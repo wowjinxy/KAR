@@ -28,7 +28,7 @@ from tools.project import (
 # Game versions
 DEFAULT_VERSION = 0
 VERSIONS = [
-    "GAMEID",  # 0
+    "GKYE01",  # 0
 ]
 
 parser = argparse.ArgumentParser()
@@ -143,6 +143,7 @@ config.asflags = [
 config.ldflags = [
     "-fp hardware",
     "-nodefaults",
+    "-warn off",
     # "-listclosure", # Uncomment for Wii linkers
 ]
 
