@@ -1,0 +1,9 @@
+# See config.example.yml for documentation.
+object_base: orig/GKYP01
+object: sys/main.dol
+hash: 14e43ef2e3d971bbb6aae596a175ac485ff242a8
+symbols: config/GKYP01/symbols.txt
+splits: config/GKYP01/splits.txt
+# Change this to match the linker version.
+# See config.example.yml for a list.
+mw_comment_version: 10

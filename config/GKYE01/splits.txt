@@ -1,0 +1,594 @@
+Sections:
+	.init       type:code align:4
+	extab       type:rodata align:32
+	extabindex  type:rodata align:16
+	.text       type:code align:32
+	.ctors      type:rodata align:32
+	.dtors      type:rodata align:32
+	.rodata     type:rodata align:32
+	.data       type:data align:32
+	.bss        type:bss align:8
+	.sdata      type:data align:32
+	.sbss       type:bss align:4
+	.sdata2     type:rodata align:4
+	.sbss2      type:bss align:32
+
+gmmain.c:
+	.text       start:0x80005898 end:0x8000714C
+
+gmglobal.c:
+	.text       start:0x8000714C end:0x800077E0
+
+gmautodemo.c:
+	.text       start:0x8000E1D8 end:0x80012E84
+
+gmracecommon.c:
+	.text       start:0x80012E84 end:0x80013B08
+
+gmracenormal.c:
+	.text       start:0x80013B08 end:0x80014D5C
+
+gmdialogue.c:
+	.text       start:0x8004788C end:0x80047B4C
+
+gmdialoguestatus.c:
+	.text       start:0x80048F68 end:0x80049198
+
+gmspecialmovie.c:
+	.text       start:0x80049198 end:0x80049C20
+
+gmclearchecker.c:
+	.text       start:0x80049C20 end:0x8004F5E0
+
+gmviconfigure.c:
+	.text       start:0x8004F5E0 end:0x8004F85C
+
+gmlanmenu.c:
+	.text       start:0x8004F85C end:0x80054904
+
+lbairride.c:
+	.text       start:0x80054904 end:0x80057514
+
+lblight.c:
+	.text       start:0x80057514 end:0x800577B8
+
+lbmemory.c:
+	.text       start:0x800577B8 end:0x80058920
+
+lbheap.c:
+	.text       start:0x80058920 end:0x80058E1C
+
+lbfile.c:
+	.text       start:0x80058E1C end:0x80059484
+
+lbarchive.c:
+	.text       start:0x80059484 end:0x80059D78
+
+lbaudio.c:
+	.text       start:0x80059D78 end:0x80064770
+
+lbvector.c:
+	.text       start:0x80064770 end:0x80065B7C
+
+lbfade.c:
+	.text       start:0x80065B7C end:0x80067734
+
+lbcamera.c:
+	.text       start:0x80067734 end:0x8006A908
+
+lbcolanim.c:
+	.text       start:0x8006A908 end:0x8006C27C
+
+lbspline.c:
+	.text       start:0x8006C27C end:0x8006F430
+
+lbkdtree.c:
+	.text       start:0x8006F430 end:0x80071290
+
+lbkdcoll.c:
+	.text       start:0x80071290 end:0x8007772C
+
+lbhvqm.c:
+	.text       start:0x8007772C end:0x80079518
+
+lbarealight.c:
+	.text       start:0x80079518 end:0x800799BC
+
+lbarealightuser.c:
+	.text       start:0x800799BC end:0x8007AC30
+
+lbarealightzone.c:
+	.text       start:0x8007AC30 end:0x8007ADE8
+
+lbshadow.c:
+	.text       start:0x8007ADE8 end:0x8007B284
+
+dbposition.c:
+	.text       start:0x8008754C end:0x8008A980
+
+dbscreenshot.c:
+	.text       start:0x8008A980 end:0x8008EF10
+
+dbcamera.c:
+	.text       start:0x8008EF10 end:0x800A0DD0
+
+dbmapspline.c:
+	.text       start:0x800A0DD0 end:0x800A2C14
+
+dbmapzone.c:
+	.text       start:0x800A2C14 end:0x800A3AB0
+
+dbmapmpcoll.c:
+	.text       start:0x800A3AB0 end:0x800A3E00
+
+dbmapdispbbox.c:
+	.text       start:0x800A448C end:0x800A59DC
+
+dbmapgravity.c:
+	.text       start:0x800A59DC end:0x800AB2D4
+
+textlib.c:
+	.text       start:0x800AB2D4 end:0x800AB4C0
+
+camera.c:
+	.text       start:0x800B31D4 end:0x800B5AF0
+
+cmreplay.c:
+	.text       start:0x800C3510 end:0x800C9848
+
+cmanimation.c:
+	.text       start:0x800C9848 end:0x800CE270
+
+ground.c:
+	.text       start:0x800CE270 end:0x800CE7A0
+
+grdata.c:
+	.text       start:0x800CE7A0 end:0x800CE924
+
+grlib2.c:
+	.text       start:0x800D59F0 end:0x800D6290
+
+grcoll.c:
+	.text       start:0x800D6290 end:0x800D8A60
+
+grparts.c:
+	.text       start:0x800D8A60 end:0x800DB234
+
+grcommon.c:
+	.text       start:0x800DB234 end:0x800DB9A0
+
+granim.c:
+	.text       start:0x800DB9A0 end:0x800DC7E4
+
+grrough.c:
+	.text       start:0x800DC7E4 end:0x800DCF08
+
+grzone.c:
+	.text       start:0x800DCF08 end:0x800DD748
+
+grzonecover.c:
+	.text       start:0x800DD748 end:0x800DE0E8
+
+grkdtree.c:
+	.text       start:0x800DE0E8 end:0x800DE8A8
+
+grcoursespline.c:
+	.text       start:0x800DE8A8 end:0x800E1940
+
+grrangespline.c:
+	.text       start:0x800E1940 end:0x800E3CB8
+
+grnullpos.c:
+	.text       start:0x800E3CB8 end:0x800E5B20
+
+grdispbbox.c:
+	.text       start:0x800E5B20 end:0x800E69B0
+
+grgravity.c:
+	.text       start:0x800E69B0 end:0x800E6BCC
+
+grairflow.c:
+	.text       start:0x800E6BCC end:0x800E8000
+
+grconveyer.c:
+	.text       start:0x800E8000 end:0x800E85A8
+
+grswitch.c:
+	.text       start:0x800E85A8 end:0x800E895C
+
+grrail.c:
+	.text       start:0x800E895C end:0x800E9A68
+
+graudio.c:
+	.text       start:0x800E9A68 end:0x800EA6E0
+
+grboxgenerator.c:
+	.text       start:0x800EA6E0 end:0x800EDB88
+
+greventgenerator.c:
+	.text       start:0x800EDB88 end:0x800EE984
+
+grglobaldead.c:
+	.text       start:0x800EE984 end:0x800EEB9C
+
+grpointstrike.c:
+	.text       start:0x800EEB9C end:0x800EEE70
+
+grairglider.c:
+	.text       start:0x800EEE70 end:0x800F3F9C
+
+gryaku.c:
+	.text       start:0x800F3F9C end:0x800F57EC
+
+gryakuanim.c:
+	.text       start:0x800F57EC end:0x800F66E0
+
+gryakueffect.c:
+	.text       start:0x800F66E0 end:0x800F7870
+
+gryakuaudio.c:
+	.text       start:0x800F7870 end:0x800F7A64
+
+gryakulib.c:
+	.text       start:0x800F7A64 end:0x800F87E4
+
+gryakucommon.c:
+	.text       start:0x800F87E4 end:0x800F9F78
+
+gryakudownforcezone.c:
+	.text       start:0x800F9F78 end:0x800FA3C0
+
+gryakucatchzone.c:
+	.text       start:0x800FA3C0 end:0x800FAC9C
+
+gryakurecoveryzone.c:
+	.text       start:0x800FAC9C end:0x800FC0F0
+
+gryakurotjumphill.c:
+	.text       start:0x800FC0F0 end:0x800FC2D0
+
+gryakugondola.c:
+	.text       start:0x800FE71C end:0x800FEE40
+
+gryakucannon.c:
+	.text       start:0x800FEE40 end:0x800FF5CC
+
+gryakupushoutwall.c:
+	.text       start:0x800FF5CC end:0x801006F4
+
+gryakulighttunnel.c:
+	.text       start:0x801006F4 end:0x80100FEC
+
+gryakupillar.c:
+	.text       start:0x80100FEC end:0x8010203C
+
+gryakubreakrock.c:
+	.text       start:0x8010203C end:0x80102794
+
+gryakubreakhouse.c:
+	.text       start:0x80102794 end:0x80102C78
+
+gryakuanimfloor.c:
+	.text       start:0x80102C78 end:0x80103EB8
+
+gryakubreakcoral.c:
+	.text       start:0x80103EB8 end:0x80104504
+
+gryakubreakicicle.c:
+	.text       start:0x80104504 end:0x80104DB0
+
+gryakubreakcommon.c:
+	.text       start:0x80104DB0 end:0x801063F4
+
+gryakulasergate.c:
+	.text       start:0x801063F4 end:0x8010685C
+
+gryakubreakfloor.c:
+	.text       start:0x8010685C end:0x80107370
+
+gryakubreakfan.c:
+	.text       start:0x80107370 end:0x8010757C
+
+gryakubreakcoll.c:
+	.text       start:0x8010757C end:0x801080EC
+
+gryakubreakhpcoll.c:
+	.text       start:0x801080EC end:0x8010DB9C
+
+gryakuwhispywoods.c:
+	.text       start:0x8010DB9C end:0x8010E0E4
+
+grheat2.c:
+	.text       start:0x8010E0E4 end:0x8010E2E8
+
+grdesert1.c:
+	.text       start:0x8010E2E8 end:0x8010E798
+
+grvalley2.c:
+	.text       start:0x8010E798 end:0x8010E95C
+
+grmachine2.c:
+	.text       start:0x8010E95C end:0x8010EC10
+
+grsky2.c:
+	.text       start:0x8010EC10 end:0x8010EC90
+
+grice1.c:
+	.text       start:0x8010ED44 end:0x8010F114
+
+grcity1.c:
+	.text       start:0x8010F114 end:0x8010F92C
+
+grcolosseum1.c:
+	.text       start:0x8010F92C end:0x8011120C
+
+greventrock.c:
+	.text       start:0x8011120C end:0x80111F00
+
+greventlighthouse.c:
+	.text       start:0x80111F00 end:0x80111FB0
+
+ifround.c:
+	.text       start:0x8011CFF0 end:0x8011D0D0
+
+mndialoguebg.c:
+	.text       start:0x8017B778 end:0x8017CF14
+
+mnclearchecker.c:
+	.text       start:0x8017CF14 end:0x8018352C
+
+mnlannumber.c:
+	.text       start:0x8018352C end:0x80183A58
+
+mnlandialogue.c:
+	.text       start:0x80183A58 end:0x80185940
+
+mnbestrapbg.c:
+	.text       start:0x80185940 end:0x80186928
+
+mnbestrapsicon.c:
+	.text       start:0x80186928 end:0x8018CF94
+
+clobject.c:
+	.text       start:0x8018CF94 end:0x8018DB84
+
+vcgenerator.c:
+	.text       start:0x801DEC44 end:0x801DF408
+
+vcdevice.c:
+	.text       start:0x801E5108 end:0x801E5628
+
+emanim.c:
+	.text       start:0x80200838 end:0x802026D4
+
+emparts.c:
+	.text       start:0x802026D4 end:0x8020354C
+
+emupdate.c:
+	.text       start:0x8020354C end:0x80206D90
+
+emcamera.c:
+	.text       start:0x80206D90 end:0x80208BD4
+
+empass.c:
+	.text       start:0x80208BD4 end:0x8020AAD8
+
+wnanim.c:
+	.text       start:0x80220750 end:0x80221914
+
+wnparts.c:
+	.text       start:0x80221914 end:0x80221BCC
+
+wneffect.c:
+	.text       start:0x80221BCC end:0x80223E1C
+
+wnguided.c:
+	.text       start:0x80223E1C end:0x8022425C
+
+plclearcheckerlib.c:
+	.text       start:0x8022DE74 end:0x80231B88
+
+pltrick.c:
+	.text       start:0x80231B88 end:0x802341EC
+
+effect.c:
+	.text       start:0x802341EC end:0x80234E4C
+
+efcallback.c:
+	.text       start:0x80234E4C end:0x80235204
+
+efdata.c:
+	.text       start:0x80235204 end:0x80236C40
+
+efrequest.c:
+	.text       start:0x80236C40 end:0x8023CA68
+
+efrequest2.c:
+	.text       start:0x8023CA68 end:0x8023E570
+
+efcontrol.c:
+	.text       start:0x8023E570 end:0x8023FDDC
+
+efanime.c:
+	.text       start:0x8023FDDC end:0x80240284
+
+efargs.c:
+	.text       start:0x80240284 end:0x80241428
+
+mpcoll.c:
+	.text       start:0x80241428 end:0x8024178C
+
+mpcollreport.c:
+	.text       start:0x8024178C end:0x80248BB4
+
+mpresponse.c:
+	.text       start:0x80248BB4 end:0x8024BA90
+
+mpzone.c:
+	.text       start:0x8024BA90 end:0x8024CCA8
+
+mpairflow.c:
+	.text       start:0x8024CCA8 end:0x80250038
+
+itdata.c:
+	.text       start:0x80250038 end:0x802514A4
+
+itanim.c:
+	.text       start:0x802514A4 end:0x80252504
+
+itparts.c:
+	.text       start:0x80252504 end:0x80252970
+
+cpcmdscript.c:
+	.text       start:0x80275CBC end:0x802762B4
+
+cpdata.c:
+	.text       start:0x802763A8 end:0x802772C0
+
+cpmapdata.c:
+	.text       start:0x802772C0 end:0x80277394
+
+a2d_game_lib.cpp:
+	.text       start:0x802894BC end:0x8028B974
+
+a2d_gamehistory.cpp:
+	.text       start:0x802B5E3C end:0x802B777C
+
+a2d_gamesession.cpp:
+	.text       start:0x802B777C end:0x802BA0DC
+
+a2d_cpu_kirby.cpp:
+	.text       start:0x802EED00 end:0x802EFA2C
+
+a2d_kirbyjointanim.cpp:
+	.text       start:0x802EFA2C end:0x802EFD8C
+
+a2d_lavabomb.cpp:
+	.text       start:0x803215F8 end:0x80322118
+
+a2d_grindrail.cpp:
+	.text       start:0x80322118 end:0x80335020
+
+a2d_bg3000.cpp:
+	.text       start:0x80335020 end:0x8033B394
+
+a2d_bg4000.cpp:
+	.text       start:0x8033B394 end:0x8033FC54
+
+a2d_bg5000.cpp:
+	.text       start:0x8033FC54 end:0x80342BE4
+
+a2d_bg8000.cpp:
+	.text       start:0x80342BE4 end:0x803448A4
+
+a2d_kurakko.cpp:
+	.text       start:0x8036E92C end:0x803789C4
+
+a2d_game_audio.cpp:
+	.text       start:0x803789C4 end:0x80379B1C
+
+a2d_soundhandle.cpp:
+	.text       start:0x80379B1C end:0x80379F94
+
+a2d_game_effect.cpp:
+	.text       start:0x80379F94 end:0x8037B028
+
+a2d_effecthandle.cpp:
+	.text       start:0x8037B028 end:0x8037E3CC
+
+a2d_wipeeffect.cpp:
+	.text       start:0x8037E3CC end:0x8037FFD0
+
+a2d_effect_slideblur.cpp:
+	.text       start:0x8037FFD0 end:0x80382E10
+
+a2d_kirbydisp.cpp:
+	.text       start:0x80382E10 end:0x80383F6C
+	.ctors      start:0x80489444 end:0x80489448
+
+a2d_refract.cpp:
+	.text       start:0x80383F6C end:0x803842E8
+
+fl_indirectload.cpp:
+	.text       start:0x80396210 end:0x80397080
+
+OSThread.c:
+	.text       start:0x803DAD1C end:0x803DB46C
+
+displayfunc.c:
+	.text       start:0x8040F00C end:0x8040FD5C
+
+initialize.c:
+	.text       start:0x8040FD5C end:0x80417E94
+
+objalloc.c:
+	.text       start:0x80417E94 end:0x8041CD84
+
+memory.c:
+	.text       start:0x8041CD84 end:0x8041D15C
+
+shadow.c:
+	.text       start:0x8041D15C end:0x8041E6D8
+
+bytecode.c:
+	.text       start:0x8041E6D8 end:0x8041FC98
+
+texpdag.c:
+	.text       start:0x804251A0 end:0x80425650
+
+gobjproc.c:
+	.text       start:0x804288A4 end:0x8042898C
+
+gobjplink.c:
+	.text       start:0x80428C50 end:0x804293F4
+
+gobjgxlink.c:
+	.text       start:0x80429690 end:0x80429BAC
+
+gobjobject.c:
+	.text       start:0x80429C14 end:0x80429C80
+
+gobjuserdata.c:
+	.text       start:0x80429D0C end:0x8042A734
+
+particle.c:
+	.text       start:0x8042A734 end:0x80430198
+
+psinterpret.c:
+	.text       start:0x80430198 end:0x804309E8
+
+generator.c:
+	.text       start:0x804309E8 end:0x80433F00
+
+psdisp.c:
+	.text       start:0x80433F00 end:0x80438314
+
+pslist.c:
+	.text       start:0x80438314 end:0x8043F820
+
+debugconsole_main.c:
+	.text       start:0x8043F820 end:0x804407E0
+
+axdriver.c:
+	.text       start:0x804407E0 end:0x80445AD4
+
+devcom.c:
+	.text       start:0x80445AD4 end:0x80446D80
+
+dvdsche.c:
+	.text       start:0x80446D80 end:0x8044EDEC
+
+sislib.c:
+	.text       start:0x8044EDEC end:0x80457E0C
+
+gcpmemcard.c:
+	.text       start:0x80457E0C end:0x8045DFA4
+
+HVQM4PlayerDx.c:
+	.text       start:0x8045DFA4 end:0x8045F4D0
+
+IPSocket.c:
+	.text       start:0x8047A950 end:0x80481AB4
+
+IPIgmp.c:
+	.text       start:0x80481AB4 end:0x80481CE8
