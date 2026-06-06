@@ -64,3 +64,8 @@ Notes
 
 - `docs/kar_us_shiftability.md` records the current `GKYE01` split heuristic,
   verification result, and the largest remaining anonymous text gaps.
+- `docs/kar_us_auto_text_audit.md` ranks the remaining `GKYE01` auto text
+  units.
+- `docs/kar_shiftability_checklist.md` tracks what still blocks version-shift
+  confidence.
+- `docs/kar_data_split_notes.md` outlines the conservative data-splitting path.

@@ -69,3 +69,9 @@ project should be considered comfortably shiftable:
   map/symbol neighborhood evidence.
 - Identify the large anonymous gameplay and Air Ride 2D regions before trying
   to make their boundaries version-shiftable.
+
+See also:
+
+- `docs/kar_us_auto_text_audit.md` for the full ranked auto text gap list.
+- `docs/kar_shiftability_checklist.md` for the cross-version readiness list.
+- `docs/kar_data_split_notes.md` for the conservative data split plan.
