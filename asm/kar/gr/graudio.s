@@ -1,0 +1,950 @@
+.include "macros.inc"
+.file "graudio.c"
+
+# 0x800E9A68..0x800EA6E0 | size: 0xC78
+.text
+.balign 4
+
+# .text:0x0 | 0x800E9A68 | size: 0x64
+.fn kar_graudio_stop_fgm_entry, global
+/* 800E9A68 000E6868  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800E9A6C 000E686C  7C 08 02 A6 */	mflr r0
+/* 800E9A70 000E6870  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800E9A74 000E6874  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800E9A78 000E6878  7C 7F 1B 78 */	mr r31, r3
+/* 800E9A7C 000E687C  80 03 00 04 */	lwz r0, 0x4(r3)
+/* 800E9A80 000E6880  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800E9A84 000E6884  40 81 00 34 */	ble .L_800E9AB8
+/* 800E9A88 000E6888  48 00 06 F9 */	bl kar_graudio_stop_active_fgm_slot
+/* 800E9A8C 000E688C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800E9A90 000E6890  40 82 00 18 */	bne .L_800E9AA8
+/* 800E9A94 000E6894  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9A98 000E6898  38 80 00 9F */	li r4, 0x9f
+/* 800E9A9C 000E689C  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800E9AA0 000E68A0  38 AD 90 88 */	li r5, lbl_805D6168@sda21
+/* 800E9AA4 000E68A4  48 33 EA 15 */	bl __assert
+.L_800E9AA8:
+/* 800E9AA8 000E68A8  7F E3 FB 78 */	mr r3, r31
+/* 800E9AAC 000E68AC  48 00 05 71 */	bl kar_graudio_mark_fgm_track_started
+/* 800E9AB0 000E68B0  7F E3 FB 78 */	mr r3, r31
+/* 800E9AB4 000E68B4  48 00 05 8D */	bl kar_graudio_release_fgm_entry_track_group
+.L_800E9AB8:
+/* 800E9AB8 000E68B8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800E9ABC 000E68BC  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800E9AC0 000E68C0  7C 08 03 A6 */	mtlr r0
+/* 800E9AC4 000E68C4  38 21 00 10 */	addi r1, r1, 0x10
+/* 800E9AC8 000E68C8  4E 80 00 20 */	blr
+.endfn kar_graudio_stop_fgm_entry
+
+# .text:0x64 | 0x800E9ACC | size: 0x2D4
+.fn kar_graudio_init_map_zone_fgm, global
+/* 800E9ACC 000E68CC  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 800E9AD0 000E68D0  7C 08 02 A6 */	mflr r0
+/* 800E9AD4 000E68D4  90 01 00 34 */	stw r0, 0x34(r1)
+/* 800E9AD8 000E68D8  39 61 00 30 */	addi r11, r1, 0x30
+/* 800E9ADC 000E68DC  48 2C 40 71 */	bl _savegpr_25
+/* 800E9AE0 000E68E0  7C 79 1B 78 */	mr r25, r3
+/* 800E9AE4 000E68E4  3C 80 80 4A */	lis r4, kar_src_graudio_804a50c8@ha
+/* 800E9AE8 000E68E8  80 63 00 04 */	lwz r3, 0x4(r3)
+/* 800E9AEC 000E68EC  3B E4 50 C8 */	addi r31, r4, kar_src_graudio_804a50c8@l
+/* 800E9AF0 000E68F0  4B F7 0B 71 */	bl kar_lbaudio__near_8005a660
+/* 800E9AF4 000E68F4  38 79 04 60 */	addi r3, r25, 0x460
+/* 800E9AF8 000E68F8  38 00 00 02 */	li r0, 0x2
+/* 800E9AFC 000E68FC  7C 64 1B 78 */	mr r4, r3
+/* 800E9B00 000E6900  7C 09 03 A6 */	mtctr r0
+.L_800E9B04:
+/* 800E9B04 000E6904  38 00 00 00 */	li r0, 0x0
+/* 800E9B08 000E6908  90 04 00 00 */	stw r0, 0x0(r4)
+/* 800E9B0C 000E690C  90 04 00 04 */	stw r0, 0x4(r4)
+/* 800E9B10 000E6910  90 04 00 08 */	stw r0, 0x8(r4)
+/* 800E9B14 000E6914  90 04 00 0C */	stw r0, 0xc(r4)
+/* 800E9B18 000E6918  90 04 00 10 */	stw r0, 0x10(r4)
+/* 800E9B1C 000E691C  90 04 00 14 */	stw r0, 0x14(r4)
+/* 800E9B20 000E6920  90 04 00 18 */	stw r0, 0x18(r4)
+/* 800E9B24 000E6924  90 04 00 1C */	stw r0, 0x1c(r4)
+/* 800E9B28 000E6928  90 04 00 20 */	stw r0, 0x20(r4)
+/* 800E9B2C 000E692C  90 04 00 24 */	stw r0, 0x24(r4)
+/* 800E9B30 000E6930  90 04 00 28 */	stw r0, 0x28(r4)
+/* 800E9B34 000E6934  90 04 00 2C */	stw r0, 0x2c(r4)
+/* 800E9B38 000E6938  90 04 00 30 */	stw r0, 0x30(r4)
+/* 800E9B3C 000E693C  90 04 00 34 */	stw r0, 0x34(r4)
+/* 800E9B40 000E6940  90 04 00 38 */	stw r0, 0x38(r4)
+/* 800E9B44 000E6944  90 04 00 3C */	stw r0, 0x3c(r4)
+/* 800E9B48 000E6948  90 04 00 40 */	stw r0, 0x40(r4)
+/* 800E9B4C 000E694C  90 04 00 44 */	stw r0, 0x44(r4)
+/* 800E9B50 000E6950  90 04 00 48 */	stw r0, 0x48(r4)
+/* 800E9B54 000E6954  90 04 00 4C */	stw r0, 0x4c(r4)
+/* 800E9B58 000E6958  90 04 00 50 */	stw r0, 0x50(r4)
+/* 800E9B5C 000E695C  90 04 00 54 */	stw r0, 0x54(r4)
+/* 800E9B60 000E6960  90 04 00 58 */	stw r0, 0x58(r4)
+/* 800E9B64 000E6964  90 04 00 5C */	stw r0, 0x5c(r4)
+/* 800E9B68 000E6968  90 04 00 60 */	stw r0, 0x60(r4)
+/* 800E9B6C 000E696C  90 04 00 64 */	stw r0, 0x64(r4)
+/* 800E9B70 000E6970  90 04 00 68 */	stw r0, 0x68(r4)
+/* 800E9B74 000E6974  90 04 00 6C */	stw r0, 0x6c(r4)
+/* 800E9B78 000E6978  90 04 00 70 */	stw r0, 0x70(r4)
+/* 800E9B7C 000E697C  90 04 00 74 */	stw r0, 0x74(r4)
+/* 800E9B80 000E6980  38 84 00 78 */	addi r4, r4, 0x78
+/* 800E9B84 000E6984  42 00 FF 80 */	bdnz .L_800E9B04
+/* 800E9B88 000E6988  38 00 00 03 */	li r0, 0x3
+/* 800E9B8C 000E698C  7C 64 1B 78 */	mr r4, r3
+/* 800E9B90 000E6990  7C 09 03 A6 */	mtctr r0
+.L_800E9B94:
+/* 800E9B94 000E6994  38 00 00 00 */	li r0, 0x0
+/* 800E9B98 000E6998  90 04 00 F4 */	stw r0, 0xf4(r4)
+/* 800E9B9C 000E699C  90 04 00 F8 */	stw r0, 0xf8(r4)
+/* 800E9BA0 000E69A0  90 04 00 FC */	stw r0, 0xfc(r4)
+/* 800E9BA4 000E69A4  90 04 01 00 */	stw r0, 0x100(r4)
+/* 800E9BA8 000E69A8  90 04 01 04 */	stw r0, 0x104(r4)
+/* 800E9BAC 000E69AC  90 04 01 08 */	stw r0, 0x108(r4)
+/* 800E9BB0 000E69B0  90 04 01 0C */	stw r0, 0x10c(r4)
+/* 800E9BB4 000E69B4  90 04 01 10 */	stw r0, 0x110(r4)
+/* 800E9BB8 000E69B8  90 04 01 14 */	stw r0, 0x114(r4)
+/* 800E9BBC 000E69BC  90 04 01 18 */	stw r0, 0x118(r4)
+/* 800E9BC0 000E69C0  90 04 01 1C */	stw r0, 0x11c(r4)
+/* 800E9BC4 000E69C4  90 04 01 20 */	stw r0, 0x120(r4)
+/* 800E9BC8 000E69C8  90 04 01 24 */	stw r0, 0x124(r4)
+/* 800E9BCC 000E69CC  90 04 01 28 */	stw r0, 0x128(r4)
+/* 800E9BD0 000E69D0  90 04 01 2C */	stw r0, 0x12c(r4)
+/* 800E9BD4 000E69D4  90 04 01 30 */	stw r0, 0x130(r4)
+/* 800E9BD8 000E69D8  90 04 01 34 */	stw r0, 0x134(r4)
+/* 800E9BDC 000E69DC  90 04 01 38 */	stw r0, 0x138(r4)
+/* 800E9BE0 000E69E0  90 04 01 3C */	stw r0, 0x13c(r4)
+/* 800E9BE4 000E69E4  90 04 01 40 */	stw r0, 0x140(r4)
+/* 800E9BE8 000E69E8  90 04 01 44 */	stw r0, 0x144(r4)
+/* 800E9BEC 000E69EC  90 04 01 48 */	stw r0, 0x148(r4)
+/* 800E9BF0 000E69F0  90 04 01 4C */	stw r0, 0x14c(r4)
+/* 800E9BF4 000E69F4  90 04 01 50 */	stw r0, 0x150(r4)
+/* 800E9BF8 000E69F8  90 04 01 54 */	stw r0, 0x154(r4)
+/* 800E9BFC 000E69FC  90 04 01 58 */	stw r0, 0x158(r4)
+/* 800E9C00 000E6A00  90 04 01 5C */	stw r0, 0x15c(r4)
+/* 800E9C04 000E6A04  90 04 01 60 */	stw r0, 0x160(r4)
+/* 800E9C08 000E6A08  90 04 01 64 */	stw r0, 0x164(r4)
+/* 800E9C0C 000E6A0C  90 04 01 68 */	stw r0, 0x168(r4)
+/* 800E9C10 000E6A10  90 04 01 6C */	stw r0, 0x16c(r4)
+/* 800E9C14 000E6A14  90 04 01 70 */	stw r0, 0x170(r4)
+/* 800E9C18 000E6A18  90 04 01 74 */	stw r0, 0x174(r4)
+/* 800E9C1C 000E6A1C  90 04 01 78 */	stw r0, 0x178(r4)
+/* 800E9C20 000E6A20  90 04 01 7C */	stw r0, 0x17c(r4)
+/* 800E9C24 000E6A24  38 84 00 8C */	addi r4, r4, 0x8c
+/* 800E9C28 000E6A28  42 00 FF 6C */	bdnz .L_800E9B94
+/* 800E9C2C 000E6A2C  90 03 00 F0 */	stw r0, 0xf0(r3)
+/* 800E9C30 000E6A30  3B D9 04 60 */	addi r30, r25, 0x460
+/* 800E9C34 000E6A34  90 03 02 98 */	stw r0, 0x298(r3)
+/* 800E9C38 000E6A38  80 79 00 08 */	lwz r3, 0x8(r25)
+/* 800E9C3C 000E6A3C  83 A3 00 3C */	lwz r29, 0x3c(r3)
+/* 800E9C40 000E6A40  28 1D 00 00 */	cmplwi r29, 0x0
+/* 800E9C44 000E6A44  41 82 01 44 */	beq .L_800E9D88
+/* 800E9C48 000E6A48  80 1D 00 04 */	lwz r0, 0x4(r29)
+/* 800E9C4C 000E6A4C  2C 00 00 0C */	cmpwi r0, 0xc
+/* 800E9C50 000E6A50  40 81 00 14 */	ble .L_800E9C64
+/* 800E9C54 000E6A54  38 7F 00 00 */	addi r3, r31, 0x0
+/* 800E9C58 000E6A58  38 BF 00 0C */	addi r5, r31, 0xc
+/* 800E9C5C 000E6A5C  38 80 00 35 */	li r4, 0x35
+/* 800E9C60 000E6A60  48 33 E8 59 */	bl __assert
+.L_800E9C64:
+/* 800E9C64 000E6A64  3B 60 00 00 */	li r27, 0x0
+/* 800E9C68 000E6A68  7F DA F3 78 */	mr r26, r30
+/* 800E9C6C 000E6A6C  7F 79 DB 78 */	mr r25, r27
+/* 800E9C70 000E6A70  48 00 00 90 */	b .L_800E9D00
+.L_800E9C74:
+/* 800E9C74 000E6A74  80 7D 00 00 */	lwz r3, 0x0(r29)
+/* 800E9C78 000E6A78  7F 83 C8 2E */	lwzx r28, r3, r25
+/* 800E9C7C 000E6A7C  80 1C 00 00 */	lwz r0, 0x0(r28)
+/* 800E9C80 000E6A80  90 1A 00 00 */	stw r0, 0x0(r26)
+/* 800E9C84 000E6A84  80 1C 00 04 */	lwz r0, 0x4(r28)
+/* 800E9C88 000E6A88  90 1A 00 04 */	stw r0, 0x4(r26)
+/* 800E9C8C 000E6A8C  80 7C 00 08 */	lwz r3, 0x8(r28)
+/* 800E9C90 000E6A90  48 00 02 19 */	bl kar_graudio_alloc_fgm_track_by_kind
+/* 800E9C94 000E6A94  90 7A 00 08 */	stw r3, 0x8(r26)
+/* 800E9C98 000E6A98  38 60 00 00 */	li r3, 0x0
+/* 800E9C9C 000E6A9C  48 00 02 95 */	bl kar_graudio_alloc_map_fgm_track_group
+/* 800E9CA0 000E6AA0  90 7A 00 0C */	stw r3, 0xc(r26)
+/* 800E9CA4 000E6AA4  80 1C 00 0C */	lwz r0, 0xc(r28)
+/* 800E9CA8 000E6AA8  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800E9CAC 000E6AAC  41 82 00 10 */	beq .L_800E9CBC
+/* 800E9CB0 000E6AB0  80 1C 00 14 */	lwz r0, 0x14(r28)
+/* 800E9CB4 000E6AB4  28 00 00 00 */	cmplwi r0, 0x0
+/* 800E9CB8 000E6AB8  41 82 00 3C */	beq .L_800E9CF4
+.L_800E9CBC:
+/* 800E9CBC 000E6ABC  80 7C 00 0C */	lwz r3, 0xc(r28)
+/* 800E9CC0 000E6AC0  80 9A 00 0C */	lwz r4, 0xc(r26)
+/* 800E9CC4 000E6AC4  C0 3C 00 10 */	lfs f1, 0x10(r28)
+/* 800E9CC8 000E6AC8  80 BC 00 14 */	lwz r5, 0x14(r28)
+/* 800E9CCC 000E6ACC  48 00 02 85 */	bl kar_graudio_configure_fgm_track_mode
+/* 800E9CD0 000E6AD0  80 7C 00 00 */	lwz r3, 0x0(r28)
+/* 800E9CD4 000E6AD4  88 03 00 04 */	lbz r0, 0x4(r3)
+/* 800E9CD8 000E6AD8  54 00 C8 02 */	extlwi r0, r0, 2, 25
+/* 800E9CDC 000E6ADC  7C 00 FE 70 */	srawi r0, r0, 31
+/* 800E9CE0 000E6AE0  7C 00 07 75 */	extsb. r0, r0
+/* 800E9CE4 000E6AE4  41 82 00 10 */	beq .L_800E9CF4
+/* 800E9CE8 000E6AE8  7F 43 D3 78 */	mr r3, r26
+/* 800E9CEC 000E6AEC  38 80 00 00 */	li r4, 0x0
+/* 800E9CF0 000E6AF0  48 00 03 95 */	bl kar_graudio_play_fgm_entry_id
+.L_800E9CF4:
+/* 800E9CF4 000E6AF4  3B 5A 00 14 */	addi r26, r26, 0x14
+/* 800E9CF8 000E6AF8  3B 39 00 04 */	addi r25, r25, 0x4
+/* 800E9CFC 000E6AFC  3B 7B 00 01 */	addi r27, r27, 0x1
+.L_800E9D00:
+/* 800E9D00 000E6B00  80 1D 00 04 */	lwz r0, 0x4(r29)
+/* 800E9D04 000E6B04  7C 1B 00 00 */	cmpw r27, r0
+/* 800E9D08 000E6B08  41 80 FF 6C */	blt .L_800E9C74
+/* 800E9D0C 000E6B0C  90 1E 00 F0 */	stw r0, 0xf0(r30)
+/* 800E9D10 000E6B10  80 1D 00 0C */	lwz r0, 0xc(r29)
+/* 800E9D14 000E6B14  2C 00 00 15 */	cmpwi r0, 0x15
+/* 800E9D18 000E6B18  40 81 00 14 */	ble .L_800E9D2C
+/* 800E9D1C 000E6B1C  38 7F 00 00 */	addi r3, r31, 0x0
+/* 800E9D20 000E6B20  38 BF 00 38 */	addi r5, r31, 0x38
+/* 800E9D24 000E6B24  38 80 00 5D */	li r4, 0x5d
+/* 800E9D28 000E6B28  48 33 E7 91 */	bl __assert
+.L_800E9D2C:
+/* 800E9D2C 000E6B2C  3B 60 00 00 */	li r27, 0x0
+/* 800E9D30 000E6B30  7F D9 F3 78 */	mr r25, r30
+/* 800E9D34 000E6B34  7F 7A DB 78 */	mr r26, r27
+/* 800E9D38 000E6B38  48 00 00 40 */	b .L_800E9D78
+.L_800E9D3C:
+/* 800E9D3C 000E6B3C  80 7D 00 08 */	lwz r3, 0x8(r29)
+/* 800E9D40 000E6B40  7C 63 D0 2E */	lwzx r3, r3, r26
+/* 800E9D44 000E6B44  80 03 00 00 */	lwz r0, 0x0(r3)
+/* 800E9D48 000E6B48  90 19 00 F4 */	stw r0, 0xf4(r25)
+/* 800E9D4C 000E6B4C  80 03 00 04 */	lwz r0, 0x4(r3)
+/* 800E9D50 000E6B50  90 19 00 F8 */	stw r0, 0xf8(r25)
+/* 800E9D54 000E6B54  80 63 00 08 */	lwz r3, 0x8(r3)
+/* 800E9D58 000E6B58  48 00 01 51 */	bl kar_graudio_alloc_fgm_track_by_kind
+/* 800E9D5C 000E6B5C  90 79 00 FC */	stw r3, 0xfc(r25)
+/* 800E9D60 000E6B60  38 60 00 00 */	li r3, 0x0
+/* 800E9D64 000E6B64  48 00 01 CD */	bl kar_graudio_alloc_map_fgm_track_group
+/* 800E9D68 000E6B68  90 79 01 00 */	stw r3, 0x100(r25)
+/* 800E9D6C 000E6B6C  3B 39 00 14 */	addi r25, r25, 0x14
+/* 800E9D70 000E6B70  3B 5A 00 04 */	addi r26, r26, 0x4
+/* 800E9D74 000E6B74  3B 7B 00 01 */	addi r27, r27, 0x1
+.L_800E9D78:
+/* 800E9D78 000E6B78  80 1D 00 0C */	lwz r0, 0xc(r29)
+/* 800E9D7C 000E6B7C  7C 1B 00 00 */	cmpw r27, r0
+/* 800E9D80 000E6B80  41 80 FF BC */	blt .L_800E9D3C
+/* 800E9D84 000E6B84  90 1E 02 98 */	stw r0, 0x298(r30)
+.L_800E9D88:
+/* 800E9D88 000E6B88  39 61 00 30 */	addi r11, r1, 0x30
+/* 800E9D8C 000E6B8C  48 2C 3E 0D */	bl _restgpr_25
+/* 800E9D90 000E6B90  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 800E9D94 000E6B94  7C 08 03 A6 */	mtlr r0
+/* 800E9D98 000E6B98  38 21 00 30 */	addi r1, r1, 0x30
+/* 800E9D9C 000E6B9C  4E 80 00 20 */	blr
+.endfn kar_graudio_init_map_zone_fgm
+
+# .text:0x338 | 0x800E9DA0 | size: 0x108
+.fn kar_graudio_update_map_zone_fgm, global
+/* 800E9DA0 000E6BA0  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 800E9DA4 000E6BA4  7C 08 02 A6 */	mflr r0
+/* 800E9DA8 000E6BA8  90 01 00 24 */	stw r0, 0x24(r1)
+/* 800E9DAC 000E6BAC  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 800E9DB0 000E6BB0  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 800E9DB4 000E6BB4  3B C3 04 60 */	addi r30, r3, 0x460
+/* 800E9DB8 000E6BB8  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9DBC 000E6BBC  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 800E9DC0 000E6BC0  7F DD F3 78 */	mr r29, r30
+/* 800E9DC4 000E6BC4  3B E3 50 C8 */	addi r31, r3, kar_src_graudio_804a50c8@l
+/* 800E9DC8 000E6BC8  93 81 00 10 */	stw r28, 0x10(r1)
+/* 800E9DCC 000E6BCC  3B 80 00 00 */	li r28, 0x0
+/* 800E9DD0 000E6BD0  48 00 00 48 */	b .L_800E9E18
+.L_800E9DD4:
+/* 800E9DD4 000E6BD4  80 1D 00 04 */	lwz r0, 0x4(r29)
+/* 800E9DD8 000E6BD8  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800E9DDC 000E6BDC  40 81 00 34 */	ble .L_800E9E10
+/* 800E9DE0 000E6BE0  7F A3 EB 78 */	mr r3, r29
+/* 800E9DE4 000E6BE4  48 00 03 9D */	bl kar_graudio_stop_active_fgm_slot
+/* 800E9DE8 000E6BE8  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800E9DEC 000E6BEC  40 82 00 14 */	bne .L_800E9E00
+/* 800E9DF0 000E6BF0  7F E3 FB 78 */	mr r3, r31
+/* 800E9DF4 000E6BF4  38 80 00 9F */	li r4, 0x9f
+/* 800E9DF8 000E6BF8  38 AD 90 88 */	li r5, lbl_805D6168@sda21
+/* 800E9DFC 000E6BFC  48 33 E6 BD */	bl __assert
+.L_800E9E00:
+/* 800E9E00 000E6C00  7F A3 EB 78 */	mr r3, r29
+/* 800E9E04 000E6C04  48 00 02 19 */	bl kar_graudio_mark_fgm_track_started
+/* 800E9E08 000E6C08  7F A3 EB 78 */	mr r3, r29
+/* 800E9E0C 000E6C0C  48 00 02 35 */	bl kar_graudio_release_fgm_entry_track_group
+.L_800E9E10:
+/* 800E9E10 000E6C10  3B BD 00 14 */	addi r29, r29, 0x14
+/* 800E9E14 000E6C14  3B 9C 00 01 */	addi r28, r28, 0x1
+.L_800E9E18:
+/* 800E9E18 000E6C18  80 1E 00 F0 */	lwz r0, 0xf0(r30)
+/* 800E9E1C 000E6C1C  7C 1C 00 00 */	cmpw r28, r0
+/* 800E9E20 000E6C20  41 80 FF B4 */	blt .L_800E9DD4
+/* 800E9E24 000E6C24  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9E28 000E6C28  7F DD F3 78 */	mr r29, r30
+/* 800E9E2C 000E6C2C  3B E3 50 C8 */	addi r31, r3, kar_src_graudio_804a50c8@l
+/* 800E9E30 000E6C30  3B 80 00 00 */	li r28, 0x0
+/* 800E9E34 000E6C34  48 00 00 48 */	b .L_800E9E7C
+.L_800E9E38:
+/* 800E9E38 000E6C38  80 1D 00 F8 */	lwz r0, 0xf8(r29)
+/* 800E9E3C 000E6C3C  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800E9E40 000E6C40  40 81 00 34 */	ble .L_800E9E74
+/* 800E9E44 000E6C44  38 7D 00 F4 */	addi r3, r29, 0xf4
+/* 800E9E48 000E6C48  48 00 03 39 */	bl kar_graudio_stop_active_fgm_slot
+/* 800E9E4C 000E6C4C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800E9E50 000E6C50  40 82 00 14 */	bne .L_800E9E64
+/* 800E9E54 000E6C54  7F E3 FB 78 */	mr r3, r31
+/* 800E9E58 000E6C58  38 80 00 9F */	li r4, 0x9f
+/* 800E9E5C 000E6C5C  38 AD 90 88 */	li r5, lbl_805D6168@sda21
+/* 800E9E60 000E6C60  48 33 E6 59 */	bl __assert
+.L_800E9E64:
+/* 800E9E64 000E6C64  38 7D 00 F4 */	addi r3, r29, 0xf4
+/* 800E9E68 000E6C68  48 00 01 B5 */	bl kar_graudio_mark_fgm_track_started
+/* 800E9E6C 000E6C6C  38 7D 00 F4 */	addi r3, r29, 0xf4
+/* 800E9E70 000E6C70  48 00 01 D1 */	bl kar_graudio_release_fgm_entry_track_group
+.L_800E9E74:
+/* 800E9E74 000E6C74  3B BD 00 14 */	addi r29, r29, 0x14
+/* 800E9E78 000E6C78  3B 9C 00 01 */	addi r28, r28, 0x1
+.L_800E9E7C:
+/* 800E9E7C 000E6C7C  80 1E 02 98 */	lwz r0, 0x298(r30)
+/* 800E9E80 000E6C80  7C 1C 00 00 */	cmpw r28, r0
+/* 800E9E84 000E6C84  41 80 FF B4 */	blt .L_800E9E38
+/* 800E9E88 000E6C88  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 800E9E8C 000E6C8C  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 800E9E90 000E6C90  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 800E9E94 000E6C94  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 800E9E98 000E6C98  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 800E9E9C 000E6C9C  7C 08 03 A6 */	mtlr r0
+/* 800E9EA0 000E6CA0  38 21 00 20 */	addi r1, r1, 0x20
+/* 800E9EA4 000E6CA4  4E 80 00 20 */	blr
+.endfn kar_graudio_update_map_zone_fgm
+
+# .text:0x440 | 0x800E9EA8 | size: 0x88
+.fn kar_graudio_alloc_fgm_track_by_kind, global
+/* 800E9EA8 000E6CA8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800E9EAC 000E6CAC  7C 08 02 A6 */	mflr r0
+/* 800E9EB0 000E6CB0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800E9EB4 000E6CB4  38 00 00 00 */	li r0, 0x0
+/* 800E9EB8 000E6CB8  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800E9EBC 000E6CBC  7C 7F 1B 79 */	mr. r31, r3
+/* 800E9EC0 000E6CC0  41 80 00 10 */	blt .L_800E9ED0
+/* 800E9EC4 000E6CC4  2C 1F 00 02 */	cmpwi r31, 0x2
+/* 800E9EC8 000E6CC8  40 80 00 08 */	bge .L_800E9ED0
+/* 800E9ECC 000E6CCC  38 00 00 01 */	li r0, 0x1
+.L_800E9ED0:
+/* 800E9ED0 000E6CD0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800E9ED4 000E6CD4  40 82 00 1C */	bne .L_800E9EF0
+/* 800E9ED8 000E6CD8  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9EDC 000E6CDC  3C A0 80 4A */	lis r5, lbl_804A5130@ha
+/* 800E9EE0 000E6CE0  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800E9EE4 000E6CE4  38 80 00 D7 */	li r4, 0xd7
+/* 800E9EE8 000E6CE8  38 A5 51 30 */	addi r5, r5, lbl_804A5130@l
+/* 800E9EEC 000E6CEC  48 33 E5 CD */	bl __assert
+.L_800E9EF0:
+/* 800E9EF0 000E6CF0  2C 1F 00 01 */	cmpwi r31, 0x1
+/* 800E9EF4 000E6CF4  41 82 00 1C */	beq .L_800E9F10
+/* 800E9EF8 000E6CF8  40 80 00 20 */	bge .L_800E9F18
+/* 800E9EFC 000E6CFC  2C 1F 00 00 */	cmpwi r31, 0x0
+/* 800E9F00 000E6D00  40 80 00 08 */	bge .L_800E9F08
+/* 800E9F04 000E6D04  48 00 00 14 */	b .L_800E9F18
+.L_800E9F08:
+/* 800E9F08 000E6D08  4B F7 34 31 */	bl kar_lbaudio_alloc_vehicle_track_subtype_6
+/* 800E9F0C 000E6D0C  48 00 00 10 */	b .L_800E9F1C
+.L_800E9F10:
+/* 800E9F10 000E6D10  4B F7 36 B9 */	bl kar_lbaudio_alloc_weapon_track_subtype_6
+/* 800E9F14 000E6D14  48 00 00 08 */	b .L_800E9F1C
+.L_800E9F18:
+/* 800E9F18 000E6D18  38 60 00 00 */	li r3, 0x0
+.L_800E9F1C:
+/* 800E9F1C 000E6D1C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800E9F20 000E6D20  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800E9F24 000E6D24  7C 08 03 A6 */	mtlr r0
+/* 800E9F28 000E6D28  38 21 00 10 */	addi r1, r1, 0x10
+/* 800E9F2C 000E6D2C  4E 80 00 20 */	blr
+.endfn kar_graudio_alloc_fgm_track_by_kind
+
+# .text:0x4C8 | 0x800E9F30 | size: 0x20
+.fn kar_graudio_alloc_map_fgm_track_group, global
+/* 800E9F30 000E6D30  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800E9F34 000E6D34  7C 08 02 A6 */	mflr r0
+/* 800E9F38 000E6D38  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800E9F3C 000E6D3C  4B F7 3F 95 */	bl kar_lbaudio_alloc_map_track_subtype_6
+/* 800E9F40 000E6D40  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800E9F44 000E6D44  7C 08 03 A6 */	mtlr r0
+/* 800E9F48 000E6D48  38 21 00 10 */	addi r1, r1, 0x10
+/* 800E9F4C 000E6D4C  4E 80 00 20 */	blr
+.endfn kar_graudio_alloc_map_fgm_track_group
+
+# .text:0x4E8 | 0x800E9F50 | size: 0xCC
+.fn kar_graudio_configure_fgm_track_mode, global
+/* 800E9F50 000E6D50  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 800E9F54 000E6D54  7C 08 02 A6 */	mflr r0
+/* 800E9F58 000E6D58  2C 03 00 01 */	cmpwi r3, 0x1
+/* 800E9F5C 000E6D5C  90 01 00 24 */	stw r0, 0x24(r1)
+/* 800E9F60 000E6D60  DB E1 00 18 */	stfd f31, 0x18(r1)
+/* 800E9F64 000E6D64  FF E0 08 90 */	fmr f31, f1
+/* 800E9F68 000E6D68  93 E1 00 14 */	stw r31, 0x14(r1)
+/* 800E9F6C 000E6D6C  7C BF 2B 78 */	mr r31, r5
+/* 800E9F70 000E6D70  93 C1 00 10 */	stw r30, 0x10(r1)
+/* 800E9F74 000E6D74  7C 9E 23 78 */	mr r30, r4
+/* 800E9F78 000E6D78  41 82 00 2C */	beq .L_800E9FA4
+/* 800E9F7C 000E6D7C  40 80 00 10 */	bge .L_800E9F8C
+/* 800E9F80 000E6D80  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800E9F84 000E6D84  40 80 00 14 */	bge .L_800E9F98
+/* 800E9F88 000E6D88  48 00 00 78 */	b .L_800EA000
+.L_800E9F8C:
+/* 800E9F8C 000E6D8C  2C 03 00 03 */	cmpwi r3, 0x3
+/* 800E9F90 000E6D90  40 80 00 70 */	bge .L_800EA000
+/* 800E9F94 000E6D94  48 00 00 40 */	b .L_800E9FD4
+.L_800E9F98:
+/* 800E9F98 000E6D98  7F C3 F3 78 */	mr r3, r30
+/* 800E9F9C 000E6D9C  4B F7 3B 85 */	bl kar_lbaudio_set_track_mode_single
+/* 800E9FA0 000E6DA0  48 00 00 60 */	b .L_800EA000
+.L_800E9FA4:
+/* 800E9FA4 000E6DA4  28 1F 00 00 */	cmplwi r31, 0x0
+/* 800E9FA8 000E6DA8  40 82 00 18 */	bne .L_800E9FC0
+/* 800E9FAC 000E6DAC  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9FB0 000E6DB0  38 80 00 FC */	li r4, 0xfc
+/* 800E9FB4 000E6DB4  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800E9FB8 000E6DB8  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800E9FBC 000E6DBC  48 33 E4 FD */	bl __assert
+.L_800E9FC0:
+/* 800E9FC0 000E6DC0  FC 20 F8 90 */	fmr f1, f31
+/* 800E9FC4 000E6DC4  7F C3 F3 78 */	mr r3, r30
+/* 800E9FC8 000E6DC8  7F E4 FB 78 */	mr r4, r31
+/* 800E9FCC 000E6DCC  4B F7 3B 79 */	bl kar_lbaudio_set_track_mode_fixed_position
+/* 800E9FD0 000E6DD0  48 00 00 30 */	b .L_800EA000
+.L_800E9FD4:
+/* 800E9FD4 000E6DD4  28 1F 00 00 */	cmplwi r31, 0x0
+/* 800E9FD8 000E6DD8  40 82 00 18 */	bne .L_800E9FF0
+/* 800E9FDC 000E6DDC  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800E9FE0 000E6DE0  38 80 01 01 */	li r4, 0x101
+/* 800E9FE4 000E6DE4  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800E9FE8 000E6DE8  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800E9FEC 000E6DEC  48 33 E4 CD */	bl __assert
+.L_800E9FF0:
+/* 800E9FF0 000E6DF0  FC 20 F8 90 */	fmr f1, f31
+/* 800E9FF4 000E6DF4  7F C3 F3 78 */	mr r3, r30
+/* 800E9FF8 000E6DF8  7F E4 FB 78 */	mr r4, r31
+/* 800E9FFC 000E6DFC  4B F7 3B 9D */	bl kar_lbaudio_set_track_mode_linked_target
+.L_800EA000:
+/* 800EA000 000E6E00  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 800EA004 000E6E04  CB E1 00 18 */	lfd f31, 0x18(r1)
+/* 800EA008 000E6E08  83 E1 00 14 */	lwz r31, 0x14(r1)
+/* 800EA00C 000E6E0C  83 C1 00 10 */	lwz r30, 0x10(r1)
+/* 800EA010 000E6E10  7C 08 03 A6 */	mtlr r0
+/* 800EA014 000E6E14  38 21 00 20 */	addi r1, r1, 0x20
+/* 800EA018 000E6E18  4E 80 00 20 */	blr
+.endfn kar_graudio_configure_fgm_track_mode
+
+# .text:0x5B4 | 0x800EA01C | size: 0x24
+.fn kar_graudio_mark_fgm_track_started, global
+/* 800EA01C 000E6E1C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA020 000E6E20  7C 08 02 A6 */	mflr r0
+/* 800EA024 000E6E24  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA028 000E6E28  80 63 00 08 */	lwz r3, 0x8(r3)
+/* 800EA02C 000E6E2C  4B F7 36 21 */	bl kar_lbaudio_mark_auto_track_started
+/* 800EA030 000E6E30  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA034 000E6E34  7C 08 03 A6 */	mtlr r0
+/* 800EA038 000E6E38  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA03C 000E6E3C  4E 80 00 20 */	blr
+.endfn kar_graudio_mark_fgm_track_started
+
+# .text:0x5D8 | 0x800EA040 | size: 0x24
+.fn kar_graudio_release_fgm_entry_track_group, global
+/* 800EA040 000E6E40  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA044 000E6E44  7C 08 02 A6 */	mflr r0
+/* 800EA048 000E6E48  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA04C 000E6E4C  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 800EA050 000E6E50  4B F7 40 3D */	bl kar_lbaudio_release_track_handle_when_idle
+/* 800EA054 000E6E54  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA058 000E6E58  7C 08 03 A6 */	mtlr r0
+/* 800EA05C 000E6E5C  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA060 000E6E60  4E 80 00 20 */	blr
+.endfn kar_graudio_release_fgm_entry_track_group
+
+# .text:0x5FC | 0x800EA064 | size: 0x20
+.fn kar_graudio_release_fgm_track_group_handle, global
+/* 800EA064 000E6E64  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA068 000E6E68  7C 08 02 A6 */	mflr r0
+/* 800EA06C 000E6E6C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA070 000E6E70  4B F7 40 1D */	bl kar_lbaudio_release_track_handle_when_idle
+/* 800EA074 000E6E74  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA078 000E6E78  7C 08 03 A6 */	mtlr r0
+/* 800EA07C 000E6E7C  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA080 000E6E80  4E 80 00 20 */	blr
+.endfn kar_graudio_release_fgm_track_group_handle
+
+# .text:0x61C | 0x800EA084 | size: 0xB8
+.fn kar_graudio_play_fgm_entry_id, global
+/* 800EA084 000E6E84  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA088 000E6E88  7C 08 02 A6 */	mflr r0
+/* 800EA08C 000E6E8C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA090 000E6E90  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800EA094 000E6E94  7C 9F 23 79 */	mr. r31, r4
+/* 800EA098 000E6E98  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 800EA09C 000E6E9C  7C 7E 1B 78 */	mr r30, r3
+/* 800EA0A0 000E6EA0  38 60 00 00 */	li r3, 0x0
+/* 800EA0A4 000E6EA4  41 80 00 14 */	blt .L_800EA0B8
+/* 800EA0A8 000E6EA8  80 1E 00 04 */	lwz r0, 0x4(r30)
+/* 800EA0AC 000E6EAC  7C 1F 00 00 */	cmpw r31, r0
+/* 800EA0B0 000E6EB0  40 80 00 08 */	bge .L_800EA0B8
+/* 800EA0B4 000E6EB4  38 60 00 01 */	li r3, 0x1
+.L_800EA0B8:
+/* 800EA0B8 000E6EB8  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800EA0BC 000E6EBC  40 82 00 1C */	bne .L_800EA0D8
+/* 800EA0C0 000E6EC0  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA0C4 000E6EC4  3C A0 80 4A */	lis r5, lbl_804A5174@ha
+/* 800EA0C8 000E6EC8  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA0CC 000E6ECC  38 80 01 2C */	li r4, 0x12c
+/* 800EA0D0 000E6ED0  38 A5 51 74 */	addi r5, r5, lbl_804A5174@l
+/* 800EA0D4 000E6ED4  48 33 E3 E5 */	bl __assert
+.L_800EA0D8:
+/* 800EA0D8 000E6ED8  80 7E 00 00 */	lwz r3, 0x0(r30)
+/* 800EA0DC 000E6EDC  57 E0 18 38 */	slwi r0, r31, 3
+/* 800EA0E0 000E6EE0  7C 63 02 14 */	add r3, r3, r0
+/* 800EA0E4 000E6EE4  88 03 00 04 */	lbz r0, 0x4(r3)
+/* 800EA0E8 000E6EE8  54 00 C0 02 */	extlwi r0, r0, 2, 24
+/* 800EA0EC 000E6EEC  7C 00 FE 70 */	srawi r0, r0, 31
+/* 800EA0F0 000E6EF0  7C 00 07 75 */	extsb. r0, r0
+/* 800EA0F4 000E6EF4  41 82 00 1C */	beq .L_800EA110
+/* 800EA0F8 000E6EF8  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA0FC 000E6EFC  80 9E 00 08 */	lwz r4, 0x8(r30)
+/* 800EA100 000E6F00  80 BE 00 0C */	lwz r5, 0xc(r30)
+/* 800EA104 000E6F04  4B F7 52 E5 */	bl kar_lbaudio_add_suspend_slot
+/* 800EA108 000E6F08  90 7E 00 10 */	stw r3, 0x10(r30)
+/* 800EA10C 000E6F0C  48 00 00 18 */	b .L_800EA124
+.L_800EA110:
+/* 800EA110 000E6F10  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA114 000E6F14  80 9E 00 08 */	lwz r4, 0x8(r30)
+/* 800EA118 000E6F18  80 BE 00 0C */	lwz r5, 0xc(r30)
+/* 800EA11C 000E6F1C  4B F7 54 0D */	bl kar_lbaudio_start_track_if_ready
+/* 800EA120 000E6F20  90 7E 00 10 */	stw r3, 0x10(r30)
+.L_800EA124:
+/* 800EA124 000E6F24  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA128 000E6F28  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800EA12C 000E6F2C  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 800EA130 000E6F30  7C 08 03 A6 */	mtlr r0
+/* 800EA134 000E6F34  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA138 000E6F38  4E 80 00 20 */	blr
+.endfn kar_graudio_play_fgm_entry_id
+
+# .text:0x6D4 | 0x800EA13C | size: 0x44
+.fn kar_graudio_start_fgm_slot_core, global
+/* 800EA13C 000E6F3C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA140 000E6F40  7C 08 02 A6 */	mflr r0
+/* 800EA144 000E6F44  2C 06 00 00 */	cmpwi r6, 0x0
+/* 800EA148 000E6F48  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA14C 000E6F4C  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800EA150 000E6F50  7C FF 3B 78 */	mr r31, r7
+/* 800EA154 000E6F54  41 82 00 10 */	beq .L_800EA164
+/* 800EA158 000E6F58  4B F7 52 91 */	bl kar_lbaudio_add_suspend_slot
+/* 800EA15C 000E6F5C  90 7F 00 00 */	stw r3, 0x0(r31)
+/* 800EA160 000E6F60  48 00 00 0C */	b .L_800EA16C
+.L_800EA164:
+/* 800EA164 000E6F64  4B F7 53 C5 */	bl kar_lbaudio_start_track_if_ready
+/* 800EA168 000E6F68  90 7F 00 00 */	stw r3, 0x0(r31)
+.L_800EA16C:
+/* 800EA16C 000E6F6C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA170 000E6F70  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800EA174 000E6F74  7C 08 03 A6 */	mtlr r0
+/* 800EA178 000E6F78  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA17C 000E6F7C  4E 80 00 20 */	blr
+.endfn kar_graudio_start_fgm_slot_core
+
+# .text:0x718 | 0x800EA180 | size: 0x50
+.fn kar_graudio_stop_active_fgm_slot, global
+/* 800EA180 000E6F80  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA184 000E6F84  7C 08 02 A6 */	mflr r0
+/* 800EA188 000E6F88  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA18C 000E6F8C  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800EA190 000E6F90  7C 7F 1B 78 */	mr r31, r3
+/* 800EA194 000E6F94  80 63 00 10 */	lwz r3, 0x10(r3)
+/* 800EA198 000E6F98  4B F7 3F 71 */	bl kar_lbaudio_is_track_handle_playing
+/* 800EA19C 000E6F9C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800EA1A0 000E6FA0  41 82 00 18 */	beq .L_800EA1B8
+/* 800EA1A4 000E6FA4  80 7F 00 10 */	lwz r3, 0x10(r31)
+/* 800EA1A8 000E6FA8  4B F7 46 31 */	bl kar_lbaudio_stop_track_handle_chain
+/* 800EA1AC 000E6FAC  38 00 00 00 */	li r0, 0x0
+/* 800EA1B0 000E6FB0  90 1F 00 10 */	stw r0, 0x10(r31)
+/* 800EA1B4 000E6FB4  48 00 00 08 */	b .L_800EA1BC
+.L_800EA1B8:
+/* 800EA1B8 000E6FB8  38 60 00 01 */	li r3, 0x1
+.L_800EA1BC:
+/* 800EA1BC 000E6FBC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA1C0 000E6FC0  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800EA1C4 000E6FC4  7C 08 03 A6 */	mtlr r0
+/* 800EA1C8 000E6FC8  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA1CC 000E6FCC  4E 80 00 20 */	blr
+.endfn kar_graudio_stop_active_fgm_slot
+
+# .text:0x768 | 0x800EA1D0 | size: 0x24
+.fn kar_graudio_is_active_fgm_slot_playing, global
+/* 800EA1D0 000E6FD0  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA1D4 000E6FD4  7C 08 02 A6 */	mflr r0
+/* 800EA1D8 000E6FD8  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA1DC 000E6FDC  80 63 00 10 */	lwz r3, 0x10(r3)
+/* 800EA1E0 000E6FE0  4B F7 3F 29 */	bl kar_lbaudio_is_track_handle_playing
+/* 800EA1E4 000E6FE4  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA1E8 000E6FE8  7C 08 03 A6 */	mtlr r0
+/* 800EA1EC 000E6FEC  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA1F0 000E6FF0  4E 80 00 20 */	blr
+.endfn kar_graudio_is_active_fgm_slot_playing
+
+# .text:0x78C | 0x800EA1F4 | size: 0x1F4
+.fn kar_graudio_play_map_fgm_for_rider, global
+/* 800EA1F4 000E6FF4  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 800EA1F8 000E6FF8  7C 08 02 A6 */	mflr r0
+/* 800EA1FC 000E6FFC  90 01 00 34 */	stw r0, 0x34(r1)
+/* 800EA200 000E7000  DB E1 00 20 */	stfd f31, 0x20(r1)
+/* 800EA204 000E7004  F3 E1 00 28 */	psq_st f31, 0x28(r1), 0, qr0
+/* 800EA208 000E7008  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 800EA20C 000E700C  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 800EA210 000E7010  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 800EA214 000E7014  93 81 00 10 */	stw r28, 0x10(r1)
+/* 800EA218 000E7018  81 03 00 08 */	lwz r8, 0x8(r3)
+/* 800EA21C 000E701C  1D 25 00 14 */	mulli r9, r5, 0x14
+/* 800EA220 000E7020  54 A0 10 3A */	slwi r0, r5, 2
+/* 800EA224 000E7024  80 A8 00 3C */	lwz r5, 0x3c(r8)
+/* 800EA228 000E7028  7C DE 33 78 */	mr r30, r6
+/* 800EA22C 000E702C  7F E3 4A 14 */	add r31, r3, r9
+/* 800EA230 000E7030  80 A5 00 08 */	lwz r5, 0x8(r5)
+/* 800EA234 000E7034  7C C5 00 2E */	lwzx r6, r5, r0
+/* 800EA238 000E7038  83 86 00 14 */	lwz r28, 0x14(r6)
+/* 800EA23C 000E703C  28 1C 00 00 */	cmplwi r28, 0x0
+/* 800EA240 000E7040  41 82 00 A0 */	beq .L_800EA2E0
+/* 800EA244 000E7044  80 06 00 0C */	lwz r0, 0xc(r6)
+/* 800EA248 000E7048  C3 E6 00 10 */	lfs f31, 0x10(r6)
+/* 800EA24C 000E704C  2C 00 00 01 */	cmpwi r0, 0x1
+/* 800EA250 000E7050  83 BF 05 60 */	lwz r29, 0x560(r31)
+/* 800EA254 000E7054  41 82 00 2C */	beq .L_800EA280
+/* 800EA258 000E7058  40 80 00 10 */	bge .L_800EA268
+/* 800EA25C 000E705C  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800EA260 000E7060  40 80 00 14 */	bge .L_800EA274
+/* 800EA264 000E7064  48 00 00 D4 */	b .L_800EA338
+.L_800EA268:
+/* 800EA268 000E7068  2C 00 00 03 */	cmpwi r0, 0x3
+/* 800EA26C 000E706C  40 80 00 CC */	bge .L_800EA338
+/* 800EA270 000E7070  48 00 00 40 */	b .L_800EA2B0
+.L_800EA274:
+/* 800EA274 000E7074  7F A3 EB 78 */	mr r3, r29
+/* 800EA278 000E7078  4B F7 38 A9 */	bl kar_lbaudio_set_track_mode_single
+/* 800EA27C 000E707C  48 00 00 BC */	b .L_800EA338
+.L_800EA280:
+/* 800EA280 000E7080  28 1C 00 00 */	cmplwi r28, 0x0
+/* 800EA284 000E7084  40 82 00 18 */	bne .L_800EA29C
+/* 800EA288 000E7088  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA28C 000E708C  38 80 00 FC */	li r4, 0xfc
+/* 800EA290 000E7090  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA294 000E7094  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA298 000E7098  48 33 E2 21 */	bl __assert
+.L_800EA29C:
+/* 800EA29C 000E709C  FC 20 F8 90 */	fmr f1, f31
+/* 800EA2A0 000E70A0  7F A3 EB 78 */	mr r3, r29
+/* 800EA2A4 000E70A4  7F 84 E3 78 */	mr r4, r28
+/* 800EA2A8 000E70A8  4B F7 38 9D */	bl kar_lbaudio_set_track_mode_fixed_position
+/* 800EA2AC 000E70AC  48 00 00 8C */	b .L_800EA338
+.L_800EA2B0:
+/* 800EA2B0 000E70B0  28 1C 00 00 */	cmplwi r28, 0x0
+/* 800EA2B4 000E70B4  40 82 00 18 */	bne .L_800EA2CC
+/* 800EA2B8 000E70B8  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA2BC 000E70BC  38 80 01 01 */	li r4, 0x101
+/* 800EA2C0 000E70C0  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA2C4 000E70C4  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA2C8 000E70C8  48 33 E1 F1 */	bl __assert
+.L_800EA2CC:
+/* 800EA2CC 000E70CC  FC 20 F8 90 */	fmr f1, f31
+/* 800EA2D0 000E70D0  7F A3 EB 78 */	mr r3, r29
+/* 800EA2D4 000E70D4  7F 84 E3 78 */	mr r4, r28
+/* 800EA2D8 000E70D8  4B F7 38 C1 */	bl kar_lbaudio_set_track_mode_linked_target
+/* 800EA2DC 000E70DC  48 00 00 5C */	b .L_800EA338
+.L_800EA2E0:
+/* 800EA2E0 000E70E0  28 07 00 00 */	cmplwi r7, 0x0
+/* 800EA2E4 000E70E4  80 AD 05 EC */	lwz r5, lbl_805DD6CC@sda21(r0)
+/* 800EA2E8 000E70E8  41 82 00 0C */	beq .L_800EA2F4
+/* 800EA2EC 000E70EC  7C FC 3B 78 */	mr r28, r7
+/* 800EA2F0 000E70F0  48 00 00 14 */	b .L_800EA304
+.L_800EA2F4:
+/* 800EA2F4 000E70F4  1C 64 01 40 */	mulli r3, r4, 0x140
+/* 800EA2F8 000E70F8  80 05 00 74 */	lwz r0, 0x74(r5)
+/* 800EA2FC 000E70FC  3B 83 01 1C */	addi r28, r3, 0x11c
+/* 800EA300 000E7100  7F 80 E2 14 */	add r28, r0, r28
+.L_800EA304:
+/* 800EA304 000E7104  28 1C 00 00 */	cmplwi r28, 0x0
+/* 800EA308 000E7108  C3 E6 00 10 */	lfs f31, 0x10(r6)
+/* 800EA30C 000E710C  83 BF 05 60 */	lwz r29, 0x560(r31)
+/* 800EA310 000E7110  40 82 00 18 */	bne .L_800EA328
+/* 800EA314 000E7114  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA318 000E7118  38 80 00 FC */	li r4, 0xfc
+/* 800EA31C 000E711C  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA320 000E7120  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA324 000E7124  48 33 E1 95 */	bl __assert
+.L_800EA328:
+/* 800EA328 000E7128  FC 20 F8 90 */	fmr f1, f31
+/* 800EA32C 000E712C  7F A3 EB 78 */	mr r3, r29
+/* 800EA330 000E7130  7F 84 E3 78 */	mr r4, r28
+/* 800EA334 000E7134  4B F7 38 11 */	bl kar_lbaudio_set_track_mode_fixed_position
+.L_800EA338:
+/* 800EA338 000E7138  2C 1E 00 00 */	cmpwi r30, 0x0
+/* 800EA33C 000E713C  38 60 00 00 */	li r3, 0x0
+/* 800EA340 000E7140  41 80 00 14 */	blt .L_800EA354
+/* 800EA344 000E7144  80 1F 05 58 */	lwz r0, 0x558(r31)
+/* 800EA348 000E7148  7C 1E 00 00 */	cmpw r30, r0
+/* 800EA34C 000E714C  40 80 00 08 */	bge .L_800EA354
+/* 800EA350 000E7150  38 60 00 01 */	li r3, 0x1
+.L_800EA354:
+/* 800EA354 000E7154  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800EA358 000E7158  40 82 00 1C */	bne .L_800EA374
+/* 800EA35C 000E715C  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA360 000E7160  3C A0 80 4A */	lis r5, lbl_804A5174@ha
+/* 800EA364 000E7164  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA368 000E7168  38 80 01 2C */	li r4, 0x12c
+/* 800EA36C 000E716C  38 A5 51 74 */	addi r5, r5, lbl_804A5174@l
+/* 800EA370 000E7170  48 33 E1 49 */	bl __assert
+.L_800EA374:
+/* 800EA374 000E7174  80 7F 05 54 */	lwz r3, 0x554(r31)
+/* 800EA378 000E7178  57 C0 18 38 */	slwi r0, r30, 3
+/* 800EA37C 000E717C  7C 63 02 14 */	add r3, r3, r0
+/* 800EA380 000E7180  88 03 00 04 */	lbz r0, 0x4(r3)
+/* 800EA384 000E7184  54 00 C0 02 */	extlwi r0, r0, 2, 24
+/* 800EA388 000E7188  7C 00 FE 70 */	srawi r0, r0, 31
+/* 800EA38C 000E718C  7C 00 07 75 */	extsb. r0, r0
+/* 800EA390 000E7190  41 82 00 1C */	beq .L_800EA3AC
+/* 800EA394 000E7194  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA398 000E7198  80 9F 05 5C */	lwz r4, 0x55c(r31)
+/* 800EA39C 000E719C  80 BF 05 60 */	lwz r5, 0x560(r31)
+/* 800EA3A0 000E71A0  4B F7 50 49 */	bl kar_lbaudio_add_suspend_slot
+/* 800EA3A4 000E71A4  90 7F 05 64 */	stw r3, 0x564(r31)
+/* 800EA3A8 000E71A8  48 00 00 18 */	b .L_800EA3C0
+.L_800EA3AC:
+/* 800EA3AC 000E71AC  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA3B0 000E71B0  80 9F 05 5C */	lwz r4, 0x55c(r31)
+/* 800EA3B4 000E71B4  80 BF 05 60 */	lwz r5, 0x560(r31)
+/* 800EA3B8 000E71B8  4B F7 51 71 */	bl kar_lbaudio_start_track_if_ready
+/* 800EA3BC 000E71BC  90 7F 05 64 */	stw r3, 0x564(r31)
+.L_800EA3C0:
+/* 800EA3C0 000E71C0  E3 E1 00 28 */	psq_l f31, 0x28(r1), 0, qr0
+/* 800EA3C4 000E71C4  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 800EA3C8 000E71C8  CB E1 00 20 */	lfd f31, 0x20(r1)
+/* 800EA3CC 000E71CC  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 800EA3D0 000E71D0  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 800EA3D4 000E71D4  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 800EA3D8 000E71D8  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 800EA3DC 000E71DC  7C 08 03 A6 */	mtlr r0
+/* 800EA3E0 000E71E0  38 21 00 30 */	addi r1, r1, 0x30
+/* 800EA3E4 000E71E4  4E 80 00 20 */	blr
+.endfn kar_graudio_play_map_fgm_for_rider
+
+# .text:0x980 | 0x800EA3E8 | size: 0x180
+.fn kar_graudio_configure_individual_fgm_tracks, global
+/* 800EA3E8 000E71E8  94 21 FF B0 */	stwu r1, -0x50(r1)
+/* 800EA3EC 000E71EC  7C 08 02 A6 */	mflr r0
+/* 800EA3F0 000E71F0  90 01 00 54 */	stw r0, 0x54(r1)
+/* 800EA3F4 000E71F4  DB E1 00 40 */	stfd f31, 0x40(r1)
+/* 800EA3F8 000E71F8  F3 E1 00 48 */	psq_st f31, 0x48(r1), 0, qr0
+/* 800EA3FC 000E71FC  39 61 00 40 */	addi r11, r1, 0x40
+/* 800EA400 000E7200  48 2C 37 4D */	bl _savegpr_25
+/* 800EA404 000E7204  7C 9D 23 79 */	mr. r29, r4
+/* 800EA408 000E7208  7C 7C 1B 78 */	mr r28, r3
+/* 800EA40C 000E720C  41 82 01 3C */	beq .L_800EA548
+/* 800EA410 000E7210  3B C0 00 00 */	li r30, 0x0
+/* 800EA414 000E7214  3B E0 00 00 */	li r31, 0x0
+/* 800EA418 000E7218  48 00 01 24 */	b .L_800EA53C
+.L_800EA41C:
+/* 800EA41C 000E721C  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 800EA420 000E7220  80 7C 00 08 */	lwz r3, 0x8(r28)
+/* 800EA424 000E7224  7C A0 FA 14 */	add r5, r0, r31
+/* 800EA428 000E7228  80 05 00 00 */	lwz r0, 0x0(r5)
+/* 800EA42C 000E722C  80 83 00 3C */	lwz r4, 0x3c(r3)
+/* 800EA430 000E7230  80 65 00 04 */	lwz r3, 0x4(r5)
+/* 800EA434 000E7234  1C A0 00 14 */	mulli r5, r0, 0x14
+/* 800EA438 000E7238  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 800EA43C 000E723C  54 00 10 3A */	slwi r0, r0, 2
+/* 800EA440 000E7240  2C 03 FF FF */	cmpwi r3, -0x1
+/* 800EA444 000E7244  7F 24 00 2E */	lwzx r25, r4, r0
+/* 800EA448 000E7248  7F 7C 2A 14 */	add r27, r28, r5
+/* 800EA44C 000E724C  41 82 00 44 */	beq .L_800EA490
+/* 800EA450 000E7250  38 81 00 08 */	addi r4, r1, 0x8
+/* 800EA454 000E7254  4B FE A7 A1 */	bl kar_grcommon__near_800d4bf4
+/* 800EA458 000E7258  34 01 00 08 */	addic. r0, r1, 0x8
+/* 800EA45C 000E725C  C3 F9 00 10 */	lfs f31, 0x10(r25)
+/* 800EA460 000E7260  83 7B 04 6C */	lwz r27, 0x46c(r27)
+/* 800EA464 000E7264  40 82 00 18 */	bne .L_800EA47C
+/* 800EA468 000E7268  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA46C 000E726C  38 80 00 FC */	li r4, 0xfc
+/* 800EA470 000E7270  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA474 000E7274  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA478 000E7278  48 33 E0 41 */	bl __assert
+.L_800EA47C:
+/* 800EA47C 000E727C  FC 20 F8 90 */	fmr f1, f31
+/* 800EA480 000E7280  7F 63 DB 78 */	mr r3, r27
+/* 800EA484 000E7284  38 81 00 08 */	addi r4, r1, 0x8
+/* 800EA488 000E7288  4B F7 36 BD */	bl kar_lbaudio_set_track_mode_fixed_position
+/* 800EA48C 000E728C  48 00 00 A8 */	b .L_800EA534
+.L_800EA490:
+/* 800EA490 000E7290  83 59 00 14 */	lwz r26, 0x14(r25)
+/* 800EA494 000E7294  28 1A 00 00 */	cmplwi r26, 0x0
+/* 800EA498 000E7298  41 82 00 9C */	beq .L_800EA534
+/* 800EA49C 000E729C  80 19 00 0C */	lwz r0, 0xc(r25)
+/* 800EA4A0 000E72A0  C3 F9 00 10 */	lfs f31, 0x10(r25)
+/* 800EA4A4 000E72A4  2C 00 00 01 */	cmpwi r0, 0x1
+/* 800EA4A8 000E72A8  83 7B 04 6C */	lwz r27, 0x46c(r27)
+/* 800EA4AC 000E72AC  41 82 00 2C */	beq .L_800EA4D8
+/* 800EA4B0 000E72B0  40 80 00 10 */	bge .L_800EA4C0
+/* 800EA4B4 000E72B4  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800EA4B8 000E72B8  40 80 00 14 */	bge .L_800EA4CC
+/* 800EA4BC 000E72BC  48 00 00 78 */	b .L_800EA534
+.L_800EA4C0:
+/* 800EA4C0 000E72C0  2C 00 00 03 */	cmpwi r0, 0x3
+/* 800EA4C4 000E72C4  40 80 00 70 */	bge .L_800EA534
+/* 800EA4C8 000E72C8  48 00 00 40 */	b .L_800EA508
+.L_800EA4CC:
+/* 800EA4CC 000E72CC  7F 63 DB 78 */	mr r3, r27
+/* 800EA4D0 000E72D0  4B F7 36 51 */	bl kar_lbaudio_set_track_mode_single
+/* 800EA4D4 000E72D4  48 00 00 60 */	b .L_800EA534
+.L_800EA4D8:
+/* 800EA4D8 000E72D8  28 1A 00 00 */	cmplwi r26, 0x0
+/* 800EA4DC 000E72DC  40 82 00 18 */	bne .L_800EA4F4
+/* 800EA4E0 000E72E0  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA4E4 000E72E4  38 80 00 FC */	li r4, 0xfc
+/* 800EA4E8 000E72E8  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA4EC 000E72EC  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA4F0 000E72F0  48 33 DF C9 */	bl __assert
+.L_800EA4F4:
+/* 800EA4F4 000E72F4  FC 20 F8 90 */	fmr f1, f31
+/* 800EA4F8 000E72F8  7F 63 DB 78 */	mr r3, r27
+/* 800EA4FC 000E72FC  7F 44 D3 78 */	mr r4, r26
+/* 800EA500 000E7300  4B F7 36 45 */	bl kar_lbaudio_set_track_mode_fixed_position
+/* 800EA504 000E7304  48 00 00 30 */	b .L_800EA534
+.L_800EA508:
+/* 800EA508 000E7308  28 1A 00 00 */	cmplwi r26, 0x0
+/* 800EA50C 000E730C  40 82 00 18 */	bne .L_800EA524
+/* 800EA510 000E7310  3C 60 80 4A */	lis r3, kar_src_graudio_804a50c8@ha
+/* 800EA514 000E7314  38 80 01 01 */	li r4, 0x101
+/* 800EA518 000E7318  38 63 50 C8 */	addi r3, r3, kar_src_graudio_804a50c8@l
+/* 800EA51C 000E731C  38 AD 90 8C */	li r5, lbl_805D616C@sda21
+/* 800EA520 000E7320  48 33 DF 99 */	bl __assert
+.L_800EA524:
+/* 800EA524 000E7324  FC 20 F8 90 */	fmr f1, f31
+/* 800EA528 000E7328  7F 63 DB 78 */	mr r3, r27
+/* 800EA52C 000E732C  7F 44 D3 78 */	mr r4, r26
+/* 800EA530 000E7330  4B F7 36 69 */	bl kar_lbaudio_set_track_mode_linked_target
+.L_800EA534:
+/* 800EA534 000E7334  3B FF 00 10 */	addi r31, r31, 0x10
+/* 800EA538 000E7338  3B DE 00 01 */	addi r30, r30, 0x1
+.L_800EA53C:
+/* 800EA53C 000E733C  80 1D 00 04 */	lwz r0, 0x4(r29)
+/* 800EA540 000E7340  7C 1E 00 00 */	cmpw r30, r0
+/* 800EA544 000E7344  41 80 FE D8 */	blt .L_800EA41C
+.L_800EA548:
+/* 800EA548 000E7348  E3 E1 00 48 */	psq_l f31, 0x48(r1), 0, qr0
+/* 800EA54C 000E734C  39 61 00 40 */	addi r11, r1, 0x40
+/* 800EA550 000E7350  CB E1 00 40 */	lfd f31, 0x40(r1)
+/* 800EA554 000E7354  48 2C 36 45 */	bl _restgpr_25
+/* 800EA558 000E7358  80 01 00 54 */	lwz r0, 0x54(r1)
+/* 800EA55C 000E735C  7C 08 03 A6 */	mtlr r0
+/* 800EA560 000E7360  38 21 00 50 */	addi r1, r1, 0x50
+/* 800EA564 000E7364  4E 80 00 20 */	blr
+.endfn kar_graudio_configure_individual_fgm_tracks
+
+# .text:0xB00 | 0x800EA568 | size: 0x150
+.fn kar_graudio_update_individual_fgm_timers, global
+/* 800EA568 000E7368  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 800EA56C 000E736C  7C 08 02 A6 */	mflr r0
+/* 800EA570 000E7370  90 01 00 34 */	stw r0, 0x34(r1)
+/* 800EA574 000E7374  39 61 00 30 */	addi r11, r1, 0x30
+/* 800EA578 000E7378  48 2C 35 CD */	bl _savegpr_23
+/* 800EA57C 000E737C  7C 9A 23 79 */	mr. r26, r4
+/* 800EA580 000E7380  3C 80 80 4A */	lis r4, kar_src_graudio_804a50c8@ha
+/* 800EA584 000E7384  7C 79 1B 78 */	mr r25, r3
+/* 800EA588 000E7388  7C B7 2B 78 */	mr r23, r5
+/* 800EA58C 000E738C  3B E4 50 C8 */	addi r31, r4, kar_src_graudio_804a50c8@l
+/* 800EA590 000E7390  41 82 01 10 */	beq .L_800EA6A0
+/* 800EA594 000E7394  80 1A 00 04 */	lwz r0, 0x4(r26)
+/* 800EA598 000E7398  7C 00 30 00 */	cmpw r0, r6
+/* 800EA59C 000E739C  40 81 00 14 */	ble .L_800EA5B0
+/* 800EA5A0 000E73A0  38 7F 00 00 */	addi r3, r31, 0x0
+/* 800EA5A4 000E73A4  38 BF 00 D4 */	addi r5, r31, 0xd4
+/* 800EA5A8 000E73A8  38 80 01 AF */	li r4, 0x1af
+/* 800EA5AC 000E73AC  48 33 DF 0D */	bl __assert
+.L_800EA5B0:
+/* 800EA5B0 000E73B0  7E FE BB 78 */	mr r30, r23
+/* 800EA5B4 000E73B4  7F 3D CB 78 */	mr r29, r25
+/* 800EA5B8 000E73B8  3B 60 00 00 */	li r27, 0x0
+/* 800EA5BC 000E73BC  3B 80 00 00 */	li r28, 0x0
+/* 800EA5C0 000E73C0  48 00 00 D4 */	b .L_800EA694
+.L_800EA5C4:
+/* 800EA5C4 000E73C4  80 7E 00 00 */	lwz r3, 0x0(r30)
+/* 800EA5C8 000E73C8  38 03 FF FF */	subi r0, r3, 0x1
+/* 800EA5CC 000E73CC  90 1E 00 00 */	stw r0, 0x0(r30)
+/* 800EA5D0 000E73D0  80 1D 07 28 */	lwz r0, 0x728(r29)
+/* 800EA5D4 000E73D4  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800EA5D8 000E73D8  41 81 00 AC */	bgt .L_800EA684
+/* 800EA5DC 000E73DC  80 7A 00 00 */	lwz r3, 0x0(r26)
+/* 800EA5E0 000E73E0  7C 03 E0 2E */	lwzx r0, r3, r28
+/* 800EA5E4 000E73E4  1C 00 00 14 */	mulli r0, r0, 0x14
+/* 800EA5E8 000E73E8  7E F9 02 14 */	add r23, r25, r0
+/* 800EA5EC 000E73EC  80 77 04 64 */	lwz r3, 0x464(r23)
+/* 800EA5F0 000E73F0  48 33 40 79 */	bl HSD_Randi
+/* 800EA5F4 000E73F4  7C 78 1B 79 */	mr. r24, r3
+/* 800EA5F8 000E73F8  38 60 00 00 */	li r3, 0x0
+/* 800EA5FC 000E73FC  41 80 00 14 */	blt .L_800EA610
+/* 800EA600 000E7400  80 17 04 64 */	lwz r0, 0x464(r23)
+/* 800EA604 000E7404  7C 18 00 00 */	cmpw r24, r0
+/* 800EA608 000E7408  40 80 00 08 */	bge .L_800EA610
+/* 800EA60C 000E740C  38 60 00 01 */	li r3, 0x1
+.L_800EA610:
+/* 800EA610 000E7410  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800EA614 000E7414  40 82 00 14 */	bne .L_800EA628
+/* 800EA618 000E7418  38 7F 00 00 */	addi r3, r31, 0x0
+/* 800EA61C 000E741C  38 BF 00 AC */	addi r5, r31, 0xac
+/* 800EA620 000E7420  38 80 01 2C */	li r4, 0x12c
+/* 800EA624 000E7424  48 33 DE 95 */	bl __assert
+.L_800EA628:
+/* 800EA628 000E7428  80 77 04 60 */	lwz r3, 0x460(r23)
+/* 800EA62C 000E742C  57 00 18 38 */	slwi r0, r24, 3
+/* 800EA630 000E7430  7C 63 02 14 */	add r3, r3, r0
+/* 800EA634 000E7434  88 03 00 04 */	lbz r0, 0x4(r3)
+/* 800EA638 000E7438  54 00 C0 02 */	extlwi r0, r0, 2, 24
+/* 800EA63C 000E743C  7C 00 FE 70 */	srawi r0, r0, 31
+/* 800EA640 000E7440  7C 00 07 75 */	extsb. r0, r0
+/* 800EA644 000E7444  41 82 00 1C */	beq .L_800EA660
+/* 800EA648 000E7448  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA64C 000E744C  80 97 04 68 */	lwz r4, 0x468(r23)
+/* 800EA650 000E7450  80 B7 04 6C */	lwz r5, 0x46c(r23)
+/* 800EA654 000E7454  4B F7 4D 95 */	bl kar_lbaudio_add_suspend_slot
+/* 800EA658 000E7458  90 77 04 70 */	stw r3, 0x470(r23)
+/* 800EA65C 000E745C  48 00 00 18 */	b .L_800EA674
+.L_800EA660:
+/* 800EA660 000E7460  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 800EA664 000E7464  80 97 04 68 */	lwz r4, 0x468(r23)
+/* 800EA668 000E7468  80 B7 04 6C */	lwz r5, 0x46c(r23)
+/* 800EA66C 000E746C  4B F7 4E BD */	bl kar_lbaudio_start_track_if_ready
+/* 800EA670 000E7470  90 77 04 70 */	stw r3, 0x470(r23)
+.L_800EA674:
+/* 800EA674 000E7474  80 7A 00 00 */	lwz r3, 0x0(r26)
+/* 800EA678 000E7478  38 1C 00 0C */	addi r0, r28, 0xc
+/* 800EA67C 000E747C  7C 03 00 2E */	lwzx r0, r3, r0
+/* 800EA680 000E7480  90 1E 00 00 */	stw r0, 0x0(r30)
+.L_800EA684:
+/* 800EA684 000E7484  3B DE 00 04 */	addi r30, r30, 0x4
+/* 800EA688 000E7488  3B BD 00 04 */	addi r29, r29, 0x4
+/* 800EA68C 000E748C  3B 9C 00 10 */	addi r28, r28, 0x10
+/* 800EA690 000E7490  3B 7B 00 01 */	addi r27, r27, 0x1
+.L_800EA694:
+/* 800EA694 000E7494  80 1A 00 04 */	lwz r0, 0x4(r26)
+/* 800EA698 000E7498  7C 1B 00 00 */	cmpw r27, r0
+/* 800EA69C 000E749C  41 80 FF 28 */	blt .L_800EA5C4
+.L_800EA6A0:
+/* 800EA6A0 000E74A0  39 61 00 30 */	addi r11, r1, 0x30
+/* 800EA6A4 000E74A4  48 2C 34 ED */	bl _restgpr_23
+/* 800EA6A8 000E74A8  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 800EA6AC 000E74AC  7C 08 03 A6 */	mtlr r0
+/* 800EA6B0 000E74B0  38 21 00 30 */	addi r1, r1, 0x30
+/* 800EA6B4 000E74B4  4E 80 00 20 */	blr
+.endfn kar_graudio_update_individual_fgm_timers
+
+# .text:0xC50 | 0x800EA6B8 | size: 0x28
+.fn kar_graudio__near_800ea6b8, global
+/* 800EA6B8 000E74B8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800EA6BC 000E74BC  7C 08 02 A6 */	mflr r0
+/* 800EA6C0 000E74C0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800EA6C4 000E74C4  80 63 00 2C */	lwz r3, 0x2c(r3)
+/* 800EA6C8 000E74C8  80 63 00 04 */	lwz r3, 0x4(r3)
+/* 800EA6CC 000E74CC  48 14 92 F9 */	bl kar_pltrick__near_802339c4
+/* 800EA6D0 000E74D0  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800EA6D4 000E74D4  7C 08 03 A6 */	mtlr r0
+/* 800EA6D8 000E74D8  38 21 00 10 */	addi r1, r1, 0x10
+/* 800EA6DC 000E74DC  4E 80 00 20 */	blr
+.endfn kar_graudio__near_800ea6b8

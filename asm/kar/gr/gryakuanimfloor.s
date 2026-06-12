@@ -1,0 +1,1325 @@
+.include "macros.inc"
+.file "gryakuanimfloor.c"
+
+# 0x80102C78..0x80103EB8 | size: 0x1240
+.text
+.balign 4
+
+# .text:0x0 | 0x80102C78 | size: 0x118
+.fn kar_gryakuanimfloor_init_kind54_linked_zone_floor, global
+/* 80102C78 000FFA78  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80102C7C 000FFA7C  7C 08 02 A6 */	mflr r0
+/* 80102C80 000FFA80  90 01 00 24 */	stw r0, 0x24(r1)
+/* 80102C84 000FFA84  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 80102C88 000FFA88  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 80102C8C 000FFA8C  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80102C90 000FFA90  7C 7D 1B 78 */	mr r29, r3
+/* 80102C94 000FFA94  93 81 00 10 */	stw r28, 0x10(r1)
+/* 80102C98 000FFA98  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80102C9C 000FFA9C  83 84 00 2C */	lwz r28, 0x2c(r4)
+/* 80102CA0 000FFAA0  80 BF 00 08 */	lwz r5, 0x8(r31)
+/* 80102CA4 000FFAA4  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 80102CA8 000FFAA8  83 C5 00 00 */	lwz r30, 0x0(r5)
+/* 80102CAC 000FFAAC  80 9C 01 04 */	lwz r4, 0x104(r28)
+/* 80102CB0 000FFAB0  38 63 00 54 */	addi r3, r3, 0x54
+/* 80102CB4 000FFAB4  80 1E 00 00 */	lwz r0, 0x0(r30)
+/* 80102CB8 000FFAB8  54 00 18 38 */	slwi r0, r0, 3
+/* 80102CBC 000FFABC  7C 84 00 2E */	lwzx r4, r4, r0
+/* 80102CC0 000FFAC0  4B FD 4C 95 */	bl kar_grcoll__800d7954
+/* 80102CC4 000FFAC4  90 7F 01 30 */	stw r3, 0x130(r31)
+/* 80102CC8 000FFAC8  80 1F 00 00 */	lwz r0, 0x0(r31)
+/* 80102CCC 000FFACC  80 7F 01 30 */	lwz r3, 0x130(r31)
+/* 80102CD0 000FFAD0  90 03 00 90 */	stw r0, 0x90(r3)
+/* 80102CD4 000FFAD4  80 1E 00 14 */	lwz r0, 0x14(r30)
+/* 80102CD8 000FFAD8  2C 00 FF FF */	cmpwi r0, -0x1
+/* 80102CDC 000FFADC  41 82 00 54 */	beq .L_80102D30
+/* 80102CE0 000FFAE0  80 7C 01 04 */	lwz r3, 0x104(r28)
+/* 80102CE4 000FFAE4  54 00 18 38 */	slwi r0, r0, 3
+/* 80102CE8 000FFAE8  80 CD 05 EC */	lwz r6, lbl_805DD6CC@sda21(r0)
+/* 80102CEC 000FFAEC  38 A0 00 00 */	li r5, 0x0
+/* 80102CF0 000FFAF0  7C 83 00 2E */	lwzx r4, r3, r0
+/* 80102CF4 000FFAF4  38 66 00 54 */	addi r3, r6, 0x54
+/* 80102CF8 000FFAF8  4B FD 4C C9 */	bl kar_grcoll__800d79c0
+/* 80102CFC 000FFAFC  7C 7C 1B 78 */	mr r28, r3
+/* 80102D00 000FFB00  80 03 01 38 */	lwz r0, 0x138(r3)
+/* 80102D04 000FFB04  28 00 00 00 */	cmplwi r0, 0x0
+/* 80102D08 000FFB08  40 82 00 1C */	bne .L_80102D24
+/* 80102D0C 000FFB0C  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 80102D10 000FFB10  3C A0 80 4A */	lis r5, kar_gryakuanimfloor_assert_zone_voidptr@ha
+/* 80102D14 000FFB14  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80102D18 000FFB18  38 80 00 50 */	li r4, 0x50
+/* 80102D1C 000FFB1C  38 A5 69 F8 */	addi r5, r5, kar_gryakuanimfloor_assert_zone_voidptr@l
+/* 80102D20 000FFB20  48 32 57 99 */	bl __assert
+.L_80102D24:
+/* 80102D24 000FFB24  80 1C 01 38 */	lwz r0, 0x138(r28)
+/* 80102D28 000FFB28  90 1F 01 34 */	stw r0, 0x134(r31)
+/* 80102D2C 000FFB2C  48 00 00 0C */	b .L_80102D38
+.L_80102D30:
+/* 80102D30 000FFB30  38 00 00 00 */	li r0, 0x0
+/* 80102D34 000FFB34  90 1F 01 34 */	stw r0, 0x134(r31)
+.L_80102D38:
+/* 80102D38 000FFB38  88 1F 01 38 */	lbz r0, 0x138(r31)
+/* 80102D3C 000FFB3C  38 60 00 00 */	li r3, 0x0
+/* 80102D40 000FFB40  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80102D44 000FFB44  98 1F 01 38 */	stb r0, 0x138(r31)
+/* 80102D48 000FFB48  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80102D4C 000FFB4C  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 80102D50 000FFB50  28 00 00 00 */	cmplwi r0, 0x0
+/* 80102D54 000FFB54  41 82 00 14 */	beq .L_80102D68
+/* 80102D58 000FFB58  80 9E 00 00 */	lwz r4, 0x0(r30)
+/* 80102D5C 000FFB5C  7F A3 EB 78 */	mr r3, r29
+/* 80102D60 000FFB60  38 A0 00 00 */	li r5, 0x0
+/* 80102D64 000FFB64  4B FF 4B 0D */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80102D68:
+/* 80102D68 000FFB68  7F A3 EB 78 */	mr r3, r29
+/* 80102D6C 000FFB6C  48 00 00 25 */	bl kar_gryakuanimfloor_start_kind54_idle_motion
+/* 80102D70 000FFB70  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 80102D74 000FFB74  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80102D78 000FFB78  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80102D7C 000FFB7C  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80102D80 000FFB80  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 80102D84 000FFB84  7C 08 03 A6 */	mtlr r0
+/* 80102D88 000FFB88  38 21 00 20 */	addi r1, r1, 0x20
+/* 80102D8C 000FFB8C  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_init_kind54_linked_zone_floor
+
+# .text:0x118 | 0x80102D90 | size: 0x70
+.fn kar_gryakuanimfloor_start_kind54_idle_motion, global
+/* 80102D90 000FFB90  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80102D94 000FFB94  7C 08 02 A6 */	mflr r0
+/* 80102D98 000FFB98  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80102D9C 000FFB9C  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 80102DA0 000FFBA0  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 80102DA4 000FFBA4  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80102DA8 000FFBA8  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 80102DAC 000FFBAC  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80102DB0 000FFBB0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80102DB4 000FFBB4  83 C3 00 00 */	lwz r30, 0x0(r3)
+/* 80102DB8 000FFBB8  40 81 00 0C */	ble .L_80102DC4
+/* 80102DBC 000FFBBC  38 7F 01 18 */	addi r3, r31, 0x118
+/* 80102DC0 000FFBC0  4B FE 73 C1 */	bl kar_graudio_stop_active_fgm_slot
+.L_80102DC4:
+/* 80102DC4 000FFBC4  C0 22 92 90 */	lfs f1, lbl_805DF990@sda21(r0)
+/* 80102DC8 000FFBC8  7F E3 FB 78 */	mr r3, r31
+/* 80102DCC 000FFBCC  80 BE 00 04 */	lwz r5, 0x4(r30)
+/* 80102DD0 000FFBD0  38 80 00 00 */	li r4, 0x0
+/* 80102DD4 000FFBD4  FC 40 08 90 */	fmr f2, f1
+/* 80102DD8 000FFBD8  80 DE 00 00 */	lwz r6, 0x0(r30)
+/* 80102DDC 000FFBDC  FC 60 08 90 */	fmr f3, f1
+/* 80102DE0 000FFBE0  38 E0 00 00 */	li r7, 0x0
+/* 80102DE4 000FFBE4  4B FF 27 65 */	bl kar_gryaku_set_path_node_motion
+/* 80102DE8 000FFBE8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80102DEC 000FFBEC  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 80102DF0 000FFBF0  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 80102DF4 000FFBF4  7C 08 03 A6 */	mtlr r0
+/* 80102DF8 000FFBF8  38 21 00 10 */	addi r1, r1, 0x10
+/* 80102DFC 000FFBFC  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_start_kind54_idle_motion
+
+# .text:0x188 | 0x80102E00 | size: 0x15C
+.fn kar_gryakuanimfloor_update_kind54_flagged_start_motion, global
+/* 80102E00 000FFC00  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 80102E04 000FFC04  7C 08 02 A6 */	mflr r0
+/* 80102E08 000FFC08  90 01 00 34 */	stw r0, 0x34(r1)
+/* 80102E0C 000FFC0C  DB E1 00 20 */	stfd f31, 0x20(r1)
+/* 80102E10 000FFC10  F3 E1 00 28 */	psq_st f31, 0x28(r1), 0, qr0
+/* 80102E14 000FFC14  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 80102E18 000FFC18  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 80102E1C 000FFC1C  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80102E20 000FFC20  93 81 00 10 */	stw r28, 0x10(r1)
+/* 80102E24 000FFC24  83 83 00 2C */	lwz r28, 0x2c(r3)
+/* 80102E28 000FFC28  7C 7F 1B 78 */	mr r31, r3
+/* 80102E2C 000FFC2C  88 1C 01 38 */	lbz r0, 0x138(r28)
+/* 80102E30 000FFC30  54 00 CF FF */	extrwi. r0, r0, 1, 24
+/* 80102E34 000FFC34  41 82 00 C4 */	beq .L_80102EF8
+/* 80102E38 000FFC38  80 1C 00 74 */	lwz r0, 0x74(r28)
+/* 80102E3C 000FFC3C  80 7C 00 08 */	lwz r3, 0x8(r28)
+/* 80102E40 000FFC40  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80102E44 000FFC44  80 8D 05 EC */	lwz r4, lbl_805DD6CC@sda21(r0)
+/* 80102E48 000FFC48  83 C3 00 00 */	lwz r30, 0x0(r3)
+/* 80102E4C 000FFC4C  40 82 00 0C */	bne .L_80102E58
+/* 80102E50 000FFC50  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80102E54 000FFC54  48 00 00 68 */	b .L_80102EBC
+.L_80102E58:
+/* 80102E58 000FFC58  80 1E 00 00 */	lwz r0, 0x0(r30)
+/* 80102E5C 000FFC5C  80 64 01 04 */	lwz r3, 0x104(r4)
+/* 80102E60 000FFC60  54 00 18 38 */	slwi r0, r0, 3
+/* 80102E64 000FFC64  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80102E68 000FFC68  83 A3 00 7C */	lwz r29, 0x7c(r3)
+/* 80102E6C 000FFC6C  28 1D 00 00 */	cmplwi r29, 0x0
+/* 80102E70 000FFC70  40 82 00 18 */	bne .L_80102E88
+/* 80102E74 000FFC74  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 80102E78 000FFC78  38 80 00 8D */	li r4, 0x8d
+/* 80102E7C 000FFC7C  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80102E80 000FFC80  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80102E84 000FFC84  48 32 56 35 */	bl __assert
+.L_80102E88:
+/* 80102E88 000FFC88  80 1C 00 74 */	lwz r0, 0x74(r28)
+/* 80102E8C 000FFC8C  2C 00 00 02 */	cmpwi r0, 0x2
+/* 80102E90 000FFC90  40 82 00 0C */	bne .L_80102E9C
+/* 80102E94 000FFC94  C3 FD 00 04 */	lfs f31, 0x4(r29)
+/* 80102E98 000FFC98  48 00 00 24 */	b .L_80102EBC
+.L_80102E9C:
+/* 80102E9C 000FFC9C  C0 3D 00 0C */	lfs f1, 0xc(r29)
+/* 80102EA0 000FFCA0  C0 1D 00 04 */	lfs f0, 0x4(r29)
+/* 80102EA4 000FFCA4  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80102EA8 000FFCA8  EC 01 00 28 */	fsubs f0, f1, f0
+/* 80102EAC 000FFCAC  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80102EB0 000FFCB0  40 80 00 08 */	bge .L_80102EB8
+/* 80102EB4 000FFCB4  48 00 00 08 */	b .L_80102EBC
+.L_80102EB8:
+/* 80102EB8 000FFCB8  FF E0 00 90 */	fmr f31, f0
+.L_80102EBC:
+/* 80102EBC 000FFCBC  80 1C 01 1C */	lwz r0, 0x11c(r28)
+/* 80102EC0 000FFCC0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80102EC4 000FFCC4  40 81 00 10 */	ble .L_80102ED4
+/* 80102EC8 000FFCC8  38 7C 01 18 */	addi r3, r28, 0x118
+/* 80102ECC 000FFCCC  38 80 00 00 */	li r4, 0x0
+/* 80102ED0 000FFCD0  4B FE 71 B5 */	bl kar_graudio_play_fgm_entry_id
+.L_80102ED4:
+/* 80102ED4 000FFCD4  FC 20 F8 90 */	fmr f1, f31
+/* 80102ED8 000FFCD8  80 BE 00 04 */	lwz r5, 0x4(r30)
+/* 80102EDC 000FFCDC  80 DE 00 00 */	lwz r6, 0x0(r30)
+/* 80102EE0 000FFCE0  7F 83 E3 78 */	mr r3, r28
+/* 80102EE4 000FFCE4  C0 5E 00 0C */	lfs f2, 0xc(r30)
+/* 80102EE8 000FFCE8  38 80 00 01 */	li r4, 0x1
+/* 80102EEC 000FFCEC  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 80102EF0 000FFCF0  38 E0 00 00 */	li r7, 0x0
+/* 80102EF4 000FFCF4  4B FF 26 55 */	bl kar_gryaku_set_path_node_motion
+.L_80102EF8:
+/* 80102EF8 000FFCF8  80 BF 00 2C */	lwz r5, 0x2c(r31)
+/* 80102EFC 000FFCFC  38 60 00 00 */	li r3, 0x0
+/* 80102F00 000FFD00  80 85 00 08 */	lwz r4, 0x8(r5)
+/* 80102F04 000FFD04  88 05 01 38 */	lbz r0, 0x138(r5)
+/* 80102F08 000FFD08  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80102F0C 000FFD0C  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 80102F10 000FFD10  98 05 01 38 */	stb r0, 0x138(r5)
+/* 80102F14 000FFD14  80 65 00 08 */	lwz r3, 0x8(r5)
+/* 80102F18 000FFD18  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 80102F1C 000FFD1C  28 00 00 00 */	cmplwi r0, 0x0
+/* 80102F20 000FFD20  41 82 00 14 */	beq .L_80102F34
+/* 80102F24 000FFD24  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 80102F28 000FFD28  7F E3 FB 78 */	mr r3, r31
+/* 80102F2C 000FFD2C  38 A0 00 00 */	li r5, 0x0
+/* 80102F30 000FFD30  4B FF 49 41 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80102F34:
+/* 80102F34 000FFD34  E3 E1 00 28 */	psq_l f31, 0x28(r1), 0, qr0
+/* 80102F38 000FFD38  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 80102F3C 000FFD3C  CB E1 00 20 */	lfd f31, 0x20(r1)
+/* 80102F40 000FFD40  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80102F44 000FFD44  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80102F48 000FFD48  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80102F4C 000FFD4C  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 80102F50 000FFD50  7C 08 03 A6 */	mtlr r0
+/* 80102F54 000FFD54  38 21 00 30 */	addi r1, r1, 0x30
+/* 80102F58 000FFD58  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind54_flagged_start_motion
+
+# .text:0x2E4 | 0x80102F5C | size: 0x284
+.fn kar_gryakuanimfloor_update_kind54_contact_release_motion, global
+/* 80102F5C 000FFD5C  94 21 FF C0 */	stwu r1, -0x40(r1)
+/* 80102F60 000FFD60  7C 08 02 A6 */	mflr r0
+/* 80102F64 000FFD64  90 01 00 44 */	stw r0, 0x44(r1)
+/* 80102F68 000FFD68  DB E1 00 30 */	stfd f31, 0x30(r1)
+/* 80102F6C 000FFD6C  F3 E1 00 38 */	psq_st f31, 0x38(r1), 0, qr0
+/* 80102F70 000FFD70  39 61 00 30 */	addi r11, r1, 0x30
+/* 80102F74 000FFD74  48 2A AB D9 */	bl _savegpr_25
+/* 80102F78 000FFD78  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80102F7C 000FFD7C  7C 7C 1B 78 */	mr r28, r3
+/* 80102F80 000FFD80  83 CD 05 EC */	lwz r30, lbl_805DD6CC@sda21(r0)
+/* 80102F84 000FFD84  88 1F 01 38 */	lbz r0, 0x138(r31)
+/* 80102F88 000FFD88  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80102F8C 000FFD8C  54 00 CF FF */	extrwi. r0, r0, 1, 24
+/* 80102F90 000FFD90  83 A3 00 00 */	lwz r29, 0x0(r3)
+/* 80102F94 000FFD94  40 82 01 C0 */	bne .L_80103154
+/* 80102F98 000FFD98  80 7F 01 34 */	lwz r3, 0x134(r31)
+/* 80102F9C 000FFD9C  28 03 00 00 */	cmplwi r3, 0x0
+/* 80102FA0 000FFDA0  41 82 01 2C */	beq .L_801030CC
+/* 80102FA4 000FFDA4  4B FF 7A E5 */	bl kar_gryakucatchzone_is_contact_flag_set
+/* 80102FA8 000FFDA8  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80102FAC 000FFDAC  40 82 00 A0 */	bne .L_8010304C
+/* 80102FB0 000FFDB0  83 5C 00 2C */	lwz r26, 0x2c(r28)
+/* 80102FB4 000FFDB4  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 80102FB8 000FFDB8  80 9A 00 08 */	lwz r4, 0x8(r26)
+/* 80102FBC 000FFDBC  80 63 01 04 */	lwz r3, 0x104(r3)
+/* 80102FC0 000FFDC0  83 64 00 00 */	lwz r27, 0x0(r4)
+/* 80102FC4 000FFDC4  80 1B 00 00 */	lwz r0, 0x0(r27)
+/* 80102FC8 000FFDC8  54 00 18 38 */	slwi r0, r0, 3
+/* 80102FCC 000FFDCC  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80102FD0 000FFDD0  83 23 00 7C */	lwz r25, 0x7c(r3)
+/* 80102FD4 000FFDD4  28 19 00 00 */	cmplwi r25, 0x0
+/* 80102FD8 000FFDD8  40 82 00 18 */	bne .L_80102FF0
+/* 80102FDC 000FFDDC  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 80102FE0 000FFDE0  38 80 00 D3 */	li r4, 0xd3
+/* 80102FE4 000FFDE4  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80102FE8 000FFDE8  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80102FEC 000FFDEC  48 32 54 CD */	bl __assert
+.L_80102FF0:
+/* 80102FF0 000FFDF0  C0 39 00 0C */	lfs f1, 0xc(r25)
+/* 80102FF4 000FFDF4  C0 19 00 04 */	lfs f0, 0x4(r25)
+/* 80102FF8 000FFDF8  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80102FFC 000FFDFC  EC 01 00 28 */	fsubs f0, f1, f0
+/* 80103000 000FFE00  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80103004 000FFE04  40 80 00 08 */	bge .L_8010300C
+/* 80103008 000FFE08  48 00 00 08 */	b .L_80103010
+.L_8010300C:
+/* 8010300C 000FFE0C  FF E0 00 90 */	fmr f31, f0
+.L_80103010:
+/* 80103010 000FFE10  80 1A 01 1C */	lwz r0, 0x11c(r26)
+/* 80103014 000FFE14  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103018 000FFE18  40 81 00 0C */	ble .L_80103024
+/* 8010301C 000FFE1C  38 7A 01 18 */	addi r3, r26, 0x118
+/* 80103020 000FFE20  4B FE 71 61 */	bl kar_graudio_stop_active_fgm_slot
+.L_80103024:
+/* 80103024 000FFE24  FC 20 F8 90 */	fmr f1, f31
+/* 80103028 000FFE28  80 BB 00 08 */	lwz r5, 0x8(r27)
+/* 8010302C 000FFE2C  80 DB 00 00 */	lwz r6, 0x0(r27)
+/* 80103030 000FFE30  7F 43 D3 78 */	mr r3, r26
+/* 80103034 000FFE34  C0 5B 00 10 */	lfs f2, 0x10(r27)
+/* 80103038 000FFE38  38 80 00 03 */	li r4, 0x3
+/* 8010303C 000FFE3C  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 80103040 000FFE40  38 E0 00 00 */	li r7, 0x0
+/* 80103044 000FFE44  4B FF 25 05 */	bl kar_gryaku_set_path_node_motion
+/* 80103048 000FFE48  48 00 01 0C */	b .L_80103154
+.L_8010304C:
+/* 8010304C 000FFE4C  83 7C 00 2C */	lwz r27, 0x2c(r28)
+/* 80103050 000FFE50  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 80103054 000FFE54  80 9B 00 08 */	lwz r4, 0x8(r27)
+/* 80103058 000FFE58  80 63 01 04 */	lwz r3, 0x104(r3)
+/* 8010305C 000FFE5C  83 44 00 00 */	lwz r26, 0x0(r4)
+/* 80103060 000FFE60  80 1A 00 00 */	lwz r0, 0x0(r26)
+/* 80103064 000FFE64  54 00 18 38 */	slwi r0, r0, 3
+/* 80103068 000FFE68  7C 63 00 2E */	lwzx r3, r3, r0
+/* 8010306C 000FFE6C  83 23 00 7C */	lwz r25, 0x7c(r3)
+/* 80103070 000FFE70  28 19 00 00 */	cmplwi r25, 0x0
+/* 80103074 000FFE74  40 82 00 18 */	bne .L_8010308C
+/* 80103078 000FFE78  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 8010307C 000FFE7C  38 80 00 B5 */	li r4, 0xb5
+/* 80103080 000FFE80  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80103084 000FFE84  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80103088 000FFE88  48 32 54 31 */	bl __assert
+.L_8010308C:
+/* 8010308C 000FFE8C  80 1B 01 1C */	lwz r0, 0x11c(r27)
+/* 80103090 000FFE90  C3 F9 00 04 */	lfs f31, 0x4(r25)
+/* 80103094 000FFE94  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103098 000FFE98  40 81 00 0C */	ble .L_801030A4
+/* 8010309C 000FFE9C  38 7B 01 18 */	addi r3, r27, 0x118
+/* 801030A0 000FFEA0  4B FE 70 E1 */	bl kar_graudio_stop_active_fgm_slot
+.L_801030A4:
+/* 801030A4 000FFEA4  C0 42 92 90 */	lfs f2, lbl_805DF990@sda21(r0)
+/* 801030A8 000FFEA8  FC 20 F8 90 */	fmr f1, f31
+/* 801030AC 000FFEAC  80 BA 00 04 */	lwz r5, 0x4(r26)
+/* 801030B0 000FFEB0  7F 63 DB 78 */	mr r3, r27
+/* 801030B4 000FFEB4  FC 60 10 90 */	fmr f3, f2
+/* 801030B8 000FFEB8  80 DA 00 00 */	lwz r6, 0x0(r26)
+/* 801030BC 000FFEBC  38 80 00 02 */	li r4, 0x2
+/* 801030C0 000FFEC0  38 E0 00 00 */	li r7, 0x0
+/* 801030C4 000FFEC4  4B FF 24 85 */	bl kar_gryaku_set_path_node_motion
+/* 801030C8 000FFEC8  48 00 00 8C */	b .L_80103154
+.L_801030CC:
+/* 801030CC 000FFECC  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 801030D0 000FFED0  80 7E 01 04 */	lwz r3, 0x104(r30)
+/* 801030D4 000FFED4  54 00 18 38 */	slwi r0, r0, 3
+/* 801030D8 000FFED8  7C 63 00 2E */	lwzx r3, r3, r0
+/* 801030DC 000FFEDC  83 23 00 7C */	lwz r25, 0x7c(r3)
+/* 801030E0 000FFEE0  28 19 00 00 */	cmplwi r25, 0x0
+/* 801030E4 000FFEE4  40 82 00 18 */	bne .L_801030FC
+/* 801030E8 000FFEE8  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 801030EC 000FFEEC  38 80 00 D3 */	li r4, 0xd3
+/* 801030F0 000FFEF0  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 801030F4 000FFEF4  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 801030F8 000FFEF8  48 32 53 C1 */	bl __assert
+.L_801030FC:
+/* 801030FC 000FFEFC  C0 39 00 0C */	lfs f1, 0xc(r25)
+/* 80103100 000FFF00  C0 19 00 04 */	lfs f0, 0x4(r25)
+/* 80103104 000FFF04  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80103108 000FFF08  EC 01 00 28 */	fsubs f0, f1, f0
+/* 8010310C 000FFF0C  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80103110 000FFF10  40 80 00 08 */	bge .L_80103118
+/* 80103114 000FFF14  48 00 00 08 */	b .L_8010311C
+.L_80103118:
+/* 80103118 000FFF18  FF E0 00 90 */	fmr f31, f0
+.L_8010311C:
+/* 8010311C 000FFF1C  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 80103120 000FFF20  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103124 000FFF24  40 81 00 0C */	ble .L_80103130
+/* 80103128 000FFF28  38 7F 01 18 */	addi r3, r31, 0x118
+/* 8010312C 000FFF2C  4B FE 70 55 */	bl kar_graudio_stop_active_fgm_slot
+.L_80103130:
+/* 80103130 000FFF30  FC 20 F8 90 */	fmr f1, f31
+/* 80103134 000FFF34  80 BD 00 08 */	lwz r5, 0x8(r29)
+/* 80103138 000FFF38  80 DD 00 00 */	lwz r6, 0x0(r29)
+/* 8010313C 000FFF3C  7F E3 FB 78 */	mr r3, r31
+/* 80103140 000FFF40  C0 5D 00 10 */	lfs f2, 0x10(r29)
+/* 80103144 000FFF44  38 80 00 03 */	li r4, 0x3
+/* 80103148 000FFF48  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 8010314C 000FFF4C  38 E0 00 00 */	li r7, 0x0
+/* 80103150 000FFF50  4B FF 23 F9 */	bl kar_gryaku_set_path_node_motion
+.L_80103154:
+/* 80103154 000FFF54  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 80103158 000FFF58  80 7E 01 04 */	lwz r3, 0x104(r30)
+/* 8010315C 000FFF5C  54 00 18 38 */	slwi r0, r0, 3
+/* 80103160 000FFF60  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80103164 000FFF64  4B F5 16 7D */	bl kar_gmlanmenu__near_800547e0
+/* 80103168 000FFF68  2C 03 00 00 */	cmpwi r3, 0x0
+/* 8010316C 000FFF6C  40 82 00 18 */	bne .L_80103184
+/* 80103170 000FFF70  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 80103174 000FFF74  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103178 000FFF78  40 81 00 0C */	ble .L_80103184
+/* 8010317C 000FFF7C  38 7F 01 18 */	addi r3, r31, 0x118
+/* 80103180 000FFF80  4B FE 70 01 */	bl kar_graudio_stop_active_fgm_slot
+.L_80103184:
+/* 80103184 000FFF84  80 BC 00 2C */	lwz r5, 0x2c(r28)
+/* 80103188 000FFF88  38 60 00 00 */	li r3, 0x0
+/* 8010318C 000FFF8C  80 85 00 08 */	lwz r4, 0x8(r5)
+/* 80103190 000FFF90  88 05 01 38 */	lbz r0, 0x138(r5)
+/* 80103194 000FFF94  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103198 000FFF98  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 8010319C 000FFF9C  98 05 01 38 */	stb r0, 0x138(r5)
+/* 801031A0 000FFFA0  80 65 00 08 */	lwz r3, 0x8(r5)
+/* 801031A4 000FFFA4  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 801031A8 000FFFA8  28 00 00 00 */	cmplwi r0, 0x0
+/* 801031AC 000FFFAC  41 82 00 14 */	beq .L_801031C0
+/* 801031B0 000FFFB0  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 801031B4 000FFFB4  7F 83 E3 78 */	mr r3, r28
+/* 801031B8 000FFFB8  38 A0 00 00 */	li r5, 0x0
+/* 801031BC 000FFFBC  4B FF 46 B5 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_801031C0:
+/* 801031C0 000FFFC0  E3 E1 00 38 */	psq_l f31, 0x38(r1), 0, qr0
+/* 801031C4 000FFFC4  39 61 00 30 */	addi r11, r1, 0x30
+/* 801031C8 000FFFC8  CB E1 00 30 */	lfd f31, 0x30(r1)
+/* 801031CC 000FFFCC  48 2A A9 CD */	bl _restgpr_25
+/* 801031D0 000FFFD0  80 01 00 44 */	lwz r0, 0x44(r1)
+/* 801031D4 000FFFD4  7C 08 03 A6 */	mtlr r0
+/* 801031D8 000FFFD8  38 21 00 40 */	addi r1, r1, 0x40
+/* 801031DC 000FFFDC  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind54_contact_release_motion
+
+# .text:0x568 | 0x801031E0 | size: 0x2A8
+.fn kar_gryakuanimfloor_update_kind54_flag_or_contact_motion, global
+/* 801031E0 000FFFE0  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 801031E4 000FFFE4  7C 08 02 A6 */	mflr r0
+/* 801031E8 000FFFE8  90 01 00 34 */	stw r0, 0x34(r1)
+/* 801031EC 000FFFEC  DB E1 00 20 */	stfd f31, 0x20(r1)
+/* 801031F0 000FFFF0  F3 E1 00 28 */	psq_st f31, 0x28(r1), 0, qr0
+/* 801031F4 000FFFF4  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 801031F8 000FFFF8  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 801031FC 000FFFFC  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80103200 00100000  93 81 00 10 */	stw r28, 0x10(r1)
+/* 80103204 00100004  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80103208 00100008  7C 7E 1B 78 */	mr r30, r3
+/* 8010320C 0010000C  88 1F 01 38 */	lbz r0, 0x138(r31)
+/* 80103210 00100010  54 00 CF FF */	extrwi. r0, r0, 1, 24
+/* 80103214 00100014  41 82 00 C8 */	beq .L_801032DC
+/* 80103218 00100018  80 1F 00 74 */	lwz r0, 0x74(r31)
+/* 8010321C 0010001C  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80103220 00100020  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103224 00100024  80 8D 05 EC */	lwz r4, lbl_805DD6CC@sda21(r0)
+/* 80103228 00100028  83 A3 00 00 */	lwz r29, 0x0(r3)
+/* 8010322C 0010002C  40 82 00 0C */	bne .L_80103238
+/* 80103230 00100030  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80103234 00100034  48 00 00 68 */	b .L_8010329C
+.L_80103238:
+/* 80103238 00100038  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 8010323C 0010003C  80 64 01 04 */	lwz r3, 0x104(r4)
+/* 80103240 00100040  54 00 18 38 */	slwi r0, r0, 3
+/* 80103244 00100044  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80103248 00100048  83 83 00 7C */	lwz r28, 0x7c(r3)
+/* 8010324C 0010004C  28 1C 00 00 */	cmplwi r28, 0x0
+/* 80103250 00100050  40 82 00 18 */	bne .L_80103268
+/* 80103254 00100054  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 80103258 00100058  38 80 00 8D */	li r4, 0x8d
+/* 8010325C 0010005C  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80103260 00100060  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80103264 00100064  48 32 52 55 */	bl __assert
+.L_80103268:
+/* 80103268 00100068  80 1F 00 74 */	lwz r0, 0x74(r31)
+/* 8010326C 0010006C  2C 00 00 02 */	cmpwi r0, 0x2
+/* 80103270 00100070  40 82 00 0C */	bne .L_8010327C
+/* 80103274 00100074  C3 FC 00 04 */	lfs f31, 0x4(r28)
+/* 80103278 00100078  48 00 00 24 */	b .L_8010329C
+.L_8010327C:
+/* 8010327C 0010007C  C0 3C 00 0C */	lfs f1, 0xc(r28)
+/* 80103280 00100080  C0 1C 00 04 */	lfs f0, 0x4(r28)
+/* 80103284 00100084  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80103288 00100088  EC 01 00 28 */	fsubs f0, f1, f0
+/* 8010328C 0010008C  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80103290 00100090  40 80 00 08 */	bge .L_80103298
+/* 80103294 00100094  48 00 00 08 */	b .L_8010329C
+.L_80103298:
+/* 80103298 00100098  FF E0 00 90 */	fmr f31, f0
+.L_8010329C:
+/* 8010329C 0010009C  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 801032A0 001000A0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801032A4 001000A4  40 81 00 10 */	ble .L_801032B4
+/* 801032A8 001000A8  38 7F 01 18 */	addi r3, r31, 0x118
+/* 801032AC 001000AC  38 80 00 00 */	li r4, 0x0
+/* 801032B0 001000B0  4B FE 6D D5 */	bl kar_graudio_play_fgm_entry_id
+.L_801032B4:
+/* 801032B4 001000B4  FC 20 F8 90 */	fmr f1, f31
+/* 801032B8 001000B8  80 BD 00 04 */	lwz r5, 0x4(r29)
+/* 801032BC 001000BC  80 DD 00 00 */	lwz r6, 0x0(r29)
+/* 801032C0 001000C0  7F E3 FB 78 */	mr r3, r31
+/* 801032C4 001000C4  C0 5D 00 0C */	lfs f2, 0xc(r29)
+/* 801032C8 001000C8  38 80 00 01 */	li r4, 0x1
+/* 801032CC 001000CC  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 801032D0 001000D0  38 E0 00 00 */	li r7, 0x0
+/* 801032D4 001000D4  4B FF 22 75 */	bl kar_gryaku_set_path_node_motion
+/* 801032D8 001000D8  48 00 01 4C */	b .L_80103424
+.L_801032DC:
+/* 801032DC 001000DC  80 7F 01 34 */	lwz r3, 0x134(r31)
+/* 801032E0 001000E0  28 03 00 00 */	cmplwi r3, 0x0
+/* 801032E4 001000E4  41 82 00 AC */	beq .L_80103390
+/* 801032E8 001000E8  4B FF 77 A1 */	bl kar_gryakucatchzone_is_contact_flag_set
+/* 801032EC 001000EC  2C 03 00 00 */	cmpwi r3, 0x0
+/* 801032F0 001000F0  40 82 01 34 */	bne .L_80103424
+/* 801032F4 001000F4  83 FE 00 2C */	lwz r31, 0x2c(r30)
+/* 801032F8 001000F8  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 801032FC 001000FC  80 9F 00 08 */	lwz r4, 0x8(r31)
+/* 80103300 00100100  80 63 01 04 */	lwz r3, 0x104(r3)
+/* 80103304 00100104  83 A4 00 00 */	lwz r29, 0x0(r4)
+/* 80103308 00100108  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 8010330C 0010010C  54 00 18 38 */	slwi r0, r0, 3
+/* 80103310 00100110  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80103314 00100114  83 83 00 7C */	lwz r28, 0x7c(r3)
+/* 80103318 00100118  28 1C 00 00 */	cmplwi r28, 0x0
+/* 8010331C 0010011C  40 82 00 18 */	bne .L_80103334
+/* 80103320 00100120  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 80103324 00100124  38 80 00 D3 */	li r4, 0xd3
+/* 80103328 00100128  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 8010332C 0010012C  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80103330 00100130  48 32 51 89 */	bl __assert
+.L_80103334:
+/* 80103334 00100134  C0 3C 00 0C */	lfs f1, 0xc(r28)
+/* 80103338 00100138  C0 1C 00 04 */	lfs f0, 0x4(r28)
+/* 8010333C 0010013C  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80103340 00100140  EC 01 00 28 */	fsubs f0, f1, f0
+/* 80103344 00100144  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80103348 00100148  40 80 00 08 */	bge .L_80103350
+/* 8010334C 0010014C  48 00 00 08 */	b .L_80103354
+.L_80103350:
+/* 80103350 00100150  FF E0 00 90 */	fmr f31, f0
+.L_80103354:
+/* 80103354 00100154  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 80103358 00100158  2C 00 00 00 */	cmpwi r0, 0x0
+/* 8010335C 0010015C  40 81 00 0C */	ble .L_80103368
+/* 80103360 00100160  38 7F 01 18 */	addi r3, r31, 0x118
+/* 80103364 00100164  4B FE 6E 1D */	bl kar_graudio_stop_active_fgm_slot
+.L_80103368:
+/* 80103368 00100168  FC 20 F8 90 */	fmr f1, f31
+/* 8010336C 0010016C  80 BD 00 08 */	lwz r5, 0x8(r29)
+/* 80103370 00100170  80 DD 00 00 */	lwz r6, 0x0(r29)
+/* 80103374 00100174  7F E3 FB 78 */	mr r3, r31
+/* 80103378 00100178  C0 5D 00 10 */	lfs f2, 0x10(r29)
+/* 8010337C 0010017C  38 80 00 03 */	li r4, 0x3
+/* 80103380 00100180  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 80103384 00100184  38 E0 00 00 */	li r7, 0x0
+/* 80103388 00100188  4B FF 21 C1 */	bl kar_gryaku_set_path_node_motion
+/* 8010338C 0010018C  48 00 00 98 */	b .L_80103424
+.L_80103390:
+/* 80103390 00100190  80 9F 00 08 */	lwz r4, 0x8(r31)
+/* 80103394 00100194  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 80103398 00100198  83 A4 00 00 */	lwz r29, 0x0(r4)
+/* 8010339C 0010019C  80 63 01 04 */	lwz r3, 0x104(r3)
+/* 801033A0 001001A0  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 801033A4 001001A4  54 00 18 38 */	slwi r0, r0, 3
+/* 801033A8 001001A8  7C 63 00 2E */	lwzx r3, r3, r0
+/* 801033AC 001001AC  83 83 00 7C */	lwz r28, 0x7c(r3)
+/* 801033B0 001001B0  28 1C 00 00 */	cmplwi r28, 0x0
+/* 801033B4 001001B4  40 82 00 18 */	bne .L_801033CC
+/* 801033B8 001001B8  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 801033BC 001001BC  38 80 00 D3 */	li r4, 0xd3
+/* 801033C0 001001C0  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 801033C4 001001C4  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 801033C8 001001C8  48 32 50 F1 */	bl __assert
+.L_801033CC:
+/* 801033CC 001001CC  C0 3C 00 0C */	lfs f1, 0xc(r28)
+/* 801033D0 001001D0  C0 1C 00 04 */	lfs f0, 0x4(r28)
+/* 801033D4 001001D4  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 801033D8 001001D8  EC 01 00 28 */	fsubs f0, f1, f0
+/* 801033DC 001001DC  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 801033E0 001001E0  40 80 00 08 */	bge .L_801033E8
+/* 801033E4 001001E4  48 00 00 08 */	b .L_801033EC
+.L_801033E8:
+/* 801033E8 001001E8  FF E0 00 90 */	fmr f31, f0
+.L_801033EC:
+/* 801033EC 001001EC  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 801033F0 001001F0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801033F4 001001F4  40 81 00 0C */	ble .L_80103400
+/* 801033F8 001001F8  38 7F 01 18 */	addi r3, r31, 0x118
+/* 801033FC 001001FC  4B FE 6D 85 */	bl kar_graudio_stop_active_fgm_slot
+.L_80103400:
+/* 80103400 00100200  FC 20 F8 90 */	fmr f1, f31
+/* 80103404 00100204  80 BD 00 08 */	lwz r5, 0x8(r29)
+/* 80103408 00100208  80 DD 00 00 */	lwz r6, 0x0(r29)
+/* 8010340C 0010020C  7F E3 FB 78 */	mr r3, r31
+/* 80103410 00100210  C0 5D 00 10 */	lfs f2, 0x10(r29)
+/* 80103414 00100214  38 80 00 03 */	li r4, 0x3
+/* 80103418 00100218  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 8010341C 0010021C  38 E0 00 00 */	li r7, 0x0
+/* 80103420 00100220  4B FF 21 29 */	bl kar_gryaku_set_path_node_motion
+.L_80103424:
+/* 80103424 00100224  80 BE 00 2C */	lwz r5, 0x2c(r30)
+/* 80103428 00100228  38 60 00 00 */	li r3, 0x0
+/* 8010342C 0010022C  80 85 00 08 */	lwz r4, 0x8(r5)
+/* 80103430 00100230  88 05 01 38 */	lbz r0, 0x138(r5)
+/* 80103434 00100234  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103438 00100238  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 8010343C 0010023C  98 05 01 38 */	stb r0, 0x138(r5)
+/* 80103440 00100240  80 65 00 08 */	lwz r3, 0x8(r5)
+/* 80103444 00100244  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 80103448 00100248  28 00 00 00 */	cmplwi r0, 0x0
+/* 8010344C 0010024C  41 82 00 14 */	beq .L_80103460
+/* 80103450 00100250  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 80103454 00100254  7F C3 F3 78 */	mr r3, r30
+/* 80103458 00100258  38 A0 00 00 */	li r5, 0x0
+/* 8010345C 0010025C  4B FF 44 15 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80103460:
+/* 80103460 00100260  E3 E1 00 28 */	psq_l f31, 0x28(r1), 0, qr0
+/* 80103464 00100264  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 80103468 00100268  CB E1 00 20 */	lfd f31, 0x20(r1)
+/* 8010346C 0010026C  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80103470 00100270  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80103474 00100274  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80103478 00100278  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 8010347C 0010027C  7C 08 03 A6 */	mtlr r0
+/* 80103480 00100280  38 21 00 30 */	addi r1, r1, 0x30
+/* 80103484 00100284  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind54_flag_or_contact_motion
+
+# .text:0x810 | 0x80103488 | size: 0x1AC
+.fn kar_gryakuanimfloor_update_kind54_ground_clear_to_idle, global
+/* 80103488 00100288  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 8010348C 0010028C  7C 08 02 A6 */	mflr r0
+/* 80103490 00100290  90 01 00 34 */	stw r0, 0x34(r1)
+/* 80103494 00100294  DB E1 00 20 */	stfd f31, 0x20(r1)
+/* 80103498 00100298  F3 E1 00 28 */	psq_st f31, 0x28(r1), 0, qr0
+/* 8010349C 0010029C  39 61 00 20 */	addi r11, r1, 0x20
+/* 801034A0 001002A0  48 2A A6 B5 */	bl _savegpr_27
+/* 801034A4 001002A4  83 83 00 2C */	lwz r28, 0x2c(r3)
+/* 801034A8 001002A8  7C 7F 1B 78 */	mr r31, r3
+/* 801034AC 001002AC  83 CD 05 EC */	lwz r30, lbl_805DD6CC@sda21(r0)
+/* 801034B0 001002B0  88 1C 01 38 */	lbz r0, 0x138(r28)
+/* 801034B4 001002B4  80 7C 00 08 */	lwz r3, 0x8(r28)
+/* 801034B8 001002B8  54 00 CF FF */	extrwi. r0, r0, 1, 24
+/* 801034BC 001002BC  83 63 00 00 */	lwz r27, 0x0(r3)
+/* 801034C0 001002C0  41 82 00 B8 */	beq .L_80103578
+/* 801034C4 001002C4  80 1C 00 74 */	lwz r0, 0x74(r28)
+/* 801034C8 001002C8  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801034CC 001002CC  40 82 00 0C */	bne .L_801034D8
+/* 801034D0 001002D0  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 801034D4 001002D4  48 00 00 68 */	b .L_8010353C
+.L_801034D8:
+/* 801034D8 001002D8  80 1B 00 00 */	lwz r0, 0x0(r27)
+/* 801034DC 001002DC  80 7E 01 04 */	lwz r3, 0x104(r30)
+/* 801034E0 001002E0  54 00 18 38 */	slwi r0, r0, 3
+/* 801034E4 001002E4  7C 63 00 2E */	lwzx r3, r3, r0
+/* 801034E8 001002E8  83 A3 00 7C */	lwz r29, 0x7c(r3)
+/* 801034EC 001002EC  28 1D 00 00 */	cmplwi r29, 0x0
+/* 801034F0 001002F0  40 82 00 18 */	bne .L_80103508
+/* 801034F4 001002F4  3C 60 80 4A */	lis r3, kar_src_gryakuanimfloor_c@ha
+/* 801034F8 001002F8  38 80 00 8D */	li r4, 0x8d
+/* 801034FC 001002FC  38 63 69 E4 */	addi r3, r3, kar_src_gryakuanimfloor_c@l
+/* 80103500 00100300  38 AD 91 E8 */	li r5, lbl_805D62C8@sda21
+/* 80103504 00100304  48 32 4F B5 */	bl __assert
+.L_80103508:
+/* 80103508 00100308  80 1C 00 74 */	lwz r0, 0x74(r28)
+/* 8010350C 0010030C  2C 00 00 02 */	cmpwi r0, 0x2
+/* 80103510 00100310  40 82 00 0C */	bne .L_8010351C
+/* 80103514 00100314  C3 FD 00 04 */	lfs f31, 0x4(r29)
+/* 80103518 00100318  48 00 00 24 */	b .L_8010353C
+.L_8010351C:
+/* 8010351C 0010031C  C0 3D 00 0C */	lfs f1, 0xc(r29)
+/* 80103520 00100320  C0 1D 00 04 */	lfs f0, 0x4(r29)
+/* 80103524 00100324  C3 E2 92 90 */	lfs f31, lbl_805DF990@sda21(r0)
+/* 80103528 00100328  EC 01 00 28 */	fsubs f0, f1, f0
+/* 8010352C 0010032C  FC 00 F8 40 */	fcmpo cr0, f0, f31
+/* 80103530 00100330  40 80 00 08 */	bge .L_80103538
+/* 80103534 00100334  48 00 00 08 */	b .L_8010353C
+.L_80103538:
+/* 80103538 00100338  FF E0 00 90 */	fmr f31, f0
+.L_8010353C:
+/* 8010353C 0010033C  80 1C 01 1C */	lwz r0, 0x11c(r28)
+/* 80103540 00100340  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103544 00100344  40 81 00 10 */	ble .L_80103554
+/* 80103548 00100348  38 7C 01 18 */	addi r3, r28, 0x118
+/* 8010354C 0010034C  38 80 00 00 */	li r4, 0x0
+/* 80103550 00100350  4B FE 6B 35 */	bl kar_graudio_play_fgm_entry_id
+.L_80103554:
+/* 80103554 00100354  FC 20 F8 90 */	fmr f1, f31
+/* 80103558 00100358  80 BB 00 04 */	lwz r5, 0x4(r27)
+/* 8010355C 0010035C  80 DB 00 00 */	lwz r6, 0x0(r27)
+/* 80103560 00100360  7F 83 E3 78 */	mr r3, r28
+/* 80103564 00100364  C0 5B 00 0C */	lfs f2, 0xc(r27)
+/* 80103568 00100368  38 80 00 01 */	li r4, 0x1
+/* 8010356C 0010036C  C0 62 92 90 */	lfs f3, lbl_805DF990@sda21(r0)
+/* 80103570 00100370  38 E0 00 00 */	li r7, 0x0
+/* 80103574 00100374  4B FF 1F D5 */	bl kar_gryaku_set_path_node_motion
+.L_80103578:
+/* 80103578 00100378  80 1B 00 00 */	lwz r0, 0x0(r27)
+/* 8010357C 0010037C  80 7E 01 04 */	lwz r3, 0x104(r30)
+/* 80103580 00100380  54 00 18 38 */	slwi r0, r0, 3
+/* 80103584 00100384  7C 63 00 2E */	lwzx r3, r3, r0
+/* 80103588 00100388  4B F5 12 59 */	bl kar_gmlanmenu__near_800547e0
+/* 8010358C 0010038C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80103590 00100390  40 82 00 48 */	bne .L_801035D8
+/* 80103594 00100394  83 BF 00 2C */	lwz r29, 0x2c(r31)
+/* 80103598 00100398  80 1D 01 1C */	lwz r0, 0x11c(r29)
+/* 8010359C 0010039C  80 7D 00 08 */	lwz r3, 0x8(r29)
+/* 801035A0 001003A0  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801035A4 001003A4  83 C3 00 00 */	lwz r30, 0x0(r3)
+/* 801035A8 001003A8  40 81 00 0C */	ble .L_801035B4
+/* 801035AC 001003AC  38 7D 01 18 */	addi r3, r29, 0x118
+/* 801035B0 001003B0  4B FE 6B D1 */	bl kar_graudio_stop_active_fgm_slot
+.L_801035B4:
+/* 801035B4 001003B4  C0 22 92 90 */	lfs f1, lbl_805DF990@sda21(r0)
+/* 801035B8 001003B8  7F A3 EB 78 */	mr r3, r29
+/* 801035BC 001003BC  80 BE 00 04 */	lwz r5, 0x4(r30)
+/* 801035C0 001003C0  38 80 00 00 */	li r4, 0x0
+/* 801035C4 001003C4  FC 40 08 90 */	fmr f2, f1
+/* 801035C8 001003C8  80 DE 00 00 */	lwz r6, 0x0(r30)
+/* 801035CC 001003CC  FC 60 08 90 */	fmr f3, f1
+/* 801035D0 001003D0  38 E0 00 00 */	li r7, 0x0
+/* 801035D4 001003D4  4B FF 1F 75 */	bl kar_gryaku_set_path_node_motion
+.L_801035D8:
+/* 801035D8 001003D8  80 BF 00 2C */	lwz r5, 0x2c(r31)
+/* 801035DC 001003DC  38 60 00 00 */	li r3, 0x0
+/* 801035E0 001003E0  80 85 00 08 */	lwz r4, 0x8(r5)
+/* 801035E4 001003E4  88 05 01 38 */	lbz r0, 0x138(r5)
+/* 801035E8 001003E8  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 801035EC 001003EC  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 801035F0 001003F0  98 05 01 38 */	stb r0, 0x138(r5)
+/* 801035F4 001003F4  80 65 00 08 */	lwz r3, 0x8(r5)
+/* 801035F8 001003F8  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 801035FC 001003FC  28 00 00 00 */	cmplwi r0, 0x0
+/* 80103600 00100400  41 82 00 14 */	beq .L_80103614
+/* 80103604 00100404  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 80103608 00100408  7F E3 FB 78 */	mr r3, r31
+/* 8010360C 0010040C  38 A0 00 00 */	li r5, 0x0
+/* 80103610 00100410  4B FF 42 61 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80103614:
+/* 80103614 00100414  E3 E1 00 28 */	psq_l f31, 0x28(r1), 0, qr0
+/* 80103618 00100418  39 61 00 20 */	addi r11, r1, 0x20
+/* 8010361C 0010041C  CB E1 00 20 */	lfd f31, 0x20(r1)
+/* 80103620 00100420  48 2A A5 81 */	bl _restgpr_27
+/* 80103624 00100424  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 80103628 00100428  7C 08 03 A6 */	mtlr r0
+/* 8010362C 0010042C  38 21 00 30 */	addi r1, r1, 0x30
+/* 80103630 00100430  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind54_ground_clear_to_idle
+
+# .text:0x9BC | 0x80103634 | size: 0x20
+.fn kar_gryakuanimfloor_set_external_trigger_flag, global
+/* 80103634 00100434  28 03 00 00 */	cmplwi r3, 0x0
+/* 80103638 00100438  4D 82 00 20 */	beqlr
+/* 8010363C 0010043C  80 63 00 2C */	lwz r3, 0x2c(r3)
+/* 80103640 00100440  38 80 00 01 */	li r4, 0x1
+/* 80103644 00100444  88 03 01 38 */	lbz r0, 0x138(r3)
+/* 80103648 00100448  50 80 3E 30 */	rlwimi r0, r4, 7, 24, 24
+/* 8010364C 0010044C  98 03 01 38 */	stb r0, 0x138(r3)
+/* 80103650 00100450  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_set_external_trigger_flag
+
+# .text:0x9DC | 0x80103654 | size: 0x38
+.fn kar_gryakuanimfloor_create_stage_linked_kind55_reactive_floor, global
+/* 80103654 00100454  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80103658 00100458  7C 08 02 A6 */	mflr r0
+/* 8010365C 0010045C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80103660 00100460  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 80103664 00100464  7C 7F 1B 78 */	mr r31, r3
+/* 80103668 00100468  38 60 00 37 */	li r3, 0x37
+/* 8010366C 0010046C  4B FF 0E 01 */	bl kar_gryaku_create_yaku_from_main_kind
+/* 80103670 00100470  7F E4 FB 78 */	mr r4, r31
+/* 80103674 00100474  48 00 00 19 */	bl kar_gryakuanimfloor_init_kind55_reactive_floor
+/* 80103678 00100478  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8010367C 0010047C  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 80103680 00100480  7C 08 03 A6 */	mtlr r0
+/* 80103684 00100484  38 21 00 10 */	addi r1, r1, 0x10
+/* 80103688 00100488  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_create_stage_linked_kind55_reactive_floor
+
+# .text:0xA14 | 0x8010368C | size: 0x100
+.fn kar_gryakuanimfloor_init_kind55_reactive_floor, global
+/* 8010368C 0010048C  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80103690 00100490  7C 08 02 A6 */	mflr r0
+/* 80103694 00100494  90 01 00 24 */	stw r0, 0x24(r1)
+/* 80103698 00100498  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 8010369C 0010049C  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 801036A0 001004A0  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 801036A4 001004A4  93 81 00 10 */	stw r28, 0x10(r1)
+/* 801036A8 001004A8  7C 7C 1B 78 */	mr r28, r3
+/* 801036AC 001004AC  83 C3 00 2C */	lwz r30, 0x2c(r3)
+/* 801036B0 001004B0  80 84 00 2C */	lwz r4, 0x2c(r4)
+/* 801036B4 001004B4  80 BE 00 08 */	lwz r5, 0x8(r30)
+/* 801036B8 001004B8  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 801036BC 001004BC  83 A5 00 00 */	lwz r29, 0x0(r5)
+/* 801036C0 001004C0  80 84 01 04 */	lwz r4, 0x104(r4)
+/* 801036C4 001004C4  38 63 00 54 */	addi r3, r3, 0x54
+/* 801036C8 001004C8  80 1D 00 00 */	lwz r0, 0x0(r29)
+/* 801036CC 001004CC  54 00 18 38 */	slwi r0, r0, 3
+/* 801036D0 001004D0  7F E4 00 2E */	lwzx r31, r4, r0
+/* 801036D4 001004D4  7F E4 FB 78 */	mr r4, r31
+/* 801036D8 001004D8  4B FD 42 7D */	bl kar_grcoll__800d7954
+/* 801036DC 001004DC  90 7E 01 30 */	stw r3, 0x130(r30)
+/* 801036E0 001004E0  28 1F 00 00 */	cmplwi r31, 0x0
+/* 801036E4 001004E4  80 1E 00 00 */	lwz r0, 0x0(r30)
+/* 801036E8 001004E8  80 7E 01 30 */	lwz r3, 0x130(r30)
+/* 801036EC 001004EC  90 03 00 90 */	stw r0, 0x90(r3)
+/* 801036F0 001004F0  40 82 00 14 */	bne .L_80103704
+/* 801036F4 001004F4  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 801036F8 001004F8  38 80 02 EC */	li r4, 0x2ec
+/* 801036FC 001004FC  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 80103700 00100500  48 32 4D B9 */	bl __assert
+.L_80103704:
+/* 80103704 00100504  C0 1F 00 1C */	lfs f0, 0x1c(r31)
+/* 80103708 00100508  38 60 00 01 */	li r3, 0x1
+/* 8010370C 0010050C  C0 22 92 98 */	lfs f1, lbl_805DF998@sda21(r0)
+/* 80103710 00100510  D0 1E 01 34 */	stfs f0, 0x134(r30)
+/* 80103714 00100514  C0 02 92 9C */	lfs f0, lbl_805DF99C@sda21(r0)
+/* 80103718 00100518  D0 3E 01 38 */	stfs f1, 0x138(r30)
+/* 8010371C 0010051C  D0 3E 01 40 */	stfs f1, 0x140(r30)
+/* 80103720 00100520  88 1E 01 44 */	lbz r0, 0x144(r30)
+/* 80103724 00100524  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103728 00100528  98 1E 01 44 */	stb r0, 0x144(r30)
+/* 8010372C 0010052C  C0 5D 00 08 */	lfs f2, 0x8(r29)
+/* 80103730 00100530  C0 3D 00 0C */	lfs f1, 0xc(r29)
+/* 80103734 00100534  EC 21 00 B2 */	fmuls f1, f1, f2
+/* 80103738 00100538  EC 22 00 72 */	fmuls f1, f2, f1
+/* 8010373C 0010053C  EC 01 00 24 */	fdivs f0, f1, f0
+/* 80103740 00100540  D0 1E 01 3C */	stfs f0, 0x13c(r30)
+/* 80103744 00100544  80 7E 00 08 */	lwz r3, 0x8(r30)
+/* 80103748 00100548  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 8010374C 0010054C  28 00 00 00 */	cmplwi r0, 0x0
+/* 80103750 00100550  41 82 00 14 */	beq .L_80103764
+/* 80103754 00100554  80 9D 00 00 */	lwz r4, 0x0(r29)
+/* 80103758 00100558  7F 83 E3 78 */	mr r3, r28
+/* 8010375C 0010055C  38 A0 00 00 */	li r5, 0x0
+/* 80103760 00100560  4B FF 41 11 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80103764:
+/* 80103764 00100564  7F 83 E3 78 */	mr r3, r28
+/* 80103768 00100568  48 00 00 25 */	bl kar_gryakuanimfloor_start_kind55_idle_motion
+/* 8010376C 0010056C  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 80103770 00100570  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80103774 00100574  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80103778 00100578  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 8010377C 0010057C  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 80103780 00100580  7C 08 03 A6 */	mtlr r0
+/* 80103784 00100584  38 21 00 20 */	addi r1, r1, 0x20
+/* 80103788 00100588  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_init_kind55_reactive_floor
+
+# .text:0xB14 | 0x8010378C | size: 0x48
+.fn kar_gryakuanimfloor_start_kind55_idle_motion, global
+/* 8010378C 0010058C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80103790 00100590  7C 08 02 A6 */	mflr r0
+/* 80103794 00100594  C0 22 92 98 */	lfs f1, lbl_805DF998@sda21(r0)
+/* 80103798 00100598  38 80 00 00 */	li r4, 0x0
+/* 8010379C 0010059C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 801037A0 001005A0  38 E0 00 00 */	li r7, 0x0
+/* 801037A4 001005A4  FC 60 08 90 */	fmr f3, f1
+/* 801037A8 001005A8  C0 42 92 A0 */	lfs f2, lbl_805DF9A0@sda21(r0)
+/* 801037AC 001005AC  80 63 00 2C */	lwz r3, 0x2c(r3)
+/* 801037B0 001005B0  80 A3 00 08 */	lwz r5, 0x8(r3)
+/* 801037B4 001005B4  80 C5 00 00 */	lwz r6, 0x0(r5)
+/* 801037B8 001005B8  80 A6 00 04 */	lwz r5, 0x4(r6)
+/* 801037BC 001005BC  80 C6 00 00 */	lwz r6, 0x0(r6)
+/* 801037C0 001005C0  4B FF 1D 89 */	bl kar_gryaku_set_path_node_motion
+/* 801037C4 001005C4  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 801037C8 001005C8  7C 08 03 A6 */	mtlr r0
+/* 801037CC 001005CC  38 21 00 10 */	addi r1, r1, 0x10
+/* 801037D0 001005D0  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_start_kind55_idle_motion
+
+# .text:0xB5C | 0x801037D4 | size: 0x2D8
+.fn kar_gryakuanimfloor_update_kind55_reactive_jobj_motion, global
+/* 801037D4 001005D4  94 21 FF C0 */	stwu r1, -0x40(r1)
+/* 801037D8 001005D8  7C 08 02 A6 */	mflr r0
+/* 801037DC 001005DC  90 01 00 44 */	stw r0, 0x44(r1)
+/* 801037E0 001005E0  DB E1 00 30 */	stfd f31, 0x30(r1)
+/* 801037E4 001005E4  F3 E1 00 38 */	psq_st f31, 0x38(r1), 0, qr0
+/* 801037E8 001005E8  DB C1 00 20 */	stfd f30, 0x20(r1)
+/* 801037EC 001005EC  F3 C1 00 28 */	psq_st f30, 0x28(r1), 0, qr0
+/* 801037F0 001005F0  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 801037F4 001005F4  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 801037F8 001005F8  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 801037FC 001005FC  93 81 00 10 */	stw r28, 0x10(r1)
+/* 80103800 00100600  7C 7D 1B 78 */	mr r29, r3
+/* 80103804 00100604  80 6D 05 EC */	lwz r3, lbl_805DD6CC@sda21(r0)
+/* 80103808 00100608  83 DD 00 2C */	lwz r30, 0x2c(r29)
+/* 8010380C 0010060C  80 63 01 04 */	lwz r3, 0x104(r3)
+/* 80103810 00100610  80 9E 00 08 */	lwz r4, 0x8(r30)
+/* 80103814 00100614  C0 22 92 A4 */	lfs f1, lbl_805DF9A4@sda21(r0)
+/* 80103818 00100618  83 84 00 00 */	lwz r28, 0x0(r4)
+/* 8010381C 0010061C  80 1C 00 00 */	lwz r0, 0x0(r28)
+/* 80103820 00100620  C0 1C 00 14 */	lfs f0, 0x14(r28)
+/* 80103824 00100624  54 00 18 38 */	slwi r0, r0, 3
+/* 80103828 00100628  7F E3 00 2E */	lwzx r31, r3, r0
+/* 8010382C 0010062C  EF E1 00 32 */	fmuls f31, f1, f0
+/* 80103830 00100630  28 1F 00 00 */	cmplwi r31, 0x0
+/* 80103834 00100634  40 82 00 14 */	bne .L_80103848
+/* 80103838 00100638  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 8010383C 0010063C  38 80 02 EC */	li r4, 0x2ec
+/* 80103840 00100640  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 80103844 00100644  48 32 4C 75 */	bl __assert
+.L_80103848:
+/* 80103848 00100648  C0 3E 01 40 */	lfs f1, 0x140(r30)
+/* 8010384C 0010064C  C0 1C 00 18 */	lfs f0, 0x18(r28)
+/* 80103850 00100650  C0 7F 00 1C */	lfs f3, 0x1c(r31)
+/* 80103854 00100654  C0 5E 01 34 */	lfs f2, 0x134(r30)
+/* 80103858 00100658  EC 21 00 32 */	fmuls f1, f1, f0
+/* 8010385C 0010065C  C0 02 92 A8 */	lfs f0, lbl_805DF9A8@sda21(r0)
+/* 80103860 00100660  EF C3 10 28 */	fsubs f30, f3, f2
+/* 80103864 00100664  D0 3E 01 40 */	stfs f1, 0x140(r30)
+/* 80103868 00100668  C0 7C 00 10 */	lfs f3, 0x10(r28)
+/* 8010386C 0010066C  C0 5E 01 38 */	lfs f2, 0x138(r30)
+/* 80103870 00100670  C0 3E 01 3C */	lfs f1, 0x13c(r30)
+/* 80103874 00100674  EC 5E 10 FC */	fnmsubs f2, f30, f3, f2
+/* 80103878 00100678  C0 7E 01 40 */	lfs f3, 0x140(r30)
+/* 8010387C 0010067C  EC 22 08 24 */	fdivs f1, f2, f1
+/* 80103880 00100680  EC 23 08 2A */	fadds f1, f3, f1
+/* 80103884 00100684  D0 3E 01 40 */	stfs f1, 0x140(r30)
+/* 80103888 00100688  C0 3E 01 40 */	lfs f1, 0x140(r30)
+/* 8010388C 0010068C  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 80103890 00100690  40 80 00 18 */	bge .L_801038A8
+/* 80103894 00100694  C0 02 92 AC */	lfs f0, lbl_805DF9AC@sda21(r0)
+/* 80103898 00100698  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 8010389C 0010069C  40 81 00 0C */	ble .L_801038A8
+/* 801038A0 001006A0  38 00 00 01 */	li r0, 0x1
+/* 801038A4 001006A4  48 00 00 08 */	b .L_801038AC
+.L_801038A8:
+/* 801038A8 001006A8  38 00 00 00 */	li r0, 0x0
+.L_801038AC:
+/* 801038AC 001006AC  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801038B0 001006B0  40 82 01 3C */	bne .L_801039EC
+/* 801038B4 001006B4  C0 3E 01 38 */	lfs f1, 0x138(r30)
+/* 801038B8 001006B8  C0 02 92 A8 */	lfs f0, lbl_805DF9A8@sda21(r0)
+/* 801038BC 001006BC  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 801038C0 001006C0  40 80 00 18 */	bge .L_801038D8
+/* 801038C4 001006C4  C0 02 92 AC */	lfs f0, lbl_805DF9AC@sda21(r0)
+/* 801038C8 001006C8  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 801038CC 001006CC  40 81 00 0C */	ble .L_801038D8
+/* 801038D0 001006D0  38 00 00 01 */	li r0, 0x1
+/* 801038D4 001006D4  48 00 00 08 */	b .L_801038DC
+.L_801038D8:
+/* 801038D8 001006D8  38 00 00 00 */	li r0, 0x0
+.L_801038DC:
+/* 801038DC 001006DC  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801038E0 001006E0  40 82 00 38 */	bne .L_80103918
+/* 801038E4 001006E4  88 1E 01 44 */	lbz r0, 0x144(r30)
+/* 801038E8 001006E8  54 00 CF FF */	extrwi. r0, r0, 1, 24
+/* 801038EC 001006EC  41 82 00 2C */	beq .L_80103918
+/* 801038F0 001006F0  80 1E 01 1C */	lwz r0, 0x11c(r30)
+/* 801038F4 001006F4  2C 00 00 00 */	cmpwi r0, 0x0
+/* 801038F8 001006F8  40 81 00 20 */	ble .L_80103918
+/* 801038FC 001006FC  38 7E 01 18 */	addi r3, r30, 0x118
+/* 80103900 00100700  38 80 00 00 */	li r4, 0x0
+/* 80103904 00100704  4B FE 67 81 */	bl kar_graudio_play_fgm_entry_id
+/* 80103908 00100708  88 1E 01 44 */	lbz r0, 0x144(r30)
+/* 8010390C 0010070C  38 60 00 00 */	li r3, 0x0
+/* 80103910 00100710  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103914 00100714  98 1E 01 44 */	stb r0, 0x144(r30)
+.L_80103918:
+/* 80103918 00100718  C0 1E 01 40 */	lfs f0, 0x140(r30)
+/* 8010391C 0010071C  EF DE 00 2A */	fadds f30, f30, f0
+/* 80103920 00100720  FC 1E F8 40 */	fcmpo cr0, f30, f31
+/* 80103924 00100724  40 81 00 14 */	ble .L_80103938
+/* 80103928 00100728  C0 02 92 98 */	lfs f0, lbl_805DF998@sda21(r0)
+/* 8010392C 0010072C  FF C0 F8 90 */	fmr f30, f31
+/* 80103930 00100730  D0 1E 01 40 */	stfs f0, 0x140(r30)
+/* 80103934 00100734  48 00 00 1C */	b .L_80103950
+.L_80103938:
+/* 80103938 00100738  FC 20 F8 50 */	fneg f1, f31
+/* 8010393C 0010073C  FC 1E 08 40 */	fcmpo cr0, f30, f1
+/* 80103940 00100740  40 80 00 10 */	bge .L_80103950
+/* 80103944 00100744  C0 02 92 98 */	lfs f0, lbl_805DF998@sda21(r0)
+/* 80103948 00100748  FF C0 08 90 */	fmr f30, f1
+/* 8010394C 0010074C  D0 1E 01 40 */	stfs f0, 0x140(r30)
+.L_80103950:
+/* 80103950 00100750  C0 1E 01 34 */	lfs f0, 0x134(r30)
+/* 80103954 00100754  28 1F 00 00 */	cmplwi r31, 0x0
+/* 80103958 00100758  EF DE 00 2A */	fadds f30, f30, f0
+/* 8010395C 0010075C  40 82 00 14 */	bne .L_80103970
+/* 80103960 00100760  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 80103964 00100764  38 80 02 A4 */	li r4, 0x2a4
+/* 80103968 00100768  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 8010396C 0010076C  48 32 4B 4D */	bl __assert
+.L_80103970:
+/* 80103970 00100770  80 1F 00 14 */	lwz r0, 0x14(r31)
+/* 80103974 00100774  54 00 03 9D */	rlwinm. r0, r0, 0, 14, 14
+/* 80103978 00100778  41 82 00 18 */	beq .L_80103990
+/* 8010397C 0010077C  3C 80 80 4A */	lis r4, kar_gryakuanimfloor_assert_jobj_not_quaternion@ha
+/* 80103980 00100780  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 80103984 00100784  38 A4 6A 2C */	addi r5, r4, kar_gryakuanimfloor_assert_jobj_not_quaternion@l
+/* 80103988 00100788  38 80 02 A5 */	li r4, 0x2a5
+/* 8010398C 0010078C  48 32 4B 2D */	bl __assert
+.L_80103990:
+/* 80103990 00100790  D3 DF 00 1C */	stfs f30, 0x1c(r31)
+/* 80103994 00100794  80 1F 00 14 */	lwz r0, 0x14(r31)
+/* 80103998 00100798  54 00 01 8D */	rlwinm. r0, r0, 0, 6, 6
+/* 8010399C 0010079C  40 82 00 B0 */	bne .L_80103A4C
+/* 801039A0 001007A0  28 1F 00 00 */	cmplwi r31, 0x0
+/* 801039A4 001007A4  41 82 00 A8 */	beq .L_80103A4C
+/* 801039A8 001007A8  40 82 00 14 */	bne .L_801039BC
+/* 801039AC 001007AC  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 801039B0 001007B0  38 80 02 5D */	li r4, 0x25d
+/* 801039B4 001007B4  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 801039B8 001007B8  48 32 4B 01 */	bl __assert
+.L_801039BC:
+/* 801039BC 001007BC  80 9F 00 14 */	lwz r4, 0x14(r31)
+/* 801039C0 001007C0  38 60 00 00 */	li r3, 0x0
+/* 801039C4 001007C4  54 80 02 11 */	rlwinm. r0, r4, 0, 8, 8
+/* 801039C8 001007C8  40 82 00 10 */	bne .L_801039D8
+/* 801039CC 001007CC  54 80 06 73 */	rlwinm. r0, r4, 0, 25, 25
+/* 801039D0 001007D0  41 82 00 08 */	beq .L_801039D8
+/* 801039D4 001007D4  38 60 00 01 */	li r3, 0x1
+.L_801039D8:
+/* 801039D8 001007D8  2C 03 00 00 */	cmpwi r3, 0x0
+/* 801039DC 001007DC  40 82 00 70 */	bne .L_80103A4C
+/* 801039E0 001007E0  7F E3 FB 78 */	mr r3, r31
+/* 801039E4 001007E4  48 30 9F 49 */	bl HSD_JObjSetMtxDirtySub
+/* 801039E8 001007E8  48 00 00 64 */	b .L_80103A4C
+.L_801039EC:
+/* 801039EC 001007EC  C0 3E 01 38 */	lfs f1, 0x138(r30)
+/* 801039F0 001007F0  C0 02 92 A8 */	lfs f0, lbl_805DF9A8@sda21(r0)
+/* 801039F4 001007F4  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 801039F8 001007F8  40 80 00 18 */	bge .L_80103A10
+/* 801039FC 001007FC  C0 02 92 AC */	lfs f0, lbl_805DF9AC@sda21(r0)
+/* 80103A00 00100800  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 80103A04 00100804  40 81 00 0C */	ble .L_80103A10
+/* 80103A08 00100808  38 00 00 01 */	li r0, 0x1
+/* 80103A0C 0010080C  48 00 00 08 */	b .L_80103A14
+.L_80103A10:
+/* 80103A10 00100810  38 00 00 00 */	li r0, 0x0
+.L_80103A14:
+/* 80103A14 00100814  2C 00 00 00 */	cmpwi r0, 0x0
+/* 80103A18 00100818  41 82 00 34 */	beq .L_80103A4C
+/* 80103A1C 0010081C  C0 22 92 A4 */	lfs f1, lbl_805DF9A4@sda21(r0)
+/* 80103A20 00100820  C0 1C 00 1C */	lfs f0, 0x1c(r28)
+/* 80103A24 00100824  EC 21 00 32 */	fmuls f1, f1, f0
+/* 80103A28 00100828  FC 00 08 50 */	fneg f0, f1
+/* 80103A2C 0010082C  FC 00 F0 40 */	fcmpo cr0, f0, f30
+/* 80103A30 00100830  40 80 00 1C */	bge .L_80103A4C
+/* 80103A34 00100834  FC 1E 08 40 */	fcmpo cr0, f30, f1
+/* 80103A38 00100838  40 80 00 14 */	bge .L_80103A4C
+/* 80103A3C 0010083C  88 1E 01 44 */	lbz r0, 0x144(r30)
+/* 80103A40 00100840  38 60 00 01 */	li r3, 0x1
+/* 80103A44 00100844  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103A48 00100848  98 1E 01 44 */	stb r0, 0x144(r30)
+.L_80103A4C:
+/* 80103A4C 0010084C  C0 22 92 98 */	lfs f1, lbl_805DF998@sda21(r0)
+/* 80103A50 00100850  38 80 00 00 */	li r4, 0x0
+/* 80103A54 00100854  C0 42 92 A0 */	lfs f2, lbl_805DF9A0@sda21(r0)
+/* 80103A58 00100858  38 E0 00 00 */	li r7, 0x0
+/* 80103A5C 0010085C  D0 3E 01 38 */	stfs f1, 0x138(r30)
+/* 80103A60 00100860  FC 60 08 90 */	fmr f3, f1
+/* 80103A64 00100864  80 7D 00 2C */	lwz r3, 0x2c(r29)
+/* 80103A68 00100868  80 A3 00 08 */	lwz r5, 0x8(r3)
+/* 80103A6C 0010086C  80 C5 00 00 */	lwz r6, 0x0(r5)
+/* 80103A70 00100870  80 A6 00 04 */	lwz r5, 0x4(r6)
+/* 80103A74 00100874  80 C6 00 00 */	lwz r6, 0x0(r6)
+/* 80103A78 00100878  4B FF 1A D1 */	bl kar_gryaku_set_path_node_motion
+/* 80103A7C 0010087C  E3 E1 00 38 */	psq_l f31, 0x38(r1), 0, qr0
+/* 80103A80 00100880  CB E1 00 30 */	lfd f31, 0x30(r1)
+/* 80103A84 00100884  E3 C1 00 28 */	psq_l f30, 0x28(r1), 0, qr0
+/* 80103A88 00100888  CB C1 00 20 */	lfd f30, 0x20(r1)
+/* 80103A8C 0010088C  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80103A90 00100890  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80103A94 00100894  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80103A98 00100898  80 01 00 44 */	lwz r0, 0x44(r1)
+/* 80103A9C 0010089C  83 81 00 10 */	lwz r28, 0x10(r1)
+/* 80103AA0 001008A0  7C 08 03 A6 */	mtlr r0
+/* 80103AA4 001008A4  38 21 00 40 */	addi r1, r1, 0x40
+/* 80103AA8 001008A8  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind55_reactive_jobj_motion
+
+# .text:0xE34 | 0x80103AAC | size: 0x1AC
+.fn kar_gryakuanimfloor_accumulate_kind55_contact_impulse, global
+/* 80103AAC 001008AC  94 21 FF B0 */	stwu r1, -0x50(r1)
+/* 80103AB0 001008B0  7C 08 02 A6 */	mflr r0
+/* 80103AB4 001008B4  90 01 00 54 */	stw r0, 0x54(r1)
+/* 80103AB8 001008B8  DB E1 00 40 */	stfd f31, 0x40(r1)
+/* 80103ABC 001008BC  F3 E1 00 48 */	psq_st f31, 0x48(r1), 0, qr0
+/* 80103AC0 001008C0  93 E1 00 3C */	stw r31, 0x3c(r1)
+/* 80103AC4 001008C4  93 C1 00 38 */	stw r30, 0x38(r1)
+/* 80103AC8 001008C8  93 A1 00 34 */	stw r29, 0x34(r1)
+/* 80103ACC 001008CC  93 81 00 30 */	stw r28, 0x30(r1)
+/* 80103AD0 001008D0  83 C3 00 2C */	lwz r30, 0x2c(r3)
+/* 80103AD4 001008D4  7C 9C 23 78 */	mr r28, r4
+/* 80103AD8 001008D8  80 8D 05 EC */	lwz r4, lbl_805DD6CC@sda21(r0)
+/* 80103ADC 001008DC  7C BD 2B 78 */	mr r29, r5
+/* 80103AE0 001008E0  80 7E 00 08 */	lwz r3, 0x8(r30)
+/* 80103AE4 001008E4  80 84 01 04 */	lwz r4, 0x104(r4)
+/* 80103AE8 001008E8  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 80103AEC 001008EC  80 03 00 00 */	lwz r0, 0x0(r3)
+/* 80103AF0 001008F0  54 00 18 38 */	slwi r0, r0, 3
+/* 80103AF4 001008F4  7F E4 00 2E */	lwzx r31, r4, r0
+/* 80103AF8 001008F8  28 1F 00 00 */	cmplwi r31, 0x0
+/* 80103AFC 001008FC  40 82 00 14 */	bne .L_80103B10
+/* 80103B00 00100900  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 80103B04 00100904  38 80 04 7C */	li r4, 0x47c
+/* 80103B08 00100908  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 80103B0C 0010090C  48 32 49 AD */	bl __assert
+.L_80103B10:
+/* 80103B10 00100910  28 1F 00 00 */	cmplwi r31, 0x0
+/* 80103B14 00100914  41 82 00 44 */	beq .L_80103B58
+/* 80103B18 00100918  40 82 00 14 */	bne .L_80103B2C
+/* 80103B1C 0010091C  38 6D 91 F0 */	li r3, kar_srcfile_jobj_h_805d62d0@sda21
+/* 80103B20 00100920  38 80 02 5D */	li r4, 0x25d
+/* 80103B24 00100924  38 AD 91 F8 */	li r5, lbl_805D62D8@sda21
+/* 80103B28 00100928  48 32 49 91 */	bl __assert
+.L_80103B2C:
+/* 80103B2C 0010092C  80 9F 00 14 */	lwz r4, 0x14(r31)
+/* 80103B30 00100930  38 60 00 00 */	li r3, 0x0
+/* 80103B34 00100934  54 80 02 11 */	rlwinm. r0, r4, 0, 8, 8
+/* 80103B38 00100938  40 82 00 10 */	bne .L_80103B48
+/* 80103B3C 0010093C  54 80 06 73 */	rlwinm. r0, r4, 0, 25, 25
+/* 80103B40 00100940  41 82 00 08 */	beq .L_80103B48
+/* 80103B44 00100944  38 60 00 01 */	li r3, 0x1
+.L_80103B48:
+/* 80103B48 00100948  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80103B4C 0010094C  41 82 00 0C */	beq .L_80103B58
+/* 80103B50 00100950  7F E3 FB 78 */	mr r3, r31
+/* 80103B54 00100954  48 30 9B 61 */	bl HSD_JObjSetupMatrixSub
+.L_80103B58:
+/* 80103B58 00100958  3B FF 00 44 */	addi r31, r31, 0x44
+/* 80103B5C 0010095C  38 61 00 20 */	addi r3, r1, 0x20
+/* 80103B60 00100960  C0 1F 00 04 */	lfs f0, 0x4(r31)
+/* 80103B64 00100964  7C 64 1B 78 */	mr r4, r3
+/* 80103B68 00100968  D0 01 00 20 */	stfs f0, 0x20(r1)
+/* 80103B6C 0010096C  C0 1F 00 14 */	lfs f0, 0x14(r31)
+/* 80103B70 00100970  D0 01 00 24 */	stfs f0, 0x24(r1)
+/* 80103B74 00100974  C0 1F 00 24 */	lfs f0, 0x24(r31)
+/* 80103B78 00100978  D0 01 00 28 */	stfs f0, 0x28(r1)
+/* 80103B7C 0010097C  4B F5 F1 29 */	bl kar_lbvector_normalize_with_axis_fallback
+/* 80103B80 00100980  C0 21 00 24 */	lfs f1, 0x24(r1)
+/* 80103B84 00100984  C0 1D 00 04 */	lfs f0, 0x4(r29)
+/* 80103B88 00100988  C0 41 00 20 */	lfs f2, 0x20(r1)
+/* 80103B8C 0010098C  EC 01 00 32 */	fmuls f0, f1, f0
+/* 80103B90 00100990  C0 3D 00 00 */	lfs f1, 0x0(r29)
+/* 80103B94 00100994  C0 81 00 28 */	lfs f4, 0x28(r1)
+/* 80103B98 00100998  C0 7D 00 08 */	lfs f3, 0x8(r29)
+/* 80103B9C 0010099C  EC 22 00 7A */	fmadds f1, f2, f1, f0
+/* 80103BA0 001009A0  C0 02 92 98 */	lfs f0, lbl_805DF998@sda21(r0)
+/* 80103BA4 001009A4  EC 24 08 FA */	fmadds f1, f4, f3, f1
+/* 80103BA8 001009A8  FC 01 00 40 */	fcmpo cr0, f1, f0
+/* 80103BAC 001009AC  40 80 00 84 */	bge .L_80103C30
+/* 80103BB0 001009B0  FF E0 0A 10 */	fabs f31, f1
+/* 80103BB4 001009B4  7F E3 FB 78 */	mr r3, r31
+/* 80103BB8 001009B8  38 81 00 14 */	addi r4, r1, 0x14
+/* 80103BBC 001009BC  48 31 2F 4D */	bl HSD_MtxGetTranslate
+/* 80103BC0 001009C0  C0 1F 00 08 */	lfs f0, 0x8(r31)
+/* 80103BC4 001009C4  38 61 00 08 */	addi r3, r1, 0x8
+/* 80103BC8 001009C8  7C 64 1B 78 */	mr r4, r3
+/* 80103BCC 001009CC  D0 01 00 08 */	stfs f0, 0x8(r1)
+/* 80103BD0 001009D0  C0 1F 00 18 */	lfs f0, 0x18(r31)
+/* 80103BD4 001009D4  D0 01 00 0C */	stfs f0, 0xc(r1)
+/* 80103BD8 001009D8  C0 1F 00 28 */	lfs f0, 0x28(r31)
+/* 80103BDC 001009DC  D0 01 00 10 */	stfs f0, 0x10(r1)
+/* 80103BE0 001009E0  4B F5 F0 C5 */	bl kar_lbvector_normalize_with_axis_fallback
+/* 80103BE4 001009E4  C0 5C 00 04 */	lfs f2, 0x4(r28)
+/* 80103BE8 001009E8  FC 20 F8 18 */	frsp f1, f31
+/* 80103BEC 001009EC  C0 01 00 18 */	lfs f0, 0x18(r1)
+/* 80103BF0 001009F0  C0 9C 00 00 */	lfs f4, 0x0(r28)
+/* 80103BF4 001009F4  C0 61 00 14 */	lfs f3, 0x14(r1)
+/* 80103BF8 001009F8  EC 42 00 28 */	fsubs f2, f2, f0
+/* 80103BFC 001009FC  C0 01 00 0C */	lfs f0, 0xc(r1)
+/* 80103C00 00100A00  EC 64 18 28 */	fsubs f3, f4, f3
+/* 80103C04 00100A04  C0 BC 00 08 */	lfs f5, 0x8(r28)
+/* 80103C08 00100A08  C0 81 00 1C */	lfs f4, 0x1c(r1)
+/* 80103C0C 00100A0C  EC 02 00 32 */	fmuls f0, f2, f0
+/* 80103C10 00100A10  C0 41 00 08 */	lfs f2, 0x8(r1)
+/* 80103C14 00100A14  EC 85 20 28 */	fsubs f4, f5, f4
+/* 80103C18 00100A18  EC 43 00 BA */	fmadds f2, f3, f2, f0
+/* 80103C1C 00100A1C  C0 61 00 10 */	lfs f3, 0x10(r1)
+/* 80103C20 00100A20  C0 1E 01 38 */	lfs f0, 0x138(r30)
+/* 80103C24 00100A24  EC 44 10 FA */	fmadds f2, f4, f3, f2
+/* 80103C28 00100A28  EC 02 00 7A */	fmadds f0, f2, f1, f0
+/* 80103C2C 00100A2C  D0 1E 01 38 */	stfs f0, 0x138(r30)
+.L_80103C30:
+/* 80103C30 00100A30  E3 E1 00 48 */	psq_l f31, 0x48(r1), 0, qr0
+/* 80103C34 00100A34  80 01 00 54 */	lwz r0, 0x54(r1)
+/* 80103C38 00100A38  CB E1 00 40 */	lfd f31, 0x40(r1)
+/* 80103C3C 00100A3C  83 E1 00 3C */	lwz r31, 0x3c(r1)
+/* 80103C40 00100A40  83 C1 00 38 */	lwz r30, 0x38(r1)
+/* 80103C44 00100A44  83 A1 00 34 */	lwz r29, 0x34(r1)
+/* 80103C48 00100A48  83 81 00 30 */	lwz r28, 0x30(r1)
+/* 80103C4C 00100A4C  7C 08 03 A6 */	mtlr r0
+/* 80103C50 00100A50  38 21 00 50 */	addi r1, r1, 0x50
+/* 80103C54 00100A54  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_accumulate_kind55_contact_impulse
+
+# .text:0xFE0 | 0x80103C58 | size: 0x38
+.fn kar_gryakuanimfloor_create_stage_linked_kind24_breakcoral_floor, global
+/* 80103C58 00100A58  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80103C5C 00100A5C  7C 08 02 A6 */	mflr r0
+/* 80103C60 00100A60  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80103C64 00100A64  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 80103C68 00100A68  7C 7F 1B 78 */	mr r31, r3
+/* 80103C6C 00100A6C  38 60 00 18 */	li r3, 0x18
+/* 80103C70 00100A70  4B FF 07 FD */	bl kar_gryaku_create_yaku_from_main_kind
+/* 80103C74 00100A74  7F E4 FB 78 */	mr r4, r31
+/* 80103C78 00100A78  48 00 00 19 */	bl kar_gryakuanimfloor_init_kind24_breakcoral_floor
+/* 80103C7C 00100A7C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80103C80 00100A80  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 80103C84 00100A84  7C 08 03 A6 */	mtlr r0
+/* 80103C88 00100A88  38 21 00 10 */	addi r1, r1, 0x10
+/* 80103C8C 00100A8C  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_create_stage_linked_kind24_breakcoral_floor
+
+# .text:0x1018 | 0x80103C90 | size: 0xC4
+.fn kar_gryakuanimfloor_init_kind24_breakcoral_floor, global
+/* 80103C90 00100A90  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80103C94 00100A94  7C 08 02 A6 */	mflr r0
+/* 80103C98 00100A98  90 01 00 24 */	stw r0, 0x24(r1)
+/* 80103C9C 00100A9C  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 80103CA0 00100AA0  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 80103CA4 00100AA4  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 80103CA8 00100AA8  7C 7D 1B 78 */	mr r29, r3
+/* 80103CAC 00100AAC  83 FD 00 2C */	lwz r31, 0x2c(r29)
+/* 80103CB0 00100AB0  80 64 00 2C */	lwz r3, 0x2c(r4)
+/* 80103CB4 00100AB4  80 DF 00 08 */	lwz r6, 0x8(r31)
+/* 80103CB8 00100AB8  80 83 01 04 */	lwz r4, 0x104(r3)
+/* 80103CBC 00100ABC  83 C6 00 00 */	lwz r30, 0x0(r6)
+/* 80103CC0 00100AC0  80 AD 05 EC */	lwz r5, lbl_805DD6CC@sda21(r0)
+/* 80103CC4 00100AC4  80 1E 00 04 */	lwz r0, 0x4(r30)
+/* 80103CC8 00100AC8  38 65 00 54 */	addi r3, r5, 0x54
+/* 80103CCC 00100ACC  54 00 18 38 */	slwi r0, r0, 3
+/* 80103CD0 00100AD0  7C 84 00 2E */	lwzx r4, r4, r0
+/* 80103CD4 00100AD4  4B FD 3C 81 */	bl kar_grcoll__800d7954
+/* 80103CD8 00100AD8  90 7F 01 30 */	stw r3, 0x130(r31)
+/* 80103CDC 00100ADC  38 60 00 00 */	li r3, 0x0
+/* 80103CE0 00100AE0  80 1F 00 00 */	lwz r0, 0x0(r31)
+/* 80103CE4 00100AE4  80 9F 01 30 */	lwz r4, 0x130(r31)
+/* 80103CE8 00100AE8  90 04 00 90 */	stw r0, 0x90(r4)
+/* 80103CEC 00100AEC  88 1F 01 50 */	lbz r0, 0x150(r31)
+/* 80103CF0 00100AF0  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
+/* 80103CF4 00100AF4  98 1F 01 50 */	stb r0, 0x150(r31)
+/* 80103CF8 00100AF8  90 7F 01 3C */	stw r3, 0x13c(r31)
+/* 80103CFC 00100AFC  90 7F 01 38 */	stw r3, 0x138(r31)
+/* 80103D00 00100B00  90 7F 01 44 */	stw r3, 0x144(r31)
+/* 80103D04 00100B04  90 7F 01 40 */	stw r3, 0x140(r31)
+/* 80103D08 00100B08  90 7F 01 4C */	stw r3, 0x14c(r31)
+/* 80103D0C 00100B0C  90 7F 01 48 */	stw r3, 0x148(r31)
+/* 80103D10 00100B10  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80103D14 00100B14  80 03 00 14 */	lwz r0, 0x14(r3)
+/* 80103D18 00100B18  28 00 00 00 */	cmplwi r0, 0x0
+/* 80103D1C 00100B1C  41 82 00 14 */	beq .L_80103D30
+/* 80103D20 00100B20  80 9E 00 00 */	lwz r4, 0x0(r30)
+/* 80103D24 00100B24  7F A3 EB 78 */	mr r3, r29
+/* 80103D28 00100B28  38 A0 00 00 */	li r5, 0x0
+/* 80103D2C 00100B2C  4B FF 3B 45 */	bl kar_gryakuaudio_configure_fgm_track_from_joint
+.L_80103D30:
+/* 80103D30 00100B30  7F A3 EB 78 */	mr r3, r29
+/* 80103D34 00100B34  48 00 00 21 */	bl kar_gryakuanimfloor_start_kind24_breakcoral_callback
+/* 80103D38 00100B38  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 80103D3C 00100B3C  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 80103D40 00100B40  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 80103D44 00100B44  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 80103D48 00100B48  7C 08 03 A6 */	mtlr r0
+/* 80103D4C 00100B4C  38 21 00 20 */	addi r1, r1, 0x20
+/* 80103D50 00100B50  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_init_kind24_breakcoral_floor
+
+# .text:0x10DC | 0x80103D54 | size: 0x60
+.fn kar_gryakuanimfloor_start_kind24_breakcoral_callback, global
+/* 80103D54 00100B54  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80103D58 00100B58  7C 08 02 A6 */	mflr r0
+/* 80103D5C 00100B5C  C0 22 92 B0 */	lfs f1, lbl_805DF9B0@sda21(r0)
+/* 80103D60 00100B60  38 80 00 00 */	li r4, 0x0
+/* 80103D64 00100B64  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80103D68 00100B68  38 A0 FF FF */	li r5, -0x1
+/* 80103D6C 00100B6C  FC 40 08 90 */	fmr f2, f1
+/* 80103D70 00100B70  38 E0 00 00 */	li r7, 0x0
+/* 80103D74 00100B74  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 80103D78 00100B78  FC 60 08 90 */	fmr f3, f1
+/* 80103D7C 00100B7C  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80103D80 00100B80  80 DF 00 08 */	lwz r6, 0x8(r31)
+/* 80103D84 00100B84  7F E3 FB 78 */	mr r3, r31
+/* 80103D88 00100B88  80 C6 00 00 */	lwz r6, 0x0(r6)
+/* 80103D8C 00100B8C  80 C6 00 00 */	lwz r6, 0x0(r6)
+/* 80103D90 00100B90  4B FF 17 B9 */	bl kar_gryaku_set_path_node_motion
+/* 80103D94 00100B94  3C 60 80 10 */	lis r3, kar_gryakubreakcoral_trigger_break_effects_mode2@ha
+/* 80103D98 00100B98  38 03 40 FC */	addi r0, r3, kar_gryakubreakcoral_trigger_break_effects_mode2@l
+/* 80103D9C 00100B9C  90 1F 01 00 */	stw r0, 0x100(r31)
+/* 80103DA0 00100BA0  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 80103DA4 00100BA4  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80103DA8 00100BA8  7C 08 03 A6 */	mtlr r0
+/* 80103DAC 00100BAC  38 21 00 10 */	addi r1, r1, 0x10
+/* 80103DB0 00100BB0  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_start_kind24_breakcoral_callback
+
+# .text:0x113C | 0x80103DB4 | size: 0x104
+.fn kar_gryakuanimfloor_update_kind24_effects_then_destroy, global
+/* 80103DB4 00100BB4  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80103DB8 00100BB8  7C 08 02 A6 */	mflr r0
+/* 80103DBC 00100BBC  90 01 00 24 */	stw r0, 0x24(r1)
+/* 80103DC0 00100BC0  39 61 00 20 */	addi r11, r1, 0x20
+/* 80103DC4 00100BC4  48 2A 9D 8D */	bl _savegpr_26
+/* 80103DC8 00100BC8  7C 7E 1B 78 */	mr r30, r3
+/* 80103DCC 00100BCC  3B 40 00 00 */	li r26, 0x0
+/* 80103DD0 00100BD0  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 80103DD4 00100BD4  3B A0 00 00 */	li r29, 0x0
+/* 80103DD8 00100BD8  80 7F 00 08 */	lwz r3, 0x8(r31)
+/* 80103DDC 00100BDC  7F FC FB 78 */	mr r28, r31
+/* 80103DE0 00100BE0  83 63 00 00 */	lwz r27, 0x0(r3)
+/* 80103DE4 00100BE4  48 00 00 38 */	b .L_80103E1C
+.L_80103DE8:
+/* 80103DE8 00100BE8  80 7C 01 38 */	lwz r3, 0x138(r28)
+/* 80103DEC 00100BEC  80 9C 01 3C */	lwz r4, 0x13c(r28)
+/* 80103DF0 00100BF0  7C 60 EA 78 */	xor r0, r3, r29
+/* 80103DF4 00100BF4  7C 85 EA 78 */	xor r5, r4, r29
+/* 80103DF8 00100BF8  7C A0 03 79 */	or. r0, r5, r0
+/* 80103DFC 00100BFC  41 82 00 18 */	beq .L_80103E14
+/* 80103E00 00100C00  4B FF 34 8D */	bl kar_gryakueffect_is_effect_key_active
+/* 80103E04 00100C04  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80103E08 00100C08  40 82 00 0C */	bne .L_80103E14
+/* 80103E0C 00100C0C  93 BC 01 3C */	stw r29, 0x13c(r28)
+/* 80103E10 00100C10  93 BC 01 38 */	stw r29, 0x138(r28)
+.L_80103E14:
+/* 80103E14 00100C14  3B 9C 00 08 */	addi r28, r28, 0x8
+/* 80103E18 00100C18  3B 5A 00 01 */	addi r26, r26, 0x1
+.L_80103E1C:
+/* 80103E1C 00100C1C  80 FB 00 1C */	lwz r7, 0x1c(r27)
+/* 80103E20 00100C20  7C 1A 38 00 */	cmpw r26, r7
+/* 80103E24 00100C24  41 80 FF C4 */	blt .L_80103DE8
+/* 80103E28 00100C28  39 00 00 00 */	li r8, 0x0
+/* 80103E2C 00100C2C  7F E6 FB 78 */	mr r6, r31
+/* 80103E30 00100C30  7D 05 43 78 */	mr r5, r8
+/* 80103E34 00100C34  7D 04 43 78 */	mr r4, r8
+/* 80103E38 00100C38  7C E9 03 A6 */	mtctr r7
+/* 80103E3C 00100C3C  2C 07 00 00 */	cmpwi r7, 0x0
+/* 80103E40 00100C40  40 81 00 28 */	ble .L_80103E68
+.L_80103E44:
+/* 80103E44 00100C44  80 06 01 38 */	lwz r0, 0x138(r6)
+/* 80103E48 00100C48  80 66 01 3C */	lwz r3, 0x13c(r6)
+/* 80103E4C 00100C4C  7C 00 22 78 */	xor r0, r0, r4
+/* 80103E50 00100C50  7C 63 2A 78 */	xor r3, r3, r5
+/* 80103E54 00100C54  7C 60 03 79 */	or. r0, r3, r0
+/* 80103E58 00100C58  40 82 00 10 */	bne .L_80103E68
+/* 80103E5C 00100C5C  38 C6 00 08 */	addi r6, r6, 0x8
+/* 80103E60 00100C60  39 08 00 01 */	addi r8, r8, 0x1
+/* 80103E64 00100C64  42 00 FF E0 */	bdnz .L_80103E44
+.L_80103E68:
+/* 80103E68 00100C68  7C 08 38 00 */	cmpw r8, r7
+/* 80103E6C 00100C6C  40 82 00 34 */	bne .L_80103EA0
+/* 80103E70 00100C70  80 7F 01 18 */	lwz r3, 0x118(r31)
+/* 80103E74 00100C74  28 03 00 00 */	cmplwi r3, 0x0
+/* 80103E78 00100C78  41 82 00 20 */	beq .L_80103E98
+/* 80103E7C 00100C7C  88 03 00 04 */	lbz r0, 0x4(r3)
+/* 80103E80 00100C80  54 00 C0 02 */	extlwi r0, r0, 2, 24
+/* 80103E84 00100C84  7C 00 FE 70 */	srawi r0, r0, 31
+/* 80103E88 00100C88  7C 00 07 75 */	extsb. r0, r0
+/* 80103E8C 00100C8C  41 82 00 0C */	beq .L_80103E98
+/* 80103E90 00100C90  38 7F 01 18 */	addi r3, r31, 0x118
+/* 80103E94 00100C94  4B FE 62 ED */	bl kar_graudio_stop_active_fgm_slot
+.L_80103E98:
+/* 80103E98 00100C98  7F C3 F3 78 */	mr r3, r30
+/* 80103E9C 00100C9C  48 32 50 C9 */	bl HSD_GObjDestroy
+.L_80103EA0:
+/* 80103EA0 00100CA0  39 61 00 20 */	addi r11, r1, 0x20
+/* 80103EA4 00100CA4  48 2A 9C F9 */	bl _restgpr_26
+/* 80103EA8 00100CA8  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 80103EAC 00100CAC  7C 08 03 A6 */	mtlr r0
+/* 80103EB0 00100CB0  38 21 00 20 */	addi r1, r1, 0x20
+/* 80103EB4 00100CB4  4E 80 00 20 */	blr
+.endfn kar_gryakuanimfloor_update_kind24_effects_then_destroy

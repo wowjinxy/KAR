@@ -1,0 +1,140 @@
+.include "macros.inc"
+.file "gryakurotjumphill.c"
+
+# 0x800FC0F0..0x800FC2D0 | size: 0x1E0
+.text
+.balign 4
+
+# .text:0x0 | 0x800FC0F0 | size: 0x1E0
+.fn kar_gryakurotjumphill_update_target_trigger_cycle, global
+/* 800FC0F0 000F8EF0  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 800FC0F4 000F8EF4  7C 08 02 A6 */	mflr r0
+/* 800FC0F8 000F8EF8  90 01 00 24 */	stw r0, 0x24(r1)
+/* 800FC0FC 000F8EFC  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 800FC100 000F8F00  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 800FC104 000F8F04  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 800FC108 000F8F08  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 800FC10C 000F8F0C  80 9F 00 08 */	lwz r4, 0x8(r31)
+/* 800FC110 000F8F10  80 7F 01 34 */	lwz r3, 0x134(r31)
+/* 800FC114 000F8F14  83 C4 00 00 */	lwz r30, 0x0(r4)
+/* 800FC118 000F8F18  38 03 FF FF */	subi r0, r3, 0x1
+/* 800FC11C 000F8F1C  90 1F 01 34 */	stw r0, 0x134(r31)
+/* 800FC120 000F8F20  88 7F 01 3C */	lbz r3, 0x13c(r31)
+/* 800FC124 000F8F24  54 60 CF FF */	extrwi. r0, r3, 1, 24
+/* 800FC128 000F8F28  41 82 00 C0 */	beq .L_800FC1E8
+/* 800FC12C 000F8F2C  48 00 00 AC */	b .L_800FC1D8
+.L_800FC130:
+/* 800FC130 000F8F30  80 1F 01 38 */	lwz r0, 0x138(r31)
+/* 800FC134 000F8F34  38 60 00 00 */	li r3, 0x0
+/* 800FC138 000F8F38  80 9E 00 04 */	lwz r4, 0x4(r30)
+/* 800FC13C 000F8F3C  54 00 18 38 */	slwi r0, r0, 3
+/* 800FC140 000F8F40  7F A4 00 2E */	lwzx r29, r4, r0
+/* 800FC144 000F8F44  2C 1D 00 00 */	cmpwi r29, 0x0
+/* 800FC148 000F8F48  41 80 00 14 */	blt .L_800FC15C
+/* 800FC14C 000F8F4C  80 1E 00 10 */	lwz r0, 0x10(r30)
+/* 800FC150 000F8F50  7C 1D 00 00 */	cmpw r29, r0
+/* 800FC154 000F8F54  40 80 00 08 */	bge .L_800FC15C
+/* 800FC158 000F8F58  38 60 00 01 */	li r3, 0x1
+.L_800FC15C:
+/* 800FC15C 000F8F5C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800FC160 000F8F60  40 82 00 1C */	bne .L_800FC17C
+/* 800FC164 000F8F64  3C 60 80 4A */	lis r3, kar_src_gryakurotjumphill_c@ha
+/* 800FC168 000F8F68  3C A0 80 4A */	lis r5, kar_gryakurotjumphill_assert_target_ref_in_range@ha
+/* 800FC16C 000F8F6C  38 63 61 7C */	addi r3, r3, kar_src_gryakurotjumphill_c@l
+/* 800FC170 000F8F70  38 80 01 B5 */	li r4, 0x1b5
+/* 800FC174 000F8F74  38 A5 61 90 */	addi r5, r5, kar_gryakurotjumphill_assert_target_ref_in_range@l
+/* 800FC178 000F8F78  48 32 C3 41 */	bl __assert
+.L_800FC17C:
+/* 800FC17C 000F8F7C  80 7F 01 30 */	lwz r3, 0x130(r31)
+/* 800FC180 000F8F80  57 A0 10 3A */	slwi r0, r29, 2
+/* 800FC184 000F8F84  38 80 00 01 */	li r4, 0x1
+/* 800FC188 000F8F88  7C 63 00 2E */	lwzx r3, r3, r0
+/* 800FC18C 000F8F8C  80 63 00 2C */	lwz r3, 0x2c(r3)
+/* 800FC190 000F8F90  88 03 01 44 */	lbz r0, 0x144(r3)
+/* 800FC194 000F8F94  50 80 36 72 */	rlwimi r0, r4, 6, 25, 25
+/* 800FC198 000F8F98  98 03 01 44 */	stb r0, 0x144(r3)
+/* 800FC19C 000F8F9C  80 1F 01 38 */	lwz r0, 0x138(r31)
+/* 800FC1A0 000F8FA0  80 9E 00 04 */	lwz r4, 0x4(r30)
+/* 800FC1A4 000F8FA4  54 03 18 38 */	slwi r3, r0, 3
+/* 800FC1A8 000F8FA8  38 03 00 04 */	addi r0, r3, 0x4
+/* 800FC1AC 000F8FAC  7C 04 00 2E */	lwzx r0, r4, r0
+/* 800FC1B0 000F8FB0  90 1F 01 34 */	stw r0, 0x134(r31)
+/* 800FC1B4 000F8FB4  80 7F 01 38 */	lwz r3, 0x138(r31)
+/* 800FC1B8 000F8FB8  38 03 00 01 */	addi r0, r3, 0x1
+/* 800FC1BC 000F8FBC  90 1F 01 38 */	stw r0, 0x138(r31)
+/* 800FC1C0 000F8FC0  80 7F 01 38 */	lwz r3, 0x138(r31)
+/* 800FC1C4 000F8FC4  80 1E 00 08 */	lwz r0, 0x8(r30)
+/* 800FC1C8 000F8FC8  7C 03 00 00 */	cmpw r3, r0
+/* 800FC1CC 000F8FCC  41 80 00 0C */	blt .L_800FC1D8
+/* 800FC1D0 000F8FD0  38 00 00 00 */	li r0, 0x0
+/* 800FC1D4 000F8FD4  90 1F 01 38 */	stw r0, 0x138(r31)
+.L_800FC1D8:
+/* 800FC1D8 000F8FD8  80 1F 01 34 */	lwz r0, 0x134(r31)
+/* 800FC1DC 000F8FDC  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800FC1E0 000F8FE0  40 81 FF 50 */	ble .L_800FC130
+/* 800FC1E4 000F8FE4  48 00 00 D0 */	b .L_800FC2B4
+.L_800FC1E8:
+/* 800FC1E8 000F8FE8  80 1F 01 34 */	lwz r0, 0x134(r31)
+/* 800FC1EC 000F8FEC  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800FC1F0 000F8FF0  41 81 00 C4 */	bgt .L_800FC2B4
+/* 800FC1F4 000F8FF4  38 00 00 01 */	li r0, 0x1
+/* 800FC1F8 000F8FF8  50 03 3E 30 */	rlwimi r3, r0, 7, 24, 24
+/* 800FC1FC 000F8FFC  98 7F 01 3C */	stb r3, 0x13c(r31)
+.L_800FC200:
+/* 800FC200 000F9000  80 1F 01 38 */	lwz r0, 0x138(r31)
+/* 800FC204 000F9004  38 60 00 00 */	li r3, 0x0
+/* 800FC208 000F9008  80 9E 00 04 */	lwz r4, 0x4(r30)
+/* 800FC20C 000F900C  54 00 18 38 */	slwi r0, r0, 3
+/* 800FC210 000F9010  7F A4 00 2E */	lwzx r29, r4, r0
+/* 800FC214 000F9014  2C 1D 00 00 */	cmpwi r29, 0x0
+/* 800FC218 000F9018  41 80 00 14 */	blt .L_800FC22C
+/* 800FC21C 000F901C  80 1E 00 10 */	lwz r0, 0x10(r30)
+/* 800FC220 000F9020  7C 1D 00 00 */	cmpw r29, r0
+/* 800FC224 000F9024  40 80 00 08 */	bge .L_800FC22C
+/* 800FC228 000F9028  38 60 00 01 */	li r3, 0x1
+.L_800FC22C:
+/* 800FC22C 000F902C  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800FC230 000F9030  40 82 00 1C */	bne .L_800FC24C
+/* 800FC234 000F9034  3C 60 80 4A */	lis r3, kar_src_gryakurotjumphill_c@ha
+/* 800FC238 000F9038  3C A0 80 4A */	lis r5, kar_gryakurotjumphill_assert_target_ref_in_range@ha
+/* 800FC23C 000F903C  38 63 61 7C */	addi r3, r3, kar_src_gryakurotjumphill_c@l
+/* 800FC240 000F9040  38 80 01 B5 */	li r4, 0x1b5
+/* 800FC244 000F9044  38 A5 61 90 */	addi r5, r5, kar_gryakurotjumphill_assert_target_ref_in_range@l
+/* 800FC248 000F9048  48 32 C2 71 */	bl __assert
+.L_800FC24C:
+/* 800FC24C 000F904C  80 7F 01 30 */	lwz r3, 0x130(r31)
+/* 800FC250 000F9050  57 A0 10 3A */	slwi r0, r29, 2
+/* 800FC254 000F9054  38 80 00 01 */	li r4, 0x1
+/* 800FC258 000F9058  7C 63 00 2E */	lwzx r3, r3, r0
+/* 800FC25C 000F905C  80 63 00 2C */	lwz r3, 0x2c(r3)
+/* 800FC260 000F9060  88 03 01 44 */	lbz r0, 0x144(r3)
+/* 800FC264 000F9064  50 80 36 72 */	rlwimi r0, r4, 6, 25, 25
+/* 800FC268 000F9068  98 03 01 44 */	stb r0, 0x144(r3)
+/* 800FC26C 000F906C  80 1F 01 38 */	lwz r0, 0x138(r31)
+/* 800FC270 000F9070  80 9E 00 04 */	lwz r4, 0x4(r30)
+/* 800FC274 000F9074  54 03 18 38 */	slwi r3, r0, 3
+/* 800FC278 000F9078  38 03 00 04 */	addi r0, r3, 0x4
+/* 800FC27C 000F907C  7C 04 00 2E */	lwzx r0, r4, r0
+/* 800FC280 000F9080  90 1F 01 34 */	stw r0, 0x134(r31)
+/* 800FC284 000F9084  80 7F 01 38 */	lwz r3, 0x138(r31)
+/* 800FC288 000F9088  38 03 00 01 */	addi r0, r3, 0x1
+/* 800FC28C 000F908C  90 1F 01 38 */	stw r0, 0x138(r31)
+/* 800FC290 000F9090  80 7F 01 38 */	lwz r3, 0x138(r31)
+/* 800FC294 000F9094  80 1E 00 08 */	lwz r0, 0x8(r30)
+/* 800FC298 000F9098  7C 03 00 00 */	cmpw r3, r0
+/* 800FC29C 000F909C  41 80 00 0C */	blt .L_800FC2A8
+/* 800FC2A0 000F90A0  38 00 00 00 */	li r0, 0x0
+/* 800FC2A4 000F90A4  90 1F 01 38 */	stw r0, 0x138(r31)
+.L_800FC2A8:
+/* 800FC2A8 000F90A8  80 1F 01 34 */	lwz r0, 0x134(r31)
+/* 800FC2AC 000F90AC  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800FC2B0 000F90B0  40 81 FF 50 */	ble .L_800FC200
+.L_800FC2B4:
+/* 800FC2B4 000F90B4  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 800FC2B8 000F90B8  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 800FC2BC 000F90BC  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 800FC2C0 000F90C0  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 800FC2C4 000F90C4  7C 08 03 A6 */	mtlr r0
+/* 800FC2C8 000F90C8  38 21 00 20 */	addi r1, r1, 0x20
+/* 800FC2CC 000F90CC  4E 80 00 20 */	blr
+.endfn kar_gryakurotjumphill_update_target_trigger_cycle

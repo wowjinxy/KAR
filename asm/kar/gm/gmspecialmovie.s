@@ -1,0 +1,781 @@
+.include "macros.inc"
+.file "gmspecialmovie.c"
+
+# 0x80049198..0x80049C20 | size: 0xA88
+.text
+.balign 4
+
+# .text:0x0 | 0x80049198 | size: 0xB8
+.fn kar_gmspecialmovie__80049198, global
+/* 80049198 00045F98  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8004919C 00045F9C  7C 08 02 A6 */	mflr r0
+/* 800491A0 00045FA0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800491A4 00045FA4  4B FB DA 71 */	bl kar_gmmain__near_80006c14
+/* 800491A8 00045FA8  88 03 07 C4 */	lbz r0, 0x7c4(r3)
+/* 800491AC 00045FAC  7C 00 07 74 */	extsb r0, r0
+/* 800491B0 00045FB0  2C 00 00 03 */	cmpwi r0, 0x3
+/* 800491B4 00045FB4  41 82 00 54 */	beq .L_80049208
+/* 800491B8 00045FB8  40 80 00 1C */	bge .L_800491D4
+/* 800491BC 00045FBC  2C 00 00 01 */	cmpwi r0, 0x1
+/* 800491C0 00045FC0  41 82 00 30 */	beq .L_800491F0
+/* 800491C4 00045FC4  40 80 00 38 */	bge .L_800491FC
+/* 800491C8 00045FC8  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800491CC 00045FCC  40 80 00 18 */	bge .L_800491E4
+/* 800491D0 00045FD0  48 00 00 5C */	b .L_8004922C
+.L_800491D4:
+/* 800491D4 00045FD4  2C 00 00 05 */	cmpwi r0, 0x5
+/* 800491D8 00045FD8  41 82 00 48 */	beq .L_80049220
+/* 800491DC 00045FDC  40 80 00 50 */	bge .L_8004922C
+/* 800491E0 00045FE0  48 00 00 34 */	b .L_80049214
+.L_800491E4:
+/* 800491E4 00045FE4  38 60 00 16 */	li r3, 0x16
+/* 800491E8 00045FE8  4B FB F6 E1 */	bl kar_gmglobal__near_800088c8
+/* 800491EC 00045FEC  48 00 00 54 */	b .L_80049240
+.L_800491F0:
+/* 800491F0 00045FF0  38 60 00 17 */	li r3, 0x17
+/* 800491F4 00045FF4  4B FB F6 D5 */	bl kar_gmglobal__near_800088c8
+/* 800491F8 00045FF8  48 00 00 48 */	b .L_80049240
+.L_800491FC:
+/* 800491FC 00045FFC  38 60 00 18 */	li r3, 0x18
+/* 80049200 00046000  4B FB F6 C9 */	bl kar_gmglobal__near_800088c8
+/* 80049204 00046004  48 00 00 3C */	b .L_80049240
+.L_80049208:
+/* 80049208 00046008  38 60 00 19 */	li r3, 0x19
+/* 8004920C 0004600C  4B FB F6 BD */	bl kar_gmglobal__near_800088c8
+/* 80049210 00046010  48 00 00 30 */	b .L_80049240
+.L_80049214:
+/* 80049214 00046014  38 60 00 1A */	li r3, 0x1a
+/* 80049218 00046018  4B FB F6 B1 */	bl kar_gmglobal__near_800088c8
+/* 8004921C 0004601C  48 00 00 24 */	b .L_80049240
+.L_80049220:
+/* 80049220 00046020  38 60 00 1B */	li r3, 0x1b
+/* 80049224 00046024  4B FB F6 A5 */	bl kar_gmglobal__near_800088c8
+/* 80049228 00046028  48 00 00 18 */	b .L_80049240
+.L_8004922C:
+/* 8004922C 0004602C  3C 60 80 49 */	lis r3, kar_src_gmspecialmovie_804972f0@ha
+/* 80049230 00046030  38 80 00 6E */	li r4, 0x6e
+/* 80049234 00046034  38 63 72 F0 */	addi r3, r3, kar_src_gmspecialmovie_804972f0@l
+/* 80049238 00046038  38 AD 80 E8 */	li r5, lbl_805D51C8@sda21
+/* 8004923C 0004603C  48 3D F2 7D */	bl __assert
+.L_80049240:
+/* 80049240 00046040  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049244 00046044  7C 08 03 A6 */	mtlr r0
+/* 80049248 00046048  38 21 00 10 */	addi r1, r1, 0x10
+/* 8004924C 0004604C  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__80049198
+
+# .text:0xB8 | 0x80049250 | size: 0x68
+.fn kar_gmspecialmovie__near_80049250, global
+/* 80049250 00046050  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 80049254 00046054  7C 08 02 A6 */	mflr r0
+/* 80049258 00046058  7C 83 23 78 */	mr r3, r4
+/* 8004925C 0004605C  90 01 00 24 */	stw r0, 0x24(r1)
+/* 80049260 00046060  48 3E 0E 41 */	bl GObj_GetFlagFromArray
+/* 80049264 00046064  2C 03 00 02 */	cmpwi r3, 0x2
+/* 80049268 00046068  40 82 00 40 */	bne .L_800492A8
+/* 8004926C 0004606C  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049270 00046070  38 81 00 10 */	addi r4, r1, 0x10
+/* 80049274 00046074  38 A1 00 0C */	addi r5, r1, 0xc
+/* 80049278 00046078  38 C1 00 08 */	addi r6, r1, 0x8
+/* 8004927C 0004607C  48 02 ED AD */	bl kar_lbhvqm__near_80078028
+/* 80049280 00046080  C0 22 82 00 */	lfs f1, lbl_805DE900@sda21(r0)
+/* 80049284 00046084  38 C0 00 46 */	li r6, 0x46
+/* 80049288 00046088  80 61 00 10 */	lwz r3, 0x10(r1)
+/* 8004928C 0004608C  38 E0 00 00 */	li r7, 0x0
+/* 80049290 00046090  FC 40 08 90 */	fmr f2, f1
+/* 80049294 00046094  80 81 00 0C */	lwz r4, 0xc(r1)
+/* 80049298 00046098  80 A1 00 08 */	lwz r5, 0x8(r1)
+/* 8004929C 0004609C  C0 62 82 04 */	lfs f3, lbl_805DE904@sda21(r0)
+/* 800492A0 000460A0  C0 82 82 08 */	lfs f4, lbl_805DE908@sda21(r0)
+/* 800492A4 000460A4  48 02 DC E9 */	bl kar_lbkdcoll__near_80076f8c
+.L_800492A8:
+/* 800492A8 000460A8  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 800492AC 000460AC  7C 08 03 A6 */	mtlr r0
+/* 800492B0 000460B0  38 21 00 20 */	addi r1, r1, 0x20
+/* 800492B4 000460B4  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049250
+
+# .text:0x120 | 0x800492B8 | size: 0x134
+.fn kar_gmspecialmovie__near_800492b8, global
+/* 800492B8 000460B8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800492BC 000460BC  7C 08 02 A6 */	mflr r0
+/* 800492C0 000460C0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800492C4 000460C4  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800492C8 000460C8  4B FB D9 4D */	bl kar_gmmain__near_80006c14
+/* 800492CC 000460CC  48 02 F2 D1 */	bl kar_lbhvqm__near_8007859c
+/* 800492D0 000460D0  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 800492D4 000460D4  48 02 EC 41 */	bl kar_lbhvqm__near_80077f14
+/* 800492D8 000460D8  2C 03 00 00 */	cmpwi r3, 0x0
+/* 800492DC 000460DC  40 82 00 1C */	bne .L_800492F8
+/* 800492E0 000460E0  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 800492E4 000460E4  48 02 ED ED */	bl kar_lbhvqm__near_800780d0
+/* 800492E8 000460E8  38 00 00 00 */	li r0, 0x0
+/* 800492EC 000460EC  90 0D 04 98 */	stw r0, lbl_805DD578@sda21(r0)
+/* 800492F0 000460F0  4B FB D2 01 */	bl kar_gmmain__near_800064f0
+/* 800492F4 000460F4  48 00 00 E4 */	b .L_800493D8
+.L_800492F8:
+/* 800492F8 000460F8  3B E0 00 00 */	li r31, 0x0
+.L_800492FC:
+/* 800492FC 000460FC  4B FC 1B AD */	bl kar_gmracenormal__8000aea8
+/* 80049300 00046100  7C 60 07 74 */	extsb r0, r3
+/* 80049304 00046104  2C 00 00 03 */	cmpwi r0, 0x3
+/* 80049308 00046108  41 82 00 34 */	beq .L_8004933C
+/* 8004930C 0004610C  4B FC 1B 9D */	bl kar_gmracenormal__8000aea8
+/* 80049310 00046110  7C 60 07 74 */	extsb r0, r3
+/* 80049314 00046114  2C 00 00 04 */	cmpwi r0, 0x4
+/* 80049318 00046118  41 82 00 24 */	beq .L_8004933C
+/* 8004931C 0004611C  4B FC 1B 8D */	bl kar_gmracenormal__8000aea8
+/* 80049320 00046120  7C 60 07 74 */	extsb r0, r3
+/* 80049324 00046124  2C 00 00 05 */	cmpwi r0, 0x5
+/* 80049328 00046128  41 82 00 14 */	beq .L_8004933C
+/* 8004932C 0004612C  4B FC 1B 7D */	bl kar_gmracenormal__8000aea8
+/* 80049330 00046130  7C 60 07 74 */	extsb r0, r3
+/* 80049334 00046134  2C 00 00 06 */	cmpwi r0, 0x6
+/* 80049338 00046138  40 82 00 5C */	bne .L_80049394
+.L_8004933C:
+/* 8004933C 0004613C  57 E0 06 3E */	clrlwi r0, r31, 24
+/* 80049340 00046140  3C 60 80 59 */	lis r3, lbl_8058B634@ha
+/* 80049344 00046144  1C 80 00 44 */	mulli r4, r0, 0x44
+/* 80049348 00046148  38 03 B6 34 */	addi r0, r3, lbl_8058B634@l
+/* 8004934C 0004614C  7C 60 22 14 */	add r3, r0, r4
+/* 80049350 00046150  80 63 00 08 */	lwz r3, 0x8(r3)
+/* 80049354 00046154  70 60 1D 60 */	andi. r0, r3, 0x1d60
+/* 80049358 00046158  41 82 00 1C */	beq .L_80049374
+/* 8004935C 0004615C  38 60 01 00 */	li r3, 0x100
+/* 80049360 00046160  4B FC 11 39 */	bl kar_movie_assets__8000a498
+/* 80049364 00046164  48 01 82 F5 */	bl kar_lbaudio__near_80061658
+/* 80049368 00046168  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 8004936C 0004616C  48 02 EF 19 */	bl kar_lbhvqm__near_80078284
+/* 80049370 00046170  48 00 00 68 */	b .L_800493D8
+.L_80049374:
+/* 80049374 00046174  54 60 05 AD */	rlwinm. r0, r3, 0, 22, 22
+/* 80049378 00046178  41 82 00 54 */	beq .L_800493CC
+/* 8004937C 0004617C  38 60 01 00 */	li r3, 0x100
+/* 80049380 00046180  4B FC 11 19 */	bl kar_movie_assets__8000a498
+/* 80049384 00046184  48 01 83 45 */	bl kar_lbaudio__near_800616c8
+/* 80049388 00046188  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 8004938C 0004618C  48 02 EE F9 */	bl kar_lbhvqm__near_80078284
+/* 80049390 00046190  48 00 00 48 */	b .L_800493D8
+.L_80049394:
+/* 80049394 00046194  57 E0 06 3E */	clrlwi r0, r31, 24
+/* 80049398 00046198  3C 60 80 59 */	lis r3, lbl_8058B634@ha
+/* 8004939C 0004619C  1C 80 00 44 */	mulli r4, r0, 0x44
+/* 800493A0 000461A0  38 03 B6 34 */	addi r0, r3, lbl_8058B634@l
+/* 800493A4 000461A4  7C 60 22 14 */	add r3, r0, r4
+/* 800493A8 000461A8  80 03 00 08 */	lwz r0, 0x8(r3)
+/* 800493AC 000461AC  70 00 11 00 */	andi. r0, r0, 0x1100
+/* 800493B0 000461B0  41 82 00 1C */	beq .L_800493CC
+/* 800493B4 000461B4  38 60 01 00 */	li r3, 0x100
+/* 800493B8 000461B8  4B FC 10 E1 */	bl kar_movie_assets__8000a498
+/* 800493BC 000461BC  48 01 82 9D */	bl kar_lbaudio__near_80061658
+/* 800493C0 000461C0  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 800493C4 000461C4  48 02 EE C1 */	bl kar_lbhvqm__near_80078284
+/* 800493C8 000461C8  48 00 00 10 */	b .L_800493D8
+.L_800493CC:
+/* 800493CC 000461CC  3B FF 00 01 */	addi r31, r31, 0x1
+/* 800493D0 000461D0  2C 1F 00 04 */	cmpwi r31, 0x4
+/* 800493D4 000461D4  41 80 FF 28 */	blt .L_800492FC
+.L_800493D8:
+/* 800493D8 000461D8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800493DC 000461DC  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800493E0 000461E0  7C 08 03 A6 */	mtlr r0
+/* 800493E4 000461E4  38 21 00 10 */	addi r1, r1, 0x10
+/* 800493E8 000461E8  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_800492b8
+
+# .text:0x254 | 0x800493EC | size: 0x6C
+.fn kar_gmspecialmovie__near_800493ec, global
+/* 800493EC 000461EC  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800493F0 000461F0  7C 08 02 A6 */	mflr r0
+/* 800493F4 000461F4  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800493F8 000461F8  4B FB D8 1D */	bl kar_gmmain__near_80006c14
+/* 800493FC 000461FC  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049400 00046200  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049404 00046204  41 82 00 08 */	beq .L_8004940C
+/* 80049408 00046208  48 3D FB 5D */	bl HSD_GObjDestroy
+.L_8004940C:
+/* 8004940C 0004620C  80 6D 04 A0 */	lwz r3, lbl_805DD580@sda21(r0)
+/* 80049410 00046210  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049414 00046214  41 82 00 08 */	beq .L_8004941C
+/* 80049418 00046218  48 3D FB 4D */	bl HSD_GObjDestroy
+.L_8004941C:
+/* 8004941C 0004621C  38 00 00 00 */	li r0, 0x0
+/* 80049420 00046220  90 0D 04 A0 */	stw r0, lbl_805DD580@sda21(r0)
+/* 80049424 00046224  90 0D 04 9C */	stw r0, lbl_805DD57C@sda21(r0)
+/* 80049428 00046228  48 02 E6 35 */	bl kar_lbhvqm__near_80077a5c
+/* 8004942C 0004622C  4B FC 1A 7D */	bl kar_gmracenormal__8000aea8
+/* 80049430 00046230  7C 60 07 74 */	extsb r0, r3
+/* 80049434 00046234  2C 00 00 09 */	cmpwi r0, 0x9
+/* 80049438 00046238  40 82 00 10 */	bne .L_80049448
+/* 8004943C 0004623C  38 60 00 10 */	li r3, 0x10
+/* 80049440 00046240  4B FB EE 61 */	bl kar_gmlanmenu__800082a0
+/* 80049444 00046244  4B FB ED DD */	bl kar_gmlanmenu__80008220
+.L_80049448:
+/* 80049448 00046248  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8004944C 0004624C  7C 08 03 A6 */	mtlr r0
+/* 80049450 00046250  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049454 00046254  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_800493ec
+
+# .text:0x2C0 | 0x80049458 | size: 0xFC
+.fn kar_movie_assets__asset_80049458, global
+/* 80049458 00046258  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8004945C 0004625C  7C 08 02 A6 */	mflr r0
+/* 80049460 00046260  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049464 00046264  4B FB D7 B1 */	bl kar_gmmain__near_80006c14
+/* 80049468 00046268  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 8004946C 0004626C  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 80049470 00046270  48 3F ED B1 */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 80049474 00046274  48 02 E5 0D */	bl kar_lbhvqm_init_movie_system
+/* 80049478 00046278  3C 60 80 49 */	lis r3, kar_linkfile_mvhowtoplay_h4m_8049736c@ha
+/* 8004947C 0004627C  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 80049480 00046280  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 80049484 00046284  38 80 00 01 */	li r4, 0x1
+/* 80049488 00046288  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 8004948C 0004628C  38 63 73 6C */	addi r3, r3, kar_linkfile_mvhowtoplay_h4m_8049736c@l
+/* 80049490 00046290  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 80049494 00046294  38 A0 00 00 */	li r5, 0x0
+/* 80049498 00046298  38 C0 00 1C */	li r6, 0x1c
+/* 8004949C 0004629C  48 02 E6 B5 */	bl kar_lbhvqm_open_movie
+/* 800494A0 000462A0  28 03 00 00 */	cmplwi r3, 0x0
+/* 800494A4 000462A4  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 800494A8 000462A8  40 82 00 0C */	bne .L_800494B4
+/* 800494AC 000462AC  4B FB D0 45 */	bl kar_gmmain__near_800064f0
+/* 800494B0 000462B0  48 00 00 94 */	b .L_80049544
+.L_800494B4:
+/* 800494B4 000462B4  38 60 00 1B */	li r3, 0x1b
+/* 800494B8 000462B8  38 80 00 1A */	li r4, 0x1a
+/* 800494BC 000462BC  38 A0 00 00 */	li r5, 0x0
+/* 800494C0 000462C0  48 3D FA 69 */	bl HSD_GObjCreate
+/* 800494C4 000462C4  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800494C8 000462C8  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800494CC 000462CC  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800494D0 000462D0  38 A0 00 15 */	li r5, 0x15
+/* 800494D4 000462D4  38 C0 00 01 */	li r6, 0x1
+/* 800494D8 000462D8  48 3E 01 B9 */	bl HSD_GObjGXLink
+/* 800494DC 000462DC  38 60 00 05 */	li r3, 0x5
+/* 800494E0 000462E0  38 80 00 1A */	li r4, 0x1a
+/* 800494E4 000462E4  38 A0 00 00 */	li r5, 0x0
+/* 800494E8 000462E8  48 3D FA 41 */	bl HSD_GObjCreate
+/* 800494EC 000462EC  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800494F0 000462F0  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800494F4 000462F4  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800494F8 000462F8  48 3B 9C F5 */	bl HSD_CObjLoadDesc
+/* 800494FC 000462FC  7C 65 1B 78 */	mr r5, r3
+/* 80049500 00046300  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049504 00046304  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 80049508 00046308  48 3E 07 0D */	bl HSD_GObjObjectLink
+/* 8004950C 0004630C  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 80049510 00046310  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049514 00046314  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 80049518 00046318  38 A0 00 05 */	li r5, 0x5
+/* 8004951C 0004631C  48 3E 02 0D */	bl GObj_SetupGXLinkMax
+/* 80049520 00046320  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049524 00046324  3C 80 00 20 */	lis r4, 0x20
+/* 80049528 00046328  38 00 00 00 */	li r0, 0x0
+/* 8004952C 0004632C  90 83 00 24 */	stw r4, 0x24(r3)
+/* 80049530 00046330  90 03 00 20 */	stw r0, 0x20(r3)
+/* 80049534 00046334  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049538 00046338  48 02 E9 9D */	bl kar_lbhvqm__near_80077ed4
+/* 8004953C 0004633C  38 60 00 10 */	li r3, 0x10
+/* 80049540 00046340  4B FC 0F 59 */	bl kar_movie_assets__8000a498
+.L_80049544:
+/* 80049544 00046344  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049548 00046348  7C 08 03 A6 */	mtlr r0
+/* 8004954C 0004634C  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049550 00046350  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049458
+
+# .text:0x3BC | 0x80049554 | size: 0xFC
+.fn kar_movie_assets__asset_80049554, global
+/* 80049554 00046354  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049558 00046358  7C 08 02 A6 */	mflr r0
+/* 8004955C 0004635C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049560 00046360  4B FB D6 B5 */	bl kar_gmmain__near_80006c14
+/* 80049564 00046364  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 80049568 00046368  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 8004956C 0004636C  48 3F EC B5 */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 80049570 00046370  48 02 E4 11 */	bl kar_lbhvqm_init_movie_system
+/* 80049574 00046374  3C 60 80 49 */	lis r3, kar_linkfile_mvhowto3d_h4m_8049737c@ha
+/* 80049578 00046378  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 8004957C 0004637C  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 80049580 00046380  38 80 00 01 */	li r4, 0x1
+/* 80049584 00046384  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 80049588 00046388  38 63 73 7C */	addi r3, r3, kar_linkfile_mvhowto3d_h4m_8049737c@l
+/* 8004958C 0004638C  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 80049590 00046390  38 A0 00 00 */	li r5, 0x0
+/* 80049594 00046394  38 C0 00 1C */	li r6, 0x1c
+/* 80049598 00046398  48 02 E5 B9 */	bl kar_lbhvqm_open_movie
+/* 8004959C 0004639C  28 03 00 00 */	cmplwi r3, 0x0
+/* 800495A0 000463A0  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 800495A4 000463A4  40 82 00 0C */	bne .L_800495B0
+/* 800495A8 000463A8  4B FB CF 49 */	bl kar_gmmain__near_800064f0
+/* 800495AC 000463AC  48 00 00 94 */	b .L_80049640
+.L_800495B0:
+/* 800495B0 000463B0  38 60 00 1B */	li r3, 0x1b
+/* 800495B4 000463B4  38 80 00 1A */	li r4, 0x1a
+/* 800495B8 000463B8  38 A0 00 00 */	li r5, 0x0
+/* 800495BC 000463BC  48 3D F9 6D */	bl HSD_GObjCreate
+/* 800495C0 000463C0  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800495C4 000463C4  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800495C8 000463C8  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800495CC 000463CC  38 A0 00 15 */	li r5, 0x15
+/* 800495D0 000463D0  38 C0 00 01 */	li r6, 0x1
+/* 800495D4 000463D4  48 3E 00 BD */	bl HSD_GObjGXLink
+/* 800495D8 000463D8  38 60 00 05 */	li r3, 0x5
+/* 800495DC 000463DC  38 80 00 1A */	li r4, 0x1a
+/* 800495E0 000463E0  38 A0 00 00 */	li r5, 0x0
+/* 800495E4 000463E4  48 3D F9 45 */	bl HSD_GObjCreate
+/* 800495E8 000463E8  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800495EC 000463EC  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800495F0 000463F0  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800495F4 000463F4  48 3B 9B F9 */	bl HSD_CObjLoadDesc
+/* 800495F8 000463F8  7C 65 1B 78 */	mr r5, r3
+/* 800495FC 000463FC  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049600 00046400  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 80049604 00046404  48 3E 06 11 */	bl HSD_GObjObjectLink
+/* 80049608 00046408  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 8004960C 0004640C  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049610 00046410  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 80049614 00046414  38 A0 00 05 */	li r5, 0x5
+/* 80049618 00046418  48 3E 01 11 */	bl GObj_SetupGXLinkMax
+/* 8004961C 0004641C  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049620 00046420  3C 80 00 20 */	lis r4, 0x20
+/* 80049624 00046424  38 00 00 00 */	li r0, 0x0
+/* 80049628 00046428  90 83 00 24 */	stw r4, 0x24(r3)
+/* 8004962C 0004642C  90 03 00 20 */	stw r0, 0x20(r3)
+/* 80049630 00046430  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049634 00046434  48 02 E8 A1 */	bl kar_lbhvqm__near_80077ed4
+/* 80049638 00046438  38 60 00 10 */	li r3, 0x10
+/* 8004963C 0004643C  4B FC 0E 5D */	bl kar_movie_assets__8000a498
+.L_80049640:
+/* 80049640 00046440  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049644 00046444  7C 08 03 A6 */	mtlr r0
+/* 80049648 00046448  38 21 00 10 */	addi r1, r1, 0x10
+/* 8004964C 0004644C  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049554
+
+# .text:0x4B8 | 0x80049650 | size: 0xFC
+.fn kar_movie_assets__asset_80049650, global
+/* 80049650 00046450  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049654 00046454  7C 08 02 A6 */	mflr r0
+/* 80049658 00046458  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8004965C 0004645C  4B FB D5 B9 */	bl kar_gmmain__near_80006c14
+/* 80049660 00046460  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 80049664 00046464  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 80049668 00046468  48 3F EB B9 */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 8004966C 0004646C  48 02 E3 15 */	bl kar_lbhvqm_init_movie_system
+/* 80049670 00046470  3C 60 80 49 */	lis r3, kar_linkfile_mvhowto2d_h4m_8049738c@ha
+/* 80049674 00046474  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 80049678 00046478  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 8004967C 0004647C  38 80 00 01 */	li r4, 0x1
+/* 80049680 00046480  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 80049684 00046484  38 63 73 8C */	addi r3, r3, kar_linkfile_mvhowto2d_h4m_8049738c@l
+/* 80049688 00046488  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 8004968C 0004648C  38 A0 00 00 */	li r5, 0x0
+/* 80049690 00046490  38 C0 00 1C */	li r6, 0x1c
+/* 80049694 00046494  48 02 E4 BD */	bl kar_lbhvqm_open_movie
+/* 80049698 00046498  28 03 00 00 */	cmplwi r3, 0x0
+/* 8004969C 0004649C  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 800496A0 000464A0  40 82 00 0C */	bne .L_800496AC
+/* 800496A4 000464A4  4B FB CE 4D */	bl kar_gmmain__near_800064f0
+/* 800496A8 000464A8  48 00 00 94 */	b .L_8004973C
+.L_800496AC:
+/* 800496AC 000464AC  38 60 00 1B */	li r3, 0x1b
+/* 800496B0 000464B0  38 80 00 1A */	li r4, 0x1a
+/* 800496B4 000464B4  38 A0 00 00 */	li r5, 0x0
+/* 800496B8 000464B8  48 3D F8 71 */	bl HSD_GObjCreate
+/* 800496BC 000464BC  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800496C0 000464C0  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800496C4 000464C4  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800496C8 000464C8  38 A0 00 15 */	li r5, 0x15
+/* 800496CC 000464CC  38 C0 00 01 */	li r6, 0x1
+/* 800496D0 000464D0  48 3D FF C1 */	bl HSD_GObjGXLink
+/* 800496D4 000464D4  38 60 00 05 */	li r3, 0x5
+/* 800496D8 000464D8  38 80 00 1A */	li r4, 0x1a
+/* 800496DC 000464DC  38 A0 00 00 */	li r5, 0x0
+/* 800496E0 000464E0  48 3D F8 49 */	bl HSD_GObjCreate
+/* 800496E4 000464E4  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800496E8 000464E8  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800496EC 000464EC  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800496F0 000464F0  48 3B 9A FD */	bl HSD_CObjLoadDesc
+/* 800496F4 000464F4  7C 65 1B 78 */	mr r5, r3
+/* 800496F8 000464F8  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 800496FC 000464FC  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 80049700 00046500  48 3E 05 15 */	bl HSD_GObjObjectLink
+/* 80049704 00046504  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 80049708 00046508  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 8004970C 0004650C  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 80049710 00046510  38 A0 00 05 */	li r5, 0x5
+/* 80049714 00046514  48 3E 00 15 */	bl GObj_SetupGXLinkMax
+/* 80049718 00046518  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 8004971C 0004651C  3C 80 00 20 */	lis r4, 0x20
+/* 80049720 00046520  38 00 00 00 */	li r0, 0x0
+/* 80049724 00046524  90 83 00 24 */	stw r4, 0x24(r3)
+/* 80049728 00046528  90 03 00 20 */	stw r0, 0x20(r3)
+/* 8004972C 0004652C  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049730 00046530  48 02 E7 A5 */	bl kar_lbhvqm__near_80077ed4
+/* 80049734 00046534  38 60 00 10 */	li r3, 0x10
+/* 80049738 00046538  4B FC 0D 61 */	bl kar_movie_assets__8000a498
+.L_8004973C:
+/* 8004973C 0004653C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049740 00046540  7C 08 03 A6 */	mtlr r0
+/* 80049744 00046544  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049748 00046548  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049650
+
+# .text:0x5B4 | 0x8004974C | size: 0xFC
+.fn kar_movie_assets__asset_8004974c, global
+/* 8004974C 0004654C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049750 00046550  7C 08 02 A6 */	mflr r0
+/* 80049754 00046554  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049758 00046558  4B FB D4 BD */	bl kar_gmmain__near_80006c14
+/* 8004975C 0004655C  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 80049760 00046560  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 80049764 00046564  48 3F EA BD */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 80049768 00046568  48 02 E2 19 */	bl kar_lbhvqm_init_movie_system
+/* 8004976C 0004656C  3C 60 80 49 */	lis r3, kar_linkfile_mvhowtoct_h4m_8049739c@ha
+/* 80049770 00046570  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 80049774 00046574  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 80049778 00046578  38 80 00 01 */	li r4, 0x1
+/* 8004977C 0004657C  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 80049780 00046580  38 63 73 9C */	addi r3, r3, kar_linkfile_mvhowtoct_h4m_8049739c@l
+/* 80049784 00046584  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 80049788 00046588  38 A0 00 00 */	li r5, 0x0
+/* 8004978C 0004658C  38 C0 00 1C */	li r6, 0x1c
+/* 80049790 00046590  48 02 E3 C1 */	bl kar_lbhvqm_open_movie
+/* 80049794 00046594  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049798 00046598  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 8004979C 0004659C  40 82 00 0C */	bne .L_800497A8
+/* 800497A0 000465A0  4B FB CD 51 */	bl kar_gmmain__near_800064f0
+/* 800497A4 000465A4  48 00 00 94 */	b .L_80049838
+.L_800497A8:
+/* 800497A8 000465A8  38 60 00 1B */	li r3, 0x1b
+/* 800497AC 000465AC  38 80 00 1A */	li r4, 0x1a
+/* 800497B0 000465B0  38 A0 00 00 */	li r5, 0x0
+/* 800497B4 000465B4  48 3D F7 75 */	bl HSD_GObjCreate
+/* 800497B8 000465B8  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800497BC 000465BC  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800497C0 000465C0  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800497C4 000465C4  38 A0 00 15 */	li r5, 0x15
+/* 800497C8 000465C8  38 C0 00 01 */	li r6, 0x1
+/* 800497CC 000465CC  48 3D FE C5 */	bl HSD_GObjGXLink
+/* 800497D0 000465D0  38 60 00 05 */	li r3, 0x5
+/* 800497D4 000465D4  38 80 00 1A */	li r4, 0x1a
+/* 800497D8 000465D8  38 A0 00 00 */	li r5, 0x0
+/* 800497DC 000465DC  48 3D F7 4D */	bl HSD_GObjCreate
+/* 800497E0 000465E0  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800497E4 000465E4  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800497E8 000465E8  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800497EC 000465EC  48 3B 9A 01 */	bl HSD_CObjLoadDesc
+/* 800497F0 000465F0  7C 65 1B 78 */	mr r5, r3
+/* 800497F4 000465F4  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 800497F8 000465F8  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 800497FC 000465FC  48 3E 04 19 */	bl HSD_GObjObjectLink
+/* 80049800 00046600  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 80049804 00046604  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049808 00046608  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 8004980C 0004660C  38 A0 00 05 */	li r5, 0x5
+/* 80049810 00046610  48 3D FF 19 */	bl GObj_SetupGXLinkMax
+/* 80049814 00046614  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049818 00046618  3C 80 00 20 */	lis r4, 0x20
+/* 8004981C 0004661C  38 00 00 00 */	li r0, 0x0
+/* 80049820 00046620  90 83 00 24 */	stw r4, 0x24(r3)
+/* 80049824 00046624  90 03 00 20 */	stw r0, 0x20(r3)
+/* 80049828 00046628  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 8004982C 0004662C  48 02 E6 A9 */	bl kar_lbhvqm__near_80077ed4
+/* 80049830 00046630  38 60 00 10 */	li r3, 0x10
+/* 80049834 00046634  4B FC 0C 65 */	bl kar_movie_assets__8000a498
+.L_80049838:
+/* 80049838 00046638  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8004983C 0004663C  7C 08 03 A6 */	mtlr r0
+/* 80049840 00046640  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049844 00046644  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_8004974c
+
+# .text:0x6B0 | 0x80049848 | size: 0xFC
+.fn kar_movie_assets__asset_80049848, global
+/* 80049848 00046648  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8004984C 0004664C  7C 08 02 A6 */	mflr r0
+/* 80049850 00046650  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049854 00046654  4B FB D3 C1 */	bl kar_gmmain__near_80006c14
+/* 80049858 00046658  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 8004985C 0004665C  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 80049860 00046660  48 3F E9 C1 */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 80049864 00046664  48 02 E1 1D */	bl kar_lbhvqm_init_movie_system
+/* 80049868 00046668  3C 60 80 49 */	lis r3, kar_linkfile_mvspecnormal_h4m_804973ac@ha
+/* 8004986C 0004666C  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 80049870 00046670  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 80049874 00046674  38 80 00 01 */	li r4, 0x1
+/* 80049878 00046678  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 8004987C 0004667C  38 63 73 AC */	addi r3, r3, kar_linkfile_mvspecnormal_h4m_804973ac@l
+/* 80049880 00046680  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 80049884 00046684  38 A0 00 00 */	li r5, 0x0
+/* 80049888 00046688  38 C0 00 1C */	li r6, 0x1c
+/* 8004988C 0004668C  48 02 E2 C5 */	bl kar_lbhvqm_open_movie
+/* 80049890 00046690  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049894 00046694  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 80049898 00046698  40 82 00 0C */	bne .L_800498A4
+/* 8004989C 0004669C  4B FB CC 55 */	bl kar_gmmain__near_800064f0
+/* 800498A0 000466A0  48 00 00 94 */	b .L_80049934
+.L_800498A4:
+/* 800498A4 000466A4  38 60 00 1B */	li r3, 0x1b
+/* 800498A8 000466A8  38 80 00 1A */	li r4, 0x1a
+/* 800498AC 000466AC  38 A0 00 00 */	li r5, 0x0
+/* 800498B0 000466B0  48 3D F6 79 */	bl HSD_GObjCreate
+/* 800498B4 000466B4  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800498B8 000466B8  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800498BC 000466BC  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800498C0 000466C0  38 A0 00 15 */	li r5, 0x15
+/* 800498C4 000466C4  38 C0 00 01 */	li r6, 0x1
+/* 800498C8 000466C8  48 3D FD C9 */	bl HSD_GObjGXLink
+/* 800498CC 000466CC  38 60 00 05 */	li r3, 0x5
+/* 800498D0 000466D0  38 80 00 1A */	li r4, 0x1a
+/* 800498D4 000466D4  38 A0 00 00 */	li r5, 0x0
+/* 800498D8 000466D8  48 3D F6 51 */	bl HSD_GObjCreate
+/* 800498DC 000466DC  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800498E0 000466E0  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800498E4 000466E4  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800498E8 000466E8  48 3B 99 05 */	bl HSD_CObjLoadDesc
+/* 800498EC 000466EC  7C 65 1B 78 */	mr r5, r3
+/* 800498F0 000466F0  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 800498F4 000466F4  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 800498F8 000466F8  48 3E 03 1D */	bl HSD_GObjObjectLink
+/* 800498FC 000466FC  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 80049900 00046700  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049904 00046704  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 80049908 00046708  38 A0 00 05 */	li r5, 0x5
+/* 8004990C 0004670C  48 3D FE 1D */	bl GObj_SetupGXLinkMax
+/* 80049910 00046710  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049914 00046714  3C 80 00 20 */	lis r4, 0x20
+/* 80049918 00046718  38 00 00 00 */	li r0, 0x0
+/* 8004991C 0004671C  90 83 00 24 */	stw r4, 0x24(r3)
+/* 80049920 00046720  90 03 00 20 */	stw r0, 0x20(r3)
+/* 80049924 00046724  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049928 00046728  48 02 E5 AD */	bl kar_lbhvqm__near_80077ed4
+/* 8004992C 0004672C  38 60 00 10 */	li r3, 0x10
+/* 80049930 00046730  4B FC 0B 69 */	bl kar_movie_assets__8000a498
+.L_80049934:
+/* 80049934 00046734  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049938 00046738  7C 08 03 A6 */	mtlr r0
+/* 8004993C 0004673C  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049940 00046740  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049848
+
+# .text:0x7AC | 0x80049944 | size: 0xFC
+.fn kar_movie_assets__asset_80049944, global
+/* 80049944 00046744  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049948 00046748  7C 08 02 A6 */	mflr r0
+/* 8004994C 0004674C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049950 00046750  4B FB D2 C5 */	bl kar_gmmain__near_80006c14
+/* 80049954 00046754  3C 60 80 06 */	lis r3, kar_lbarchive__near_80059cfc@ha
+/* 80049958 00046758  38 63 9C FC */	addi r3, r3, kar_lbarchive__near_80059cfc@l
+/* 8004995C 0004675C  48 3F E8 C5 */	bl HSD_SynthSFXWaitForLoadCompletion
+/* 80049960 00046760  48 02 E0 21 */	bl kar_lbhvqm_init_movie_system
+/* 80049964 00046764  3C 60 80 49 */	lis r3, kar_linkfile_mvspechidden_h4m_804973c0@ha
+/* 80049968 00046768  3C C0 80 08 */	lis r6, fn_80078604@ha
+/* 8004996C 0004676C  3C A0 80 08 */	lis r5, fn_80078620@ha
+/* 80049970 00046770  38 80 00 01 */	li r4, 0x1
+/* 80049974 00046774  38 E6 86 04 */	addi r7, r6, fn_80078604@l
+/* 80049978 00046778  38 63 73 C0 */	addi r3, r3, kar_linkfile_mvspechidden_h4m_804973c0@l
+/* 8004997C 0004677C  39 05 86 20 */	addi r8, r5, fn_80078620@l
+/* 80049980 00046780  38 A0 00 00 */	li r5, 0x0
+/* 80049984 00046784  38 C0 00 1C */	li r6, 0x1c
+/* 80049988 00046788  48 02 E1 C9 */	bl kar_lbhvqm_open_movie
+/* 8004998C 0004678C  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049990 00046790  90 6D 04 98 */	stw r3, lbl_805DD578@sda21(r0)
+/* 80049994 00046794  40 82 00 0C */	bne .L_800499A0
+/* 80049998 00046798  4B FB CB 59 */	bl kar_gmmain__near_800064f0
+/* 8004999C 0004679C  48 00 00 94 */	b .L_80049A30
+.L_800499A0:
+/* 800499A0 000467A0  38 60 00 1B */	li r3, 0x1b
+/* 800499A4 000467A4  38 80 00 1A */	li r4, 0x1a
+/* 800499A8 000467A8  38 A0 00 00 */	li r5, 0x0
+/* 800499AC 000467AC  48 3D F5 7D */	bl HSD_GObjCreate
+/* 800499B0 000467B0  3C 80 80 05 */	lis r4, kar_gmspecialmovie__near_80049250@ha
+/* 800499B4 000467B4  90 6D 04 A0 */	stw r3, lbl_805DD580@sda21(r0)
+/* 800499B8 000467B8  38 84 92 50 */	addi r4, r4, kar_gmspecialmovie__near_80049250@l
+/* 800499BC 000467BC  38 A0 00 15 */	li r5, 0x15
+/* 800499C0 000467C0  38 C0 00 01 */	li r6, 0x1
+/* 800499C4 000467C4  48 3D FC CD */	bl HSD_GObjGXLink
+/* 800499C8 000467C8  38 60 00 05 */	li r3, 0x5
+/* 800499CC 000467CC  38 80 00 1A */	li r4, 0x1a
+/* 800499D0 000467D0  38 A0 00 00 */	li r5, 0x0
+/* 800499D4 000467D4  48 3D F5 55 */	bl HSD_GObjCreate
+/* 800499D8 000467D8  3C 80 80 49 */	lis r4, lbl_8049732C@ha
+/* 800499DC 000467DC  90 6D 04 9C */	stw r3, lbl_805DD57C@sda21(r0)
+/* 800499E0 000467E0  38 64 73 2C */	addi r3, r4, lbl_8049732C@l
+/* 800499E4 000467E4  48 3B 98 09 */	bl HSD_CObjLoadDesc
+/* 800499E8 000467E8  7C 65 1B 78 */	mr r5, r3
+/* 800499EC 000467EC  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 800499F0 000467F0  88 8D 12 73 */	lbz r4, lbl_805DE353@sda21(r0)
+/* 800499F4 000467F4  48 3E 02 21 */	bl HSD_GObjObjectLink
+/* 800499F8 000467F8  3C 80 80 43 */	lis r4, GObj_SetCamera@ha
+/* 800499FC 000467FC  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049A00 00046800  38 84 A2 9C */	addi r4, r4, GObj_SetCamera@l
+/* 80049A04 00046804  38 A0 00 05 */	li r5, 0x5
+/* 80049A08 00046808  48 3D FD 21 */	bl GObj_SetupGXLinkMax
+/* 80049A0C 0004680C  80 6D 04 9C */	lwz r3, lbl_805DD57C@sda21(r0)
+/* 80049A10 00046810  3C 80 00 20 */	lis r4, 0x20
+/* 80049A14 00046814  38 00 00 00 */	li r0, 0x0
+/* 80049A18 00046818  90 83 00 24 */	stw r4, 0x24(r3)
+/* 80049A1C 0004681C  90 03 00 20 */	stw r0, 0x20(r3)
+/* 80049A20 00046820  80 6D 04 98 */	lwz r3, lbl_805DD578@sda21(r0)
+/* 80049A24 00046824  48 02 E4 B1 */	bl kar_lbhvqm__near_80077ed4
+/* 80049A28 00046828  38 60 00 10 */	li r3, 0x10
+/* 80049A2C 0004682C  4B FC 0A 6D */	bl kar_movie_assets__8000a498
+.L_80049A30:
+/* 80049A30 00046830  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049A34 00046834  7C 08 03 A6 */	mtlr r0
+/* 80049A38 00046838  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049A3C 0004683C  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049944
+
+# .text:0x8A8 | 0x80049A40 | size: 0x38
+.fn kar_gmspecialmovie__near_80049a40, global
+/* 80049A40 00046840  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049A44 00046844  7C 08 02 A6 */	mflr r0
+/* 80049A48 00046848  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049A4C 0004684C  48 02 EB 51 */	bl kar_lbhvqm__near_8007859c
+/* 80049A50 00046850  48 23 2D E1 */	bl fn_8027C830
+/* 80049A54 00046854  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80049A58 00046858  41 82 00 10 */	beq .L_80049A68
+/* 80049A5C 0004685C  38 60 FF FF */	li r3, -0x1
+/* 80049A60 00046860  4B FB EE 69 */	bl kar_gmglobal__near_800088c8
+/* 80049A64 00046864  4B FB CA 8D */	bl kar_gmmain__near_800064f0
+.L_80049A68:
+/* 80049A68 00046868  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049A6C 0004686C  7C 08 03 A6 */	mtlr r0
+/* 80049A70 00046870  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049A74 00046874  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049a40
+
+# .text:0x8E0 | 0x80049A78 | size: 0x90
+.fn kar_movie_assets__asset_80049a78, global
+/* 80049A78 00046878  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049A7C 0004687C  7C 08 02 A6 */	mflr r0
+/* 80049A80 00046880  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049A84 00046884  48 23 2D B5 */	bl kar_en_assets__asset_8027c838
+/* 80049A88 00046888  48 02 DE F9 */	bl kar_lbhvqm_init_movie_system
+/* 80049A8C 0004688C  48 01 BE D1 */	bl kar_lbvector__near_8006595c
+/* 80049A90 00046890  48 23 4A E5 */	bl fn_8027E574
+/* 80049A94 00046894  3C A0 80 08 */	lis r5, fn_80078604@ha
+/* 80049A98 00046898  3C 80 80 08 */	lis r4, fn_80078620@ha
+/* 80049A9C 0004689C  38 E5 86 04 */	addi r7, r5, fn_80078604@l
+/* 80049AA0 000468A0  3C C0 80 49 */	lis r6, kar_linkfile_mvending_h4m_804973d8@ha
+/* 80049AA4 000468A4  90 6D 04 A8 */	stw r3, lbl_805DD588@sda21(r0)
+/* 80049AA8 000468A8  38 66 73 D8 */	addi r3, r6, kar_linkfile_mvending_h4m_804973d8@l
+/* 80049AAC 000468AC  39 04 86 20 */	addi r8, r4, fn_80078620@l
+/* 80049AB0 000468B0  38 80 00 00 */	li r4, 0x0
+/* 80049AB4 000468B4  38 A0 00 01 */	li r5, 0x1
+/* 80049AB8 000468B8  38 C0 00 0E */	li r6, 0xe
+/* 80049ABC 000468BC  48 02 E0 95 */	bl kar_lbhvqm_open_movie
+/* 80049AC0 000468C0  80 8D 04 A8 */	lwz r4, lbl_805DD588@sda21(r0)
+/* 80049AC4 000468C4  28 03 00 00 */	cmplwi r3, 0x0
+/* 80049AC8 000468C8  90 64 00 00 */	stw r3, 0x0(r4)
+/* 80049ACC 000468CC  40 82 00 10 */	bne .L_80049ADC
+/* 80049AD0 000468D0  38 60 FF FF */	li r3, -0x1
+/* 80049AD4 000468D4  4B FB ED F5 */	bl kar_gmglobal__near_800088c8
+/* 80049AD8 000468D8  4B FB CA 19 */	bl kar_gmmain__near_800064f0
+.L_80049ADC:
+/* 80049ADC 000468DC  80 6D 04 A8 */	lwz r3, lbl_805DD588@sda21(r0)
+/* 80049AE0 000468E0  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 80049AE4 000468E4  48 02 E3 F1 */	bl kar_lbhvqm__near_80077ed4
+/* 80049AE8 000468E8  48 23 31 C1 */	bl fn_8027CCA8
+/* 80049AEC 000468EC  48 01 4A E5 */	bl kar_lbaudio__near_8005e5d0
+/* 80049AF0 000468F0  38 60 00 2B */	li r3, 0x2b
+/* 80049AF4 000468F4  48 01 46 B5 */	bl kar_lbaudio__near_8005e1a8
+/* 80049AF8 000468F8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049AFC 000468FC  7C 08 03 A6 */	mtlr r0
+/* 80049B00 00046900  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049B04 00046904  4E 80 00 20 */	blr
+.endfn kar_movie_assets__asset_80049a78
+
+# .text:0x970 | 0x80049B08 | size: 0x60
+.fn kar_gmspecialmovie__near_80049b08, global
+/* 80049B08 00046908  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049B0C 0004690C  7C 08 02 A6 */	mflr r0
+/* 80049B10 00046910  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049B14 00046914  48 23 4A 61 */	bl fn_8027E574
+/* 80049B18 00046918  90 6D 04 A8 */	stw r3, lbl_805DD588@sda21(r0)
+/* 80049B1C 0004691C  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 80049B20 00046920  48 02 E5 B1 */	bl kar_lbhvqm__near_800780d0
+/* 80049B24 00046924  80 6D 04 A8 */	lwz r3, lbl_805DD588@sda21(r0)
+/* 80049B28 00046928  38 00 00 00 */	li r0, 0x0
+/* 80049B2C 0004692C  90 03 00 00 */	stw r0, 0x0(r3)
+/* 80049B30 00046930  48 02 DF 2D */	bl kar_lbhvqm__near_80077a5c
+/* 80049B34 00046934  48 01 4A 9D */	bl kar_lbaudio__near_8005e5d0
+/* 80049B38 00046938  48 23 31 D9 */	bl fn_8027CD10
+/* 80049B3C 0004693C  4B FC 13 6D */	bl kar_gmracenormal__8000aea8
+/* 80049B40 00046940  7C 60 07 74 */	extsb r0, r3
+/* 80049B44 00046944  2C 00 00 0A */	cmpwi r0, 0xa
+/* 80049B48 00046948  40 82 00 10 */	bne .L_80049B58
+/* 80049B4C 0004694C  38 60 00 10 */	li r3, 0x10
+/* 80049B50 00046950  4B FB E7 51 */	bl kar_gmlanmenu__800082a0
+/* 80049B54 00046954  4B FB E6 CD */	bl kar_gmlanmenu__80008220
+.L_80049B58:
+/* 80049B58 00046958  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049B5C 0004695C  7C 08 03 A6 */	mtlr r0
+/* 80049B60 00046960  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049B64 00046964  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049b08
+
+# .text:0x9D0 | 0x80049B68 | size: 0x34
+.fn kar_gmspecialmovie__near_80049b68, global
+/* 80049B68 00046968  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049B6C 0004696C  7C 08 02 A6 */	mflr r0
+/* 80049B70 00046970  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049B74 00046974  48 23 53 F1 */	bl fn_8027EF64
+/* 80049B78 00046978  2C 03 00 00 */	cmpwi r3, 0x0
+/* 80049B7C 0004697C  41 82 00 10 */	beq .L_80049B8C
+/* 80049B80 00046980  38 60 FF FF */	li r3, -0x1
+/* 80049B84 00046984  4B FB ED 45 */	bl kar_gmglobal__near_800088c8
+/* 80049B88 00046988  4B FB C9 69 */	bl kar_gmmain__near_800064f0
+.L_80049B8C:
+/* 80049B8C 0004698C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049B90 00046990  7C 08 03 A6 */	mtlr r0
+/* 80049B94 00046994  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049B98 00046998  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049b68
+
+# .text:0xA04 | 0x80049B9C | size: 0x44
+.fn kar_gmspecialmovie__near_80049b9c, global
+/* 80049B9C 0004699C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049BA0 000469A0  7C 08 02 A6 */	mflr r0
+/* 80049BA4 000469A4  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049BA8 000469A8  48 1E 9E CD */	bl kar_pltrick__near_80233a74
+/* 80049BAC 000469AC  48 01 BD B1 */	bl kar_lbvector__near_8006595c
+/* 80049BB0 000469B0  48 01 0F D5 */	bl kar_lbaudio__near_8005ab84
+/* 80049BB4 000469B4  48 01 08 8D */	bl kar_lbaudio__near_8005a440
+/* 80049BB8 000469B8  48 01 0A 51 */	bl kar_lbaudio__near_8005a608
+/* 80049BBC 000469BC  48 23 53 B1 */	bl kar_en_assets__asset_8027ef6c
+/* 80049BC0 000469C0  48 23 59 F5 */	bl fn_8027F5B4
+/* 80049BC4 000469C4  48 01 4A 0D */	bl kar_lbaudio__near_8005e5d0
+/* 80049BC8 000469C8  38 60 00 0C */	li r3, 0xc
+/* 80049BCC 000469CC  48 01 45 DD */	bl kar_lbaudio__near_8005e1a8
+/* 80049BD0 000469D0  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049BD4 000469D4  7C 08 03 A6 */	mtlr r0
+/* 80049BD8 000469D8  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049BDC 000469DC  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049b9c
+
+# .text:0xA48 | 0x80049BE0 | size: 0x40
+.fn kar_gmspecialmovie__near_80049be0, global
+/* 80049BE0 000469E0  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80049BE4 000469E4  7C 08 02 A6 */	mflr r0
+/* 80049BE8 000469E8  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80049BEC 000469EC  48 23 5A 25 */	bl fn_8027F610
+/* 80049BF0 000469F0  48 01 49 E1 */	bl kar_lbaudio__near_8005e5d0
+/* 80049BF4 000469F4  4B FC 12 B5 */	bl kar_gmracenormal__8000aea8
+/* 80049BF8 000469F8  7C 60 07 74 */	extsb r0, r3
+/* 80049BFC 000469FC  2C 00 00 0B */	cmpwi r0, 0xb
+/* 80049C00 00046A00  40 82 00 10 */	bne .L_80049C10
+/* 80049C04 00046A04  38 60 00 10 */	li r3, 0x10
+/* 80049C08 00046A08  4B FB E6 99 */	bl kar_gmlanmenu__800082a0
+/* 80049C0C 00046A0C  4B FB E6 15 */	bl kar_gmlanmenu__80008220
+.L_80049C10:
+/* 80049C10 00046A10  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80049C14 00046A14  7C 08 03 A6 */	mtlr r0
+/* 80049C18 00046A18  38 21 00 10 */	addi r1, r1, 0x10
+/* 80049C1C 00046A1C  4E 80 00 20 */	blr
+.endfn kar_gmspecialmovie__near_80049be0
