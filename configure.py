@@ -280,6 +280,81 @@ def MatchingFor(*versions):
     return config.version in versions
 
 
+KAR_SOURCE_EXACT = {
+    "textlib.c": "if",
+    "camera.c": "cm",
+    "ground.c": "gr",
+    "effect.c": "ef",
+    "OSThread.c": "os",
+    "displayfunc.c": "hsd/base",
+    "initialize.c": "hsd/base",
+    "objalloc.c": "hsd/base",
+    "memory.c": "hsd/base",
+    "shadow.c": "hsd/base",
+    "bytecode.c": "hsd/base",
+    "texpdag.c": "hsd/base",
+    "gobjproc.c": "hsd/base",
+    "gobjplink.c": "hsd/base",
+    "gobjgxlink.c": "hsd/base",
+    "gobjobject.c": "hsd/base",
+    "gobjuserdata.c": "hsd/base",
+    "particle.c": "hsd/particle",
+    "psinterpret.c": "hsd/particle",
+    "generator.c": "hsd/particle",
+    "psdisp.c": "hsd/particle",
+    "pslist.c": "hsd/particle",
+    "debugconsole_main.c": "debug",
+    "axdriver.c": "audio_ax",
+    "devcom.c": "audio_ax",
+    "dvdsche.c": "audio_ax",
+    "sislib.c": "hsd/base",
+    "gcpmemcard.c": "card",
+    "HVQM4PlayerDx.c": "hvqm",
+    "IPSocket.c": "network",
+    "IPIgmp.c": "network",
+}
+
+KAR_SOURCE_PREFIXES = [
+    ("a2d_", "a2d"),
+    ("fl_", "fl"),
+    ("gm", "gm"),
+    ("lb", "lb"),
+    ("db", "db"),
+    ("cm", "cm"),
+    ("gr", "gr"),
+    ("if", "if"),
+    ("mn", "mn"),
+    ("cl", "cl"),
+    ("vc", "vc"),
+    ("em", "em"),
+    ("wn", "wn"),
+    ("pl", "pl"),
+    ("ef", "ef"),
+    ("mp", "mp"),
+    ("it", "it"),
+    ("cp", "cp"),
+]
+
+
+def kar_source_path(name: str) -> str:
+    path = Path(name)
+    if len(path.parts) > 1:
+        return str(Path("kar") / path).replace("\\", "/")
+
+    subdir = KAR_SOURCE_EXACT.get(name)
+    if subdir is None:
+        stem = path.stem
+        subdir = next(
+            (
+                directory
+                for prefix, directory in KAR_SOURCE_PREFIXES
+                if stem.startswith(prefix)
+            ),
+            "misc",
+        )
+    return str(Path("kar") / subdir / name).replace("\\", "/")
+
+
 config.warn_missing_config = True
 config.warn_missing_source = False
 kar_objects = [
@@ -477,6 +552,9 @@ kar_objects = [
     Object(NonMatching, "IPSocket.c"),
     Object(NonMatching, "IPIgmp.c"),
 ]
+
+for obj in kar_objects:
+    obj.options["source"] = kar_source_path(obj.name)
 
 config.libs = [
     {
