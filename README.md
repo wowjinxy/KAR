@@ -20,6 +20,12 @@ Compiler Baseline
 KAR uses CodeWarrior for GameCube 2.4.2 build 81, represented by the
 `GC/1.3.2` toolchain in the project config.
 
+Source imported or cross-checked against `doldecomp/kar` keeps that project's
+source flags (`-cwd source`, `-I-`, and `-inline all`) separate from the broader
+game-code baseline. Dolphin SDK-shaped objects are also kept separate from game
+objects and are configured with the SDK compiler slot (`GC/1.0`) because the SDK
+code was not built with the same compiler as the KAR game code.
+
 Observed game-code flags:
 
 ```sh
@@ -69,3 +75,9 @@ Notes
 - `docs/kar_shiftability_checklist.md` tracks what still blocks version-shift
   confidence.
 - `docs/kar_data_split_notes.md` outlines the conservative data-splitting path.
+- `tools/import_doldecomp_kar_symbols.py` imports conservative symbol upgrades
+  from a local `doldecomp/kar` clone. By default it trusts SysDolphin,
+  Dolphin SDK, and runtime/SDK labels with concrete addresses, while leaving
+  asm-only game labels for manual review.
+- Source files mirrored from `doldecomp/kar` live under `src/sysdolphin`,
+  `src/os`, and `src/Dolphin`; mirrored headers live under `include`.
