@@ -339,3 +339,101 @@
 /* 80106854 00103654  38 21 00 10 */	addi r1, r1, 0x10
 /* 80106858 00103658  4E 80 00 20 */	blr
 .endfn kar_gryakulasergate_create_stage_linked_kind32_breakfloor
+
+# 0x804A6CDC..0x804A6DC8 | size: 0xEC
+.data
+.balign 4
+
+# .data:0x0 | 0x804A6CDC | size: 0x20
+.obj kar_gryakulasergate_kind58_ctrl_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakulasergate_update_kind58_ctrl_target_reset_to_idle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakulasergate_kind58_ctrl_callback_table
+
+# .data:0x20 | 0x804A6CFC | size: 0xCC
+.obj kar_gryakulasergate_kind58_ctrl_callback_table_ptr, global
+	.4byte kar_gryakulasergate_kind58_ctrl_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x67727961
+	.4byte 0x6B756C61
+	.4byte 0x73657267
+	.4byte 0x6174652E
+	.4byte 0x63000000
+	.4byte 0x6779702D
+	.4byte 0x3E6B696E
+	.4byte 0x64203D3D
+	.4byte 0x2047725F
+	.4byte 0x59616B75
+	.4byte 0x4B696E64
+	.4byte 0x5F4C6173
+	.4byte 0x65724761
+	.4byte 0x74650000
+	.4byte 0x30203C20
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x20262620
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x203C3D20
+	.4byte 0x47725961
+	.4byte 0x6B754C61
+	.4byte 0x73657247
+	.4byte 0x61746543
+	.4byte 0x74726C5F
+	.4byte 0x474F626A
+	.4byte 0x4E756D4D
+	.4byte 0x61780000
+	.4byte 0x67726F75
+	.4byte 0x6E642E68
+	.4byte 0x00000000
+	.4byte 0x6779702D
+	.4byte 0x3E6B696E
+	.4byte 0x64203D3D
+	.4byte 0x2047725F
+	.4byte 0x59616B75
+	.4byte 0x4B696E64
+	.4byte 0x5F4C6173
+	.4byte 0x65724761
+	.4byte 0x74654374
+	.4byte 0x726C0000
+.endobj kar_gryakulasergate_kind58_ctrl_callback_table_ptr
+
+# 0x805D62E8..0x805D62F8 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D62E8 | size: 0x5
+.obj lbl_805D62E8, global
+	.string "aobj"
+.endobj lbl_805D62E8
+
+# .sdata:0x5 | 0x805D62ED | size: 0x3
+.obj gap_09_805D62ED_sdata, global
+.hidden gap_09_805D62ED_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D62ED_sdata
+
+# .sdata:0x8 | 0x805D62F0 | size: 0x2
+.obj lbl_805D62F0, global
+	.string "0"
+.endobj lbl_805D62F0
+
+# .sdata:0xA | 0x805D62F2 | size: 0x6
+.obj gap_09_805D62F2_sdata, global
+.hidden gap_09_805D62F2_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D62F2_sdata

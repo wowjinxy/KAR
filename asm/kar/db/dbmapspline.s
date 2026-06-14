@@ -678,6 +678,7 @@
 /* 800A1748 0009E548  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800A174C 0009E54C  7C 09 03 A6 */	mtctr r0
 /* 800A1750 0009E550  4E 80 04 20 */	bctr
+.L_800A1754:
 /* 800A1754 0009E554  80 7C 01 10 */	lwz r3, 0x110(r28)
 /* 800A1758 0009E558  28 03 00 00 */	cmplwi r3, 0x0
 /* 800A175C 0009E55C  41 82 04 7C */	beq .L_800A1BD8
@@ -712,6 +713,7 @@
 /* 800A17C8 0009E5C8  38 9F 00 00 */	addi r4, r31, 0x0
 /* 800A17CC 0009E5CC  4B FF F6 05 */	bl kar_dbmapspline__800a0dd0
 /* 800A17D0 0009E5D0  48 00 04 08 */	b .L_800A1BD8
+.L_800A17D4:
 /* 800A17D4 0009E5D4  80 7C 01 10 */	lwz r3, 0x110(r28)
 /* 800A17D8 0009E5D8  28 03 00 00 */	cmplwi r3, 0x0
 /* 800A17DC 0009E5DC  41 82 03 FC */	beq .L_800A1BD8
@@ -749,6 +751,7 @@
 /* 800A1854 0009E654  38 84 00 04 */	addi r4, r4, 0x4
 /* 800A1858 0009E658  4B FF F5 79 */	bl kar_dbmapspline__800a0dd0
 /* 800A185C 0009E65C  48 00 03 7C */	b .L_800A1BD8
+.L_800A1860:
 /* 800A1860 0009E660  80 1C 01 1C */	lwz r0, 0x11c(r28)
 /* 800A1864 0009E664  28 00 00 00 */	cmplwi r0, 0x0
 /* 800A1868 0009E668  41 82 03 70 */	beq .L_800A1BD8
@@ -761,6 +764,7 @@
 /* 800A1884 0009E684  38 C0 00 00 */	li r6, 0x0
 /* 800A1888 0009E688  4B FF FC 3D */	bl kar_dbmapspline__near_800a14c4
 /* 800A188C 0009E68C  48 00 03 4C */	b .L_800A1BD8
+.L_800A1890:
 /* 800A1890 0009E690  80 1C 01 1C */	lwz r0, 0x11c(r28)
 /* 800A1894 0009E694  28 00 00 00 */	cmplwi r0, 0x0
 /* 800A1898 0009E698  41 82 03 40 */	beq .L_800A1BD8
@@ -773,6 +777,7 @@
 /* 800A18B4 0009E6B4  38 C0 00 00 */	li r6, 0x0
 /* 800A18B8 0009E6B8  4B FF FC 0D */	bl kar_dbmapspline__near_800a14c4
 /* 800A18BC 0009E6BC  48 00 03 1C */	b .L_800A1BD8
+.L_800A18C0:
 /* 800A18C0 0009E6C0  80 1C 01 1C */	lwz r0, 0x11c(r28)
 /* 800A18C4 0009E6C4  28 00 00 00 */	cmplwi r0, 0x0
 /* 800A18C8 0009E6C8  41 82 03 10 */	beq .L_800A1BD8
@@ -786,6 +791,7 @@
 /* 800A18E8 0009E6E8  38 C6 00 20 */	addi r6, r6, 0x20
 /* 800A18EC 0009E6EC  4B FF FB D9 */	bl kar_dbmapspline__near_800a14c4
 /* 800A18F0 0009E6F0  48 00 02 E8 */	b .L_800A1BD8
+.L_800A18F4:
 /* 800A18F4 0009E6F4  80 1C 01 1C */	lwz r0, 0x11c(r28)
 /* 800A18F8 0009E6F8  28 00 00 00 */	cmplwi r0, 0x0
 /* 800A18FC 0009E6FC  41 82 02 DC */	beq .L_800A1BD8
@@ -799,6 +805,7 @@
 /* 800A191C 0009E71C  38 C6 00 28 */	addi r6, r6, 0x28
 /* 800A1920 0009E720  4B FF FB A5 */	bl kar_dbmapspline__near_800a14c4
 /* 800A1924 0009E724  48 00 02 B4 */	b .L_800A1BD8
+.L_800A1928:
 /* 800A1928 0009E728  80 7C 00 08 */	lwz r3, 0x8(r28)
 /* 800A192C 0009E72C  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 800A1930 0009E730  80 63 00 08 */	lwz r3, 0x8(r3)
@@ -836,6 +843,7 @@
 /* 800A19A8 0009E7A8  38 84 00 10 */	addi r4, r4, 0x10
 /* 800A19AC 0009E7AC  4B FF F4 25 */	bl kar_dbmapspline__800a0dd0
 /* 800A19B0 0009E7B0  48 00 02 28 */	b .L_800A1BD8
+.L_800A19B4:
 /* 800A19B4 0009E7B4  80 7C 00 08 */	lwz r3, 0x8(r28)
 /* 800A19B8 0009E7B8  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 800A19BC 0009E7BC  80 63 00 0C */	lwz r3, 0xc(r3)
@@ -873,6 +881,7 @@
 /* 800A1A34 0009E834  38 84 00 14 */	addi r4, r4, 0x14
 /* 800A1A38 0009E838  4B FF F3 99 */	bl kar_dbmapspline__800a0dd0
 /* 800A1A3C 0009E83C  48 00 01 9C */	b .L_800A1BD8
+.L_800A1A40:
 /* 800A1A40 0009E840  80 7C 00 08 */	lwz r3, 0x8(r28)
 /* 800A1A44 0009E844  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 800A1A48 0009E848  80 63 00 10 */	lwz r3, 0x10(r3)
@@ -910,6 +919,7 @@
 /* 800A1AC0 0009E8C0  38 84 00 18 */	addi r4, r4, 0x18
 /* 800A1AC4 0009E8C4  4B FF F3 0D */	bl kar_dbmapspline__800a0dd0
 /* 800A1AC8 0009E8C8  48 00 01 10 */	b .L_800A1BD8
+.L_800A1ACC:
 /* 800A1ACC 0009E8CC  80 7C 00 08 */	lwz r3, 0x8(r28)
 /* 800A1AD0 0009E8D0  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 800A1AD4 0009E8D4  83 63 00 14 */	lwz r27, 0x14(r3)
@@ -946,6 +956,7 @@
 /* 800A1B48 0009E948  38 84 00 1C */	addi r4, r4, 0x1c
 /* 800A1B4C 0009E94C  4B FF F2 85 */	bl kar_dbmapspline__800a0dd0
 /* 800A1B50 0009E950  48 00 00 88 */	b .L_800A1BD8
+.L_800A1B54:
 /* 800A1B54 0009E954  80 7C 00 08 */	lwz r3, 0x8(r28)
 /* 800A1B58 0009E958  80 63 00 1C */	lwz r3, 0x1c(r3)
 /* 800A1B5C 0009E95C  83 63 00 18 */	lwz r27, 0x18(r3)
@@ -2131,3 +2142,865 @@
 /* 800A2C0C 0009FA0C  38 21 00 30 */	addi r1, r1, 0x30
 /* 800A2C10 0009FA10  4E 80 00 20 */	blr
 .endfn kar_dbmapspline__near_800a2b70
+
+# 0x8049E2F0..0x8049ED90 | size: 0xAA0
+.data
+.balign 8
+
+# .data:0x0 | 0x8049E2F0 | size: 0xB
+.obj kar_src_lbkdtree_8049e2f0, global
+	.string "lbkdtree.h"
+.endobj kar_src_lbkdtree_8049e2f0
+
+# .data:0xB | 0x8049E2FB | size: 0x1
+.obj gap_07_8049E2FB_data, global
+.hidden gap_07_8049E2FB_data
+	.byte 0x00
+.endobj gap_07_8049E2FB_data
+
+# .data:0xC | 0x8049E2FC | size: 0x9C
+.obj lbl_8049E2FC, global
+	.4byte 0x6C624B64
+	.4byte 0x74726565
+	.4byte 0x4F626A47
+	.4byte 0x6574466C
+	.4byte 0x61677328
+	.4byte 0x6B647472
+	.4byte 0x65652C20
+	.4byte 0x6F626A4B
+	.4byte 0x696E6429
+	.4byte 0x2026204C
+	.4byte 0x624B6474
+	.4byte 0x7265655F
+	.4byte 0x466C6167
+	.4byte 0x735F5479
+	.4byte 0x70655F53
+	.4byte 0x74617469
+	.4byte 0x63000000
+	.4byte 0x63742025
+	.4byte 0x643A2063
+	.4byte 0x72202564
+	.4byte 0x3A20637A
+	.4byte 0x2025643A
+	.4byte 0x2063726C
+	.4byte 0x2025643A
+	.4byte 0x20636320
+	.4byte 0x25643A20
+	.4byte 0x63726120
+	.4byte 0x25640A00
+	.4byte 0x67706F73
+	.4byte 0x20256620
+	.4byte 0x25662025
+	.4byte 0x660A0000
+	.4byte kar_dbcamera__near_8009ddb8
+	.4byte kar_dbmapzone__800a3138
+	.4byte kar_dbmapzone__near_800a367c
+	.4byte kar_dbmapgravity__near_800a8b58
+	.4byte kar_dbmapspline__800a21dc
+	.4byte kar_dbmapspline__near_800a22bc
+	.4byte 0x00000000
+.endobj lbl_8049E2FC
+
+# .data:0xA8 | 0x8049E398 | size: 0x178
+.obj lbl_8049E398, global
+	.4byte 0x754C24FF
+	.4byte 0xF1DBC5FF
+	.4byte 0xFFF200FF
+	.4byte 0x00A651FF
+	.4byte 0x095C32FF
+	.4byte 0xB6B6ABFF
+	.4byte 0x61615FFF
+	.4byte 0xD7FBFEFF
+	.4byte 0xFFFFFFFF
+	.4byte 0xE5BCA7FF
+	.4byte 0xC8BCA7FF
+	.4byte 0xA08666FF
+	.4byte 0x735C4DFF
+	.4byte 0xE79365FF
+	.4byte 0xFF0000FF
+	.4byte 0xAFFF99FF
+	.4byte 0xEFFFEFFF
+	.4byte 0x4F4F40FF
+	.4byte 0x0080FFFF
+	.4byte 0x606060FF
+	.4byte 0x4C285FFF
+	.4byte 0xCAC59AFF
+	.4byte 0x8D8D8DFF
+	.4byte 0xE76D00FF
+	.4byte 0xFFC8C8FF
+	.4byte 0x1655A4FF
+	.4byte 0x505000FF
+	.4byte 0xFF0000FF
+	.4byte 0x0000FFFF
+	.4byte 0x0000FFFF
+	.4byte 0xFF9A2EFF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0x594A3BFF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0x594A3BFF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0x594A3BFF
+	.4byte 0xE87A04FF
+	.4byte 0xE87A04FF
+	.4byte 0x754C24C8
+	.4byte 0xF1DBC5C8
+	.4byte 0xFFF200C8
+	.4byte 0x00A651C8
+	.4byte 0x095C32C8
+	.4byte 0xB6B6ABC8
+	.4byte 0x61615FC8
+	.4byte 0xD7FBFEC8
+	.4byte 0xFFFFFFC8
+	.4byte 0xE5BCA7C8
+	.4byte 0xC8BCA7C8
+	.4byte 0xA08666C8
+	.4byte 0x735C4DC8
+	.4byte 0xE79365C8
+	.4byte 0xFF0000C8
+	.4byte 0xAFFF99C8
+	.4byte 0xDFFFFFC8
+	.4byte 0x4F4F40C8
+	.4byte 0x0080FFC8
+	.4byte 0x606060C8
+	.4byte 0x4C285FC8
+	.4byte 0xCAC59AC8
+	.4byte 0x8D8D8DC8
+	.4byte 0xE76D00C8
+	.4byte 0xFFC8C8C8
+	.4byte 0x1655A4C8
+	.4byte 0x505000C8
+	.4byte 0xFF0000C8
+	.4byte 0xFF00FFC8
+	.4byte 0x0000FFC8
+	.4byte 0xFF9A2EC8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0x594A3BC8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0x594A3BC8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+	.4byte 0x594A3BC8
+	.4byte 0xE87A04C8
+	.4byte 0xE87A04C8
+.endobj lbl_8049E398
+
+# .data:0x220 | 0x8049E510 | size: 0x9
+.obj kar_src_grcoll_8049e510, global
+	.string "grcoll.h"
+.endobj kar_src_grcoll_8049e510
+
+# .data:0x229 | 0x8049E519 | size: 0x3
+.obj gap_07_8049E519_data, global
+.hidden gap_07_8049E519_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_8049E519_data
+
+# .data:0x22C | 0x8049E51C | size: 0x50
+.obj lbl_8049E51C, global
+	.4byte 0x21677243
+	.4byte 0x6F6C6C43
+	.4byte 0x686B4661
+	.4byte 0x6365496C
+	.4byte 0x6C656761
+	.4byte 0x6C286763
+	.4byte 0x702C2069
+	.4byte 0x64290000
+	.4byte 0x800000FF
+	.4byte 0x008000FF
+	.4byte 0x000080FF
+	.4byte 0x808000FF
+	.4byte 0x008080FF
+	.4byte 0x800080FF
+	.4byte 0x800000C8
+	.4byte 0x008000C8
+	.4byte 0x000080C8
+	.4byte 0x808000C8
+	.4byte 0x008080C8
+	.4byte kar_gmglobal__near_800080c0+0x8
+.endobj lbl_8049E51C
+
+# .data:0x27C | 0x8049E56C | size: 0xC
+.obj lbl_8049E56C, global
+	.4byte 0x800000FF
+	.4byte 0x008000FF
+	.4byte 0x000080FF
+.endobj lbl_8049E56C
+
+# .data:0x288 | 0x8049E578 | size: 0xC
+.obj lbl_8049E578, global
+	.4byte 0x800000C8
+	.4byte 0x008000C8
+	.4byte 0x000080C8
+.endobj lbl_8049E578
+
+# .data:0x294 | 0x8049E584 | size: 0x20
+.obj lbl_8049E584, global
+	.4byte 0x008000FF
+	.4byte 0x800000FF
+	.4byte 0x000080FF
+	.4byte 0x808000FF
+	.4byte 0x008080FF
+	.4byte 0x800080FF
+	.4byte 0x808080FF
+	.4byte 0x000000FF
+.endobj lbl_8049E584
+
+# .data:0x2B4 | 0x8049E5A4 | size: 0x20
+.obj lbl_8049E5A4, global
+	.4byte 0x008000C8
+	.4byte 0x800000C8
+	.4byte 0x000080C8
+	.4byte 0x808000C8
+	.4byte 0x008080C8
+	.4byte kar_gmglobal__near_800080c0+0x8
+	.4byte 0x808080C8
+	.4byte 0x000000C8
+.endobj lbl_8049E5A4
+
+# .data:0x2D4 | 0x8049E5C4 | size: 0x20
+.obj lbl_8049E5C4, global
+	.4byte 0x008000FF
+	.4byte 0x800000FF
+	.4byte 0x000080FF
+	.4byte 0x808000FF
+	.4byte 0x008080FF
+	.4byte 0x800080FF
+	.4byte 0x808080FF
+	.4byte 0x000000FF
+.endobj lbl_8049E5C4
+
+# .data:0x2F4 | 0x8049E5E4 | size: 0x20
+.obj lbl_8049E5E4, global
+	.4byte 0x008000C8
+	.4byte 0x800000C8
+	.4byte 0x000080C8
+	.4byte 0x808000C8
+	.4byte 0x008080C8
+	.4byte kar_gmglobal__near_800080c0+0x8
+	.4byte 0x808080C8
+	.4byte 0x000000C8
+.endobj lbl_8049E5E4
+
+# .data:0x314 | 0x8049E604 | size: 0x2C
+.obj lbl_8049E604, global
+	.4byte 0x808080FF
+	.4byte 0x800000FF
+	.4byte 0x000080FF
+	.4byte 0x008000FF
+	.4byte 0x008080FF
+	.4byte 0x800080FF
+	.4byte 0x808000FF
+	.4byte 0xF20D6EFF
+	.4byte 0xE3B994FF
+	.4byte 0xE375E2FF
+	.4byte 0x00FFFFFF
+.endobj lbl_8049E604
+
+# .data:0x340 | 0x8049E630 | size: 0x2C
+.obj lbl_8049E630, global
+	.4byte 0x808080C8
+	.4byte 0x800000C8
+	.4byte 0x000080C8
+	.4byte 0x008000C8
+	.4byte 0x008080C8
+	.4byte kar_gmglobal__near_800080c0+0x8
+	.4byte 0x808000C8
+	.4byte 0xF20D6EC8
+	.4byte 0xE3B994C8
+	.4byte 0xE375E2C8
+	.4byte 0x00FFFFC8
+.endobj lbl_8049E630
+
+# .data:0x36C | 0x8049E65C | size: 0x34
+.obj lbl_8049E65C, global
+	.4byte kar_dbcamera__near_8009e490
+	.4byte kar_dbcamera__near_8009e574
+	.4byte kar_dbcamera__near_8009ddb8
+	.4byte kar_dbcamera__near_8009e028
+	.4byte kar_dbcamera__near_8009e65c
+	.4byte kar_dbcamera__near_8009e8c4
+	.4byte kar_dbcamera__near_8009ecfc
+	.4byte kar_dbcamera__near_8009ede0
+	.4byte kar_dbcamera__near_8009f094
+	.4byte kar_dbcamera__near_8009f178
+	.4byte kar_dbcamera__near_800a03cc
+	.4byte kar_dbcamera__near_800a04b0
+	.4byte 0x00000000
+.endobj lbl_8049E65C
+
+# .data:0x3A0 | 0x8049E690 | size: 0x24
+.obj lbl_8049E690, global
+	.4byte 0x0000FFFF
+	.4byte 0x00FF00FF
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00FF00FF
+	.4byte 0xFF0000FF
+	.4byte 0xFF00FFFF
+	.4byte 0x505000FF
+	.4byte 0xFF8000FF
+.endobj lbl_8049E690
+
+# .data:0x3C4 | 0x8049E6B4 | size: 0x30
+.obj lbl_8049E6B4, global
+	.4byte 0xFFFF00FF
+	.4byte 0x00FFFFFF
+	.4byte 0xFF0000FF
+	.4byte 0xFF00FFFF
+	.4byte 0xEC541EFF
+	.4byte 0xEC541EFF
+	.4byte 0x00541EFF
+	.4byte 0x00541EFF
+	.4byte 0xFF0000FF
+	.4byte 0xFF00FFFF
+	.4byte 0x00541EFF
+	.4byte 0x00541EFF
+.endobj lbl_8049E6B4
+
+# .data:0x3F4 | 0x8049E6E4 | size: 0x2C
+.obj jumptable_8049E6E4, global
+	.4byte fn_800A0748+0x20
+	.4byte fn_800A0748+0x40
+	.4byte fn_800A0748+0x7C
+	.4byte fn_800A0748+0x158
+	.4byte fn_800A0748+0x158
+	.4byte fn_800A0748+0x158
+	.4byte fn_800A0748+0x98
+	.4byte fn_800A0748+0xC0
+	.4byte fn_800A0748+0xE8
+	.4byte fn_800A0748+0x110
+	.4byte fn_800A0748+0x134
+.endobj jumptable_8049E6E4
+
+# .data:0x420 | 0x8049E710 | size: 0x2C
+.obj jumptable_8049E710, global
+	.4byte kar_dbcamera__near_800a08a8+0x118
+	.4byte kar_dbcamera__near_800a08a8+0x120
+	.4byte kar_dbcamera__near_800a08a8+0x128
+	.4byte kar_dbcamera__near_800a08a8+0x15C
+	.4byte kar_dbcamera__near_800a08a8+0x15C
+	.4byte kar_dbcamera__near_800a08a8+0x15C
+	.4byte kar_dbcamera__near_800a08a8+0x134
+	.4byte kar_dbcamera__near_800a08a8+0x13C
+	.4byte kar_dbcamera__near_800a08a8+0x144
+	.4byte kar_dbcamera__near_800a08a8+0x14C
+	.4byte kar_dbcamera__near_800a08a8+0x154
+.endobj jumptable_8049E710
+
+# .data:0x44C | 0x8049E73C | size: 0x2C
+.obj jumptable_8049E73C, global
+	.4byte kar_dbcamera__near_800a0a0c+0xBC
+	.4byte kar_dbcamera__near_800a0a0c+0xDC
+	.4byte kar_dbcamera__near_800a0a0c+0x118
+	.4byte kar_dbcamera__near_800a0a0c+0x1F4
+	.4byte kar_dbcamera__near_800a0a0c+0x1F4
+	.4byte kar_dbcamera__near_800a0a0c+0x1F4
+	.4byte kar_dbcamera__near_800a0a0c+0x134
+	.4byte kar_dbcamera__near_800a0a0c+0x15C
+	.4byte kar_dbcamera__near_800a0a0c+0x184
+	.4byte kar_dbcamera__near_800a0a0c+0x1AC
+	.4byte kar_dbcamera__near_800a0a0c+0x1D0
+.endobj jumptable_8049E73C
+
+# .data:0x478 | 0x8049E768 | size: 0x124
+.obj kar_src_dbmapspline_8049e768, global
+	.4byte 0x64626D61
+	.4byte 0x7073706C
+	.4byte 0x696E652E
+	.4byte 0x63000000
+	.4byte 0x30203C3D
+	.4byte 0x20627566
+	.4byte 0x66496420
+	.4byte 0x26262062
+	.4byte 0x75666649
+	.4byte 0x64203C20
+	.4byte 0x44624D61
+	.4byte 0x705F5370
+	.4byte 0x6C427566
+	.4byte 0x665F4E75
+	.4byte 0x6D4D6178
+	.4byte 0x00000000
+	.4byte 0x73746172
+	.4byte 0x745F7061
+	.4byte 0x72616D20
+	.4byte 0x3D202566
+	.4byte 0x2C20656E
+	.4byte 0x645F7061
+	.4byte 0x72616D20
+	.4byte 0x3D202566
+	.4byte 0x0A000000
+	.4byte 0x302E3046
+	.4byte 0x203C3D20
+	.4byte 0x73746172
+	.4byte 0x745F7061
+	.4byte 0x72616D20
+	.4byte 0x26262065
+	.4byte 0x6E645F70
+	.4byte 0x6172616D
+	.4byte 0x203C3D20
+	.4byte 0x312E3046
+	.4byte 0x20262620
+	.4byte 0x73746172
+	.4byte 0x745F7061
+	.4byte 0x72616D20
+	.4byte 0x3C3D2065
+	.4byte 0x6E645F70
+	.4byte 0x6172616D
+	.4byte 0x00000000
+	.4byte 0x6772636F
+	.4byte 0x6D6D6F6E
+	.4byte 0x2E680000
+	.4byte 0x72616E67
+	.4byte 0x65446174
+	.4byte 0x61000000
+	.4byte 0x30203C3D
+	.4byte 0x2072616E
+	.4byte 0x67655F73
+	.4byte 0x706C5F69
+	.4byte 0x64202626
+	.4byte 0x2072616E
+	.4byte 0x67655F73
+	.4byte 0x706C5F69
+	.4byte 0x64203C20
+	.4byte 0x72616E67
+	.4byte 0x65446174
+	.4byte 0x612D3E70
+	.4byte 0x6169724E
+	.4byte 0x756D0000
+	.4byte 0x30203C3D
+	.4byte 0x2073706C
+	.4byte 0x5F696420
+	.4byte 0x26262073
+	.4byte 0x706C5F69
+	.4byte 0x64203C20
+	.4byte 0x73706C5F
+	.4byte 0x64617461
+	.4byte 0x2D3E6E75
+	.4byte 0x6D000000
+.endobj kar_src_dbmapspline_8049e768
+
+# .data:0x59C | 0x8049E88C | size: 0x2C
+.obj jumptable_8049E88C, local
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1754
+	.rel kar_dbmapspline__near_800a16a8, .L_800A17D4
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1860
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1890
+	.rel kar_dbmapspline__near_800a16a8, .L_800A18C0
+	.rel kar_dbmapspline__near_800a16a8, .L_800A18F4
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1928
+	.rel kar_dbmapspline__near_800a16a8, .L_800A19B4
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1A40
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1ACC
+	.rel kar_dbmapspline__near_800a16a8, .L_800A1B54
+.endobj jumptable_8049E88C
+
+# .data:0x5C8 | 0x8049E8B8 | size: 0x88
+.obj lbl_8049E8B8, global
+	.4byte 0x72616E67
+	.4byte 0x652D3E64
+	.4byte 0x61746100
+	.4byte 0x30203C3D
+	.4byte 0x2063745F
+	.4byte 0x706F696E
+	.4byte 0x745F6964
+	.4byte 0x20262620
+	.4byte 0x63745F70
+	.4byte 0x6F696E74
+	.4byte 0x5F696420
+	.4byte 0x3C207261
+	.4byte 0x6E67652D
+	.4byte 0x3E63744E
+	.4byte 0x756D0000
+	.4byte 0x63745F70
+	.4byte 0x6F696E74
+	.4byte 0x5F696420
+	.4byte 0x3D202564
+	.4byte 0x2C206672
+	.4byte 0x6F6E7420
+	.4byte 0x3D202564
+	.4byte 0x0A000000
+	.4byte 0x73706C5F
+	.4byte 0x6964203D
+	.4byte 0x2025640A
+	.4byte 0x00000000
+	.4byte 0x636F6E6E
+	.4byte 0x6563745F
+	.4byte 0x73706C00
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_8049E8B8
+
+# .data:0x650 | 0x8049E940 | size: 0x60
+.obj lbl_8049E940, global
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+.endobj lbl_8049E940
+
+# .data:0x6B0 | 0x8049E9A0 | size: 0x60
+.obj lbl_8049E9A0, global
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0xBF800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_8049E9A0
+
+# .data:0x710 | 0x8049EA00 | size: 0x40
+.obj lbl_8049EA00, global
+	.4byte 0x80001807
+	.4byte 0x05040505
+	.4byte 0x05060506
+	.4byte 0x04050402
+	.4byte 0x04030403
+	.4byte 0x03020300
+	.4byte 0x03010301
+	.4byte 0x02000204
+	.4byte 0x02070201
+	.4byte 0x01070106
+	.4byte 0x01030104
+	.4byte 0x00000002
+	.4byte 0x00050000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_8049EA00
+
+# .data:0x750 | 0x8049EA40 | size: 0x350
+.obj lbl_8049EA40, global
+	.4byte 0x00000000
+	.4byte 0x10000000
+	.4byte 0x00000001
+	.4byte 0x10000001
+	.4byte 0x20000000
+	.4byte 0x30000000
+	.4byte 0x00000002
+	.4byte 0x10000002
+	.4byte 0x00000003
+	.4byte 0x10000003
+	.4byte 0x00000004
+	.4byte 0x02000004
+	.4byte 0x10000004
+	.4byte 0x12000004
+	.4byte 0x00000005
+	.4byte 0x02000005
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x02000007
+	.4byte 0x04000007
+	.4byte 0x00000008
+	.4byte 0x00000009
+	.4byte 0x0000000A
+	.4byte 0x1000000A
+	.4byte 0x0000000B
+	.4byte 0x0200000B
+	.4byte 0x0400000B
+	.4byte 0x0000000C
+	.4byte 0x0000000D
+	.4byte 0x0000000E
+	.4byte 0x0000000F
+	.4byte 0x00000010
+	.4byte 0x00000011
+	.4byte 0x00000012
+	.4byte 0x00000013
+	.4byte 0x00000014
+	.4byte 0x00000015
+	.4byte 0x00000016
+	.4byte 0x00000017
+	.4byte 0x00000018
+	.4byte 0x00000019
+	.4byte 0x0000001A
+	.4byte 0x0200001A
+	.4byte 0x0000001B
+	.4byte 0x0000001C
+	.4byte 0x0000001D
+	.4byte 0x0000001E
+	.4byte 0x0000001F
+	.4byte 0x00000020
+	.4byte 0x02000020
+	.4byte 0x00000021
+	.4byte 0x00000022
+	.4byte 0x00000023
+	.4byte 0xB5B6ADC8
+	.4byte 0x828282C8
+	.4byte 0x00B6ADC8
+	.4byte 0x008282C8
+	.4byte 0xDCDCDCC8
+	.4byte 0x646464C8
+	.4byte 0xC05A00C8
+	.4byte kar_diagnostic__near_803c00c8
+	.4byte 0xC05A50C8
+	.4byte DVDConvertPathToEntrynum+0x1F4
+	.4byte 0x00C8C8C8
+	.4byte 0x0000C8C8
+	.4byte 0x002828C8
+	.4byte 0x000028C8
+	.4byte 0x0000FFC8
+	.4byte 0x131313C8
+	.4byte 0xFFFFFFC8
+	.4byte 0x7CC576C8
+	.4byte 0x7CC576C8
+	.4byte 0x7CC576C8
+	.4byte 0x7DC5B8C8
+	.4byte 0x80FF00C8
+	.4byte 0xFFFF80C8
+	.4byte 0xC0C080C8
+	.4byte 0xFF0000C8
+	.4byte 0xFFB4B4C8
+	.4byte 0x500000C8
+	.4byte 0xC600FFC8
+	.4byte 0x500076C8
+	.4byte 0xECA8FFC8
+	.4byte 0x00FFFFC8
+	.4byte 0x505000C8
+	.4byte 0xFFAD37C8
+	.4byte 0xFF98E5C8
+	.4byte 0xFF00BFC8
+	.4byte 0x2EB8FFC8
+	.4byte 0x146A1AC8
+	.4byte 0xFFC7F1C8
+	.4byte 0x78005AC8
+	.4byte 0x000096C8
+	.4byte 0x00FCFFC8
+	.4byte 0xFBACFCC8
+	.4byte 0xC4FCACC8
+	.4byte 0xD7F3FFC8
+	.4byte 0xFFE3C1C8
+	.4byte 0xB29383C8
+	.4byte 0xAADE78C8
+	.4byte 0xFFFFB9C8
+	.4byte 0xE375E2C8
+	.4byte 0xB32DF8C8
+	.4byte 0xFFFFFFC8
+	.4byte 0xE3B994C8
+	.4byte 0xF20D6EC8
+	.4byte 0xB5B6ADFF
+	.4byte 0x828282FF
+	.4byte 0x00B6ADFF
+	.4byte 0x008282FF
+	.4byte 0xDCDCDCFF
+	.4byte 0x646464FF
+	.4byte 0xC05A00FF
+	.4byte 0x803C00FF
+	.4byte 0xC05A50FF
+	.4byte 0x803C50FF
+	.4byte 0x00C8C8FF
+	.4byte 0x0000C8FF
+	.4byte 0x002828FF
+	.4byte 0x000028FF
+	.4byte 0x0000FFFF
+	.4byte 0x131313FF
+	.4byte 0xFFFFFFFF
+	.4byte 0x7CC576FF
+	.4byte 0x7CC576FF
+	.4byte 0x7CC576FF
+	.4byte 0x7DC5B8FF
+	.4byte 0x80FF00FF
+	.4byte 0xFFFF80FF
+	.4byte 0xC0C080FF
+	.4byte 0xFF0000FF
+	.4byte 0xFFB4B4FF
+	.4byte 0x500000FF
+	.4byte 0xC600FFFF
+	.4byte 0x500076FF
+	.4byte 0xECA8FFFF
+	.4byte 0x00FFFFFF
+	.4byte 0x505000FF
+	.4byte 0xFFAD37FF
+	.4byte 0xFF98E5FF
+	.4byte 0xFF00BFFF
+	.4byte 0x2EB8FFFF
+	.4byte 0x146A1AFF
+	.4byte 0xFFC7F1FF
+	.4byte 0x78005AFF
+	.4byte 0x000096FF
+	.4byte 0x00FCFFFF
+	.4byte 0xFBACFCFF
+	.4byte 0xC4FCACFF
+	.4byte 0xD7F3FFFF
+	.4byte 0xFFE3C1FF
+	.4byte 0xB29383FF
+	.4byte 0xAADE78FF
+	.4byte 0xFFFFB9FF
+	.4byte 0xE375E2FF
+	.4byte 0xB32DF8FF
+	.4byte 0xFFFFFFFF
+	.4byte 0xE3B994FF
+	.4byte 0xF20D6EFF
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_dbmapspline__near_800a2b70
+	.4byte 0x00000000
+	.4byte kar_dbmapspline__near_800a2b70
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_dbmapzone__800a2c14
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_8049EA40
+
+# 0x805DF080..0x805DF0BC | size: 0x3C
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF080 | size: 0x4
+.obj lbl_805DF080, global
+	.float 0
+.endobj lbl_805DF080
+
+# .sdata2:0x4 | 0x805DF084 | size: 0x4
+.obj lbl_805DF084, global
+	.float 1
+.endobj lbl_805DF084
+
+# .sdata2:0x8 | 0x805DF088 | size: 0x4
+.obj lbl_805DF088, global
+	.float 255
+.endobj lbl_805DF088
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805DF090 | size: 0x8
+.obj lbl_805DF090, global
+	.double 4503601774854144
+.endobj lbl_805DF090
+
+# .sdata2:0x18 | 0x805DF098 | size: 0x4
+.obj lbl_805DF098, global
+	.float 0
+.endobj lbl_805DF098
+
+# .sdata2:0x1C | 0x805DF09C | size: 0x4
+.obj lbl_805DF09C, global
+	.float 1
+.endobj lbl_805DF09C
+
+# .sdata2:0x20 | 0x805DF0A0 | size: 0x4
+.obj lbl_805DF0A0, global
+	.float 0.5
+.endobj lbl_805DF0A0
+
+# .sdata2:0x24 | 0x805DF0A4 | size: 0x4
+.obj lbl_805DF0A4, global
+	.4byte 0x80808040
+.endobj lbl_805DF0A4
+
+# .sdata2:0x28 | 0x805DF0A8 | size: 0x4
+.obj lbl_805DF0A8, global
+	.4byte 0xFFFFFF40
+.endobj lbl_805DF0A8
+
+# .sdata2:0x2C | 0x805DF0AC | size: 0x4
+.obj lbl_805DF0AC, global
+	.4byte 0x00FF0040
+.endobj lbl_805DF0AC
+
+# .sdata2:0x30 | 0x805DF0B0 | size: 0x8
+.obj lbl_805DF0B0, global
+	.4byte 0x0000FF40
+	.4byte 0x00000000
+.endobj lbl_805DF0B0
+
+# .sdata2:0x38 | 0x805DF0B8 | size: 0x4
+.obj lbl_805DF0B8, global
+	.4byte 0xFF0000FF
+.endobj lbl_805DF0B8

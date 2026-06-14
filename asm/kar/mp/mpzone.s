@@ -1274,3 +1274,215 @@
 /* 8024CCA0 00249AA0  38 21 01 90 */	addi r1, r1, 0x190
 /* 8024CCA4 00249AA4  4E 80 00 20 */	blr
 .endfn kar_mpzone_update_sphere_rough_check_hits
+
+# 0x804B5A88..0x804B5D38 | size: 0x2B0
+.data
+.balign 8
+
+# .data:0x0 | 0x804B5A88 | size: 0x220
+.obj kar_mpzone_face_kind_flags, global
+	.4byte 0x00000008
+	.4byte 0x00000008
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000008
+	.4byte 0x00000008
+	.4byte 0x00000000
+	.4byte 0x00000008
+	.4byte 0x00000002
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x6D707A6F
+	.4byte 0x6E652E63
+	.4byte 0x00000000
+	.4byte 0x282A7A6F
+	.4byte 0x6E655265
+	.4byte 0x73756C74
+	.4byte 0x4E756D29
+	.4byte 0x203C204D
+	.4byte 0x70436F6C
+	.4byte 0x6C526573
+	.4byte 0x756C745F
+	.4byte 0x5A6F6E65
+	.4byte 0x49645F4D
+	.4byte 0x61780000
+	.4byte 0x282A7A6F
+	.4byte 0x6E654661
+	.4byte 0x63655265
+	.4byte 0x73756C74
+	.4byte 0x4E756D29
+	.4byte 0x203C204D
+	.4byte 0x70436F6C
+	.4byte 0x6C526573
+	.4byte 0x756C745F
+	.4byte 0x5A6F6E65
+	.4byte 0x46616365
+	.4byte 0x49645F4D
+	.4byte 0x61780000
+	.4byte 0x6D70636F
+	.4byte 0x6C6C2E68
+	.4byte 0x00000000
+	.4byte 0x6D70436F
+	.4byte 0x6C6C4765
+	.4byte 0x74536861
+	.4byte 0x70654B69
+	.4byte 0x6E64286D
+	.4byte 0x63702920
+	.4byte 0x3D3D204D
+	.4byte 0x705F436F
+	.4byte 0x6C6C5368
+	.4byte 0x6170654B
+	.4byte 0x696E645F
+	.4byte 0x53706865
+	.4byte 0x72650000
+	.4byte 0x6C626B64
+	.4byte 0x74726565
+	.4byte 0x2E680000
+	.4byte 0x6C624B64
+	.4byte 0x74726565
+	.4byte 0x4F626A47
+	.4byte 0x6574466C
+	.4byte 0x61677328
+	.4byte 0x6B647472
+	.4byte 0x65652C20
+	.4byte 0x6F626A4B
+	.4byte 0x696E6429
+	.4byte 0x2026204C
+	.4byte 0x624B6474
+	.4byte 0x7265655F
+	.4byte 0x466C6167
+	.4byte 0x735F5479
+	.4byte 0x70655F53
+	.4byte 0x74617469
+	.4byte 0x63000000
+	.4byte 0x706F7320
+	.4byte 0x3D202566
+	.4byte 0x2C202566
+	.4byte 0x2C202566
+	.4byte 0x2C207665
+	.4byte 0x6C6F6369
+	.4byte 0x7479203D
+	.4byte 0x2025662C
+	.4byte 0x2025662C
+	.4byte 0x2025660A
+	.4byte 0x00000000
+	.4byte 0x72657375
+	.4byte 0x6C742D3E
+	.4byte 0x7A6F6E65
+	.4byte 0x52657375
+	.4byte 0x6C744E75
+	.4byte 0x6D203C20
+	.4byte 0x4D70436F
+	.4byte 0x6C6C5265
+	.4byte 0x73756C74
+	.4byte 0x5F5A6F6E
+	.4byte 0x6549645F
+	.4byte 0x4D617800
+	.4byte 0x72657375
+	.4byte 0x6C742D3E
+	.4byte 0x7A6F6E65
+	.4byte 0x46616365
+	.4byte 0x52657375
+	.4byte 0x6C744E75
+	.4byte 0x6D203C20
+	.4byte 0x4D70436F
+	.4byte 0x6C6C5265
+	.4byte 0x73756C74
+	.4byte 0x5F5A6F6E
+	.4byte 0x65466163
+	.4byte 0x6549645F
+	.4byte 0x4D617800
+.endobj kar_mpzone_face_kind_flags
+
+# .data:0x220 | 0x804B5CA8 | size: 0x9
+.obj kar_src_mpcoll_804b5ca8, global
+	.string "mpcoll.h"
+.endobj kar_src_mpcoll_804b5ca8
+
+# .data:0x229 | 0x804B5CB1 | size: 0x3
+.obj gap_07_804B5CB1_data, global
+.hidden gap_07_804B5CB1_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5CB1_data
+
+# .data:0x22C | 0x804B5CB4 | size: 0x84
+.obj lbl_804B5CB4, global
+	.4byte 0x6D70436F
+	.4byte 0x6C6C4765
+	.4byte 0x74536861
+	.4byte 0x70654B69
+	.4byte 0x6E64286D
+	.4byte 0x63702920
+	.4byte 0x3D3D204D
+	.4byte 0x705F436F
+	.4byte 0x6C6C5368
+	.4byte 0x6170654B
+	.4byte 0x696E645F
+	.4byte 0x53706865
+	.4byte 0x72650000
+	.4byte 0x6C626B64
+	.4byte 0x74726565
+	.4byte 0x2E680000
+	.4byte 0x6C624B64
+	.4byte 0x74726565
+	.4byte 0x4F626A47
+	.4byte 0x6574466C
+	.4byte 0x61677328
+	.4byte 0x6B647472
+	.4byte 0x65652C20
+	.4byte 0x6F626A4B
+	.4byte 0x696E6429
+	.4byte 0x2026204C
+	.4byte 0x624B6474
+	.4byte 0x7265655F
+	.4byte 0x466C6167
+	.4byte 0x735F5479
+	.4byte 0x70655F53
+	.4byte 0x74617469
+	.4byte 0x63000000
+.endobj lbl_804B5CB4
+
+# 0x805E2C38..0x805E2C48 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2C38 | size: 0x8
+.obj lbl_805E2C38, global
+	.float 0.01
+	.float 0
+.endobj lbl_805E2C38
+
+# .sdata2:0x8 | 0x805E2C40 | size: 0x4
+.obj lbl_805E2C40, global
+	.float 0
+.endobj lbl_805E2C40
+
+# .sdata2:0xC | 0x805E2C44 | size: 0x4
+.obj lbl_805E2C44, global
+	.float 0.01
+.endobj lbl_805E2C44

@@ -1165,3 +1165,83 @@
 /* 800F66D8 000F34D8  38 21 00 10 */	addi r1, r1, 0x10
 /* 800F66DC 000F34DC  4E 80 00 20 */	blr
 .endfn kar_gryakuanim_destroy_efdata_state
+
+# 0x804A5AC0..0x804A5AE8 | size: 0x28
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5AC0 | size: 0xD
+.obj kar_src_gryakuanim_804a5ac0, global
+	.string "gryakuanim.c"
+.endobj kar_src_gryakuanim_804a5ac0
+
+# .data:0xD | 0x804A5ACD | size: 0x3
+.obj gap_07_804A5ACD_data, global
+.hidden gap_07_804A5ACD_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A5ACD_data
+
+# .data:0x10 | 0x804A5AD0 | size: 0x14
+.obj lbl_804A5AD0, global
+	.string "lbJObjGetAObj(jobj)"
+.endobj lbl_804A5AD0
+
+# .data:0x24 | 0x804A5AE4 | size: 0x4
+.obj gap_07_804A5AE4_data, global
+.hidden gap_07_804A5AE4_data
+	.4byte 0x00000000
+.endobj gap_07_804A5AE4_data
+
+# 0x805D61B8..0x805D61D0 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D61B8 | size: 0x7
+.obj kar_srcfile_aobj_h_805d61b8, global
+	.string "aobj.h"
+.endobj kar_srcfile_aobj_h_805d61b8
+
+# .sdata:0x7 | 0x805D61BF | size: 0x1
+.obj gap_09_805D61BF_sdata, global
+.hidden gap_09_805D61BF_sdata
+	.byte 0x00
+.endobj gap_09_805D61BF_sdata
+
+# .sdata:0x8 | 0x805D61C0 | size: 0x5
+.obj lbl_805D61C0, global
+	.string "aobj"
+.endobj lbl_805D61C0
+
+# .sdata:0xD | 0x805D61C5 | size: 0x3
+.obj gap_09_805D61C5_sdata, global
+.hidden gap_09_805D61C5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D61C5_sdata
+
+# .sdata:0x10 | 0x805D61C8 | size: 0x2
+.obj lbl_805D61C8, global
+	.string "0"
+.endobj lbl_805D61C8
+
+# .sdata:0x12 | 0x805D61CA | size: 0x6
+.obj gap_09_805D61CA_sdata, global
+.hidden gap_09_805D61CA_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D61CA_sdata
+
+# 0x805DF7E8..0x805DF7F8 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF7E8 | size: 0x8
+.obj lbl_805DF7E8, global
+	.float 0
+	.float 0
+.endobj lbl_805DF7E8
+
+# .sdata2:0x8 | 0x805DF7F0 | size: 0x8
+.obj lbl_805DF7F0, global
+	.float 1
+	.float 0
+.endobj lbl_805DF7F0

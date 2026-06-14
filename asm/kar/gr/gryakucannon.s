@@ -557,3 +557,76 @@
 /* 800FF5C4 000FC3C4  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FF5C8 000FC3C8  4E 80 00 20 */	blr
 .endfn kar_gryakupushoutwall_start_kind49_mode2_motion
+
+# 0x804A6430..0x804A6498 | size: 0x68
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6430 | size: 0x20
+.obj kar_gryakucannon_kind48_callback_table, global
+	.4byte kar_gryakucannon_update_pending_shot_queue
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakucannon_update_reload_and_pending_shots
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakucannon_kind48_callback_table
+
+# .data:0x20 | 0x804A6450 | size: 0x14
+.obj kar_gryakucannon_kind48_callback_table_ptr, global
+	.4byte kar_gryakucannon_kind48_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakucannon_kind48_callback_table_ptr
+
+# .data:0x34 | 0x804A6464 | size: 0xF
+.obj kar_src_gryakucannon_c, global
+	.string "gryakucannon.c"
+.endobj kar_src_gryakucannon_c
+
+# .data:0x43 | 0x804A6473 | size: 0x1
+.obj gap_07_804A6473_data, global
+.hidden gap_07_804A6473_data
+	.byte 0x00
+.endobj gap_07_804A6473_data
+
+# .data:0x44 | 0x804A6474 | size: 0x20
+.obj kar_gryakucannon_assert_pending_user_gobj, global
+	.string "gyp->lc.cannon.userInfo[i].gobj"
+.endobj kar_gryakucannon_assert_pending_user_gobj
+
+# .data:0x64 | 0x804A6494 | size: 0x4
+.obj gap_07_804A6494_data, global
+.hidden gap_07_804A6494_data
+	.4byte 0x00000000
+.endobj gap_07_804A6494_data
+
+# 0x805D6278..0x805D6280 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6278 | size: 0x2
+.obj lbl_805D6278, global
+	.string "0"
+.endobj lbl_805D6278
+
+# .sdata:0x2 | 0x805D627A | size: 0x6
+.obj gap_09_805D627A_sdata, global
+.hidden gap_09_805D627A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D627A_sdata
+
+# 0x805DF930..0x805DF938 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF930 | size: 0x8
+.obj lbl_805DF930, global
+	.float 0
+	.float 0
+.endobj lbl_805DF930

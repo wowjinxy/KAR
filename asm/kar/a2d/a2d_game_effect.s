@@ -1183,3 +1183,192 @@
 /* 8037B020 00377E20  38 21 00 10 */	addi r1, r1, 0x10
 /* 8037B024 00377E24  4E 80 00 20 */	blr
 .endfn kar_a2d_game_effect__near_8037afd0
+
+# 0x805DBB88..0x805DBC58 | size: 0xD0
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805DBB88 | size: 0x8
+.obj lbl_805DBB88, global
+	.4byte lbl_804F2B44
+	.4byte 0x00000000
+.endobj lbl_805DBB88
+
+# .sdata:0x8 | 0x805DBB90 | size: 0x8
+.obj lbl_805DBB90, global
+	.4byte lbl_804F2B30
+	.4byte lbl_804F2B64
+.endobj lbl_805DBB90
+
+# .sdata:0x10 | 0x805DBB98 | size: 0x8
+.obj lbl_805DBB98, global
+	.4byte lbl_804F2B80
+	.4byte 0x00000000
+.endobj lbl_805DBB98
+
+# .sdata:0x18 | 0x805DBBA0 | size: 0x8
+.obj lbl_805DBBA0, global
+	.4byte lbl_804F2B70
+	.4byte lbl_804F2B9C
+.endobj lbl_805DBBA0
+
+# .sdata:0x20 | 0x805DBBA8 | size: 0x8
+.obj lbl_805DBBA8, global
+	.4byte lbl_804F2BB8
+	.4byte 0x00000000
+.endobj lbl_805DBBA8
+
+# .sdata:0x28 | 0x805DBBB0 | size: 0x8
+.obj lbl_805DBBB0, global
+	.4byte lbl_804F2BA8
+	.4byte lbl_804F2BD4
+.endobj lbl_805DBBB0
+
+# .sdata:0x30 | 0x805DBBB8 | size: 0x8
+.obj lbl_805DBBB8, global
+	.4byte lbl_804F2BEC
+	.4byte 0x00000000
+.endobj lbl_805DBBB8
+
+# .sdata:0x38 | 0x805DBBC0 | size: 0x8
+.obj lbl_805DBBC0, global
+	.4byte lbl_804F2BE0
+	.4byte lbl_804F2C04
+.endobj lbl_805DBBC0
+
+# .sdata:0x40 | 0x805DBBC8 | size: 0x8
+.obj lbl_805DBBC8, global
+	.4byte lbl_804F2C1C
+	.4byte 0x00000000
+.endobj lbl_805DBBC8
+
+# .sdata:0x48 | 0x805DBBD0 | size: 0x8
+.obj lbl_805DBBD0, global
+	.4byte lbl_804F2C50
+	.4byte 0x00000000
+.endobj lbl_805DBBD0
+
+# .sdata:0x50 | 0x805DBBD8 | size: 0x8
+.obj lbl_805DBBD8, global
+	.4byte lbl_804F2C40
+	.4byte lbl_804F2C6C
+.endobj lbl_805DBBD8
+
+# .sdata:0x58 | 0x805DBBE0 | size: 0x8
+.obj lbl_805DBBE0, global
+	.4byte lbl_804F2C88
+	.4byte 0x00000000
+.endobj lbl_805DBBE0
+
+# .sdata:0x60 | 0x805DBBE8 | size: 0x8
+.obj lbl_805DBBE8, global
+	.4byte lbl_804F2C78
+	.4byte lbl_804F2CA4
+.endobj lbl_805DBBE8
+
+# .sdata:0x68 | 0x805DBBF0 | size: 0x8
+.obj lbl_805DBBF0, global
+	.4byte lbl_804F2CC8
+	.4byte 0x00000000
+.endobj lbl_805DBBF0
+
+# .sdata:0x70 | 0x805DBBF8 | size: 0x8
+.obj lbl_805DBBF8, global
+	.4byte lbl_804F2CBC
+	.4byte lbl_804F2CE0
+.endobj lbl_805DBBF8
+
+# .sdata:0x78 | 0x805DBC00 | size: 0x6
+.obj lbl_805DBC00, global
+	.string "model"
+.endobj lbl_805DBC00
+
+# .sdata:0x7E | 0x805DBC06 | size: 0x2
+.obj gap_09_805DBC06_sdata, global
+.hidden gap_09_805DBC06_sdata
+	.2byte 0x0000
+.endobj gap_09_805DBC06_sdata
+
+# .sdata:0x80 | 0x805DBC08 | size: 0x6
+.obj lbl_805DBC08, global
+	.string "jobj_"
+.endobj lbl_805DBC08
+
+# .sdata:0x86 | 0x805DBC0E | size: 0x2
+.obj gap_09_805DBC0E_sdata, global
+.hidden gap_09_805DBC0E_sdata
+	.2byte 0x0000
+.endobj gap_09_805DBC0E_sdata
+
+# .sdata:0x88 | 0x805DBC10 | size: 0x8
+.obj lbl_805DBC10, global
+	.4byte lbl_804F2E64
+	.4byte 0x00000000
+.endobj lbl_805DBC10
+
+# .sdata:0x90 | 0x805DBC18 | size: 0x8
+.obj lbl_805DBC18, global
+	.4byte lbl_804F2E58
+	.4byte lbl_804F2E7C
+.endobj lbl_805DBC18
+
+# .sdata:0x98 | 0x805DBC20 | size: 0x8
+.obj lbl_805DBC20, global
+	.4byte lbl_804F2E9C
+	.4byte 0x00000000
+.endobj lbl_805DBC20
+
+# .sdata:0xA0 | 0x805DBC28 | size: 0x8
+.obj lbl_805DBC28, global
+	.4byte lbl_804F2EF8
+	.4byte 0x00000000
+.endobj lbl_805DBC28
+
+# .sdata:0xA8 | 0x805DBC30 | size: 0x8
+.obj lbl_805DBC30, global
+	.4byte lbl_804F2F54
+	.4byte 0x00000000
+.endobj lbl_805DBC30
+
+# .sdata:0xB0 | 0x805DBC38 | size: 0x8
+.obj lbl_805DBC38, global
+	.4byte lbl_804F2FB0
+	.4byte 0x00000000
+.endobj lbl_805DBC38
+
+# .sdata:0xB8 | 0x805DBC40 | size: 0x8
+.obj lbl_805DBC40, global
+	.4byte lbl_804F300C
+	.4byte 0x00000000
+.endobj lbl_805DBC40
+
+# .sdata:0xC0 | 0x805DBC48 | size: 0x8
+.obj lbl_805DBC48, global
+	.4byte lbl_804F3068
+	.4byte 0x00000000
+.endobj lbl_805DBC48
+
+# .sdata:0xC8 | 0x805DBC50 | size: 0x8
+.obj lbl_805DBC50, global
+	.4byte lbl_804F30C8
+	.4byte 0x00000000
+.endobj lbl_805DBC50
+
+# 0x805DDA28..0x805DDA34 | size: 0xC
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DDA28 | size: 0x4
+.obj lbl_805DDA28, global
+	.skip 0x4
+.endobj lbl_805DDA28
+
+# .sbss:0x4 | 0x805DDA2C | size: 0x4
+.obj lbl_805DDA2C, global
+	.skip 0x4
+.endobj lbl_805DDA2C
+
+# .sbss:0x8 | 0x805DDA30 | size: 0x4
+.obj lbl_805DDA30, global
+	.skip 0x4
+.endobj lbl_805DDA30

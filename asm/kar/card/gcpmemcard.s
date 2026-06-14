@@ -3309,6 +3309,7 @@
 /* 8045AA40 00457840  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8045AA44 00457844  7C 09 03 A6 */	mtctr r0
 /* 8045AA48 00457848  4E 80 04 20 */	bctr
+.L_8045AA4C:
 /* 8045AA4C 0045784C  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AA50 00457850  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AA54 00457854  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3323,6 +3324,7 @@
 /* 8045AA78 00457878  4B FF CE 91 */	bl kar_memcard_check_initial_save_space_status
 /* 8045AA7C 0045787C  7C 7D 1B 78 */	mr r29, r3
 /* 8045AA80 00457880  48 00 01 88 */	b .L_8045AC08
+.L_8045AA84:
 /* 8045AA84 00457884  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AA88 00457888  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AA8C 0045788C  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3337,6 +3339,7 @@
 /* 8045AAB0 004578B0  4B FF D3 01 */	bl kar_memcard_get_cached_or_reprobe_status
 /* 8045AAB4 004578B4  7C 7D 1B 78 */	mr r29, r3
 /* 8045AAB8 004578B8  48 00 01 50 */	b .L_8045AC08
+.L_8045AABC:
 /* 8045AABC 004578BC  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AAC0 004578C0  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AAC4 004578C4  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3351,6 +3354,7 @@
 /* 8045AAE8 004578E8  4B FF D3 25 */	bl kar_gcpmemcard_phase_create_save_file
 /* 8045AAEC 004578EC  7C 7D 1B 78 */	mr r29, r3
 /* 8045AAF0 004578F0  48 00 01 18 */	b .L_8045AC08
+.L_8045AAF4:
 /* 8045AAF4 004578F4  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AAF8 004578F8  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AAFC 004578FC  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3365,6 +3369,7 @@
 /* 8045AB20 00457920  4B FF DC 0D */	bl kar_gcpmemcard_phase_delete_save_file
 /* 8045AB24 00457924  7C 7D 1B 78 */	mr r29, r3
 /* 8045AB28 00457928  48 00 00 E0 */	b .L_8045AC08
+.L_8045AB2C:
 /* 8045AB2C 0045792C  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AB30 00457930  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AB34 00457934  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3379,6 +3384,7 @@
 /* 8045AB58 00457958  4B FF DE 99 */	bl kar_gcpmemcard_phase_rename_save_file
 /* 8045AB5C 0045795C  7C 7D 1B 78 */	mr r29, r3
 /* 8045AB60 00457960  48 00 00 A8 */	b .L_8045AC08
+.L_8045AB64:
 /* 8045AB64 00457964  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045AB68 00457968  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045AB6C 0045796C  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3393,6 +3399,7 @@
 /* 8045AB90 00457990  4B FF E0 F1 */	bl kar_gcpmemcard_phase_repair_save_file
 /* 8045AB94 00457994  7C 7D 1B 78 */	mr r29, r3
 /* 8045AB98 00457998  48 00 00 70 */	b .L_8045AC08
+.L_8045AB9C:
 /* 8045AB9C 0045799C  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045ABA0 004579A0  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045ABA4 004579A4  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -3407,6 +3414,7 @@
 /* 8045ABC8 004579C8  4B FF E6 0D */	bl kar_gcpmemcard_phase_validate_save_regions
 /* 8045ABCC 004579CC  7C 7D 1B 78 */	mr r29, r3
 /* 8045ABD0 004579D0  48 00 00 38 */	b .L_8045AC08
+.L_8045ABD4:
 /* 8045ABD4 004579D4  3C 60 80 5A */	lis r3, lbl_8059A880@ha
 /* 8045ABD8 004579D8  38 63 A8 80 */	addi r3, r3, lbl_8059A880@l
 /* 8045ABDC 004579DC  3B 63 05 A0 */	addi r27, r3, 0x5a0
@@ -5245,6 +5253,7 @@
 /* 8045C408 00459208  7C 04 00 2E */	lwzx r0, r4, r0
 /* 8045C40C 0045920C  7C 09 03 A6 */	mtctr r0
 /* 8045C410 00459210  4E 80 04 20 */	bctr
+.L_8045C414:
 /* 8045C414 00459214  54 60 1E F6 */	rlwinm r0, r3, 3, 27, 27
 /* 8045C418 00459218  50 60 07 FE */	rlwimi r0, r3, 0, 31, 31
 /* 8045C41C 0045921C  50 60 FF BC */	rlwimi r0, r3, 31, 30, 30
@@ -5255,6 +5264,7 @@
 /* 8045C430 00459230  50 60 06 30 */	rlwimi r0, r3, 0, 24, 24
 /* 8045C434 00459234  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C438 00459238  4E 80 00 20 */	blr
+.L_8045C43C:
 /* 8045C43C 0045923C  54 60 FF FE */	extrwi r0, r3, 1, 30
 /* 8045C440 00459240  50 60 1F 38 */	rlwimi r0, r3, 3, 28, 28
 /* 8045C444 00459244  50 60 07 7A */	rlwimi r0, r3, 0, 29, 29
@@ -5265,6 +5275,7 @@
 /* 8045C458 00459258  50 60 D7 BC */	rlwimi r0, r3, 26, 30, 30
 /* 8045C45C 0045925C  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C460 00459260  4E 80 00 20 */	blr
+.L_8045C464:
 /* 8045C464 00459264  54 60 26 B4 */	rlwinm r0, r3, 4, 26, 26
 /* 8045C468 00459268  50 60 36 72 */	rlwimi r0, r3, 6, 25, 25
 /* 8045C46C 0045926C  50 60 F7 FE */	rlwimi r0, r3, 30, 31, 31
@@ -5275,6 +5286,7 @@
 /* 8045C480 00459280  50 60 EE F6 */	rlwimi r0, r3, 29, 27, 27
 /* 8045C484 00459284  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C488 00459288  4E 80 00 20 */	blr
+.L_8045C48C:
 /* 8045C48C 0045928C  54 60 17 38 */	rlwinm r0, r3, 2, 28, 28
 /* 8045C490 00459290  50 60 0F BC */	rlwimi r0, r3, 1, 30, 30
 /* 8045C494 00459294  50 60 2E 30 */	rlwimi r0, r3, 5, 24, 24
@@ -5285,6 +5297,7 @@
 /* 8045C4A8 004592A8  50 60 FE 72 */	rlwimi r0, r3, 31, 25, 25
 /* 8045C4AC 004592AC  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C4B0 004592B0  4E 80 00 20 */	blr
+.L_8045C4B4:
 /* 8045C4B4 004592B4  54 60 0F 7A */	rlwinm r0, r3, 1, 29, 29
 /* 8045C4B8 004592B8  50 60 3E 30 */	rlwimi r0, r3, 7, 24, 24
 /* 8045C4BC 004592BC  50 60 1E B4 */	rlwimi r0, r3, 3, 26, 26
@@ -5295,6 +5308,7 @@
 /* 8045C4D0 004592D0  50 60 E7 38 */	rlwimi r0, r3, 28, 28, 28
 /* 8045C4D4 004592D4  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C4D8 004592D8  4E 80 00 20 */	blr
+.L_8045C4DC:
 /* 8045C4DC 004592DC  54 60 2E 72 */	rlwinm r0, r3, 5, 25, 25
 /* 8045C4E0 004592E0  50 60 2E B4 */	rlwimi r0, r3, 5, 26, 26
 /* 8045C4E4 004592E4  50 60 16 F6 */	rlwimi r0, r3, 2, 27, 27
@@ -5305,6 +5319,7 @@
 /* 8045C4F8 004592F8  50 60 DF 7A */	rlwimi r0, r3, 27, 29, 29
 /* 8045C4FC 004592FC  54 03 06 3E */	clrlwi r3, r0, 24
 /* 8045C500 00459300  4E 80 00 20 */	blr
+.L_8045C504:
 /* 8045C504 00459304  54 60 07 BC */	rlwinm r0, r3, 0, 30, 30
 /* 8045C508 00459308  50 60 17 7A */	rlwimi r0, r3, 2, 29, 29
 /* 8045C50C 0045930C  50 60 26 72 */	rlwimi r0, r3, 4, 25, 25
@@ -5376,6 +5391,7 @@
 /* 8045C5E4 004593E4  7C A6 28 2E */	lwzx r5, r6, r5
 /* 8045C5E8 004593E8  7C A9 03 A6 */	mtctr r5
 /* 8045C5EC 004593EC  4E 80 04 20 */	bctr
+.L_8045C5F0:
 /* 8045C5F0 004593F0  54 85 0F 7A */	rlwinm r5, r4, 1, 29, 29
 /* 8045C5F4 004593F4  50 85 07 FE */	rlwimi r5, r4, 0, 31, 31
 /* 8045C5F8 004593F8  50 85 16 F6 */	rlwimi r5, r4, 2, 27, 27
@@ -5386,6 +5402,7 @@
 /* 8045C60C 0045940C  50 85 06 30 */	rlwimi r5, r4, 0, 24, 24
 /* 8045C610 00459410  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C614 00459414  48 00 00 F0 */	b .L_8045C704
+.L_8045C618:
 /* 8045C618 00459418  54 85 36 30 */	rlwinm r5, r4, 6, 24, 24
 /* 8045C61C 0045941C  50 85 0F BC */	rlwimi r5, r4, 1, 30, 30
 /* 8045C620 00459420  50 85 07 7A */	rlwimi r5, r4, 0, 29, 29
@@ -5396,6 +5413,7 @@
 /* 8045C634 00459434  50 85 FE 72 */	rlwimi r5, r4, 31, 25, 25
 /* 8045C638 00459438  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C63C 0045943C  48 00 00 C8 */	b .L_8045C704
+.L_8045C640:
 /* 8045C640 00459440  54 85 17 38 */	rlwinm r5, r4, 2, 28, 28
 /* 8045C644 00459444  50 85 17 7A */	rlwimi r5, r4, 2, 29, 29
 /* 8045C648 00459448  50 85 26 72 */	rlwimi r5, r4, 4, 25, 25
@@ -5406,6 +5424,7 @@
 /* 8045C65C 0045945C  50 85 F6 B4 */	rlwimi r5, r4, 30, 26, 26
 /* 8045C660 00459460  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C664 00459464  48 00 00 A0 */	b .L_8045C704
+.L_8045C668:
 /* 8045C668 00459468  54 85 FF FE */	extrwi r5, r4, 1, 30
 /* 8045C66C 0045946C  50 85 26 F6 */	rlwimi r5, r4, 4, 27, 27
 /* 8045C670 00459470  50 85 1E B4 */	rlwimi r5, r4, 3, 26, 26
@@ -5416,6 +5435,7 @@
 /* 8045C684 00459484  50 85 DF 7A */	rlwimi r5, r4, 27, 29, 29
 /* 8045C688 00459488  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C68C 0045948C  48 00 00 78 */	b .L_8045C704
+.L_8045C690:
 /* 8045C690 00459490  54 85 26 B4 */	rlwinm r5, r4, 4, 26, 26
 /* 8045C694 00459494  50 85 1F 38 */	rlwimi r5, r4, 3, 28, 28
 /* 8045C698 00459498  50 85 FF BC */	rlwimi r5, r4, 31, 30, 30
@@ -5426,6 +5446,7 @@
 /* 8045C6AC 004594AC  50 85 CF FE */	rlwimi r5, r4, 25, 31, 31
 /* 8045C6B0 004594B0  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C6B4 004594B4  48 00 00 50 */	b .L_8045C704
+.L_8045C6B8:
 /* 8045C6B8 004594B8  54 85 2E 72 */	rlwinm r5, r4, 5, 25, 25
 /* 8045C6BC 004594BC  50 85 2E B4 */	rlwimi r5, r4, 5, 26, 26
 /* 8045C6C0 004594C0  50 85 2E 30 */	rlwimi r5, r4, 5, 24, 24
@@ -5436,6 +5457,7 @@
 /* 8045C6D4 004594D4  50 85 EE F6 */	rlwimi r5, r4, 29, 27, 27
 /* 8045C6D8 004594D8  54 A4 06 3E */	clrlwi r4, r5, 24
 /* 8045C6DC 004594DC  48 00 00 28 */	b .L_8045C704
+.L_8045C6E0:
 /* 8045C6E0 004594E0  54 85 07 BC */	rlwinm r5, r4, 0, 30, 30
 /* 8045C6E4 004594E4  50 85 36 72 */	rlwimi r5, r4, 6, 25, 25
 /* 8045C6E8 004594E8  50 85 F7 FE */	rlwimi r5, r4, 30, 31, 31
@@ -7328,3 +7350,325 @@
 /* 8045DF9C 0045AD9C  7C A3 2B 78 */	mr r3, r5
 /* 8045DFA0 0045ADA0  4E 80 00 20 */	blr
 .endfn kar_gcpmemcard__near_8045df38
+
+# 0x805321D4..0x80532418 | size: 0x244
+.data
+.balign 4
+
+# .data:0x0 | 0x805321D4 | size: 0x15
+.obj lbl_805321D4, global
+	.string "delete [%d] file:%s\n"
+.endobj lbl_805321D4
+
+# .data:0x15 | 0x805321E9 | size: 0x3
+.obj gap_07_805321E9_data, global
+.hidden gap_07_805321E9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_805321E9_data
+
+# .data:0x18 | 0x805321EC | size: 0x3E
+.obj lbl_805321EC, global
+	.string "[GCP_MemCard] save : region[%2d], saveSector[%2d], serial:%d\n"
+.endobj lbl_805321EC
+
+# .data:0x56 | 0x8053222A | size: 0x2
+.obj gap_07_8053222A_data, global
+.hidden gap_07_8053222A_data
+	.2byte 0x0000
+.endobj gap_07_8053222A_data
+
+# .data:0x58 | 0x8053222C | size: 0x4D
+.obj lbl_8053222C, global
+	.string "[GCP_MemCard] save : region[%2d], saveSector[%2d], serial:%d, sectorsize:%d\n"
+.endobj lbl_8053222C
+
+# .data:0xA5 | 0x80532279 | size: 0x3
+.obj gap_07_80532279_data, global
+.hidden gap_07_80532279_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80532279_data
+
+# .data:0xA8 | 0x8053227C | size: 0x33
+.obj lbl_8053227C, global
+	.string "[GCP_MemCard] save : region[%2d], saveSector[%2d]\n"
+.endobj lbl_8053227C
+
+# .data:0xDB | 0x805322AF | size: 0x1
+.obj gap_07_805322AF_data, global
+.hidden gap_07_805322AF_data
+	.byte 0x00
+.endobj gap_07_805322AF_data
+
+# .data:0xDC | 0x805322B0 | size: 0x1E
+.obj lbl_805322B0, global
+	.string "[GCP_MemCard] CARDSetStatus!\n"
+.endobj lbl_805322B0
+
+# .data:0xFA | 0x805322CE | size: 0x2
+.obj gap_07_805322CE_data, global
+.hidden gap_07_805322CE_data
+	.2byte 0x0000
+.endobj gap_07_805322CE_data
+
+# .data:0xFC | 0x805322D0 | size: 0x1A
+.obj lbl_805322D0, global
+	.string "[GCP_MemCard] RESULT: %d\n"
+.endobj lbl_805322D0
+
+# .data:0x116 | 0x805322EA | size: 0x2
+.obj gap_07_805322EA_data, global
+.hidden gap_07_805322EA_data
+	.2byte 0x0000
+.endobj gap_07_805322EA_data
+
+# .data:0x118 | 0x805322EC | size: 0x20
+.obj jumptable_805322EC, local
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AA4C
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AA84
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AABC
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AAF4
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AB2C
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AB64
+	.rel kar_gcpmemcard_step_worker_request, .L_8045AB9C
+	.rel kar_gcpmemcard_step_worker_request, .L_8045ABD4
+.endobj jumptable_805322EC
+
+# .data:0x138 | 0x8053230C | size: 0x44
+.obj lbl_8053230C, global
+	.4byte 0x5B474350
+	.4byte 0x5F4D656D
+	.4byte 0x43617264
+	.4byte 0x5D204672
+	.4byte 0x65652053
+	.4byte 0x6563746F
+	.4byte 0x72203A20
+	.4byte 0x25640A00
+	.4byte 0x5B474350
+	.4byte 0x5F4D656D
+	.4byte 0x43617264
+	.4byte 0x5D204E65
+	.4byte 0x65642053
+	.4byte 0x6563746F
+	.4byte 0x72202564
+	.4byte 0x0A000000
+	.4byte 0x00000000
+.endobj lbl_8053230C
+
+# .data:0x17C | 0x80532350 | size: 0x18
+.obj lbl_80532350, global
+	.string "thread start pri is %d\n"
+.endobj lbl_80532350
+
+# .data:0x194 | 0x80532368 | size: 0x34
+.obj lbl_80532368, global
+	.4byte 0x00000026
+	.4byte 0x000000FF
+	.4byte 0x000000E8
+	.4byte 0x000000EF
+	.4byte 0x00000042
+	.4byte 0x000000D6
+	.4byte 0x00000001
+	.4byte 0x00000054
+	.4byte 0x00000014
+	.4byte 0x000000A3
+	.4byte 0x00000080
+	.4byte 0x000000FD
+	.4byte 0x0000006E
+.endobj lbl_80532368
+
+# .data:0x1C8 | 0x8053239C | size: 0x1C
+.obj jumptable_8053239C, local
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C504
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C4DC
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C4B4
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C48C
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C464
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C43C
+	.rel kar_gcpmemcard_encode_payload_byte, .L_8045C414
+.endobj jumptable_8053239C
+
+# .data:0x1E4 | 0x805323B8 | size: 0x1C
+.obj jumptable_805323B8, local
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C6E0
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C6B8
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C690
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C668
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C640
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C618
+	.rel kar_gcpmemcard_decode_payload_byte, .L_8045C5F0
+.endobj jumptable_805323B8
+
+# .data:0x200 | 0x805323D4 | size: 0x4
+.obj gap_07_805323D4_data, global
+.hidden gap_07_805323D4_data
+	.4byte 0x00000000
+.endobj gap_07_805323D4_data
+
+# .data:0x204 | 0x805323D8 | size: 0x1A
+.obj lbl_805323D8, global
+	.string "HVQM4 bufv alloc error !\n"
+.endobj lbl_805323D8
+
+# .data:0x21E | 0x805323F2 | size: 0x6
+.obj gap_07_805323F2_data, global
+.hidden gap_07_805323F2_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_805323F2_data
+
+# .data:0x224 | 0x805323F8 | size: 0x1A
+.obj lbl_805323F8, global
+	.string "HVQM4 bufa alloc error !\n"
+.endobj lbl_805323F8
+
+# .data:0x23E | 0x80532412 | size: 0x6
+.obj gap_07_80532412_data, global
+.hidden gap_07_80532412_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_80532412_data
+
+# 0x805B1E80..0x805B6118 | size: 0x4298
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x805B1E80 | size: 0x2800
+.obj lbl_805B1E80, global
+	.skip 0x2800
+.endobj lbl_805B1E80
+
+# .bss:0x2800 | 0x805B4680 | size: 0x18
+.obj lbl_805B4680, global
+	.skip 0x18
+.endobj lbl_805B4680
+
+# .bss:0x2818 | 0x805B4698 | size: 0x360
+.obj lbl_805B4698, global
+	.skip 0x360
+.endobj lbl_805B4698
+
+# .bss:0x2B78 | 0x805B49F8 | size: 0x200
+.obj lbl_805B49F8, global
+	.skip 0x200
+.endobj lbl_805B49F8
+
+# .bss:0x2D78 | 0x805B4BF8 | size: 0x40
+.obj lbl_805B4BF8, global
+	.skip 0x40
+.endobj lbl_805B4BF8
+
+# .bss:0x2DB8 | 0x805B4C38 | size: 0x800
+.obj lbl_805B4C38, global
+	.skip 0x800
+.endobj lbl_805B4C38
+
+# .bss:0x35B8 | 0x805B5438 | size: 0x4
+.obj lbl_805B5438, global
+	.skip 0x4
+.endobj lbl_805B5438
+
+# .bss:0x35BC | 0x805B543C | size: 0x4
+.obj lbl_805B543C, global
+	.skip 0x4
+.endobj lbl_805B543C
+
+# .bss:0x35C0 | 0x805B5440 | size: 0x4
+.obj lbl_805B5440, global
+	.skip 0x4
+.endobj lbl_805B5440
+
+# .bss:0x35C4 | 0x805B5444 | size: 0x4
+.obj lbl_805B5444, global
+	.skip 0x4
+.endobj lbl_805B5444
+
+# .bss:0x35C8 | 0x805B5448 | size: 0x18
+.obj lbl_805B5448, global
+	.skip 0x18
+.endobj lbl_805B5448
+
+# .bss:0x35E0 | 0x805B5460 | size: 0x40
+.obj lbl_805B5460, global
+	.skip 0x40
+.endobj lbl_805B5460
+
+# .bss:0x3620 | 0x805B54A0 | size: 0x600
+.obj lbl_805B54A0, global
+	.skip 0x600
+.endobj lbl_805B54A0
+
+# .bss:0x3C20 | 0x805B5AA0 | size: 0x600
+.obj lbl_805B5AA0, global
+	.skip 0x600
+.endobj lbl_805B5AA0
+
+# .bss:0x4220 | 0x805B60A0 | size: 0x78
+.obj lbl_805B60A0, global
+	.skip 0x78
+.endobj lbl_805B60A0
+
+# 0x805DD1B8..0x805DD1D0 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805DD1B8 | size: 0x8
+.obj lbl_805DD1B8, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_805DD1B8
+
+# .sdata:0x8 | 0x805DD1C0 | size: 0x3
+.obj lbl_805DD1C0, global
+	.string "%s"
+.endobj lbl_805DD1C0
+
+# .sdata:0xB | 0x805DD1C3 | size: 0x5
+.obj gap_09_805DD1C3_sdata, global
+.hidden gap_09_805DD1C3_sdata
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_09_805DD1C3_sdata
+
+# .sdata:0x10 | 0x805DD1C8 | size: 0x4
+.obj lbl_805DD1C8, global
+	.4byte kar_gcpmemcard__near_8045d664
+.endobj lbl_805DD1C8
+
+# .sdata:0x14 | 0x805DD1CC | size: 0x4
+.obj lbl_805DD1CC, global
+	.4byte kar_gcpmemcard__near_8045d684
+.endobj lbl_805DD1CC
+
+# 0x805DE578..0x805DE590 | size: 0x18
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DE578 | size: 0x4
+.obj lbl_805DE578, global
+	.skip 0x4
+.endobj lbl_805DE578
+
+# .sbss:0x4 | 0x805DE57C | size: 0x4
+.obj lbl_805DE57C, global
+	.skip 0x4
+.endobj lbl_805DE57C
+
+# .sbss:0x8 | 0x805DE580 | size: 0x4
+.obj lbl_805DE580, global
+	.skip 0x4
+.endobj lbl_805DE580
+
+# .sbss:0xC | 0x805DE584 | size: 0x4
+.obj lbl_805DE584, global
+	.skip 0x4
+.endobj lbl_805DE584
+
+# .sbss:0x10 | 0x805DE588 | size: 0x4
+.obj lbl_805DE588, global
+	.skip 0x4
+.endobj lbl_805DE588
+
+# .sbss:0x14 | 0x805DE58C | size: 0x4
+.obj lbl_805DE58C, global
+	.skip 0x4
+.endobj lbl_805DE58C

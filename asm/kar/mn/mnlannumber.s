@@ -403,3 +403,87 @@
 /* 80183A50 00180850  38 21 00 20 */	addi r1, r1, 0x20
 /* 80183A54 00180854  4E 80 00 20 */	blr
 .endfn kar_mnlandialogue_get_box0_screen_height
+
+# 0x804AD688..0x804AD6B8 | size: 0x30
+.data
+.balign 8
+
+# .data:0x0 | 0x804AD688 | size: 0xE
+.obj kar_src_mnlannumber_c, global
+	.string "mnlannumber.c"
+.endobj kar_src_mnlannumber_c
+
+# .data:0xE | 0x804AD696 | size: 0x2
+.obj gap_07_804AD696_data, global
+.hidden gap_07_804AD696_data
+	.2byte 0x0000
+.endobj gap_07_804AD696_data
+
+# .data:0x10 | 0x804AD698 | size: 0x1C
+.obj kar_mnlannumber_scene_models_name, global
+	.string "ScMenLanNumber_scene_models"
+.endobj kar_mnlannumber_scene_models_name
+
+# .data:0x2C | 0x804AD6B4 | size: 0x4
+.obj gap_07_804AD6B4_data, global
+.hidden gap_07_804AD6B4_data
+	.4byte 0x00000000
+.endobj gap_07_804AD6B4_data
+
+# 0x805D6E20..0x805D6E38 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6E20 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6e20, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6e20
+
+# .sdata:0x7 | 0x805D6E27 | size: 0x1
+.obj gap_09_805D6E27_sdata, global
+.hidden gap_09_805D6E27_sdata
+	.byte 0x00
+.endobj gap_09_805D6E27_sdata
+
+# .sdata:0x8 | 0x805D6E28 | size: 0x5
+.obj lbl_805D6E28, global
+	.string "jobj"
+.endobj lbl_805D6E28
+
+# .sdata:0xD | 0x805D6E2D | size: 0x3
+.obj gap_09_805D6E2D_sdata, global
+.hidden gap_09_805D6E2D_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6E2D_sdata
+
+# .sdata:0x10 | 0x805D6E30 | size: 0x2
+.obj lbl_805D6E30, global
+	.string "0"
+.endobj lbl_805D6E30
+
+# .sdata:0x12 | 0x805D6E32 | size: 0x6
+.obj gap_09_805D6E32_sdata, global
+.hidden gap_09_805D6E32_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6E32_sdata
+
+# 0x805E0E70..0x805E0E80 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E0E70 | size: 0x4
+.obj lbl_805E0E70, global
+	.float 0
+.endobj lbl_805E0E70
+
+# .sdata2:0x4 | 0x805E0E74 | size: 0x4
+.obj lbl_805E0E74, global
+	.float 1
+.endobj lbl_805E0E74
+
+# .sdata2:0x8 | 0x805E0E78 | size: 0x8
+.obj lbl_805E0E78, global
+	.float 2
+	.float 0
+.endobj lbl_805E0E78

@@ -368,3 +368,88 @@
 /* 8024027C 0023D07C  38 21 00 20 */	addi r1, r1, 0x20
 /* 80240280 0023D080  4E 80 00 20 */	blr
 .endfn kar_efanime__near_802401e8
+
+# 0x804B5628..0x804B565C | size: 0x34
+.data
+.balign 8
+
+# .data:0x0 | 0x804B5628 | size: 0xA
+.obj kar_src_efanime_804b5628, global
+	.string "efanime.c"
+.endobj kar_src_efanime_804b5628
+
+# .data:0xA | 0x804B5632 | size: 0x6
+.obj gap_07_804B5632_data, global
+.hidden gap_07_804B5632_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804B5632_data
+
+# .data:0x10 | 0x804B5638 | size: 0x22
+.obj lbl_804B5638, global
+	.string "effect: no support arg type = %d "
+.endobj lbl_804B5638
+
+# .data:0x32 | 0x804B565A | size: 0x2
+.obj gap_07_804B565A_data, global
+.hidden gap_07_804B565A_data
+	.2byte 0x0000
+.endobj gap_07_804B565A_data
+
+# 0x805D7300..0x805D7320 | size: 0x20
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7300 | size: 0x6
+.obj lbl_805D7300, global
+	.string "model"
+.endobj lbl_805D7300
+
+# .sdata:0x6 | 0x805D7306 | size: 0x2
+.obj gap_09_805D7306_sdata, global
+.hidden gap_09_805D7306_sdata
+	.2byte 0x0000
+.endobj gap_09_805D7306_sdata
+
+# .sdata:0x8 | 0x805D7308 | size: 0x5
+.obj lbl_805D7308, global
+	.string "jobj"
+.endobj lbl_805D7308
+
+# .sdata:0xD | 0x805D730D | size: 0x3
+.obj gap_09_805D730D_sdata, global
+.hidden gap_09_805D730D_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D730D_sdata
+
+# .sdata:0x10 | 0x805D7310 | size: 0x7
+.obj kar_srcfile_aobj_h_805d7310, global
+	.string "aobj.h"
+.endobj kar_srcfile_aobj_h_805d7310
+
+# .sdata:0x17 | 0x805D7317 | size: 0x1
+.obj gap_09_805D7317_sdata, global
+.hidden gap_09_805D7317_sdata
+	.byte 0x00
+.endobj gap_09_805D7317_sdata
+
+# .sdata:0x18 | 0x805D7318 | size: 0x5
+.obj lbl_805D7318, global
+	.string "aobj"
+.endobj lbl_805D7318
+
+# .sdata:0x1D | 0x805D731D | size: 0x3
+.obj gap_09_805D731D_sdata, global
+.hidden gap_09_805D731D_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D731D_sdata
+
+# 0x805E2B20..0x805E2B28 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2B20 | size: 0x8
+.obj lbl_805E2B20, global
+	.float 0
+	.float 0
+.endobj lbl_805E2B20

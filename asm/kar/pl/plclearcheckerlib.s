@@ -1,11 +1,1862 @@
 .include "macros.inc"
 .file "plclearcheckerlib.c"
 
-# 0x8022DE74..0x80231B88 | size: 0x3D14
+# 0x8022C7E0..0x80231B88 | size: 0x53A8
 .text
 .balign 4
 
-# .text:0x0 | 0x8022DE74 | size: 0x54
+# .text:0x0 | 0x8022C7E0 | size: 0x44
+.fn kar_plclearcheckerlib__near_8022c7e0, global
+/* 8022C7E0 002295E0  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022C7E4 002295E4  7C 08 02 A6 */	mflr r0
+/* 8022C7E8 002295E8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C7EC 002295EC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C7F0 002295F0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022C7F4 002295F4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C7F8 002295F8  7C 60 22 14 */	add r3, r0, r4
+/* 8022C7FC 002295FC  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022C800 00229600  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022C804 00229604  41 82 00 0C */	beq .L_8022C810
+/* 8022C808 00229608  4B F9 AE 61 */	bl fn_801C7668
+/* 8022C80C 0022960C  48 00 00 08 */	b .L_8022C814
+.L_8022C810:
+/* 8022C810 00229610  C0 22 C3 28 */	lfs f1, lbl_805E2A28@sda21(r0)
+.L_8022C814:
+/* 8022C814 00229614  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022C818 00229618  7C 08 03 A6 */	mtlr r0
+/* 8022C81C 0022961C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022C820 00229620  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c7e0
+
+# .text:0x44 | 0x8022C824 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022c824, global
+/* 8022C824 00229624  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022C828 00229628  7C 08 02 A6 */	mflr r0
+/* 8022C82C 0022962C  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C830 00229630  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C834 00229634  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022C838 00229638  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C83C 0022963C  7C 60 22 14 */	add r3, r0, r4
+/* 8022C840 00229640  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022C844 00229644  4B F6 57 19 */	bl fn_80191F5C
+/* 8022C848 00229648  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022C84C 0022964C  7C 08 03 A6 */	mtlr r0
+/* 8022C850 00229650  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022C854 00229654  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c824
+
+# .text:0x78 | 0x8022C858 | size: 0x14
+.fn kar_plclearcheckerlib__near_8022c858, global
+/* 8022C858 00229658  1C 03 09 0C */	mulli r0, r3, 0x90c
+/* 8022C85C 0022965C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C860 00229660  38 63 A9 F0 */	addi r3, r3, plclearchecker_player_template_table@l
+/* 8022C864 00229664  7C 63 00 2E */	lwzx r3, r3, r0
+/* 8022C868 00229668  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c858
+
+# .text:0x8C | 0x8022C86C | size: 0x14
+.fn kar_gmracenormal__8022c86c, global
+/* 8022C86C 0022966C  1C 03 09 0C */	mulli r0, r3, 0x90c
+/* 8022C870 00229670  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C874 00229674  38 63 A9 F0 */	addi r3, r3, plclearchecker_player_template_table@l
+/* 8022C878 00229678  7C 83 01 2E */	stwx r4, r3, r0
+/* 8022C87C 0022967C  4E 80 00 20 */	blr
+.endfn kar_gmracenormal__8022c86c
+
+# .text:0xA0 | 0x8022C880 | size: 0x18
+.fn kar_cmreplay__8022c880, global
+/* 8022C880 00229680  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C884 00229684  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C888 00229688  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C88C 0022968C  7C 60 22 14 */	add r3, r0, r4
+/* 8022C890 00229690  80 63 00 04 */	lwz r3, 0x4(r3)
+/* 8022C894 00229694  4E 80 00 20 */	blr
+.endfn kar_cmreplay__8022c880
+
+# .text:0xB8 | 0x8022C898 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c898, global
+/* 8022C898 00229698  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C89C 0022969C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C8A0 002296A0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C8A4 002296A4  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C8A8 002296A8  90 83 00 04 */	stw r4, 0x4(r3)
+/* 8022C8AC 002296AC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c898
+
+# .text:0xD0 | 0x8022C8B0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c8b0, global
+/* 8022C8B0 002296B0  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C8B4 002296B4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C8B8 002296B8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C8BC 002296BC  7C 60 22 14 */	add r3, r0, r4
+/* 8022C8C0 002296C0  88 63 00 8E */	lbz r3, 0x8e(r3)
+/* 8022C8C4 002296C4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c8b0
+
+# .text:0xE8 | 0x8022C8C8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c8c8, global
+/* 8022C8C8 002296C8  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C8CC 002296CC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C8D0 002296D0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C8D4 002296D4  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C8D8 002296D8  98 83 00 8E */	stb r4, 0x8e(r3)
+/* 8022C8DC 002296DC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c8c8
+
+# .text:0x100 | 0x8022C8E0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c8e0, global
+/* 8022C8E0 002296E0  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C8E4 002296E4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C8E8 002296E8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C8EC 002296EC  7C 60 22 14 */	add r3, r0, r4
+/* 8022C8F0 002296F0  88 63 00 8F */	lbz r3, 0x8f(r3)
+/* 8022C8F4 002296F4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c8e0
+
+# .text:0x118 | 0x8022C8F8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c8f8, global
+/* 8022C8F8 002296F8  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C8FC 002296FC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C900 00229700  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C904 00229704  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C908 00229708  98 83 00 8F */	stb r4, 0x8f(r3)
+/* 8022C90C 0022970C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c8f8
+
+# .text:0x130 | 0x8022C910 | size: 0x38
+.fn kar_plclearcheckerlib__near_8022c910, global
+/* 8022C910 00229710  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022C914 00229714  7C 08 02 A6 */	mflr r0
+/* 8022C918 00229718  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C91C 0022971C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C920 00229720  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022C924 00229724  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C928 00229728  7C 80 22 14 */	add r4, r0, r4
+/* 8022C92C 0022972C  88 64 00 8E */	lbz r3, 0x8e(r4)
+/* 8022C930 00229730  88 84 00 8F */	lbz r4, 0x8f(r4)
+/* 8022C934 00229734  4B F9 BC 75 */	bl fn_801C85A8
+/* 8022C938 00229738  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022C93C 0022973C  7C 08 03 A6 */	mtlr r0
+/* 8022C940 00229740  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022C944 00229744  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c910
+
+# .text:0x168 | 0x8022C948 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c948, global
+/* 8022C948 00229748  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C94C 0022974C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C950 00229750  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C954 00229754  7C 60 22 14 */	add r3, r0, r4
+/* 8022C958 00229758  88 63 00 90 */	lbz r3, 0x90(r3)
+/* 8022C95C 0022975C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c948
+
+# .text:0x180 | 0x8022C960 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c960, global
+/* 8022C960 00229760  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C964 00229764  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C968 00229768  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C96C 0022976C  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C970 00229770  98 83 00 90 */	stb r4, 0x90(r3)
+/* 8022C974 00229774  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c960
+
+# .text:0x198 | 0x8022C978 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c978, global
+/* 8022C978 00229778  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C97C 0022977C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C980 00229780  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C984 00229784  7C 60 22 14 */	add r3, r0, r4
+/* 8022C988 00229788  88 63 00 91 */	lbz r3, 0x91(r3)
+/* 8022C98C 0022978C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c978
+
+# .text:0x1B0 | 0x8022C990 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c990, global
+/* 8022C990 00229790  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C994 00229794  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C998 00229798  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C99C 0022979C  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C9A0 002297A0  98 83 00 91 */	stb r4, 0x91(r3)
+/* 8022C9A4 002297A4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c990
+
+# .text:0x1C8 | 0x8022C9A8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c9a8, global
+/* 8022C9A8 002297A8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C9AC 002297AC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C9B0 002297B0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C9B4 002297B4  7C 60 22 14 */	add r3, r0, r4
+/* 8022C9B8 002297B8  88 63 00 92 */	lbz r3, 0x92(r3)
+/* 8022C9BC 002297BC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c9a8
+
+# .text:0x1E0 | 0x8022C9C0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c9c0, global
+/* 8022C9C0 002297C0  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C9C4 002297C4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C9C8 002297C8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C9CC 002297CC  7C 60 2A 14 */	add r3, r0, r5
+/* 8022C9D0 002297D0  98 83 00 92 */	stb r4, 0x92(r3)
+/* 8022C9D4 002297D4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c9c0
+
+# .text:0x1F8 | 0x8022C9D8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c9d8, global
+/* 8022C9D8 002297D8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022C9DC 002297DC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C9E0 002297E0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C9E4 002297E4  7C 60 22 14 */	add r3, r0, r4
+/* 8022C9E8 002297E8  88 63 00 93 */	lbz r3, 0x93(r3)
+/* 8022C9EC 002297EC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c9d8
+
+# .text:0x210 | 0x8022C9F0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022c9f0, global
+/* 8022C9F0 002297F0  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022C9F4 002297F4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022C9F8 002297F8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022C9FC 002297FC  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CA00 00229800  98 83 00 93 */	stb r4, 0x93(r3)
+/* 8022CA04 00229804  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022c9f0
+
+# .text:0x228 | 0x8022CA08 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022ca08, global
+/* 8022CA08 00229808  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CA0C 0022980C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CA10 00229810  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CA14 00229814  7C 60 22 14 */	add r3, r0, r4
+/* 8022CA18 00229818  C0 23 00 34 */	lfs f1, 0x34(r3)
+/* 8022CA1C 0022981C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ca08
+
+# .text:0x240 | 0x8022CA20 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022ca20, global
+/* 8022CA20 00229820  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CA24 00229824  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CA28 00229828  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CA2C 0022982C  7C 60 22 14 */	add r3, r0, r4
+/* 8022CA30 00229830  D0 23 00 34 */	stfs f1, 0x34(r3)
+/* 8022CA34 00229834  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ca20
+
+# .text:0x258 | 0x8022CA38 | size: 0x40
+.fn kar_plclearcheckerlib__near_8022ca38, global
+/* 8022CA38 00229838  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CA3C 0022983C  7C 08 02 A6 */	mflr r0
+/* 8022CA40 00229840  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CA44 00229844  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CA48 00229848  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CA4C 0022984C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CA50 00229850  7C 60 22 14 */	add r3, r0, r4
+/* 8022CA54 00229854  D0 23 00 34 */	stfs f1, 0x34(r3)
+/* 8022CA58 00229858  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022CA5C 0022985C  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022CA60 00229860  41 82 00 08 */	beq .L_8022CA68
+/* 8022CA64 00229864  4B F9 B9 B9 */	bl fn_801C841C
+.L_8022CA68:
+/* 8022CA68 00229868  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CA6C 0022986C  7C 08 03 A6 */	mtlr r0
+/* 8022CA70 00229870  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CA74 00229874  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ca38
+
+# .text:0x298 | 0x8022CA78 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022ca78, global
+/* 8022CA78 00229878  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CA7C 0022987C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CA80 00229880  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CA84 00229884  7C 60 22 14 */	add r3, r0, r4
+/* 8022CA88 00229888  C0 23 00 38 */	lfs f1, 0x38(r3)
+/* 8022CA8C 0022988C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ca78
+
+# .text:0x2B0 | 0x8022CA90 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022ca90, global
+/* 8022CA90 00229890  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CA94 00229894  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CA98 00229898  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CA9C 0022989C  7C 60 22 14 */	add r3, r0, r4
+/* 8022CAA0 002298A0  D0 23 00 38 */	stfs f1, 0x38(r3)
+/* 8022CAA4 002298A4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ca90
+
+# .text:0x2C8 | 0x8022CAA8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022caa8, global
+/* 8022CAA8 002298A8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CAAC 002298AC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CAB0 002298B0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CAB4 002298B4  7C 60 22 14 */	add r3, r0, r4
+/* 8022CAB8 002298B8  A0 63 00 96 */	lhz r3, 0x96(r3)
+/* 8022CABC 002298BC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022caa8
+
+# .text:0x2E0 | 0x8022CAC0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022cac0, global
+/* 8022CAC0 002298C0  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CAC4 002298C4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CAC8 002298C8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CACC 002298CC  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CAD0 002298D0  B0 83 00 96 */	sth r4, 0x96(r3)
+/* 8022CAD4 002298D4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cac0
+
+# .text:0x2F8 | 0x8022CAD8 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022cad8, global
+/* 8022CAD8 002298D8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CADC 002298DC  7C 08 02 A6 */	mflr r0
+/* 8022CAE0 002298E0  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CAE4 002298E4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CAE8 002298E8  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CAEC 002298EC  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CAF0 002298F0  7C 60 22 14 */	add r3, r0, r4
+/* 8022CAF4 002298F4  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CAF8 002298F8  4B F6 57 91 */	bl fn_80192288
+/* 8022CAFC 002298FC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CB00 00229900  7C 08 03 A6 */	mtlr r0
+/* 8022CB04 00229904  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CB08 00229908  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cad8
+
+# .text:0x32C | 0x8022CB0C | size: 0x34
+.fn kar_plclearcheckerlib__near_8022cb0c, global
+/* 8022CB0C 0022990C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CB10 00229910  7C 08 02 A6 */	mflr r0
+/* 8022CB14 00229914  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CB18 00229918  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CB1C 0022991C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CB20 00229920  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CB24 00229924  7C 60 22 14 */	add r3, r0, r4
+/* 8022CB28 00229928  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CB2C 0022992C  4B F6 58 55 */	bl fn_80192380
+/* 8022CB30 00229930  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CB34 00229934  7C 08 03 A6 */	mtlr r0
+/* 8022CB38 00229938  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CB3C 0022993C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cb0c
+
+# .text:0x360 | 0x8022CB40 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022cb40, global
+/* 8022CB40 00229940  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CB44 00229944  7C 08 02 A6 */	mflr r0
+/* 8022CB48 00229948  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CB4C 0022994C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CB50 00229950  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CB54 00229954  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CB58 00229958  7C 60 22 14 */	add r3, r0, r4
+/* 8022CB5C 0022995C  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CB60 00229960  4B F6 58 59 */	bl fn_801923B8
+/* 8022CB64 00229964  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CB68 00229968  7C 08 03 A6 */	mtlr r0
+/* 8022CB6C 0022996C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CB70 00229970  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cb40
+
+# .text:0x394 | 0x8022CB74 | size: 0x18
+.fn kar_cmreplay__8022cb74, global
+/* 8022CB74 00229974  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CB78 00229978  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CB7C 0022997C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CB80 00229980  7C 60 22 14 */	add r3, r0, r4
+/* 8022CB84 00229984  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CB88 00229988  4E 80 00 20 */	blr
+.endfn kar_cmreplay__8022cb74
+
+# .text:0x3AC | 0x8022CB8C | size: 0x34
+.fn kar_plclearchecker_call_clobject_func_191f74, global
+/* 8022CB8C 0022998C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CB90 00229990  7C 08 02 A6 */	mflr r0
+/* 8022CB94 00229994  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CB98 00229998  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CB9C 0022999C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CBA0 002299A0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CBA4 002299A4  7C 60 22 14 */	add r3, r0, r4
+/* 8022CBA8 002299A8  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CBAC 002299AC  4B F6 53 C9 */	bl fn_80191F74
+/* 8022CBB0 002299B0  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CBB4 002299B4  7C 08 03 A6 */	mtlr r0
+/* 8022CBB8 002299B8  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CBBC 002299BC  4E 80 00 20 */	blr
+.endfn kar_plclearchecker_call_clobject_func_191f74
+
+# .text:0x3E0 | 0x8022CBC0 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022cbc0, global
+/* 8022CBC0 002299C0  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CBC4 002299C4  7C 08 02 A6 */	mflr r0
+/* 8022CBC8 002299C8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CBCC 002299CC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CBD0 002299D0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CBD4 002299D4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CBD8 002299D8  7C 60 22 14 */	add r3, r0, r4
+/* 8022CBDC 002299DC  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CBE0 002299E0  4B F6 53 A1 */	bl fn_80191F80
+/* 8022CBE4 002299E4  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CBE8 002299E8  7C 08 03 A6 */	mtlr r0
+/* 8022CBEC 002299EC  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CBF0 002299F0  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cbc0
+
+# .text:0x414 | 0x8022CBF4 | size: 0x1C
+.fn kar_plclearcheckerlib__near_8022cbf4, global
+/* 8022CBF4 002299F4  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CBF8 002299F8  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CBFC 002299FC  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CC00 00229A00  7C 60 22 14 */	add r3, r0, r4
+/* 8022CC04 00229A04  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CC08 00229A08  54 03 D7 FE */	extrwi r3, r0, 1, 25
+/* 8022CC0C 00229A0C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cbf4
+
+# .text:0x430 | 0x8022CC10 | size: 0x20
+.fn kar_plclearcheckerlib__near_8022cc10, global
+/* 8022CC10 00229A10  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CC14 00229A14  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CC18 00229A18  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CC1C 00229A1C  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CC20 00229A20  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CC24 00229A24  50 80 36 72 */	rlwimi r0, r4, 6, 25, 25
+/* 8022CC28 00229A28  98 03 09 08 */	stb r0, 0x908(r3)
+/* 8022CC2C 00229A2C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cc10
+
+# .text:0x450 | 0x8022CC30 | size: 0x34
+.fn kar_cmreplay__8022cc30, global
+/* 8022CC30 00229A30  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CC34 00229A34  7C 08 02 A6 */	mflr r0
+/* 8022CC38 00229A38  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CC3C 00229A3C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CC40 00229A40  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CC44 00229A44  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CC48 00229A48  7C 60 22 14 */	add r3, r0, r4
+/* 8022CC4C 00229A4C  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CC50 00229A50  4B F6 50 AD */	bl fn_80191CFC
+/* 8022CC54 00229A54  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CC58 00229A58  7C 08 03 A6 */	mtlr r0
+/* 8022CC5C 00229A5C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CC60 00229A60  4E 80 00 20 */	blr
+.endfn kar_cmreplay__8022cc30
+
+# .text:0x484 | 0x8022CC64 | size: 0x1C
+.fn kar_plclearcheckerlib__near_8022cc64, global
+/* 8022CC64 00229A64  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CC68 00229A68  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CC6C 00229A6C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CC70 00229A70  7C 60 22 14 */	add r3, r0, r4
+/* 8022CC74 00229A74  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CC78 00229A78  54 03 DF FE */	extrwi r3, r0, 1, 26
+/* 8022CC7C 00229A7C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cc64
+
+# .text:0x4A0 | 0x8022CC80 | size: 0x20
+.fn kar_plclearcheckerlib__near_8022cc80, global
+/* 8022CC80 00229A80  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CC84 00229A84  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CC88 00229A88  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CC8C 00229A8C  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CC90 00229A90  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CC94 00229A94  50 80 2E B4 */	rlwimi r0, r4, 5, 26, 26
+/* 8022CC98 00229A98  98 03 09 08 */	stb r0, 0x908(r3)
+/* 8022CC9C 00229A9C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cc80
+
+# .text:0x4C0 | 0x8022CCA0 | size: 0x28
+.fn kar_plclearcheckerlib__near_8022cca0, global
+/* 8022CCA0 00229AA0  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CCA4 00229AA4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CCA8 00229AA8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CCAC 00229AAC  7C A0 2A 14 */	add r5, r0, r5
+/* 8022CCB0 00229AB0  88 65 09 08 */	lbz r3, 0x908(r5)
+/* 8022CCB4 00229AB4  54 60 F7 7E */	extrwi r0, r3, 3, 27
+/* 8022CCB8 00229AB8  7C 00 23 78 */	or r0, r0, r4
+/* 8022CCBC 00229ABC  50 03 16 FA */	rlwimi r3, r0, 2, 27, 29
+/* 8022CCC0 00229AC0  98 65 09 08 */	stb r3, 0x908(r5)
+/* 8022CCC4 00229AC4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cca0
+
+# .text:0x4E8 | 0x8022CCC8 | size: 0x20
+.fn kar_plclearcheckerlib__near_8022ccc8, global
+/* 8022CCC8 00229AC8  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CCCC 00229ACC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CCD0 00229AD0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CCD4 00229AD4  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CCD8 00229AD8  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CCDC 00229ADC  50 80 16 FA */	rlwimi r0, r4, 2, 27, 29
+/* 8022CCE0 00229AE0  98 03 09 08 */	stb r0, 0x908(r3)
+/* 8022CCE4 00229AE4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ccc8
+
+# .text:0x508 | 0x8022CCE8 | size: 0x1C
+.fn kar_plclearcheckerlib__near_8022cce8, global
+/* 8022CCE8 00229AE8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CCEC 00229AEC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CCF0 00229AF0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CCF4 00229AF4  7C 60 22 14 */	add r3, r0, r4
+/* 8022CCF8 00229AF8  88 03 09 08 */	lbz r0, 0x908(r3)
+/* 8022CCFC 00229AFC  54 03 F7 7E */	extrwi r3, r0, 3, 27
+/* 8022CD00 00229B00  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cce8
+
+# .text:0x524 | 0x8022CD04 | size: 0x60
+.fn kar_plclearcheckerlib__near_8022cd04, global
+/* 8022CD04 00229B04  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CD08 00229B08  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CD0C 00229B0C  38 C0 00 00 */	li r6, 0x0
+/* 8022CD10 00229B10  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CD14 00229B14  7C 60 22 14 */	add r3, r0, r4
+/* 8022CD18 00229B18  38 80 00 01 */	li r4, 0x1
+/* 8022CD1C 00229B1C  88 A3 09 08 */	lbz r5, 0x908(r3)
+/* 8022CD20 00229B20  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CD24 00229B24  38 60 00 00 */	li r3, 0x0
+/* 8022CD28 00229B28  54 A5 F7 7E */	extrwi r5, r5, 3, 27
+/* 8022CD2C 00229B2C  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CD30 00229B30  41 82 00 08 */	beq .L_8022CD38
+/* 8022CD34 00229B34  38 60 00 01 */	li r3, 0x1
+.L_8022CD38:
+/* 8022CD38 00229B38  38 C0 00 01 */	li r6, 0x1
+/* 8022CD3C 00229B3C  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CD40 00229B40  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CD44 00229B44  41 82 00 08 */	beq .L_8022CD4C
+/* 8022CD48 00229B48  38 63 00 01 */	addi r3, r3, 0x1
+.L_8022CD4C:
+/* 8022CD4C 00229B4C  38 C0 00 02 */	li r6, 0x2
+/* 8022CD50 00229B50  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CD54 00229B54  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CD58 00229B58  4D 82 00 20 */	beqlr
+/* 8022CD5C 00229B5C  38 63 00 01 */	addi r3, r3, 0x1
+/* 8022CD60 00229B60  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cd04
+
+# .text:0x584 | 0x8022CD64 | size: 0x28
+.fn kar_plclearcheckerlib__near_8022cd64, global
+/* 8022CD64 00229B64  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CD68 00229B68  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CD6C 00229B6C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CD70 00229B70  7C A0 2A 14 */	add r5, r0, r5
+/* 8022CD74 00229B74  A0 65 09 08 */	lhz r3, 0x908(r5)
+/* 8022CD78 00229B78  54 60 CF 7E */	extrwi r0, r3, 3, 22
+/* 8022CD7C 00229B7C  7C 00 23 78 */	or r0, r0, r4
+/* 8022CD80 00229B80  50 03 3D B0 */	rlwimi r3, r0, 7, 22, 24
+/* 8022CD84 00229B84  B0 65 09 08 */	sth r3, 0x908(r5)
+/* 8022CD88 00229B88  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cd64
+
+# .text:0x5AC | 0x8022CD8C | size: 0x20
+.fn kar_plclearcheckerlib__near_8022cd8c, global
+/* 8022CD8C 00229B8C  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CD90 00229B90  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CD94 00229B94  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CD98 00229B98  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CD9C 00229B9C  A0 03 09 08 */	lhz r0, 0x908(r3)
+/* 8022CDA0 00229BA0  50 80 3D B0 */	rlwimi r0, r4, 7, 22, 24
+/* 8022CDA4 00229BA4  B0 03 09 08 */	sth r0, 0x908(r3)
+/* 8022CDA8 00229BA8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cd8c
+
+# .text:0x5CC | 0x8022CDAC | size: 0x1C
+.fn kar_plclearcheckerlib__near_8022cdac, global
+/* 8022CDAC 00229BAC  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CDB0 00229BB0  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CDB4 00229BB4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CDB8 00229BB8  7C 60 22 14 */	add r3, r0, r4
+/* 8022CDBC 00229BBC  A0 03 09 08 */	lhz r0, 0x908(r3)
+/* 8022CDC0 00229BC0  54 03 CF 7E */	extrwi r3, r0, 3, 22
+/* 8022CDC4 00229BC4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cdac
+
+# .text:0x5E8 | 0x8022CDC8 | size: 0x60
+.fn kar_plclearcheckerlib__near_8022cdc8, global
+/* 8022CDC8 00229BC8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CDCC 00229BCC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CDD0 00229BD0  38 C0 00 00 */	li r6, 0x0
+/* 8022CDD4 00229BD4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CDD8 00229BD8  7C 60 22 14 */	add r3, r0, r4
+/* 8022CDDC 00229BDC  38 80 00 01 */	li r4, 0x1
+/* 8022CDE0 00229BE0  A0 A3 09 08 */	lhz r5, 0x908(r3)
+/* 8022CDE4 00229BE4  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CDE8 00229BE8  38 60 00 00 */	li r3, 0x0
+/* 8022CDEC 00229BEC  54 A5 CF 7E */	extrwi r5, r5, 3, 22
+/* 8022CDF0 00229BF0  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CDF4 00229BF4  41 82 00 08 */	beq .L_8022CDFC
+/* 8022CDF8 00229BF8  38 60 00 01 */	li r3, 0x1
+.L_8022CDFC:
+/* 8022CDFC 00229BFC  38 C0 00 01 */	li r6, 0x1
+/* 8022CE00 00229C00  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CE04 00229C04  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CE08 00229C08  41 82 00 08 */	beq .L_8022CE10
+/* 8022CE0C 00229C0C  38 63 00 01 */	addi r3, r3, 0x1
+.L_8022CE10:
+/* 8022CE10 00229C10  38 C0 00 02 */	li r6, 0x2
+/* 8022CE14 00229C14  7C 80 30 30 */	slw r0, r4, r6
+/* 8022CE18 00229C18  7C A0 00 39 */	and. r0, r5, r0
+/* 8022CE1C 00229C1C  4D 82 00 20 */	beqlr
+/* 8022CE20 00229C20  38 63 00 01 */	addi r3, r3, 0x1
+/* 8022CE24 00229C24  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cdc8
+
+# .text:0x648 | 0x8022CE28 | size: 0x6C
+.fn kar_plclearcheckerlib__near_8022ce28, global
+/* 8022CE28 00229C28  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CE2C 00229C2C  7C 08 02 A6 */	mflr r0
+/* 8022CE30 00229C30  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CE34 00229C34  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CE38 00229C38  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 8022CE3C 00229C3C  3B E3 A9 F0 */	addi r31, r3, plclearchecker_player_template_table@l
+/* 8022CE40 00229C40  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 8022CE44 00229C44  3B C0 00 00 */	li r30, 0x0
+.L_8022CE48:
+/* 8022CE48 00229C48  80 7F 00 3C */	lwz r3, 0x3c(r31)
+/* 8022CE4C 00229C4C  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022CE50 00229C50  41 82 00 1C */	beq .L_8022CE6C
+/* 8022CE54 00229C54  80 1F 00 40 */	lwz r0, 0x40(r31)
+/* 8022CE58 00229C58  28 00 00 00 */	cmplwi r0, 0x0
+/* 8022CE5C 00229C5C  41 82 00 10 */	beq .L_8022CE6C
+/* 8022CE60 00229C60  4B F6 4D D9 */	bl fn_80191C38
+/* 8022CE64 00229C64  80 7F 00 40 */	lwz r3, 0x40(r31)
+/* 8022CE68 00229C68  4B F9 A8 31 */	bl fn_801C7698
+.L_8022CE6C:
+/* 8022CE6C 00229C6C  3B DE 00 01 */	addi r30, r30, 0x1
+/* 8022CE70 00229C70  3B FF 09 0C */	addi r31, r31, 0x90c
+/* 8022CE74 00229C74  2C 1E 00 05 */	cmpwi r30, 0x5
+/* 8022CE78 00229C78  41 80 FF D0 */	blt .L_8022CE48
+/* 8022CE7C 00229C7C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CE80 00229C80  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 8022CE84 00229C84  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 8022CE88 00229C88  7C 08 03 A6 */	mtlr r0
+/* 8022CE8C 00229C8C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CE90 00229C90  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ce28
+
+# .text:0x6B4 | 0x8022CE94 | size: 0x48
+.fn kar_plclearcheckerlib__near_8022ce94, global
+/* 8022CE94 00229C94  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CE98 00229C98  7C 08 02 A6 */	mflr r0
+/* 8022CE9C 00229C9C  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CEA0 00229CA0  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CEA4 00229CA4  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CEA8 00229CA8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CEAC 00229CAC  7C A0 2A 14 */	add r5, r0, r5
+/* 8022CEB0 00229CB0  80 65 00 40 */	lwz r3, 0x40(r5)
+/* 8022CEB4 00229CB4  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022CEB8 00229CB8  41 82 00 0C */	beq .L_8022CEC4
+/* 8022CEBC 00229CBC  4B F9 BD 5D */	bl fn_801C8C18
+/* 8022CEC0 00229CC0  48 00 00 0C */	b .L_8022CECC
+.L_8022CEC4:
+/* 8022CEC4 00229CC4  80 65 00 3C */	lwz r3, 0x3c(r5)
+/* 8022CEC8 00229CC8  4B F6 51 BD */	bl fn_80192084
+.L_8022CECC:
+/* 8022CECC 00229CCC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CED0 00229CD0  7C 08 03 A6 */	mtlr r0
+/* 8022CED4 00229CD4  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CED8 00229CD8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022ce94
+
+# .text:0x6FC | 0x8022CEDC | size: 0x44
+.fn kar_plclearcheckerlib__near_8022cedc, global
+/* 8022CEDC 00229CDC  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CEE0 00229CE0  7C 08 02 A6 */	mflr r0
+/* 8022CEE4 00229CE4  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CEE8 00229CE8  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CEEC 00229CEC  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CEF0 00229CF0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CEF4 00229CF4  7C 60 22 14 */	add r3, r0, r4
+/* 8022CEF8 00229CF8  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022CEFC 00229CFC  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022CF00 00229D00  41 82 00 0C */	beq .L_8022CF0C
+/* 8022CF04 00229D04  4B F9 B0 FD */	bl fn_801C8000
+/* 8022CF08 00229D08  48 00 00 08 */	b .L_8022CF10
+.L_8022CF0C:
+/* 8022CF0C 00229D0C  38 60 00 00 */	li r3, 0x0
+.L_8022CF10:
+/* 8022CF10 00229D10  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CF14 00229D14  7C 08 03 A6 */	mtlr r0
+/* 8022CF18 00229D18  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CF1C 00229D1C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cedc
+
+# .text:0x740 | 0x8022CF20 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022cf20, global
+/* 8022CF20 00229D20  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022CF24 00229D24  7C 08 02 A6 */	mflr r0
+/* 8022CF28 00229D28  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022CF2C 00229D2C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CF30 00229D30  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022CF34 00229D34  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CF38 00229D38  7C 60 22 14 */	add r3, r0, r4
+/* 8022CF3C 00229D3C  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022CF40 00229D40  4B F6 4D CD */	bl fn_80191D0C
+/* 8022CF44 00229D44  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022CF48 00229D48  7C 08 03 A6 */	mtlr r0
+/* 8022CF4C 00229D4C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022CF50 00229D50  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cf20
+
+# .text:0x774 | 0x8022CF54 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022cf54, global
+/* 8022CF54 00229D54  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CF58 00229D58  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CF5C 00229D5C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CF60 00229D60  7C 60 2A 14 */	add r3, r0, r5
+/* 8022CF64 00229D64  90 83 00 40 */	stw r4, 0x40(r3)
+/* 8022CF68 00229D68  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cf54
+
+# .text:0x78C | 0x8022CF6C | size: 0x5C
+.fn kar_plclearcheckerlib__near_8022cf6c, global
+/* 8022CF6C 00229D6C  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022CF70 00229D70  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022CF74 00229D74  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022CF78 00229D78  7C A0 2A 14 */	add r5, r0, r5
+/* 8022CF7C 00229D7C  80 65 00 44 */	lwz r3, 0x44(r5)
+/* 8022CF80 00229D80  80 05 00 48 */	lwz r0, 0x48(r5)
+/* 8022CF84 00229D84  90 64 00 00 */	stw r3, 0x0(r4)
+/* 8022CF88 00229D88  90 04 00 04 */	stw r0, 0x4(r4)
+/* 8022CF8C 00229D8C  80 65 00 4C */	lwz r3, 0x4c(r5)
+/* 8022CF90 00229D90  80 05 00 50 */	lwz r0, 0x50(r5)
+/* 8022CF94 00229D94  90 64 00 08 */	stw r3, 0x8(r4)
+/* 8022CF98 00229D98  90 04 00 0C */	stw r0, 0xc(r4)
+/* 8022CF9C 00229D9C  80 65 00 54 */	lwz r3, 0x54(r5)
+/* 8022CFA0 00229DA0  80 05 00 58 */	lwz r0, 0x58(r5)
+/* 8022CFA4 00229DA4  90 64 00 10 */	stw r3, 0x10(r4)
+/* 8022CFA8 00229DA8  90 04 00 14 */	stw r0, 0x14(r4)
+/* 8022CFAC 00229DAC  80 65 00 5C */	lwz r3, 0x5c(r5)
+/* 8022CFB0 00229DB0  80 05 00 60 */	lwz r0, 0x60(r5)
+/* 8022CFB4 00229DB4  90 64 00 18 */	stw r3, 0x18(r4)
+/* 8022CFB8 00229DB8  90 04 00 1C */	stw r0, 0x1c(r4)
+/* 8022CFBC 00229DBC  80 05 00 64 */	lwz r0, 0x64(r5)
+/* 8022CFC0 00229DC0  90 04 00 20 */	stw r0, 0x20(r4)
+/* 8022CFC4 00229DC4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cf6c
+
+# .text:0x7E8 | 0x8022CFC8 | size: 0x5C
+.fn kar_plclearcheckerlib__near_8022cfc8, global
+/* 8022CFC8 00229DC8  1C C3 09 0C */	mulli r6, r3, 0x90c
+/* 8022CFCC 00229DCC  3C A0 80 56 */	lis r5, plclearchecker_player_template_table@ha
+/* 8022CFD0 00229DD0  80 64 00 00 */	lwz r3, 0x0(r4)
+/* 8022CFD4 00229DD4  38 A5 A9 F0 */	addi r5, r5, plclearchecker_player_template_table@l
+/* 8022CFD8 00229DD8  80 04 00 04 */	lwz r0, 0x4(r4)
+/* 8022CFDC 00229DDC  7C A5 32 14 */	add r5, r5, r6
+/* 8022CFE0 00229DE0  90 65 00 44 */	stw r3, 0x44(r5)
+/* 8022CFE4 00229DE4  90 05 00 48 */	stw r0, 0x48(r5)
+/* 8022CFE8 00229DE8  80 64 00 08 */	lwz r3, 0x8(r4)
+/* 8022CFEC 00229DEC  80 04 00 0C */	lwz r0, 0xc(r4)
+/* 8022CFF0 00229DF0  90 65 00 4C */	stw r3, 0x4c(r5)
+/* 8022CFF4 00229DF4  90 05 00 50 */	stw r0, 0x50(r5)
+/* 8022CFF8 00229DF8  80 64 00 10 */	lwz r3, 0x10(r4)
+/* 8022CFFC 00229DFC  80 04 00 14 */	lwz r0, 0x14(r4)
+/* 8022D000 00229E00  90 65 00 54 */	stw r3, 0x54(r5)
+/* 8022D004 00229E04  90 05 00 58 */	stw r0, 0x58(r5)
+/* 8022D008 00229E08  80 64 00 18 */	lwz r3, 0x18(r4)
+/* 8022D00C 00229E0C  80 04 00 1C */	lwz r0, 0x1c(r4)
+/* 8022D010 00229E10  90 65 00 5C */	stw r3, 0x5c(r5)
+/* 8022D014 00229E14  90 05 00 60 */	stw r0, 0x60(r5)
+/* 8022D018 00229E18  80 04 00 20 */	lwz r0, 0x20(r4)
+/* 8022D01C 00229E1C  90 05 00 64 */	stw r0, 0x64(r5)
+/* 8022D020 00229E20  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022cfc8
+
+# .text:0x844 | 0x8022D024 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d024, global
+/* 8022D024 00229E24  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D028 00229E28  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D02C 00229E2C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D030 00229E30  7C 60 22 14 */	add r3, r0, r4
+/* 8022D034 00229E34  80 63 00 A8 */	lwz r3, 0xa8(r3)
+/* 8022D038 00229E38  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d024
+
+# .text:0x85C | 0x8022D03C | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d03c, global
+/* 8022D03C 00229E3C  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D040 00229E40  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D044 00229E44  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D048 00229E48  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D04C 00229E4C  90 83 00 A8 */	stw r4, 0xa8(r3)
+/* 8022D050 00229E50  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d03c
+
+# .text:0x874 | 0x8022D054 | size: 0x78
+.fn kar_plclearcheckerlib__near_8022d054, global
+/* 8022D054 00229E54  94 21 FF E0 */	stwu r1, -0x20(r1)
+/* 8022D058 00229E58  7C 08 02 A6 */	mflr r0
+/* 8022D05C 00229E5C  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D060 00229E60  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D064 00229E64  90 01 00 24 */	stw r0, 0x24(r1)
+/* 8022D068 00229E68  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D06C 00229E6C  93 E1 00 1C */	stw r31, 0x1c(r1)
+/* 8022D070 00229E70  7F E0 22 14 */	add r31, r0, r4
+/* 8022D074 00229E74  93 C1 00 18 */	stw r30, 0x18(r1)
+/* 8022D078 00229E78  7F FE FB 78 */	mr r30, r31
+/* 8022D07C 00229E7C  93 A1 00 14 */	stw r29, 0x14(r1)
+/* 8022D080 00229E80  3B A0 00 00 */	li r29, 0x0
+.L_8022D084:
+/* 8022D084 00229E84  C0 1E 00 68 */	lfs f0, 0x68(r30)
+/* 8022D088 00229E88  7F A4 EB 78 */	mr r4, r29
+/* 8022D08C 00229E8C  38 7F 00 44 */	addi r3, r31, 0x44
+/* 8022D090 00229E90  FC 00 00 1E */	fctiwz f0, f0
+/* 8022D094 00229E94  D8 01 00 08 */	stfd f0, 0x8(r1)
+/* 8022D098 00229E98  80 A1 00 0C */	lwz r5, 0xc(r1)
+/* 8022D09C 00229E9C  4B F6 55 25 */	bl fn_801925C0
+/* 8022D0A0 00229EA0  3B BD 00 01 */	addi r29, r29, 0x1
+/* 8022D0A4 00229EA4  3B DE 00 04 */	addi r30, r30, 0x4
+/* 8022D0A8 00229EA8  2C 1D 00 09 */	cmpwi r29, 0x9
+/* 8022D0AC 00229EAC  41 80 FF D8 */	blt .L_8022D084
+/* 8022D0B0 00229EB0  80 01 00 24 */	lwz r0, 0x24(r1)
+/* 8022D0B4 00229EB4  83 E1 00 1C */	lwz r31, 0x1c(r1)
+/* 8022D0B8 00229EB8  83 C1 00 18 */	lwz r30, 0x18(r1)
+/* 8022D0BC 00229EBC  83 A1 00 14 */	lwz r29, 0x14(r1)
+/* 8022D0C0 00229EC0  7C 08 03 A6 */	mtlr r0
+/* 8022D0C4 00229EC4  38 21 00 20 */	addi r1, r1, 0x20
+/* 8022D0C8 00229EC8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d054
+
+# .text:0x8EC | 0x8022D0CC | size: 0x5C
+.fn kar_plclearcheckerlib__near_8022d0cc, global
+/* 8022D0CC 00229ECC  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D0D0 00229ED0  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D0D4 00229ED4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D0D8 00229ED8  7C A0 2A 14 */	add r5, r0, r5
+/* 8022D0DC 00229EDC  80 65 00 68 */	lwz r3, 0x68(r5)
+/* 8022D0E0 00229EE0  80 05 00 6C */	lwz r0, 0x6c(r5)
+/* 8022D0E4 00229EE4  90 64 00 00 */	stw r3, 0x0(r4)
+/* 8022D0E8 00229EE8  90 04 00 04 */	stw r0, 0x4(r4)
+/* 8022D0EC 00229EEC  80 65 00 70 */	lwz r3, 0x70(r5)
+/* 8022D0F0 00229EF0  80 05 00 74 */	lwz r0, 0x74(r5)
+/* 8022D0F4 00229EF4  90 64 00 08 */	stw r3, 0x8(r4)
+/* 8022D0F8 00229EF8  90 04 00 0C */	stw r0, 0xc(r4)
+/* 8022D0FC 00229EFC  80 65 00 78 */	lwz r3, 0x78(r5)
+/* 8022D100 00229F00  80 05 00 7C */	lwz r0, 0x7c(r5)
+/* 8022D104 00229F04  90 64 00 10 */	stw r3, 0x10(r4)
+/* 8022D108 00229F08  90 04 00 14 */	stw r0, 0x14(r4)
+/* 8022D10C 00229F0C  80 65 00 80 */	lwz r3, 0x80(r5)
+/* 8022D110 00229F10  80 05 00 84 */	lwz r0, 0x84(r5)
+/* 8022D114 00229F14  90 64 00 18 */	stw r3, 0x18(r4)
+/* 8022D118 00229F18  90 04 00 1C */	stw r0, 0x1c(r4)
+/* 8022D11C 00229F1C  80 05 00 88 */	lwz r0, 0x88(r5)
+/* 8022D120 00229F20  90 04 00 20 */	stw r0, 0x20(r4)
+/* 8022D124 00229F24  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d0cc
+
+# .text:0x948 | 0x8022D128 | size: 0x98
+.fn kar_plclearcheckerlib__near_8022d128, global
+/* 8022D128 00229F28  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D12C 00229F2C  7C 08 02 A6 */	mflr r0
+/* 8022D130 00229F30  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D134 00229F34  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D138 00229F38  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D13C 00229F3C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D140 00229F40  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 8022D144 00229F44  7F E0 2A 14 */	add r31, r0, r5
+/* 8022D148 00229F48  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 8022D14C 00229F4C  7C 9E 23 78 */	mr r30, r4
+/* 8022D150 00229F50  80 7F 00 40 */	lwz r3, 0x40(r31)
+/* 8022D154 00229F54  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D158 00229F58  41 82 00 08 */	beq .L_8022D160
+/* 8022D15C 00229F5C  4B F9 B0 FD */	bl fn_801C8258
+.L_8022D160:
+/* 8022D160 00229F60  80 7E 00 00 */	lwz r3, 0x0(r30)
+/* 8022D164 00229F64  80 1E 00 04 */	lwz r0, 0x4(r30)
+/* 8022D168 00229F68  90 7F 00 68 */	stw r3, 0x68(r31)
+/* 8022D16C 00229F6C  90 1F 00 6C */	stw r0, 0x6c(r31)
+/* 8022D170 00229F70  80 7E 00 08 */	lwz r3, 0x8(r30)
+/* 8022D174 00229F74  80 1E 00 0C */	lwz r0, 0xc(r30)
+/* 8022D178 00229F78  90 7F 00 70 */	stw r3, 0x70(r31)
+/* 8022D17C 00229F7C  90 1F 00 74 */	stw r0, 0x74(r31)
+/* 8022D180 00229F80  80 7E 00 10 */	lwz r3, 0x10(r30)
+/* 8022D184 00229F84  80 1E 00 14 */	lwz r0, 0x14(r30)
+/* 8022D188 00229F88  90 7F 00 78 */	stw r3, 0x78(r31)
+/* 8022D18C 00229F8C  90 1F 00 7C */	stw r0, 0x7c(r31)
+/* 8022D190 00229F90  80 7E 00 18 */	lwz r3, 0x18(r30)
+/* 8022D194 00229F94  80 1E 00 1C */	lwz r0, 0x1c(r30)
+/* 8022D198 00229F98  90 7F 00 80 */	stw r3, 0x80(r31)
+/* 8022D19C 00229F9C  90 1F 00 84 */	stw r0, 0x84(r31)
+/* 8022D1A0 00229FA0  80 1E 00 20 */	lwz r0, 0x20(r30)
+/* 8022D1A4 00229FA4  90 1F 00 88 */	stw r0, 0x88(r31)
+/* 8022D1A8 00229FA8  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 8022D1AC 00229FAC  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 8022D1B0 00229FB0  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D1B4 00229FB4  7C 08 03 A6 */	mtlr r0
+/* 8022D1B8 00229FB8  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D1BC 00229FBC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d128
+
+# .text:0x9E0 | 0x8022D1C0 | size: 0x3C
+.fn kar_plclearcheckerlib__near_8022d1c0, global
+/* 8022D1C0 00229FC0  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D1C4 00229FC4  7C 08 02 A6 */	mflr r0
+/* 8022D1C8 00229FC8  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D1CC 00229FCC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D1D0 00229FD0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D1D4 00229FD4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D1D8 00229FD8  7C 60 22 14 */	add r3, r0, r4
+/* 8022D1DC 00229FDC  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D1E0 00229FE0  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D1E4 00229FE4  41 82 00 08 */	beq .L_8022D1EC
+/* 8022D1E8 00229FE8  4B F9 B8 21 */	bl fn_801C8A08
+.L_8022D1EC:
+/* 8022D1EC 00229FEC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D1F0 00229FF0  7C 08 03 A6 */	mtlr r0
+/* 8022D1F4 00229FF4  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D1F8 00229FF8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d1c0
+
+# .text:0xA1C | 0x8022D1FC | size: 0x34
+.fn kar_plclearcheckerlib__near_8022d1fc, global
+/* 8022D1FC 00229FFC  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D200 0022A000  7C 08 02 A6 */	mflr r0
+/* 8022D204 0022A004  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D208 0022A008  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D20C 0022A00C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D210 0022A010  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D214 0022A014  7C 60 22 14 */	add r3, r0, r4
+/* 8022D218 0022A018  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D21C 0022A01C  4B F6 53 C5 */	bl fn_801925E0
+/* 8022D220 0022A020  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D224 0022A024  7C 08 03 A6 */	mtlr r0
+/* 8022D228 0022A028  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D22C 0022A02C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d1fc
+
+# .text:0xA50 | 0x8022D230 | size: 0x18
+.fn kar_plclearchecker_get_player_object, global
+/* 8022D230 0022A030  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D234 0022A034  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D238 0022A038  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D23C 0022A03C  7C 60 22 14 */	add r3, r0, r4
+/* 8022D240 0022A040  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D244 0022A044  4E 80 00 20 */	blr
+.endfn kar_plclearchecker_get_player_object
+
+# .text:0xA68 | 0x8022D248 | size: 0x18
+.fn kar_plclearchecker_get_player_state, global
+/* 8022D248 0022A048  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D24C 0022A04C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D250 0022A050  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D254 0022A054  7C 60 22 14 */	add r3, r0, r4
+/* 8022D258 0022A058  38 63 00 B0 */	addi r3, r3, 0xb0
+/* 8022D25C 0022A05C  4E 80 00 20 */	blr
+.endfn kar_plclearchecker_get_player_state
+
+# .text:0xA80 | 0x8022D260 | size: 0x18
+.fn kar_plclearcheckerlib__8022d260, global
+/* 8022D260 0022A060  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D264 0022A064  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D268 0022A068  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D26C 0022A06C  7C 60 22 14 */	add r3, r0, r4
+/* 8022D270 0022A070  38 63 00 B0 */	addi r3, r3, 0xb0
+/* 8022D274 0022A074  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__8022d260
+
+# .text:0xA98 | 0x8022D278 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022d278, global
+/* 8022D278 0022A078  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D27C 0022A07C  7C 08 02 A6 */	mflr r0
+/* 8022D280 0022A080  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D284 0022A084  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D288 0022A088  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D28C 0022A08C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D290 0022A090  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D294 0022A094  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D298 0022A098  4B F6 56 95 */	bl fn_8019292C
+/* 8022D29C 0022A09C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D2A0 0022A0A0  7C 08 03 A6 */	mtlr r0
+/* 8022D2A4 0022A0A4  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D2A8 0022A0A8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d278
+
+# .text:0xACC | 0x8022D2AC | size: 0x138
+.fn kar_plclearcheckerlib__near_8022d2ac, global
+/* 8022D2AC 0022A0AC  94 21 FF D0 */	stwu r1, -0x30(r1)
+/* 8022D2B0 0022A0B0  7C 08 02 A6 */	mflr r0
+/* 8022D2B4 0022A0B4  90 01 00 34 */	stw r0, 0x34(r1)
+/* 8022D2B8 0022A0B8  DB E1 00 20 */	stfd f31, 0x20(r1)
+/* 8022D2BC 0022A0BC  F3 E1 00 28 */	psq_st f31, 0x28(r1), 0, qr0
+/* 8022D2C0 0022A0C0  DB C1 00 10 */	stfd f30, 0x10(r1)
+/* 8022D2C4 0022A0C4  F3 C1 00 18 */	psq_st f30, 0x18(r1), 0, qr0
+/* 8022D2C8 0022A0C8  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 8022D2CC 0022A0CC  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 8022D2D0 0022A0D0  48 00 45 49 */	bl kar_plclearcheckerlib__near_80231818
+/* 8022D2D4 0022A0D4  48 00 01 11 */	bl kar_pl_assets__asset_8022d3e4
+/* 8022D2D8 0022A0D8  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D2DC 0022A0DC  C3 E2 C3 28 */	lfs f31, lbl_805E2A28@sda21(r0)
+/* 8022D2E0 0022A0E0  C3 C2 C3 2C */	lfs f30, lbl_805E2A2C@sda21(r0)
+/* 8022D2E4 0022A0E4  3B E3 A9 F0 */	addi r31, r3, plclearchecker_player_template_table@l
+/* 8022D2E8 0022A0E8  3B C0 00 00 */	li r30, 0x0
+.L_8022D2EC:
+/* 8022D2EC 0022A0EC  7F E3 FB 78 */	mr r3, r31
+/* 8022D2F0 0022A0F0  38 80 00 00 */	li r4, 0x0
+/* 8022D2F4 0022A0F4  38 A0 09 0C */	li r5, 0x90c
+/* 8022D2F8 0022A0F8  4B DD 5E 09 */	bl memset
+/* 8022D2FC 0022A0FC  38 00 00 04 */	li r0, 0x4
+/* 8022D300 0022A100  38 A0 00 00 */	li r5, 0x0
+/* 8022D304 0022A104  90 1F 00 00 */	stw r0, 0x0(r31)
+/* 8022D308 0022A108  38 00 00 05 */	li r0, 0x5
+/* 8022D30C 0022A10C  38 8D 07 B8 */	li r4, lbl_805DD898@sda21
+/* 8022D310 0022A110  7F C3 F3 78 */	mr r3, r30
+/* 8022D314 0022A114  90 BF 00 04 */	stw r5, 0x4(r31)
+/* 8022D318 0022A118  D3 FF 00 14 */	stfs f31, 0x14(r31)
+/* 8022D31C 0022A11C  D3 FF 00 18 */	stfs f31, 0x18(r31)
+/* 8022D320 0022A120  D3 DF 00 1C */	stfs f30, 0x1c(r31)
+/* 8022D324 0022A124  D3 FF 00 20 */	stfs f31, 0x20(r31)
+/* 8022D328 0022A128  D3 DF 00 24 */	stfs f30, 0x24(r31)
+/* 8022D32C 0022A12C  D3 FF 00 28 */	stfs f31, 0x28(r31)
+/* 8022D330 0022A130  D3 DF 00 2C */	stfs f30, 0x2c(r31)
+/* 8022D334 0022A134  D3 DF 00 30 */	stfs f30, 0x30(r31)
+/* 8022D338 0022A138  D3 FF 00 44 */	stfs f31, 0x44(r31)
+/* 8022D33C 0022A13C  D3 FF 00 48 */	stfs f31, 0x48(r31)
+/* 8022D340 0022A140  D3 FF 00 4C */	stfs f31, 0x4c(r31)
+/* 8022D344 0022A144  D3 FF 00 50 */	stfs f31, 0x50(r31)
+/* 8022D348 0022A148  D3 FF 00 54 */	stfs f31, 0x54(r31)
+/* 8022D34C 0022A14C  D3 FF 00 58 */	stfs f31, 0x58(r31)
+/* 8022D350 0022A150  D3 FF 00 5C */	stfs f31, 0x5c(r31)
+/* 8022D354 0022A154  D3 FF 00 60 */	stfs f31, 0x60(r31)
+/* 8022D358 0022A158  D3 FF 00 64 */	stfs f31, 0x64(r31)
+/* 8022D35C 0022A15C  D3 FF 00 68 */	stfs f31, 0x68(r31)
+/* 8022D360 0022A160  D3 FF 00 6C */	stfs f31, 0x6c(r31)
+/* 8022D364 0022A164  D3 FF 00 70 */	stfs f31, 0x70(r31)
+/* 8022D368 0022A168  D3 FF 00 74 */	stfs f31, 0x74(r31)
+/* 8022D36C 0022A16C  D3 FF 00 78 */	stfs f31, 0x78(r31)
+/* 8022D370 0022A170  D3 FF 00 7C */	stfs f31, 0x7c(r31)
+/* 8022D374 0022A174  D3 FF 00 80 */	stfs f31, 0x80(r31)
+/* 8022D378 0022A178  D3 FF 00 84 */	stfs f31, 0x84(r31)
+/* 8022D37C 0022A17C  D3 FF 00 88 */	stfs f31, 0x88(r31)
+/* 8022D380 0022A180  98 BF 00 8E */	stb r5, 0x8e(r31)
+/* 8022D384 0022A184  98 BF 00 8F */	stb r5, 0x8f(r31)
+/* 8022D388 0022A188  98 BF 00 91 */	stb r5, 0x91(r31)
+/* 8022D38C 0022A18C  98 BF 00 92 */	stb r5, 0x92(r31)
+/* 8022D390 0022A190  90 BF 00 3C */	stw r5, 0x3c(r31)
+/* 8022D394 0022A194  90 BF 00 40 */	stw r5, 0x40(r31)
+/* 8022D398 0022A198  98 0D 07 B8 */	stb r0, lbl_805DD898@sda21(r0)
+/* 8022D39C 0022A19C  98 04 00 01 */	stb r0, 0x1(r4)
+/* 8022D3A0 0022A1A0  98 04 00 02 */	stb r0, 0x2(r4)
+/* 8022D3A4 0022A1A4  98 04 00 03 */	stb r0, 0x3(r4)
+/* 8022D3A8 0022A1A8  48 00 05 21 */	bl kar_plclearcheckerlib__near_8022d8c8
+/* 8022D3AC 0022A1AC  3B DE 00 01 */	addi r30, r30, 0x1
+/* 8022D3B0 0022A1B0  3B FF 09 0C */	addi r31, r31, 0x90c
+/* 8022D3B4 0022A1B4  2C 1E 00 05 */	cmpwi r30, 0x5
+/* 8022D3B8 0022A1B8  41 80 FF 34 */	blt .L_8022D2EC
+/* 8022D3BC 0022A1BC  E3 E1 00 28 */	psq_l f31, 0x28(r1), 0, qr0
+/* 8022D3C0 0022A1C0  CB E1 00 20 */	lfd f31, 0x20(r1)
+/* 8022D3C4 0022A1C4  E3 C1 00 18 */	psq_l f30, 0x18(r1), 0, qr0
+/* 8022D3C8 0022A1C8  CB C1 00 10 */	lfd f30, 0x10(r1)
+/* 8022D3CC 0022A1CC  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 8022D3D0 0022A1D0  80 01 00 34 */	lwz r0, 0x34(r1)
+/* 8022D3D4 0022A1D4  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 8022D3D8 0022A1D8  7C 08 03 A6 */	mtlr r0
+/* 8022D3DC 0022A1DC  38 21 00 30 */	addi r1, r1, 0x30
+/* 8022D3E0 0022A1E0  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d2ac
+
+# .text:0xC04 | 0x8022D3E4 | size: 0x50
+.fn kar_pl_assets__asset_8022d3e4, global
+/* 8022D3E4 0022A1E4  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D3E8 0022A1E8  7C 08 02 A6 */	mflr r0
+/* 8022D3EC 0022A1EC  3C 80 80 4B */	lis r4, kar_linkfile_pldata_dat_804b4c00@ha
+/* 8022D3F0 0022A1F0  3C 60 80 4B */	lis r3, lbl_804B4C0C@ha
+/* 8022D3F4 0022A1F4  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D3F8 0022A1F8  38 C3 4C 0C */	addi r6, r3, lbl_804B4C0C@l
+/* 8022D3FC 0022A1FC  38 84 4C 00 */	addi r4, r4, kar_linkfile_pldata_dat_804b4c00@l
+/* 8022D400 0022A200  38 A1 00 08 */	addi r5, r1, 0x8
+/* 8022D404 0022A204  38 60 00 00 */	li r3, 0x0
+/* 8022D408 0022A208  38 E0 00 00 */	li r7, 0x0
+/* 8022D40C 0022A20C  4C C6 31 82 */	crclr cr1eq
+/* 8022D410 0022A210  4B E2 C6 11 */	bl kar_lbarchive__80059a20
+/* 8022D414 0022A214  80 61 00 08 */	lwz r3, 0x8(r1)
+/* 8022D418 0022A218  90 6D 07 B0 */	stw r3, lbl_805DD890@sda21(r0)
+/* 8022D41C 0022A21C  80 03 00 00 */	lwz r0, 0x0(r3)
+/* 8022D420 0022A220  90 0D 07 B4 */	stw r0, lbl_805DD894@sda21(r0)
+/* 8022D424 0022A224  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D428 0022A228  7C 08 03 A6 */	mtlr r0
+/* 8022D42C 0022A22C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D430 0022A230  4E 80 00 20 */	blr
+.endfn kar_pl_assets__asset_8022d3e4
+
+# .text:0xC54 | 0x8022D434 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022d434, global
+/* 8022D434 0022A234  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D438 0022A238  7C 08 02 A6 */	mflr r0
+/* 8022D43C 0022A23C  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D440 0022A240  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D444 0022A244  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D448 0022A248  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D44C 0022A24C  7C 60 22 14 */	add r3, r0, r4
+/* 8022D450 0022A250  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D454 0022A254  4B F6 52 91 */	bl fn_801926E4
+/* 8022D458 0022A258  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D45C 0022A25C  7C 08 03 A6 */	mtlr r0
+/* 8022D460 0022A260  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D464 0022A264  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d434
+
+# .text:0xC88 | 0x8022D468 | size: 0x34
+.fn kar_plclearchecker_call_clobject_func_1926f4, global
+/* 8022D468 0022A268  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D46C 0022A26C  7C 08 02 A6 */	mflr r0
+/* 8022D470 0022A270  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D474 0022A274  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D478 0022A278  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D47C 0022A27C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D480 0022A280  7C 60 22 14 */	add r3, r0, r4
+/* 8022D484 0022A284  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D488 0022A288  4B F6 52 6D */	bl fn_801926F4
+/* 8022D48C 0022A28C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D490 0022A290  7C 08 03 A6 */	mtlr r0
+/* 8022D494 0022A294  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D498 0022A298  4E 80 00 20 */	blr
+.endfn kar_plclearchecker_call_clobject_func_1926f4
+
+# .text:0xCBC | 0x8022D49C | size: 0x44
+.fn kar_plclearcheckerlib__near_8022d49c, global
+/* 8022D49C 0022A29C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D4A0 0022A2A0  7C 08 02 A6 */	mflr r0
+/* 8022D4A4 0022A2A4  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D4A8 0022A2A8  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D4AC 0022A2AC  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D4B0 0022A2B0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D4B4 0022A2B4  7C 60 22 14 */	add r3, r0, r4
+/* 8022D4B8 0022A2B8  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D4BC 0022A2BC  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D4C0 0022A2C0  41 82 00 0C */	beq .L_8022D4CC
+/* 8022D4C4 0022A2C4  4B F9 B2 D5 */	bl fn_801C8798
+/* 8022D4C8 0022A2C8  48 00 00 08 */	b .L_8022D4D0
+.L_8022D4CC:
+/* 8022D4CC 0022A2CC  38 60 00 00 */	li r3, 0x0
+.L_8022D4D0:
+/* 8022D4D0 0022A2D0  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D4D4 0022A2D4  7C 08 03 A6 */	mtlr r0
+/* 8022D4D8 0022A2D8  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D4DC 0022A2DC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d49c
+
+# .text:0xD00 | 0x8022D4E0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d4e0, global
+/* 8022D4E0 0022A2E0  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D4E4 0022A2E4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D4E8 0022A2E8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D4EC 0022A2EC  7C 60 22 14 */	add r3, r0, r4
+/* 8022D4F0 0022A2F0  D0 23 00 98 */	stfs f1, 0x98(r3)
+/* 8022D4F4 0022A2F4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d4e0
+
+# .text:0xD18 | 0x8022D4F8 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d4f8, global
+/* 8022D4F8 0022A2F8  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D4FC 0022A2FC  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D500 0022A300  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D504 0022A304  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D508 0022A308  90 83 00 9C */	stw r4, 0x9c(r3)
+/* 8022D50C 0022A30C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d4f8
+
+# .text:0xD30 | 0x8022D510 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d510, global
+/* 8022D510 0022A310  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D514 0022A314  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D518 0022A318  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D51C 0022A31C  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D520 0022A320  90 83 00 A0 */	stw r4, 0xa0(r3)
+/* 8022D524 0022A324  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d510
+
+# .text:0xD48 | 0x8022D528 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d528, global
+/* 8022D528 0022A328  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D52C 0022A32C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D530 0022A330  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D534 0022A334  7C 60 22 14 */	add r3, r0, r4
+/* 8022D538 0022A338  80 63 00 9C */	lwz r3, 0x9c(r3)
+/* 8022D53C 0022A33C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d528
+
+# .text:0xD60 | 0x8022D540 | size: 0x44
+.fn kar_plclearcheckerlib__near_8022d540, global
+/* 8022D540 0022A340  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D544 0022A344  7C 08 02 A6 */	mflr r0
+/* 8022D548 0022A348  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D54C 0022A34C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D550 0022A350  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D554 0022A354  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D558 0022A358  7C 60 22 14 */	add r3, r0, r4
+/* 8022D55C 0022A35C  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D560 0022A360  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D564 0022A364  41 82 00 0C */	beq .L_8022D570
+/* 8022D568 0022A368  4B F9 B2 41 */	bl fn_801C87A8
+/* 8022D56C 0022A36C  48 00 00 08 */	b .L_8022D574
+.L_8022D570:
+/* 8022D570 0022A370  38 60 00 00 */	li r3, 0x0
+.L_8022D574:
+/* 8022D574 0022A374  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D578 0022A378  7C 08 03 A6 */	mtlr r0
+/* 8022D57C 0022A37C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D580 0022A380  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d540
+
+# .text:0xDA4 | 0x8022D584 | size: 0x44
+.fn kar_plclearcheckerlib__near_8022d584, global
+/* 8022D584 0022A384  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D588 0022A388  7C 08 02 A6 */	mflr r0
+/* 8022D58C 0022A38C  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D590 0022A390  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D594 0022A394  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D598 0022A398  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D59C 0022A39C  7C 60 22 14 */	add r3, r0, r4
+/* 8022D5A0 0022A3A0  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D5A4 0022A3A4  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D5A8 0022A3A8  41 82 00 0C */	beq .L_8022D5B4
+/* 8022D5AC 0022A3AC  4B F9 B2 0D */	bl fn_801C87B8
+/* 8022D5B0 0022A3B0  48 00 00 08 */	b .L_8022D5B8
+.L_8022D5B4:
+/* 8022D5B4 0022A3B4  38 60 00 00 */	li r3, 0x0
+.L_8022D5B8:
+/* 8022D5B8 0022A3B8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D5BC 0022A3BC  7C 08 03 A6 */	mtlr r0
+/* 8022D5C0 0022A3C0  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D5C4 0022A3C4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d584
+
+# .text:0xDE8 | 0x8022D5C8 | size: 0x58
+.fn kar_plclearcheckerlib__near_8022d5c8, global
+/* 8022D5C8 0022A3C8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D5CC 0022A3CC  7C 08 02 A6 */	mflr r0
+/* 8022D5D0 0022A3D0  1C C3 09 0C */	mulli r6, r3, 0x90c
+/* 8022D5D4 0022A3D4  3C A0 80 56 */	lis r5, plclearchecker_player_template_table@ha
+/* 8022D5D8 0022A3D8  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D5DC 0022A3DC  38 60 00 01 */	li r3, 0x1
+/* 8022D5E0 0022A3E0  38 05 A9 F0 */	addi r0, r5, plclearchecker_player_template_table@l
+/* 8022D5E4 0022A3E4  7C A0 32 14 */	add r5, r0, r6
+/* 8022D5E8 0022A3E8  88 05 09 09 */	lbz r0, 0x909(r5)
+/* 8022D5EC 0022A3EC  50 60 36 72 */	rlwimi r0, r3, 6, 25, 25
+/* 8022D5F0 0022A3F0  98 05 09 09 */	stb r0, 0x909(r5)
+/* 8022D5F4 0022A3F4  80 65 00 40 */	lwz r3, 0x40(r5)
+/* 8022D5F8 0022A3F8  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D5FC 0022A3FC  41 82 00 0C */	beq .L_8022D608
+/* 8022D600 0022A400  4B F9 B2 E5 */	bl fn_801C88E4
+/* 8022D604 0022A404  48 00 00 0C */	b .L_8022D610
+.L_8022D608:
+/* 8022D608 0022A408  80 65 00 3C */	lwz r3, 0x3c(r5)
+/* 8022D60C 0022A40C  4B F6 53 D9 */	bl fn_801929E4
+.L_8022D610:
+/* 8022D610 0022A410  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D614 0022A414  7C 08 03 A6 */	mtlr r0
+/* 8022D618 0022A418  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D61C 0022A41C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d5c8
+
+# .text:0xE40 | 0x8022D620 | size: 0x24
+.fn kar_plclearcheckerlib__near_8022d620, global
+/* 8022D620 0022A420  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D624 0022A424  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D628 0022A428  38 A0 00 00 */	li r5, 0x0
+/* 8022D62C 0022A42C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D630 0022A430  7C 60 22 14 */	add r3, r0, r4
+/* 8022D634 0022A434  88 03 09 09 */	lbz r0, 0x909(r3)
+/* 8022D638 0022A438  50 A0 36 72 */	rlwimi r0, r5, 6, 25, 25
+/* 8022D63C 0022A43C  98 03 09 09 */	stb r0, 0x909(r3)
+/* 8022D640 0022A440  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d620
+
+# .text:0xE64 | 0x8022D644 | size: 0x1C
+.fn kar_plclearcheckerlib__near_8022d644, global
+/* 8022D644 0022A444  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D648 0022A448  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D64C 0022A44C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D650 0022A450  7C 60 22 14 */	add r3, r0, r4
+/* 8022D654 0022A454  88 03 09 09 */	lbz r0, 0x909(r3)
+/* 8022D658 0022A458  54 03 D7 FE */	extrwi r3, r0, 1, 25
+/* 8022D65C 0022A45C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d644
+
+# .text:0xE80 | 0x8022D660 | size: 0x24
+.fn kar_plclearcheckerlib__near_8022d660, global
+/* 8022D660 0022A460  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D664 0022A464  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D668 0022A468  38 A0 00 01 */	li r5, 0x1
+/* 8022D66C 0022A46C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D670 0022A470  7C 60 22 14 */	add r3, r0, r4
+/* 8022D674 0022A474  88 03 09 09 */	lbz r0, 0x909(r3)
+/* 8022D678 0022A478  50 A0 2E B4 */	rlwimi r0, r5, 5, 26, 26
+/* 8022D67C 0022A47C  98 03 09 09 */	stb r0, 0x909(r3)
+/* 8022D680 0022A480  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d660
+
+# .text:0xEA4 | 0x8022D684 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d684, global
+/* 8022D684 0022A484  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D688 0022A488  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D68C 0022A48C  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D690 0022A490  7C 60 22 14 */	add r3, r0, r4
+/* 8022D694 0022A494  80 63 00 A4 */	lwz r3, 0xa4(r3)
+/* 8022D698 0022A498  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d684
+
+# .text:0xEBC | 0x8022D69C | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d69c, global
+/* 8022D69C 0022A49C  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D6A0 0022A4A0  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D6A4 0022A4A4  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D6A8 0022A4A8  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D6AC 0022A4AC  90 83 00 A4 */	stw r4, 0xa4(r3)
+/* 8022D6B0 0022A4B0  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d69c
+
+# .text:0xED4 | 0x8022D6B4 | size: 0x68
+.fn kar_plclearcheckerlib__near_8022d6b4, global
+/* 8022D6B4 0022A4B4  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D6B8 0022A4B8  7C 08 02 A6 */	mflr r0
+/* 8022D6BC 0022A4BC  1C 63 09 0C */	mulli r3, r3, 0x90c
+/* 8022D6C0 0022A4C0  3C A0 80 56 */	lis r5, plclearchecker_player_template_table@ha
+/* 8022D6C4 0022A4C4  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D6C8 0022A4C8  2C 04 00 00 */	cmpwi r4, 0x0
+/* 8022D6CC 0022A4CC  38 05 A9 F0 */	addi r0, r5, plclearchecker_player_template_table@l
+/* 8022D6D0 0022A4D0  7C A0 1A 14 */	add r5, r0, r3
+/* 8022D6D4 0022A4D4  40 82 00 18 */	bne .L_8022D6EC
+/* 8022D6D8 0022A4D8  A0 05 09 08 */	lhz r0, 0x908(r5)
+/* 8022D6DC 0022A4DC  38 60 00 00 */	li r3, 0x0
+/* 8022D6E0 0022A4E0  50 60 3D B0 */	rlwimi r0, r3, 7, 22, 24
+/* 8022D6E4 0022A4E4  B0 05 09 08 */	sth r0, 0x908(r5)
+/* 8022D6E8 0022A4E8  48 00 00 14 */	b .L_8022D6FC
+.L_8022D6EC:
+/* 8022D6EC 0022A4EC  88 05 09 08 */	lbz r0, 0x908(r5)
+/* 8022D6F0 0022A4F0  38 60 00 00 */	li r3, 0x0
+/* 8022D6F4 0022A4F4  50 60 16 FA */	rlwimi r0, r3, 2, 27, 29
+/* 8022D6F8 0022A4F8  98 05 09 08 */	stb r0, 0x908(r5)
+.L_8022D6FC:
+/* 8022D6FC 0022A4FC  80 65 00 3C */	lwz r3, 0x3c(r5)
+/* 8022D700 0022A500  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D704 0022A504  41 82 00 08 */	beq .L_8022D70C
+/* 8022D708 0022A508  4B F6 4D 85 */	bl fn_8019248C
+.L_8022D70C:
+/* 8022D70C 0022A50C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D710 0022A510  7C 08 03 A6 */	mtlr r0
+/* 8022D714 0022A514  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D718 0022A518  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d6b4
+
+# .text:0xF3C | 0x8022D71C | size: 0x3C
+.fn kar_plclearcheckerlib__near_8022d71c, global
+/* 8022D71C 0022A51C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D720 0022A520  7C 08 02 A6 */	mflr r0
+/* 8022D724 0022A524  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D728 0022A528  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D72C 0022A52C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D730 0022A530  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D734 0022A534  7C 60 22 14 */	add r3, r0, r4
+/* 8022D738 0022A538  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D73C 0022A53C  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D740 0022A540  41 82 00 08 */	beq .L_8022D748
+/* 8022D744 0022A544  4B F6 4D B5 */	bl fn_801924F8
+.L_8022D748:
+/* 8022D748 0022A548  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D74C 0022A54C  7C 08 03 A6 */	mtlr r0
+/* 8022D750 0022A550  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D754 0022A554  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d71c
+
+# .text:0xF78 | 0x8022D758 | size: 0x20
+.fn kar_plclearcheckerlib__near_8022d758, global
+/* 8022D758 0022A558  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D75C 0022A55C  7C 08 02 A6 */	mflr r0
+/* 8022D760 0022A560  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D764 0022A564  4B DE 38 75 */	bl kar_gmautodemo__near_80010fd8
+/* 8022D768 0022A568  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D76C 0022A56C  7C 08 03 A6 */	mtlr r0
+/* 8022D770 0022A570  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D774 0022A574  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d758
+
+# .text:0xF98 | 0x8022D778 | size: 0x20
+.fn kar_plclearcheckerlib__near_8022d778, global
+/* 8022D778 0022A578  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D77C 0022A57C  7C 08 02 A6 */	mflr r0
+/* 8022D780 0022A580  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D784 0022A584  4B DE 38 29 */	bl kar_gmautodemo__near_80010fac
+/* 8022D788 0022A588  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D78C 0022A58C  7C 08 03 A6 */	mtlr r0
+/* 8022D790 0022A590  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D794 0022A594  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d778
+
+# .text:0xFB8 | 0x8022D798 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d798, global
+/* 8022D798 0022A598  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D79C 0022A59C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D7A0 0022A5A0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D7A4 0022A5A4  7C 60 2A 14 */	add r3, r0, r5
+/* 8022D7A8 0022A5A8  90 83 00 AC */	stw r4, 0xac(r3)
+/* 8022D7AC 0022A5AC  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d798
+
+# .text:0xFD0 | 0x8022D7B0 | size: 0x18
+.fn kar_plclearcheckerlib__near_8022d7b0, global
+/* 8022D7B0 0022A5B0  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D7B4 0022A5B4  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D7B8 0022A5B8  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D7BC 0022A5BC  7C 60 22 14 */	add r3, r0, r4
+/* 8022D7C0 0022A5C0  80 63 00 AC */	lwz r3, 0xac(r3)
+/* 8022D7C4 0022A5C4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d7b0
+
+# .text:0xFE8 | 0x8022D7C8 | size: 0x34
+.fn kar_plclearcheckerlib__near_8022d7c8, global
+/* 8022D7C8 0022A5C8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D7CC 0022A5CC  7C 08 02 A6 */	mflr r0
+/* 8022D7D0 0022A5D0  1C A3 09 0C */	mulli r5, r3, 0x90c
+/* 8022D7D4 0022A5D4  3C 80 80 56 */	lis r4, plclearchecker_player_template_table@ha
+/* 8022D7D8 0022A5D8  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D7DC 0022A5DC  38 04 A9 F0 */	addi r0, r4, plclearchecker_player_template_table@l
+/* 8022D7E0 0022A5E0  7C 80 2A 14 */	add r4, r0, r5
+/* 8022D7E4 0022A5E4  80 84 00 AC */	lwz r4, 0xac(r4)
+/* 8022D7E8 0022A5E8  48 04 84 1D */	bl kar_cpcmdscript_init_player_cpu_work
+/* 8022D7EC 0022A5EC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D7F0 0022A5F0  7C 08 03 A6 */	mtlr r0
+/* 8022D7F4 0022A5F4  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D7F8 0022A5F8  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d7c8
+
+# .text:0x101C | 0x8022D7FC | size: 0x54
+.fn kar_plclearcheckerlib__near_8022d7fc, global
+/* 8022D7FC 0022A5FC  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D800 0022A600  7C 08 02 A6 */	mflr r0
+/* 8022D804 0022A604  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D808 0022A608  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D80C 0022A60C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D810 0022A610  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D814 0022A614  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 8022D818 0022A618  7F E0 22 14 */	add r31, r0, r4
+/* 8022D81C 0022A61C  80 7F 00 3C */	lwz r3, 0x3c(r31)
+/* 8022D820 0022A620  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D824 0022A624  41 82 00 08 */	beq .L_8022D82C
+/* 8022D828 0022A628  4B F6 52 FD */	bl fn_80192B24
+.L_8022D82C:
+/* 8022D82C 0022A62C  80 7F 00 40 */	lwz r3, 0x40(r31)
+/* 8022D830 0022A630  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D834 0022A634  41 82 00 08 */	beq .L_8022D83C
+/* 8022D838 0022A638  4B F9 B3 71 */	bl fn_801C8BA8
+.L_8022D83C:
+/* 8022D83C 0022A63C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D840 0022A640  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 8022D844 0022A644  7C 08 03 A6 */	mtlr r0
+/* 8022D848 0022A648  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D84C 0022A64C  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d7fc
+
+# .text:0x1070 | 0x8022D850 | size: 0x3C
+.fn kar_plclearcheckerlib__near_8022d850, global
+/* 8022D850 0022A650  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D854 0022A654  7C 08 02 A6 */	mflr r0
+/* 8022D858 0022A658  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D85C 0022A65C  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D860 0022A660  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D864 0022A664  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D868 0022A668  7C 60 22 14 */	add r3, r0, r4
+/* 8022D86C 0022A66C  80 63 00 40 */	lwz r3, 0x40(r3)
+/* 8022D870 0022A670  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D874 0022A674  41 82 00 08 */	beq .L_8022D87C
+/* 8022D878 0022A678  4B F9 B3 6D */	bl fn_801C8BE4
+.L_8022D87C:
+/* 8022D87C 0022A67C  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D880 0022A680  7C 08 03 A6 */	mtlr r0
+/* 8022D884 0022A684  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D888 0022A688  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d850
+
+# .text:0x10AC | 0x8022D88C | size: 0x3C
+.fn kar_plclearcheckerlib__near_8022d88c, global
+/* 8022D88C 0022A68C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D890 0022A690  7C 08 02 A6 */	mflr r0
+/* 8022D894 0022A694  1C 83 09 0C */	mulli r4, r3, 0x90c
+/* 8022D898 0022A698  3C 60 80 56 */	lis r3, plclearchecker_player_template_table@ha
+/* 8022D89C 0022A69C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D8A0 0022A6A0  38 03 A9 F0 */	addi r0, r3, plclearchecker_player_template_table@l
+/* 8022D8A4 0022A6A4  7C 60 22 14 */	add r3, r0, r4
+/* 8022D8A8 0022A6A8  80 63 00 3C */	lwz r3, 0x3c(r3)
+/* 8022D8AC 0022A6AC  28 03 00 00 */	cmplwi r3, 0x0
+/* 8022D8B0 0022A6B0  41 82 00 08 */	beq .L_8022D8B8
+/* 8022D8B4 0022A6B4  4B F6 52 AD */	bl fn_80192B60
+.L_8022D8B8:
+/* 8022D8B8 0022A6B8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022D8BC 0022A6BC  7C 08 03 A6 */	mtlr r0
+/* 8022D8C0 0022A6C0  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022D8C4 0022A6C4  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d88c
+
+# .text:0x10E8 | 0x8022D8C8 | size: 0x5AC
+.fn kar_plclearcheckerlib__near_8022d8c8, global
+/* 8022D8C8 0022A6C8  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 8022D8CC 0022A6CC  7C 08 02 A6 */	mflr r0
+/* 8022D8D0 0022A6D0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 8022D8D4 0022A6D4  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 8022D8D8 0022A6D8  7C 7F 1B 78 */	mr r31, r3
+/* 8022D8DC 0022A6DC  4B FF F9 6D */	bl kar_plclearchecker_get_player_state
+/* 8022D8E0 0022A6E0  7C 60 1B 78 */	mr r0, r3
+/* 8022D8E4 0022A6E4  7F E3 FB 78 */	mr r3, r31
+/* 8022D8E8 0022A6E8  7C 1F 03 78 */	mr r31, r0
+/* 8022D8EC 0022A6EC  48 00 3F 39 */	bl kar_plclearcheckerlib__near_80231824
+/* 8022D8F0 0022A6F0  38 A0 00 0B */	li r5, 0xb
+/* 8022D8F4 0022A6F4  38 C0 00 0A */	li r6, 0xa
+/* 8022D8F8 0022A6F8  90 BF 03 60 */	stw r5, 0x360(r31)
+/* 8022D8FC 0022A6FC  54 C3 10 3A */	slwi r3, r6, 2
+/* 8022D900 0022A700  38 80 00 00 */	li r4, 0x0
+/* 8022D904 0022A704  20 06 00 0B */	subfic r0, r6, 0xb
+/* 8022D908 0022A708  90 BF 03 64 */	stw r5, 0x364(r31)
+/* 8022D90C 0022A70C  7C 7F 1A 14 */	add r3, r31, r3
+/* 8022D910 0022A710  90 BF 03 68 */	stw r5, 0x368(r31)
+/* 8022D914 0022A714  90 BF 03 6C */	stw r5, 0x36c(r31)
+/* 8022D918 0022A718  90 BF 03 70 */	stw r5, 0x370(r31)
+/* 8022D91C 0022A71C  90 BF 03 74 */	stw r5, 0x374(r31)
+/* 8022D920 0022A720  90 9F 03 34 */	stw r4, 0x334(r31)
+/* 8022D924 0022A724  90 9F 03 38 */	stw r4, 0x338(r31)
+/* 8022D928 0022A728  90 9F 03 3C */	stw r4, 0x33c(r31)
+/* 8022D92C 0022A72C  90 9F 03 40 */	stw r4, 0x340(r31)
+/* 8022D930 0022A730  90 9F 03 44 */	stw r4, 0x344(r31)
+/* 8022D934 0022A734  90 9F 03 48 */	stw r4, 0x348(r31)
+/* 8022D938 0022A738  90 9F 03 4C */	stw r4, 0x34c(r31)
+/* 8022D93C 0022A73C  90 9F 03 50 */	stw r4, 0x350(r31)
+/* 8022D940 0022A740  90 9F 03 54 */	stw r4, 0x354(r31)
+/* 8022D944 0022A744  90 9F 03 58 */	stw r4, 0x358(r31)
+/* 8022D948 0022A748  7C 09 03 A6 */	mtctr r0
+/* 8022D94C 0022A74C  2C 06 00 0B */	cmpwi r6, 0xb
+/* 8022D950 0022A750  40 80 00 10 */	bge .L_8022D960
+.L_8022D954:
+/* 8022D954 0022A754  90 83 03 34 */	stw r4, 0x334(r3)
+/* 8022D958 0022A758  38 63 00 04 */	addi r3, r3, 0x4
+/* 8022D95C 0022A75C  42 00 FF F8 */	bdnz .L_8022D954
+.L_8022D960:
+/* 8022D960 0022A760  38 C0 00 00 */	li r6, 0x0
+/* 8022D964 0022A764  88 7F 03 78 */	lbz r3, 0x378(r31)
+/* 8022D968 0022A768  50 C3 1E 38 */	rlwimi r3, r6, 3, 24, 28
+/* 8022D96C 0022A76C  38 00 00 03 */	li r0, 0x3
+/* 8022D970 0022A770  98 7F 03 78 */	stb r3, 0x378(r31)
+/* 8022D974 0022A774  7F E5 FB 78 */	mr r5, r31
+/* 8022D978 0022A778  88 7F 03 78 */	lbz r3, 0x378(r31)
+/* 8022D97C 0022A77C  50 C3 17 7A */	rlwimi r3, r6, 2, 29, 29
+/* 8022D980 0022A780  98 7F 03 78 */	stb r3, 0x378(r31)
+/* 8022D984 0022A784  88 7F 03 78 */	lbz r3, 0x378(r31)
+/* 8022D988 0022A788  50 C3 0F BC */	rlwimi r3, r6, 1, 30, 30
+/* 8022D98C 0022A78C  98 7F 03 78 */	stb r3, 0x378(r31)
+/* 8022D990 0022A790  88 7F 03 78 */	lbz r3, 0x378(r31)
+/* 8022D994 0022A794  50 C3 07 FE */	rlwimi r3, r6, 0, 31, 31
+/* 8022D998 0022A798  98 7F 03 78 */	stb r3, 0x378(r31)
+/* 8022D99C 0022A79C  B0 DF 03 7A */	sth r6, 0x37a(r31)
+/* 8022D9A0 0022A7A0  7C 09 03 A6 */	mtctr r0
+.L_8022D9A4:
+/* 8022D9A4 0022A7A4  38 80 00 00 */	li r4, 0x0
+/* 8022D9A8 0022A7A8  38 C6 00 08 */	addi r6, r6, 0x8
+/* 8022D9AC 0022A7AC  90 85 03 7C */	stw r4, 0x37c(r5)
+/* 8022D9B0 0022A7B0  90 85 03 E4 */	stw r4, 0x3e4(r5)
+/* 8022D9B4 0022A7B4  90 85 04 4C */	stw r4, 0x44c(r5)
+/* 8022D9B8 0022A7B8  90 85 03 80 */	stw r4, 0x380(r5)
+/* 8022D9BC 0022A7BC  90 85 03 E8 */	stw r4, 0x3e8(r5)
+/* 8022D9C0 0022A7C0  90 85 04 50 */	stw r4, 0x450(r5)
+/* 8022D9C4 0022A7C4  90 85 03 84 */	stw r4, 0x384(r5)
+/* 8022D9C8 0022A7C8  90 85 03 EC */	stw r4, 0x3ec(r5)
+/* 8022D9CC 0022A7CC  90 85 04 54 */	stw r4, 0x454(r5)
+/* 8022D9D0 0022A7D0  90 85 03 88 */	stw r4, 0x388(r5)
+/* 8022D9D4 0022A7D4  90 85 03 F0 */	stw r4, 0x3f0(r5)
+/* 8022D9D8 0022A7D8  90 85 04 58 */	stw r4, 0x458(r5)
+/* 8022D9DC 0022A7DC  90 85 03 8C */	stw r4, 0x38c(r5)
+/* 8022D9E0 0022A7E0  90 85 03 F4 */	stw r4, 0x3f4(r5)
+/* 8022D9E4 0022A7E4  90 85 04 5C */	stw r4, 0x45c(r5)
+/* 8022D9E8 0022A7E8  90 85 03 90 */	stw r4, 0x390(r5)
+/* 8022D9EC 0022A7EC  90 85 03 F8 */	stw r4, 0x3f8(r5)
+/* 8022D9F0 0022A7F0  90 85 04 60 */	stw r4, 0x460(r5)
+/* 8022D9F4 0022A7F4  90 85 03 94 */	stw r4, 0x394(r5)
+/* 8022D9F8 0022A7F8  90 85 03 FC */	stw r4, 0x3fc(r5)
+/* 8022D9FC 0022A7FC  90 85 04 64 */	stw r4, 0x464(r5)
+/* 8022DA00 0022A800  90 85 03 98 */	stw r4, 0x398(r5)
+/* 8022DA04 0022A804  90 85 04 00 */	stw r4, 0x400(r5)
+/* 8022DA08 0022A808  90 85 04 68 */	stw r4, 0x468(r5)
+/* 8022DA0C 0022A80C  38 A5 00 20 */	addi r5, r5, 0x20
+/* 8022DA10 0022A810  42 00 FF 94 */	bdnz .L_8022D9A4
+/* 8022DA14 0022A814  54 C3 10 3A */	slwi r3, r6, 2
+/* 8022DA18 0022A818  20 06 00 1A */	subfic r0, r6, 0x1a
+/* 8022DA1C 0022A81C  7C 7F 1A 14 */	add r3, r31, r3
+/* 8022DA20 0022A820  7C 09 03 A6 */	mtctr r0
+/* 8022DA24 0022A824  2C 06 00 1A */	cmpwi r6, 0x1a
+/* 8022DA28 0022A828  40 80 00 18 */	bge .L_8022DA40
+.L_8022DA2C:
+/* 8022DA2C 0022A82C  90 83 03 7C */	stw r4, 0x37c(r3)
+/* 8022DA30 0022A830  90 83 03 E4 */	stw r4, 0x3e4(r3)
+/* 8022DA34 0022A834  90 83 04 4C */	stw r4, 0x44c(r3)
+/* 8022DA38 0022A838  38 63 00 04 */	addi r3, r3, 0x4
+/* 8022DA3C 0022A83C  42 00 FF F0 */	bdnz .L_8022DA2C
+.L_8022DA40:
+/* 8022DA40 0022A840  38 60 00 00 */	li r3, 0x0
+/* 8022DA44 0022A844  38 00 00 02 */	li r0, 0x2
+/* 8022DA48 0022A848  90 7F 04 B4 */	stw r3, 0x4b4(r31)
+/* 8022DA4C 0022A84C  7C 65 1B 78 */	mr r5, r3
+/* 8022DA50 0022A850  7F E4 FB 78 */	mr r4, r31
+/* 8022DA54 0022A854  90 7F 04 B8 */	stw r3, 0x4b8(r31)
+/* 8022DA58 0022A858  90 7F 04 BC */	stw r3, 0x4bc(r31)
+/* 8022DA5C 0022A85C  90 7F 04 C0 */	stw r3, 0x4c0(r31)
+/* 8022DA60 0022A860  B0 7F 04 C4 */	sth r3, 0x4c4(r31)
+/* 8022DA64 0022A864  98 7F 05 DC */	stb r3, 0x5dc(r31)
+/* 8022DA68 0022A868  98 7F 05 DD */	stb r3, 0x5dd(r31)
+/* 8022DA6C 0022A86C  98 7F 05 DE */	stb r3, 0x5de(r31)
+/* 8022DA70 0022A870  98 7F 05 DF */	stb r3, 0x5df(r31)
+/* 8022DA74 0022A874  98 7F 05 E0 */	stb r3, 0x5e0(r31)
+/* 8022DA78 0022A878  98 7F 05 E1 */	stb r3, 0x5e1(r31)
+/* 8022DA7C 0022A87C  98 7F 05 E2 */	stb r3, 0x5e2(r31)
+/* 8022DA80 0022A880  98 7F 05 E3 */	stb r3, 0x5e3(r31)
+/* 8022DA84 0022A884  7C 09 03 A6 */	mtctr r0
+.L_8022DA88:
+/* 8022DA88 0022A888  90 64 04 C8 */	stw r3, 0x4c8(r4)
+/* 8022DA8C 0022A88C  38 A5 00 20 */	addi r5, r5, 0x20
+/* 8022DA90 0022A890  90 64 04 CC */	stw r3, 0x4cc(r4)
+/* 8022DA94 0022A894  90 64 04 D0 */	stw r3, 0x4d0(r4)
+/* 8022DA98 0022A898  90 64 04 D4 */	stw r3, 0x4d4(r4)
+/* 8022DA9C 0022A89C  90 64 04 D8 */	stw r3, 0x4d8(r4)
+/* 8022DAA0 0022A8A0  90 64 04 DC */	stw r3, 0x4dc(r4)
+/* 8022DAA4 0022A8A4  90 64 04 E0 */	stw r3, 0x4e0(r4)
+/* 8022DAA8 0022A8A8  90 64 04 E4 */	stw r3, 0x4e4(r4)
+/* 8022DAAC 0022A8AC  90 64 04 E8 */	stw r3, 0x4e8(r4)
+/* 8022DAB0 0022A8B0  90 64 04 EC */	stw r3, 0x4ec(r4)
+/* 8022DAB4 0022A8B4  90 64 04 F0 */	stw r3, 0x4f0(r4)
+/* 8022DAB8 0022A8B8  90 64 04 F4 */	stw r3, 0x4f4(r4)
+/* 8022DABC 0022A8BC  90 64 04 F8 */	stw r3, 0x4f8(r4)
+/* 8022DAC0 0022A8C0  90 64 04 FC */	stw r3, 0x4fc(r4)
+/* 8022DAC4 0022A8C4  90 64 05 00 */	stw r3, 0x500(r4)
+/* 8022DAC8 0022A8C8  90 64 05 04 */	stw r3, 0x504(r4)
+/* 8022DACC 0022A8CC  90 64 05 08 */	stw r3, 0x508(r4)
+/* 8022DAD0 0022A8D0  90 64 05 0C */	stw r3, 0x50c(r4)
+/* 8022DAD4 0022A8D4  90 64 05 10 */	stw r3, 0x510(r4)
+/* 8022DAD8 0022A8D8  90 64 05 14 */	stw r3, 0x514(r4)
+/* 8022DADC 0022A8DC  90 64 05 18 */	stw r3, 0x518(r4)
+/* 8022DAE0 0022A8E0  90 64 05 1C */	stw r3, 0x51c(r4)
+/* 8022DAE4 0022A8E4  90 64 05 20 */	stw r3, 0x520(r4)
+/* 8022DAE8 0022A8E8  90 64 05 24 */	stw r3, 0x524(r4)
+/* 8022DAEC 0022A8EC  90 64 05 28 */	stw r3, 0x528(r4)
+/* 8022DAF0 0022A8F0  90 64 05 2C */	stw r3, 0x52c(r4)
+/* 8022DAF4 0022A8F4  90 64 05 30 */	stw r3, 0x530(r4)
+/* 8022DAF8 0022A8F8  90 64 05 34 */	stw r3, 0x534(r4)
+/* 8022DAFC 0022A8FC  90 64 05 38 */	stw r3, 0x538(r4)
+/* 8022DB00 0022A900  90 64 05 3C */	stw r3, 0x53c(r4)
+/* 8022DB04 0022A904  90 64 05 40 */	stw r3, 0x540(r4)
+/* 8022DB08 0022A908  90 64 05 44 */	stw r3, 0x544(r4)
+/* 8022DB0C 0022A90C  38 84 00 80 */	addi r4, r4, 0x80
+/* 8022DB10 0022A910  42 00 FF 78 */	bdnz .L_8022DA88
+/* 8022DB14 0022A914  54 A3 10 3A */	slwi r3, r5, 2
+/* 8022DB18 0022A918  20 05 00 45 */	subfic r0, r5, 0x45
+/* 8022DB1C 0022A91C  7C 9F 1A 14 */	add r4, r31, r3
+/* 8022DB20 0022A920  38 60 00 00 */	li r3, 0x0
+/* 8022DB24 0022A924  7C 09 03 A6 */	mtctr r0
+/* 8022DB28 0022A928  2C 05 00 45 */	cmpwi r5, 0x45
+/* 8022DB2C 0022A92C  40 80 00 10 */	bge .L_8022DB3C
+.L_8022DB30:
+/* 8022DB30 0022A930  90 64 04 C8 */	stw r3, 0x4c8(r4)
+/* 8022DB34 0022A934  38 84 00 04 */	addi r4, r4, 0x4
+/* 8022DB38 0022A938  42 00 FF F8 */	bdnz .L_8022DB30
+.L_8022DB3C:
+/* 8022DB3C 0022A93C  38 E0 00 00 */	li r7, 0x0
+/* 8022DB40 0022A940  C0 02 C3 30 */	lfs f0, lbl_805E2A30@sda21(r0)
+/* 8022DB44 0022A944  90 FF 05 E4 */	stw r7, 0x5e4(r31)
+/* 8022DB48 0022A948  38 7F 06 54 */	addi r3, r31, 0x654
+/* 8022DB4C 0022A94C  38 80 00 00 */	li r4, 0x0
+/* 8022DB50 0022A950  38 A0 00 0D */	li r5, 0xd
+/* 8022DB54 0022A954  90 FF 05 E8 */	stw r7, 0x5e8(r31)
+/* 8022DB58 0022A958  90 FF 05 EC */	stw r7, 0x5ec(r31)
+/* 8022DB5C 0022A95C  90 FF 05 F0 */	stw r7, 0x5f0(r31)
+/* 8022DB60 0022A960  90 FF 05 F4 */	stw r7, 0x5f4(r31)
+/* 8022DB64 0022A964  90 FF 05 F8 */	stw r7, 0x5f8(r31)
+/* 8022DB68 0022A968  90 FF 06 00 */	stw r7, 0x600(r31)
+/* 8022DB6C 0022A96C  90 FF 05 FC */	stw r7, 0x5fc(r31)
+/* 8022DB70 0022A970  80 CD 07 B4 */	lwz r6, lbl_805DD894@sda21(r0)
+/* 8022DB74 0022A974  80 06 00 00 */	lwz r0, 0x0(r6)
+/* 8022DB78 0022A978  90 1F 06 04 */	stw r0, 0x604(r31)
+/* 8022DB7C 0022A97C  80 CD 07 B4 */	lwz r6, lbl_805DD894@sda21(r0)
+/* 8022DB80 0022A980  80 06 00 04 */	lwz r0, 0x4(r6)
+/* 8022DB84 0022A984  90 1F 06 08 */	stw r0, 0x608(r31)
+/* 8022DB88 0022A988  D0 1F 06 0C */	stfs f0, 0x60c(r31)
+/* 8022DB8C 0022A98C  D0 1F 06 10 */	stfs f0, 0x610(r31)
+/* 8022DB90 0022A990  D0 1F 06 14 */	stfs f0, 0x614(r31)
+/* 8022DB94 0022A994  D0 1F 06 18 */	stfs f0, 0x618(r31)
+/* 8022DB98 0022A998  D0 1F 06 1C */	stfs f0, 0x61c(r31)
+/* 8022DB9C 0022A99C  D0 1F 06 20 */	stfs f0, 0x620(r31)
+/* 8022DBA0 0022A9A0  D0 1F 06 38 */	stfs f0, 0x638(r31)
+/* 8022DBA4 0022A9A4  D0 1F 06 3C */	stfs f0, 0x63c(r31)
+/* 8022DBA8 0022A9A8  D0 1F 06 24 */	stfs f0, 0x624(r31)
+/* 8022DBAC 0022A9AC  D0 1F 06 28 */	stfs f0, 0x628(r31)
+/* 8022DBB0 0022A9B0  D0 1F 06 2C */	stfs f0, 0x62c(r31)
+/* 8022DBB4 0022A9B4  D0 1F 06 30 */	stfs f0, 0x630(r31)
+/* 8022DBB8 0022A9B8  D0 1F 06 34 */	stfs f0, 0x634(r31)
+/* 8022DBBC 0022A9BC  98 FF 06 40 */	stb r7, 0x640(r31)
+/* 8022DBC0 0022A9C0  98 FF 06 41 */	stb r7, 0x641(r31)
+/* 8022DBC4 0022A9C4  98 FF 06 42 */	stb r7, 0x642(r31)
+/* 8022DBC8 0022A9C8  98 FF 06 43 */	stb r7, 0x643(r31)
+/* 8022DBCC 0022A9CC  98 FF 06 44 */	stb r7, 0x644(r31)
+/* 8022DBD0 0022A9D0  98 FF 06 45 */	stb r7, 0x645(r31)
+/* 8022DBD4 0022A9D4  98 FF 06 46 */	stb r7, 0x646(r31)
+/* 8022DBD8 0022A9D8  98 FF 06 47 */	stb r7, 0x647(r31)
+/* 8022DBDC 0022A9DC  98 FF 06 48 */	stb r7, 0x648(r31)
+/* 8022DBE0 0022A9E0  98 FF 06 49 */	stb r7, 0x649(r31)
+/* 8022DBE4 0022A9E4  98 FF 06 4A */	stb r7, 0x64a(r31)
+/* 8022DBE8 0022A9E8  98 FF 06 4B */	stb r7, 0x64b(r31)
+/* 8022DBEC 0022A9EC  98 FF 06 4C */	stb r7, 0x64c(r31)
+/* 8022DBF0 0022A9F0  98 FF 06 4D */	stb r7, 0x64d(r31)
+/* 8022DBF4 0022A9F4  98 FF 06 4E */	stb r7, 0x64e(r31)
+/* 8022DBF8 0022A9F8  98 FF 06 4F */	stb r7, 0x64f(r31)
+/* 8022DBFC 0022A9FC  98 FF 06 50 */	stb r7, 0x650(r31)
+/* 8022DC00 0022AA00  98 FF 06 51 */	stb r7, 0x651(r31)
+/* 8022DC04 0022AA04  98 FF 06 52 */	stb r7, 0x652(r31)
+/* 8022DC08 0022AA08  98 FF 06 53 */	stb r7, 0x653(r31)
+/* 8022DC0C 0022AA0C  4B DD 54 F5 */	bl memset
+/* 8022DC10 0022AA10  38 7F 06 61 */	addi r3, r31, 0x661
+/* 8022DC14 0022AA14  38 80 00 00 */	li r4, 0x0
+/* 8022DC18 0022AA18  38 A0 00 3F */	li r5, 0x3f
+/* 8022DC1C 0022AA1C  4B DD 54 E5 */	bl memset
+/* 8022DC20 0022AA20  38 60 00 00 */	li r3, 0x0
+/* 8022DC24 0022AA24  38 00 00 03 */	li r0, 0x3
+/* 8022DC28 0022AA28  90 7F 06 A0 */	stw r3, 0x6a0(r31)
+/* 8022DC2C 0022AA2C  7F E4 FB 78 */	mr r4, r31
+/* 8022DC30 0022AA30  90 7F 06 A4 */	stw r3, 0x6a4(r31)
+/* 8022DC34 0022AA34  7C 09 03 A6 */	mtctr r0
+.L_8022DC38:
+/* 8022DC38 0022AA38  90 64 06 A8 */	stw r3, 0x6a8(r4)
+/* 8022DC3C 0022AA3C  90 64 06 AC */	stw r3, 0x6ac(r4)
+/* 8022DC40 0022AA40  90 64 06 B0 */	stw r3, 0x6b0(r4)
+/* 8022DC44 0022AA44  90 64 06 B4 */	stw r3, 0x6b4(r4)
+/* 8022DC48 0022AA48  90 64 06 B8 */	stw r3, 0x6b8(r4)
+/* 8022DC4C 0022AA4C  90 64 06 BC */	stw r3, 0x6bc(r4)
+/* 8022DC50 0022AA50  90 64 06 C0 */	stw r3, 0x6c0(r4)
+/* 8022DC54 0022AA54  90 64 06 C4 */	stw r3, 0x6c4(r4)
+/* 8022DC58 0022AA58  90 64 06 C8 */	stw r3, 0x6c8(r4)
+/* 8022DC5C 0022AA5C  90 64 06 CC */	stw r3, 0x6cc(r4)
+/* 8022DC60 0022AA60  90 64 06 D0 */	stw r3, 0x6d0(r4)
+/* 8022DC64 0022AA64  90 64 06 D4 */	stw r3, 0x6d4(r4)
+/* 8022DC68 0022AA68  90 64 06 D8 */	stw r3, 0x6d8(r4)
+/* 8022DC6C 0022AA6C  90 64 06 DC */	stw r3, 0x6dc(r4)
+/* 8022DC70 0022AA70  90 64 06 E0 */	stw r3, 0x6e0(r4)
+/* 8022DC74 0022AA74  90 64 06 E4 */	stw r3, 0x6e4(r4)
+/* 8022DC78 0022AA78  90 64 06 E8 */	stw r3, 0x6e8(r4)
+/* 8022DC7C 0022AA7C  90 64 06 EC */	stw r3, 0x6ec(r4)
+/* 8022DC80 0022AA80  90 64 06 F0 */	stw r3, 0x6f0(r4)
+/* 8022DC84 0022AA84  90 64 06 F4 */	stw r3, 0x6f4(r4)
+/* 8022DC88 0022AA88  90 64 06 F8 */	stw r3, 0x6f8(r4)
+/* 8022DC8C 0022AA8C  90 64 06 FC */	stw r3, 0x6fc(r4)
+/* 8022DC90 0022AA90  90 64 07 00 */	stw r3, 0x700(r4)
+/* 8022DC94 0022AA94  90 64 07 04 */	stw r3, 0x704(r4)
+/* 8022DC98 0022AA98  38 84 00 60 */	addi r4, r4, 0x60
+/* 8022DC9C 0022AA9C  42 00 FF 9C */	bdnz .L_8022DC38
+/* 8022DCA0 0022AAA0  38 A0 00 00 */	li r5, 0x0
+/* 8022DCA4 0022AAA4  38 00 FF FF */	li r0, -0x1
+/* 8022DCA8 0022AAA8  90 BF 07 C8 */	stw r5, 0x7c8(r31)
+/* 8022DCAC 0022AAAC  38 60 00 01 */	li r3, 0x1
+/* 8022DCB0 0022AAB0  90 BF 07 CC */	stw r5, 0x7cc(r31)
+/* 8022DCB4 0022AAB4  90 BF 07 D0 */	stw r5, 0x7d0(r31)
+/* 8022DCB8 0022AAB8  90 BF 07 E0 */	stw r5, 0x7e0(r31)
+/* 8022DCBC 0022AABC  90 BF 07 D4 */	stw r5, 0x7d4(r31)
+/* 8022DCC0 0022AAC0  90 BF 07 D8 */	stw r5, 0x7d8(r31)
+/* 8022DCC4 0022AAC4  90 BF 07 DC */	stw r5, 0x7dc(r31)
+/* 8022DCC8 0022AAC8  90 BF 07 E4 */	stw r5, 0x7e4(r31)
+/* 8022DCCC 0022AACC  90 BF 07 E8 */	stw r5, 0x7e8(r31)
+/* 8022DCD0 0022AAD0  90 BF 07 EC */	stw r5, 0x7ec(r31)
+/* 8022DCD4 0022AAD4  88 9F 08 4D */	lbz r4, 0x84d(r31)
+/* 8022DCD8 0022AAD8  50 A4 3E 30 */	rlwimi r4, r5, 7, 24, 24
+/* 8022DCDC 0022AADC  98 9F 08 4D */	stb r4, 0x84d(r31)
+/* 8022DCE0 0022AAE0  90 BF 07 F0 */	stw r5, 0x7f0(r31)
+/* 8022DCE4 0022AAE4  90 BF 07 F4 */	stw r5, 0x7f4(r31)
+/* 8022DCE8 0022AAE8  90 BF 07 F8 */	stw r5, 0x7f8(r31)
+/* 8022DCEC 0022AAEC  90 BF 07 FC */	stw r5, 0x7fc(r31)
+/* 8022DCF0 0022AAF0  90 BF 08 00 */	stw r5, 0x800(r31)
+/* 8022DCF4 0022AAF4  90 BF 08 04 */	stw r5, 0x804(r31)
+/* 8022DCF8 0022AAF8  90 BF 08 08 */	stw r5, 0x808(r31)
+/* 8022DCFC 0022AAFC  90 BF 08 0C */	stw r5, 0x80c(r31)
+/* 8022DD00 0022AB00  90 BF 08 10 */	stw r5, 0x810(r31)
+/* 8022DD04 0022AB04  90 BF 08 14 */	stw r5, 0x814(r31)
+/* 8022DD08 0022AB08  90 BF 08 18 */	stw r5, 0x818(r31)
+/* 8022DD0C 0022AB0C  90 BF 08 1C */	stw r5, 0x81c(r31)
+/* 8022DD10 0022AB10  90 BF 08 20 */	stw r5, 0x820(r31)
+/* 8022DD14 0022AB14  90 BF 08 24 */	stw r5, 0x824(r31)
+/* 8022DD18 0022AB18  90 BF 08 28 */	stw r5, 0x828(r31)
+/* 8022DD1C 0022AB1C  90 BF 08 2C */	stw r5, 0x82c(r31)
+/* 8022DD20 0022AB20  90 BF 08 30 */	stw r5, 0x830(r31)
+/* 8022DD24 0022AB24  90 BF 08 34 */	stw r5, 0x834(r31)
+/* 8022DD28 0022AB28  90 BF 08 38 */	stw r5, 0x838(r31)
+/* 8022DD2C 0022AB2C  90 BF 08 3C */	stw r5, 0x83c(r31)
+/* 8022DD30 0022AB30  90 1F 08 40 */	stw r0, 0x840(r31)
+/* 8022DD34 0022AB34  90 BF 08 48 */	stw r5, 0x848(r31)
+/* 8022DD38 0022AB38  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD3C 0022AB3C  50 A0 3E 30 */	rlwimi r0, r5, 7, 24, 24
+/* 8022DD40 0022AB40  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD44 0022AB44  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD48 0022AB48  50 A0 36 72 */	rlwimi r0, r5, 6, 25, 25
+/* 8022DD4C 0022AB4C  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD50 0022AB50  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD54 0022AB54  50 A0 2E B4 */	rlwimi r0, r5, 5, 26, 26
+/* 8022DD58 0022AB58  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD5C 0022AB5C  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD60 0022AB60  50 60 26 F6 */	rlwimi r0, r3, 4, 27, 27
+/* 8022DD64 0022AB64  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD68 0022AB68  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD6C 0022AB6C  50 A0 1F 38 */	rlwimi r0, r5, 3, 28, 28
+/* 8022DD70 0022AB70  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD74 0022AB74  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD78 0022AB78  50 A0 17 7A */	rlwimi r0, r5, 2, 29, 29
+/* 8022DD7C 0022AB7C  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD80 0022AB80  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD84 0022AB84  50 A0 0F BC */	rlwimi r0, r5, 1, 30, 30
+/* 8022DD88 0022AB88  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD8C 0022AB8C  88 1F 08 4C */	lbz r0, 0x84c(r31)
+/* 8022DD90 0022AB90  50 A0 07 FE */	rlwimi r0, r5, 0, 31, 31
+/* 8022DD94 0022AB94  98 1F 08 4C */	stb r0, 0x84c(r31)
+/* 8022DD98 0022AB98  90 BF 08 44 */	stw r5, 0x844(r31)
+/* 8022DD9C 0022AB9C  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDA0 0022ABA0  50 A0 36 72 */	rlwimi r0, r5, 6, 25, 25
+/* 8022DDA4 0022ABA4  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDA8 0022ABA8  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDAC 0022ABAC  50 A0 2E B4 */	rlwimi r0, r5, 5, 26, 26
+/* 8022DDB0 0022ABB0  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDB4 0022ABB4  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDB8 0022ABB8  50 A0 26 F6 */	rlwimi r0, r5, 4, 27, 27
+/* 8022DDBC 0022ABBC  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDC0 0022ABC0  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDC4 0022ABC4  50 A0 1F 38 */	rlwimi r0, r5, 3, 28, 28
+/* 8022DDC8 0022ABC8  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDCC 0022ABCC  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDD0 0022ABD0  50 A0 17 7A */	rlwimi r0, r5, 2, 29, 29
+/* 8022DDD4 0022ABD4  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDD8 0022ABD8  88 1F 08 4D */	lbz r0, 0x84d(r31)
+/* 8022DDDC 0022ABDC  50 A0 0F BC */	rlwimi r0, r5, 1, 30, 30
+/* 8022DDE0 0022ABE0  98 1F 08 4D */	stb r0, 0x84d(r31)
+/* 8022DDE4 0022ABE4  90 BF 08 50 */	stw r5, 0x850(r31)
+/* 8022DDE8 0022ABE8  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DDEC 0022ABEC  50 A0 3E 30 */	rlwimi r0, r5, 7, 24, 24
+/* 8022DDF0 0022ABF0  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DDF4 0022ABF4  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DDF8 0022ABF8  50 A0 36 72 */	rlwimi r0, r5, 6, 25, 25
+/* 8022DDFC 0022ABFC  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE00 0022AC00  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE04 0022AC04  50 A0 2E B4 */	rlwimi r0, r5, 5, 26, 26
+/* 8022DE08 0022AC08  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE0C 0022AC0C  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE10 0022AC10  50 A0 26 F6 */	rlwimi r0, r5, 4, 27, 27
+/* 8022DE14 0022AC14  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE18 0022AC18  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE1C 0022AC1C  50 A0 1F 38 */	rlwimi r0, r5, 3, 28, 28
+/* 8022DE20 0022AC20  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE24 0022AC24  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE28 0022AC28  50 A0 17 7A */	rlwimi r0, r5, 2, 29, 29
+/* 8022DE2C 0022AC2C  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE30 0022AC30  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE34 0022AC34  50 A0 0F BC */	rlwimi r0, r5, 1, 30, 30
+/* 8022DE38 0022AC38  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE3C 0022AC3C  88 1F 08 54 */	lbz r0, 0x854(r31)
+/* 8022DE40 0022AC40  50 A0 07 FE */	rlwimi r0, r5, 0, 31, 31
+/* 8022DE44 0022AC44  98 1F 08 54 */	stb r0, 0x854(r31)
+/* 8022DE48 0022AC48  88 1F 08 55 */	lbz r0, 0x855(r31)
+/* 8022DE4C 0022AC4C  50 A0 3E 30 */	rlwimi r0, r5, 7, 24, 24
+/* 8022DE50 0022AC50  98 1F 08 55 */	stb r0, 0x855(r31)
+/* 8022DE54 0022AC54  88 1F 08 55 */	lbz r0, 0x855(r31)
+/* 8022DE58 0022AC58  50 A0 36 72 */	rlwimi r0, r5, 6, 25, 25
+/* 8022DE5C 0022AC5C  98 1F 08 55 */	stb r0, 0x855(r31)
+/* 8022DE60 0022AC60  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 8022DE64 0022AC64  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 8022DE68 0022AC68  7C 08 03 A6 */	mtlr r0
+/* 8022DE6C 0022AC6C  38 21 00 10 */	addi r1, r1, 0x10
+/* 8022DE70 0022AC70  4E 80 00 20 */	blr
+.endfn kar_plclearcheckerlib__near_8022d8c8
+
+# .text:0x1694 | 0x8022DE74 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_840, global
 /* 8022DE74 0022AC74  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022DE78 0022AC78  7C 08 02 A6 */	mflr r0
@@ -31,7 +1882,7 @@
 /* 8022DEC4 0022ACC4  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_840
 
-# .text:0x54 | 0x8022DEC8 | size: 0x54
+# .text:0x16E8 | 0x8022DEC8 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_844, global
 /* 8022DEC8 0022ACC8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022DECC 0022ACCC  7C 08 02 A6 */	mflr r0
@@ -57,7 +1908,7 @@
 /* 8022DF18 0022AD18  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_844
 
-# .text:0xA8 | 0x8022DF1C | size: 0x15C
+# .text:0x173C | 0x8022DF1C | size: 0x15C
 .fn kar_plclearcheckerlib__near_8022df1c, global
 /* 8022DF1C 0022AD1C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022DF20 0022AD20  7C 08 02 A6 */	mflr r0
@@ -160,7 +2011,7 @@
 /* 8022E074 0022AE74  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022df1c
 
-# .text:0x204 | 0x8022E078 | size: 0x58
+# .text:0x1898 | 0x8022E078 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit7, global
 /* 8022E078 0022AE78  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E07C 0022AE7C  7C 08 02 A6 */	mflr r0
@@ -187,7 +2038,7 @@
 /* 8022E0CC 0022AECC  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit7
 
-# .text:0x25C | 0x8022E0D0 | size: 0x58
+# .text:0x18F0 | 0x8022E0D0 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit5, global
 /* 8022E0D0 0022AED0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E0D4 0022AED4  7C 08 02 A6 */	mflr r0
@@ -214,7 +2065,7 @@
 /* 8022E124 0022AF24  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit5
 
-# .text:0x2B4 | 0x8022E128 | size: 0x58
+# .text:0x1948 | 0x8022E128 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit6, global
 /* 8022E128 0022AF28  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E12C 0022AF2C  7C 08 02 A6 */	mflr r0
@@ -241,7 +2092,7 @@
 /* 8022E17C 0022AF7C  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit6
 
-# .text:0x30C | 0x8022E180 | size: 0x58
+# .text:0x19A0 | 0x8022E180 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit4, global
 /* 8022E180 0022AF80  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E184 0022AF84  7C 08 02 A6 */	mflr r0
@@ -268,7 +2119,7 @@
 /* 8022E1D4 0022AFD4  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit4
 
-# .text:0x364 | 0x8022E1D8 | size: 0x58
+# .text:0x19F8 | 0x8022E1D8 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit3, global
 /* 8022E1D8 0022AFD8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E1DC 0022AFDC  7C 08 02 A6 */	mflr r0
@@ -295,7 +2146,7 @@
 /* 8022E22C 0022B02C  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit3
 
-# .text:0x3BC | 0x8022E230 | size: 0x58
+# .text:0x1A50 | 0x8022E230 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit2, global
 /* 8022E230 0022B030  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E234 0022B034  7C 08 02 A6 */	mflr r0
@@ -322,7 +2173,7 @@
 /* 8022E284 0022B084  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit2
 
-# .text:0x414 | 0x8022E288 | size: 0x58
+# .text:0x1AA8 | 0x8022E288 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit1, global
 /* 8022E288 0022B088  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E28C 0022B08C  7C 08 02 A6 */	mflr r0
@@ -349,7 +2200,7 @@
 /* 8022E2DC 0022B0DC  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit1
 
-# .text:0x46C | 0x8022E2E0 | size: 0x58
+# .text:0x1B00 | 0x8022E2E0 | size: 0x58
 .fn kar_plclearchecker_get_flag_854_bit0, global
 /* 8022E2E0 0022B0E0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E2E4 0022B0E4  7C 08 02 A6 */	mflr r0
@@ -376,7 +2227,7 @@
 /* 8022E334 0022B134  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_854_bit0
 
-# .text:0x4C4 | 0x8022E338 | size: 0x58
+# .text:0x1B58 | 0x8022E338 | size: 0x58
 .fn kar_plclearchecker_get_flag_855_bit7, global
 /* 8022E338 0022B138  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E33C 0022B13C  7C 08 02 A6 */	mflr r0
@@ -403,7 +2254,7 @@
 /* 8022E38C 0022B18C  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_855_bit7
 
-# .text:0x51C | 0x8022E390 | size: 0x54
+# .text:0x1BB0 | 0x8022E390 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_7d4, global
 /* 8022E390 0022B190  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E394 0022B194  7C 08 02 A6 */	mflr r0
@@ -429,7 +2280,7 @@
 /* 8022E3E0 0022B1E0  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_7d4
 
-# .text:0x570 | 0x8022E3E4 | size: 0x54
+# .text:0x1C04 | 0x8022E3E4 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_7d8, global
 /* 8022E3E4 0022B1E4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E3E8 0022B1E8  7C 08 02 A6 */	mflr r0
@@ -455,7 +2306,7 @@
 /* 8022E434 0022B234  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_7d8
 
-# .text:0x5C4 | 0x8022E438 | size: 0x54
+# .text:0x1C58 | 0x8022E438 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_7fc, global
 /* 8022E438 0022B238  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E43C 0022B23C  7C 08 02 A6 */	mflr r0
@@ -481,7 +2332,7 @@
 /* 8022E488 0022B288  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_7fc
 
-# .text:0x618 | 0x8022E48C | size: 0x54
+# .text:0x1CAC | 0x8022E48C | size: 0x54
 .fn kar_plclearchecker_get_state_u32_82c, global
 /* 8022E48C 0022B28C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E490 0022B290  7C 08 02 A6 */	mflr r0
@@ -507,7 +2358,7 @@
 /* 8022E4DC 0022B2DC  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_82c
 
-# .text:0x66C | 0x8022E4E0 | size: 0x1D4
+# .text:0x1D00 | 0x8022E4E0 | size: 0x1D4
 .fn kar_plclearchecker_update_primary_flags, global
 /* 8022E4E0 0022B2E0  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022E4E4 0022B2E4  7C 08 02 A6 */	mflr r0
@@ -642,7 +2493,7 @@
 /* 8022E6B0 0022B4B0  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_update_primary_flags
 
-# .text:0x840 | 0x8022E6B4 | size: 0xD4
+# .text:0x1ED4 | 0x8022E6B4 | size: 0xD4
 .fn kar_plclearchecker_update_secondary_flags, global
 /* 8022E6B4 0022B4B4  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022E6B8 0022B4B8  7C 08 02 A6 */	mflr r0
@@ -704,7 +2555,7 @@
 /* 8022E784 0022B584  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_update_secondary_flags
 
-# .text:0x914 | 0x8022E788 | size: 0x58
+# .text:0x1FA8 | 0x8022E788 | size: 0x58
 .fn kar_plclearchecker_get_flag_84c_bit5, global
 /* 8022E788 0022B588  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E78C 0022B58C  7C 08 02 A6 */	mflr r0
@@ -731,7 +2582,7 @@
 /* 8022E7DC 0022B5DC  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_84c_bit5
 
-# .text:0x96C | 0x8022E7E0 | size: 0x58
+# .text:0x2000 | 0x8022E7E0 | size: 0x58
 .fn kar_plclearchecker_get_flag_84d_bit6, global
 /* 8022E7E0 0022B5E0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E7E4 0022B5E4  7C 08 02 A6 */	mflr r0
@@ -758,7 +2609,7 @@
 /* 8022E834 0022B634  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_flag_84d_bit6
 
-# .text:0x9C4 | 0x8022E838 | size: 0x54
+# .text:0x2058 | 0x8022E838 | size: 0x54
 .fn kar_plclearchecker_get_state_u32_81c, global
 /* 8022E838 0022B638  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022E83C 0022B63C  7C 08 02 A6 */	mflr r0
@@ -784,7 +2635,7 @@
 /* 8022E888 0022B688  4E 80 00 20 */	blr
 .endfn kar_plclearchecker_get_state_u32_81c
 
-# .text:0xA18 | 0x8022E88C | size: 0x184
+# .text:0x20AC | 0x8022E88C | size: 0x184
 .fn kar_plclearcheckerlib__near_8022e88c, global
 /* 8022E88C 0022B68C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022E890 0022B690  7C 08 02 A6 */	mflr r0
@@ -891,7 +2742,7 @@
 /* 8022EA0C 0022B80C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022e88c
 
-# .text:0xB9C | 0x8022EA10 | size: 0x88
+# .text:0x2230 | 0x8022EA10 | size: 0x88
 .fn kar_plclearcheckerlib__near_8022ea10, global
 /* 8022EA10 0022B810  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EA14 0022B814  7C 08 02 A6 */	mflr r0
@@ -931,7 +2782,7 @@
 /* 8022EA94 0022B894  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ea10
 
-# .text:0xC24 | 0x8022EA98 | size: 0x78
+# .text:0x22B8 | 0x8022EA98 | size: 0x78
 .fn kar_plclearcheckerlib__8022ea98, global
 /* 8022EA98 0022B898  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EA9C 0022B89C  7C 08 02 A6 */	mflr r0
@@ -968,7 +2819,7 @@
 /* 8022EB0C 0022B90C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022ea98
 
-# .text:0xC9C | 0x8022EB10 | size: 0x78
+# .text:0x2330 | 0x8022EB10 | size: 0x78
 .fn kar_plclearcheckerlib__8022eb10, global
 /* 8022EB10 0022B910  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EB14 0022B914  7C 08 02 A6 */	mflr r0
@@ -1005,7 +2856,7 @@
 /* 8022EB84 0022B984  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022eb10
 
-# .text:0xD14 | 0x8022EB88 | size: 0x54
+# .text:0x23A8 | 0x8022EB88 | size: 0x54
 .fn kar_plclearcheckerlib__8022eb88, global
 /* 8022EB88 0022B988  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EB8C 0022B98C  7C 08 02 A6 */	mflr r0
@@ -1031,7 +2882,7 @@
 /* 8022EBD8 0022B9D8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022eb88
 
-# .text:0xD68 | 0x8022EBDC | size: 0x58
+# .text:0x23FC | 0x8022EBDC | size: 0x58
 .fn kar_plclearcheckerlib__8022ebdc, global
 /* 8022EBDC 0022B9DC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EBE0 0022B9E0  7C 08 02 A6 */	mflr r0
@@ -1058,7 +2909,7 @@
 /* 8022EC30 0022BA30  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022ebdc
 
-# .text:0xDC0 | 0x8022EC34 | size: 0x50
+# .text:0x2454 | 0x8022EC34 | size: 0x50
 .fn kar_plclearcheckerlib__8022ec34, global
 /* 8022EC34 0022BA34  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EC38 0022BA38  7C 08 02 A6 */	mflr r0
@@ -1083,7 +2934,7 @@
 /* 8022EC80 0022BA80  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022ec34
 
-# .text:0xE10 | 0x8022EC84 | size: 0x54
+# .text:0x24A4 | 0x8022EC84 | size: 0x54
 .fn kar_plclearcheckerlib__near_8022ec84, global
 /* 8022EC84 0022BA84  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EC88 0022BA88  7C 08 02 A6 */	mflr r0
@@ -1109,7 +2960,7 @@
 /* 8022ECD4 0022BAD4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ec84
 
-# .text:0xE64 | 0x8022ECD8 | size: 0x40
+# .text:0x24F8 | 0x8022ECD8 | size: 0x40
 .fn kar_plclearcheckerlib__near_8022ecd8, global
 /* 8022ECD8 0022BAD8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022ECDC 0022BADC  7C 08 02 A6 */	mflr r0
@@ -1130,7 +2981,7 @@
 /* 8022ED14 0022BB14  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ecd8
 
-# .text:0xEA4 | 0x8022ED18 | size: 0x38
+# .text:0x2538 | 0x8022ED18 | size: 0x38
 .fn kar_plclearcheckerlib__near_8022ed18, global
 /* 8022ED18 0022BB18  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022ED1C 0022BB1C  7C 08 02 A6 */	mflr r0
@@ -1149,7 +3000,7 @@
 /* 8022ED4C 0022BB4C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ed18
 
-# .text:0xEDC | 0x8022ED50 | size: 0x58
+# .text:0x2570 | 0x8022ED50 | size: 0x58
 .fn kar_plclearcheckerlib__8022ed50, global
 /* 8022ED50 0022BB50  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022ED54 0022BB54  7C 08 02 A6 */	mflr r0
@@ -1176,7 +3027,7 @@
 /* 8022EDA4 0022BBA4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022ed50
 
-# .text:0xF34 | 0x8022EDA8 | size: 0x58
+# .text:0x25C8 | 0x8022EDA8 | size: 0x58
 .fn kar_plclearcheckerlib__8022eda8, global
 /* 8022EDA8 0022BBA8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EDAC 0022BBAC  7C 08 02 A6 */	mflr r0
@@ -1203,7 +3054,7 @@
 /* 8022EDFC 0022BBFC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022eda8
 
-# .text:0xF8C | 0x8022EE00 | size: 0x350
+# .text:0x2620 | 0x8022EE00 | size: 0x350
 .fn kar_plclearcheckerlib__near_8022ee00, global
 /* 8022EE00 0022BC00  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022EE04 0022BC04  7C 08 02 A6 */	mflr r0
@@ -1448,7 +3299,7 @@
 /* 8022F14C 0022BF4C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ee00
 
-# .text:0x12DC | 0x8022F150 | size: 0x4C
+# .text:0x2970 | 0x8022F150 | size: 0x4C
 .fn kar_plclearcheckerlib__near_8022f150, global
 /* 8022F150 0022BF50  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F154 0022BF54  7C 08 02 A6 */	mflr r0
@@ -1472,7 +3323,7 @@
 /* 8022F198 0022BF98  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022f150
 
-# .text:0x1328 | 0x8022F19C | size: 0x104
+# .text:0x29BC | 0x8022F19C | size: 0x104
 .fn kar_plclearcheckerlib__8022f19c, global
 /* 8022F19C 0022BF9C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F1A0 0022BFA0  7C 08 02 A6 */	mflr r0
@@ -1549,7 +3400,7 @@
 /* 8022F29C 0022C09C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f19c
 
-# .text:0x142C | 0x8022F2A0 | size: 0x104
+# .text:0x2AC0 | 0x8022F2A0 | size: 0x104
 .fn kar_plclearcheckerlib__8022f2a0, global
 /* 8022F2A0 0022C0A0  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F2A4 0022C0A4  7C 08 02 A6 */	mflr r0
@@ -1626,7 +3477,7 @@
 /* 8022F3A0 0022C1A0  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f2a0
 
-# .text:0x1530 | 0x8022F3A4 | size: 0x74
+# .text:0x2BC4 | 0x8022F3A4 | size: 0x74
 .fn kar_plclearcheckerlib__8022f3a4, global
 /* 8022F3A4 0022C1A4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F3A8 0022C1A8  7C 08 02 A6 */	mflr r0
@@ -1660,7 +3511,7 @@
 /* 8022F414 0022C214  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f3a4
 
-# .text:0x15A4 | 0x8022F418 | size: 0x54
+# .text:0x2C38 | 0x8022F418 | size: 0x54
 .fn kar_plclearcheckerlib__8022f418, global
 /* 8022F418 0022C218  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F41C 0022C21C  7C 08 02 A6 */	mflr r0
@@ -1686,7 +3537,7 @@
 /* 8022F468 0022C268  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f418
 
-# .text:0x15F8 | 0x8022F46C | size: 0x54
+# .text:0x2C8C | 0x8022F46C | size: 0x54
 .fn kar_plclearcheckerlib__8022f46c, global
 /* 8022F46C 0022C26C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F470 0022C270  7C 08 02 A6 */	mflr r0
@@ -1712,7 +3563,7 @@
 /* 8022F4BC 0022C2BC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f46c
 
-# .text:0x164C | 0x8022F4C0 | size: 0x54
+# .text:0x2CE0 | 0x8022F4C0 | size: 0x54
 .fn kar_plclearcheckerlib__8022f4c0, global
 /* 8022F4C0 0022C2C0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F4C4 0022C2C4  7C 08 02 A6 */	mflr r0
@@ -1738,7 +3589,7 @@
 /* 8022F510 0022C310  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f4c0
 
-# .text:0x16A0 | 0x8022F514 | size: 0x54
+# .text:0x2D34 | 0x8022F514 | size: 0x54
 .fn kar_plclearcheckerlib__8022f514, global
 /* 8022F514 0022C314  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F518 0022C318  7C 08 02 A6 */	mflr r0
@@ -1764,7 +3615,7 @@
 /* 8022F564 0022C364  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f514
 
-# .text:0x16F4 | 0x8022F568 | size: 0x54
+# .text:0x2D88 | 0x8022F568 | size: 0x54
 .fn kar_plclearcheckerlib__8022f568, global
 /* 8022F568 0022C368  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022F56C 0022C36C  7C 08 02 A6 */	mflr r0
@@ -1790,7 +3641,7 @@
 /* 8022F5B8 0022C3B8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f568
 
-# .text:0x1748 | 0x8022F5BC | size: 0x8C
+# .text:0x2DDC | 0x8022F5BC | size: 0x8C
 .fn kar_plclearcheckerlib__near_8022f5bc, global
 /* 8022F5BC 0022C3BC  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F5C0 0022C3C0  7C 08 02 A6 */	mflr r0
@@ -1831,7 +3682,7 @@
 /* 8022F644 0022C444  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022f5bc
 
-# .text:0x17D4 | 0x8022F648 | size: 0x250
+# .text:0x2E68 | 0x8022F648 | size: 0x250
 .fn kar_plclearcheckerlib__near_8022f648, global
 /* 8022F648 0022C448  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F64C 0022C44C  7C 08 02 A6 */	mflr r0
@@ -1997,7 +3848,7 @@
 /* 8022F894 0022C694  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022f648
 
-# .text:0x1A24 | 0x8022F898 | size: 0x88
+# .text:0x30B8 | 0x8022F898 | size: 0x88
 .fn kar_plclearcheckerlib__8022f898, global
 /* 8022F898 0022C698  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F89C 0022C69C  7C 08 02 A6 */	mflr r0
@@ -2037,7 +3888,7 @@
 /* 8022F91C 0022C71C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f898
 
-# .text:0x1AAC | 0x8022F920 | size: 0x9C
+# .text:0x3140 | 0x8022F920 | size: 0x9C
 .fn kar_plclearcheckerlib__8022f920, global
 /* 8022F920 0022C720  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F924 0022C724  7C 08 02 A6 */	mflr r0
@@ -2083,7 +3934,7 @@
 /* 8022F9B8 0022C7B8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f920
 
-# .text:0x1B48 | 0x8022F9BC | size: 0x9C
+# .text:0x31DC | 0x8022F9BC | size: 0x9C
 .fn kar_plclearcheckerlib__8022f9bc, global
 /* 8022F9BC 0022C7BC  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022F9C0 0022C7C0  7C 08 02 A6 */	mflr r0
@@ -2129,7 +3980,7 @@
 /* 8022FA54 0022C854  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022f9bc
 
-# .text:0x1BE4 | 0x8022FA58 | size: 0x54
+# .text:0x3278 | 0x8022FA58 | size: 0x54
 .fn kar_plclearcheckerlib__8022fa58, global
 /* 8022FA58 0022C858  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FA5C 0022C85C  7C 08 02 A6 */	mflr r0
@@ -2155,7 +4006,7 @@
 /* 8022FAA8 0022C8A8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fa58
 
-# .text:0x1C38 | 0x8022FAAC | size: 0x54
+# .text:0x32CC | 0x8022FAAC | size: 0x54
 .fn kar_plclearcheckerlib__8022faac, global
 /* 8022FAAC 0022C8AC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FAB0 0022C8B0  7C 08 02 A6 */	mflr r0
@@ -2181,7 +4032,7 @@
 /* 8022FAFC 0022C8FC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022faac
 
-# .text:0x1C8C | 0x8022FB00 | size: 0x58
+# .text:0x3320 | 0x8022FB00 | size: 0x58
 .fn kar_plclearcheckerlib__near_8022fb00, global
 /* 8022FB00 0022C900  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FB04 0022C904  7C 08 02 A6 */	mflr r0
@@ -2208,7 +4059,7 @@
 /* 8022FB54 0022C954  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fb00
 
-# .text:0x1CE4 | 0x8022FB58 | size: 0x74
+# .text:0x3378 | 0x8022FB58 | size: 0x74
 .fn kar_plclearcheckerlib__near_8022fb58, global
 /* 8022FB58 0022C958  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FB5C 0022C95C  7C 08 02 A6 */	mflr r0
@@ -2242,7 +4093,7 @@
 /* 8022FBC8 0022C9C8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fb58
 
-# .text:0x1D58 | 0x8022FBCC | size: 0x94
+# .text:0x33EC | 0x8022FBCC | size: 0x94
 .fn kar_plclearcheckerlib__near_8022fbcc, global
 /* 8022FBCC 0022C9CC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FBD0 0022C9D0  7C 08 02 A6 */	mflr r0
@@ -2285,7 +4136,7 @@
 /* 8022FC5C 0022CA5C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fbcc
 
-# .text:0x1DEC | 0x8022FC60 | size: 0x6C
+# .text:0x3480 | 0x8022FC60 | size: 0x6C
 .fn kar_plclearcheckerlib__near_8022fc60, global
 /* 8022FC60 0022CA60  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 8022FC64 0022CA64  7C 08 02 A6 */	mflr r0
@@ -2317,7 +4168,7 @@
 /* 8022FCC8 0022CAC8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fc60
 
-# .text:0x1E58 | 0x8022FCCC | size: 0x7C
+# .text:0x34EC | 0x8022FCCC | size: 0x7C
 .fn kar_plclearcheckerlib__8022fccc, global
 /* 8022FCCC 0022CACC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FCD0 0022CAD0  7C 08 02 A6 */	mflr r0
@@ -2356,7 +4207,7 @@
 /* 8022FD44 0022CB44  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fccc
 
-# .text:0x1ED4 | 0x8022FD48 | size: 0x78
+# .text:0x3568 | 0x8022FD48 | size: 0x78
 .fn kar_plclearcheckerlib__8022fd48, global
 /* 8022FD48 0022CB48  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FD4C 0022CB4C  7C 08 02 A6 */	mflr r0
@@ -2393,7 +4244,7 @@
 /* 8022FDBC 0022CBBC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fd48
 
-# .text:0x1F4C | 0x8022FDC0 | size: 0x68
+# .text:0x35E0 | 0x8022FDC0 | size: 0x68
 .fn kar_plclearcheckerlib__8022fdc0, global
 /* 8022FDC0 0022CBC0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FDC4 0022CBC4  7C 08 02 A6 */	mflr r0
@@ -2426,7 +4277,7 @@
 /* 8022FE24 0022CC24  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fdc0
 
-# .text:0x1FB4 | 0x8022FE28 | size: 0x58
+# .text:0x3648 | 0x8022FE28 | size: 0x58
 .fn kar_plclearcheckerlib__8022fe28, global
 /* 8022FE28 0022CC28  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FE2C 0022CC2C  7C 08 02 A6 */	mflr r0
@@ -2453,7 +4304,7 @@
 /* 8022FE7C 0022CC7C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fe28
 
-# .text:0x200C | 0x8022FE80 | size: 0x58
+# .text:0x36A0 | 0x8022FE80 | size: 0x58
 .fn kar_plclearcheckerlib__8022fe80, global
 /* 8022FE80 0022CC80  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FE84 0022CC84  7C 08 02 A6 */	mflr r0
@@ -2480,7 +4331,7 @@
 /* 8022FED4 0022CCD4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8022fe80
 
-# .text:0x2064 | 0x8022FED8 | size: 0xD0
+# .text:0x36F8 | 0x8022FED8 | size: 0xD0
 .fn kar_plclearcheckerlib__near_8022fed8, global
 /* 8022FED8 0022CCD8  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 8022FEDC 0022CCDC  7C 08 02 A6 */	mflr r0
@@ -2540,7 +4391,7 @@
 /* 8022FFA4 0022CDA4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fed8
 
-# .text:0x2134 | 0x8022FFA8 | size: 0x4C
+# .text:0x37C8 | 0x8022FFA8 | size: 0x4C
 .fn kar_plclearcheckerlib__near_8022ffa8, global
 /* 8022FFA8 0022CDA8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FFAC 0022CDAC  7C 08 02 A6 */	mflr r0
@@ -2564,7 +4415,7 @@
 /* 8022FFF0 0022CDF0  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022ffa8
 
-# .text:0x2180 | 0x8022FFF4 | size: 0x38
+# .text:0x3814 | 0x8022FFF4 | size: 0x38
 .fn kar_plclearcheckerlib__near_8022fff4, global
 /* 8022FFF4 0022CDF4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8022FFF8 0022CDF8  7C 08 02 A6 */	mflr r0
@@ -2583,7 +4434,7 @@
 /* 80230028 0022CE28  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8022fff4
 
-# .text:0x21B8 | 0x8023002C | size: 0x88
+# .text:0x384C | 0x8023002C | size: 0x88
 .fn kar_plclearcheckerlib__8023002c, global
 /* 8023002C 0022CE2C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230030 0022CE30  7C 08 02 A6 */	mflr r0
@@ -2622,7 +4473,7 @@
 /* 802300B0 0022CEB0  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8023002c
 
-# .text:0x2240 | 0x802300B4 | size: 0x18C
+# .text:0x38D4 | 0x802300B4 | size: 0x18C
 .fn kar_plclearcheckerlib__802300b4, global
 /* 802300B4 0022CEB4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802300B8 0022CEB8  7C 08 02 A6 */	mflr r0
@@ -2735,7 +4586,7 @@
 /* 8023023C 0022D03C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802300b4
 
-# .text:0x23CC | 0x80230240 | size: 0x54
+# .text:0x3A60 | 0x80230240 | size: 0x54
 .fn kar_plclearcheckerlib__80230240, global
 /* 80230240 0022D040  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230244 0022D044  7C 08 02 A6 */	mflr r0
@@ -2761,7 +4612,7 @@
 /* 80230290 0022D090  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230240
 
-# .text:0x2420 | 0x80230294 | size: 0x18C
+# .text:0x3AB4 | 0x80230294 | size: 0x18C
 .fn kar_plclearcheckerlib__80230294, global
 /* 80230294 0022D094  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230298 0022D098  7C 08 02 A6 */	mflr r0
@@ -2874,7 +4725,7 @@
 /* 8023041C 0022D21C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230294
 
-# .text:0x25AC | 0x80230420 | size: 0x54
+# .text:0x3C40 | 0x80230420 | size: 0x54
 .fn kar_plclearcheckerlib__80230420, global
 /* 80230420 0022D220  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230424 0022D224  7C 08 02 A6 */	mflr r0
@@ -2900,7 +4751,7 @@
 /* 80230470 0022D270  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230420
 
-# .text:0x2600 | 0x80230474 | size: 0x54
+# .text:0x3C94 | 0x80230474 | size: 0x54
 .fn kar_plclearcheckerlib__80230474, global
 /* 80230474 0022D274  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230478 0022D278  7C 08 02 A6 */	mflr r0
@@ -2926,7 +4777,7 @@
 /* 802304C4 0022D2C4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230474
 
-# .text:0x2654 | 0x802304C8 | size: 0xE8
+# .text:0x3CE8 | 0x802304C8 | size: 0xE8
 .fn kar_plclearcheckerlib__near_802304c8, global
 /* 802304C8 0022D2C8  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 802304CC 0022D2CC  7C 08 02 A6 */	mflr r0
@@ -2990,7 +4841,7 @@
 /* 802305AC 0022D3AC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_802304c8
 
-# .text:0x273C | 0x802305B0 | size: 0x124
+# .text:0x3DD0 | 0x802305B0 | size: 0x124
 .fn kar_plclearcheckerlib__near_802305b0, global
 /* 802305B0 0022D3B0  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 802305B4 0022D3B4  7C 08 02 A6 */	mflr r0
@@ -3071,7 +4922,7 @@
 /* 802306D0 0022D4D0  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_802305b0
 
-# .text:0x2860 | 0x802306D4 | size: 0x54
+# .text:0x3EF4 | 0x802306D4 | size: 0x54
 .fn kar_plclearcheckerlib__802306d4, global
 /* 802306D4 0022D4D4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802306D8 0022D4D8  7C 08 02 A6 */	mflr r0
@@ -3097,7 +4948,7 @@
 /* 80230724 0022D524  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802306d4
 
-# .text:0x28B4 | 0x80230728 | size: 0x54
+# .text:0x3F48 | 0x80230728 | size: 0x54
 .fn kar_plclearcheckerlib__80230728, global
 /* 80230728 0022D528  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8023072C 0022D52C  7C 08 02 A6 */	mflr r0
@@ -3123,7 +4974,7 @@
 /* 80230778 0022D578  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230728
 
-# .text:0x2908 | 0x8023077C | size: 0x68
+# .text:0x3F9C | 0x8023077C | size: 0x68
 .fn kar_plclearcheckerlib__8023077c, global
 /* 8023077C 0022D57C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230780 0022D580  7C 08 02 A6 */	mflr r0
@@ -3154,7 +5005,7 @@
 /* 802307E0 0022D5E0  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8023077c
 
-# .text:0x2970 | 0x802307E4 | size: 0x54
+# .text:0x4004 | 0x802307E4 | size: 0x54
 .fn kar_plclearcheckerlib__802307e4, global
 /* 802307E4 0022D5E4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802307E8 0022D5E8  7C 08 02 A6 */	mflr r0
@@ -3180,7 +5031,7 @@
 /* 80230834 0022D634  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802307e4
 
-# .text:0x29C4 | 0x80230838 | size: 0x54
+# .text:0x4058 | 0x80230838 | size: 0x54
 .fn kar_plclearcheckerlib__80230838, global
 /* 80230838 0022D638  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8023083C 0022D63C  7C 08 02 A6 */	mflr r0
@@ -3206,7 +5057,7 @@
 /* 80230888 0022D688  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230838
 
-# .text:0x2A18 | 0x8023088C | size: 0x54
+# .text:0x40AC | 0x8023088C | size: 0x54
 .fn kar_plclearcheckerlib__8023088c, global
 /* 8023088C 0022D68C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230890 0022D690  7C 08 02 A6 */	mflr r0
@@ -3232,7 +5083,7 @@
 /* 802308DC 0022D6DC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8023088c
 
-# .text:0x2A6C | 0x802308E0 | size: 0x54
+# .text:0x4100 | 0x802308E0 | size: 0x54
 .fn kar_plclearcheckerlib__802308e0, global
 /* 802308E0 0022D6E0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802308E4 0022D6E4  7C 08 02 A6 */	mflr r0
@@ -3258,7 +5109,7 @@
 /* 80230930 0022D730  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802308e0
 
-# .text:0x2AC0 | 0x80230934 | size: 0x58
+# .text:0x4154 | 0x80230934 | size: 0x58
 .fn kar_plclearcheckerlib__80230934, global
 /* 80230934 0022D734  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230938 0022D738  7C 08 02 A6 */	mflr r0
@@ -3285,7 +5136,7 @@
 /* 80230988 0022D788  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230934
 
-# .text:0x2B18 | 0x8023098C | size: 0x54
+# .text:0x41AC | 0x8023098C | size: 0x54
 .fn kar_plclearcheckerlib__8023098c, global
 /* 8023098C 0022D78C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230990 0022D790  7C 08 02 A6 */	mflr r0
@@ -3311,7 +5162,7 @@
 /* 802309DC 0022D7DC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8023098c
 
-# .text:0x2B6C | 0x802309E0 | size: 0x54
+# .text:0x4200 | 0x802309E0 | size: 0x54
 .fn kar_plclearcheckerlib__802309e0, global
 /* 802309E0 0022D7E0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802309E4 0022D7E4  7C 08 02 A6 */	mflr r0
@@ -3337,7 +5188,7 @@
 /* 80230A30 0022D830  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802309e0
 
-# .text:0x2BC0 | 0x80230A34 | size: 0x54
+# .text:0x4254 | 0x80230A34 | size: 0x54
 .fn kar_plclearcheckerlib__80230a34, global
 /* 80230A34 0022D834  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230A38 0022D838  7C 08 02 A6 */	mflr r0
@@ -3363,7 +5214,7 @@
 /* 80230A84 0022D884  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230a34
 
-# .text:0x2C14 | 0x80230A88 | size: 0x58
+# .text:0x42A8 | 0x80230A88 | size: 0x58
 .fn kar_plclearcheckerlib__80230a88, global
 /* 80230A88 0022D888  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230A8C 0022D88C  7C 08 02 A6 */	mflr r0
@@ -3390,7 +5241,7 @@
 /* 80230ADC 0022D8DC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230a88
 
-# .text:0x2C6C | 0x80230AE0 | size: 0x58
+# .text:0x4300 | 0x80230AE0 | size: 0x58
 .fn kar_plclearcheckerlib__80230ae0, global
 /* 80230AE0 0022D8E0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230AE4 0022D8E4  7C 08 02 A6 */	mflr r0
@@ -3417,7 +5268,7 @@
 /* 80230B34 0022D934  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230ae0
 
-# .text:0x2CC4 | 0x80230B38 | size: 0x58
+# .text:0x4358 | 0x80230B38 | size: 0x58
 .fn kar_plclearcheckerlib__80230b38, global
 /* 80230B38 0022D938  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230B3C 0022D93C  7C 08 02 A6 */	mflr r0
@@ -3444,7 +5295,7 @@
 /* 80230B8C 0022D98C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230b38
 
-# .text:0x2D1C | 0x80230B90 | size: 0x58
+# .text:0x43B0 | 0x80230B90 | size: 0x58
 .fn kar_plclearcheckerlib__80230b90, global
 /* 80230B90 0022D990  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230B94 0022D994  7C 08 02 A6 */	mflr r0
@@ -3471,7 +5322,7 @@
 /* 80230BE4 0022D9E4  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230b90
 
-# .text:0x2D74 | 0x80230BE8 | size: 0x54
+# .text:0x4408 | 0x80230BE8 | size: 0x54
 .fn kar_plclearcheckerlib__80230be8, global
 /* 80230BE8 0022D9E8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230BEC 0022D9EC  7C 08 02 A6 */	mflr r0
@@ -3497,7 +5348,7 @@
 /* 80230C38 0022DA38  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230be8
 
-# .text:0x2DC8 | 0x80230C3C | size: 0x58
+# .text:0x445C | 0x80230C3C | size: 0x58
 .fn kar_plclearcheckerlib__80230c3c, global
 /* 80230C3C 0022DA3C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230C40 0022DA40  7C 08 02 A6 */	mflr r0
@@ -3524,7 +5375,7 @@
 /* 80230C90 0022DA90  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230c3c
 
-# .text:0x2E20 | 0x80230C94 | size: 0x58
+# .text:0x44B4 | 0x80230C94 | size: 0x58
 .fn kar_plclearcheckerlib__80230c94, global
 /* 80230C94 0022DA94  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230C98 0022DA98  7C 08 02 A6 */	mflr r0
@@ -3551,7 +5402,7 @@
 /* 80230CE8 0022DAE8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80230c94
 
-# .text:0x2E78 | 0x80230CEC | size: 0x124
+# .text:0x450C | 0x80230CEC | size: 0x124
 .fn kar_plclearcheckerlib__near_80230cec, global
 /* 80230CEC 0022DAEC  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80230CF0 0022DAF0  7C 08 02 A6 */	mflr r0
@@ -3632,7 +5483,7 @@
 /* 80230E0C 0022DC0C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230cec
 
-# .text:0x2F9C | 0x80230E10 | size: 0x34
+# .text:0x4630 | 0x80230E10 | size: 0x34
 .fn kar_plclearcheckerlib__near_80230e10, global
 /* 80230E10 0022DC10  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230E14 0022DC14  7C 08 02 A6 */	mflr r0
@@ -3650,7 +5501,7 @@
 /* 80230E40 0022DC40  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230e10
 
-# .text:0x2FD0 | 0x80230E44 | size: 0x34
+# .text:0x4664 | 0x80230E44 | size: 0x34
 .fn kar_plclearcheckerlib__near_80230e44, global
 /* 80230E44 0022DC44  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230E48 0022DC48  7C 08 02 A6 */	mflr r0
@@ -3668,7 +5519,7 @@
 /* 80230E74 0022DC74  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230e44
 
-# .text:0x3004 | 0x80230E78 | size: 0x68
+# .text:0x4698 | 0x80230E78 | size: 0x68
 .fn kar_plclearcheckerlib__near_80230e78, global
 /* 80230E78 0022DC78  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230E7C 0022DC7C  7C 08 02 A6 */	mflr r0
@@ -3699,7 +5550,7 @@
 /* 80230EDC 0022DCDC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230e78
 
-# .text:0x306C | 0x80230EE0 | size: 0x38
+# .text:0x4700 | 0x80230EE0 | size: 0x38
 .fn kar_plclearcheckerlib__near_80230ee0, global
 /* 80230EE0 0022DCE0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230EE4 0022DCE4  7C 08 02 A6 */	mflr r0
@@ -3718,7 +5569,7 @@
 /* 80230F14 0022DD14  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230ee0
 
-# .text:0x30A4 | 0x80230F18 | size: 0x34
+# .text:0x4738 | 0x80230F18 | size: 0x34
 .fn kar_plclearcheckerlib__near_80230f18, global
 /* 80230F18 0022DD18  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230F1C 0022DD1C  7C 08 02 A6 */	mflr r0
@@ -3736,7 +5587,7 @@
 /* 80230F48 0022DD48  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230f18
 
-# .text:0x30D8 | 0x80230F4C | size: 0x54
+# .text:0x476C | 0x80230F4C | size: 0x54
 .fn kar_plclearcheckerlib__near_80230f4c, global
 /* 80230F4C 0022DD4C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230F50 0022DD50  7C 08 02 A6 */	mflr r0
@@ -3762,7 +5613,7 @@
 /* 80230F9C 0022DD9C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230f4c
 
-# .text:0x312C | 0x80230FA0 | size: 0x4C
+# .text:0x47C0 | 0x80230FA0 | size: 0x4C
 .fn kar_plclearcheckerlib__near_80230fa0, global
 /* 80230FA0 0022DDA0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230FA4 0022DDA4  7C 08 02 A6 */	mflr r0
@@ -3786,7 +5637,7 @@
 /* 80230FE8 0022DDE8  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230fa0
 
-# .text:0x3178 | 0x80230FEC | size: 0x34
+# .text:0x480C | 0x80230FEC | size: 0x34
 .fn kar_plclearcheckerlib__near_80230fec, global
 /* 80230FEC 0022DDEC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80230FF0 0022DDF0  7C 08 02 A6 */	mflr r0
@@ -3804,7 +5655,7 @@
 /* 8023101C 0022DE1C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80230fec
 
-# .text:0x31AC | 0x80231020 | size: 0x34
+# .text:0x4840 | 0x80231020 | size: 0x34
 .fn kar_plclearcheckerlib__near_80231020, global
 /* 80231020 0022DE20  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231024 0022DE24  7C 08 02 A6 */	mflr r0
@@ -3822,7 +5673,7 @@
 /* 80231050 0022DE50  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231020
 
-# .text:0x31E0 | 0x80231054 | size: 0x34
+# .text:0x4874 | 0x80231054 | size: 0x34
 .fn kar_plclearcheckerlib__near_80231054, global
 /* 80231054 0022DE54  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231058 0022DE58  7C 08 02 A6 */	mflr r0
@@ -3840,7 +5691,7 @@
 /* 80231084 0022DE84  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231054
 
-# .text:0x3214 | 0x80231088 | size: 0x58
+# .text:0x48A8 | 0x80231088 | size: 0x58
 .fn kar_plclearcheckerlib__near_80231088, global
 /* 80231088 0022DE88  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8023108C 0022DE8C  7C 08 02 A6 */	mflr r0
@@ -3867,7 +5718,7 @@
 /* 802310DC 0022DEDC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231088
 
-# .text:0x326C | 0x802310E0 | size: 0x40
+# .text:0x4900 | 0x802310E0 | size: 0x40
 .fn kar_plclearcheckerlib__near_802310e0, global
 /* 802310E0 0022DEE0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802310E4 0022DEE4  7C 08 02 A6 */	mflr r0
@@ -3888,7 +5739,7 @@
 /* 8023111C 0022DF1C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_802310e0
 
-# .text:0x32AC | 0x80231120 | size: 0x40
+# .text:0x4940 | 0x80231120 | size: 0x40
 .fn kar_plclearcheckerlib__near_80231120, global
 /* 80231120 0022DF20  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231124 0022DF24  7C 08 02 A6 */	mflr r0
@@ -3909,7 +5760,7 @@
 /* 8023115C 0022DF5C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231120
 
-# .text:0x32EC | 0x80231160 | size: 0x38
+# .text:0x4980 | 0x80231160 | size: 0x38
 .fn kar_plclearcheckerlib__near_80231160, global
 /* 80231160 0022DF60  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231164 0022DF64  7C 08 02 A6 */	mflr r0
@@ -3928,7 +5779,7 @@
 /* 80231194 0022DF94  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231160
 
-# .text:0x3324 | 0x80231198 | size: 0x68
+# .text:0x49B8 | 0x80231198 | size: 0x68
 .fn kar_plclearcheckerlib__near_80231198, global
 /* 80231198 0022DF98  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8023119C 0022DF9C  7C 08 02 A6 */	mflr r0
@@ -3960,7 +5811,7 @@
 /* 802311FC 0022DFFC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231198
 
-# .text:0x338C | 0x80231200 | size: 0x140
+# .text:0x4A20 | 0x80231200 | size: 0x140
 .fn kar_plclearcheckerlib__near_80231200, global
 /* 80231200 0022E000  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80231204 0022E004  7C 08 02 A6 */	mflr r0
@@ -4051,7 +5902,7 @@
 /* 8023133C 0022E13C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231200
 
-# .text:0x34CC | 0x80231340 | size: 0x1D0
+# .text:0x4B60 | 0x80231340 | size: 0x1D0
 .fn kar_plclearcheckerlib__near_80231340, global
 /* 80231340 0022E140  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 80231344 0022E144  7C 08 02 A6 */	mflr r0
@@ -4182,7 +6033,7 @@
 /* 8023150C 0022E30C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231340
 
-# .text:0x369C | 0x80231510 | size: 0x5C
+# .text:0x4D30 | 0x80231510 | size: 0x5C
 .fn kar_plclearcheckerlib__80231510, global
 /* 80231510 0022E310  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231514 0022E314  7C 08 02 A6 */	mflr r0
@@ -4210,7 +6061,7 @@
 /* 80231568 0022E368  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80231510
 
-# .text:0x36F8 | 0x8023156C | size: 0x54
+# .text:0x4D8C | 0x8023156C | size: 0x54
 .fn kar_plclearcheckerlib__8023156c, global
 /* 8023156C 0022E36C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231570 0022E370  7C 08 02 A6 */	mflr r0
@@ -4236,7 +6087,7 @@
 /* 802315BC 0022E3BC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__8023156c
 
-# .text:0x374C | 0x802315C0 | size: 0x54
+# .text:0x4DE0 | 0x802315C0 | size: 0x54
 .fn kar_plclearcheckerlib__802315c0, global
 /* 802315C0 0022E3C0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 802315C4 0022E3C4  7C 08 02 A6 */	mflr r0
@@ -4262,7 +6113,7 @@
 /* 80231610 0022E410  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__802315c0
 
-# .text:0x37A0 | 0x80231614 | size: 0x5C
+# .text:0x4E34 | 0x80231614 | size: 0x5C
 .fn kar_plclearcheckerlib__80231614, global
 /* 80231614 0022E414  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231618 0022E418  7C 08 02 A6 */	mflr r0
@@ -4290,7 +6141,7 @@
 /* 8023166C 0022E46C  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__80231614
 
-# .text:0x37FC | 0x80231670 | size: 0x90
+# .text:0x4E90 | 0x80231670 | size: 0x90
 .fn kar_plclearcheckerlib__near_80231670, global
 /* 80231670 0022E470  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80231674 0022E474  7C 08 02 A6 */	mflr r0
@@ -4332,7 +6183,7 @@
 /* 802316FC 0022E4FC  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231670
 
-# .text:0x388C | 0x80231700 | size: 0x7C
+# .text:0x4F20 | 0x80231700 | size: 0x7C
 .fn kar_plclearcheckerlib__near_80231700, global
 /* 80231700 0022E500  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231704 0022E504  7C 08 02 A6 */	mflr r0
@@ -4368,7 +6219,7 @@
 /* 80231778 0022E578  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231700
 
-# .text:0x3908 | 0x8023177C | size: 0x9C
+# .text:0x4F9C | 0x8023177C | size: 0x9C
 .fn kar_plclearcheckerlib__near_8023177c, global
 /* 8023177C 0022E57C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231780 0022E580  7C 08 02 A6 */	mflr r0
@@ -4413,14 +6264,14 @@
 /* 80231814 0022E614  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_8023177c
 
-# .text:0x39A4 | 0x80231818 | size: 0xC
+# .text:0x5038 | 0x80231818 | size: 0xC
 .fn kar_plclearcheckerlib__near_80231818, global
 /* 80231818 0022E618  38 00 00 01 */	li r0, 0x1
 /* 8023181C 0022E61C  B0 0D 07 C0 */	sth r0, lbl_805DD8A0@sda21(r0)
 /* 80231820 0022E620  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231818
 
-# .text:0x39B0 | 0x80231824 | size: 0x344
+# .text:0x5044 | 0x80231824 | size: 0x344
 .fn kar_plclearcheckerlib__near_80231824, global
 /* 80231824 0022E624  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80231828 0022E628  7C 08 02 A6 */	mflr r0
@@ -4645,7 +6496,7 @@
 /* 80231B64 0022E964  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231824
 
-# .text:0x3CF4 | 0x80231B68 | size: 0x20
+# .text:0x5388 | 0x80231B68 | size: 0x20
 .fn kar_plclearcheckerlib__near_80231b68, global
 /* 80231B68 0022E968  A0 6D 07 C0 */	lhz r3, lbl_805DD8A0@sda21(r0)
 /* 80231B6C 0022E96C  38 83 00 01 */	addi r4, r3, 0x1
@@ -4656,3 +6507,170 @@
 /* 80231B80 0022E980  B0 0D 07 C0 */	sth r0, lbl_805DD8A0@sda21(r0)
 /* 80231B84 0022E984  4E 80 00 20 */	blr
 .endfn kar_plclearcheckerlib__near_80231b68
+
+# 0x804B4C00..0x804B4D48 | size: 0x148
+.data
+.balign 8
+
+# .data:0x0 | 0x804B4C00 | size: 0xB
+.obj kar_linkfile_pldata_dat_804b4c00, global
+	.string "PlData.dat"
+.endobj kar_linkfile_pldata_dat_804b4c00
+
+# .data:0xB | 0x804B4C0B | size: 0x1
+.obj gap_07_804B4C0B_data, global
+.hidden gap_07_804B4C0B_data
+	.byte 0x00
+.endobj gap_07_804B4C0B_data
+
+# .data:0xC | 0x804B4C0C | size: 0xD
+.obj lbl_804B4C0C, global
+	.string "plDataCommon"
+.endobj lbl_804B4C0C
+
+# .data:0x19 | 0x804B4C19 | size: 0x7
+.obj gap_07_804B4C19_data, global
+.hidden gap_07_804B4C19_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4C19_data
+
+# .data:0x20 | 0x804B4C20 | size: 0x48
+.obj lbl_804B4C20, global
+	.4byte 0x00000000
+	.4byte 0x00000008
+	.4byte 0x00000002
+	.4byte 0x0000000B
+	.4byte 0x0000000B
+	.4byte 0x0000000B
+	.4byte 0x00000001
+	.4byte 0x00000006
+	.4byte 0x00000000
+	.4byte 0x0000000B
+	.4byte 0x0000000B
+	.4byte 0x0000000B
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x0000000B
+	.4byte 0x0000000B
+.endobj lbl_804B4C20
+
+# .data:0x68 | 0x804B4C68 | size: 0x50
+.obj lbl_804B4C68, global
+	.4byte 0x00000017
+	.4byte 0x00000001
+	.4byte 0x00000015
+	.4byte 0x00000000
+	.4byte 0x0000000B
+	.4byte 0x00000015
+	.4byte 0x00000000
+	.4byte 0x0000000B
+	.4byte 0x00000007
+	.4byte 0x0000000C
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x0000000A
+	.4byte 0x00000006
+	.4byte 0x0000000C
+	.4byte 0x0000000A
+	.4byte 0x00000008
+	.4byte 0x00000004
+	.4byte 0x00000004
+	.4byte 0x00000008
+.endobj lbl_804B4C68
+
+# .data:0xB8 | 0x804B4CB8 | size: 0x24
+.obj lbl_804B4CB8, global
+	.4byte kar_plclearcheckerlib__near_80231670
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_plclearcheckerlib__near_80231700
+	.4byte 0x00000000
+.endobj lbl_804B4CB8
+
+# .data:0xDC | 0x804B4CDC | size: 0x14
+.obj kar_src_plclearcheckerlib_804b4cdc, global
+	.string "plclearcheckerlib.c"
+.endobj kar_src_plclearcheckerlib_804b4cdc
+
+# .data:0xF0 | 0x804B4CF0 | size: 0x58
+.obj lbl_804B4CF0, global
+	.4byte 0x706C6179
+	.4byte 0x6572203C
+	.4byte 0x20476D5F
+	.4byte 0x506C6179
+	.4byte 0x65725F4E
+	.4byte 0x756D4D61
+	.4byte 0x78000000
+	.4byte 0x74797065
+	.4byte 0x203C2056
+	.4byte 0x635F5479
+	.4byte 0x70655F41
+	.4byte 0x6C6C5F4D
+	.4byte 0x61780000
+	.4byte 0x6974656D
+	.4byte 0x5F6B696E
+	.4byte 0x64203C20
+	.4byte 0x49745F4B
+	.4byte 0x696E645F
+	.4byte 0x5465726D
+	.4byte 0x696E6174
+	.4byte 0x65000000
+	.4byte 0x00000000
+.endobj lbl_804B4CF0
+
+# 0x805DD8A0..0x805DD8A8 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD8A0 | size: 0x8
+.obj lbl_805DD8A0, global
+	.skip 0x8
+.endobj lbl_805DD8A0
+
+# 0x805E2A38..0x805E2A68 | size: 0x30
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2A38 | size: 0x4
+.obj lbl_805E2A38, global
+	.float 99
+.endobj lbl_805E2A38
+
+# .sdata2:0x4 | 0x805E2A3C | size: 0x4
+.obj lbl_805E2A3C, global
+	.float 59
+.endobj lbl_805E2A3C
+
+# .sdata2:0x8 | 0x805E2A40 | size: 0x8
+.obj lbl_805E2A40, global
+	.double 4503601774854144
+.endobj lbl_805E2A40
+
+# .sdata2:0x10 | 0x805E2A48 | size: 0x4
+.obj lbl_805E2A48, global
+	.float 0
+.endobj lbl_805E2A48
+	.4byte 0x00000000
+
+# .sdata2:0x18 | 0x805E2A50 | size: 0x8
+.obj lbl_805E2A50, global
+	.double 0.02025
+.endobj lbl_805E2A50
+
+# .sdata2:0x20 | 0x805E2A58 | size: 0x8
+.obj lbl_805E2A58, global
+	.double 1.609344
+.endobj lbl_805E2A58
+
+# .sdata2:0x28 | 0x805E2A60 | size: 0x8
+.obj lbl_805E2A60, global
+	.float 0.81018513
+	.float 0
+.endobj lbl_805E2A60

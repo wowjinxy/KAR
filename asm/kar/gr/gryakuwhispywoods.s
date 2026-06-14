@@ -387,3 +387,74 @@
 /* 8010E0DC 0010AEDC  38 21 00 10 */	addi r1, r1, 0x10
 /* 8010E0E0 0010AEE0  4E 80 00 20 */	blr
 .endfn kar_gryakuwhispywoods_create_stage_linked_catchzones
+
+# 0x804A7470..0x804A7538 | size: 0xC8
+.data
+.balign 8
+
+# .data:0x0 | 0x804A7470 | size: 0x40
+.obj kar_gryakuwhispywoods_kind69_callback_table, global
+	.4byte kar_gryakuwhispywoods_update_kind69_wait_random_extra_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuwhispywoods_update_kind69_return_idle_when_clear
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuwhispywoods_update_kind69_reseed_extra_motion_when_clear
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuwhispywoods_kind69_callback_table
+
+# .data:0x40 | 0x804A74B0 | size: 0x14
+.obj kar_gryakuwhispywoods_kind69_callback_table_ptr, global
+	.4byte kar_gryakuwhispywoods_kind69_callback_table
+	.4byte kar_gryakuwhispywoods_handle_kind69_grcoll_hit_damage
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuwhispywoods_kind69_callback_table_ptr
+
+# .data:0x54 | 0x804A74C4 | size: 0x14
+.obj kar_src_gryakuwhispywoods_c, global
+	.string "gryakuwhispywoods.c"
+.endobj kar_src_gryakuwhispywoods_c
+
+# .data:0x68 | 0x804A74D8 | size: 0x4C
+.obj kar_gryakuwhispywoods_assert_wait_ex_motion_req_count_range, global
+	.string "param->edit->waitExMotionReqCountMax > param->edit->waitExMotionReqCountMin"
+.endobj kar_gryakuwhispywoods_assert_wait_ex_motion_req_count_range
+
+# .data:0xB4 | 0x804A7524 | size: 0x4
+.obj gap_07_804A7524_data, global
+.hidden gap_07_804A7524_data
+	.4byte 0x00000000
+.endobj gap_07_804A7524_data
+
+# .data:0xB8 | 0x804A7528 | size: 0x10
+.obj lbl_804A7528, global
+	.4byte fn_8010E098
+	.4byte kar_gryakuwhispywoods_create_stage_linked_catchzones
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7528
+
+# 0x805DFAE0..0x805DFAE8 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DFAE0 | size: 0x4
+.obj lbl_805DFAE0, global
+	.float 0
+.endobj lbl_805DFAE0
+
+# .sdata2:0x4 | 0x805DFAE4 | size: 0x4
+.obj lbl_805DFAE4, global
+	.float 1
+.endobj lbl_805DFAE4

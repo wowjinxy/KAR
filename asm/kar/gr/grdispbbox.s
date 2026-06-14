@@ -1085,3 +1085,49 @@
 /* 800E69A8 000E37A8  38 21 00 40 */	addi r1, r1, 0x40
 /* 800E69AC 000E37AC  4E 80 00 20 */	blr
 .endfn kar_grgravity_calc_nearest_nullpos_gravity
+
+# 0x804A4A00..0x804A4A60 | size: 0x60
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4A00 | size: 0x20
+.obj kar_src_grdispbbox_804a4a00, global
+	.4byte 0x67726469
+	.4byte 0x73706262
+	.4byte 0x6F782E63
+	.4byte 0x00000000
+	.4byte 0x64697370
+	.4byte 0x42426F78
+	.4byte 0x44617461
+	.4byte 0x00000000
+.endobj kar_src_grdispbbox_804a4a00
+
+# .data:0x20 | 0x804A4A20 | size: 0x3F
+.obj lbl_804A4A20, global
+	.string "HSD_CObjGetProjectionType(cobj) == COBJ_PROJECTION_PERSPECTIVE"
+.endobj lbl_804A4A20
+
+# .data:0x5F | 0x804A4A5F | size: 0x1
+.obj gap_07_804A4A5F_data, global
+.hidden gap_07_804A4A5F_data
+	.byte 0x00
+.endobj gap_07_804A4A5F_data
+
+# 0x805DF724..0x805DF730 | size: 0xC
+.section .sdata2, "a"
+.balign 4
+
+# .sdata2:0x0 | 0x805DF724 | size: 0x4
+.obj lbl_805DF724, global
+	.float 10
+.endobj lbl_805DF724
+
+# .sdata2:0x4 | 0x805DF728 | size: 0x4
+.obj lbl_805DF728, global
+	.float 0
+.endobj lbl_805DF728
+
+# .sdata2:0x8 | 0x805DF72C | size: 0x4
+.obj lbl_805DF72C, global
+	.float -1
+.endobj lbl_805DF72C

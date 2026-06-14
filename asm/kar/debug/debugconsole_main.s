@@ -719,8 +719,10 @@
 /* 804401B4 0043CFB4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 804401B8 0043CFB8  7C 09 03 A6 */	mtctr r0
 /* 804401BC 0043CFBC  4E 80 04 20 */	bctr
+.L_804401C0:
 /* 804401C0 0043CFC0  38 60 00 00 */	li r3, 0x0
 /* 804401C4 0043CFC4  48 00 00 1C */	b .L_804401E0
+.L_804401C8:
 /* 804401C8 0043CFC8  4B F8 32 91 */	bl fn_803C3458
 /* 804401CC 0043CFCC  2C 03 00 00 */	cmpwi r3, 0x0
 /* 804401D0 0043CFD0  40 82 00 40 */	bne .L_80440210
@@ -1227,3 +1229,129 @@
 /* 804407D8 0043D5D8  80 6D 13 A0 */	lwz r3, lbl_805DE480@sda21(r0)
 /* 804407DC 0043D5DC  4E 80 00 20 */	blr
 .endfn kar_debugconsole_main__near_804407d8
+
+# 0x805088CC..0x805089E8 | size: 0x11C
+.data
+.balign 4
+
+# .data:0x0 | 0x805088CC | size: 0x3E
+.obj lbl_805088CC, global
+	.string "Debug console invoked before\ninitializing sysdolphin baselib."
+.endobj lbl_805088CC
+
+# .data:0x3E | 0x8050890A | size: 0x6
+.obj gap_07_8050890A_data, global
+.hidden gap_07_8050890A_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_8050890A_data
+
+# .data:0x44 | 0x80508910 | size: 0x34
+.obj jumptable_80508910, local
+	.rel kar_debugconsole_main__near_80440130, .L_804401C0
+	.rel kar_debugconsole_main__near_80440130, .L_804401DC
+	.rel kar_debugconsole_main__near_80440130, .L_804401C8
+	.rel kar_debugconsole_main__near_80440130, .L_804401C0
+	.rel kar_debugconsole_main__near_80440130, .L_804401C0
+	.rel kar_debugconsole_main__near_80440130, .L_804401C0
+	.rel kar_debugconsole_main__near_80440130, .L_804401C8
+	.rel kar_debugconsole_main__near_80440130, .L_804401DC
+	.rel kar_debugconsole_main__near_80440130, .L_804401C8
+	.rel kar_debugconsole_main__near_80440130, .L_804401DC
+	.rel kar_debugconsole_main__near_80440130, .L_804401DC
+	.rel kar_debugconsole_main__near_80440130, .L_804401DC
+	.rel kar_debugconsole_main__near_80440130, .L_804401C0
+.endobj jumptable_80508910
+
+# .data:0x78 | 0x80508944 | size: 0x4
+.obj gap_07_80508944_data, global
+.hidden gap_07_80508944_data
+	.4byte 0x00000000
+.endobj gap_07_80508944_data
+
+# .data:0x7C | 0x80508948 | size: 0x32
+.obj lbl_80508948, global
+	.string "unsupported no. of special purpose register (%d)."
+.endobj lbl_80508948
+
+# .data:0xAE | 0x8050897A | size: 0x6
+.obj gap_07_8050897A_data, global
+.hidden gap_07_8050897A_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_8050897A_data
+
+# .data:0xB4 | 0x80508980 | size: 0x14
+.obj lbl_80508980, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+.endobj lbl_80508980
+
+# .data:0xC8 | 0x80508994 | size: 0x14
+.obj lbl_80508994, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80508994
+
+# .data:0xDC | 0x805089A8 | size: 0x40
+.obj lbl_805089A8, global
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte lbl_80508980
+	.4byte lbl_80508994
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x47000000
+	.4byte 0xC3DE8000
+	.4byte 0x420C0000
+	.4byte 0xC1A00000
+	.4byte 0x441B0000
+.endobj lbl_805089A8
+
+# 0x8058D298..0x8058E298 | size: 0x1000
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8058D298 | size: 0x1000
+.obj lbl_8058D298, global
+	.skip 0x1000
+.endobj lbl_8058D298
+
+# 0x805DE430..0x805DE438 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DE430 | size: 0x4
+.obj lbl_805DE430, global
+	.skip 0x4
+.endobj lbl_805DE430
+
+# .sbss:0x4 | 0x805DE434 | size: 0x4
+.obj lbl_805DE434, global
+	.skip 0x4
+.endobj lbl_805DE434
+
+# 0x805E60E0..0x805E60E8 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E60E0 | size: 0x4
+.obj lbl_805E60E0, global
+	.4byte 0xFFFFFFFF
+.endobj lbl_805E60E0
+
+# .sdata2:0x4 | 0x805E60E4 | size: 0x4
+.obj lbl_805E60E4, global
+	.4byte 0x000000FF
+.endobj lbl_805E60E4

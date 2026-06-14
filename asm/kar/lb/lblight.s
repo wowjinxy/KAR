@@ -202,3 +202,35 @@
 /* 800577B0 000545B0  38 21 00 30 */	addi r1, r1, 0x30
 /* 800577B4 000545B4  4E 80 00 20 */	blr
 .endfn kar_lblight__80057620
+
+# 0x80497E00..0x80497E10 | size: 0x10
+.data
+.balign 8
+
+# .data:0x0 | 0x80497E00 | size: 0xA
+.obj kar_src_lblight_80497e00, global
+	.string "lblight.c"
+.endobj kar_src_lblight_80497e00
+
+# .data:0xA | 0x80497E0A | size: 0x6
+.obj gap_07_80497E0A_data, global
+.hidden gap_07_80497E0A_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_80497E0A_data
+
+# 0x805D5238..0x805D5240 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5238 | size: 0x2
+.obj lbl_805D5238, global
+	.string "0"
+.endobj lbl_805D5238
+
+# .sdata:0x2 | 0x805D523A | size: 0x6
+.obj gap_09_805D523A_sdata, global
+.hidden gap_09_805D523A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D523A_sdata

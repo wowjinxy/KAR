@@ -279,3 +279,52 @@
 /* 800E8954 000E5754  41 80 FF 4C */	blt .L_800E88A0
 /* 800E8958 000E5758  4E 80 00 20 */	blr
 .endfn kar_grswitch__near_800e8888
+
+# 0x804A4EE0..0x804A4F90 | size: 0xB0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4EE0 | size: 0x74
+.obj kar_src_grswitch_804a4ee0, global
+	.4byte 0x67727377
+	.4byte 0x69746368
+	.4byte 0x2E630000
+	.4byte 0x30203C3D
+	.4byte 0x20706172
+	.4byte 0x616D2D3E
+	.4byte 0x72656649
+	.4byte 0x64202626
+	.4byte 0x20706172
+	.4byte 0x616D2D3E
+	.4byte 0x72656649
+	.4byte 0x64203C20
+	.4byte 0x47725377
+	.4byte 0x69746368
+	.4byte 0x5A6F6E65
+	.4byte 0x5F4E756D
+	.4byte 0x00000000
+	.4byte 0x30203C3D
+	.4byte 0x20706172
+	.4byte 0x616D2D3E
+	.4byte 0x66756E63
+	.4byte 0x49642026
+	.4byte 0x26207061
+	.4byte 0x72616D2D
+	.4byte 0x3E66756E
+	.4byte 0x63496420
+	.4byte 0x3C206675
+	.4byte 0x6E634E75
+	.4byte 0x6D000000
+.endobj kar_src_grswitch_804a4ee0
+
+# .data:0x74 | 0x804A4F54 | size: 0x37
+.obj lbl_804A4F54, global
+	.string "0 <= param->refId && param->refId < switchAll->zoneNum"
+.endobj lbl_804A4F54
+
+# .data:0xAB | 0x804A4F8B | size: 0x5
+.obj gap_07_804A4F8B_data, global
+.hidden gap_07_804A4F8B_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A4F8B_data

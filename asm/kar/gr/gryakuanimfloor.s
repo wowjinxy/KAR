@@ -1323,3 +1323,194 @@
 /* 80103EB0 00100CB0  38 21 00 20 */	addi r1, r1, 0x20
 /* 80103EB4 00100CB4  4E 80 00 20 */	blr
 .endfn kar_gryakuanimfloor_update_kind24_effects_then_destroy
+
+# 0x804A6990..0x804A6A9C | size: 0x10C
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6990 | size: 0x40
+.obj kar_gryakuanimfloor_kind54_callback_table, global
+	.4byte kar_gryakuanimfloor_update_kind54_flagged_start_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuanimfloor_update_kind54_contact_release_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuanimfloor_update_kind54_flag_or_contact_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuanimfloor_update_kind54_ground_clear_to_idle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_kind54_callback_table
+
+# .data:0x40 | 0x804A69D0 | size: 0x14
+.obj kar_gryakuanimfloor_kind54_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_kind54_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_kind54_callback_table_ptr
+
+# .data:0x54 | 0x804A69E4 | size: 0x12
+.obj kar_src_gryakuanimfloor_c, global
+	.string "gryakuanimfloor.c"
+.endobj kar_src_gryakuanimfloor_c
+
+# .data:0x66 | 0x804A69F6 | size: 0x2
+.obj gap_07_804A69F6_data, global
+.hidden gap_07_804A69F6_data
+	.2byte 0x0000
+.endobj gap_07_804A69F6_data
+
+# .data:0x68 | 0x804A69F8 | size: 0xE
+.obj kar_gryakuanimfloor_assert_zone_voidptr, global
+	.string "zone->voidPtr"
+.endobj kar_gryakuanimfloor_assert_zone_voidptr
+
+# .data:0x76 | 0x804A6A06 | size: 0x2
+.obj gap_07_804A6A06_data, global
+.hidden gap_07_804A6A06_data
+	.2byte 0x0000
+.endobj gap_07_804A6A06_data
+
+# .data:0x78 | 0x804A6A08 | size: 0x10
+.obj kar_gryakuanimfloor_kind55_callback_table, global
+	.4byte kar_gryakuanimfloor_update_kind55_reactive_jobj_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_kind55_callback_table
+
+# .data:0x88 | 0x804A6A18 | size: 0x14
+.obj kar_gryakuanimfloor_kind55_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_kind55_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_kind55_callback_table_ptr
+
+# .data:0x9C | 0x804A6A2C | size: 0x25
+.obj kar_gryakuanimfloor_assert_jobj_not_quaternion, global
+	.string "!(jobj->flags & JOBJ_USE_QUATERNION)"
+.endobj kar_gryakuanimfloor_assert_jobj_not_quaternion
+
+# .data:0xC1 | 0x804A6A51 | size: 0x7
+.obj gap_07_804A6A51_data, global
+.hidden gap_07_804A6A51_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A6A51_data
+
+# .data:0xC8 | 0x804A6A58 | size: 0x30
+.obj kar_gryakuanimfloor_break_effect_shared_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakuanimfloor_update_kind24_effects_then_destroy
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_break_effect_shared_callback_table
+
+# .data:0xF8 | 0x804A6A88 | size: 0x14
+.obj kar_gryakuanimfloor_kind24_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakuanimfloor_kind24_callback_table_ptr
+
+# 0x805D62C8..0x805D62E0 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D62C8 | size: 0x5
+.obj lbl_805D62C8, global
+	.string "aobj"
+.endobj lbl_805D62C8
+
+# .sdata:0x5 | 0x805D62CD | size: 0x3
+.obj gap_09_805D62CD_sdata, global
+.hidden gap_09_805D62CD_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D62CD_sdata
+
+# .sdata:0x8 | 0x805D62D0 | size: 0x7
+.obj kar_srcfile_jobj_h_805d62d0, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d62d0
+
+# .sdata:0xF | 0x805D62D7 | size: 0x1
+.obj gap_09_805D62D7_sdata, global
+.hidden gap_09_805D62D7_sdata
+	.byte 0x00
+.endobj gap_09_805D62D7_sdata
+
+# .sdata:0x10 | 0x805D62D8 | size: 0x5
+.obj lbl_805D62D8, global
+	.string "jobj"
+.endobj lbl_805D62D8
+
+# .sdata:0x15 | 0x805D62DD | size: 0x3
+.obj gap_09_805D62DD_sdata, global
+.hidden gap_09_805D62DD_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D62DD_sdata
+
+# 0x805DF990..0x805DF9B4 | size: 0x24
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF990 | size: 0x8
+.obj lbl_805DF990, global
+	.float 0
+	.float 0
+.endobj lbl_805DF990
+
+# .sdata2:0x8 | 0x805DF998 | size: 0x4
+.obj lbl_805DF998, global
+	.float 0
+.endobj lbl_805DF998
+
+# .sdata2:0xC | 0x805DF99C | size: 0x4
+.obj lbl_805DF99C, global
+	.float 12
+.endobj lbl_805DF99C
+
+# .sdata2:0x10 | 0x805DF9A0 | size: 0x4
+.obj lbl_805DF9A0, global
+	.float 1
+.endobj lbl_805DF9A0
+
+# .sdata2:0x14 | 0x805DF9A4 | size: 0x4
+.obj lbl_805DF9A4, global
+	.float 0.017453292
+.endobj lbl_805DF9A4
+
+# .sdata2:0x18 | 0x805DF9A8 | size: 0x4
+.obj lbl_805DF9A8, global
+	.float 0.00001
+.endobj lbl_805DF9A8
+
+# .sdata2:0x1C | 0x805DF9AC | size: 0x4
+.obj lbl_805DF9AC, global
+	.float -0.00001
+.endobj lbl_805DF9AC
+
+# .sdata2:0x20 | 0x805DF9B0 | size: 0x4
+.obj lbl_805DF9B0, global
+	.float 0
+.endobj lbl_805DF9B0

@@ -546,3 +546,84 @@
 /* 8010278C 000FF58C  38 21 00 20 */	addi r1, r1, 0x20
 /* 80102790 000FF590  4E 80 00 20 */	blr
 .endfn kar_gryakubreakrock_update_kind22_effects_then_destroy
+
+# 0x804A68C8..0x804A6978 | size: 0xB0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A68C8 | size: 0x20
+.obj kar_gryakubreakrock_kind22_callback_table, global
+	.4byte kar_gryakubreakrock_update_kind22_lifetime_countdown
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakrock_update_kind22_effects_then_destroy
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakrock_kind22_callback_table
+
+# .data:0x20 | 0x804A68E8 | size: 0x90
+.obj kar_gryakubreakrock_kind22_callback_table_ptr, global
+	.4byte kar_gryakubreakrock_kind22_callback_table
+	.4byte kar_gryakubreakhouse_handle_kind22_23_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x67727961
+	.4byte 0x6B756272
+	.4byte 0x65616B68
+	.4byte 0x6F757365
+	.4byte 0x2E630000
+	.4byte 0x70617261
+	.4byte 0x6D2D3E65
+	.4byte 0x66427265
+	.4byte 0x616B4E75
+	.4byte 0x6D203C3D
+	.4byte 0x20477259
+	.4byte 0x616B7542
+	.4byte 0x7265616B
+	.4byte 0x486F7573
+	.4byte 0x655F5265
+	.4byte 0x6D6F7665
+	.4byte 0x45666665
+	.4byte 0x63744964
+	.4byte 0x4E756D4D
+	.4byte 0x61780000
+	.4byte 0x6772636F
+	.4byte 0x6C6C2E68
+	.4byte 0x00000000
+	.4byte 0x21677243
+	.4byte 0x6F6C6C43
+	.4byte 0x686B4661
+	.4byte 0x6365496C
+	.4byte 0x6C656761
+	.4byte 0x6C286763
+	.4byte 0x702C2069
+	.4byte 0x64290000
+.endobj kar_gryakubreakrock_kind22_callback_table_ptr
+
+# 0x805DF970..0x805DF988 | size: 0x18
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF970 | size: 0x4
+.obj lbl_805DF970, global
+	.float 0.00001
+.endobj lbl_805DF970
+
+# .sdata2:0x4 | 0x805DF974 | size: 0x4
+.obj lbl_805DF974, global
+	.float -0.00001
+.endobj lbl_805DF974
+
+# .sdata2:0x8 | 0x805DF978 | size: 0x4
+.obj lbl_805DF978, global
+	.float 0
+.endobj lbl_805DF978
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805DF980 | size: 0x8
+.obj lbl_805DF980, global
+	.double 4503601774854144
+.endobj lbl_805DF980

@@ -451,3 +451,83 @@
 /* 801044FC 001012FC  38 21 00 10 */	addi r1, r1, 0x10
 /* 80104500 00101300  4E 80 00 20 */	blr
 .endfn kar_gryakubreakcoral_create_stage_linked_kind31_breakicicle
+
+# 0x804A6A9C..0x804A6B50 | size: 0xB4
+.data
+.balign 4
+
+# .data:0x0 | 0x804A6A9C | size: 0x13
+.obj kar_src_gryakubreakcoral_c, global
+	.string "gryakubreakcoral.c"
+.endobj kar_src_gryakubreakcoral_c
+
+# .data:0x13 | 0x804A6AAF | size: 0x1
+.obj gap_07_804A6AAF_data, global
+.hidden gap_07_804A6AAF_data
+	.byte 0x00
+.endobj gap_07_804A6AAF_data
+
+# .data:0x14 | 0x804A6AB0 | size: 0x3B
+.obj kar_gryakubreakcoral_assert_remove_effect_count, global
+	.string "param->efBreakNum <= GrYakuBreakCoral_RemoveEffectIdNumMax"
+.endobj kar_gryakubreakcoral_assert_remove_effect_count
+
+# .data:0x4F | 0x804A6AEB | size: 0x1
+.obj gap_07_804A6AEB_data, global
+.hidden gap_07_804A6AEB_data
+	.byte 0x00
+.endobj gap_07_804A6AEB_data
+
+# .data:0x50 | 0x804A6AEC | size: 0x14
+.obj kar_gryakubreakcoral_kind25_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoral_kind25_callback_table_ptr
+
+# .data:0x64 | 0x804A6B00 | size: 0x14
+.obj kar_gryakubreakcoral_kind26_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoral_kind26_callback_table_ptr
+
+# .data:0x78 | 0x804A6B14 | size: 0x14
+.obj kar_gryakubreakcoral_kind27_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoral_kind27_callback_table_ptr
+
+# .data:0x8C | 0x804A6B28 | size: 0x14
+.obj kar_gryakubreakcoral_kind28_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoral_kind28_callback_table_ptr
+
+# .data:0xA0 | 0x804A6B3C | size: 0x14
+.obj kar_gryakubreakcoral_kind29_callback_table_ptr, global
+	.4byte kar_gryakuanimfloor_break_effect_shared_callback_table
+	.4byte kar_gryakubreakcoral_handle_kind24_to29_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoral_kind29_callback_table_ptr
+
+# 0x805DF9B4..0x805DF9B8 | size: 0x4
+.section .sdata2, "a"
+.balign 4
+
+# .sdata2:0x0 | 0x805DF9B4 | size: 0x4
+.obj lbl_805DF9B4, global
+	.float 1
+.endobj lbl_805DF9B4

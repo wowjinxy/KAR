@@ -2254,3 +2254,373 @@
 /* 80071288 0006E088  38 21 00 10 */	addi r1, r1, 0x10
 /* 8007128C 0006E08C  4E 80 00 20 */	blr
 .endfn kar_lbkdtree__near_8007125c
+
+# 0x80499860..0x80499CA8 | size: 0x448
+.data
+.balign 8
+
+# .data:0x0 | 0x80499860 | size: 0x298
+.obj kar_src_lbkdtree_80499860, global
+	.4byte 0x6C626B64
+	.4byte 0x74726565
+	.4byte 0x2E630000
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x6E6F6465
+	.4byte 0x4E756D20
+	.4byte 0x3E203000
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x6E6F6465
+	.4byte 0x4E756D20
+	.4byte 0x3C206E6F
+	.4byte 0x64654275
+	.4byte 0x66664E75
+	.4byte 0x6D000000
+	.4byte 0x6E6F6465
+	.4byte 0x49644E75
+	.4byte 0x6D203C20
+	.4byte 0x4C624B64
+	.4byte 0x5F4E6F64
+	.4byte 0x65427566
+	.4byte 0x664D6178
+	.4byte 0x00000000
+	.4byte 0x6C626B64
+	.4byte 0x74726565
+	.4byte 0x2E680000
+	.4byte 0x6C624B64
+	.4byte 0x74726565
+	.4byte 0x4F626A47
+	.4byte 0x6574466C
+	.4byte 0x61677328
+	.4byte 0x6B647472
+	.4byte 0x65652C20
+	.4byte 0x6F626A4B
+	.4byte 0x696E6429
+	.4byte 0x2026204C
+	.4byte 0x624B6474
+	.4byte 0x7265655F
+	.4byte 0x466C6167
+	.4byte 0x735F5479
+	.4byte 0x70655F53
+	.4byte 0x74617469
+	.4byte 0x63000000
+	.4byte 0x6F626A4B
+	.4byte 0x696E6420
+	.4byte 0x3D202564
+	.4byte 0x2C207374
+	.4byte 0x61746963
+	.4byte 0x48656164
+	.4byte 0x2D3E6964
+	.4byte 0x4E756D20
+	.4byte 0x3D202564
+	.4byte 0x2C206F62
+	.4byte 0x6A496442
+	.4byte 0x7566664E
+	.4byte 0x756D5B6F
+	.4byte 0x626A4B69
+	.4byte 0x6E645D20
+	.4byte 0x3D202564
+	.4byte 0x0A000000
+	.4byte 0x73746174
+	.4byte 0x69634865
+	.4byte 0x61642D3E
+	.4byte 0x69644E75
+	.4byte 0x6D203C20
+	.4byte 0x6F626A49
+	.4byte 0x64427566
+	.4byte 0x664E756D
+	.4byte 0x5B6F626A
+	.4byte 0x4B696E64
+	.4byte 0x5D000000
+	.4byte 0x6E6F6465
+	.4byte 0x2D3E6465
+	.4byte 0x70746820
+	.4byte 0x3C204C62
+	.4byte 0x4B645F44
+	.4byte 0x65707468
+	.4byte 0x4D617800
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63204853
+	.4byte 0x445F416C
+	.4byte 0x6C6F6328
+	.4byte 0x73697A65
+	.4byte 0x6F66284C
+	.4byte 0x624B644E
+	.4byte 0x6F64652A
+	.4byte 0x29202A20
+	.4byte 0x6E6F6465
+	.4byte 0x42756666
+	.4byte 0x4E756D29
+	.4byte 0x21210A00
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x6E6F6465
+	.4byte 0x00000000
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63204853
+	.4byte 0x445F416C
+	.4byte 0x6C6F6328
+	.4byte 0x73697A65
+	.4byte 0x6F66284C
+	.4byte 0x624B644E
+	.4byte 0x756D2920
+	.4byte 0x2A206F62
+	.4byte 0x6A496442
+	.4byte 0x7566664E
+	.4byte 0x756D5B25
+	.4byte 0x645D2921
+	.4byte 0x210A0000
+	.4byte 0x73746174
+	.4byte 0x69634865
+	.4byte 0x61642D3E
+	.4byte 0x69640000
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63204853
+	.4byte 0x445F416C
+	.4byte 0x6C6F6328
+	.4byte 0x73697A65
+	.4byte 0x6F66284C
+	.4byte 0x624B644E
+	.4byte 0x6F64652A
+	.4byte 0x29202A20
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x6E6F6465
+	.4byte 0x4E756D29
+	.4byte 0x21210A00
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63204853
+	.4byte 0x445F416C
+	.4byte 0x6C6F6328
+	.4byte 0x73697A65
+	.4byte 0x6F66284C
+	.4byte 0x624B644E
+	.4byte 0x756D2920
+	.4byte 0x2A202564
+	.4byte 0x29212120
+	.4byte 0x6F626A4B
+	.4byte 0x696E6420
+	.4byte 0x3D202564
+	.4byte 0x0A000000
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63204853
+	.4byte 0x445F416C
+	.4byte 0x6C6F6328
+	.4byte 0x73697A65
+	.4byte 0x6F662875
+	.4byte 0x3829202A
+	.4byte 0x206C6247
+	.4byte 0x65744B64
+	.4byte 0x436F756E
+	.4byte 0x74657242
+	.4byte 0x79746528
+	.4byte 0x6B647472
+	.4byte 0x65652921
+	.4byte 0x210A0000
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x636F756E
+	.4byte 0x74657200
+.endobj kar_src_lbkdtree_80499860
+
+# .data:0x298 | 0x80499AF8 | size: 0xA8
+.obj lbl_80499AF8, global
+	.4byte 0x6F626A4B
+	.4byte 0x696E6420
+	.4byte 0x3D3D206B
+	.4byte 0x64747265
+	.4byte 0x652D3E6F
+	.4byte 0x626A4E75
+	.4byte 0x6D000000
+	.4byte 0x6F626A49
+	.4byte 0x64203D20
+	.4byte 0x25642C20
+	.4byte 0x636F756E
+	.4byte 0x7465724E
+	.4byte 0x756D203D
+	.4byte 0x2025640A
+	.4byte 0x00000000
+	.4byte 0x6F626A49
+	.4byte 0x64203C20
+	.4byte 0x6B647472
+	.4byte 0x65652D3E
+	.4byte 0x636F756E
+	.4byte 0x7465724E
+	.4byte 0x756D202D
+	.4byte 0x20310000
+	.4byte 0x6C624B64
+	.4byte 0x4F626A43
+	.4byte 0x72656174
+	.4byte 0x6546756E
+	.4byte 0x635B7479
+	.4byte 0x70655D2E
+	.4byte 0x63686B49
+	.4byte 0x6E636C75
+	.4byte 0x64654E6F
+	.4byte 0x64654675
+	.4byte 0x6E634F6E
+	.4byte 0x6528266B
+	.4byte 0x64747265
+	.4byte 0x652D3E6E
+	.4byte 0x6F64655B
+	.4byte 0x305D2D3E
+	.4byte 0x626F782C
+	.4byte 0x20646174
+	.4byte 0x61290000
+.endobj lbl_80499AF8
+
+# .data:0x340 | 0x80499BA0 | size: 0x48
+.obj lbl_80499BA0, global
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+.endobj lbl_80499BA0
+
+# .data:0x388 | 0x80499BE8 | size: 0x60
+.obj lbl_80499BE8, global
+	.4byte 0x00000004
+	.4byte 0x00000005
+	.4byte 0x00000006
+	.4byte 0x00000007
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000006
+	.4byte 0x00000005
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x00000007
+	.4byte 0x00000003
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000007
+	.4byte 0x00000006
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000005
+	.4byte 0x00000004
+.endobj lbl_80499BE8
+
+# .data:0x3E8 | 0x80499C48 | size: 0x60
+.obj lbl_80499C48, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000001
+.endobj lbl_80499C48
+
+# 0x80550E80..0x80550ED8 | size: 0x58
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80550E80 | size: 0x2C
+.obj lbKdTree_obj_ref_alloc_data, global
+	.skip 0x2C
+.endobj lbKdTree_obj_ref_alloc_data
+
+# .bss:0x2C | 0x80550EAC | size: 0x2C
+.obj lbl_80550EAC, global
+	.skip 0x2C
+.endobj lbl_80550EAC
+
+# 0x805D5388..0x805D5390 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5388 | size: 0x4
+.obj lbl_805D5388, global
+	.string "num"
+.endobj lbl_805D5388
+
+# .sdata:0x4 | 0x805D538C | size: 0x4
+.obj gap_09_805D538C_sdata, global
+.hidden gap_09_805D538C_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D538C_sdata
+
+# 0x805DD5C0..0x805DD5C8 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD5C0 | size: 0x8
+.obj lbl_805DD5C0, global
+	.skip 0x8
+.endobj lbl_805DD5C0
+
+# 0x805DECC0..0x805DECD8 | size: 0x18
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DECC0 | size: 0x4
+.obj lbl_805DECC0, global
+	.float 0.01
+.endobj lbl_805DECC0
+
+# .sdata2:0x4 | 0x805DECC4 | size: 0x4
+.obj lbl_805DECC4, global
+	.float 0
+.endobj lbl_805DECC4
+
+# .sdata2:0x8 | 0x805DECC8 | size: 0x4
+.obj lbl_805DECC8, global
+	.float 0.5
+.endobj lbl_805DECC8
+
+# .sdata2:0xC | 0x805DECCC | size: 0x4
+.obj lbl_805DECCC, global
+	.float -0.5
+.endobj lbl_805DECCC
+
+# .sdata2:0x10 | 0x805DECD0 | size: 0x4
+.obj lbl_805DECD0, global
+	.float 1
+.endobj lbl_805DECD0
+
+# .sdata2:0x14 | 0x805DECD4 | size: 0x4
+.obj lbl_805DECD4, global
+	.float 1.5
+.endobj lbl_805DECD4

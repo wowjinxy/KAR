@@ -1054,3 +1054,155 @@
 /* 800EE97C 000EB77C  38 60 00 00 */	li r3, 0x0
 /* 800EE980 000EB780  4E 80 00 20 */	blr
 .endfn kar_grglobaldead_get_configured_count
+
+# 0x804A5410..0x804A5618 | size: 0x208
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5410 | size: 0x140
+.obj greventgenerator_event_callback_records, global
+	.4byte kar_grcolosseum1_event_kind4d_init_shuffle_positions
+	.4byte kar_grcolosseum1_event_kind4d_update_spawn_until_timeout
+	.4byte fn_80110444
+	.4byte kar_grcolosseum1_event_kind4d_cleanup_reset_positions
+	.4byte 0x00000000
+	.4byte kar_grcolosseum1_event_kind4c_init_boxgenerator_state
+	.4byte kar_grcolosseum1_event_kind4c_update_spawn_until_gone
+	.4byte fn_80110634
+	.4byte kar_grcolosseum1_event_kind4c_cleanup_boxgenerator_state
+	.4byte 0x00000000
+	.4byte kar_grcolosseum1_event_kind4e_init_pattern_state
+	.4byte kar_grcolosseum1_event_kind4e_update_spawn_pattern_rows
+	.4byte fn_80110F34
+	.4byte kar_grcolosseum1_event_kind4e_cleanup_pattern_state
+	.4byte 0x00000000
+	.4byte kar_grcolosseum1_event_start_kind40_pillar_and_break_targets
+	.4byte kar_greventrock_event_update_kind40_pillar_prefall_and_fall
+	.4byte 0x00000000
+	.4byte kar_greventrock_cleanup_kind40_boxgenerator_state
+	.4byte 0x00000000
+	.4byte kar_grcolosseum1_event_mark_active_players_at_keyframe
+	.4byte kar_grcolosseum1_event_clear_marked_players_after_keyframe
+	.4byte fn_80111070
+	.4byte fn_80111074
+	.4byte 0x00000000
+	.4byte kar_grcolosseum1_event_create_random_secondary_kind20_catchzones
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_spawn_kind65_effect_fgm_timers
+	.4byte kar_greventrock_event_destroy_kind65_timers_after_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_init_state7_boxgenerator_helper
+	.4byte kar_greventrock_event_cleanup_state7_after_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventlighthouse_event_arm_kind68_handle_and_mark_param_vec
+	.4byte kar_greventlighthouse_event_mark_kind68_complete_at_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_create_kind66_break_part_emitter
+	.4byte kar_greventrock_event_finish_kind66_emitter_after_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_init_vcgenerator_from_three_floats
+	.4byte kar_greventrock_event_update_vcgenerator_until_done
+	.4byte fn_80111D68
+	.4byte fn_80111D6C
+	.4byte kar_greventrock_configure_vcgenerator_weighted_kind11_segment
+	.4byte kar_greventrock_event_init_kind67_collapse_controller
+	.4byte fn_80111968
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_init_state13_five_float_boxgenerator
+	.4byte kar_greventrock_event_cleanup_state13_after_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte fn_801118D8
+	.4byte kar_greventrock_event_finish_after_keyframe
+	.4byte fn_8011192C
+	.4byte fn_80111930
+	.4byte 0x00000000
+	.4byte kar_greventrock_event_init_state15_boxgenerator_helper
+	.4byte kar_greventrock_event_cleanup_state15_after_keyframe
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj greventgenerator_event_callback_records
+
+# .data:0x140 | 0x804A5550 | size: 0x13
+.obj kar_src_greventgenerator_804a5550, global
+	.string "greventgenerator.c"
+.endobj kar_src_greventgenerator_804a5550
+
+# .data:0x153 | 0x804A5563 | size: 0x1
+.obj gap_07_804A5563_data, global
+.hidden gap_07_804A5563_data
+	.byte 0x00
+.endobj gap_07_804A5563_data
+
+# .data:0x154 | 0x804A5564 | size: 0xA0
+.obj lbl_804A5564, global
+	.4byte 0x6765702D
+	.4byte 0x3E646174
+	.4byte 0x612D3E70
+	.4byte 0x6172616D
+	.4byte 0x2D3E7072
+	.4byte 0x65765F6B
+	.4byte 0x696E645F
+	.4byte 0x6E756D20
+	.4byte 0x3C3D2047
+	.4byte 0x725F4576
+	.4byte 0x656E7447
+	.4byte 0x656E655F
+	.4byte 0x50726576
+	.4byte 0x4B696E64
+	.4byte 0x5F4E756D
+	.4byte 0x00000000
+	.4byte 0x6765702D
+	.4byte 0x3E726573
+	.4byte 0x65727665
+	.4byte 0x5F6B696E
+	.4byte 0x645F6E75
+	.4byte 0x6D203C20
+	.4byte 0x47725F45
+	.4byte 0x76656E74
+	.4byte 0x47656E65
+	.4byte 0x5F526573
+	.4byte 0x65727665
+	.4byte 0x5F4E756D
+	.4byte 0x00000000
+	.4byte 0x30203C3D
+	.4byte 0x2067726F
+	.4byte 0x75702026
+	.4byte 0x26206772
+	.4byte 0x6F757020
+	.4byte 0x3C20476D
+	.4byte 0x5F537461
+	.4byte 0x6469756D
+	.4byte 0x47726F75
+	.4byte 0x705F4D61
+	.4byte 0x78000000
+.endobj lbl_804A5564
+
+# .data:0x1F4 | 0x804A5604 | size: 0x14
+.obj greventgenerator_state_update_callbacks, global
+	.4byte kar_greventgenerator_update_idle_state
+	.4byte kar_greventgenerator_begin_selected_event
+	.4byte kar_greventgenerator_update_active_event
+	.4byte kar_greventgenerator_update_finish_state
+	.4byte 0x00000000
+.endobj greventgenerator_state_update_callbacks

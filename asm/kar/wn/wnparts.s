@@ -226,3 +226,55 @@
 /* 80221BC4 0021E9C4  38 21 00 10 */	addi r1, r1, 0x10
 /* 80221BC8 0021E9C8  4E 80 00 20 */	blr
 .endfn kar_wnparts__near_80221ba8
+
+# 0x804B4450..0x804B4498 | size: 0x48
+.data
+.balign 8
+
+# .data:0x0 | 0x804B4450 | size: 0x48
+.obj lbl_804B4450, global
+	.4byte 0x77656170
+	.4byte 0x6F6E2070
+	.4byte 0x61727473
+	.4byte 0x206E756D
+	.4byte 0x206F7665
+	.4byte 0x72212025
+	.4byte 0x640A0000
+	.4byte 0x776E7061
+	.4byte 0x7274732E
+	.4byte 0x63000000
+	.4byte 0x77656170
+	.4byte 0x6F6E2070
+	.4byte 0x61727473
+	.4byte 0x206E756D
+	.4byte 0x206E6F74
+	.4byte 0x206D6174
+	.4byte 0x63682120
+	.4byte 0x25640A00
+.endobj lbl_804B4450
+
+# 0x805D71C0..0x805D71C8 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D71C0 | size: 0x2
+.obj lbl_805D71C0, global
+	.string "0"
+.endobj lbl_805D71C0
+
+# .sdata:0x2 | 0x805D71C2 | size: 0x6
+.obj gap_09_805D71C2_sdata, global
+.hidden gap_09_805D71C2_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D71C2_sdata
+
+# 0x805E2858..0x805E2860 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2858 | size: 0x8
+.obj lbl_805E2858, global
+	.float 9999
+	.float 0
+.endobj lbl_805E2858

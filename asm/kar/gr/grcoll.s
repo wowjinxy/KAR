@@ -2912,3 +2912,242 @@
 /* 800D8A58 000D5858  90 03 00 08 */	stw r0, 0x8(r3)
 /* 800D8A5C 000D585C  4E 80 00 20 */	blr
 .endfn kar_grcoll__near_800d8a4c
+
+# 0x804A3B98..0x804A3E10 | size: 0x278
+.data
+.balign 8
+
+# .data:0x0 | 0x804A3B98 | size: 0x22
+.obj lbl_804A3B98, global
+	.string "seg move flag!! joint %d face %d\n"
+.endobj lbl_804A3B98
+
+# .data:0x22 | 0x804A3BBA | size: 0x2
+.obj gap_07_804A3BBA_data, global
+.hidden gap_07_804A3BBA_data
+	.2byte 0x0000
+.endobj gap_07_804A3BBA_data
+
+# .data:0x24 | 0x804A3BBC | size: 0x1D4
+.obj kar_src_grcoll_804a3bbc, global
+	.4byte 0x6772636F
+	.4byte 0x6C6C2E63
+	.4byte 0x00000000
+	.4byte 0x6572726F
+	.4byte 0x72212120
+	.4byte 0x7A6F6E65
+	.4byte 0x20256420
+	.4byte 0x66616365
+	.4byte 0x2025640A
+	.4byte 0x00000000
+	.4byte 0x67637020
+	.4byte 0x25643A20
+	.4byte 0x746F7461
+	.4byte 0x6C202564
+	.4byte 0x0A000000
+	.4byte 0x6763702D
+	.4byte 0x3E6D6F76
+	.4byte 0x655F6A6F
+	.4byte 0x696E745F
+	.4byte 0x6E756D20
+	.4byte 0x3C3D2074
+	.4byte 0x6F74616C
+	.4byte 0x2D3E6D6F
+	.4byte 0x76655F6A
+	.4byte 0x6F696E74
+	.4byte 0x5F6E756D
+	.4byte 0x00000000
+	.4byte 0x6763702D
+	.4byte 0x3E767478
+	.4byte 0x5F6E756D
+	.4byte 0x203C3D20
+	.4byte 0x746F7461
+	.4byte 0x6C2D3E76
+	.4byte 0x74785F6E
+	.4byte 0x756D0000
+	.4byte 0x6763702D
+	.4byte 0x3E666163
+	.4byte 0x655F6E75
+	.4byte 0x6D203C3D
+	.4byte 0x20746F74
+	.4byte 0x616C2D3E
+	.4byte 0x66616365
+	.4byte 0x5F6E756D
+	.4byte 0x00000000
+	.4byte 0x6763702D
+	.4byte 0x3E6A6F69
+	.4byte 0x6E745F6E
+	.4byte 0x756D203C
+	.4byte 0x3D20746F
+	.4byte 0x74616C2D
+	.4byte 0x3E6A6F69
+	.4byte 0x6E745F6E
+	.4byte 0x756D0000
+	.4byte 0x6763702D
+	.4byte 0x3E7A7674
+	.4byte 0x785F6E75
+	.4byte 0x6D203C3D
+	.4byte 0x20746F74
+	.4byte 0x616C2D3E
+	.4byte 0x7A767478
+	.4byte 0x5F6E756D
+	.4byte 0x00000000
+	.4byte 0x6763702D
+	.4byte 0x3E7A6F6E
+	.4byte 0x655F6E75
+	.4byte 0x6D203C3D
+	.4byte 0x20746F74
+	.4byte 0x616C2D3E
+	.4byte 0x7A6F6E65
+	.4byte 0x5F6E756D
+	.4byte 0x00000000
+	.4byte 0x67726F75
+	.4byte 0x6E642E68
+	.4byte 0x00000000
+	.4byte 0x30203C3D
+	.4byte 0x20646174
+	.4byte 0x615F6B69
+	.4byte 0x6E642026
+	.4byte 0x26206461
+	.4byte 0x74615F6B
+	.4byte 0x696E6420
+	.4byte 0x3C206772
+	.4byte 0x47657459
+	.4byte 0x616B7553
+	.4byte 0x74617469
+	.4byte 0x63446174
+	.4byte 0x614E756D
+	.4byte 0x28677029
+	.4byte 0x00000000
+	.4byte 0x30203C3D
+	.4byte 0x206E756D
+	.4byte 0x20262620
+	.4byte 0x6E756D20
+	.4byte 0x3C206772
+	.4byte 0x47657459
+	.4byte 0x616B7543
+	.4byte 0x6F6D6D6F
+	.4byte 0x6E446174
+	.4byte 0x614E756D
+	.4byte 0x28677029
+	.4byte 0x00000000
+	.4byte 0x746F7461
+	.4byte 0x6C2D3E7A
+	.4byte 0x6F6E655F
+	.4byte 0x6E756D20
+	.4byte 0x3D202564
+	.4byte 0x0A000000
+	.4byte 0x746F7461
+	.4byte 0x6C2D3E7A
+	.4byte 0x6F6E655F
+	.4byte 0x6E756D20
+	.4byte 0x3C204772
+	.4byte 0x5F436F6C
+	.4byte 0x6C5A6F6E
+	.4byte 0x655F4E75
+	.4byte 0x6D4D6178
+	.4byte 0x00000000
+.endobj kar_src_grcoll_804a3bbc
+
+# .data:0x1F8 | 0x804A3D90 | size: 0x80
+.obj lbl_804A3D90, global
+	.4byte 0x30203C3D
+	.4byte 0x20656467
+	.4byte 0x65496420
+	.4byte 0x26262065
+	.4byte 0x64676549
+	.4byte 0x64203C3D
+	.4byte 0x20320000
+	.4byte 0x6367665F
+	.4byte 0x616C6C2D
+	.4byte 0x3E636F6C
+	.4byte 0x6C5F696E
+	.4byte 0x666F2026
+	.4byte 0x20477243
+	.4byte 0x464B5F55
+	.4byte 0x6E646572
+	.4byte 0x00000000
+	.4byte 0x6367665F
+	.4byte 0x616C6C2D
+	.4byte 0x3E636F6C
+	.4byte 0x6C5F696E
+	.4byte 0x666F2026
+	.4byte 0x20477243
+	.4byte 0x464B5F57
+	.4byte 0x616C6C00
+	.4byte 0x6367665F
+	.4byte 0x616C6C2D
+	.4byte 0x3E636F6C
+	.4byte 0x6C5F696E
+	.4byte 0x666F2026
+	.4byte 0x20477243
+	.4byte 0x464B5F54
+	.4byte 0x6F700000
+.endobj lbl_804A3D90
+
+# 0x805D60B0..0x805D60D0 | size: 0x20
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D60B0 | size: 0x2
+.obj lbl_805D60B0, global
+	.string "0"
+.endobj lbl_805D60B0
+
+# .sdata:0x2 | 0x805D60B2 | size: 0x2
+.obj gap_09_805D60B2_sdata, global
+.hidden gap_09_805D60B2_sdata
+	.2byte 0x0000
+.endobj gap_09_805D60B2_sdata
+
+# .sdata:0x4 | 0x805D60B4 | size: 0x7
+.obj kar_srcfile_jobj_h_805d60b4, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d60b4
+
+# .sdata:0xB | 0x805D60BB | size: 0x1
+.obj gap_09_805D60BB_sdata, global
+.hidden gap_09_805D60BB_sdata
+	.byte 0x00
+.endobj gap_09_805D60BB_sdata
+
+# .sdata:0xC | 0x805D60BC | size: 0x5
+.obj lbl_805D60BC, global
+	.string "jobj"
+.endobj lbl_805D60BC
+
+# .sdata:0x11 | 0x805D60C1 | size: 0x3
+.obj gap_09_805D60C1_sdata, global
+.hidden gap_09_805D60C1_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D60C1_sdata
+
+# .sdata:0x14 | 0x805D60C4 | size: 0x8
+.obj kar_src_mplib_805d60c4, global
+	.string "mplib.h"
+.endobj kar_src_mplib_805d60c4
+
+# .sdata:0x1C | 0x805D60CC | size: 0x4
+.obj gap_09_805D60CC_sdata, global
+.hidden gap_09_805D60CC_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D60CC_sdata
+
+# 0x805DF618..0x805DF628 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF618 | size: 0x8
+.obj lbl_805DF618, global
+	.double 0.5
+.endobj lbl_805DF618
+
+# .sdata2:0x8 | 0x805DF620 | size: 0x4
+.obj lbl_805DF620, global
+	.float 0.5
+.endobj lbl_805DF620
+
+# .sdata2:0xC | 0x805DF624 | size: 0x4
+.obj lbl_805DF624, global
+	.float 0.017453292
+.endobj lbl_805DF624

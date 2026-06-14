@@ -948,3 +948,110 @@
 /* 800EA6D8 000E74D8  38 21 00 10 */	addi r1, r1, 0x10
 /* 800EA6DC 000E74DC  4E 80 00 20 */	blr
 .endfn kar_graudio__near_800ea6b8
+
+# 0x804A50C8..0x804A51F8 | size: 0x130
+.data
+.balign 8
+
+# .data:0x0 | 0x804A50C8 | size: 0x68
+.obj kar_src_graudio_804a50c8, global
+	.4byte 0x67726175
+	.4byte 0x64696F2E
+	.4byte 0x63000000
+	.4byte 0x66676D44
+	.4byte 0x61746141
+	.4byte 0x6C6C2D3E
+	.4byte 0x6D617044
+	.4byte 0x6174614E
+	.4byte 0x756D203C
+	.4byte 0x3D204772
+	.4byte 0x5F4D6170
+	.4byte 0x46676D5F
+	.4byte 0x4E756D4D
+	.4byte 0x61780000
+	.4byte 0x66676D44
+	.4byte 0x61746141
+	.4byte 0x6C6C2D3E
+	.4byte 0x7A6F6E65
+	.4byte 0x44617461
+	.4byte 0x4E756D20
+	.4byte 0x3C3D2047
+	.4byte 0x725F5A6F
+	.4byte 0x6E654667
+	.4byte 0x6D5F4E75
+	.4byte 0x6D4D6178
+	.4byte 0x00000000
+.endobj kar_src_graudio_804a50c8
+
+# .data:0x68 | 0x804A5130 | size: 0x41
+.obj lbl_804A5130, global
+	.string "GrFgmTrackKind_Single <= kind && kind < GrFgmTrackKind_Terminate"
+.endobj lbl_804A5130
+
+# .data:0xA9 | 0x804A5171 | size: 0x3
+.obj gap_07_804A5171_data, global
+.hidden gap_07_804A5171_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A5171_data
+
+# .data:0xAC | 0x804A5174 | size: 0x54
+.obj lbl_804A5174, global
+	.4byte 0x66676D49
+	.4byte 0x64203E3D
+	.4byte 0x20302026
+	.4byte 0x26206667
+	.4byte 0x6D496420
+	.4byte 0x3C206667
+	.4byte 0x6D2D3E69
+	.4byte 0x64446174
+	.4byte 0x614E756D
+	.4byte 0x00000000
+	.4byte 0x696E6469
+	.4byte 0x76694667
+	.4byte 0x6D416C6C
+	.4byte 0x2D3E696E
+	.4byte 0x64697669
+	.4byte 0x46676D4E
+	.4byte 0x756D203C
+	.4byte 0x3D206672
+	.4byte 0x616D6541
+	.4byte 0x72726179
+	.4byte 0x4E756D00
+.endobj lbl_804A5174
+
+# .data:0x100 | 0x804A51C8 | size: 0x2F
+.obj lbl_804A51C8, global
+	.string "*** Error(ItemGene) : Not Found Timing Table!\n"
+.endobj lbl_804A51C8
+
+# .data:0x12F | 0x804A51F7 | size: 0x1
+.obj gap_07_804A51F7_data, global
+.hidden gap_07_804A51F7_data
+	.byte 0x00
+.endobj gap_07_804A51F7_data
+
+# 0x805D6168..0x805D6178 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6168 | size: 0x2
+.obj lbl_805D6168, global
+	.string "0"
+.endobj lbl_805D6168
+
+# .sdata:0x2 | 0x805D616A | size: 0x2
+.obj gap_09_805D616A_sdata, global
+.hidden gap_09_805D616A_sdata
+	.2byte 0x0000
+.endobj gap_09_805D616A_sdata
+
+# .sdata:0x4 | 0x805D616C | size: 0x8
+.obj lbl_805D616C, global
+	.string "voidPtr"
+.endobj lbl_805D616C
+
+# .sdata:0xC | 0x805D6174 | size: 0x4
+.obj gap_09_805D6174_sdata, global
+.hidden gap_09_805D6174_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D6174_sdata

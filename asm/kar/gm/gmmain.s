@@ -1,11 +1,57 @@
 .include "macros.inc"
 .file "gmmain.c"
 
-# 0x80005898..0x8000714C | size: 0x18B4
+# 0x80005800..0x8000714C | size: 0x194C
 .text
 .balign 4
 
-# .text:0x0 | 0x80005898 | size: 0x424
+# .text:0x0 | 0x80005800 | size: 0x94
+.fn fn_80005800, global
+/* 80005800 00002600  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80005804 00002604  7C 08 02 A6 */	mflr r0
+/* 80005808 00002608  3C 80 80 53 */	lis r4, lbl_80535300@ha
+/* 8000580C 0000260C  38 60 00 05 */	li r3, 0x5
+/* 80005810 00002610  38 E4 53 00 */	addi r7, r4, lbl_80535300@l
+/* 80005814 00002614  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80005818 00002618  38 C0 00 0C */	li r6, 0xc
+/* 8000581C 0000261C  38 87 00 00 */	addi r4, r7, 0x0
+/* 80005820 00002620  38 A7 01 04 */	addi r5, r7, 0x104
+/* 80005824 00002624  38 E7 05 14 */	addi r7, r7, 0x514
+/* 80005828 00002628  48 40 E9 21 */	bl fn_80414148
+/* 8000582C 0000262C  3C 60 80 59 */	lis r3, lbl_8058B080@ha
+/* 80005830 00002630  C0 02 80 00 */	lfs f0, lbl_805DE700@sda21(r0)
+/* 80005834 00002634  38 E3 B0 80 */	addi r7, r3, lbl_8058B080@l
+/* 80005838 00002638  39 00 00 00 */	li r8, 0x0
+/* 8000583C 0000263C  38 C0 00 01 */	li r6, 0x1
+/* 80005840 00002640  38 A0 00 50 */	li r5, 0x50
+/* 80005844 00002644  38 80 00 8C */	li r4, 0x8c
+/* 80005848 00002648  38 60 00 32 */	li r3, 0x32
+/* 8000584C 0000264C  38 00 00 03 */	li r0, 0x3
+/* 80005850 00002650  99 07 00 4C */	stb r8, 0x4c(r7)
+/* 80005854 00002654  98 C7 00 4D */	stb r6, 0x4d(r7)
+/* 80005858 00002658  98 A7 00 4E */	stb r5, 0x4e(r7)
+/* 8000585C 0000265C  99 07 00 4F */	stb r8, 0x4f(r7)
+/* 80005860 00002660  98 A7 00 56 */	stb r5, 0x56(r7)
+/* 80005864 00002664  98 C7 00 50 */	stb r6, 0x50(r7)
+/* 80005868 00002668  98 87 00 51 */	stb r4, 0x51(r7)
+/* 8000586C 0000266C  99 07 00 52 */	stb r8, 0x52(r7)
+/* 80005870 00002670  98 87 00 57 */	stb r4, 0x57(r7)
+/* 80005874 00002674  99 07 00 44 */	stb r8, 0x44(r7)
+/* 80005878 00002678  98 67 00 45 */	stb r3, 0x45(r7)
+/* 8000587C 0000267C  D0 07 00 48 */	stfs f0, 0x48(r7)
+/* 80005880 00002680  98 07 00 59 */	stb r0, 0x59(r7)
+/* 80005884 00002684  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80005888 00002688  7C 08 03 A6 */	mtlr r0
+/* 8000588C 0000268C  38 21 00 10 */	addi r1, r1, 0x10
+/* 80005890 00002690  4E 80 00 20 */	blr
+.endfn fn_80005800
+
+# .text:0x94 | 0x80005894 | size: 0x4
+.fn fn_80005894, global
+/* 80005894 00002694  4E 80 00 20 */	blr
+.endfn fn_80005894
+
+# .text:0x98 | 0x80005898 | size: 0x424
 .fn main, global
 /* 80005898 00002698  94 21 FF 40 */	stwu r1, -0xc0(r1)
 /* 8000589C 0000269C  7C 08 02 A6 */	mflr r0
@@ -292,7 +338,7 @@
 /* 80005CB8 00002AB8  4E 80 00 20 */	blr
 .endfn main
 
-# .text:0x424 | 0x80005CBC | size: 0x24
+# .text:0x4BC | 0x80005CBC | size: 0x24
 .fn kar_gmmain__near_80005cbc, global
 /* 80005CBC 00002ABC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005CC0 00002AC0  7C 08 02 A6 */	mflr r0
@@ -305,7 +351,7 @@
 /* 80005CDC 00002ADC  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005cbc
 
-# .text:0x448 | 0x80005CE0 | size: 0x24
+# .text:0x4E0 | 0x80005CE0 | size: 0x24
 .fn kar_gmmain__near_80005ce0, global
 /* 80005CE0 00002AE0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005CE4 00002AE4  7C 08 02 A6 */	mflr r0
@@ -318,7 +364,7 @@
 /* 80005D00 00002B00  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005ce0
 
-# .text:0x46C | 0x80005D04 | size: 0x50
+# .text:0x504 | 0x80005D04 | size: 0x50
 .fn kar_gmmain__near_80005d04, global
 /* 80005D04 00002B04  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005D08 00002B08  7C 08 02 A6 */	mflr r0
@@ -342,7 +388,7 @@
 /* 80005D50 00002B50  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005d04
 
-# .text:0x4BC | 0x80005D54 | size: 0x24
+# .text:0x554 | 0x80005D54 | size: 0x24
 .fn kar_gmmain__near_80005d54, global
 /* 80005D54 00002B54  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005D58 00002B58  7C 08 02 A6 */	mflr r0
@@ -355,7 +401,7 @@
 /* 80005D74 00002B74  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005d54
 
-# .text:0x4E0 | 0x80005D78 | size: 0x54
+# .text:0x578 | 0x80005D78 | size: 0x54
 .fn kar_gmmain__near_80005d78, global
 /* 80005D78 00002B78  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005D7C 00002B7C  7C 08 02 A6 */	mflr r0
@@ -380,7 +426,7 @@
 /* 80005DC8 00002BC8  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005d78
 
-# .text:0x534 | 0x80005DCC | size: 0x58
+# .text:0x5CC | 0x80005DCC | size: 0x58
 .fn kar_gmmain__near_80005dcc, global
 /* 80005DCC 00002BCC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80005DD0 00002BD0  7C 08 02 A6 */	mflr r0
@@ -406,7 +452,7 @@
 /* 80005E20 00002C20  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005dcc
 
-# .text:0x58C | 0x80005E24 | size: 0xF0
+# .text:0x624 | 0x80005E24 | size: 0xF0
 .fn fn_80005E24, global
 /* 80005E24 00002C24  38 00 00 00 */	li r0, 0x0
 /* 80005E28 00002C28  3C 60 80 59 */	lis r3, lbl_8058B0E4@ha
@@ -474,7 +520,7 @@
 /* 80005F10 00002D10  4E 80 00 20 */	blr
 .endfn fn_80005E24
 
-# .text:0x67C | 0x80005F14 | size: 0xC0
+# .text:0x714 | 0x80005F14 | size: 0xC0
 .fn kar_gmmain__near_80005f14, global
 /* 80005F14 00002D14  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80005F18 00002D18  7C 08 02 A6 */	mflr r0
@@ -530,7 +576,7 @@
 /* 80005FD0 00002DD0  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80005f14
 
-# .text:0x73C | 0x80005FD4 | size: 0xC0
+# .text:0x7D4 | 0x80005FD4 | size: 0xC0
 .fn fn_80005FD4, global
 /* 80005FD4 00002DD4  38 00 00 00 */	li r0, 0x0
 /* 80005FD8 00002DD8  3C 60 80 59 */	lis r3, lbl_8058B0E4@ha
@@ -586,7 +632,7 @@
 /* 80006090 00002E90  4E 80 00 20 */	blr
 .endfn fn_80005FD4
 
-# .text:0x7FC | 0x80006094 | size: 0x288
+# .text:0x894 | 0x80006094 | size: 0x288
 .fn kar_gmmain__near_80006094, global
 /* 80006094 00002E94  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80006098 00002E98  7C 08 02 A6 */	mflr r0
@@ -765,7 +811,7 @@
 /* 80006318 00003118  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006094
 
-# .text:0xA84 | 0x8000631C | size: 0x38
+# .text:0xB1C | 0x8000631C | size: 0x38
 .fn kar_gmmain__near_8000631c, global
 /* 8000631C 0000311C  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006320 00003120  7C 08 02 A6 */	mflr r0
@@ -783,7 +829,7 @@
 /* 80006350 00003150  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_8000631c
 
-# .text:0xABC | 0x80006354 | size: 0x30
+# .text:0xB54 | 0x80006354 | size: 0x30
 .fn kar_gmmain__near_80006354, global
 /* 80006354 00003154  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006358 00003158  7C 08 02 A6 */	mflr r0
@@ -799,7 +845,7 @@
 /* 80006380 00003180  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006354
 
-# .text:0xAEC | 0x80006384 | size: 0x24
+# .text:0xB84 | 0x80006384 | size: 0x24
 .fn kar_gmmain__near_80006384, global
 /* 80006384 00003184  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006388 00003188  7C 08 02 A6 */	mflr r0
@@ -812,7 +858,7 @@
 /* 800063A4 000031A4  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006384
 
-# .text:0xB10 | 0x800063A8 | size: 0x148
+# .text:0xBA8 | 0x800063A8 | size: 0x148
 .fn kar_gmmain__near_800063a8, global
 /* 800063A8 000031A8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800063AC 000031AC  7C 08 02 A6 */	mflr r0
@@ -906,7 +952,7 @@
 /* 800064EC 000032EC  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_800063a8
 
-# .text:0xC58 | 0x800064F0 | size: 0x28
+# .text:0xCF0 | 0x800064F0 | size: 0x28
 .fn kar_gmmain__near_800064f0, global
 /* 800064F0 000032F0  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800064F4 000032F4  7C 08 02 A6 */	mflr r0
@@ -920,7 +966,7 @@
 /* 80006514 00003314  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_800064f0
 
-# .text:0xC80 | 0x80006518 | size: 0x28
+# .text:0xD18 | 0x80006518 | size: 0x28
 .fn kar_gmmain__near_80006518, global
 /* 80006518 00003318  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 8000651C 0000331C  7C 08 02 A6 */	mflr r0
@@ -934,7 +980,7 @@
 /* 8000653C 0000333C  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006518
 
-# .text:0xCA8 | 0x80006540 | size: 0x264
+# .text:0xD40 | 0x80006540 | size: 0x264
 .fn kar_gmmain__near_80006540, global
 /* 80006540 00003340  94 21 FF C0 */	stwu r1, -0x40(r1)
 /* 80006544 00003344  7C 08 02 A6 */	mflr r0
@@ -1099,7 +1145,7 @@
 /* 800067A0 000035A0  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006540
 
-# .text:0xF0C | 0x800067A4 | size: 0x3B4
+# .text:0xFA4 | 0x800067A4 | size: 0x3B4
 .fn kar_gmmain__near_800067a4, global
 /* 800067A4 000035A4  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800067A8 000035A8  7C 08 02 A6 */	mflr r0
@@ -1369,7 +1415,7 @@
 /* 80006B54 00003954  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_800067a4
 
-# .text:0x12C0 | 0x80006B58 | size: 0xBC
+# .text:0x1358 | 0x80006B58 | size: 0xBC
 .fn kar_gmmain__near_80006b58, global
 /* 80006B58 00003958  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006B5C 0000395C  7C 08 02 A6 */	mflr r0
@@ -1426,14 +1472,14 @@
 /* 80006C10 00003A10  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006b58
 
-# .text:0x137C | 0x80006C14 | size: 0xC
+# .text:0x1414 | 0x80006C14 | size: 0xC
 .fn kar_gmmain__near_80006c14, global
 /* 80006C14 00003A14  3C 60 80 53 */	lis r3, lbl_805359D8@ha
 /* 80006C18 00003A18  38 63 59 D8 */	addi r3, r3, lbl_805359D8@l
 /* 80006C1C 00003A1C  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006c14
 
-# .text:0x1388 | 0x80006C20 | size: 0x10
+# .text:0x1420 | 0x80006C20 | size: 0x10
 .fn kar_gmmain__near_80006c20, global
 /* 80006C20 00003A20  3C 60 80 53 */	lis r3, lbl_805359D8@ha
 /* 80006C24 00003A24  38 63 59 D8 */	addi r3, r3, lbl_805359D8@l
@@ -1441,13 +1487,13 @@
 /* 80006C2C 00003A2C  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006c20
 
-# .text:0x1398 | 0x80006C30 | size: 0x8
+# .text:0x1430 | 0x80006C30 | size: 0x8
 .fn kar_gmmain__near_80006c30, global
 /* 80006C30 00003A30  38 60 07 B0 */	li r3, 0x7b0
 /* 80006C34 00003A34  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006c30
 
-# .text:0x13A0 | 0x80006C38 | size: 0x10
+# .text:0x1438 | 0x80006C38 | size: 0x10
 .fn kar_gmmain__near_80006c38, global
 /* 80006C38 00003A38  3C 60 80 53 */	lis r3, lbl_805359D8@ha
 /* 80006C3C 00003A3C  38 63 59 D8 */	addi r3, r3, lbl_805359D8@l
@@ -1455,7 +1501,7 @@
 /* 80006C44 00003A44  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006c38
 
-# .text:0x13B0 | 0x80006C48 | size: 0x138
+# .text:0x1448 | 0x80006C48 | size: 0x138
 .fn kar_gmmain__near_80006c48, global
 /* 80006C48 00003A48  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006C4C 00003A4C  7C 08 02 A6 */	mflr r0
@@ -1537,7 +1583,7 @@
 /* 80006D7C 00003B7C  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006c48
 
-# .text:0x14E8 | 0x80006D80 | size: 0xC8
+# .text:0x1580 | 0x80006D80 | size: 0xC8
 .fn kar_gmmain__near_80006d80, global
 /* 80006D80 00003B80  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80006D84 00003B84  7C 08 02 A6 */	mflr r0
@@ -1591,7 +1637,7 @@
 /* 80006E44 00003C44  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006d80
 
-# .text:0x15B0 | 0x80006E48 | size: 0x70
+# .text:0x1648 | 0x80006E48 | size: 0x70
 .fn kar_gmmain__near_80006e48, global
 /* 80006E48 00003C48  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 80006E4C 00003C4C  7C 08 02 A6 */	mflr r0
@@ -1623,7 +1669,7 @@
 /* 80006EB4 00003CB4  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006e48
 
-# .text:0x1620 | 0x80006EB8 | size: 0x34
+# .text:0x16B8 | 0x80006EB8 | size: 0x34
 .fn kar_gmmain__near_80006eb8, global
 /* 80006EB8 00003CB8  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006EBC 00003CBC  7C 08 02 A6 */	mflr r0
@@ -1640,7 +1686,7 @@
 /* 80006EE8 00003CE8  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006eb8
 
-# .text:0x1654 | 0x80006EEC | size: 0x260
+# .text:0x16EC | 0x80006EEC | size: 0x260
 .fn kar_gmmain__near_80006eec, global
 /* 80006EEC 00003CEC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 80006EF0 00003CF0  7C 08 02 A6 */	mflr r0
@@ -1795,3 +1841,441 @@
 /* 80007144 00003F44  38 21 00 10 */	addi r1, r1, 0x10
 /* 80007148 00003F48  4E 80 00 20 */	blr
 .endfn kar_gmmain__near_80006eec
+
+# 0x80494E60..0x80495010 | size: 0x1B0
+.data
+.balign 8
+
+# .data:0x0 | 0x80494E60 | size: 0x108
+.obj kar_linkfile_debug_level_0_ini_80494e60, global
+	.4byte 0x2F646562
+	.4byte 0x75675F6C
+	.4byte 0x6576656C
+	.4byte 0x5F302E69
+	.4byte 0x6E690000
+	.4byte 0x2F646562
+	.4byte 0x75675F6C
+	.4byte 0x6576656C
+	.4byte 0x5F312E69
+	.4byte 0x6E690000
+	.4byte 0x676D6D61
+	.4byte 0x696E2E63
+	.4byte 0x00000000
+	.4byte 0x2F766572
+	.4byte 0x73696F6E
+	.4byte 0x5F65332E
+	.4byte 0x696E6900
+	.4byte 0x524F4D20
+	.4byte 0x25732044
+	.4byte 0x69737420
+	.4byte 0x25732044
+	.4byte 0x624C6576
+	.4byte 0x656C2025
+	.4byte 0x64000000
+	.4byte 0x23202D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D0A
+	.4byte 0x00000000
+	.4byte 0x23202020
+	.4byte 0x204B6972
+	.4byte 0x62792773
+	.4byte 0x20416972
+	.4byte 0x72696465
+	.4byte 0x200A0000
+	.4byte 0x23204C61
+	.4byte 0x6E677561
+	.4byte 0x67652025
+	.4byte 0x730A0000
+	.4byte 0x23204462
+	.4byte 0x48696465
+	.4byte 0x466F7263
+	.4byte 0x65547572
+	.4byte 0x6E4F6E20
+	.4byte 0x25640A00
+	.4byte 0x23204172
+	.4byte 0x656E6120
+	.4byte 0x53697A65
+	.4byte 0x20256420
+	.4byte 0x4D420A00
+	.4byte 0x23204152
+	.4byte 0x414D2046
+	.4byte 0x72656520
+	.4byte 0x53697A65
+	.4byte 0x20256420
+	.4byte 0x4D422825
+	.4byte 0x64290A00
+	.4byte 0x00000000
+.endobj kar_linkfile_debug_level_0_ini_80494e60
+
+# .data:0x108 | 0x80494F68 | size: 0x40
+.obj lbl_80494F68, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0xE743FFFE
+	.4byte 0x00000001
+	.4byte 0xE543F7FE
+	.4byte 0x00000001
+	.4byte 0xE543FFFE
+	.4byte 0x00000000
+	.4byte 0x0743FFFE
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80494F68
+
+# .data:0x148 | 0x80494FA8 | size: 0x21
+.obj lbl_80494FA8, global
+	.string "[hsdDumpClassStat] -- Report --\n"
+.endobj lbl_80494FA8
+
+# .data:0x169 | 0x80494FC9 | size: 0x3
+.obj gap_07_80494FC9_data, global
+.hidden gap_07_80494FC9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80494FC9_data
+
+# .data:0x16C | 0x80494FCC | size: 0x20
+.obj lbl_80494FCC, global
+	.string "[HSD_ObjDumpStat] -- Report --\n"
+.endobj lbl_80494FCC
+
+# .data:0x18C | 0x80494FEC | size: 0x4
+.obj gap_07_80494FEC_data, global
+.hidden gap_07_80494FEC_data
+	.4byte 0x00000000
+.endobj gap_07_80494FEC_data
+
+# .data:0x190 | 0x80494FF0 | size: 0x20
+.obj kar_linkfile_dist_us_ini_80494ff0, global
+	.4byte 0x2F646973
+	.4byte 0x745F7573
+	.4byte 0x2E696E69
+	.4byte 0x00000000
+	.4byte 0x2F646973
+	.4byte 0x745F6A70
+	.4byte 0x2E696E69
+	.4byte 0x00000000
+.endobj kar_linkfile_dist_us_ini_80494ff0
+
+# 0x80535300..0x805359D8 | size: 0x6D8
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80535300 | size: 0x694
+.obj lbl_80535300, global
+	.skip 0x694
+.endobj lbl_80535300
+
+# .bss:0x694 | 0x80535994 | size: 0x44
+.obj lbl_80535994, global
+	.skip 0x44
+.endobj lbl_80535994
+
+# 0x805D50E0..0x805D5110 | size: 0x30
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D50E0 | size: 0x2
+.obj lbl_805D50E0, global
+	.string "0"
+.endobj lbl_805D50E0
+
+# .sdata:0x2 | 0x805D50E2 | size: 0x2
+.obj gap_09_805D50E2_sdata, global
+.hidden gap_09_805D50E2_sdata
+	.2byte 0x0000
+.endobj gap_09_805D50E2_sdata
+
+# .sdata:0x4 | 0x805D50E4 | size: 0x3
+.obj lbl_805D50E4, global
+	.string "jp"
+.endobj lbl_805D50E4
+
+# .sdata:0x7 | 0x805D50E7 | size: 0x1
+.obj gap_09_805D50E7_sdata, global
+.hidden gap_09_805D50E7_sdata
+	.byte 0x00
+.endobj gap_09_805D50E7_sdata
+
+# .sdata:0x8 | 0x805D50E8 | size: 0x3
+.obj lbl_805D50E8, global
+	.string "us"
+.endobj lbl_805D50E8
+
+# .sdata:0xB | 0x805D50EB | size: 0x1
+.obj gap_09_805D50EB_sdata, global
+.hidden gap_09_805D50EB_sdata
+	.byte 0x00
+.endobj gap_09_805D50EB_sdata
+
+# .sdata:0xC | 0x805D50EC | size: 0x3
+.obj lbl_805D50EC, global
+	.string "#\n"
+.endobj lbl_805D50EC
+
+# .sdata:0xF | 0x805D50EF | size: 0x1
+.obj gap_09_805D50EF_sdata, global
+.hidden gap_09_805D50EF_sdata
+	.byte 0x00
+.endobj gap_09_805D50EF_sdata
+
+# .sdata:0x10 | 0x805D50F0 | size: 0x6
+.obj lbl_805D50F0, global
+	.string "# %s\n"
+.endobj lbl_805D50F0
+
+# .sdata:0x16 | 0x805D50F6 | size: 0x2
+.obj gap_09_805D50F6_sdata, global
+.hidden gap_09_805D50F6_sdata
+	.2byte 0x0000
+.endobj gap_09_805D50F6_sdata
+
+# .sdata:0x18 | 0x805D50F8 | size: 0x4
+.obj lbl_805D50F8, global
+	.string "#\n\n"
+.endobj lbl_805D50F8
+
+# .sdata:0x1C | 0x805D50FC | size: 0x4
+.obj gap_09_805D50FC_sdata, global
+.hidden gap_09_805D50FC_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D50FC_sdata
+
+# .sdata:0x20 | 0x805D5100 | size: 0x4
+.obj lbl_805D5100, global
+	.4byte 0x00000000
+.endobj lbl_805D5100
+
+# .sdata:0x24 | 0x805D5104 | size: 0x4
+.obj lbl_805D5104, global
+	.4byte 0x404040FF
+.endobj lbl_805D5104
+
+# .sdata:0x28 | 0x805D5108 | size: 0x2
+.obj lbl_805D5108, global
+	.string "\n"
+.endobj lbl_805D5108
+
+# .sdata:0x2A | 0x805D510A | size: 0x6
+.obj gap_09_805D510A_sdata, global
+.hidden gap_09_805D510A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D510A_sdata
+
+# 0x805DD520..0x805DD570 | size: 0x50
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD520 | size: 0x8
+.obj lbl_805DD520, global
+	.skip 0x8
+.endobj lbl_805DD520
+
+# .sbss:0x8 | 0x805DD528 | size: 0x4
+.obj lbl_805DD528, global
+	.skip 0x4
+.endobj lbl_805DD528
+
+# .sbss:0xC | 0x805DD52C | size: 0x4
+.obj lbl_805DD52C, global
+	.skip 0x4
+.endobj lbl_805DD52C
+
+# .sbss:0x10 | 0x805DD530 | size: 0x4
+.obj lbl_805DD530, global
+	.skip 0x4
+.endobj lbl_805DD530
+
+# .sbss:0x14 | 0x805DD534 | size: 0x4
+.obj lbl_805DD534, global
+	.skip 0x4
+.endobj lbl_805DD534
+
+# .sbss:0x18 | 0x805DD538 | size: 0x8
+.obj lbl_805DD538, global
+	.skip 0x8
+.endobj lbl_805DD538
+
+# .sbss:0x20 | 0x805DD540 | size: 0x8
+.obj lbl_805DD540, global
+	.skip 0x8
+.endobj lbl_805DD540
+
+# .sbss:0x28 | 0x805DD548 | size: 0x4
+.obj lbl_805DD548, global
+	.skip 0x4
+.endobj lbl_805DD548
+
+# .sbss:0x2C | 0x805DD54C | size: 0x4
+.obj lbl_805DD54C, global
+	.skip 0x4
+.endobj lbl_805DD54C
+
+# .sbss:0x30 | 0x805DD550 | size: 0x4
+.obj lbl_805DD550, global
+	.skip 0x4
+.endobj lbl_805DD550
+
+# .sbss:0x34 | 0x805DD554 | size: 0x4
+.obj lbl_805DD554, global
+	.skip 0x4
+.endobj lbl_805DD554
+
+# .sbss:0x38 | 0x805DD558 | size: 0x8
+.obj lbl_805DD558, global
+	.skip 0x8
+.endobj lbl_805DD558
+
+# .sbss:0x40 | 0x805DD560 | size: 0x4
+.obj lbl_805DD560, global
+	.skip 0x4
+.endobj lbl_805DD560
+
+# .sbss:0x44 | 0x805DD564 | size: 0x4
+.obj lbl_805DD564, global
+	.skip 0x4
+.endobj lbl_805DD564
+
+# .sbss:0x48 | 0x805DD568 | size: 0x8
+.obj lbl_805DD568, global
+	.skip 0x8
+.endobj lbl_805DD568
+
+# 0x805DE700..0x805DE780 | size: 0x80
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DE700 | size: 0x8
+.obj lbl_805DE700, global
+	.float 0.5235988
+	.float 0
+.endobj lbl_805DE700
+
+# .sdata2:0x8 | 0x805DE708 | size: 0x4
+.obj lbl_805DE708, global
+	.float 0.016666668
+.endobj lbl_805DE708
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805DE710 | size: 0x8
+.obj lbl_805DE710, global
+	.double 4503599627370496
+.endobj lbl_805DE710
+
+# .sdata2:0x18 | 0x805DE718 | size: 0x8
+.obj lbl_805DE718, global
+	.float 0
+	.float 0
+.endobj lbl_805DE718
+
+# .sdata2:0x20 | 0x805DE720 | size: 0x4
+.obj lbl_805DE720, global
+	.float 0.016666668
+.endobj lbl_805DE720
+
+# .sdata2:0x24 | 0x805DE724 | size: 0x4
+.obj lbl_805DE724, global
+	.float 1.5
+.endobj lbl_805DE724
+
+# .sdata2:0x28 | 0x805DE728 | size: 0x8
+.obj lbl_805DE728, global
+	.double 4503599627370496
+.endobj lbl_805DE728
+
+# .sdata2:0x30 | 0x805DE730 | size: 0x4
+.obj lbl_805DE730, global
+	.4byte 0x00010207
+.endobj lbl_805DE730
+
+# .sdata2:0x34 | 0x805DE734 | size: 0x4
+.obj lbl_805DE734, global
+	.4byte 0x03050604
+.endobj lbl_805DE734
+
+# .sdata2:0x38 | 0x805DE738 | size: 0x4
+.obj lbl_805DE738, global
+	.float 0.175
+.endobj lbl_805DE738
+
+# .sdata2:0x3C | 0x805DE73C | size: 0x4
+.obj lbl_805DE73C, global
+	.float 99
+.endobj lbl_805DE73C
+
+# .sdata2:0x40 | 0x805DE740 | size: 0x4
+.obj lbl_805DE740, global
+	.float 59
+.endobj lbl_805DE740
+	.4byte 0x00000000
+
+# .sdata2:0x48 | 0x805DE748 | size: 0x8
+.obj lbl_805DE748, global
+	.double 4503601774854144
+.endobj lbl_805DE748
+
+# .sdata2:0x50 | 0x805DE750 | size: 0x8
+.obj lbl_805DE750, global
+	.float 6
+	.float 0
+.endobj lbl_805DE750
+
+# .sdata2:0x58 | 0x805DE758 | size: 0x4
+.obj lbl_805DE758, global
+	.float 10
+.endobj lbl_805DE758
+
+# .sdata2:0x5C | 0x805DE75C | size: 0x4
+.obj lbl_805DE75C, global
+	.float 0.5
+.endobj lbl_805DE75C
+
+# .sdata2:0x60 | 0x805DE760 | size: 0x4
+.obj lbl_805DE760, global
+	.float 26
+.endobj lbl_805DE760
+
+# .sdata2:0x64 | 0x805DE764 | size: 0x4
+.obj lbl_805DE764, global
+	.float 0
+.endobj lbl_805DE764
+
+# .sdata2:0x68 | 0x805DE768 | size: 0x4
+.obj lbl_805DE768, global
+	.float 640
+.endobj lbl_805DE768
+
+# .sdata2:0x6C | 0x805DE76C | size: 0x4
+.obj lbl_805DE76C, global
+	.float 480
+.endobj lbl_805DE76C
+
+# .sdata2:0x70 | 0x805DE770 | size: 0x4
+.obj lbl_805DE770, global
+	.float 0
+.endobj lbl_805DE770
+
+# .sdata2:0x74 | 0x805DE774 | size: 0x4
+.obj lbl_805DE774, global
+	.float 640
+.endobj lbl_805DE774
+
+# .sdata2:0x78 | 0x805DE778 | size: 0x8
+.obj lbl_805DE778, global
+	.float 480
+	.float 0
+.endobj lbl_805DE778

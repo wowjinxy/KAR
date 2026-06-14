@@ -301,3 +301,72 @@
 /* 8041D154 00419F54  38 21 00 10 */	addi r1, r1, 0x10
 /* 8041D158 00419F58  4E 80 00 20 */	blr
 .endfn HSD_ShadowRemove
+
+# 0x80504500..0x80504528 | size: 0x28
+.data
+.balign 8
+
+# .data:0x0 | 0x80504500 | size: 0x9
+.obj kar_src_memory_80504500, global
+	.string "memory.c"
+.endobj kar_src_memory_80504500
+
+# .data:0x9 | 0x80504509 | size: 0x3
+.obj gap_07_80504509_data, global
+.hidden gap_07_80504509_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80504509_data
+
+# .data:0xC | 0x8050450C | size: 0x19
+.obj lbl_8050450C, global
+	.string "size == sizeof(__mem_cb)"
+.endobj lbl_8050450C
+
+# .data:0x25 | 0x80504525 | size: 0x3
+.obj gap_07_80504525_data, global
+.hidden gap_07_80504525_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80504525_data
+
+# 0x8058BE80..0x8058C190 | size: 0x310
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8058BE80 | size: 0x18
+.obj lbl_8058BE80, global
+	.skip 0x18
+.endobj lbl_8058BE80
+
+# .bss:0x18 | 0x8058BE98 | size: 0x30
+.obj lbl_8058BE98, global
+	.skip 0x30
+.endobj lbl_8058BE98
+
+# .bss:0x48 | 0x8058BEC8 | size: 0x2C8
+.obj hsd_saved_context, global
+	.skip 0x2C8
+.endobj hsd_saved_context
+
+# 0x805E5DB8..0x805E5DC8 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E5DB8 | size: 0x4
+.obj lbl_805E5DB8, global
+	.float 0.5
+.endobj lbl_805E5DB8
+
+# .sdata2:0x4 | 0x805E5DBC | size: 0x4
+.obj lbl_805E5DBC, global
+	.float -0.5
+.endobj lbl_805E5DBC
+
+# .sdata2:0x8 | 0x805E5DC0 | size: 0x4
+.obj lbl_805E5DC0, global
+	.float 0
+.endobj lbl_805E5DC0
+
+# .sdata2:0xC | 0x805E5DC4 | size: 0x4
+.obj lbl_805E5DC4, global
+	.float 256
+.endobj lbl_805E5DC4

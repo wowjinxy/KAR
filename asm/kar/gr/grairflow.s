@@ -1472,3 +1472,160 @@
 /* 800E7FF8 000E4DF8  38 21 00 20 */	addi r1, r1, 0x20
 /* 800E7FFC 000E4DFC  4E 80 00 20 */	blr
 .endfn kar_grairflow_count_external_gobjs
+
+# 0x80489DA8..0x80489DC0 | size: 0x18
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489DA8 | size: 0xC
+.obj lbl_80489DA8, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489DA8
+
+# .rodata:0xC | 0x80489DB4 | size: 0xC
+.obj lbl_80489DB4, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489DB4
+
+# 0x804A4A80..0x804A4BC0 | size: 0x140
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4A80 | size: 0xC
+.obj kar_src_grairflow_804a4a80, global
+	.string "grairflow.c"
+.endobj kar_src_grairflow_804a4a80
+
+# .data:0xC | 0x804A4A8C | size: 0x27
+.obj lbl_804A4A8C, global
+	.string "gp->airflowAll.zoneNum < GrAirZone_Num"
+.endobj lbl_804A4A8C
+
+# .data:0x33 | 0x804A4AB3 | size: 0x1
+.obj gap_07_804A4AB3_data, global
+.hidden gap_07_804A4AB3_data
+	.byte 0x00
+.endobj gap_07_804A4AB3_data
+
+# .data:0x34 | 0x804A4AB4 | size: 0x24
+.obj lbl_804A4AB4, global
+	.4byte 0x746D7050
+	.4byte 0x6172616D
+	.4byte 0x20213D20
+	.4byte 0x2D312E30
+	.4byte 0x46000000
+	.4byte kar_grairflow_calc_point_force
+	.4byte kar_grairflow_calc_segment_radial_force
+	.4byte kar_grairflow_calc_segment_directional_force
+	.4byte 0x00000000
+.endobj lbl_804A4AB4
+
+# .data:0x58 | 0x804A4AD8 | size: 0xE8
+.obj lbl_804A4AD8, global
+	.4byte 0x4853445F
+	.4byte 0x474F626A
+	.4byte 0x47657449
+	.4byte 0x6428676F
+	.4byte 0x626A2920
+	.4byte 0x3D3D2047
+	.4byte 0x6D5F474F
+	.4byte 0x626A5F49
+	.4byte 0x645F4169
+	.4byte 0x72666C6F
+	.4byte 0x77000000
+	.4byte 0x61697266
+	.4byte 0x6C6F7745
+	.4byte 0x782D3E6B
+	.4byte 0x696E6420
+	.4byte 0x3D3D2047
+	.4byte 0x72416972
+	.4byte 0x666C6F77
+	.4byte 0x45784B69
+	.4byte 0x6E645F50
+	.4byte 0x6F696E74
+	.4byte 0x00000000
+	.4byte 0x61697266
+	.4byte 0x6C6F7745
+	.4byte 0x782D3E6B
+	.4byte 0x696E6420
+	.4byte 0x3D3D2047
+	.4byte 0x72416972
+	.4byte 0x666C6F77
+	.4byte 0x45784B69
+	.4byte 0x6E645F4C
+	.4byte 0x696E6553
+	.4byte 0x70726561
+	.4byte 0x64000000
+	.4byte 0x61697266
+	.4byte 0x6C6F7745
+	.4byte 0x782D3E6B
+	.4byte 0x696E6420
+	.4byte 0x3D3D2047
+	.4byte 0x72416972
+	.4byte 0x666C6F77
+	.4byte 0x45784B69
+	.4byte 0x6E645F4C
+	.4byte 0x696E6550
+	.4byte 0x6172616C
+	.4byte 0x6C656C00
+	.4byte 0x61697266
+	.4byte 0x6C6F7745
+	.4byte 0x782D3E6B
+	.4byte 0x696E6420
+	.4byte 0x3D3D2047
+	.4byte 0x72416972
+	.4byte 0x666C6F77
+	.4byte 0x45784B69
+	.4byte 0x6E645F53
+	.4byte 0x74617253
+	.4byte 0x6C697000
+	.4byte 0x00000000
+.endobj lbl_804A4AD8
+
+# 0x80557608..0x805576A8 | size: 0xA0
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80557608 | size: 0x30
+.obj grairflow_external_objalloc_data, global
+	.skip 0x30
+.endobj grairflow_external_objalloc_data
+
+# .bss:0x30 | 0x80557638 | size: 0x70
+.obj lbl_80557638, global
+	.skip 0x70
+.endobj lbl_80557638
+
+# 0x805DF738..0x805DF750 | size: 0x18
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF738 | size: 0x4
+.obj lbl_805DF738, global
+	.float -1
+.endobj lbl_805DF738
+
+# .sdata2:0x4 | 0x805DF73C | size: 0x4
+.obj lbl_805DF73C, global
+	.float 0
+.endobj lbl_805DF73C
+
+# .sdata2:0x8 | 0x805DF740 | size: 0x4
+.obj lbl_805DF740, global
+	.float 1
+.endobj lbl_805DF740
+
+# .sdata2:0xC | 0x805DF744 | size: 0x4
+.obj lbl_805DF744, global
+	.float 0.00001
+.endobj lbl_805DF744
+
+# .sdata2:0x10 | 0x805DF748 | size: 0x8
+.obj lbl_805DF748, global
+	.float -0.00001
+	.float 0
+.endobj lbl_805DF748

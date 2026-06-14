@@ -4175,6 +4175,7 @@
 /* 8004D2A4 0004A0A4  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8004D2A8 0004A0A8  7C 09 03 A6 */	mtctr r0
 /* 8004D2AC 0004A0AC  4E 80 04 20 */	bctr
+.L_8004D2B0:
 /* 8004D2B0 0004A0B0  38 A0 00 23 */	li r5, 0x23
 /* 8004D2B4 0004A0B4  38 80 0E C4 */	li r4, 0xec4
 /* 8004D2B8 0004A0B8  38 60 00 19 */	li r3, 0x19
@@ -4184,6 +4185,7 @@
 /* 8004D2C8 0004A0C8  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D2CC 0004A0CC  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D2D0 0004A0D0  48 00 00 FC */	b .L_8004D3CC
+.L_8004D2D4:
 /* 8004D2D4 0004A0D4  38 A0 00 24 */	li r5, 0x24
 /* 8004D2D8 0004A0D8  38 80 1B 30 */	li r4, 0x1b30
 /* 8004D2DC 0004A0DC  38 60 00 1A */	li r3, 0x1a
@@ -4193,6 +4195,7 @@
 /* 8004D2EC 0004A0EC  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D2F0 0004A0F0  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D2F4 0004A0F4  48 00 00 D8 */	b .L_8004D3CC
+.L_8004D2F8:
 /* 8004D2F8 0004A0F8  38 A0 00 25 */	li r5, 0x25
 /* 8004D2FC 0004A0FC  38 80 18 9C */	li r4, 0x189c
 /* 8004D300 0004A100  38 60 00 1B */	li r3, 0x1b
@@ -4202,6 +4205,7 @@
 /* 8004D310 0004A110  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D314 0004A114  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D318 0004A118  48 00 00 B4 */	b .L_8004D3CC
+.L_8004D31C:
 /* 8004D31C 0004A11C  38 A0 00 26 */	li r5, 0x26
 /* 8004D320 0004A120  38 80 1B 30 */	li r4, 0x1b30
 /* 8004D324 0004A124  38 60 00 1D */	li r3, 0x1d
@@ -4211,6 +4215,7 @@
 /* 8004D334 0004A134  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D338 0004A138  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D33C 0004A13C  48 00 00 90 */	b .L_8004D3CC
+.L_8004D340:
 /* 8004D340 0004A140  38 A0 00 27 */	li r5, 0x27
 /* 8004D344 0004A144  38 80 1C 5C */	li r4, 0x1c5c
 /* 8004D348 0004A148  38 60 00 0D */	li r3, 0xd
@@ -4220,6 +4225,7 @@
 /* 8004D358 0004A158  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D35C 0004A15C  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D360 0004A160  48 00 00 6C */	b .L_8004D3CC
+.L_8004D364:
 /* 8004D364 0004A164  38 A0 00 28 */	li r5, 0x28
 /* 8004D368 0004A168  38 80 1B 30 */	li r4, 0x1b30
 /* 8004D36C 0004A16C  38 60 00 11 */	li r3, 0x11
@@ -4229,6 +4235,7 @@
 /* 8004D37C 0004A17C  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D380 0004A180  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D384 0004A184  48 00 00 48 */	b .L_8004D3CC
+.L_8004D388:
 /* 8004D388 0004A188  38 A0 00 29 */	li r5, 0x29
 /* 8004D38C 0004A18C  38 80 19 50 */	li r4, 0x1950
 /* 8004D390 0004A190  38 60 00 12 */	li r3, 0x12
@@ -4238,6 +4245,7 @@
 /* 8004D3A0 0004A1A0  90 61 00 0C */	stw r3, 0xc(r1)
 /* 8004D3A4 0004A1A4  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8004D3A8 0004A1A8  48 00 00 24 */	b .L_8004D3CC
+.L_8004D3AC:
 /* 8004D3AC 0004A1AC  38 A0 00 2A */	li r5, 0x2a
 /* 8004D3B0 0004A1B0  38 80 25 80 */	li r4, 0x2580
 /* 8004D3B4 0004A1B4  38 60 00 13 */	li r3, 0x13
@@ -4313,34 +4321,42 @@
 /* 8004D4AC 0004A2AC  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8004D4B0 0004A2B0  7C 09 03 A6 */	mtctr r0
 /* 8004D4B4 0004A2B4  4E 80 04 20 */	bctr
+.L_8004D4B8:
 /* 8004D4B8 0004A2B8  C3 E2 82 10 */	lfs f31, lbl_805DE910@sda21(r0)
 /* 8004D4BC 0004A2BC  3B A0 00 14 */	li r29, 0x14
 /* 8004D4C0 0004A2C0  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D4C4 0004A2C4  48 00 00 70 */	b .L_8004D534
+.L_8004D4C8:
 /* 8004D4C8 0004A2C8  C3 E2 82 14 */	lfs f31, lbl_805DE914@sda21(r0)
 /* 8004D4CC 0004A2CC  3B A0 00 15 */	li r29, 0x15
 /* 8004D4D0 0004A2D0  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D4D4 0004A2D4  48 00 00 60 */	b .L_8004D534
+.L_8004D4D8:
 /* 8004D4D8 0004A2D8  C3 E2 82 18 */	lfs f31, lbl_805DE918@sda21(r0)
 /* 8004D4DC 0004A2DC  3B A0 00 16 */	li r29, 0x16
 /* 8004D4E0 0004A2E0  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D4E4 0004A2E4  48 00 00 50 */	b .L_8004D534
+.L_8004D4E8:
 /* 8004D4E8 0004A2E8  C3 E2 82 1C */	lfs f31, lbl_805DE91C@sda21(r0)
 /* 8004D4EC 0004A2EC  3B A0 00 17 */	li r29, 0x17
 /* 8004D4F0 0004A2F0  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D4F4 0004A2F4  48 00 00 40 */	b .L_8004D534
+.L_8004D4F8:
 /* 8004D4F8 0004A2F8  C3 E2 82 20 */	lfs f31, lbl_805DE920@sda21(r0)
 /* 8004D4FC 0004A2FC  3B A0 00 0C */	li r29, 0xc
 /* 8004D500 0004A300  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D504 0004A304  48 00 00 30 */	b .L_8004D534
+.L_8004D508:
 /* 8004D508 0004A308  C3 E2 82 24 */	lfs f31, lbl_805DE924@sda21(r0)
 /* 8004D50C 0004A30C  3B A0 00 22 */	li r29, 0x22
 /* 8004D510 0004A310  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D514 0004A314  48 00 00 20 */	b .L_8004D534
+.L_8004D518:
 /* 8004D518 0004A318  C3 E2 82 10 */	lfs f31, lbl_805DE910@sda21(r0)
 /* 8004D51C 0004A31C  3B A0 00 21 */	li r29, 0x21
 /* 8004D520 0004A320  3B C0 1C 20 */	li r30, 0x1c20
 /* 8004D524 0004A324  48 00 00 10 */	b .L_8004D534
+.L_8004D528:
 /* 8004D528 0004A328  C3 E2 82 24 */	lfs f31, lbl_805DE924@sda21(r0)
 /* 8004D52C 0004A32C  3B A0 00 0B */	li r29, 0xb
 /* 8004D530 0004A330  3B C0 1C 20 */	li r30, 0x1c20
@@ -4420,6 +4436,7 @@
 /* 8004D63C 0004A43C  7C 64 18 2E */	lwzx r3, r4, r3
 /* 8004D640 0004A440  7C 69 03 A6 */	mtctr r3
 /* 8004D644 0004A444  4E 80 04 20 */	bctr
+.L_8004D648:
 /* 8004D648 0004A448  38 E0 00 2B */	li r7, 0x2b
 /* 8004D64C 0004A44C  38 C0 00 2C */	li r6, 0x2c
 /* 8004D650 0004A450  38 A0 00 5D */	li r5, 0x5d
@@ -4435,6 +4452,7 @@
 /* 8004D678 0004A478  38 00 0F 3C */	li r0, 0xf3c
 /* 8004D67C 0004A47C  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D680 0004A480  48 00 01 A0 */	b .L_8004D820
+.L_8004D684:
 /* 8004D684 0004A484  38 E0 00 2D */	li r7, 0x2d
 /* 8004D688 0004A488  38 C0 00 2E */	li r6, 0x2e
 /* 8004D68C 0004A48C  38 A0 00 69 */	li r5, 0x69
@@ -4450,6 +4468,7 @@
 /* 8004D6B4 0004A4B4  38 00 29 B8 */	li r0, 0x29b8
 /* 8004D6B8 0004A4B8  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D6BC 0004A4BC  48 00 01 64 */	b .L_8004D820
+.L_8004D6C0:
 /* 8004D6C0 0004A4C0  38 E0 00 2F */	li r7, 0x2f
 /* 8004D6C4 0004A4C4  38 C0 00 30 */	li r6, 0x30
 /* 8004D6C8 0004A4C8  38 A0 00 6C */	li r5, 0x6c
@@ -4464,6 +4483,7 @@
 /* 8004D6EC 0004A4EC  40 82 01 34 */	bne .L_8004D820
 /* 8004D6F0 0004A4F0  90 61 00 1C */	stw r3, 0x1c(r1)
 /* 8004D6F4 0004A4F4  48 00 01 2C */	b .L_8004D820
+.L_8004D6F8:
 /* 8004D6F8 0004A4F8  38 E0 00 31 */	li r7, 0x31
 /* 8004D6FC 0004A4FC  38 C0 00 32 */	li r6, 0x32
 /* 8004D700 0004A500  38 A0 00 71 */	li r5, 0x71
@@ -4479,6 +4499,7 @@
 /* 8004D728 0004A528  38 00 2C 88 */	li r0, 0x2c88
 /* 8004D72C 0004A52C  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D730 0004A530  48 00 00 F0 */	b .L_8004D820
+.L_8004D734:
 /* 8004D734 0004A534  38 E0 00 33 */	li r7, 0x33
 /* 8004D738 0004A538  38 C0 00 34 */	li r6, 0x34
 /* 8004D73C 0004A53C  38 A0 00 73 */	li r5, 0x73
@@ -4494,6 +4515,7 @@
 /* 8004D764 0004A564  38 00 2D B4 */	li r0, 0x2db4
 /* 8004D768 0004A568  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D76C 0004A56C  48 00 00 B4 */	b .L_8004D820
+.L_8004D770:
 /* 8004D770 0004A570  38 E0 00 35 */	li r7, 0x35
 /* 8004D774 0004A574  38 C0 00 36 */	li r6, 0x36
 /* 8004D778 0004A578  38 A0 00 75 */	li r5, 0x75
@@ -4509,6 +4531,7 @@
 /* 8004D7A0 0004A5A0  38 00 2A 30 */	li r0, 0x2a30
 /* 8004D7A4 0004A5A4  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D7A8 0004A5A8  48 00 00 78 */	b .L_8004D820
+.L_8004D7AC:
 /* 8004D7AC 0004A5AC  38 E0 00 37 */	li r7, 0x37
 /* 8004D7B0 0004A5B0  38 C0 00 38 */	li r6, 0x38
 /* 8004D7B4 0004A5B4  38 A0 00 76 */	li r5, 0x76
@@ -4524,6 +4547,7 @@
 /* 8004D7DC 0004A5DC  38 00 27 D8 */	li r0, 0x27d8
 /* 8004D7E0 0004A5E0  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D7E4 0004A5E4  48 00 00 3C */	b .L_8004D820
+.L_8004D7E8:
 /* 8004D7E8 0004A5E8  38 E0 00 39 */	li r7, 0x39
 /* 8004D7EC 0004A5EC  38 C0 00 3A */	li r6, 0x3a
 /* 8004D7F0 0004A5F0  38 A0 00 77 */	li r5, 0x77
@@ -4609,6 +4633,7 @@
 /* 8004D910 0004A710  7C 64 18 2E */	lwzx r3, r4, r3
 /* 8004D914 0004A714  7C 69 03 A6 */	mtctr r3
 /* 8004D918 0004A718  4E 80 04 20 */	bctr
+.L_8004D91C:
 /* 8004D91C 0004A71C  38 E0 00 3B */	li r7, 0x3b
 /* 8004D920 0004A720  38 C0 00 3C */	li r6, 0x3c
 /* 8004D924 0004A724  38 A0 00 3D */	li r5, 0x3d
@@ -4624,6 +4649,7 @@
 /* 8004D94C 0004A74C  38 00 05 64 */	li r0, 0x564
 /* 8004D950 0004A750  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D954 0004A754  48 00 01 98 */	b .L_8004DAEC
+.L_8004D958:
 /* 8004D958 0004A758  38 E0 00 3E */	li r7, 0x3e
 /* 8004D95C 0004A75C  38 C0 00 3F */	li r6, 0x3f
 /* 8004D960 0004A760  38 A0 00 40 */	li r5, 0x40
@@ -4639,6 +4665,7 @@
 /* 8004D988 0004A788  38 00 0E 88 */	li r0, 0xe88
 /* 8004D98C 0004A78C  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004D990 0004A790  48 00 01 5C */	b .L_8004DAEC
+.L_8004D994:
 /* 8004D994 0004A794  38 E0 00 41 */	li r7, 0x41
 /* 8004D998 0004A798  38 C0 00 42 */	li r6, 0x42
 /* 8004D99C 0004A79C  38 A0 00 43 */	li r5, 0x43
@@ -4653,6 +4680,7 @@
 /* 8004D9C0 0004A7C0  40 82 01 2C */	bne .L_8004DAEC
 /* 8004D9C4 0004A7C4  90 81 00 1C */	stw r4, 0x1c(r1)
 /* 8004D9C8 0004A7C8  48 00 01 24 */	b .L_8004DAEC
+.L_8004D9CC:
 /* 8004D9CC 0004A7CC  38 E0 00 44 */	li r7, 0x44
 /* 8004D9D0 0004A7D0  38 C0 00 45 */	li r6, 0x45
 /* 8004D9D4 0004A7D4  38 A0 00 46 */	li r5, 0x46
@@ -4667,6 +4695,7 @@
 /* 8004D9F8 0004A7F8  40 82 00 F4 */	bne .L_8004DAEC
 /* 8004D9FC 0004A7FC  90 81 00 1C */	stw r4, 0x1c(r1)
 /* 8004DA00 0004A800  48 00 00 EC */	b .L_8004DAEC
+.L_8004DA04:
 /* 8004DA04 0004A804  38 E0 00 47 */	li r7, 0x47
 /* 8004DA08 0004A808  38 C0 00 48 */	li r6, 0x48
 /* 8004DA0C 0004A80C  38 A0 00 49 */	li r5, 0x49
@@ -4682,6 +4711,7 @@
 /* 8004DA34 0004A834  38 00 0E 88 */	li r0, 0xe88
 /* 8004DA38 0004A838  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004DA3C 0004A83C  48 00 00 B0 */	b .L_8004DAEC
+.L_8004DA40:
 /* 8004DA40 0004A840  38 E0 00 4A */	li r7, 0x4a
 /* 8004DA44 0004A844  38 C0 00 4B */	li r6, 0x4b
 /* 8004DA48 0004A848  38 A0 00 4C */	li r5, 0x4c
@@ -4696,6 +4726,7 @@
 /* 8004DA6C 0004A86C  40 82 00 80 */	bne .L_8004DAEC
 /* 8004DA70 0004A870  90 61 00 1C */	stw r3, 0x1c(r1)
 /* 8004DA74 0004A874  48 00 00 78 */	b .L_8004DAEC
+.L_8004DA78:
 /* 8004DA78 0004A878  38 E0 00 4D */	li r7, 0x4d
 /* 8004DA7C 0004A87C  38 C0 00 4E */	li r6, 0x4e
 /* 8004DA80 0004A880  38 A0 00 4F */	li r5, 0x4f
@@ -4711,6 +4742,7 @@
 /* 8004DAA8 0004A8A8  38 00 0D 5C */	li r0, 0xd5c
 /* 8004DAAC 0004A8AC  90 01 00 1C */	stw r0, 0x1c(r1)
 /* 8004DAB0 0004A8B0  48 00 00 3C */	b .L_8004DAEC
+.L_8004DAB4:
 /* 8004DAB4 0004A8B4  38 E0 00 50 */	li r7, 0x50
 /* 8004DAB8 0004A8B8  38 C0 00 51 */	li r6, 0x51
 /* 8004DABC 0004A8BC  38 A0 00 52 */	li r5, 0x52
@@ -5865,6 +5897,7 @@
 /* 8004EA7C 0004B87C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 8004EA80 0004B880  7C 09 03 A6 */	mtctr r0
 /* 8004EA84 0004B884  4E 80 04 20 */	bctr
+.L_8004EA88:
 /* 8004EA88 0004B888  88 1E 05 AD */	lbz r0, 0x5ad(r30)
 /* 8004EA8C 0004B88C  7C 00 07 74 */	extsb r0, r0
 /* 8004EA90 0004B890  2C 00 00 02 */	cmpwi r0, 0x2
@@ -6074,6 +6107,7 @@
 /* 8004ED7C 0004BB7C  38 80 00 6A */	li r4, 0x6a
 /* 8004ED80 0004BB80  4B FF B2 D5 */	bl kar_gmclearchecker__8004a054
 /* 8004ED84 0004BB84  48 00 01 7C */	b .L_8004EF00
+.L_8004ED88:
 /* 8004ED88 0004BB88  38 1B 00 22 */	addi r0, r27, 0x22
 /* 8004ED8C 0004BB8C  7C 1C 00 AE */	lbzx r0, r28, r0
 /* 8004ED90 0004BB90  7C 00 07 75 */	extsb. r0, r0
@@ -6099,6 +6133,7 @@
 /* 8004EDD8 0004BBD8  38 80 00 1A */	li r4, 0x1a
 /* 8004EDDC 0004BBDC  4B FF B2 79 */	bl kar_gmclearchecker__8004a054
 /* 8004EDE0 0004BBE0  48 00 01 20 */	b .L_8004EF00
+.L_8004EDE4:
 /* 8004EDE4 0004BBE4  38 1B 00 22 */	addi r0, r27, 0x22
 /* 8004EDE8 0004BBE8  7C 1C 00 AE */	lbzx r0, r28, r0
 /* 8004EDEC 0004BBEC  7C 00 07 75 */	extsb. r0, r0
@@ -6144,6 +6179,7 @@
 /* 8004EE80 0004BC80  38 80 00 22 */	li r4, 0x22
 /* 8004EE84 0004BC84  4B FF B1 D1 */	bl kar_gmclearchecker__8004a054
 /* 8004EE88 0004BC88  48 00 00 78 */	b .L_8004EF00
+.L_8004EE8C:
 /* 8004EE8C 0004BC8C  A0 BF 01 02 */	lhz r5, 0x102(r31)
 /* 8004EE90 0004BC90  3C 60 00 01 */	lis r3, 0x1
 /* 8004EE94 0004BC94  80 9D 02 08 */	lwz r4, 0x208(r29)
@@ -6155,6 +6191,7 @@
 .L_8004EEAC:
 /* 8004EEAC 0004BCAC  B0 1F 01 02 */	sth r0, 0x102(r31)
 /* 8004EEB0 0004BCB0  48 00 00 50 */	b .L_8004EF00
+.L_8004EEB4:
 /* 8004EEB4 0004BCB4  A0 BF 01 04 */	lhz r5, 0x104(r31)
 /* 8004EEB8 0004BCB8  3C 60 00 01 */	lis r3, 0x1
 /* 8004EEBC 0004BCBC  80 9D 02 08 */	lwz r4, 0x208(r29)
@@ -6166,6 +6203,7 @@
 .L_8004EED4:
 /* 8004EED4 0004BCD4  B0 1F 01 04 */	sth r0, 0x104(r31)
 /* 8004EED8 0004BCD8  48 00 00 28 */	b .L_8004EF00
+.L_8004EEDC:
 /* 8004EEDC 0004BCDC  7F 63 DB 78 */	mr r3, r27
 /* 8004EEE0 0004BCE0  48 1E 06 89 */	bl kar_plclearcheckerlib__8022f568
 /* 8004EEE4 0004BCE4  28 03 00 00 */	cmplwi r3, 0x0
@@ -6710,3 +6748,596 @@
 /* 8004F5D8 0004C3D8  80 63 00 00 */	lwz r3, 0x0(r3)
 /* 8004F5DC 0004C3DC  4E 80 00 20 */	blr
 .endfn kar_gmclearchecker__near_8004f5d0
+
+# 0x80497568..0x80497BA8 | size: 0x640
+.data
+.balign 8
+
+# .data:0x0 | 0x80497568 | size: 0x1C
+.obj lbl_80497568, global
+	.string "error Clearchecker Type %d\n"
+.endobj lbl_80497568
+
+# .data:0x1C | 0x80497584 | size: 0x11
+.obj kar_src_gmclearchecker_80497584, global
+	.string "gmclearchecker.c"
+.endobj kar_src_gmclearchecker_80497584
+
+# .data:0x2D | 0x80497595 | size: 0x3
+.obj gap_07_80497595_data, global
+.hidden gap_07_80497595_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80497595_data
+
+# .data:0x30 | 0x80497598 | size: 0x1E
+.obj lbl_80497598, global
+	.string "error Clearchecker Number %d\n"
+.endobj lbl_80497598
+
+# .data:0x4E | 0x804975B6 | size: 0x2
+.obj gap_07_804975B6_data, global
+.hidden gap_07_804975B6_data
+	.2byte 0x0000
+.endobj gap_07_804975B6_data
+
+# .data:0x50 | 0x804975B8 | size: 0x78
+.obj lbl_804975B8, global
+	.4byte kar_gmclearchecker__near_8004ac34
+	.4byte kar_gmclearchecker__near_8004ac34
+	.4byte kar_gmclearchecker__near_8004afc0
+	.4byte kar_gmclearchecker__near_8004afc0
+	.4byte kar_gmclearchecker__near_8004afc0
+	.4byte kar_gmclearchecker__near_8004afc0
+	.4byte kar_gmclearchecker__near_8004b23c
+	.4byte kar_gmclearchecker__near_8004b578
+	.4byte kar_gmclearchecker__near_8004b62c
+	.4byte kar_gmclearchecker__near_8004b720
+	.4byte kar_gmclearchecker__near_8004bcb4
+	.4byte kar_gmclearchecker__near_8004bd68
+	.4byte kar_gmclearchecker__near_8004be1c
+	.4byte kar_gmclearchecker__near_8004bed0
+	.4byte kar_gmclearchecker__near_8004bf84
+	.4byte kar_gmclearchecker__near_8004c038
+	.4byte kar_gmclearchecker__near_8004c0ec
+	.4byte kar_gmclearchecker__near_8004c1a0
+	.4byte kar_gmclearchecker__near_8004c2b4
+	.4byte kar_gmclearchecker__near_8004c4a4
+	.4byte kar_gmclearchecker__near_8004c5ac
+	.4byte kar_gmclearchecker__near_8004c6b4
+	.4byte kar_gmclearchecker__near_8004c7bc
+	.4byte kar_gmclearchecker__near_8004c8c4
+	.4byte kar_gmclearchecker__near_8004c9d0
+	.4byte kar_gmclearchecker__near_8004cad8
+	.4byte kar_gmclearchecker__near_8004cbe0
+	.4byte kar_gmclearchecker__near_8004cd5c
+	.4byte kar_gmclearchecker__near_8004ce64
+	.4byte kar_gmclearchecker__near_8004cfe0
+.endobj lbl_804975B8
+
+# .data:0xC8 | 0x80497630 | size: 0x44
+.obj lbl_80497630, global
+	.4byte kar_gmclearchecker__near_8004ad90
+	.4byte kar_gmclearchecker__near_8004ad90
+	.4byte kar_gmclearchecker__near_8004aef8
+	.4byte kar_gmclearchecker__near_8004aef8
+	.4byte kar_gmclearchecker__near_8004b354
+	.4byte kar_gmclearchecker__near_8004b4b4
+	.4byte kar_gmclearchecker__near_8004b8b4
+	.4byte kar_gmclearchecker__near_8004ba08
+	.4byte kar_gmclearchecker__near_8004babc
+	.4byte kar_gmclearchecker__near_8004bb64
+	.4byte kar_gmclearchecker__near_8004c254
+	.4byte kar_gmclearchecker__near_8004c3bc
+	.4byte kar_gmclearchecker__near_8004c430
+	.4byte kar_gmclearchecker__near_8004cce8
+	.4byte kar_gmclearchecker__near_8004cf6c
+	.4byte kar_gmclearchecker__near_8004d0e8
+	.4byte kar_gmclearchecker__near_8004d1d4
+.endobj lbl_80497630
+
+# .data:0x10C | 0x80497674 | size: 0x20
+.obj lbl_80497674, global
+	.byte 0x00, 0x01, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x10
+	.byte 0x1C, 0x1E, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A
+	.byte 0x5B, 0x5C, 0x5F, 0x62, 0x63, 0x64, 0x65, 0x66
+	.byte 0x67, 0x68, 0x6A, 0x6D, 0x6E, 0x70, 0x00, 0x00
+.endobj lbl_80497674
+
+# .data:0x12C | 0x80497694 | size: 0x14
+.obj lbl_80497694, global
+	.4byte 0x02030405
+	.4byte 0x0E0F1F20
+	.4byte 0x53545E60
+	.4byte 0x616B6F72
+	.4byte 0x74000000
+.endobj lbl_80497694
+
+# .data:0x140 | 0x804976A8 | size: 0x24
+.obj jumptable_804976A8, local
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D2B0
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D340
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D2F8
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D3AC
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D2D4
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D388
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D3CC
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D364
+	.rel kar_gmclearchecker__near_8004d248, .L_8004D31C
+.endobj jumptable_804976A8
+
+# .data:0x164 | 0x804976CC | size: 0x24
+.obj jumptable_804976CC, local
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D4B8
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D4F8
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D4D8
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D528
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D4C8
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D518
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D534
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D508
+	.rel kar_gmclearchecker__near_8004d454, .L_8004D4E8
+.endobj jumptable_804976CC
+
+# .data:0x188 | 0x804976F0 | size: 0x24
+.obj jumptable_804976F0, local
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D648
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D734
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D6C0
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D7E8
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D684
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D7AC
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D820
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D770
+	.rel kar_gmclearchecker__near_8004d5d4, .L_8004D6F8
+.endobj jumptable_804976F0
+
+# .data:0x1AC | 0x80497714 | size: 0x24
+.obj jumptable_80497714, local
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004D91C
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004DA04
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004D994
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004DAB4
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004D958
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004DA78
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004DAEC
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004DA40
+	.rel kar_gmclearchecker__near_8004d8a8, .L_8004D9CC
+.endobj jumptable_80497714
+
+# .data:0x1D0 | 0x80497738 | size: 0x30
+.obj jumptable_80497738, local
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EA88
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EDE4
+	.rel kar_gmclearchecker__near_8004e998, .L_8004ED88
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EEB4
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EE8C
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EF00
+	.rel kar_gmclearchecker__near_8004e998, .L_8004EEDC
+.endobj jumptable_80497738
+
+# .data:0x200 | 0x80497768 | size: 0x380
+.obj lbl_80497768, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000007
+	.4byte 0x00000011
+	.4byte 0x000000DC
+	.4byte kar_gmclearchecker__near_8004f39c
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000109
+	.4byte 0x00000000
+	.4byte 0x0000000A
+	.4byte 0x00000011
+	.4byte 0x00000120
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x0000012C
+	.4byte 0x00000000
+	.4byte 0x0000000E
+	.4byte 0x00000011
+	.4byte 0x00000154
+	.4byte kar_gmclearchecker__near_8004f37c
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x0000015E
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000007
+	.4byte 0x00000162
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000172
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000A
+	.4byte 0x000001C0
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x000001DC
+	.4byte 0x00000000
+	.4byte 0x00000009
+	.4byte 0x00000011
+	.4byte 0x0000023E
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000280
+	.4byte 0x00000000
+	.4byte 0x00000005
+	.4byte 0x00000011
+	.4byte 0x0000028E
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000E
+	.4byte 0x000002CE
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000320
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000005
+	.4byte 0x00000334
+	.4byte 0x00000000
+	.4byte 0x0000000C
+	.4byte 0x00000011
+	.4byte 0x00000352
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000009
+	.4byte 0x00000378
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000384
+	.4byte 0x00000000
+	.4byte 0x0000000D
+	.4byte 0x00000011
+	.4byte 0x00000421
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000C
+	.4byte 0x00000433
+	.4byte 0x00000000
+	.4byte 0x00000006
+	.4byte 0x00000011
+	.4byte 0x00000451
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000486
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000492
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000D
+	.4byte 0x0000049C
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000006
+	.4byte 0x000004BF
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000011
+	.4byte 0x00000524
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x0000055A
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000002
+	.4byte 0x00000564
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000059E
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000618
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000000
+	.4byte 0x000006AE
+	.4byte 0x00000000
+	.4byte 0x00000010
+	.4byte 0x00000011
+	.4byte 0x000006E0
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000011
+	.4byte 0x0000071A
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000730
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000010
+	.4byte 0x000007C4
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x000007DA
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000003
+	.4byte 0x00000898
+	.4byte 0x00000000
+	.4byte 0x0000000B
+	.4byte 0x00000011
+	.4byte 0x00000898
+	.4byte 0x00000000
+	.4byte 0x00000008
+	.4byte 0x00000011
+	.4byte 0x000008CA
+	.4byte kar_gmclearchecker__near_8004f33c
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000904
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x0000092E
+	.4byte kar_gmclearchecker__near_8004f35c
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x0000091A
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000B
+	.4byte 0x00000954
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000960
+	.4byte 0x00000000
+	.4byte 0x0000000F
+	.4byte 0x00000011
+	.4byte 0x0000096A
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000008
+	.4byte 0x000009F4
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000A0A
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x0000000F
+	.4byte 0x00000B36
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x00000011
+	.4byte 0x00000B5C
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000B72
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000004
+	.4byte 0x00000BA4
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000011
+	.4byte 0x00000C60
+	.4byte kar_gmclearchecker__near_8004f270
+	.4byte 0x00000011
+	.4byte 0x00000011
+	.4byte 0x00000C76
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000001
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000000
+	.4byte 0x00000011
+	.4byte 0x00000011
+.endobj lbl_80497768
+
+# .data:0x580 | 0x80497AE8 | size: 0x3C
+.obj lbl_80497AE8, global
+	.4byte 0x00000000
+	.4byte 0x028001E0
+	.4byte 0x01E0001E
+	.4byte 0x00000294
+	.4byte 0x01E00000
+	.4byte 0x00000001
+	.4byte 0x00000606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060808
+	.4byte 0x0A0C0A08
+	.4byte 0x08000000
+.endobj lbl_80497AE8
+
+# .data:0x5BC | 0x80497B24 | size: 0x3C
+.obj lbl_80497B24, global
+	.4byte 0x00000000
+	.4byte 0x028001E0
+	.4byte 0x01E0001E
+	.4byte 0x00000294
+	.4byte 0x01E00000
+	.4byte 0x00000001
+	.4byte 0x00000606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060000
+	.4byte 0x15161500
+	.4byte 0x00000000
+.endobj lbl_80497B24
+
+# .data:0x5F8 | 0x80497B60 | size: 0x3C
+.obj lbl_80497B60, global
+	.4byte 0x00000002
+	.4byte 0x028001E0
+	.4byte 0x01E0001E
+	.4byte 0x00000294
+	.4byte 0x01E00000
+	.4byte 0x00000000
+	.4byte 0x00000606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060606
+	.4byte 0x06060808
+	.4byte 0x0A0C0A08
+	.4byte 0x08000000
+.endobj lbl_80497B60
+
+# .data:0x634 | 0x80497B9C | size: 0xC
+.obj lbl_80497B9C, global
+	.4byte lbl_80497AE8
+	.4byte lbl_80497B24
+	.4byte lbl_80497B60
+.endobj lbl_80497B9C
+
+# 0x805D51D0..0x805D51D8 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D51D0 | size: 0x4
+.obj lbl_805D51D0, global
+	.string ".!,"
+.endobj lbl_805D51D0
+
+# .sdata:0x4 | 0x805D51D4 | size: 0x2
+.obj lbl_805D51D4, global
+	.string "0"
+.endobj lbl_805D51D4
+
+# .sdata:0x6 | 0x805D51D6 | size: 0x2
+.obj gap_09_805D51D6_sdata, global
+.hidden gap_09_805D51D6_sdata
+	.2byte 0x0000
+.endobj gap_09_805D51D6_sdata
+
+# 0x805DD590..0x805DD5A0 | size: 0x10
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD590 | size: 0x8
+.obj lbl_805DD590, global
+	.skip 0x8
+.endobj lbl_805DD590
+
+# .sbss:0x8 | 0x805DD598 | size: 0x8
+.obj lbl_805DD598, global
+	.skip 0x8
+.endobj lbl_805DD598
+
+# 0x805DE910..0x805DE960 | size: 0x50
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DE910 | size: 0x4
+.obj lbl_805DE910, global
+	.float 4500
+.endobj lbl_805DE910
+
+# .sdata2:0x4 | 0x805DE914 | size: 0x4
+.obj lbl_805DE914, global
+	.float 6000
+.endobj lbl_805DE914
+
+# .sdata2:0x8 | 0x805DE918 | size: 0x4
+.obj lbl_805DE918, global
+	.float 4000
+.endobj lbl_805DE918
+
+# .sdata2:0xC | 0x805DE91C | size: 0x4
+.obj lbl_805DE91C, global
+	.float 5300
+.endobj lbl_805DE91C
+
+# .sdata2:0x10 | 0x805DE920 | size: 0x4
+.obj lbl_805DE920, global
+	.float 4800
+.endobj lbl_805DE920
+
+# .sdata2:0x14 | 0x805DE924 | size: 0x4
+.obj lbl_805DE924, global
+	.float 5500
+.endobj lbl_805DE924
+
+# .sdata2:0x18 | 0x805DE928 | size: 0x8
+.obj lbl_805DE928, global
+	.float 0.304788
+	.float 0
+.endobj lbl_805DE928
+
+# .sdata2:0x20 | 0x805DE930 | size: 0x4
+.obj lbl_805DE930, global
+	.float 87500000
+.endobj lbl_805DE930
+
+# .sdata2:0x24 | 0x805DE934 | size: 0x4
+.obj lbl_805DE934, global
+	.float 11.428572
+.endobj lbl_805DE934
+
+# .sdata2:0x28 | 0x805DE938 | size: 0x4
+.obj lbl_805DE938, global
+	.float 160934.4
+.endobj lbl_805DE938
+
+# .sdata2:0x2C | 0x805DE93C | size: 0x4
+.obj lbl_805DE93C, global
+	.float 60
+.endobj lbl_805DE93C
+
+# .sdata2:0x30 | 0x805DE940 | size: 0x4
+.obj lbl_805DE940, global
+	.float 200
+.endobj lbl_805DE940
+
+# .sdata2:0x34 | 0x805DE944 | size: 0x4
+.obj lbl_805DE944, global
+	.float 0.304788
+.endobj lbl_805DE944
+
+# .sdata2:0x38 | 0x805DE948 | size: 0x4
+.obj lbl_805DE948, global
+	.float 500
+.endobj lbl_805DE948
+
+# .sdata2:0x3C | 0x805DE94C | size: 0x4
+.obj lbl_805DE94C, global
+	.float 1000
+.endobj lbl_805DE94C
+
+# .sdata2:0x40 | 0x805DE950 | size: 0x4
+.obj lbl_805DE950, global
+	.float 330
+.endobj lbl_805DE950
+
+# .sdata2:0x44 | 0x805DE954 | size: 0x4
+.obj lbl_805DE954, global
+	.float 660
+.endobj lbl_805DE954
+
+# .sdata2:0x48 | 0x805DE958 | size: 0x8
+.obj lbl_805DE958, global
+	.float 1300
+	.float 0
+.endobj lbl_805DE958

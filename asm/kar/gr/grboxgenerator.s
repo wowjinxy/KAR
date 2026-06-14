@@ -1740,16 +1740,22 @@
 /* 800EBE8C 000E8C8C  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800EBE90 000E8C90  7C 09 03 A6 */	mtctr r0
 /* 800EBE94 000E8C94  4E 80 04 20 */	bctr
+.L_800EBE98:
 /* 800EBE98 000E8C98  38 C0 00 00 */	li r6, 0x0
 /* 800EBE9C 000E8C9C  48 00 00 28 */	b .L_800EBEC4
+.L_800EBEA0:
 /* 800EBEA0 000E8CA0  38 C0 00 01 */	li r6, 0x1
 /* 800EBEA4 000E8CA4  48 00 00 20 */	b .L_800EBEC4
+.L_800EBEA8:
 /* 800EBEA8 000E8CA8  38 C0 00 02 */	li r6, 0x2
 /* 800EBEAC 000E8CAC  48 00 00 18 */	b .L_800EBEC4
+.L_800EBEB0:
 /* 800EBEB0 000E8CB0  38 C0 00 03 */	li r6, 0x3
 /* 800EBEB4 000E8CB4  48 00 00 10 */	b .L_800EBEC4
+.L_800EBEB8:
 /* 800EBEB8 000E8CB8  38 C0 00 04 */	li r6, 0x4
 /* 800EBEBC 000E8CBC  48 00 00 08 */	b .L_800EBEC4
+.L_800EBEC0:
 /* 800EBEC0 000E8CC0  38 C0 00 05 */	li r6, 0x5
 .L_800EBEC4:
 /* 800EBEC4 000E8CC4  2C 06 FF FF */	cmpwi r6, -0x1
@@ -3371,20 +3377,28 @@
 /* 800ED550 000EA350  7C 03 00 2E */	lwzx r0, r3, r0
 /* 800ED554 000EA354  7C 09 03 A6 */	mtctr r0
 /* 800ED558 000EA358  4E 80 04 20 */	bctr
+.L_800ED55C:
 /* 800ED55C 000EA35C  3B E0 00 00 */	li r31, 0x0
 /* 800ED560 000EA360  48 00 00 38 */	b .L_800ED598
+.L_800ED564:
 /* 800ED564 000EA364  3B E0 00 01 */	li r31, 0x1
 /* 800ED568 000EA368  48 00 00 30 */	b .L_800ED598
+.L_800ED56C:
 /* 800ED56C 000EA36C  3B E0 00 02 */	li r31, 0x2
 /* 800ED570 000EA370  48 00 00 28 */	b .L_800ED598
+.L_800ED574:
 /* 800ED574 000EA374  3B E0 00 03 */	li r31, 0x3
 /* 800ED578 000EA378  48 00 00 20 */	b .L_800ED598
+.L_800ED57C:
 /* 800ED57C 000EA37C  3B E0 00 04 */	li r31, 0x4
 /* 800ED580 000EA380  48 00 00 18 */	b .L_800ED598
+.L_800ED584:
 /* 800ED584 000EA384  3B E0 00 05 */	li r31, 0x5
 /* 800ED588 000EA388  48 00 00 10 */	b .L_800ED598
+.L_800ED58C:
 /* 800ED58C 000EA38C  3B E0 00 06 */	li r31, 0x6
 /* 800ED590 000EA390  48 00 00 08 */	b .L_800ED598
+.L_800ED594:
 /* 800ED594 000EA394  3B E0 00 07 */	li r31, 0x7
 .L_800ED598:
 /* 800ED598 000EA398  80 01 00 14 */	lwz r0, 0x14(r1)
@@ -3836,3 +3850,283 @@
 /* 800EDB80 000EA980  38 21 00 10 */	addi r1, r1, 0x10
 /* 800EDB84 000EA984  4E 80 00 20 */	blr
 .endfn kar_greventgenerator_free_userdata
+
+# 0x80489DC0..0x80489E40 | size: 0x80
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489DC0 | size: 0x80
+.obj lbl_80489DC0, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xBF800000
+	.4byte 0xBF800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3ECCCCCD
+	.4byte 0x3F4CCCCD
+	.4byte 0xBF4CCCCD
+	.4byte 0xBECCCCCD
+	.4byte 0x3F4CCCCD
+	.4byte 0xBECCCCCD
+	.4byte 0x00000000
+	.4byte 0x3ECCCCCD
+	.4byte 0xBF4CCCCD
+	.4byte 0x00000000
+	.4byte 0x3F4CCCCD
+	.4byte 0xBF4CCCCD
+	.4byte 0x00000000
+	.4byte 0x3ECCCCCD
+	.4byte 0xBF4CCCCD
+	.4byte 0x00000000
+	.4byte 0x3ECCCCCD
+	.4byte 0x3F4CCCCD
+	.4byte 0xBECCCCCD
+	.4byte 0x3F4CCCCD
+	.4byte 0xBECCCCCD
+	.4byte 0x3F4CCCCD
+	.4byte 0xBF4CCCCD
+	.4byte 0x00000000
+	.4byte 0xBF4CCCCD
+.endobj lbl_80489DC0
+
+# 0x804A51F8..0x804A5410 | size: 0x218
+.data
+.balign 8
+
+# .data:0x0 | 0x804A51F8 | size: 0x98
+.obj kar_src_grboxgenerator_804a51f8, global
+	.4byte 0x6772626F
+	.4byte 0x7867656E
+	.4byte 0x65726174
+	.4byte 0x6F722E63
+	.4byte 0x00000000
+	.4byte 0x2A706F73
+	.4byte 0x5F696E64
+	.4byte 0x6578203C
+	.4byte 0x20677242
+	.4byte 0x6F784765
+	.4byte 0x6E65496E
+	.4byte 0x666F2D3E
+	.4byte 0x706F7369
+	.4byte 0x74696F6E
+	.4byte 0x5F6D6178
+	.4byte 0x00000000
+	.4byte 0x2A706F73
+	.4byte 0x5F696E64
+	.4byte 0x6578203C
+	.4byte 0x20677242
+	.4byte 0x6F784765
+	.4byte 0x6E65496E
+	.4byte 0x666F2D3E
+	.4byte 0x61726561
+	.4byte 0x5F6D6178
+	.4byte 0x00000000
+	.4byte 0x2A636F6C
+	.4byte 0x203C2047
+	.4byte 0x725F426F
+	.4byte 0x785F436F
+	.4byte 0x6C5F4D61
+	.4byte 0x78000000
+	.4byte 0x2A73697A
+	.4byte 0x65203C20
+	.4byte 0x47725F42
+	.4byte 0x6F785F53
+	.4byte 0x697A655F
+	.4byte 0x4D617800
+.endobj kar_src_grboxgenerator_804a51f8
+
+# .data:0x98 | 0x804A5290 | size: 0x34
+.obj jumptable_804A5290, local
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBE98
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEA0
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEA8
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEB0
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEB8
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC4
+	.rel kar_grboxgenerator__near_800ebe44, .L_800EBEC0
+.endobj jumptable_804A5290
+
+# .data:0xCC | 0x804A52C4 | size: 0x20
+.obj lbl_804A52C4, global
+	.string "**** Item Lots Data Not Found!\n"
+.endobj lbl_804A52C4
+
+# .data:0xEC | 0x804A52E4 | size: 0x1E
+.obj lbl_804A52E4, global
+	.string "grBoxGeneInfo->total_num >= 0"
+.endobj lbl_804A52E4
+
+# .data:0x10A | 0x804A5302 | size: 0x2
+.obj gap_07_804A5302_data, global
+.hidden gap_07_804A5302_data
+	.2byte 0x0000
+.endobj gap_07_804A5302_data
+
+# .data:0x10C | 0x804A5304 | size: 0x88
+.obj lbl_804A5304, global
+	.4byte 0x6772426F
+	.4byte 0x7847656E
+	.4byte 0x65496E66
+	.4byte 0x6F2D3E70
+	.4byte 0x6F736974
+	.4byte 0x696F6E5F
+	.4byte 0x65786973
+	.4byte 0x745B696E
+	.4byte 0x6465785D
+	.4byte 0x203C2047
+	.4byte 0x725F426F
+	.4byte 0x7847656E
+	.4byte 0x655F4E75
+	.4byte 0x6C6C506F
+	.4byte 0x735F4D61
+	.4byte 0x78000000
+	.4byte 0x6772426F
+	.4byte 0x7847656E
+	.4byte 0x65496E66
+	.4byte 0x6F2D3E70
+	.4byte 0x6F736974
+	.4byte 0x696F6E5F
+	.4byte 0x65786973
+	.4byte 0x745B696E
+	.4byte 0x6465785D
+	.4byte 0x00000000
+	.4byte 0x2A2A2A20
+	.4byte 0x4974656D
+	.4byte 0x204D656D
+	.4byte 0x6F727920
+	.4byte 0x3D20252E
+	.4byte 0x3266204B
+	.4byte 0x42282564
+	.4byte 0x290A0000
+.endobj lbl_804A5304
+
+# .data:0x194 | 0x804A538C | size: 0x60
+.obj jumptable_804A538C, local
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED55C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED55C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED55C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED55C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED564
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED56C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED574
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED57C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED57C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED584
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED584
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED584
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED584
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED584
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED58C
+	.rel kar_grboxgenerator__near_800ed520, .L_800ED594
+.endobj jumptable_804A538C
+
+# .data:0x1F4 | 0x804A53EC | size: 0x24
+.obj lbl_804A53EC, global
+	.4byte 0x25642825
+	.4byte 0x64293A20
+	.4byte 0x25640A00
+	.4byte 0x436F6C20
+	.4byte 0x2564203A
+	.4byte 0x2053697A
+	.4byte 0x65202564
+	.4byte 0x203A2025
+	.4byte 0x640A0000
+.endobj lbl_804A53EC
+
+# 0x805576A8..0x80557758 | size: 0xB0
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x805576A8 | size: 0xB0
+.obj lbl_805576A8, global
+	.skip 0xB0
+.endobj lbl_805576A8
+
+# 0x805D6178..0x805D6188 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6178 | size: 0x2
+.obj lbl_805D6178, global
+	.string "0"
+.endobj lbl_805D6178
+
+# .sdata:0x2 | 0x805D617A | size: 0x2
+.obj gap_09_805D617A_sdata, global
+.hidden gap_09_805D617A_sdata
+	.2byte 0x0000
+.endobj gap_09_805D617A_sdata
+
+# .sdata:0x4 | 0x805D617C | size: 0xC
+.obj lbl_805D617C, global
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+.endobj lbl_805D617C
+
+# 0x805DF760..0x805DF790 | size: 0x30
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF760 | size: 0x4
+.obj lbl_805DF760, global
+	.float 0.6
+.endobj lbl_805DF760
+
+# .sdata2:0x4 | 0x805DF764 | size: 0x4
+.obj lbl_805DF764, global
+	.float 1
+.endobj lbl_805DF764
+
+# .sdata2:0x8 | 0x805DF768 | size: 0x8
+.obj lbl_805DF768, global
+	.double 4503601774854144
+.endobj lbl_805DF768
+
+# .sdata2:0x10 | 0x805DF770 | size: 0x4
+.obj lbl_805DF770, global
+	.float 0
+.endobj lbl_805DF770
+
+# .sdata2:0x14 | 0x805DF774 | size: 0x4
+.obj lbl_805DF774, global
+	.float 0.5
+.endobj lbl_805DF774
+
+# .sdata2:0x18 | 0x805DF778 | size: 0x4
+.obj lbl_805DF778, global
+	.float -1
+.endobj lbl_805DF778
+
+# .sdata2:0x1C | 0x805DF77C | size: 0x4
+.obj lbl_805DF77C, global
+	.float 0.1
+.endobj lbl_805DF77C
+
+# .sdata2:0x20 | 0x805DF780 | size: 0x8
+.obj lbl_805DF780, global
+	.float 0.01
+	.float 0
+.endobj lbl_805DF780
+
+# .sdata2:0x28 | 0x805DF788 | size: 0x8
+.obj lbl_805DF788, global
+	.float 0
+	.float 0
+.endobj lbl_805DF788

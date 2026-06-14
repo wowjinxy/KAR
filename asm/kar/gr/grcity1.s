@@ -630,3 +630,107 @@
 .fn fn_8010F928, global
 /* 8010F928 0010C728  4E 80 00 20 */	blr
 .endfn fn_8010F928
+
+# 0x804A77D8..0x804A78A8 | size: 0xD0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A77D8 | size: 0xC
+.obj kar_grcity1_main_callback_table, global
+	.4byte kar_grcity1_init_mode_dependent_anim_and_bitcounter_params
+	.4byte kar_grcity1_create_stage_city_yaku_objects
+	.4byte 0x00000000
+.endobj kar_grcity1_main_callback_table
+
+# .data:0xC | 0x804A77E4 | size: 0x10
+.obj kar_grcity1_mode9_anim_id_lookup_table, global
+	.4byte 0x00000000
+	.4byte 0x0000000A
+	.4byte 0x0000000B
+	.4byte 0x0000000C
+.endobj kar_grcity1_mode9_anim_id_lookup_table
+
+# .data:0x1C | 0x804A77F4 | size: 0xA
+.obj kar_src_grcity1_c, global
+	.string "grcity1.c"
+.endobj kar_src_grcity1_c
+
+# .data:0x26 | 0x804A77FE | size: 0x2
+.obj gap_07_804A77FE_data, global
+.hidden gap_07_804A77FE_data
+	.2byte 0x0000
+.endobj gap_07_804A77FE_data
+
+# .data:0x28 | 0x804A7800 | size: 0x53
+.obj kar_grcity1_assert_bit_counter_id_count_at_least7, global
+	.string "indiviParam->bitCounterIdAll->idParamNum > GrBitCounterIdParamCity1_RapidRiverRail"
+.endobj kar_grcity1_assert_bit_counter_id_count_at_least7
+
+# .data:0x7B | 0x804A7853 | size: 0x5
+.obj gap_07_804A7853_data, global
+.hidden gap_07_804A7853_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A7853_data
+
+# .data:0x80 | 0x804A7858 | size: 0x10
+.obj kar_grcity1_risingcube_callback_table, global
+	.4byte kar_grcity1_init_risingcube_switch_group
+	.4byte kar_grcity1_create_stage_risingcube_pair
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_grcity1_risingcube_callback_table
+
+# .data:0x90 | 0x804A7868 | size: 0x10
+.obj lbl_804A7868, global
+	.4byte fn_8010F91C
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7868
+
+# .data:0xA0 | 0x804A7878 | size: 0x10
+.obj lbl_804A7878, global
+	.4byte fn_8010F920
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7878
+
+# .data:0xB0 | 0x804A7888 | size: 0x10
+.obj lbl_804A7888, global
+	.4byte fn_8010F924
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7888
+
+# .data:0xC0 | 0x804A7898 | size: 0x10
+.obj lbl_804A7898, global
+	.4byte fn_8010F928
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7898
+
+# 0x805D6368..0x805D6378 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6368 | size: 0x2
+.obj lbl_805D6368, global
+	.string "0"
+.endobj lbl_805D6368
+
+# .sdata:0x2 | 0x805D636A | size: 0x6
+.obj gap_09_805D636A_sdata, global
+.hidden gap_09_805D636A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D636A_sdata
+
+# .sdata:0x8 | 0x805D6370 | size: 0x8
+.obj lbl_805D6370, global
+	.4byte kar_grcity1_switch0_trigger_risingcube_by_stage_index
+	.4byte kar_grcity1_switch1_trigger_risingcube_by_stage_index
+.endobj lbl_805D6370

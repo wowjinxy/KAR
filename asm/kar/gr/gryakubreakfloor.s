@@ -809,3 +809,157 @@
 /* 80107368 00104168  38 21 00 20 */	addi r1, r1, 0x20
 /* 8010736C 0010416C  4E 80 00 20 */	blr
 .endfn kar_gryakubreakfloor_update_kind30_breakfan_effects_then_destroy
+
+# 0x804A6DC8..0x804A6F08 | size: 0x140
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6DC8 | size: 0x40
+.obj kar_gryakubreakfloor_kind32_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakfloor_update_kind32_crack_delay_to_advance
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakfloor_update_kind32_restore_after_contact_clear
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakfloor_update_kind32_airride_clear_to_intact
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind32_callback_table
+
+# .data:0x40 | 0x804A6E08 | size: 0x14
+.obj kar_gryakubreakfloor_kind32_callback_table_ptr, global
+	.4byte kar_gryakubreakfloor_kind32_callback_table
+	.4byte kar_gryakubreakfloor_handle_kind32_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind32_callback_table_ptr
+
+# .data:0x54 | 0x804A6E1C | size: 0x13
+.obj kar_src_gryakubreakfloor_c, global
+	.string "gryakubreakfloor.c"
+.endobj kar_src_gryakubreakfloor_c
+
+# .data:0x67 | 0x804A6E2F | size: 0x1
+.obj gap_07_804A6E2F_data, global
+.hidden gap_07_804A6E2F_data
+	.byte 0x00
+.endobj gap_07_804A6E2F_data
+
+# .data:0x68 | 0x804A6E30 | size: 0xE
+.obj kar_gryakubreakfloor_assert_zone_voidptr, global
+	.string "zone->voidPtr"
+.endobj kar_gryakubreakfloor_assert_zone_voidptr
+
+# .data:0x76 | 0x804A6E3E | size: 0x2
+.obj gap_07_804A6E3E_data, global
+.hidden gap_07_804A6E3E_data
+	.2byte 0x0000
+.endobj gap_07_804A6E3E_data
+
+# .data:0x78 | 0x804A6E40 | size: 0x63
+.obj kar_gryakubreakfloor_assert_crack_anim_range, global
+	.string "gyp->lc.breakFloor.currentAnim >= 1 && gyp->lc.breakFloor.currentAnim <= param->wpp->crackStateNum"
+.endobj kar_gryakubreakfloor_assert_crack_anim_range
+
+# .data:0xDB | 0x804A6EA3 | size: 0x5
+.obj gap_07_804A6EA3_data, global
+.hidden gap_07_804A6EA3_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A6EA3_data
+
+# .data:0xE0 | 0x804A6EA8 | size: 0x20
+.obj kar_gryakubreakfloor_kind59_bounce_callback_table, global
+	.4byte kar_gryakubreakfloor_update_kind59_bounce_wait_to_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakfloor_update_kind59_bounce_between_endpoints
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind59_bounce_callback_table
+
+# .data:0x100 | 0x804A6EC8 | size: 0x18
+.obj kar_gryakubreakfloor_kind59_bounce_callback_table_ptr, global
+	.4byte kar_gryakubreakfloor_kind59_bounce_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind59_bounce_callback_table_ptr
+
+# .data:0x118 | 0x804A6EE0 | size: 0x10
+.obj kar_gryakubreakfloor_kind60_empty_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind60_empty_callback_table
+
+# .data:0x128 | 0x804A6EF0 | size: 0x18
+.obj kar_gryakubreakfloor_kind60_callback_table_ptr, global
+	.4byte kar_gryakubreakfloor_kind60_empty_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind60_callback_table_ptr
+
+# 0x805DFA40..0x805DFA70 | size: 0x30
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DFA40 | size: 0x4
+.obj lbl_805DFA40, global
+	.float 0
+.endobj lbl_805DFA40
+	.4byte 0x00000000
+
+# .sdata2:0x8 | 0x805DFA48 | size: 0x8
+.obj lbl_805DFA48, global
+	.double 4503601774854144
+.endobj lbl_805DFA48
+
+# .sdata2:0x10 | 0x805DFA50 | size: 0x8
+.obj lbl_805DFA50, global
+	.float 1
+	.float 0
+.endobj lbl_805DFA50
+
+# .sdata2:0x18 | 0x805DFA58 | size: 0x4
+.obj lbl_805DFA58, global
+	.float 0
+.endobj lbl_805DFA58
+
+# .sdata2:0x1C | 0x805DFA5C | size: 0x4
+.obj lbl_805DFA5C, global
+	.float 0.00001
+.endobj lbl_805DFA5C
+
+# .sdata2:0x20 | 0x805DFA60 | size: 0x8
+.obj lbl_805DFA60, global
+	.float -0.00001
+	.float 0
+.endobj lbl_805DFA60
+
+# .sdata2:0x28 | 0x805DFA68 | size: 0x4
+.obj lbl_805DFA68, global
+	.float 0
+.endobj lbl_805DFA68
+
+# .sdata2:0x2C | 0x805DFA6C | size: 0x4
+.obj lbl_805DFA6C, global
+	.float 1
+.endobj lbl_805DFA6C

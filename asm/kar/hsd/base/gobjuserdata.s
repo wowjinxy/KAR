@@ -796,3 +796,184 @@
 /* 8042A72C 0042752C  38 21 00 10 */	addi r1, r1, 0x10
 /* 8042A730 00427530  4E 80 00 20 */	blr
 .endfn GObj_Init
+
+# 0x80504EB0..0x80504F50 | size: 0xA0
+.data
+.balign 8
+
+# .data:0x0 | 0x80504EB0 | size: 0xF
+.obj kar_src_gobjuserdata_80504eb0, global
+	.string "gobjuserdata.c"
+.endobj kar_src_gobjuserdata_80504eb0
+
+# .data:0xF | 0x80504EBF | size: 0x1
+.obj gap_07_80504EBF_data, global
+.hidden gap_07_80504EBF_data
+	.byte 0x00
+.endobj gap_07_80504EBF_data
+
+# .data:0x10 | 0x80504EC0 | size: 0x30
+.obj lbl_80504EC0, global
+	.string "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE"
+.endobj lbl_80504EC0
+
+# .data:0x40 | 0x80504EF0 | size: 0x1C
+.obj lbl_80504EF0, global
+	.string "gobj->user_data_remove_func"
+.endobj lbl_80504EF0
+
+# .data:0x5C | 0x80504F0C | size: 0x4
+.obj gap_07_80504F0C_data, global
+.hidden gap_07_80504F0C_data
+	.4byte 0x00000000
+.endobj gap_07_80504F0C_data
+
+# .data:0x60 | 0x80504F10 | size: 0x10
+.obj hsdGObj_gxlink_render_masks, global
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0x00000002
+	.4byte 0x00000000
+.endobj hsdGObj_gxlink_render_masks
+
+# .data:0x70 | 0x80504F20 | size: 0x10
+.obj gobj_default_obj_remove_funcs, global
+	.4byte HSD_GObjDefaultObjectRemove
+	.4byte HSD_LObjRemoveAll
+	.4byte RecalcParentTrspBits
+	.4byte HSD_GObjDefaultObjectRemoveAlt
+.endobj gobj_default_obj_remove_funcs
+
+# .data:0x80 | 0x80504F30 | size: 0x10
+.obj gobj_default_func_node, global
+	.4byte 0x00000000
+	.4byte 0x04000000
+	.4byte gobj_default_obj_remove_funcs
+	.4byte 0x00000000
+.endobj gobj_default_func_node
+
+# .data:0x90 | 0x80504F40 | size: 0x10
+.obj gobj_default_init_data, global
+	.4byte 0x3F3F0200
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj gobj_default_init_data
+
+# 0x8058C190..0x8058C208 | size: 0x78
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8058C190 | size: 0xC
+.obj hsdGObj_p_link_max, global
+	.skip 0xC
+.endobj hsdGObj_p_link_max
+
+# .bss:0xC | 0x8058C19C | size: 0x2C
+.obj hsdGObj_alloc_data, global
+	.skip 0x2C
+.endobj hsdGObj_alloc_data
+
+# .bss:0x38 | 0x8058C1C8 | size: 0x2C
+.obj hsdGObjProc_alloc_data, global
+	.skip 0x2C
+.endobj hsdGObjProc_alloc_data
+
+# .bss:0x64 | 0x8058C1F4 | size: 0x14
+.obj hsdGObj_deferred_action_flags, global
+	.skip 0x14
+.endobj hsdGObj_deferred_action_flags
+
+# 0x805DE318..0x805DE358 | size: 0x40
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DE318 | size: 0x4
+.obj lbl_805DE318, global
+	.skip 0x4
+.endobj lbl_805DE318
+
+# .sbss:0x4 | 0x805DE31C | size: 0x4
+.obj lbl_805DE31C, global
+	.skip 0x4
+.endobj lbl_805DE31C
+
+# .sbss:0x8 | 0x805DE320 | size: 0x4
+.obj lbl_805DE320, global
+	.skip 0x4
+.endobj lbl_805DE320
+
+# .sbss:0xC | 0x805DE324 | size: 0x4
+.obj lbl_805DE324, global
+	.skip 0x4
+.endobj lbl_805DE324
+
+# .sbss:0x10 | 0x805DE328 | size: 0x4
+.obj lbl_805DE328, global
+	.skip 0x4
+.endobj lbl_805DE328
+
+# .sbss:0x14 | 0x805DE32C | size: 0x4
+.obj lbl_805DE32C, global
+	.skip 0x4
+.endobj lbl_805DE32C
+
+# .sbss:0x18 | 0x805DE330 | size: 0x4
+.obj lbl_805DE330, global
+	.skip 0x4
+.endobj lbl_805DE330
+
+# .sbss:0x1C | 0x805DE334 | size: 0x4
+.obj lbl_805DE334, global
+	.skip 0x4
+.endobj lbl_805DE334
+
+# .sbss:0x20 | 0x805DE338 | size: 0x4
+.obj lbl_805DE338, global
+	.skip 0x4
+.endobj lbl_805DE338
+
+# .sbss:0x24 | 0x805DE33C | size: 0x4
+.obj lbl_805DE33C, global
+	.skip 0x4
+.endobj lbl_805DE33C
+
+# .sbss:0x28 | 0x805DE340 | size: 0x4
+.obj lbl_805DE340, global
+	.skip 0x4
+.endobj lbl_805DE340
+
+# .sbss:0x2C | 0x805DE344 | size: 0x4
+.obj lbl_805DE344, global
+	.skip 0x4
+.endobj lbl_805DE344
+
+# .sbss:0x30 | 0x805DE348 | size: 0x4
+.obj lbl_805DE348, global
+	.skip 0x4
+.endobj lbl_805DE348
+
+# .sbss:0x34 | 0x805DE34C | size: 0x4
+.obj lbl_805DE34C, global
+	.skip 0x4
+.endobj lbl_805DE34C
+
+# .sbss:0x38 | 0x805DE350 | size: 0x1
+.obj lbl_805DE350, global
+	.skip 0x1
+.endobj lbl_805DE350
+
+# .sbss:0x39 | 0x805DE351 | size: 0x1
+.obj lbl_805DE351, global
+	.skip 0x1
+.endobj lbl_805DE351
+
+# .sbss:0x3A | 0x805DE352 | size: 0x1
+.obj lbl_805DE352, global
+	.skip 0x1
+.endobj lbl_805DE352
+
+# .sbss:0x3B | 0x805DE353 | size: 0x5
+.obj lbl_805DE353, global
+	.skip 0x5
+.endobj lbl_805DE353

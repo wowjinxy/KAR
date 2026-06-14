@@ -1083,3 +1083,107 @@
 /* 80203544 00200344  38 21 00 20 */	addi r1, r1, 0x20
 /* 80203548 00200348  4E 80 00 20 */	blr
 .endfn kar_emparts__near_80203458
+
+# 0x804B2848..0x804B2940 | size: 0xF8
+.data
+.balign 8
+
+# .data:0x0 | 0x804B2848 | size: 0xB0
+.obj kar_src_emparts_804b2848, global
+	.4byte 0x656D7061
+	.4byte 0x7274732E
+	.4byte 0x63000000
+	.4byte 0x656E656D
+	.4byte 0x79207061
+	.4byte 0x72747320
+	.4byte 0x6D6F6465
+	.4byte 0x6C20746F
+	.4byte 0x626A206E
+	.4byte 0x756D206F
+	.4byte 0x76657221
+	.4byte 0x28256429
+	.4byte 0x0A000000
+	.4byte 0x656E656D
+	.4byte 0x7920646F
+	.4byte 0x626A206E
+	.4byte 0x756D206F
+	.4byte 0x76657221
+	.4byte 0x28256429
+	.4byte 0x0A000000
+	.4byte 0x656E656D
+	.4byte 0x79207061
+	.4byte 0x72747320
+	.4byte 0x6E756D20
+	.4byte 0x6F766572
+	.4byte 0x21202564
+	.4byte 0x0A000000
+	.4byte 0x656E656D
+	.4byte 0x79207061
+	.4byte 0x72747320
+	.4byte 0x6E756D20
+	.4byte 0x6E6F7420
+	.4byte 0x6D617463
+	.4byte 0x68212020
+	.4byte 0x20206B69
+	.4byte 0x6E643A25
+	.4byte 0x64202020
+	.4byte 0x70617274
+	.4byte 0x735F6E6F
+	.4byte 0x3A256420
+	.4byte 0x20207061
+	.4byte 0x7274735F
+	.4byte 0x6E756D3A
+	.4byte 0x25640A00
+.endobj kar_src_emparts_804b2848
+
+# .data:0xB0 | 0x804B28F8 | size: 0x1D
+.obj lbl_804B28F8, global
+	.string "enemy parts model num over!\n"
+.endobj lbl_804B28F8
+
+# .data:0xCD | 0x804B2915 | size: 0x3
+.obj gap_07_804B2915_data, global
+.hidden gap_07_804B2915_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B2915_data
+
+# .data:0xD0 | 0x804B2918 | size: 0x25
+.obj lbl_804B2918, global
+	.string "emUpdateWaitAir    distance is Zero\n"
+.endobj lbl_804B2918
+
+# .data:0xF5 | 0x804B293D | size: 0x3
+.obj gap_07_804B293D_data, global
+.hidden gap_07_804B293D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B293D_data
+
+# 0x805D7120..0x805D7128 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7120 | size: 0x2
+.obj lbl_805D7120, global
+	.string "0"
+.endobj lbl_805D7120
+
+# .sdata:0x2 | 0x805D7122 | size: 0x6
+.obj gap_09_805D7122_sdata, global
+.hidden gap_09_805D7122_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D7122_sdata
+
+# 0x805E22C0..0x805E22C8 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E22C0 | size: 0x4
+.obj lbl_805E22C0, global
+	.float 0
+.endobj lbl_805E22C0
+
+# .sdata2:0x4 | 0x805E22C4 | size: 0x4
+.obj lbl_805E22C4, global
+	.float 0.05
+.endobj lbl_805E22C4

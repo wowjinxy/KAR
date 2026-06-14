@@ -1,11 +1,110 @@
 .include "macros.inc"
 .file "gryakugondola.c"
 
-# 0x800FE71C..0x800FEE40 | size: 0x724
+# 0x800FE5D4..0x800FEE40 | size: 0x86C
 .text
 .balign 4
 
-# .text:0x0 | 0x800FE71C | size: 0x18C
+# .text:0x0 | 0x800FE5D4 | size: 0x38
+.fn kar_gryakugondola_create_stage_linked_kind46_carrier_yaku, global
+/* 800FE5D4 000FB3D4  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800FE5D8 000FB3D8  7C 08 02 A6 */	mflr r0
+/* 800FE5DC 000FB3DC  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800FE5E0 000FB3E0  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800FE5E4 000FB3E4  7C 7F 1B 78 */	mr r31, r3
+/* 800FE5E8 000FB3E8  38 60 00 2E */	li r3, 0x2e
+/* 800FE5EC 000FB3EC  4B FF 5E 81 */	bl kar_gryaku_create_yaku_from_main_kind
+/* 800FE5F0 000FB3F0  7F E4 FB 78 */	mr r4, r31
+/* 800FE5F4 000FB3F4  48 00 00 19 */	bl kar_gryakugondola_init_stage_linked_kind46_carrier_yaku
+/* 800FE5F8 000FB3F8  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800FE5FC 000FB3FC  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800FE600 000FB400  7C 08 03 A6 */	mtlr r0
+/* 800FE604 000FB404  38 21 00 10 */	addi r1, r1, 0x10
+/* 800FE608 000FB408  4E 80 00 20 */	blr
+.endfn kar_gryakugondola_create_stage_linked_kind46_carrier_yaku
+
+# .text:0x38 | 0x800FE60C | size: 0x8C
+.fn kar_gryakugondola_init_stage_linked_kind46_carrier_yaku, global
+/* 800FE60C 000FB40C  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800FE610 000FB410  7C 08 02 A6 */	mflr r0
+/* 800FE614 000FB414  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800FE618 000FB418  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800FE61C 000FB41C  93 C1 00 08 */	stw r30, 0x8(r1)
+/* 800FE620 000FB420  7C 7E 1B 78 */	mr r30, r3
+/* 800FE624 000FB424  83 FE 00 2C */	lwz r31, 0x2c(r30)
+/* 800FE628 000FB428  80 64 00 2C */	lwz r3, 0x2c(r4)
+/* 800FE62C 000FB42C  80 9F 00 08 */	lwz r4, 0x8(r31)
+/* 800FE630 000FB430  38 BF 01 38 */	addi r5, r31, 0x138
+/* 800FE634 000FB434  80 C3 01 04 */	lwz r6, 0x104(r3)
+/* 800FE638 000FB438  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 800FE63C 000FB43C  80 ED 05 EC */	lwz r7, lbl_805DD6CC@sda21(r0)
+/* 800FE640 000FB440  80 04 00 0C */	lwz r0, 0xc(r4)
+/* 800FE644 000FB444  38 67 00 54 */	addi r3, r7, 0x54
+/* 800FE648 000FB448  54 00 18 38 */	slwi r0, r0, 3
+/* 800FE64C 000FB44C  7C 86 00 2E */	lwzx r4, r6, r0
+/* 800FE650 000FB450  4B FD 93 71 */	bl kar_grcoll__800d79c0
+/* 800FE654 000FB454  38 A0 00 00 */	li r5, 0x0
+/* 800FE658 000FB458  3C 60 80 5E */	lis r3, lbl_805DC8BC@ha
+/* 800FE65C 000FB45C  90 BF 01 30 */	stw r5, 0x130(r31)
+/* 800FE660 000FB460  38 83 C8 BC */	addi r4, r3, lbl_805DC8BC@l
+/* 800FE664 000FB464  7F C3 F3 78 */	mr r3, r30
+/* 800FE668 000FB468  C0 04 00 00 */	lfs f0, 0x0(r4)
+/* 800FE66C 000FB46C  D0 1F 01 34 */	stfs f0, 0x134(r31)
+/* 800FE670 000FB470  88 1F 01 3C */	lbz r0, 0x13c(r31)
+/* 800FE674 000FB474  50 A0 3E 30 */	rlwimi r0, r5, 7, 24, 24
+/* 800FE678 000FB478  98 1F 01 3C */	stb r0, 0x13c(r31)
+/* 800FE67C 000FB47C  48 00 00 1D */	bl kar_gryakugondola_start_kind46_idle_motion
+/* 800FE680 000FB480  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800FE684 000FB484  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800FE688 000FB488  83 C1 00 08 */	lwz r30, 0x8(r1)
+/* 800FE68C 000FB48C  7C 08 03 A6 */	mtlr r0
+/* 800FE690 000FB490  38 21 00 10 */	addi r1, r1, 0x10
+/* 800FE694 000FB494  4E 80 00 20 */	blr
+.endfn kar_gryakugondola_init_stage_linked_kind46_carrier_yaku
+
+# .text:0xC4 | 0x800FE698 | size: 0x68
+.fn kar_gryakugondola_start_kind46_idle_motion, global
+/* 800FE698 000FB498  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 800FE69C 000FB49C  7C 08 02 A6 */	mflr r0
+/* 800FE6A0 000FB4A0  90 01 00 14 */	stw r0, 0x14(r1)
+/* 800FE6A4 000FB4A4  38 00 00 00 */	li r0, 0x0
+/* 800FE6A8 000FB4A8  93 E1 00 0C */	stw r31, 0xc(r1)
+/* 800FE6AC 000FB4AC  83 E3 00 2C */	lwz r31, 0x2c(r3)
+/* 800FE6B0 000FB4B0  90 1F 01 30 */	stw r0, 0x130(r31)
+/* 800FE6B4 000FB4B4  80 1F 01 1C */	lwz r0, 0x11c(r31)
+/* 800FE6B8 000FB4B8  2C 00 00 00 */	cmpwi r0, 0x0
+/* 800FE6BC 000FB4BC  40 81 00 0C */	ble .L_800FE6C8
+/* 800FE6C0 000FB4C0  38 7F 01 18 */	addi r3, r31, 0x118
+/* 800FE6C4 000FB4C4  4B FE BA BD */	bl kar_graudio_stop_active_fgm_slot
+.L_800FE6C8:
+/* 800FE6C8 000FB4C8  C0 22 92 20 */	lfs f1, lbl_805DF920@sda21(r0)
+/* 800FE6CC 000FB4CC  7F E3 FB 78 */	mr r3, r31
+/* 800FE6D0 000FB4D0  C0 42 92 24 */	lfs f2, lbl_805DF924@sda21(r0)
+/* 800FE6D4 000FB4D4  38 80 00 00 */	li r4, 0x0
+/* 800FE6D8 000FB4D8  FC 60 08 90 */	fmr f3, f1
+/* 800FE6DC 000FB4DC  38 A0 FF FF */	li r5, -0x1
+/* 800FE6E0 000FB4E0  38 C0 FF FF */	li r6, -0x1
+/* 800FE6E4 000FB4E4  38 E0 00 00 */	li r7, 0x0
+/* 800FE6E8 000FB4E8  4B FF 6E 61 */	bl kar_gryaku_set_path_node_motion
+/* 800FE6EC 000FB4EC  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 800FE6F0 000FB4F0  83 E1 00 0C */	lwz r31, 0xc(r1)
+/* 800FE6F4 000FB4F4  7C 08 03 A6 */	mtlr r0
+/* 800FE6F8 000FB4F8  38 21 00 10 */	addi r1, r1, 0x10
+/* 800FE6FC 000FB4FC  4E 80 00 20 */	blr
+.endfn kar_gryakugondola_start_kind46_idle_motion
+
+# .text:0x12C | 0x800FE700 | size: 0x1C
+.fn kar_gryakugondola_reset_kind46_candidate_state, global
+/* 800FE700 000FB500  80 83 00 2C */	lwz r4, 0x2c(r3)
+/* 800FE704 000FB504  38 00 00 00 */	li r0, 0x0
+/* 800FE708 000FB508  3C 60 80 5E */	lis r3, lbl_805DC8BC@ha
+/* 800FE70C 000FB50C  90 04 01 30 */	stw r0, 0x130(r4)
+/* 800FE710 000FB510  C0 03 C8 BC */	lfs f0, lbl_805DC8BC@l(r3)
+/* 800FE714 000FB514  D0 04 01 34 */	stfs f0, 0x134(r4)
+/* 800FE718 000FB518  4E 80 00 20 */	blr
+.endfn kar_gryakugondola_reset_kind46_candidate_state
+
+# .text:0x148 | 0x800FE71C | size: 0x18C
 .fn kar_gryakugondola_apply_armed_user_launch, global
 /* 800FE71C 000FB51C  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800FE720 000FB520  7C 08 02 A6 */	mflr r0
@@ -116,7 +215,7 @@
 /* 800FE8A4 000FB6A4  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_apply_armed_user_launch
 
-# .text:0x18C | 0x800FE8A8 | size: 0x60
+# .text:0x2D4 | 0x800FE8A8 | size: 0x60
 .fn kar_gryakugondola_update_zone_contains_current_user, global
 /* 800FE8A8 000FB6A8  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FE8AC 000FB6AC  7C 08 02 A6 */	mflr r0
@@ -145,7 +244,7 @@
 /* 800FE904 000FB704  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_update_zone_contains_current_user
 
-# .text:0x1EC | 0x800FE908 | size: 0x60
+# .text:0x334 | 0x800FE908 | size: 0x60
 .fn kar_gryakugondola_is_catch_candidate_in_zone, global
 /* 800FE908 000FB708  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FE90C 000FB70C  7C 08 02 A6 */	mflr r0
@@ -175,7 +274,7 @@
 /* 800FE964 000FB764  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_is_catch_candidate_in_zone
 
-# .text:0x24C | 0x800FE968 | size: 0x94
+# .text:0x394 | 0x800FE968 | size: 0x94
 .fn kar_gryakugondola_record_nearest_catch_candidate, global
 /* 800FE968 000FB768  94 21 FF D0 */	stwu r1, -0x30(r1)
 /* 800FE96C 000FB76C  7C 08 02 A6 */	mflr r0
@@ -218,7 +317,7 @@
 /* 800FE9F8 000FB7F8  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_record_nearest_catch_candidate
 
-# .text:0x2E0 | 0x800FE9FC | size: 0x60
+# .text:0x428 | 0x800FE9FC | size: 0x60
 .fn kar_gryakugondola_is_current_user_and_start_motion, global
 /* 800FE9FC 000FB7FC  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FEA00 000FB800  7C 08 02 A6 */	mflr r0
@@ -248,7 +347,7 @@
 /* 800FEA58 000FB858  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_is_current_user_and_start_motion
 
-# .text:0x340 | 0x800FEA5C | size: 0x68
+# .text:0x488 | 0x800FEA5C | size: 0x68
 .fn kar_gryakugondola_get_reference_position_and_vectors, global
 /* 800FEA5C 000FB85C  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FEA60 000FB860  7C 08 02 A6 */	mflr r0
@@ -278,7 +377,7 @@
 /* 800FEAC0 000FB8C0  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_get_reference_position_and_vectors
 
-# .text:0x3A8 | 0x800FEAC4 | size: 0x5C
+# .text:0x4F0 | 0x800FEAC4 | size: 0x5C
 .fn kar_gryakugondola_replace_current_user_gobj, global
 /* 800FEAC4 000FB8C4  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FEAC8 000FB8C8  7C 08 02 A6 */	mflr r0
@@ -306,7 +405,7 @@
 /* 800FEB1C 000FB91C  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_replace_current_user_gobj
 
-# .text:0x404 | 0x800FEB20 | size: 0x38
+# .text:0x54C | 0x800FEB20 | size: 0x38
 .fn kar_gryakugondola_create_stage_linked_kind47_ground_audio_yaku, global
 /* 800FEB20 000FB920  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FEB24 000FB924  7C 08 02 A6 */	mflr r0
@@ -324,7 +423,7 @@
 /* 800FEB54 000FB954  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_create_stage_linked_kind47_ground_audio_yaku
 
-# .text:0x43C | 0x800FEB58 | size: 0xDC
+# .text:0x584 | 0x800FEB58 | size: 0xDC
 .fn kar_gryakugondola_init_stage_linked_kind47_ground_audio_yaku, global
 /* 800FEB58 000FB958  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FEB5C 000FB95C  7C 08 02 A6 */	mflr r0
@@ -390,7 +489,7 @@
 /* 800FEC30 000FBA30  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_init_stage_linked_kind47_ground_audio_yaku
 
-# .text:0x518 | 0x800FEC34 | size: 0x40
+# .text:0x660 | 0x800FEC34 | size: 0x40
 .fn kar_gryakugondola_start_kind47_idle_motion, global
 /* 800FEC34 000FBA34  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FEC38 000FBA38  7C 08 02 A6 */	mflr r0
@@ -410,7 +509,7 @@
 /* 800FEC70 000FBA70  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_start_kind47_idle_motion
 
-# .text:0x558 | 0x800FEC74 | size: 0xAC
+# .text:0x6A0 | 0x800FEC74 | size: 0xAC
 .fn kar_gryakugondola_update_kind47_ground_state_fgm, global
 /* 800FEC74 000FBA74  94 21 FF E0 */	stwu r1, -0x20(r1)
 /* 800FEC78 000FBA78  7C 08 02 A6 */	mflr r0
@@ -461,7 +560,7 @@
 /* 800FED1C 000FBB1C  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_update_kind47_ground_state_fgm
 
-# .text:0x604 | 0x800FED20 | size: 0x28
+# .text:0x74C | 0x800FED20 | size: 0x28
 .fn kar_gryakugondola_create_stage_linked_kind48_route_yaku, global
 /* 800FED20 000FBB20  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FED24 000FBB24  7C 08 02 A6 */	mflr r0
@@ -475,7 +574,7 @@
 /* 800FED44 000FBB44  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_create_stage_linked_kind48_route_yaku
 
-# .text:0x62C | 0x800FED48 | size: 0xB8
+# .text:0x774 | 0x800FED48 | size: 0xB8
 .fn kar_gryakugondola_init_stage_linked_kind48_route_yaku, global
 /* 800FED48 000FBB48  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FED4C 000FBB4C  7C 08 02 A6 */	mflr r0
@@ -526,7 +625,7 @@
 /* 800FEDFC 000FBBFC  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_init_stage_linked_kind48_route_yaku
 
-# .text:0x6E4 | 0x800FEE00 | size: 0x40
+# .text:0x82C | 0x800FEE00 | size: 0x40
 .fn kar_gryakugondola_start_kind48_route_idle_motion, global
 /* 800FEE00 000FBC00  94 21 FF F0 */	stwu r1, -0x10(r1)
 /* 800FEE04 000FBC04  7C 08 02 A6 */	mflr r0
@@ -545,3 +644,123 @@
 /* 800FEE38 000FBC38  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FEE3C 000FBC3C  4E 80 00 20 */	blr
 .endfn kar_gryakugondola_start_kind48_route_idle_motion
+
+# 0x804A6378..0x804A6430 | size: 0xB8
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6378 | size: 0x20
+.obj kar_gryakugondola_kind46_callback_table, global
+	.4byte kar_gryakugondola_reset_kind46_candidate_state
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakugondola_apply_armed_user_launch
+	.4byte 0x00000000
+	.4byte kar_gryakugondola_update_zone_contains_current_user
+	.4byte 0x00000000
+.endobj kar_gryakugondola_kind46_callback_table
+
+# .data:0x20 | 0x804A6398 | size: 0x14
+.obj kar_gryakugondola_kind46_callback_table_ptr, global
+	.4byte kar_gryakugondola_kind46_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakugondola_kind46_callback_table_ptr
+
+# .data:0x34 | 0x804A63AC | size: 0x10
+.obj kar_gryakugondola_kind47_ground_audio_callback_table, global
+	.4byte kar_gryakugondola_update_kind47_ground_state_fgm
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakugondola_kind47_ground_audio_callback_table
+
+# .data:0x44 | 0x804A63BC | size: 0x14
+.obj kar_gryakugondola_kind47_ground_audio_callback_table_ptr, global
+	.4byte kar_gryakugondola_kind47_ground_audio_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakugondola_kind47_ground_audio_callback_table_ptr
+
+# .data:0x58 | 0x804A63D0 | size: 0x10
+.obj kar_src_gryakugondola_c, global
+	.string "gryakugondola.c"
+.endobj kar_src_gryakugondola_c
+
+# .data:0x68 | 0x804A63E0 | size: 0x19
+.obj kar_gryakugondola_assert_user_gobj, global
+	.string "gyp->lc.gondola.userGObj"
+.endobj kar_gryakugondola_assert_user_gobj
+
+# .data:0x81 | 0x804A63F9 | size: 0x3
+.obj gap_07_804A63F9_data, global
+.hidden gap_07_804A63F9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A63F9_data
+
+# .data:0x84 | 0x804A63FC | size: 0x27
+.obj kar_gryakugondola_assert_user_gobj_matches_old_app, global
+	.string "gyp->lc.gondola.userGObj == oldAppGObj"
+.endobj kar_gryakugondola_assert_user_gobj_matches_old_app
+
+# .data:0xAB | 0x804A6423 | size: 0x1
+.obj gap_07_804A6423_data, global
+.hidden gap_07_804A6423_data
+	.byte 0x00
+.endobj gap_07_804A6423_data
+
+# .data:0xAC | 0x804A6424 | size: 0x9
+.obj kar_src_ground_h_804a6424, global
+	.string "ground.h"
+.endobj kar_src_ground_h_804a6424
+
+# .data:0xB5 | 0x804A642D | size: 0x3
+.obj gap_07_804A642D_data, global
+.hidden gap_07_804A642D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A642D_data
+
+# 0x805D6270..0x805D6278 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6270 | size: 0x2
+.obj lbl_805D6270, global
+	.string "0"
+.endobj lbl_805D6270
+
+# .sdata:0x2 | 0x805D6272 | size: 0x6
+.obj gap_09_805D6272_sdata, global
+.hidden gap_09_805D6272_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6272_sdata
+
+# 0x805DF920..0x805DF930 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF920 | size: 0x4
+.obj lbl_805DF920, global
+	.float 0
+.endobj lbl_805DF920
+
+# .sdata2:0x4 | 0x805DF924 | size: 0x4
+.obj lbl_805DF924, global
+	.float 1
+.endobj lbl_805DF924
+
+# .sdata2:0x8 | 0x805DF928 | size: 0x4
+.obj lbl_805DF928, global
+	.float 0
+.endobj lbl_805DF928
+
+# .sdata2:0xC | 0x805DF92C | size: 0x4
+.obj lbl_805DF92C, global
+	.float 1
+.endobj lbl_805DF92C

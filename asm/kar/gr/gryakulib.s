@@ -1045,3 +1045,215 @@
 /* 800F87DC 000F55DC  38 21 00 20 */	addi r1, r1, 0x20
 /* 800F87E0 000F55E0  4E 80 00 20 */	blr
 .endfn kar_gryakulib_set_orientation_basis
+
+# 0x804A5B60..0x804A5D40 | size: 0x1E0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5B60 | size: 0xC
+.obj kar_src_gryakulib_c, global
+	.string "gryakulib.c"
+.endobj kar_src_gryakulib_c
+
+# .data:0xC | 0x804A5B6C | size: 0x22
+.obj kar_gryakulib_assert_yakumono_gobj, global
+	.string "grYakuCheckGObjYakumono(yakuGObj)"
+.endobj kar_gryakulib_assert_yakumono_gobj
+
+# .data:0x2E | 0x804A5B8E | size: 0x2
+.obj gap_07_804A5B8E_data, global
+.hidden gap_07_804A5B8E_data
+	.2byte 0x0000
+.endobj gap_07_804A5B8E_data
+
+# .data:0x30 | 0x804A5B90 | size: 0x16
+.obj kar_gryakulib_assert_model_data_present, global
+	.string "yaku_data->model_data"
+.endobj kar_gryakulib_assert_model_data_present
+
+# .data:0x46 | 0x804A5BA6 | size: 0x2
+.obj gap_07_804A5BA6_data, global
+.hidden gap_07_804A5BA6_data
+	.2byte 0x0000
+.endobj gap_07_804A5BA6_data
+
+# .data:0x48 | 0x804A5BA8 | size: 0x40
+.obj gryaku_common_kind_factory_table, global
+	.4byte kar_gryakucommon_create_factory_variant0_bbox
+	.4byte kar_gryakucommon_create_factory_variant0_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant1_bbox
+	.4byte kar_gryakucommon_create_factory_variant1_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant2_bbox
+	.4byte kar_gryakucommon_create_factory_variant2_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant3_bbox
+	.4byte kar_gryakucommon_create_factory_variant3_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant4_bbox
+	.4byte kar_gryakucommon_create_factory_variant4_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant5_bbox
+	.4byte kar_gryakucommon_create_factory_variant5_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant6_bbox
+	.4byte kar_gryakucommon_create_factory_variant6_scaled_bbox
+	.4byte kar_gryakucommon_create_factory_variant7_bbox
+	.4byte kar_gryakucommon_create_factory_variant7_scaled_bbox
+.endobj gryaku_common_kind_factory_table
+
+# .data:0x88 | 0x804A5BE8 | size: 0x118
+.obj gryaku_kind_function_table, global
+	.4byte gryakucommon_factory_variant0_config
+	.4byte gryakucommon_factory_variant0_config
+	.4byte gryakucommon_factory_variant1_config
+	.4byte gryakucommon_factory_variant1_config
+	.4byte gryakucommon_factory_variant2_config
+	.4byte gryakucommon_factory_variant2_config
+	.4byte gryakucommon_factory_variant3_config
+	.4byte gryakucommon_factory_variant3_config
+	.4byte gryakucommon_factory_variant4_config
+	.4byte gryakucommon_factory_variant4_config
+	.4byte gryakucommon_factory_variant5_config
+	.4byte gryakucommon_factory_variant5_config
+	.4byte gryakucommon_factory_variant6_config
+	.4byte gryakucommon_factory_variant6_config
+	.4byte gryakucommon_factory_variant7_config
+	.4byte gryakucommon_factory_variant7_config
+	.4byte lbl_804A5EE8
+	.4byte lbl_804A5F50
+	.4byte lbl_804A5FB0
+	.4byte lbl_804A5FD8
+	.4byte kar_gryakurecoveryzone_recoveryzone_callback_table_ptr
+	.4byte kar_gryakurotjumphill_cooldown_callback_table_ptr
+	.4byte kar_gryakubreakrock_kind22_callback_table_ptr
+	.4byte kar_gryakubreakhouse_kind23_callback_table_ptr
+	.4byte kar_gryakuanimfloor_kind24_callback_table_ptr
+	.4byte kar_gryakubreakcoral_kind25_callback_table_ptr
+	.4byte kar_gryakubreakcoral_kind26_callback_table_ptr
+	.4byte kar_gryakubreakcoral_kind27_callback_table_ptr
+	.4byte kar_gryakubreakcoral_kind28_callback_table_ptr
+	.4byte kar_gryakubreakcoral_kind29_callback_table_ptr
+	.4byte kar_gryakubreakfloor_kind30_breakfan_callback_table_ptr
+	.4byte kar_gryakubreakicicle_kind31_callback_table_ptr
+	.4byte kar_gryakubreakfloor_kind32_callback_table_ptr
+	.4byte kar_gryakubreakcoll_kind33_callback_table_ptr
+	.4byte kar_gryakubreakcoll_kind34_callback_table_ptr
+	.4byte kar_gryakubreakcoll_kind35_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind36_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind37_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind38_callback_table_ptr
+	.4byte kar_gryakupillar_kind39_callback_table_ptr
+	.4byte kar_gryakupillar_kind40_callback_table_ptr
+	.4byte kar_gryakurecoveryzone_kind41_joint_callback_table_ptr
+	.4byte kar_gryakurotjumphill_target_cycle_callback_table_ptr
+	.4byte kar_gryakuinvisibleball_restore_callback_table_ptr
+	.4byte kar_gryakurisingcube_cube_state_callback_table_ptr
+	.4byte kar_gryakurisingcube_controller_callback_table_ptr
+	.4byte kar_gryakugondola_kind46_callback_table_ptr
+	.4byte kar_gryakugondola_kind47_ground_audio_callback_table_ptr
+	.4byte kar_gryakucannon_kind48_callback_table_ptr
+	.4byte kar_gryakupushoutwall_kind49_callback_table_ptr
+	.4byte kar_gryakupushoutwall_kind50_callback_table_ptr
+	.4byte kar_gryakupushoutwall_kind51_callback_table_ptr
+	.4byte kar_gryakulighttunnel_kind52_callback_table_ptr
+	.4byte kar_gryakupillar_kind53_empty_callback_table_ptr
+	.4byte kar_gryakuanimfloor_kind54_callback_table_ptr
+	.4byte kar_gryakuanimfloor_kind55_callback_table_ptr
+	.4byte kar_gryakubreakcommon_kind56_callback_table_ptr
+	.4byte kar_gryakubreakcommon_kind57_lasergate_callback_table_ptr
+	.4byte kar_gryakulasergate_kind58_ctrl_callback_table_ptr
+	.4byte kar_gryakubreakfloor_kind59_bounce_callback_table_ptr
+	.4byte kar_gryakubreakfloor_kind60_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind61_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind62_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind63_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind64_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind65_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind66_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind67_callback_table_ptr
+	.4byte kar_gryakubreakhpcoll_kind68_callback_table_ptr
+	.4byte kar_gryakuwhispywoods_kind69_callback_table_ptr
+.endobj gryaku_kind_function_table
+
+# .data:0x1A0 | 0x804A5D00 | size: 0xD
+.obj kar_asset_ykcommon_dat, global
+	.string "YkCommon.dat"
+.endobj kar_asset_ykcommon_dat
+
+# .data:0x1AD | 0x804A5D0D | size: 0x3
+.obj gap_07_804A5D0D_data, global
+.hidden gap_07_804A5D0D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A5D0D_data
+
+# .data:0x1B0 | 0x804A5D10 | size: 0xD
+.obj kar_asset_yakumono_dat, global
+	.string "Yakumono.dat"
+.endobj kar_asset_yakumono_dat
+
+# .data:0x1BD | 0x804A5D1D | size: 0x3
+.obj gap_07_804A5D1D_data, global
+.hidden gap_07_804A5D1D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A5D1D_data
+
+# .data:0x1C0 | 0x804A5D20 | size: 0xD
+.obj kar_asset_ykdata_common_name, global
+	.string "ykDataCommon"
+.endobj kar_asset_ykdata_common_name
+
+# .data:0x1CD | 0x804A5D2D | size: 0x3
+.obj gap_07_804A5D2D_data, global
+.hidden gap_07_804A5D2D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A5D2D_data
+
+# .data:0x1D0 | 0x804A5D30 | size: 0xA
+.obj kar_asset_ykdata_all_name, global
+	.string "ykDataAll"
+.endobj kar_asset_ykdata_all_name
+
+# .data:0x1DA | 0x804A5D3A | size: 0x6
+.obj gap_07_804A5D3A_data, global
+.hidden gap_07_804A5D3A_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804A5D3A_data
+
+# 0x805D61F8..0x805D6208 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D61F8 | size: 0x7
+.obj kar_srcfile_jobj_h_805d61f8, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d61f8
+
+# .sdata:0x7 | 0x805D61FF | size: 0x1
+.obj gap_09_805D61FF_sdata, global
+.hidden gap_09_805D61FF_sdata
+	.byte 0x00
+.endobj gap_09_805D61FF_sdata
+
+# .sdata:0x8 | 0x805D6200 | size: 0x5
+.obj lbl_805D6200, global
+	.string "jobj"
+.endobj lbl_805D6200
+
+# .sdata:0xD | 0x805D6205 | size: 0x3
+.obj gap_09_805D6205_sdata, global
+.hidden gap_09_805D6205_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6205_sdata
+
+# 0x805DF828..0x805DF838 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF828 | size: 0x8
+.obj lbl_805DF828, global
+	.float 0
+	.float 0
+.endobj lbl_805DF828
+
+# .sdata2:0x8 | 0x805DF830 | size: 0x8
+.obj lbl_805DF830, global
+	.float 9999
+	.float 0
+.endobj lbl_805DF830

@@ -1973,3 +1973,612 @@
 /* 80236C38 00233A38  80 63 02 5C */	lwz r3, 0x25c(r3)
 /* 80236C3C 00233A3C  4E 80 00 20 */	blr
 .endfn kar_efdata__near_80236c30
+
+# 0x804B4E28..0x804B5468 | size: 0x640
+.data
+.balign 8
+
+# .data:0x0 | 0x804B4E28 | size: 0xC
+.obj lbl_804B4E28, global
+	.string "EfMapPlants"
+.endobj lbl_804B4E28
+
+# .data:0xC | 0x804B4E34 | size: 0xD
+.obj lbl_804B4E34, global
+	.string "EfPtclPlants"
+.endobj lbl_804B4E34
+
+# .data:0x19 | 0x804B4E41 | size: 0x3
+.obj gap_07_804B4E41_data, global
+.hidden gap_07_804B4E41_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4E41_data
+
+# .data:0x1C | 0x804B4E44 | size: 0xA
+.obj lbl_804B4E44, global
+	.string "EfMapHeat"
+.endobj lbl_804B4E44
+
+# .data:0x26 | 0x804B4E4E | size: 0x2
+.obj gap_07_804B4E4E_data, global
+.hidden gap_07_804B4E4E_data
+	.2byte 0x0000
+.endobj gap_07_804B4E4E_data
+
+# .data:0x28 | 0x804B4E50 | size: 0xB
+.obj lbl_804B4E50, global
+	.string "EfPtclHeat"
+.endobj lbl_804B4E50
+
+# .data:0x33 | 0x804B4E5B | size: 0x1
+.obj gap_07_804B4E5B_data, global
+.hidden gap_07_804B4E5B_data
+	.byte 0x00
+.endobj gap_07_804B4E5B_data
+
+# .data:0x34 | 0x804B4E5C | size: 0xC
+.obj lbl_804B4E5C, global
+	.string "EfMapDesert"
+.endobj lbl_804B4E5C
+
+# .data:0x40 | 0x804B4E68 | size: 0xD
+.obj lbl_804B4E68, global
+	.string "EfPtclDesert"
+.endobj lbl_804B4E68
+
+# .data:0x4D | 0x804B4E75 | size: 0x3
+.obj gap_07_804B4E75_data, global
+.hidden gap_07_804B4E75_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4E75_data
+
+# .data:0x50 | 0x804B4E78 | size: 0xB
+.obj lbl_804B4E78, global
+	.string "EfMapCheck"
+.endobj lbl_804B4E78
+
+# .data:0x5B | 0x804B4E83 | size: 0x1
+.obj gap_07_804B4E83_data, global
+.hidden gap_07_804B4E83_data
+	.byte 0x00
+.endobj gap_07_804B4E83_data
+
+# .data:0x5C | 0x804B4E84 | size: 0xC
+.obj lbl_804B4E84, global
+	.string "EfPtclCheck"
+.endobj lbl_804B4E84
+
+# .data:0x68 | 0x804B4E90 | size: 0xC
+.obj lbl_804B4E90, global
+	.string "EfMapValley"
+.endobj lbl_804B4E90
+
+# .data:0x74 | 0x804B4E9C | size: 0xD
+.obj lbl_804B4E9C, global
+	.string "EfPtclValley"
+.endobj lbl_804B4E9C
+
+# .data:0x81 | 0x804B4EA9 | size: 0x3
+.obj gap_07_804B4EA9_data, global
+.hidden gap_07_804B4EA9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4EA9_data
+
+# .data:0x84 | 0x804B4EAC | size: 0xD
+.obj lbl_804B4EAC, global
+	.string "EfMapMachine"
+.endobj lbl_804B4EAC
+
+# .data:0x91 | 0x804B4EB9 | size: 0x3
+.obj gap_07_804B4EB9_data, global
+.hidden gap_07_804B4EB9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4EB9_data
+
+# .data:0x94 | 0x804B4EBC | size: 0xE
+.obj lbl_804B4EBC, global
+	.string "EfPtclMachine"
+.endobj lbl_804B4EBC
+
+# .data:0xA2 | 0x804B4ECA | size: 0x2
+.obj gap_07_804B4ECA_data, global
+.hidden gap_07_804B4ECA_data
+	.2byte 0x0000
+.endobj gap_07_804B4ECA_data
+
+# .data:0xA4 | 0x804B4ECC | size: 0xB
+.obj lbl_804B4ECC, global
+	.string "EfMapSpace"
+.endobj lbl_804B4ECC
+
+# .data:0xAF | 0x804B4ED7 | size: 0x1
+.obj gap_07_804B4ED7_data, global
+.hidden gap_07_804B4ED7_data
+	.byte 0x00
+.endobj gap_07_804B4ED7_data
+
+# .data:0xB0 | 0x804B4ED8 | size: 0xC
+.obj lbl_804B4ED8, global
+	.string "EfPtclSpace"
+.endobj lbl_804B4ED8
+
+# .data:0xBC | 0x804B4EE4 | size: 0x9
+.obj lbl_804B4EE4, global
+	.string "EfMapSky"
+.endobj lbl_804B4EE4
+
+# .data:0xC5 | 0x804B4EED | size: 0x3
+.obj gap_07_804B4EED_data, global
+.hidden gap_07_804B4EED_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4EED_data
+
+# .data:0xC8 | 0x804B4EF0 | size: 0xA
+.obj lbl_804B4EF0, global
+	.string "EfPtclSky"
+.endobj lbl_804B4EF0
+
+# .data:0xD2 | 0x804B4EFA | size: 0x2
+.obj gap_07_804B4EFA_data, global
+.hidden gap_07_804B4EFA_data
+	.2byte 0x0000
+.endobj gap_07_804B4EFA_data
+
+# .data:0xD4 | 0x804B4EFC | size: 0x9
+.obj lbl_804B4EFC, global
+	.string "EfMapIce"
+.endobj lbl_804B4EFC
+
+# .data:0xDD | 0x804B4F05 | size: 0x3
+.obj gap_07_804B4F05_data, global
+.hidden gap_07_804B4F05_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4F05_data
+
+# .data:0xE0 | 0x804B4F08 | size: 0xA
+.obj lbl_804B4F08, global
+	.string "EfPtclIce"
+.endobj lbl_804B4F08
+
+# .data:0xEA | 0x804B4F12 | size: 0x2
+.obj gap_07_804B4F12_data, global
+.hidden gap_07_804B4F12_data
+	.2byte 0x0000
+.endobj gap_07_804B4F12_data
+
+# .data:0xEC | 0x804B4F14 | size: 0xA
+.obj lbl_804B4F14, global
+	.string "EfMapCity"
+.endobj lbl_804B4F14
+
+# .data:0xF6 | 0x804B4F1E | size: 0x2
+.obj gap_07_804B4F1E_data, global
+.hidden gap_07_804B4F1E_data
+	.2byte 0x0000
+.endobj gap_07_804B4F1E_data
+
+# .data:0xF8 | 0x804B4F20 | size: 0xB
+.obj lbl_804B4F20, global
+	.string "EfPtclCity"
+.endobj lbl_804B4F20
+
+# .data:0x103 | 0x804B4F2B | size: 0x1
+.obj gap_07_804B4F2B_data, global
+.hidden gap_07_804B4F2B_data
+	.byte 0x00
+.endobj gap_07_804B4F2B_data
+
+# .data:0x104 | 0x804B4F2C | size: 0xE
+.obj lbl_804B4F2C, global
+	.string "EfPtclStadium"
+.endobj lbl_804B4F2C
+
+# .data:0x112 | 0x804B4F3A | size: 0x2
+.obj gap_07_804B4F3A_data, global
+.hidden gap_07_804B4F3A_data
+	.2byte 0x0000
+.endobj gap_07_804B4F3A_data
+
+# .data:0x114 | 0x804B4F3C | size: 0x1D0
+.obj lbl_804B4F3C, global
+	.4byte 0x00000000
+	.4byte 0x0000001A
+	.4byte lbl_804B4E28
+	.4byte lbl_804B4E34
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x0000001B
+	.4byte lbl_804B4E44
+	.4byte lbl_804B4E50
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000020
+	.4byte lbl_804B4E5C
+	.4byte lbl_804B4E68
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000021
+	.4byte lbl_804B4E78
+	.4byte lbl_804B4E84
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x0000001C
+	.4byte lbl_804B4E90
+	.4byte lbl_804B4E9C
+	.4byte 0x00000000
+	.4byte 0x00000005
+	.4byte 0x00000022
+	.4byte lbl_804B4EAC
+	.4byte lbl_804B4EBC
+	.4byte 0x00000000
+	.4byte 0x00000006
+	.4byte 0x00000023
+	.4byte lbl_804B4ECC
+	.4byte lbl_804B4ED8
+	.4byte 0x00000000
+	.4byte 0x00000007
+	.4byte 0x0000001E
+	.4byte lbl_804B4EE4
+	.4byte lbl_804B4EF0
+	.4byte 0x00000000
+	.4byte 0x00000008
+	.4byte 0x0000001F
+	.4byte lbl_804B4EFC
+	.4byte lbl_804B4F08
+	.4byte 0x00000000
+	.4byte 0x00000009
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F20
+	.4byte 0x00000000
+	.4byte 0x0000000A
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E84
+	.4byte 0x0000000B
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E84
+	.4byte 0x0000000C
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E84
+	.4byte 0x0000000D
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E84
+	.4byte 0x0000000E
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E34
+	.4byte 0x0000000F
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E9C
+	.4byte 0x00000010
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4E50
+	.4byte 0x00000012
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4EF0
+	.4byte 0x00000013
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4EF0
+	.4byte 0x00000014
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte lbl_804B4EF0
+	.4byte 0x00000015
+	.4byte 0x00000024
+	.4byte lbl_804B4F14
+	.4byte lbl_804B4F2C
+	.4byte 0x00000000
+	.4byte 0x4853445F
+	.4byte 0x41726368
+	.4byte 0x69766550
+	.4byte 0x61727365
+	.4byte 0x20657272
+	.4byte 0x2866696C
+	.4byte 0x653D2573
+	.4byte 0x290A0000
+	.4byte 0x65666461
+	.4byte 0x74612E63
+	.4byte 0x00000000
+.endobj lbl_804B4F3C
+
+# .data:0x2E4 | 0x804B510C | size: 0x74
+.obj lbl_804B510C, global
+	.4byte 0x5761726E
+	.4byte 0x696E673A
+	.4byte 0x206F6C64
+	.4byte 0x20706172
+	.4byte 0x7469636C
+	.4byte 0x65206461
+	.4byte 0x74612076
+	.4byte 0x65727369
+	.4byte 0x6F6E203D
+	.4byte 0x2025642C
+	.4byte 0x20726571
+	.4byte 0x75696564
+	.4byte 0x203D2025
+	.4byte 0x640A0000
+	.4byte 0x45665074
+	.4byte 0x636C4D65
+	.4byte 0x6E750000
+	.4byte 0x6D656E75
+	.4byte 0x5F707463
+	.4byte 0x6C000000
+	.4byte 0x6D656E75
+	.4byte 0x5F746578
+	.4byte 0x67000000
+	.4byte 0x6D656E75
+	.4byte 0x5F726566
+	.4byte 0x00000000
+	.4byte 0x6D656E75
+	.4byte 0x5F666F72
+	.4byte 0x6D000000
+.endobj lbl_804B510C
+
+# .data:0x358 | 0x804B5180 | size: 0x4C
+.obj lbl_804B5180, global
+	.4byte 0x45665074
+	.4byte 0x636C5665
+	.4byte 0x6869636C
+	.4byte 0x65000000
+	.4byte 0x76656869
+	.4byte 0x636C655F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x76656869
+	.4byte 0x636C655F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x76656869
+	.4byte 0x636C655F
+	.4byte 0x72656600
+	.4byte 0x76656869
+	.4byte 0x636C655F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+.endobj lbl_804B5180
+
+# .data:0x3A4 | 0x804B51CC | size: 0x1E4
+.obj lbl_804B51CC, global
+	.4byte 0x4566436F
+	.4byte 0x6D6D6F6E
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E315F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E315F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E315F
+	.4byte 0x72656600
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E315F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E325F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E325F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E325F
+	.4byte 0x72656600
+	.4byte 0x636F6D6D
+	.4byte 0x6F6E325F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+	.4byte 0x79616B75
+	.4byte 0x6D6F6E6F
+	.4byte 0x5F707463
+	.4byte 0x6C000000
+	.4byte 0x79616B75
+	.4byte 0x6D6F6E6F
+	.4byte 0x5F746578
+	.4byte 0x67000000
+	.4byte 0x79616B75
+	.4byte 0x6D6F6E6F
+	.4byte 0x5F726566
+	.4byte 0x00000000
+	.4byte 0x79616B75
+	.4byte 0x6D6F6E6F
+	.4byte 0x5F666F72
+	.4byte 0x6D000000
+	.4byte 0x656E656D
+	.4byte 0x795F7074
+	.4byte 0x636C0000
+	.4byte 0x656E656D
+	.4byte 0x795F7465
+	.4byte 0x78670000
+	.4byte 0x656E656D
+	.4byte 0x795F7265
+	.4byte 0x66000000
+	.4byte 0x656E656D
+	.4byte 0x795F666F
+	.4byte 0x726D0000
+	.4byte 0x6D61705F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x6D61705F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x6D61705F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+	.4byte 0x4566456E
+	.4byte 0x64696E67
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67315F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67315F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67315F
+	.4byte 0x72656600
+	.4byte 0x656E6469
+	.4byte 0x6E67315F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67325F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67325F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67325F
+	.4byte 0x72656600
+	.4byte 0x656E6469
+	.4byte 0x6E67325F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+	.4byte 0x4566456E
+	.4byte 0x64696E67
+	.4byte 0x32640000
+	.4byte 0x656E6469
+	.4byte 0x6E67335F
+	.4byte 0x7074636C
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67335F
+	.4byte 0x74657867
+	.4byte 0x00000000
+	.4byte 0x656E6469
+	.4byte 0x6E67335F
+	.4byte 0x72656600
+	.4byte 0x656E6469
+	.4byte 0x6E67335F
+	.4byte 0x666F726D
+	.4byte 0x00000000
+.endobj lbl_804B51CC
+
+# .data:0x588 | 0x804B53B0 | size: 0xC
+.obj lbl_804B53B0, global
+	.string "efModelData"
+.endobj lbl_804B53B0
+
+# .data:0x594 | 0x804B53BC | size: 0x34
+.obj lbl_804B53BC, global
+	.4byte 0x67726F75
+	.4byte 0x70213D45
+	.4byte 0x6647726F
+	.4byte 0x75705F4E
+	.4byte 0x6F6E6500
+	.4byte 0x28656647
+	.4byte 0x6C6F6261
+	.4byte 0x6C2E7073
+	.4byte 0x5F6C696E
+	.4byte 0x6B5F7573
+	.4byte 0x65642026
+	.4byte 0x20666C61
+	.4byte 0x67290000
+.endobj lbl_804B53BC
+
+# .data:0x5C8 | 0x804B53F0 | size: 0x4C
+.obj lbl_804B53F0, global
+	.4byte 0x6978213D
+	.4byte 0x6566476C
+	.4byte 0x6F62616C
+	.4byte 0x2E67726F
+	.4byte 0x75705F69
+	.4byte 0x78000000
+	.4byte 0x63616E20
+	.4byte 0x74206672
+	.4byte 0x65652067
+	.4byte 0x726F7570
+	.4byte 0x203D2025
+	.4byte 0x640A0000
+	.4byte 0x69783E3D
+	.4byte 0x30262669
+	.4byte 0x783C4566
+	.4byte 0x5F47726F
+	.4byte 0x75705F41
+	.4byte 0x75746F5F
+	.4byte 0x4E756D00
+.endobj lbl_804B53F0
+
+# .data:0x614 | 0x804B543C | size: 0x26
+.obj lbl_804B543C, global
+	.string "group>EfGroup_None&&group<EfGroup_Max"
+.endobj lbl_804B543C
+
+# .data:0x63A | 0x804B5462 | size: 0x6
+.obj gap_07_804B5462_data, global
+.hidden gap_07_804B5462_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804B5462_data
+
+# 0x805D7278..0x805D7298 | size: 0x20
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7278 | size: 0x2
+.obj lbl_805D7278, global
+	.string "0"
+.endobj lbl_805D7278
+
+# .sdata:0x2 | 0x805D727A | size: 0x2
+.obj gap_09_805D727A_sdata, global
+.hidden gap_09_805D727A_sdata
+	.2byte 0x0000
+.endobj gap_09_805D727A_sdata
+
+# .sdata:0x4 | 0x805D727C | size: 0x8
+.obj lbl_805D727C, global
+	.string "EfEnemy"
+.endobj lbl_805D727C
+
+# .sdata:0xC | 0x805D7284 | size: 0x8
+.obj lbl_805D7284, global
+	.string "map_ref"
+.endobj lbl_805D7284
+
+# .sdata:0x14 | 0x805D728C | size: 0x4
+.obj gap_09_805D728C_sdata, global
+.hidden gap_09_805D728C_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D728C_sdata
+
+# .sdata:0x18 | 0x805D7290 | size: 0x8
+.obj kar_srcfile_eflib_c_805d7290, global
+	.string "eflib.c"
+.endobj kar_srcfile_eflib_c_805d7290
+
+# 0x805E2A90..0x805E2A98 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2A90 | size: 0x8
+.obj lbl_805E2A90, global
+	.float 0
+	.float 0
+.endobj lbl_805E2A90

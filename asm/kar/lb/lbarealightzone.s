@@ -139,3 +139,48 @@
 /* 8007ADE0 00077BE0  38 21 00 10 */	addi r1, r1, 0x10
 /* 8007ADE4 00077BE4  4E 80 00 20 */	blr
 .endfn kar_lbarealightzone__near_8007adb8
+
+# 0x8049AD98..0x8049ADB8 | size: 0x20
+.data
+.balign 8
+
+# .data:0x0 | 0x8049AD98 | size: 0x12
+.obj kar_src_lbarealightzone_8049ad98, global
+	.string "lbarealightzone.c"
+.endobj kar_src_lbarealightzone_8049ad98
+
+# .data:0x12 | 0x8049ADAA | size: 0x2
+.obj gap_07_8049ADAA_data, global
+.hidden gap_07_8049ADAA_data
+	.2byte 0x0000
+.endobj gap_07_8049ADAA_data
+
+# .data:0x14 | 0x8049ADAC | size: 0xA
+.obj lbl_8049ADAC, global
+	.string "zone_desc"
+.endobj lbl_8049ADAC
+
+# .data:0x1E | 0x8049ADB6 | size: 0x2
+.obj gap_07_8049ADB6_data, global
+.hidden gap_07_8049ADB6_data
+	.2byte 0x0000
+.endobj gap_07_8049ADB6_data
+
+# 0x805529A4..0x80552A30 | size: 0x8C
+.section .bss, "wa", @nobits
+.balign 4
+
+# .bss:0x0 | 0x805529A4 | size: 0x2C
+.obj lbl_805529A4, global
+	.skip 0x2C
+.endobj lbl_805529A4
+
+# .bss:0x2C | 0x805529D0 | size: 0x30
+.obj lbl_805529D0, global
+	.skip 0x30
+.endobj lbl_805529D0
+
+# .bss:0x5C | 0x80552A00 | size: 0x30
+.obj lbl_80552A00, global
+	.skip 0x30
+.endobj lbl_80552A00

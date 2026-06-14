@@ -289,3 +289,42 @@
 /* 802351FC 00231FFC  38 60 00 00 */	li r3, 0x0
 /* 80235200 00232000  4E 80 00 20 */	blr
 .endfn kar_efcallback__near_80235190
+
+# 0x804B4E08..0x804B4E28 | size: 0x20
+.data
+.balign 8
+
+# .data:0x0 | 0x804B4E08 | size: 0xC
+.obj lbl_804B4E08, global
+	.4byte kar_efcallback__80234e4c
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804B4E08
+
+# .data:0xC | 0x804B4E14 | size: 0xD
+.obj kar_src_efcallback_804b4e14, global
+	.string "efcallback.c"
+.endobj kar_src_efcallback_804b4e14
+
+# .data:0x19 | 0x804B4E21 | size: 0x7
+.obj gap_07_804B4E21_data, global
+.hidden gap_07_804B4E21_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B4E21_data
+
+# 0x805D7270..0x805D7278 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7270 | size: 0x3
+.obj lbl_805D7270, global
+	.string "gp"
+.endobj lbl_805D7270
+
+# .sdata:0x3 | 0x805D7273 | size: 0x5
+.obj gap_09_805D7273_sdata, global
+.hidden gap_09_805D7273_sdata
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_09_805D7273_sdata

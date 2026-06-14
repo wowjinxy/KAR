@@ -651,3 +651,86 @@
 /* 80100FE4 000FDDE4  38 21 00 10 */	addi r1, r1, 0x10
 /* 80100FE8 000FDDE8  4E 80 00 20 */	blr
 .endfn kar_gryakupillar_create_stage_linked_kind53_pillar_controller
+
+# 0x804A662C..0x804A6694 | size: 0x68
+.data
+.balign 4
+
+# .data:0x0 | 0x804A662C | size: 0x14
+.obj kar_src_gryakulighttunnel_c, global
+	.string "gryakulighttunnel.c"
+.endobj kar_src_gryakulighttunnel_c
+
+# .data:0x14 | 0x804A6640 | size: 0x40
+.obj kar_gryakulighttunnel_kind52_callback_table, global
+	.4byte kar_gryakulighttunnel_update_kind52_pillar_delay_to_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakulighttunnel_update_kind52_pillar_ground_clear_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakulighttunnel_update_kind52_pillar_progress_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakulighttunnel_update_kind52_pillar_return_to_idle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakulighttunnel_kind52_callback_table
+
+# .data:0x54 | 0x804A6680 | size: 0x14
+.obj kar_gryakulighttunnel_kind52_callback_table_ptr, global
+	.4byte kar_gryakulighttunnel_kind52_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakulighttunnel_kind52_callback_table_ptr
+
+# 0x805D62A0..0x805D62B0 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D62A0 | size: 0x7
+.obj kar_srcfile_jobj_h_805d62a0, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d62a0
+
+# .sdata:0x7 | 0x805D62A7 | size: 0x1
+.obj gap_09_805D62A7_sdata, global
+.hidden gap_09_805D62A7_sdata
+	.byte 0x00
+.endobj gap_09_805D62A7_sdata
+
+# .sdata:0x8 | 0x805D62A8 | size: 0x5
+.obj lbl_805D62A8, global
+	.string "jobj"
+.endobj lbl_805D62A8
+
+# .sdata:0xD | 0x805D62AD | size: 0x3
+.obj gap_09_805D62AD_sdata, global
+.hidden gap_09_805D62AD_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D62AD_sdata
+
+# 0x805DF940..0x805DF950 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF940 | size: 0x8
+.obj lbl_805DF940, global
+	.double 4503601774854144
+.endobj lbl_805DF940
+
+# .sdata2:0x8 | 0x805DF948 | size: 0x4
+.obj lbl_805DF948, global
+	.float 0
+.endobj lbl_805DF948
+
+# .sdata2:0xC | 0x805DF94C | size: 0x4
+.obj lbl_805DF94C, global
+	.float 1
+.endobj lbl_805DF94C

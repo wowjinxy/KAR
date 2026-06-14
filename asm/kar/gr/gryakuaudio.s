@@ -152,3 +152,66 @@
 /* 800F7A5C 000F485C  54 03 D9 7E */	srwi r3, r0, 5
 /* 800F7A60 000F4860  4E 80 00 20 */	blr
 .endfn kar_gryakuaudio_is_gr_parts_none_joint
+
+# 0x804A5B30..0x804A5B60 | size: 0x30
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5B30 | size: 0xE
+.obj kar_src_gryakuaudio_c, global
+	.string "gryakuaudio.c"
+.endobj kar_src_gryakuaudio_c
+
+# .data:0xE | 0x804A5B3E | size: 0x2
+.obj gap_07_804A5B3E_data, global
+.hidden gap_07_804A5B3E_data
+	.2byte 0x0000
+.endobj gap_07_804A5B3E_data
+
+# .data:0x10 | 0x804A5B40 | size: 0x1B
+.obj kar_gryakuaudio_assert_joint_not_parts_none, global
+	.string "jointName != Gr_Parts_None"
+.endobj kar_gryakuaudio_assert_joint_not_parts_none
+
+# .data:0x2B | 0x804A5B5B | size: 0x5
+.obj gap_07_804A5B5B_data, global
+.hidden gap_07_804A5B5B_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A5B5B_data
+
+# 0x805D61E8..0x805D61F8 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D61E8 | size: 0x7
+.obj kar_srcfile_jobj_h_805d61e8, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d61e8
+
+# .sdata:0x7 | 0x805D61EF | size: 0x1
+.obj gap_09_805D61EF_sdata, global
+.hidden gap_09_805D61EF_sdata
+	.byte 0x00
+.endobj gap_09_805D61EF_sdata
+
+# .sdata:0x8 | 0x805D61F0 | size: 0x5
+.obj lbl_805D61F0, global
+	.string "jobj"
+.endobj lbl_805D61F0
+
+# .sdata:0xD | 0x805D61F5 | size: 0x3
+.obj gap_09_805D61F5_sdata, global
+.hidden gap_09_805D61F5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D61F5_sdata
+
+# 0x805DF820..0x805DF828 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF820 | size: 0x8
+.obj lbl_805DF820, global
+	.float 1
+	.float 0
+.endobj lbl_805DF820

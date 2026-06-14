@@ -348,3 +348,27 @@
 /* 80102C70 000FFA70  38 21 00 10 */	addi r1, r1, 0x10
 /* 80102C74 000FFA74  4E 80 00 20 */	blr
 .endfn kar_gryakubreakhouse_create_stage_linked_kind54_animfloor
+
+# 0x804A6978..0x804A6990 | size: 0x18
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6978 | size: 0x18
+.obj kar_gryakubreakhouse_kind23_callback_table_ptr, global
+	.4byte kar_gryakubreakrock_kind22_callback_table
+	.4byte kar_gryakubreakhouse_handle_kind22_23_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakhouse_kind23_callback_table_ptr
+
+# 0x805DF988..0x805DF990 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF988 | size: 0x8
+.obj lbl_805DF988, global
+	.float 1
+	.float 0
+.endobj lbl_805DF988

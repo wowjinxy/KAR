@@ -1471,3 +1471,308 @@
 /* 800FC0E8 000F8EE8  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FC0EC 000F8EEC  4E 80 00 20 */	blr
 .endfn kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion
+
+# 0x804A5FF0..0x804A617C | size: 0x18C
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5FF0 | size: 0x40
+.obj kar_gryakurecoveryzone_recoveryzone_callback_table, global
+	.4byte kar_gryakurecoveryzone_enter_recovery_sequence
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_enter_enabled_state_sequence
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurecoveryzone_recoveryzone_callback_table
+
+# .data:0x40 | 0x804A6030 | size: 0x14
+.obj kar_gryakurecoveryzone_recoveryzone_callback_table_ptr, global
+	.4byte kar_gryakurecoveryzone_recoveryzone_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurecoveryzone_recoveryzone_callback_table_ptr
+
+# .data:0x54 | 0x804A6044 | size: 0x15
+.obj kar_src_gryakurecoveryzone_c, global
+	.string "gryakurecoveryzone.c"
+.endobj kar_src_gryakurecoveryzone_c
+
+# .data:0x69 | 0x804A6059 | size: 0x3
+.obj gap_07_804A6059_data, global
+.hidden gap_07_804A6059_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A6059_data
+
+# .data:0x6C | 0x804A605C | size: 0x34
+.obj kar_gryakurecoveryzone_assert_effect_loop_count, global
+	.string "param->efLoopNum <= GrYakuRecoveryZone_EfLoopNumMax"
+.endobj kar_gryakurecoveryzone_assert_effect_loop_count
+
+# .data:0xA0 | 0x804A6090 | size: 0x30
+.obj kar_gryakurecoveryzone_assert_kind_recoveryzone, global
+	.string "grYakuGetKind(gobj) == Gr_YakuKind_RecoveryZone"
+.endobj kar_gryakurecoveryzone_assert_kind_recoveryzone
+
+# .data:0xD0 | 0x804A60C0 | size: 0x50
+.obj kar_gryakurecoveryzone_kind41_joint_callback_table, global
+	.4byte kar_gryakurecoveryzone_update_kind41_wait_then_extend
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_begin_kind41_extend_angle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_update_kind41_extend_angle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_begin_kind41_return_angle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_update_kind41_return_angle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurecoveryzone_kind41_joint_callback_table
+
+# .data:0x120 | 0x804A6110 | size: 0x14
+.obj kar_gryakurecoveryzone_kind41_joint_callback_table_ptr, global
+	.4byte kar_gryakurecoveryzone_kind41_joint_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurecoveryzone_kind41_joint_callback_table_ptr
+
+# .data:0x134 | 0x804A6124 | size: 0x10
+.obj kar_gryakurotjumphill_target_cycle_callback_table, global
+	.4byte kar_gryakurotjumphill_update_target_trigger_cycle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurotjumphill_target_cycle_callback_table
+
+# .data:0x144 | 0x804A6134 | size: 0x14
+.obj kar_gryakurotjumphill_target_cycle_callback_table_ptr, global
+	.4byte kar_gryakurotjumphill_target_cycle_callback_table
+	.4byte 0x00000000
+	.4byte kar_gryakurecoveryzone_destroy_kind42_ground_group_yaku
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakurotjumphill_target_cycle_callback_table_ptr
+
+# .data:0x158 | 0x804A6148 | size: 0x25
+.obj kar_gryakurecoveryzone_assert_jobj_not_quaternion, global
+	.string "!(jobj->flags & JOBJ_USE_QUATERNION)"
+.endobj kar_gryakurecoveryzone_assert_jobj_not_quaternion
+
+# .data:0x17D | 0x804A616D | size: 0x3
+.obj gap_07_804A616D_data, global
+.hidden gap_07_804A616D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A616D_data
+
+# .data:0x180 | 0x804A6170 | size: 0x9
+.obj kar_src_ground_h_804a6170, global
+	.string "ground.h"
+.endobj kar_src_ground_h_804a6170
+
+# .data:0x189 | 0x804A6179 | size: 0x3
+.obj gap_07_804A6179_data, global
+.hidden gap_07_804A6179_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A6179_data
+
+# 0x805D6220..0x805D6270 | size: 0x50
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6220 | size: 0x2
+.obj lbl_805D6220, global
+	.string "0"
+.endobj lbl_805D6220
+
+# .sdata:0x2 | 0x805D6222 | size: 0x2
+.obj gap_09_805D6222_sdata, global
+.hidden gap_09_805D6222_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6222_sdata
+
+# .sdata:0x4 | 0x805D6224 | size: 0x7
+.obj kar_srcfile_aobj_h_805d6224, global
+	.string "aobj.h"
+.endobj kar_srcfile_aobj_h_805d6224
+
+# .sdata:0xB | 0x805D622B | size: 0x1
+.obj gap_09_805D622B_sdata, global
+.hidden gap_09_805D622B_sdata
+	.byte 0x00
+.endobj gap_09_805D622B_sdata
+
+# .sdata:0xC | 0x805D622C | size: 0x5
+.obj lbl_805D622C, global
+	.string "aobj"
+.endobj lbl_805D622C
+
+# .sdata:0x11 | 0x805D6231 | size: 0x7
+.obj gap_09_805D6231_sdata, global
+.hidden gap_09_805D6231_sdata
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6231_sdata
+
+# .sdata:0x18 | 0x805D6238 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6238, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6238
+
+# .sdata:0x1F | 0x805D623F | size: 0x1
+.obj gap_09_805D623F_sdata, global
+.hidden gap_09_805D623F_sdata
+	.byte 0x00
+.endobj gap_09_805D623F_sdata
+
+# .sdata:0x20 | 0x805D6240 | size: 0x5
+.obj lbl_805D6240, global
+	.string "jobj"
+.endobj lbl_805D6240
+
+# .sdata:0x25 | 0x805D6245 | size: 0x3
+.obj gap_09_805D6245_sdata, global
+.hidden gap_09_805D6245_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6245_sdata
+
+# .sdata:0x28 | 0x805D6248 | size: 0x2
+.obj lbl_805D6248, global
+	.string "0"
+.endobj lbl_805D6248
+
+# .sdata:0x2A | 0x805D624A | size: 0x6
+.obj gap_09_805D624A_sdata, global
+.hidden gap_09_805D624A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D624A_sdata
+
+# .sdata:0x30 | 0x805D6250 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6250, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6250
+
+# .sdata:0x37 | 0x805D6257 | size: 0x1
+.obj gap_09_805D6257_sdata, global
+.hidden gap_09_805D6257_sdata
+	.byte 0x00
+.endobj gap_09_805D6257_sdata
+
+# .sdata:0x38 | 0x805D6258 | size: 0x5
+.obj lbl_805D6258, global
+	.string "jobj"
+.endobj lbl_805D6258
+
+# .sdata:0x3D | 0x805D625D | size: 0x3
+.obj gap_09_805D625D_sdata, global
+.hidden gap_09_805D625D_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D625D_sdata
+
+# .sdata:0x40 | 0x805D6260 | size: 0x5
+.obj lbl_805D6260, global
+	.string "aobj"
+.endobj lbl_805D6260
+
+# .sdata:0x45 | 0x805D6265 | size: 0x3
+.obj gap_09_805D6265_sdata, global
+.hidden gap_09_805D6265_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6265_sdata
+
+# .sdata:0x48 | 0x805D6268 | size: 0x2
+.obj lbl_805D6268, global
+	.string "0"
+.endobj lbl_805D6268
+
+# .sdata:0x4A | 0x805D626A | size: 0x6
+.obj gap_09_805D626A_sdata, global
+.hidden gap_09_805D626A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D626A_sdata
+
+# 0x805DF8E0..0x805DF920 | size: 0x40
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF8E0 | size: 0x4
+.obj lbl_805DF8E0, global
+	.float 0.017453292
+.endobj lbl_805DF8E0
+
+# .sdata2:0x4 | 0x805DF8E4 | size: 0x4
+.obj lbl_805DF8E4, global
+	.float 0
+.endobj lbl_805DF8E4
+
+# .sdata2:0x8 | 0x805DF8E8 | size: 0x4
+.obj lbl_805DF8E8, global
+	.float 1
+.endobj lbl_805DF8E8
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805DF8F0 | size: 0x8
+.obj lbl_805DF8F0, global
+	.double 0.01745329238474369
+.endobj lbl_805DF8F0
+
+# .sdata2:0x18 | 0x805DF8F8 | size: 0x4
+.obj lbl_805DF8F8, global
+	.float 0
+.endobj lbl_805DF8F8
+	.4byte 0x00000000
+
+# .sdata2:0x20 | 0x805DF900 | size: 0x8
+.obj lbl_805DF900, global
+	.double 4503601774854144
+.endobj lbl_805DF900
+
+# .sdata2:0x28 | 0x805DF908 | size: 0x4
+.obj lbl_805DF908, global
+	.float 1
+.endobj lbl_805DF908
+
+# .sdata2:0x2C | 0x805DF90C | size: 0x4
+.obj lbl_805DF90C, global
+	.float 0.017453292
+.endobj lbl_805DF90C
+
+# .sdata2:0x30 | 0x805DF910 | size: 0x8
+.obj lbl_805DF910, global
+	.float 0
+	.float 0
+.endobj lbl_805DF910
+
+# .sdata2:0x38 | 0x805DF918 | size: 0x4
+.obj lbl_805DF918, global
+	.float 0
+.endobj lbl_805DF918
+
+# .sdata2:0x3C | 0x805DF91C | size: 0x4
+.obj lbl_805DF91C, global
+	.float 1
+.endobj lbl_805DF91C

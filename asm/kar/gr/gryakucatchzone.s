@@ -679,3 +679,98 @@
 /* 800FAC94 000F7A94  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FAC98 000F7A98  4E 80 00 20 */	blr
 .endfn kar_gryakucatchzone_get_entry_offset_c_float
+
+# 0x804A5F64..0x804A5FF0 | size: 0x8C
+.data
+.balign 4
+
+# .data:0x0 | 0x804A5F64 | size: 0x12
+.obj kar_src_gryakucatchzone_c, global
+	.string "gryakucatchzone.c"
+.endobj kar_src_gryakucatchzone_c
+
+# .data:0x12 | 0x804A5F76 | size: 0x2
+.obj gap_07_804A5F76_data, global
+.hidden gap_07_804A5F76_data
+	.2byte 0x0000
+.endobj gap_07_804A5F76_data
+
+# .data:0x14 | 0x804A5F78 | size: 0x23
+.obj kar_gryakucatchzone_assert_kind_catchzone, global
+	.string "gyp->kind == Gr_YakuKind_CatchZone"
+.endobj kar_gryakucatchzone_assert_kind_catchzone
+
+# .data:0x37 | 0x804A5F9B | size: 0x5
+.obj gap_07_804A5F9B_data, global
+.hidden gap_07_804A5F9B_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A5F9B_data
+
+# .data:0x3C | 0x804A5FA0 | size: 0x10
+.obj lbl_804A5FA0, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A5FA0
+
+# .data:0x4C | 0x804A5FB0 | size: 0x18
+.obj lbl_804A5FB0, global
+	.4byte lbl_804A5FA0
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A5FB0
+
+# .data:0x64 | 0x804A5FC8 | size: 0x10
+.obj lbl_804A5FC8, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte fn_800FA910
+	.4byte 0x00000000
+.endobj lbl_804A5FC8
+
+# .data:0x74 | 0x804A5FD8 | size: 0x18
+.obj lbl_804A5FD8, global
+	.4byte lbl_804A5FC8
+	.4byte 0x00000000
+	.4byte kar_gryakucatchzone_stop_four_audio_rail_states
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A5FD8
+
+# 0x805DF8C0..0x805DF8E0 | size: 0x20
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF8C0 | size: 0x8
+.obj lbl_805DF8C0, global
+	.float 0
+	.float 0
+.endobj lbl_805DF8C0
+
+# .sdata2:0x8 | 0x805DF8C8 | size: 0x8
+.obj lbl_805DF8C8, global
+	.float 0
+	.float 0
+.endobj lbl_805DF8C8
+
+# .sdata2:0x10 | 0x805DF8D0 | size: 0x4
+.obj lbl_805DF8D0, global
+	.float 10
+.endobj lbl_805DF8D0
+
+# .sdata2:0x14 | 0x805DF8D4 | size: 0x4
+.obj lbl_805DF8D4, global
+	.float 0
+.endobj lbl_805DF8D4
+
+# .sdata2:0x18 | 0x805DF8D8 | size: 0x8
+.obj lbl_805DF8D8, global
+	.float 1
+	.float 0
+.endobj lbl_805DF8D8

@@ -6563,3 +6563,187 @@
 /* 8023CA60 00239860  38 21 00 20 */	addi r1, r1, 0x20
 /* 8023CA64 00239864  4E 80 00 20 */	blr
 .endfn kar_efrequest__near_8023c9e0
+
+# 0x80489F08..0x80489F38 | size: 0x30
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489F08 | size: 0x30
+.obj lbl_80489F08, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489F08
+
+# 0x804B5468..0x804B5518 | size: 0xB0
+.data
+.balign 8
+
+# .data:0x0 | 0x804B5468 | size: 0x7C
+.obj lbl_804B5468, global
+	.4byte 0x65666772
+	.4byte 0x6F757020
+	.4byte 0x6973206E
+	.4byte 0x6F6E6521
+	.4byte 0x21206B69
+	.4byte 0x6E643D25
+	.4byte 0x640A0000
+	.4byte 0x65667265
+	.4byte 0x71756573
+	.4byte 0x742E6300
+	.4byte 0x67726F75
+	.4byte 0x70213D45
+	.4byte 0x6647726F
+	.4byte 0x75705F4E
+	.4byte 0x6F6E6500
+	.4byte 0x7074636C
+	.4byte 0x20726571
+	.4byte 0x20657272
+	.4byte 0x2C206261
+	.4byte 0x64206172
+	.4byte 0x67732028
+	.4byte 0x6B696E64
+	.4byte 0x3D256420
+	.4byte 0x61747970
+	.4byte 0x653D2564
+	.4byte 0x290A0000
+	.4byte 0x62616420
+	.4byte 0x61726773
+	.4byte 0x2E2E286B
+	.4byte 0x696E643D
+	.4byte 0x25642900
+.endobj lbl_804B5468
+
+# .data:0x7C | 0x804B54E4 | size: 0xA
+.obj lbl_804B54E4, global
+	.string "translate"
+.endobj lbl_804B54E4
+
+# .data:0x86 | 0x804B54EE | size: 0x2
+.obj gap_07_804B54EE_data, global
+.hidden gap_07_804B54EE_data
+	.2byte 0x0000
+.endobj gap_07_804B54EE_data
+
+# .data:0x88 | 0x804B54F0 | size: 0x25
+.obj lbl_804B54F0, global
+	.string "!(jobj->flags & JOBJ_USE_QUATERNION)"
+.endobj lbl_804B54F0
+
+# .data:0xAD | 0x804B5515 | size: 0x3
+.obj gap_07_804B5515_data, global
+.hidden gap_07_804B5515_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5515_data
+
+# 0x805D7298..0x805D72B0 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7298 | size: 0x2
+.obj lbl_805D7298, global
+	.string "0"
+.endobj lbl_805D7298
+
+# .sdata:0x2 | 0x805D729A | size: 0x2
+.obj gap_09_805D729A_sdata, global
+.hidden gap_09_805D729A_sdata
+	.2byte 0x0000
+.endobj gap_09_805D729A_sdata
+
+# .sdata:0x4 | 0x805D729C | size: 0x7
+.obj kar_srcfile_jobj_h_805d729c, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d729c
+
+# .sdata:0xB | 0x805D72A3 | size: 0x1
+.obj gap_09_805D72A3_sdata, global
+.hidden gap_09_805D72A3_sdata
+	.byte 0x00
+.endobj gap_09_805D72A3_sdata
+
+# .sdata:0xC | 0x805D72A4 | size: 0x5
+.obj lbl_805D72A4, global
+	.string "jobj"
+.endobj lbl_805D72A4
+
+# .sdata:0x11 | 0x805D72A9 | size: 0x7
+.obj gap_09_805D72A9_sdata, global
+.hidden gap_09_805D72A9_sdata
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D72A9_sdata
+
+# 0x805DD8B8..0x805DD8C4 | size: 0xC
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD8B8 | size: 0x8
+.obj lbl_805DD8B8, global
+	.skip 0x8
+.endobj lbl_805DD8B8
+
+# .sbss:0x8 | 0x805DD8C0 | size: 0x4
+.obj lbl_805DD8C0, global
+	.skip 0x4
+.endobj lbl_805DD8C0
+
+# 0x805E2A98..0x805E2AC8 | size: 0x30
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2A98 | size: 0x4
+.obj lbl_805E2A98, global
+	.float 1
+.endobj lbl_805E2A98
+
+# .sdata2:0x4 | 0x805E2A9C | size: 0x4
+.obj lbl_805E2A9C, global
+	.float 0
+.endobj lbl_805E2A9C
+
+# .sdata2:0x8 | 0x805E2AA0 | size: 0x4
+.obj lbl_805E2AA0, global
+	.float 2
+.endobj lbl_805E2AA0
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805E2AA8 | size: 0x8
+.obj lbl_805E2AA8, global
+	.double 6.283185307179586
+.endobj lbl_805E2AA8
+
+# .sdata2:0x18 | 0x805E2AB0 | size: 0x4
+.obj lbl_805E2AB0, global
+	.float 0.3
+.endobj lbl_805E2AB0
+
+# .sdata2:0x1C | 0x805E2AB4 | size: 0x4
+.obj lbl_805E2AB4, global
+	.float 0.6
+.endobj lbl_805E2AB4
+
+# .sdata2:0x20 | 0x805E2AB8 | size: 0x4
+.obj lbl_805E2AB8, global
+	.float 0.1
+.endobj lbl_805E2AB8
+
+# .sdata2:0x24 | 0x805E2ABC | size: 0x4
+.obj lbl_805E2ABC, global
+	.float 0.9
+.endobj lbl_805E2ABC
+
+# .sdata2:0x28 | 0x805E2AC0 | size: 0x8
+.obj lbl_805E2AC0, global
+	.float 0.00001
+	.float 0
+.endobj lbl_805E2AC0

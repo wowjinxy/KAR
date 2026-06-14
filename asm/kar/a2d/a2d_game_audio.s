@@ -1304,3 +1304,135 @@
 /* 80379B14 00376914  38 21 00 20 */	addi r1, r1, 0x20
 /* 80379B18 00376918  4E 80 00 20 */	blr
 .endfn kar_a2d_game_audio__near_80379a94
+
+# 0x8048B3A0..0x8048B3D0 | size: 0x30
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x8048B3A0 | size: 0xC
+.obj lbl_8048B3A0, global
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+.endobj lbl_8048B3A0
+
+# .rodata:0xC | 0x8048B3AC | size: 0x14
+.obj lbl_8048B3AC, global
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x3F666666
+	.4byte 0x3F4CCCCD
+	.4byte 0x3F333333
+.endobj lbl_8048B3AC
+
+# .rodata:0x20 | 0x8048B3C0 | size: 0x10
+.obj lbl_8048B3C0, global
+	.4byte 0x00000000
+	.4byte 0x00000032
+	.4byte 0xFFFFFFCE
+	.4byte 0x00000064
+.endobj lbl_8048B3C0
+
+# 0x804F2AD4..0x804F2B00 | size: 0x2C
+.data
+.balign 4
+
+# .data:0x0 | 0x804F2AD4 | size: 0x13
+.obj kar_src_a2d_game_audio_804f2ad4, global
+	.string "a2d_game_audio.cpp"
+.endobj kar_src_a2d_game_audio_804f2ad4
+
+# .data:0x13 | 0x804F2AE7 | size: 0x1
+.obj gap_07_804F2AE7_data, global
+.hidden gap_07_804F2AE7_data
+	.byte 0x00
+.endobj gap_07_804F2AE7_data
+
+# .data:0x14 | 0x804F2AE8 | size: 0x13
+.obj lbl_804F2AE8, global
+	.string "t_ratio != FLT_MAX"
+.endobj lbl_804F2AE8
+
+# .data:0x27 | 0x804F2AFB | size: 0x5
+.obj gap_07_804F2AFB_data, global
+.hidden gap_07_804F2AFB_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804F2AFB_data
+
+# 0x805DBB58..0x805DBB88 | size: 0x30
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805DBB58 | size: 0x8
+.obj lbl_805DBB58, global
+	.4byte lbl_804F2474
+	.4byte 0x00000000
+.endobj lbl_805DBB58
+
+# .sdata:0x8 | 0x805DBB60 | size: 0x8
+.obj lbl_805DBB60, global
+	.4byte lbl_804F2468
+	.4byte lbl_804F2488
+.endobj lbl_805DBB60
+
+# .sdata:0x10 | 0x805DBB68 | size: 0x8
+.obj lbl_805DBB68, global
+	.4byte lbl_804F2A80
+	.4byte 0x00000000
+.endobj lbl_805DBB68
+
+# .sdata:0x18 | 0x805DBB70 | size: 0x8
+.obj lbl_805DBB70, global
+	.4byte lbl_804F2A74
+	.4byte lbl_804F2A98
+.endobj lbl_805DBB70
+
+# .sdata:0x20 | 0x805DBB78 | size: 0x8
+.obj lbl_805DBB78, global
+	.4byte lbl_804F2AB0
+	.4byte 0x00000000
+.endobj lbl_805DBB78
+
+# .sdata:0x28 | 0x805DBB80 | size: 0x8
+.obj lbl_805DBB80, global
+	.4byte lbl_804F2AA4
+	.4byte lbl_804F2AC8
+.endobj lbl_805DBB80
+
+# 0x805E4B30..0x805E4B58 | size: 0x28
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E4B30 | size: 0x4
+.obj lbl_805E4B30, global
+	.float 0.0001
+.endobj lbl_805E4B30
+
+# .sdata2:0x4 | 0x805E4B34 | size: 0x4
+.obj lbl_805E4B34, global
+	.float 57.29578
+.endobj lbl_805E4B34
+
+# .sdata2:0x8 | 0x805E4B38 | size: 0x4
+.obj lbl_805E4B38, global
+	.float 0.4
+.endobj lbl_805E4B38
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805E4B40 | size: 0x8
+.obj lbl_805E4B40, global
+	.double 4503601774854144
+.endobj lbl_805E4B40
+
+# .sdata2:0x18 | 0x805E4B48 | size: 0x8
+.obj lbl_805E4B48, global
+	.float 255
+	.float 0
+.endobj lbl_805E4B48
+
+# .sdata2:0x20 | 0x805E4B50 | size: 0x8
+.obj lbl_805E4B50, global
+	.float 0
+	.float 0
+.endobj lbl_805E4B50

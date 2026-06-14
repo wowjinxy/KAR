@@ -278,3 +278,37 @@
 /* 8010F10C 0010BF0C  38 21 00 10 */	addi r1, r1, 0x10
 /* 8010F110 0010BF10  4E 80 00 20 */	blr
 .endfn kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index
+
+# 0x804A7770..0x804A77D8 | size: 0x68
+.data
+.balign 8
+
+# .data:0x0 | 0x804A7770 | size: 0x68
+.obj kar_grice1_callback_table, global
+	.4byte kar_grice1_init_switch_group_and_individual_fgm_ids
+	.4byte kar_grice1_create_stage_ice_yaku_objects
+	.4byte kar_grice1_update_individual_fgm_timers
+	.4byte kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index
+	.4byte kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index
+	.4byte kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index
+	.4byte 0x67726963
+	.4byte 0x65312E63
+	.4byte 0x00000000
+	.4byte 0x696E6469
+	.4byte 0x76695061
+	.4byte 0x72616D2D
+	.4byte 0x3E696E64
+	.4byte 0x69766946
+	.4byte 0x676D416C
+	.4byte 0x6C2D3E69
+	.4byte 0x6E646976
+	.4byte 0x6946676D
+	.4byte 0x4E756D20
+	.4byte 0x3C3D2047
+	.4byte 0x72496365
+	.4byte 0x315F4667
+	.4byte 0x6D436F75
+	.4byte 0x6E746572
+	.4byte 0x4E756D00
+	.4byte 0x00000000
+.endobj kar_grice1_callback_table

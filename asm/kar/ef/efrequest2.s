@@ -2003,3 +2003,216 @@
 /* 8023E568 0023B368  38 21 00 40 */	addi r1, r1, 0x40
 /* 8023E56C 0023B36C  4E 80 00 20 */	blr
 .endfn kar_efrequest2__near_8023e384
+
+# 0x804B5518..0x804B5608 | size: 0xF0
+.data
+.balign 8
+
+# .data:0x0 | 0x804B5518 | size: 0xD
+.obj kar_src_efrequest2_804b5518, global
+	.string "efrequest2.c"
+.endobj kar_src_efrequest2_804b5518
+
+# .data:0xD | 0x804B5525 | size: 0x3
+.obj gap_07_804B5525_data, global
+.hidden gap_07_804B5525_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5525_data
+
+# .data:0x10 | 0x804B5528 | size: 0x78
+.obj lbl_804B5528, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte lbl_804B5528
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x6E6F7420
+	.4byte 0x666F756E
+	.4byte 0x64206566
+	.4byte 0x66656374
+	.4byte 0x206D6F64
+	.4byte 0x656C2064
+	.4byte 0x61746128
+	.4byte 0x6B696E64
+	.4byte 0x3D256429
+	.4byte 0x0A000000
+.endobj lbl_804B5528
+
+# .data:0x88 | 0x804B55A0 | size: 0x32
+.obj lbl_804B55A0, global
+	.string "Warning: effect request scale is zero. (kind=%d)\n"
+.endobj lbl_804B55A0
+
+# .data:0xBA | 0x804B55D2 | size: 0x2
+.obj gap_07_804B55D2_data, global
+.hidden gap_07_804B55D2_data
+	.2byte 0x0000
+.endobj gap_07_804B55D2_data
+
+# .data:0xBC | 0x804B55D4 | size: 0xA
+.obj lbl_804B55D4, global
+	.string "translate"
+.endobj lbl_804B55D4
+
+# .data:0xC6 | 0x804B55DE | size: 0x2
+.obj gap_07_804B55DE_data, global
+.hidden gap_07_804B55DE_data
+	.2byte 0x0000
+.endobj gap_07_804B55DE_data
+
+# .data:0xC8 | 0x804B55E0 | size: 0x25
+.obj lbl_804B55E0, global
+	.string "!(jobj->flags & JOBJ_USE_QUATERNION)"
+.endobj lbl_804B55E0
+
+# .data:0xED | 0x804B5605 | size: 0x3
+.obj gap_07_804B5605_data, global
+.hidden gap_07_804B5605_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5605_data
+
+# 0x805D72B0..0x805D72E8 | size: 0x38
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D72B0 | size: 0x3
+.obj lbl_805D72B0, global
+	.string "ep"
+.endobj lbl_805D72B0
+
+# .sdata:0x3 | 0x805D72B3 | size: 0x1
+.obj gap_09_805D72B3_sdata, global
+.hidden gap_09_805D72B3_sdata
+	.byte 0x00
+.endobj gap_09_805D72B3_sdata
+
+# .sdata:0x4 | 0x805D72B4 | size: 0x5
+.obj lbl_805D72B4, global
+	.string "gobj"
+.endobj lbl_805D72B4
+
+# .sdata:0x9 | 0x805D72B9 | size: 0x3
+.obj gap_09_805D72B9_sdata, global
+.hidden gap_09_805D72B9_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D72B9_sdata
+
+# .sdata:0xC | 0x805D72BC | size: 0x4
+.obj lbl_805D72BC, global
+	.string "eup"
+.endobj lbl_805D72BC
+
+# .sdata:0x10 | 0x805D72C0 | size: 0x2
+.obj lbl_805D72C0, global
+	.string "0"
+.endobj lbl_805D72C0
+
+# .sdata:0x12 | 0x805D72C2 | size: 0x2
+.obj gap_09_805D72C2_sdata, global
+.hidden gap_09_805D72C2_sdata
+	.2byte 0x0000
+.endobj gap_09_805D72C2_sdata
+
+# .sdata:0x14 | 0x805D72C4 | size: 0x7
+.obj kar_srcfile_jobj_h_805d72c4, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d72c4
+
+# .sdata:0x1B | 0x805D72CB | size: 0x1
+.obj gap_09_805D72CB_sdata, global
+.hidden gap_09_805D72CB_sdata
+	.byte 0x00
+.endobj gap_09_805D72CB_sdata
+
+# .sdata:0x1C | 0x805D72CC | size: 0x5
+.obj lbl_805D72CC, global
+	.string "jobj"
+.endobj lbl_805D72CC
+
+# .sdata:0x21 | 0x805D72D1 | size: 0x7
+.obj gap_09_805D72D1_sdata, global
+.hidden gap_09_805D72D1_sdata
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D72D1_sdata
+
+# .sdata:0x28 | 0x805D72D8 | size: 0x7
+.obj kar_srcfile_jobj_h_805d72d8, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d72d8
+
+# .sdata:0x2F | 0x805D72DF | size: 0x1
+.obj gap_09_805D72DF_sdata, global
+.hidden gap_09_805D72DF_sdata
+	.byte 0x00
+.endobj gap_09_805D72DF_sdata
+
+# .sdata:0x30 | 0x805D72E0 | size: 0x5
+.obj lbl_805D72E0, global
+	.string "jobj"
+.endobj lbl_805D72E0
+
+# .sdata:0x35 | 0x805D72E5 | size: 0x3
+.obj gap_09_805D72E5_sdata, global
+.hidden gap_09_805D72E5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D72E5_sdata
+
+# 0x805E2AC8..0x805E2AE8 | size: 0x20
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2AC8 | size: 0x4
+.obj lbl_805E2AC8, global
+	.float 0
+.endobj lbl_805E2AC8
+
+# .sdata2:0x4 | 0x805E2ACC | size: 0x4
+.obj lbl_805E2ACC, global
+	.float 0.00001
+.endobj lbl_805E2ACC
+
+# .sdata2:0x8 | 0x805E2AD0 | size: 0x4
+.obj lbl_805E2AD0, global
+	.float 0.0001
+.endobj lbl_805E2AD0
+
+# .sdata2:0xC | 0x805E2AD4 | size: 0x4
+.obj lbl_805E2AD4, global
+	.float 1
+.endobj lbl_805E2AD4
+
+# .sdata2:0x10 | 0x805E2AD8 | size: 0x4
+.obj lbl_805E2AD8, global
+	.float 0
+.endobj lbl_805E2AD8
+
+# .sdata2:0x14 | 0x805E2ADC | size: 0x4
+.obj lbl_805E2ADC, global
+	.float 1
+.endobj lbl_805E2ADC
+
+# .sdata2:0x18 | 0x805E2AE0 | size: 0x4
+.obj lbl_805E2AE0, global
+	.float 0.25
+.endobj lbl_805E2AE0
+
+# .sdata2:0x1C | 0x805E2AE4 | size: 0x4
+.obj lbl_805E2AE4, global
+	.float 0.75
+.endobj lbl_805E2AE4

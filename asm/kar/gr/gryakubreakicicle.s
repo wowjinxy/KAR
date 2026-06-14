@@ -624,3 +624,103 @@
 /* 80104DA8 00101BA8  38 21 00 20 */	addi r1, r1, 0x20
 /* 80104DAC 00101BAC  4E 80 00 20 */	blr
 .endfn kar_gryakubreakicicle_test_damage_falloff_threshold
+
+# 0x804A6B50..0x804A6BF0 | size: 0xA0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6B50 | size: 0x40
+.obj kar_gryakubreakicicle_kind31_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakicicle_update_kind31_respawn_to_active
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakicicle_update_kind31_ground_clear_to_idle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakicicle_kind31_callback_table
+
+# .data:0x40 | 0x804A6B90 | size: 0x14
+.obj kar_gryakubreakicicle_kind31_callback_table_ptr, global
+	.4byte kar_gryakubreakicicle_kind31_callback_table
+	.4byte kar_gryakubreakicicle_handle_kind31_grcoll_hit
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakicicle_kind31_callback_table_ptr
+
+# .data:0x54 | 0x804A6BA4 | size: 0x14
+.obj kar_src_gryakubreakicicle_c, global
+	.string "gryakubreakicicle.c"
+.endobj kar_src_gryakubreakicicle_c
+
+# .data:0x68 | 0x804A6BB8 | size: 0xE
+.obj kar_gryakubreakicicle_assert_zone_voidptr, global
+	.string "zone->voidPtr"
+.endobj kar_gryakubreakicicle_assert_zone_voidptr
+
+# .data:0x76 | 0x804A6BC6 | size: 0x2
+.obj gap_07_804A6BC6_data, global
+.hidden gap_07_804A6BC6_data
+	.2byte 0x0000
+.endobj gap_07_804A6BC6_data
+
+# .data:0x78 | 0x804A6BC8 | size: 0x24
+.obj kar_gryakubreakicicle_assert_attack_vector_nonzero, global
+	.string "!lbEqZeroVec(damage->attack_vector)"
+.endobj kar_gryakubreakicicle_assert_attack_vector_nonzero
+
+# .data:0x9C | 0x804A6BEC | size: 0x4
+.obj gap_07_804A6BEC_data, global
+.hidden gap_07_804A6BEC_data
+	.4byte 0x00000000
+.endobj gap_07_804A6BEC_data
+
+# 0x805DF9B8..0x805DF9D8 | size: 0x20
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF9B8 | size: 0x4
+.obj lbl_805DF9B8, global
+	.float 0
+.endobj lbl_805DF9B8
+
+# .sdata2:0x4 | 0x805DF9BC | size: 0x4
+.obj lbl_805DF9BC, global
+	.float 1
+.endobj lbl_805DF9BC
+
+# .sdata2:0x8 | 0x805DF9C0 | size: 0x4
+.obj lbl_805DF9C0, global
+	.float 0.00001
+.endobj lbl_805DF9C0
+
+# .sdata2:0xC | 0x805DF9C4 | size: 0x4
+.obj lbl_805DF9C4, global
+	.float -0.00001
+.endobj lbl_805DF9C4
+
+# .sdata2:0x10 | 0x805DF9C8 | size: 0x4
+.obj lbl_805DF9C8, global
+	.float 0.017453292
+.endobj lbl_805DF9C8
+
+# .sdata2:0x14 | 0x805DF9CC | size: 0x4
+.obj lbl_805DF9CC, global
+	.float 0
+.endobj lbl_805DF9CC
+
+# .sdata2:0x18 | 0x805DF9D0 | size: 0x4
+.obj lbl_805DF9D0, global
+	.float 1
+.endobj lbl_805DF9D0
+	.4byte 0x00000000

@@ -319,3 +319,68 @@
 /* 800FA3B8 000F71B8  38 21 00 10 */	addi r1, r1, 0x10
 /* 800FA3BC 000F71BC  4E 80 00 20 */	blr
 .endfn kar_gryakudownforcezone_start_path_motion
+
+# 0x804A5EFC..0x804A5F64 | size: 0x68
+.data
+.balign 4
+
+# .data:0x0 | 0x804A5EFC | size: 0x16
+.obj kar_src_gryakudownforcezone_c, global
+	.string "gryakudownforcezone.c"
+.endobj kar_src_gryakudownforcezone_c
+
+# .data:0x16 | 0x804A5F12 | size: 0x2
+.obj gap_07_804A5F12_data, global
+.hidden gap_07_804A5F12_data
+	.2byte 0x0000
+.endobj gap_07_804A5F12_data
+
+# .data:0x18 | 0x804A5F14 | size: 0x27
+.obj kar_gryakudownforcezone_assert_kind_downforcezone, global
+	.string "gyp->kind == Gr_YakuKind_DownForceZone"
+.endobj kar_gryakudownforcezone_assert_kind_downforcezone
+
+# .data:0x3F | 0x804A5F3B | size: 0x5
+.obj gap_07_804A5F3B_data, global
+.hidden gap_07_804A5F3B_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A5F3B_data
+
+# .data:0x44 | 0x804A5F40 | size: 0x10
+.obj lbl_804A5F40, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A5F40
+
+# .data:0x54 | 0x804A5F50 | size: 0x14
+.obj lbl_804A5F50, global
+	.4byte lbl_804A5F40
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A5F50
+
+# 0x805DF8AC..0x805DF8C0 | size: 0x14
+.section .sdata2, "a"
+.balign 4
+
+# .sdata2:0x0 | 0x805DF8AC | size: 0x4
+.obj lbl_805DF8AC, global
+	.float 0.00001
+.endobj lbl_805DF8AC
+
+# .sdata2:0x4 | 0x805DF8B0 | size: 0x8
+.obj lbl_805DF8B0, global
+	.float -0.00001
+	.float 0
+.endobj lbl_805DF8B0
+
+# .sdata2:0xC | 0x805DF8B8 | size: 0x8
+.obj lbl_805DF8B8, global
+	.float 0
+	.float 0
+.endobj lbl_805DF8B8

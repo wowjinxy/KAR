@@ -189,3 +189,171 @@
 /* 8004F854 0004C654  38 21 00 10 */	addi r1, r1, 0x10
 /* 8004F858 0004C658  4E 80 00 20 */	blr
 .endfn kar_gmviconfigure__near_8004f83c
+
+# 0x80489480..0x80489618 | size: 0x198
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489480 | size: 0x20
+.obj lbl_80489480, global
+	.4byte 0xFFAABD00
+	.4byte 0xFFE85200
+	.4byte 0x5AC9FF00
+	.4byte 0xA8FA8200
+	.4byte 0xFFFFFF00
+	.4byte 0xE260FF00
+	.4byte 0x5E3D2500
+	.4byte 0xFF293600
+.endobj lbl_80489480
+
+# .rodata:0x20 | 0x804894A0 | size: 0x4C
+.obj lbl_804894A0, global
+	.4byte 0x3FEF5C29
+	.4byte 0x3FEF5C29
+	.4byte 0x3FEF5C29
+	.4byte 0x3FEF5C29
+	.4byte 0x40666666
+	.4byte 0x40933333
+	.4byte 0x400CCCCD
+	.4byte 0x4019999A
+	.4byte 0x40C00000
+	.4byte 0x41066666
+	.4byte 0x3FEF5C29
+	.4byte 0x40400000
+	.4byte 0x3FEF5C29
+	.4byte 0x403A5E35
+	.4byte 0x3FEF5C29
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804894A0
+
+# .rodata:0x6C | 0x804894EC | size: 0x1C
+.obj lbl_804894EC, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x40E66666
+	.4byte 0x41499999
+	.4byte 0x40A66666
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804894EC
+
+# .rodata:0x88 | 0x80489508 | size: 0x28
+.obj lbl_80489508, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489508
+
+# .rodata:0xB0 | 0x80489530 | size: 0x28
+.obj lbl_80489530, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489530
+
+# .rodata:0xD8 | 0x80489558 | size: 0x80
+.obj lbl_80489558, global
+	.4byte 0x40BBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x40666666
+	.4byte 0x40A66666
+	.4byte 0x40BBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x40C00000
+	.4byte 0x41066666
+	.4byte 0x40BBD70A
+	.4byte 0x40DBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x40BBD70A
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x41000000
+	.4byte 0x41400000
+	.4byte 0x41100000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+.endobj lbl_80489558
+
+# .rodata:0x158 | 0x804895D8 | size: 0x40
+.obj lbl_804895D8, global
+	.4byte 0x01010000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804895D8
+
+# 0x80497BA8..0x80497BB8 | size: 0x10
+.data
+.balign 8
+
+# .data:0x0 | 0x80497BA8 | size: 0x10
+.obj kar_srcfile_gmviconfigure_c_80497ba8, global
+	.string "gmviconfigure.c"
+.endobj kar_srcfile_gmviconfigure_c_80497ba8
+
+# 0x80537430..0x80537470 | size: 0x40
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80537430 | size: 0x40
+.obj lbl_80537430, global
+	.skip 0x40
+.endobj lbl_80537430
+
+# 0x805D51D8..0x805D51E0 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D51D8 | size: 0x2
+.obj lbl_805D51D8, global
+	.string "0"
+.endobj lbl_805D51D8
+
+# .sdata:0x2 | 0x805D51DA | size: 0x6
+.obj gap_09_805D51DA_sdata, global
+.hidden gap_09_805D51DA_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D51DA_sdata

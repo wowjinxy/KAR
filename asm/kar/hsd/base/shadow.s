@@ -1581,3 +1581,188 @@
 /* 8041E6D0 0041B4D0  38 21 00 10 */	addi r1, r1, 0x10
 /* 8041E6D4 0041B4D4  4E 80 00 20 */	blr
 .endfn fn_8041E6A4
+
+# 0x80504528..0x80504708 | size: 0x1E0
+.data
+.balign 8
+
+# .data:0x0 | 0x80504528 | size: 0x11C
+.obj kar_src_shadow_80504528, global
+	.4byte 0x73686164
+	.4byte 0x6F772E63
+	.4byte 0x00000000
+	.4byte 0x77696474
+	.4byte 0x68203E20
+	.4byte 0x30000000
+	.4byte 0x68656967
+	.4byte 0x6874203E
+	.4byte 0x20300000
+	.4byte 0x73697A65
+	.4byte 0x203E2030
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x000000FF
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000002
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x000000FF
+	.4byte 0x000000FF
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x0000000F
+	.4byte 0x0000000F
+	.4byte 0x0000000F
+	.4byte 0x0000000A
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000007
+	.4byte 0x00000007
+	.4byte 0x00000007
+	.4byte 0x00000005
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x09000000
+	.4byte 0x0004050F
+	.4byte 0x07070007
+	.4byte 0x73686164
+	.4byte 0x6F772D3E
+	.4byte 0x63616D65
+	.4byte 0x72610000
+	.4byte 0x73686164
+	.4byte 0x6F772D3E
+	.4byte 0x74657874
+	.4byte 0x75726500
+	.4byte 0x73686164
+	.4byte 0x6F772D3E
+	.4byte 0x74657874
+	.4byte 0x7572652D
+	.4byte 0x3E696D61
+	.4byte 0x67656465
+	.4byte 0x73630000
+.endobj kar_src_shadow_80504528
+
+# .data:0x11C | 0x80504644 | size: 0x9
+.obj kar_src_object_80504644, global
+	.string "object.h"
+.endobj kar_src_object_80504644
+
+# .data:0x125 | 0x8050464D | size: 0x3
+.obj gap_07_8050464D_data, global
+.hidden gap_07_8050464D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_8050464D_data
+
+# .data:0x128 | 0x80504650 | size: 0x27
+.obj lbl_80504650, global
+	.string "HSD_OBJ(o)->ref_count != HSD_OBJ_NOREF"
+.endobj lbl_80504650
+
+# .data:0x14F | 0x80504677 | size: 0x1
+.obj gap_07_80504677_data, global
+.hidden gap_07_80504677_data
+	.byte 0x00
+.endobj gap_07_80504677_data
+
+# .data:0x150 | 0x80504678 | size: 0x30
+.obj lbl_80504678, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+.endobj lbl_80504678
+
+# .data:0x180 | 0x805046A8 | size: 0x18
+.obj lbl_805046A8, global
+	.4byte 0x706F7369
+	.4byte 0x74696F6E
+	.4byte 0x00000000
+	.4byte 0x61203E20
+	.4byte 0x302E3046
+	.4byte 0x00000000
+.endobj lbl_805046A8
+
+# .data:0x198 | 0x805046C0 | size: 0x41
+.obj lbl_805046C0, global
+	.string "HSD_ArchiveParse: byte-order mismatch! Please check data format\n"
+.endobj lbl_805046C0
+
+# .data:0x1D9 | 0x80504701 | size: 0x7
+.obj gap_07_80504701_data, global
+.hidden gap_07_80504701_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80504701_data
+
+# 0x805E5DC8..0x805E5DF8 | size: 0x30
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E5DC8 | size: 0x8
+.obj lbl_805E5DC8, global
+	.double 4503599627370496
+.endobj lbl_805E5DC8
+
+# .sdata2:0x8 | 0x805E5DD0 | size: 0x4
+.obj lbl_805E5DD0, global
+	.float 1
+.endobj lbl_805E5DD0
+
+# .sdata2:0xC | 0x805E5DD4 | size: 0x4
+.obj lbl_805E5DD4, global
+	.float -1
+.endobj lbl_805E5DD4
+
+# .sdata2:0x10 | 0x805E5DD8 | size: 0x4
+.obj lbl_805E5DD8, global
+	.float 57.29578
+.endobj lbl_805E5DD8
+
+# .sdata2:0x14 | 0x805E5DDC | size: 0x4
+.obj lbl_805E5DDC, global
+	.float -340282350000000000000000000000000000000
+.endobj lbl_805E5DDC
+
+# .sdata2:0x18 | 0x805E5DE0 | size: 0x8
+.obj lbl_805E5DE0, global
+	.float 340282350000000000000000000000000000000
+	.float 0
+.endobj lbl_805E5DE0
+
+# .sdata2:0x20 | 0x805E5DE8 | size: 0x4
+.obj lbl_805E5DE8, global
+	.float 65536
+.endobj lbl_805E5DE8
+	.4byte 0x00000000
+
+# .sdata2:0x28 | 0x805E5DF0 | size: 0x8
+.obj lbl_805E5DF0, global
+	.double 4503599627370496
+.endobj lbl_805E5DF0

@@ -138,3 +138,45 @@
 /* 8010E954 0010B754  38 21 00 10 */	addi r1, r1, 0x10
 /* 8010E958 0010B758  4E 80 00 20 */	blr
 .endfn kar_grvalley2_start_bit_counter_id0_duration100
+
+# 0x804A7610..0x804A7698 | size: 0x88
+.data
+.balign 8
+
+# .data:0x0 | 0x804A7610 | size: 0x88
+.obj kar_grvalley2_callback_table, global
+	.4byte kar_grvalley2_init_loop_anim_and_individual_fgm_ids
+	.4byte kar_grvalley2_create_stage_common_and_breakcoral_yaku
+	.4byte kar_grvalley2_update_individual_fgm_timers
+	.4byte 0x67727661
+	.4byte 0x6C6C6579
+	.4byte 0x322E6300
+	.4byte 0x696E6469
+	.4byte 0x76695061
+	.4byte 0x72616D20
+	.4byte 0x26262069
+	.4byte 0x6E646976
+	.4byte 0x69506172
+	.4byte 0x616D2D3E
+	.4byte 0x6C6F6F70
+	.4byte 0x416E696D
+	.4byte 0x416C6C00
+	.4byte 0x696E6469
+	.4byte 0x76695061
+	.4byte 0x72616D2D
+	.4byte 0x3E696E64
+	.4byte 0x69766946
+	.4byte 0x676D416C
+	.4byte 0x6C2D3E69
+	.4byte 0x6E646976
+	.4byte 0x6946676D
+	.4byte 0x4E756D20
+	.4byte 0x3C3D2047
+	.4byte 0x7256616C
+	.4byte 0x6C657932
+	.4byte 0x5F46676D
+	.4byte 0x436F756E
+	.4byte 0x7465724E
+	.4byte 0x756D0000
+	.4byte 0x00000000
+.endobj kar_grvalley2_callback_table

@@ -150,3 +150,33 @@
 /* 800E6BC4 000E39C4  38 21 00 90 */	addi r1, r1, 0x90
 /* 800E6BC8 000E39C8  4E 80 00 20 */	blr
 .endfn kar_grgravity_calc_nearest_spline_gravity
+
+# 0x804A4A60..0x804A4A80 | size: 0x20
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4A60 | size: 0xC
+.obj kar_src_grgravity_804a4a60, global
+	.string "grgravity.c"
+.endobj kar_src_grgravity_804a4a60
+
+# .data:0xC | 0x804A4A6C | size: 0x12
+.obj lbl_804A4A6C, global
+	.string "tmpParam != -1.0F"
+.endobj lbl_804A4A6C
+
+# .data:0x1E | 0x804A4A7E | size: 0x2
+.obj gap_07_804A4A7E_data, global
+.hidden gap_07_804A4A7E_data
+	.2byte 0x0000
+.endobj gap_07_804A4A7E_data
+
+# 0x805DF730..0x805DF738 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF730 | size: 0x8
+.obj lbl_805DF730, global
+	.float 1
+	.float 0
+.endobj lbl_805DF730

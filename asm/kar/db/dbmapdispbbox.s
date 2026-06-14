@@ -1505,3 +1505,155 @@
 /* 800A59D4 000A27D4  38 21 02 E0 */	addi r1, r1, 0x2e0
 /* 800A59D8 000A27D8  4E 80 00 20 */	blr
 .endfn kar_dbmapdispbbox__near_800a55c4
+
+# 0x80489CB8..0x80489CC4 | size: 0xC
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489CB8 | size: 0xC
+.obj lbl_80489CB8, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80489CB8
+
+# 0x8049EE50..0x8049EF90 | size: 0x140
+.data
+.balign 8
+
+# .data:0x0 | 0x8049EE50 | size: 0xC
+.obj lbl_8049EE50, global
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+.endobj lbl_8049EE50
+
+# .data:0xC | 0x8049EE5C | size: 0x10C
+.obj lbl_8049EE5C, global
+	.4byte 0x00000000
+	.4byte 0x00010001
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte lbl_8049EE28
+	.4byte lbl_8049EE3C
+	.4byte 0x00000000
+	.4byte lbl_8049EE50
+	.4byte 0x3DCCCCCD
+	.4byte 0x47000000
+	.4byte 0x41F00000
+	.4byte 0x3FA0B021
+	.4byte 0x64626D61
+	.4byte 0x70646973
+	.4byte 0x7062626F
+	.4byte 0x782E6300
+	.4byte 0x30203C3D
+	.4byte 0x20696420
+	.4byte 0x26262069
+	.4byte 0x64203C20
+	.4byte 0x67724765
+	.4byte 0x7459616B
+	.4byte 0x754E756D
+	.4byte 0x28677029
+	.4byte 0x00000000
+	.4byte 0x67726F75
+	.4byte 0x6E642E68
+	.4byte 0x00000000
+	.4byte 0x646F626A
+	.4byte 0x20256420
+	.4byte 0x2F202564
+	.4byte 0x202F2025
+	.4byte 0x640A0000
+	.4byte 0x74726920
+	.4byte 0x2564202F
+	.4byte 0x20256420
+	.4byte 0x2F202564
+	.4byte 0x0A000000
+	.4byte 0x65796570
+	.4byte 0x6F732025
+	.4byte 0x66202566
+	.4byte 0x2025660A
+	.4byte 0x00000000
+	.4byte 0x696E7465
+	.4byte 0x72657374
+	.4byte 0x20256620
+	.4byte 0x25662025
+	.4byte 0x660A0000
+	.4byte 0x75702025
+	.4byte 0x66202566
+	.4byte 0x2025660A
+	.4byte 0x00000000
+	.4byte 0x666F7620
+	.4byte 0x3D202566
+	.4byte 0x3A206173
+	.4byte 0x70656374
+	.4byte 0x203D2025
+	.4byte 0x66000000
+	.4byte 0x6964203D
+	.4byte 0x2025640A
+	.4byte 0x00000000
+	.4byte 0x2564202F
+	.4byte 0x2025640A
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_8049EE5C
+
+# .data:0x118 | 0x8049EF68 | size: 0x28
+.obj lbl_8049EF68, global
+	.4byte kar_grcommon_get_gravitypos_num
+	.4byte kar_grcommon_get_gravitypos_vectors_by_index
+	.4byte kar_dbmapgravity__near_800a6c64
+	.4byte kar_dbmapgravity__near_800a6e44
+	.4byte kar_dbmapgravity__near_800a7acc
+	.4byte kar_grcommon_get_airflowpos_num
+	.4byte kar_grcommon_get_airflowpos_vectors_by_index
+	.4byte kar_dbmapgravity__near_800a6d54
+	.4byte kar_dbmapgravity__near_800a6fe8
+	.4byte fn_800A7B94
+.endobj lbl_8049EF68
+
+# 0x805D5B70..0x805D5B80 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5B70 | size: 0x4
+.obj lbl_805D5B70, global
+	.4byte 0x00000006
+.endobj lbl_805D5B70
+
+# .sdata:0x4 | 0x805D5B74 | size: 0x4
+.obj lbl_805D5B74, global
+	.4byte 0x0000FFFF
+.endobj lbl_805D5B74
+
+# .sdata:0x8 | 0x805D5B78 | size: 0x2
+.obj lbl_805D5B78, global
+	.string "0"
+.endobj lbl_805D5B78
+
+# .sdata:0xA | 0x805D5B7A | size: 0x6
+.obj gap_09_805D5B7A_sdata, global
+.hidden gap_09_805D5B7A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D5B7A_sdata
+
+# 0x805DD690..0x805DD698 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD690 | size: 0x8
+.obj lbl_805DD690, global
+	.skip 0x8
+.endobj lbl_805DD690
+
+# 0x805DF0E0..0x805DF0E8 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF0E0 | size: 0x8
+.obj lbl_805DF0E0, global
+	.float 5000
+	.float 0
+.endobj lbl_805DF0E0

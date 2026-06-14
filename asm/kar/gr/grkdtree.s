@@ -589,3 +589,60 @@
 /* 800DE8A0 000DB6A0  42 00 FF E0 */	bdnz .L_800DE880
 /* 800DE8A4 000DB6A4  4E 80 00 20 */	blr
 .endfn kar_grcoursespline_sum_path_segment_lengths
+
+# 0x804A4180..0x804A41F8 | size: 0x78
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4180 | size: 0xB
+.obj kar_src_grkdtree_804a4180, global
+	.string "grkdtree.c"
+.endobj kar_src_grkdtree_804a4180
+
+# .data:0xB | 0x804A418B | size: 0x1
+.obj gap_07_804A418B_data, global
+.hidden gap_07_804A418B_data
+	.byte 0x00
+.endobj gap_07_804A418B_data
+
+# .data:0xC | 0x804A418C | size: 0x1A
+.obj lbl_804A418C, global
+	.string "grChkStaticCollKdtree(gp)"
+.endobj lbl_804A418C
+
+# .data:0x26 | 0x804A41A6 | size: 0x2
+.obj gap_07_804A41A6_data, global
+.hidden gap_07_804A41A6_data
+	.2byte 0x0000
+.endobj gap_07_804A41A6_data
+
+# .data:0x28 | 0x804A41A8 | size: 0xB
+.obj kar_src_lbkdtree_804a41a8, global
+	.string "lbkdtree.h"
+.endobj kar_src_lbkdtree_804a41a8
+
+# .data:0x33 | 0x804A41B3 | size: 0x1
+.obj gap_07_804A41B3_data, global
+.hidden gap_07_804A41B3_data
+	.byte 0x00
+.endobj gap_07_804A41B3_data
+
+# .data:0x34 | 0x804A41B4 | size: 0x42
+.obj lbl_804A41B4, global
+	.string "lbKdtreeObjGetFlags(kdtree, objKind) & LbKdtree_Flags_Type_Static"
+.endobj lbl_804A41B4
+
+# .data:0x76 | 0x804A41F6 | size: 0x2
+.obj gap_07_804A41F6_data, global
+.hidden gap_07_804A41F6_data
+	.2byte 0x0000
+.endobj gap_07_804A41F6_data
+
+# 0x805DF6C8..0x805DF6CC | size: 0x4
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF6C8 | size: 0x4
+.obj lbl_805DF6C8, global
+	.float 0
+.endobj lbl_805DF6C8

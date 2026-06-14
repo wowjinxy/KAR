@@ -2034,3 +2034,252 @@
 /* 8006772C 0006452C  38 21 00 90 */	addi r1, r1, 0x90
 /* 80067730 00064530  4E 80 00 20 */	blr
 .endfn kar_lbcamera_is_sphere_visible
+
+# 0x80499468..0x80499618 | size: 0x1B0
+.data
+.balign 8
+
+# .data:0x0 | 0x80499468 | size: 0xB8
+.obj lbfade_overlay_cobj_desc, global
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte lbl_80499440
+	.4byte lbl_80499454
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3DCCCCCD
+	.4byte 0x46EA6000
+	.4byte 0x42700000
+	.4byte 0x3FAAAAAA
+	.4byte 0x00000001
+	.4byte 0x00000015
+	.4byte 0x00000000
+	.4byte 0x44200000
+	.4byte 0x00000000
+	.4byte 0x43F00000
+	.4byte 0x6C626661
+	.4byte 0x64652E63
+	.4byte 0x00000000
+	.4byte 0x6964203E
+	.4byte 0x204C6246
+	.4byte 0x61646549
+	.4byte 0x645F4E6F
+	.4byte 0x6E652026
+	.4byte 0x26206964
+	.4byte 0x203C204C
+	.4byte 0x62466164
+	.4byte 0x6549645F
+	.4byte 0x46697849
+	.4byte 0x645F4D61
+	.4byte 0x78000000
+	.4byte 0x66616465
+	.4byte 0x20464958
+	.4byte 0x20494428
+	.4byte 0x25642920
+	.4byte 0x6E6F7420
+	.4byte 0x666F756E
+	.4byte 0x6420696E
+	.4byte 0x206C6246
+	.4byte 0x61646544
+	.4byte 0x6174612E
+	.4byte 0x2E2E0A00
+.endobj lbfade_overlay_cobj_desc
+
+# .data:0xB8 | 0x80499520 | size: 0x19
+.obj lbl_80499520, global
+	.string "couldn t get fade gobj!\n"
+.endobj lbl_80499520
+
+# .data:0xD1 | 0x80499539 | size: 0x3
+.obj gap_07_80499539_data, global
+.hidden gap_07_80499539_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80499539_data
+
+# .data:0xD4 | 0x8049953C | size: 0xB
+.obj kar_src_objalloc_8049953c, global
+	.string "objalloc.h"
+.endobj kar_src_objalloc_8049953c
+
+# .data:0xDF | 0x80499547 | size: 0x1
+.obj gap_07_80499547_data, global
+.hidden gap_07_80499547_data
+	.byte 0x00
+.endobj gap_07_80499547_data
+
+# .data:0xE0 | 0x80499548 | size: 0x10
+.obj lbcamera_viewport_rect_table_2way_a, global
+	.4byte 0x0004027C
+	.4byte 0x001400E4
+	.4byte 0x0004027C
+	.4byte 0x00FC01CC
+.endobj lbcamera_viewport_rect_table_2way_a
+
+# .data:0xF0 | 0x80499558 | size: 0x10
+.obj lbcamera_viewport_rect_table_2way_b, global
+	.4byte 0x0004027C
+	.4byte 0x001400E4
+	.4byte 0x0004027C
+	.4byte 0x00FC01CC
+.endobj lbcamera_viewport_rect_table_2way_b
+
+# .data:0x100 | 0x80499568 | size: 0x10
+.obj lbl_80499568, global
+	.4byte 0x00000280
+	.4byte 0x000000E4
+	.4byte 0x00000280
+	.4byte 0x00FC01E0
+.endobj lbl_80499568
+
+# .data:0x110 | 0x80499578 | size: 0x20
+.obj lbcamera_viewport_rect_table_4way_a, global
+	.4byte 0x000A013E
+	.4byte 0x001400E4
+	.4byte 0x000A013E
+	.4byte 0x00FC01CC
+	.4byte 0x01420276
+	.4byte 0x001400E4
+	.4byte 0x01420276
+	.4byte 0x00FC01CC
+.endobj lbcamera_viewport_rect_table_4way_a
+
+# .data:0x130 | 0x80499598 | size: 0x20
+.obj lbcamera_viewport_rect_table_4way_b, global
+	.4byte 0x000A013E
+	.4byte 0x001400E4
+	.4byte 0x000A013E
+	.4byte 0x00FC01CC
+	.4byte 0x01420276
+	.4byte 0x001400E4
+	.4byte 0x01420276
+	.4byte 0x00FC01CC
+.endobj lbcamera_viewport_rect_table_4way_b
+
+# .data:0x150 | 0x804995B8 | size: 0x20
+.obj lbl_804995B8, global
+	.4byte 0x000A013E
+	.4byte 0x001400E4
+	.4byte 0x000A013E
+	.4byte 0x00FC01CC
+	.4byte 0x01420276
+	.4byte 0x001400E4
+	.4byte 0x01420276
+	.4byte 0x00FC01CC
+.endobj lbl_804995B8
+
+# .data:0x170 | 0x804995D8 | size: 0x20
+.obj lbl_804995D8, global
+	.4byte 0x0000013E
+	.4byte 0x001400E4
+	.4byte 0x0000013E
+	.4byte 0x00FC01CC
+	.4byte 0x01420280
+	.4byte 0x001400E4
+	.4byte 0x01420280
+	.4byte 0x00FC01CC
+.endobj lbl_804995D8
+
+# .data:0x190 | 0x804995F8 | size: 0x20
+.obj lbl_804995F8, global
+	.4byte 0x0000013E
+	.4byte 0x001400E4
+	.4byte 0x0000013E
+	.4byte 0x00FC01CC
+	.4byte 0x01420280
+	.4byte 0x001400E4
+	.4byte 0x01420280
+	.4byte 0x00FC01CC
+.endobj lbl_804995F8
+
+# 0x80550D88..0x80550DC0 | size: 0x38
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80550D88 | size: 0x38
+.obj lbl_80550D88, global
+	.skip 0x38
+.endobj lbl_80550D88
+
+# 0x805D52D8..0x805D52FC | size: 0x24
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D52D8 | size: 0x4
+.obj lbl_805D52D8, global
+	.4byte 0x000000FF
+.endobj lbl_805D52D8
+
+# .sdata:0x4 | 0x805D52DC | size: 0x4
+.obj lbl_805D52DC, global
+	.4byte 0x00000000
+.endobj lbl_805D52DC
+
+# .sdata:0x8 | 0x805D52E0 | size: 0x4
+.obj lbl_805D52E0, global
+	.4byte 0xFFFFFFFF
+.endobj lbl_805D52E0
+
+# .sdata:0xC | 0x805D52E4 | size: 0x4
+.obj lbl_805D52E4, global
+	.4byte 0x00000000
+.endobj lbl_805D52E4
+
+# .sdata:0x10 | 0x805D52E8 | size: 0x4
+.obj lbl_805D52E8, global
+	.4byte 0x00000003
+.endobj lbl_805D52E8
+
+# .sdata:0x14 | 0x805D52EC | size: 0x2
+.obj lbl_805D52EC, global
+	.string "0"
+.endobj lbl_805D52EC
+
+# .sdata:0x16 | 0x805D52EE | size: 0x2
+.obj gap_09_805D52EE_sdata, global
+.hidden gap_09_805D52EE_sdata
+	.2byte 0x0000
+.endobj gap_09_805D52EE_sdata
+
+# .sdata:0x18 | 0x805D52F0 | size: 0x5
+.obj lbl_805D52F0, global
+	.string "data"
+.endobj lbl_805D52F0
+
+# .sdata:0x1D | 0x805D52F5 | size: 0x3
+.obj gap_09_805D52F5_sdata, global
+.hidden gap_09_805D52F5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D52F5_sdata
+
+# .sdata:0x20 | 0x805D52F8 | size: 0x4
+.obj lbl_805D52F8, global
+	.4byte 0x00000280
+.endobj lbl_805D52F8
+
+# 0x805DEB20..0x805DEB30 | size: 0x10
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DEB20 | size: 0x4
+.obj lbl_805DEB20, global
+	.float 1.255375
+.endobj lbl_805DEB20
+
+# .sdata2:0x4 | 0x805DEB24 | size: 0x4
+.obj lbl_805DEB24, global
+	.float 1.3333334
+.endobj lbl_805DEB24
+
+# .sdata2:0x8 | 0x805DEB28 | size: 0x4
+.obj lbl_805DEB28, global
+	.float 2147483600
+.endobj lbl_805DEB28
+
+# .sdata2:0xC | 0x805DEB2C | size: 0x4
+.obj lbl_805DEB2C, global
+	.float -2147483600
+.endobj lbl_805DEB2C

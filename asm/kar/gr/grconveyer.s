@@ -402,3 +402,229 @@
 /* 800E85A0 000E53A0  90 83 04 50 */	stw r4, 0x450(r3)
 /* 800E85A4 000E53A4  4E 80 00 20 */	blr
 .endfn kar_grconveyer__near_800e853c
+
+# 0x804A4BC0..0x804A4EE0 | size: 0x320
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4BC0 | size: 0x260
+.obj kar_src_grconveyer_804a4bc0, global
+	.4byte 0x6772636F
+	.4byte 0x6E766579
+	.4byte 0x65722E63
+	.4byte 0x00000000
+	.4byte 0x30203C20
+	.4byte 0x62697446
+	.4byte 0x69656C64
+	.4byte 0x20262620
+	.4byte 0x62697446
+	.4byte 0x69656C64
+	.4byte 0x203C3D20
+	.4byte 0x4772436F
+	.4byte 0x6E766579
+	.4byte 0x6F724465
+	.4byte 0x6275675F
+	.4byte 0x42697446
+	.4byte 0x69656C64
+	.4byte 0x4D617800
+	.4byte 0x28646972
+	.4byte 0x496E6465
+	.4byte 0x78202620
+	.4byte 0x28477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724C65
+	.4byte 0x6674207C
+	.4byte 0x20477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69725269
+	.4byte 0x67687429
+	.4byte 0x29203D3D
+	.4byte 0x20477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724C65
+	.4byte 0x6674207C
+	.4byte 0x7C206469
+	.4byte 0x72496E64
+	.4byte 0x6578203D
+	.4byte 0x3D204772
+	.4byte 0x4346465F
+	.4byte 0x436F6E76
+	.4byte 0x65796572
+	.4byte 0x44697252
+	.4byte 0x69676874
+	.4byte 0x00000000
+	.4byte 0x28646972
+	.4byte 0x496E6465
+	.4byte 0x78202620
+	.4byte 0x28477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724C65
+	.4byte 0x6674207C
+	.4byte 0x20477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69725269
+	.4byte 0x67687429
+	.4byte 0x29213D20
+	.4byte 0x28477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724C65
+	.4byte 0x6674207C
+	.4byte 0x20477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69725269
+	.4byte 0x67687429
+	.4byte 0x00000000
+	.4byte 0x6772636F
+	.4byte 0x6C6C2E68
+	.4byte 0x00000000
+	.4byte 0x21677243
+	.4byte 0x6F6C6C43
+	.4byte 0x686B4661
+	.4byte 0x6365496C
+	.4byte 0x6C656761
+	.4byte 0x6C286763
+	.4byte 0x702C2069
+	.4byte 0x64290000
+	.4byte 0x73702021
+	.4byte 0x3D204E55
+	.4byte 0x4C4C0000
+	.4byte 0x28646972
+	.4byte 0x496E6465
+	.4byte 0x78202620
+	.4byte 0x28477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724C65
+	.4byte 0x6674207C
+	.4byte 0x20477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69725269
+	.4byte 0x67687429
+	.4byte 0x2920213D
+	.4byte 0x20284772
+	.4byte 0x4346465F
+	.4byte 0x436F6E76
+	.4byte 0x65796572
+	.4byte 0x4469724C
+	.4byte 0x65667420
+	.4byte 0x7C204772
+	.4byte 0x4346465F
+	.4byte 0x436F6E76
+	.4byte 0x65796572
+	.4byte 0x44697252
+	.4byte 0x69676874
+	.4byte 0x29000000
+	.4byte 0x28646972
+	.4byte 0x496E6465
+	.4byte 0x78202620
+	.4byte 0x28477243
+	.4byte 0x46465F43
+	.4byte 0x6F6E7665
+	.4byte 0x79657244
+	.4byte 0x69724672
+	.4byte 0x6F6E7420
+	.4byte 0x7C204772
+	.4byte 0x4346465F
+	.4byte 0x436F6E76
+	.4byte 0x65796572
+	.4byte 0x44697242
+	.4byte 0x61636B29
+	.4byte 0x2920213D
+	.4byte 0x20284772
+	.4byte 0x4346465F
+	.4byte 0x436F6E76
+	.4byte 0x65796572
+	.4byte 0x44697246
+	.4byte 0x726F6E74
+	.4byte 0x207C2047
+	.4byte 0x72434646
+	.4byte 0x5F436F6E
+	.4byte 0x76657965
+	.4byte 0x72446972
+	.4byte 0x4261636B
+	.4byte 0x29000000
+	.4byte 0x00000000
+.endobj kar_src_grconveyer_804a4bc0
+
+# .data:0x260 | 0x804A4E20 | size: 0xC0
+.obj lbl_804A4E20, global
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x40400000
+	.4byte 0x00000000
+.endobj lbl_804A4E20
+
+# 0x805DF750..0x805DF758 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF750 | size: 0x4
+.obj lbl_805DF750, global
+	.float -1
+.endobj lbl_805DF750
+
+# .sdata2:0x4 | 0x805DF754 | size: 0x4
+.obj lbl_805DF754, global
+	.float 0
+.endobj lbl_805DF754

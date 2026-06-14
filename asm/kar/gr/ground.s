@@ -373,3 +373,213 @@
 /* 800CE798 000CB598  38 21 00 10 */	addi r1, r1, 0x10
 /* 800CE79C 000CB59C  4E 80 00 20 */	blr
 .endfn kar_gr_assets__asset_800ce754
+
+# 0x804A23E8..0x804A2648 | size: 0x260
+.data
+.balign 8
+
+# .data:0x0 | 0x804A23E8 | size: 0x9
+.obj kar_src_ground_804a23e8, global
+	.string "ground.c"
+.endobj kar_src_ground_804a23e8
+
+# .data:0x9 | 0x804A23F1 | size: 0x3
+.obj gap_07_804A23F1_data, global
+.hidden gap_07_804A23F1_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A23F1_data
+
+# .data:0xC | 0x804A23F4 | size: 0x12
+.obj lbl_804A23F4, global
+	.string "grGlobalP == NULL"
+.endobj lbl_804A23F4
+
+# .data:0x1E | 0x804A2406 | size: 0x2
+.obj gap_07_804A2406_data, global
+.hidden gap_07_804A2406_data
+	.2byte 0x0000
+.endobj gap_07_804A2406_data
+
+# .data:0x20 | 0x804A2408 | size: 0x50
+.obj lbl_804A2408, global
+	.4byte 0xC47A01EC
+	.4byte 0xBCF5C28F
+	.4byte 0xC47A01EC
+	.4byte 0x447A01EC
+	.4byte 0x3CF5C28F
+	.4byte 0x447A01EC
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000002
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A2408
+
+# .data:0x70 | 0x804A2458 | size: 0x5C
+.obj lbl_804A2458, global
+	.4byte lbl_805D6080
+	.4byte 0x00010000
+	.4byte 0x05000000
+	.4byte lbl_805D6084
+	.4byte 0x00020000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte lbl_805D6088
+	.4byte 0x00020000
+.endobj lbl_804A2458
+
+# .data:0xCC | 0x804A24B4 | size: 0x30
+.obj lbl_804A24B4, global
+	.4byte 0xC47A0000
+	.4byte 0x00000000
+	.4byte 0xC47A0000
+	.4byte 0xC47A0000
+	.4byte 0x00000000
+	.4byte 0x447A0000
+	.4byte 0x447A0000
+	.4byte 0x00000000
+	.4byte 0xC47A0000
+	.4byte 0x447A0000
+	.4byte 0x00000000
+	.4byte 0x447A0000
+.endobj lbl_804A24B4
+
+# .data:0xFC | 0x804A24E4 | size: 0x28
+.obj lbl_804A24E4, global
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000001
+	.4byte 0x00000051
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000003
+	.4byte 0x00000051
+	.4byte 0x00000000
+.endobj lbl_804A24E4
+
+# .data:0x124 | 0x804A250C | size: 0x1C
+.obj lbl_804A250C, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A250C
+
+# .data:0x140 | 0x804A2528 | size: 0x30
+.obj lbl_804A2528, global
+	.4byte lbl_804A24B4
+	.4byte 0x00000004
+	.4byte lbl_804A24E4
+	.4byte 0x00000002
+	.4byte lbl_804A250C
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A2528
+
+# .data:0x170 | 0x804A2558 | size: 0x1C
+.obj lbl_804A2558, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A2558
+
+# .data:0x18C | 0x804A2574 | size: 0x90
+.obj lbl_804A2574, global
+	.4byte 0xC1200000
+	.4byte 0x3F800000
+	.4byte 0xC1A00000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0xC1A00000
+	.4byte 0x3F800000
+	.4byte 0xC1A00000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0xC1F00000
+	.4byte 0x3F800000
+	.4byte 0xC1A00000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0xC2200000
+	.4byte 0x3F800000
+	.4byte 0xC1A00000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+	.4byte 0x3F800000
+	.4byte 0x80000000
+.endobj lbl_804A2574
+
+# .data:0x21C | 0x804A2604 | size: 0xC
+.obj lbl_804A2604, global
+	.4byte 0x00000000
+	.4byte lbl_804A2574
+	.4byte 0x00000004
+.endobj lbl_804A2604
+
+# .data:0x228 | 0x804A2610 | size: 0x38
+.obj lbl_804A2610, global
+	.4byte 0x00000000
+	.4byte lbl_804A2604
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A2610

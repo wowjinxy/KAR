@@ -1193,3 +1193,245 @@
 /* 80102034 000FEE34  38 60 00 00 */	li r3, 0x0
 /* 80102038 000FEE38  4E 80 00 20 */	blr
 .endfn fn_80102034
+
+# 0x804A6694..0x804A68C8 | size: 0x234
+.data
+.balign 4
+
+# .data:0x0 | 0x804A6694 | size: 0x10
+.obj kar_gryakupillar_kind53_empty_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupillar_kind53_empty_callback_table
+
+# .data:0x10 | 0x804A66A4 | size: 0xDC
+.obj kar_gryakupillar_kind53_empty_callback_table_ptr, global
+	.4byte kar_gryakupillar_kind53_empty_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x67727961
+	.4byte 0x6B757069
+	.4byte 0x6C6C6172
+	.4byte 0x2E630000
+	.4byte 0x6779702D
+	.4byte 0x3E6B696E
+	.4byte 0x64203D3D
+	.4byte 0x2047725F
+	.4byte 0x59616B75
+	.4byte 0x4B696E64
+	.4byte 0x5F50696C
+	.4byte 0x6C617200
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x203C3D20
+	.4byte 0x47725961
+	.4byte 0x6B755069
+	.4byte 0x6C6C6172
+	.4byte 0x4374726C
+	.4byte 0x5F474F62
+	.4byte 0x6A4E756D
+	.4byte 0x4D617800
+	.4byte 0x67726F75
+	.4byte 0x6E642E68
+	.4byte 0x00000000
+	.4byte 0x6779702D
+	.4byte 0x3E6B696E
+	.4byte 0x64203D3D
+	.4byte 0x2047725F
+	.4byte 0x59616B75
+	.4byte 0x4B696E64
+	.4byte 0x5F50696C
+	.4byte 0x6C617243
+	.4byte 0x74726C00
+	.4byte 0x7663474F
+	.4byte 0x626A2021
+	.4byte 0x3D204E55
+	.4byte 0x4C4C0000
+	.4byte 0x72616E6B
+	.4byte 0x696E6720
+	.4byte 0x3C207061
+	.4byte 0x72616D2D
+	.4byte 0x3E66616C
+	.4byte 0x6C50696C
+	.4byte 0x6C61724E
+	.4byte 0x756D5461
+	.4byte 0x626C6553
+	.4byte 0x697A6500
+.endobj kar_gryakupillar_kind53_empty_callback_table_ptr
+
+# .data:0xEC | 0x804A6780 | size: 0x40
+.obj kar_gryakupillar_kind39_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind39_drop_delay_to_mode2
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind39_respawn_to_raised
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind39_ground_clear_to_idle
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupillar_kind39_callback_table
+
+# .data:0x12C | 0x804A67C0 | size: 0x18
+.obj kar_gryakupillar_kind39_callback_table_ptr, global
+	.4byte kar_gryakupillar_kind39_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupillar_kind39_callback_table_ptr
+
+# .data:0x144 | 0x804A67D8 | size: 0x70
+.obj kar_gryakupillar_kind40_callback_table, global
+	.4byte kar_gryakupillar_update_kind40_delay_to_collision_enable
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind40_ground_clear_to_mode2_anim
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind40_icon_delay_a
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind40_icon_delay_b
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind40_wait_effects_then_reset
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupillar_update_kind40_ground_clear_to_reset
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupillar_kind40_callback_table
+
+# .data:0x1B4 | 0x804A6848 | size: 0x80
+.obj kar_gryakupillar_kind40_callback_table_ptr, global
+	.4byte kar_gryakupillar_kind40_callback_table
+	.4byte fn_80102034
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x67727961
+	.4byte 0x6B756272
+	.4byte 0x65616B72
+	.4byte 0x6F636B2E
+	.4byte 0x63000000
+	.4byte 0x70617261
+	.4byte 0x6D2D3E65
+	.4byte 0x66427265
+	.4byte 0x616B4E75
+	.4byte 0x6D203C3D
+	.4byte 0x20477259
+	.4byte 0x616B7542
+	.4byte 0x7265616B
+	.4byte 0x526F636B
+	.4byte 0x5F52656D
+	.4byte 0x6F766545
+	.4byte 0x66666563
+	.4byte 0x7449644E
+	.4byte 0x756D4D61
+	.4byte 0x78000000
+	.4byte 0x216C6245
+	.4byte 0x715A6572
+	.4byte 0x6F566563
+	.4byte 0x28617474
+	.4byte 0x61636B56
+	.4byte 0x6563746F
+	.4byte 0x72290000
+.endobj kar_gryakupillar_kind40_callback_table_ptr
+
+# 0x805D62B0..0x805D62C8 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D62B0 | size: 0x2
+.obj lbl_805D62B0, global
+	.string "0"
+.endobj lbl_805D62B0
+
+# .sdata:0x2 | 0x805D62B2 | size: 0x6
+.obj gap_09_805D62B2_sdata, global
+.hidden gap_09_805D62B2_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D62B2_sdata
+
+# .sdata:0x8 | 0x805D62B8 | size: 0x7
+.obj kar_srcfile_aobj_h_805d62b8, global
+	.string "aobj.h"
+.endobj kar_srcfile_aobj_h_805d62b8
+
+# .sdata:0xF | 0x805D62BF | size: 0x1
+.obj gap_09_805D62BF_sdata, global
+.hidden gap_09_805D62BF_sdata
+	.byte 0x00
+.endobj gap_09_805D62BF_sdata
+
+# .sdata:0x10 | 0x805D62C0 | size: 0x5
+.obj lbl_805D62C0, global
+	.string "aobj"
+.endobj lbl_805D62C0
+
+# .sdata:0x15 | 0x805D62C5 | size: 0x3
+.obj gap_09_805D62C5_sdata, global
+.hidden gap_09_805D62C5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D62C5_sdata
+
+# 0x805DF950..0x805DF970 | size: 0x20
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF950 | size: 0x4
+.obj lbl_805DF950, global
+	.float 0
+.endobj lbl_805DF950
+
+# .sdata2:0x4 | 0x805DF954 | size: 0x4
+.obj lbl_805DF954, global
+	.float 1
+.endobj lbl_805DF954
+
+# .sdata2:0x8 | 0x805DF958 | size: 0x4
+.obj lbl_805DF958, global
+	.float 10
+.endobj lbl_805DF958
+
+# .sdata2:0xC | 0x805DF95C | size: 0x4
+.obj lbl_805DF95C, global
+	.float 0
+.endobj lbl_805DF95C
+
+# .sdata2:0x10 | 0x805DF960 | size: 0x4
+.obj lbl_805DF960, global
+	.float 1
+.endobj lbl_805DF960
+	.4byte 0x00000000
+
+# .sdata2:0x18 | 0x805DF968 | size: 0x8
+.obj lbl_805DF968, global
+	.double 4503601774854144
+.endobj lbl_805DF968

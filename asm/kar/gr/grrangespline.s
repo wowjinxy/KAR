@@ -2588,3 +2588,280 @@
 /* 800E3CB0 000E0AB0  38 21 00 40 */	addi r1, r1, 0x40
 /* 800E3CB4 000E0AB4  4E 80 00 20 */	blr
 .endfn kar_grnullpos_collect_jobj_tree_nodes
+
+# 0x804A4518..0x804A4820 | size: 0x308
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4518 | size: 0x18
+.obj grrangespline_search_lengths, global
+	.float 10
+	.float 30
+	.float 50
+	.float 100
+	.float 150
+	.float 200
+.endobj grrangespline_search_lengths
+
+# .data:0x18 | 0x804A4530 | size: 0x10
+.obj kar_src_grrangespline_804a4530, global
+	.string "grrangespline.c"
+.endobj kar_src_grrangespline_804a4530
+
+# .data:0x28 | 0x804A4540 | size: 0x70
+.obj lbl_804A4540, global
+	.4byte 0x72616E67
+	.4byte 0x65437450
+	.4byte 0x6F696E74
+	.4byte 0x30203C20
+	.4byte 0x72616E67
+	.4byte 0x65437450
+	.4byte 0x6F696E74
+	.4byte 0x31000000
+	.4byte 0x6772636F
+	.4byte 0x6D6D6F6E
+	.4byte 0x2E680000
+	.4byte 0x72616E67
+	.4byte 0x65446174
+	.4byte 0x61000000
+	.4byte 0x30203C3D
+	.4byte 0x2072616E
+	.4byte 0x67655F73
+	.4byte 0x706C5F69
+	.4byte 0x64202626
+	.4byte 0x2072616E
+	.4byte 0x67655F73
+	.4byte 0x706C5F69
+	.4byte 0x64203C20
+	.4byte 0x72616E67
+	.4byte 0x65446174
+	.4byte 0x612D3E70
+	.4byte 0x6169724E
+	.4byte 0x756D0000
+.endobj lbl_804A4540
+
+# .data:0x98 | 0x804A45B0 | size: 0x27
+.obj lbl_804A45B0, global
+	.string "ctp->connect_num < Gr_RangeConnect_Max"
+.endobj lbl_804A45B0
+
+# .data:0xBF | 0x804A45D7 | size: 0x1
+.obj gap_07_804A45D7_data, global
+.hidden gap_07_804A45D7_data
+	.byte 0x00
+.endobj gap_07_804A45D7_data
+
+# .data:0xC0 | 0x804A45D8 | size: 0x248
+.obj lbl_804A45D8, global
+	.4byte 0x6374506F
+	.4byte 0x696E742D
+	.4byte 0x3E636F6E
+	.4byte 0x6E656374
+	.4byte 0x5F6E756D
+	.4byte 0x203E2030
+	.4byte 0x00000000
+	.4byte 0x72616E67
+	.4byte 0x652D3E64
+	.4byte 0x61746100
+	.4byte 0x30203C3D
+	.4byte 0x2063745F
+	.4byte 0x706F696E
+	.4byte 0x745F6964
+	.4byte 0x20262620
+	.4byte 0x63745F70
+	.4byte 0x6F696E74
+	.4byte 0x5F696420
+	.4byte 0x3C207261
+	.4byte 0x6E67652D
+	.4byte 0x3E63744E
+	.4byte 0x756D0000
+	.4byte 0x73746172
+	.4byte 0x74506F69
+	.4byte 0x6E742D3E
+	.4byte 0x636F6E6E
+	.4byte 0x6563745F
+	.4byte 0x6E756D20
+	.4byte 0x3C204772
+	.4byte 0x5F52616E
+	.4byte 0x6765436F
+	.4byte 0x6E6E6563
+	.4byte 0x745F4D61
+	.4byte 0x78000000
+	.4byte 0x656E6450
+	.4byte 0x6F696E74
+	.4byte 0x2D3E636F
+	.4byte 0x6E6E6563
+	.4byte 0x745F6E75
+	.4byte 0x6D203C20
+	.4byte 0x47725F52
+	.4byte 0x616E6765
+	.4byte 0x436F6E6E
+	.4byte 0x6563745F
+	.4byte 0x4D617800
+	.4byte 0x73746172
+	.4byte 0x74506F69
+	.4byte 0x6E742021
+	.4byte 0x3D20656E
+	.4byte 0x64506F69
+	.4byte 0x6E740000
+	.4byte 0x72616E67
+	.4byte 0x65446174
+	.4byte 0x612D3E70
+	.4byte 0x6169724E
+	.4byte 0x756D203E
+	.4byte 0x20320000
+	.4byte 0x6772496E
+	.4byte 0x6C476574
+	.4byte 0x4C656674
+	.4byte 0x52616E67
+	.4byte 0x6553706C
+	.4byte 0x696E6528
+	.4byte 0x67702C20
+	.4byte 0x69292D3E
+	.4byte 0x74797065
+	.4byte 0x203D3D20
+	.4byte 0x53504C49
+	.4byte 0x4E455F4C
+	.4byte 0x494E4541
+	.4byte 0x52000000
+	.4byte 0x6772496E
+	.4byte 0x6C476574
+	.4byte 0x52696768
+	.4byte 0x7452616E
+	.4byte 0x67655370
+	.4byte 0x6C696E65
+	.4byte 0x2867702C
+	.4byte 0x2069292D
+	.4byte 0x3E747970
+	.4byte 0x65203D3D
+	.4byte 0x2053504C
+	.4byte 0x494E455F
+	.4byte 0x4C494E45
+	.4byte 0x41520000
+	.4byte 0x7020213D
+	.4byte 0x202D312E
+	.4byte 0x30460000
+	.4byte 0x6D696E20
+	.4byte 0x213D202D
+	.4byte 0x312E3046
+	.4byte 0x00000000
+	.4byte 0x6C626B64
+	.4byte 0x74726565
+	.4byte 0x2E680000
+	.4byte 0x6C624B64
+	.4byte 0x74726565
+	.4byte 0x4F626A47
+	.4byte 0x6574466C
+	.4byte 0x61677328
+	.4byte 0x6B647472
+	.4byte 0x65652C20
+	.4byte 0x6F626A4B
+	.4byte 0x696E6429
+	.4byte 0x2026204C
+	.4byte 0x624B6474
+	.4byte 0x7265655F
+	.4byte 0x466C6167
+	.4byte 0x735F5479
+	.4byte 0x70655F53
+	.4byte 0x74617469
+	.4byte 0x63000000
+	.4byte 0x706F7320
+	.4byte 0x3D202566
+	.4byte 0x2C202566
+	.4byte 0x2C202566
+	.4byte 0x2C207365
+	.4byte 0x61726368
+	.4byte 0x5F72616E
+	.4byte 0x6765203D
+	.4byte 0x2025662C
+	.4byte 0x206C6576
+	.4byte 0x656C203D
+	.4byte 0x2025642C
+	.4byte 0x20726574
+	.4byte 0x203D2025
+	.4byte 0x640A0000
+	.4byte 0x73656172
+	.4byte 0x63685F72
+	.4byte 0x616E6765
+	.4byte 0x203D3D20
+	.4byte 0x67725261
+	.4byte 0x6E676553
+	.4byte 0x65617263
+	.4byte 0x684C6576
+	.4byte 0x656C5B6C
+	.4byte 0x6576656C
+	.4byte 0x5D207C7C
+	.4byte 0x20726574
+	.4byte 0x203D3D20
+	.4byte 0x47725365
+	.4byte 0x61726368
+	.4byte 0x53706C69
+	.4byte 0x6E655F46
+	.4byte 0x6F756E64
+	.4byte 0x00000000
+.endobj lbl_804A45D8
+
+# 0x805575DC..0x80557608 | size: 0x2C
+.section .bss, "wa", @nobits
+.balign 4
+
+# .bss:0x0 | 0x805575DC | size: 0x2C
+.obj grrangespline_connection_objalloc_data, global
+	.skip 0x2C
+.endobj grrangespline_connection_objalloc_data
+
+# 0x805D6120..0x805D6128 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6120 | size: 0x2
+.obj lbl_805D6120, global
+	.string "0"
+.endobj lbl_805D6120
+
+# .sdata:0x2 | 0x805D6122 | size: 0x6
+.obj gap_09_805D6122_sdata, global
+.hidden gap_09_805D6122_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6122_sdata
+
+# 0x805DF6E8..0x805DF710 | size: 0x28
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF6E8 | size: 0x4
+.obj lbl_805DF6E8, global
+	.float 0
+.endobj lbl_805DF6E8
+
+# .sdata2:0x4 | 0x805DF6EC | size: 0x4
+.obj lbl_805DF6EC, global
+	.float 0.5
+.endobj lbl_805DF6EC
+
+# .sdata2:0x8 | 0x805DF6F0 | size: 0x4
+.obj lbl_805DF6F0, global
+	.float 100000000
+.endobj lbl_805DF6F0
+
+# .sdata2:0xC | 0x805DF6F4 | size: 0x4
+.obj lbl_805DF6F4, global
+	.float 1
+.endobj lbl_805DF6F4
+
+# .sdata2:0x10 | 0x805DF6F8 | size: 0x4
+.obj lbl_805DF6F8, global
+	.float -1
+.endobj lbl_805DF6F8
+	.4byte 0x00000000
+
+# .sdata2:0x18 | 0x805DF700 | size: 0x8
+.obj lbl_805DF700, global
+	.double 0.5
+.endobj lbl_805DF700
+
+# .sdata2:0x20 | 0x805DF708 | size: 0x8
+.obj lbl_805DF708, global
+	.double 3
+.endobj lbl_805DF708

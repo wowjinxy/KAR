@@ -1249,3 +1249,97 @@
 /* 80241420 0023E220  38 21 00 10 */	addi r1, r1, 0x10
 /* 80241424 0023E224  4E 80 00 20 */	blr
 .endfn kar_efargs__near_802413c0
+
+# 0x804B565C..0x804B5688 | size: 0x2C
+.data
+.balign 4
+
+# .data:0x0 | 0x804B565C | size: 0x9
+.obj kar_src_efargs_804b565c, global
+	.string "efargs.c"
+.endobj kar_src_efargs_804b565c
+
+# .data:0x9 | 0x804B5665 | size: 0x3
+.obj gap_07_804B5665_data, global
+.hidden gap_07_804B5665_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5665_data
+
+# .data:0xC | 0x804B5668 | size: 0x20
+.obj kar_mpcoll_report_free_not_found_fmt, global
+	.string "not find FreeMpColl!! mcp = %x\n"
+.endobj kar_mpcoll_report_free_not_found_fmt
+
+# 0x8055DB98..0x8055DBC8 | size: 0x30
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8055DB98 | size: 0x30
+.obj lbl_8055DB98, global
+	.skip 0x30
+.endobj lbl_8055DB98
+
+# 0x805D7320..0x805D7330 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7320 | size: 0x2
+.obj lbl_805D7320, global
+	.string "0"
+.endobj lbl_805D7320
+
+# .sdata:0x2 | 0x805D7322 | size: 0x6
+.obj gap_09_805D7322_sdata, global
+.hidden gap_09_805D7322_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D7322_sdata
+
+# .sdata:0x8 | 0x805D7328 | size: 0x4
+.obj lbl_805D7328, global
+	.4byte 0xFFFFFFFF
+.endobj lbl_805D7328
+
+# .sdata:0xC | 0x805D732C | size: 0x4
+.obj lbl_805D732C, global
+	.4byte 0xFFFFFFFF
+.endobj lbl_805D732C
+
+# 0x805DD8C4..0x805DD8C8 | size: 0x4
+.section .sbss, "wa", @nobits
+.balign 4
+
+# .sbss:0x0 | 0x805DD8C4 | size: 0x4
+.obj lbl_805DD8C4, global
+	.skip 0x4
+.endobj lbl_805DD8C4
+
+# 0x805E2B28..0x805E2B40 | size: 0x18
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2B28 | size: 0x4
+.obj lbl_805E2B28, global
+	.float 0
+.endobj lbl_805E2B28
+
+# .sdata2:0x4 | 0x805E2B2C | size: 0x4
+.obj lbl_805E2B2C, global
+	.float -1
+.endobj lbl_805E2B2C
+
+# .sdata2:0x8 | 0x805E2B30 | size: 0x4
+.obj lbl_805E2B30, global
+	.float 1
+.endobj lbl_805E2B30
+
+# .sdata2:0xC | 0x805E2B34 | size: 0x4
+.obj lbl_805E2B34, global
+	.float 10
+.endobj lbl_805E2B34
+
+# .sdata2:0x10 | 0x805E2B38 | size: 0x4
+.obj lbl_805E2B38, global
+	.float 0
+.endobj lbl_805E2B38
+	.4byte 0x00000000

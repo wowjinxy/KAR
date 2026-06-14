@@ -1275,3 +1275,199 @@
 /* 801006EC 000FD4EC  38 21 00 30 */	addi r1, r1, 0x30
 /* 801006F0 000FD4F0  4E 80 00 20 */	blr
 .endfn kar_gryakupushoutwall_update_kind51_lightzone_close_motion
+
+# 0x804A6498..0x804A662C | size: 0x194
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6498 | size: 0x40
+.obj kar_gryakupushoutwall_kind49_callback_table, global
+	.4byte kar_gryakupushoutwall_update_kind49_cycle_timer
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind49_ground_clear_to_mode2
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind49_push_trigger_core
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind49_return_after_ground_clear
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind49_callback_table
+
+# .data:0x40 | 0x804A64D8 | size: 0x14
+.obj kar_gryakupushoutwall_kind49_callback_table_ptr, global
+	.4byte kar_gryakupushoutwall_kind49_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind49_callback_table_ptr
+
+# .data:0x54 | 0x804A64EC | size: 0x10
+.obj kar_gryakupushoutwall_kind50_callback_table, global
+	.4byte kar_gryakupushoutwall_update_kind50_target_state_fgm
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind50_callback_table
+
+# .data:0x64 | 0x804A64FC | size: 0x14
+.obj kar_gryakupushoutwall_kind50_callback_table_ptr, global
+	.4byte kar_gryakupushoutwall_kind50_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind50_callback_table_ptr
+
+# .data:0x78 | 0x804A6510 | size: 0x14
+.obj kar_src_gryakupushoutwall_c, global
+	.string "gryakupushoutwall.c"
+.endobj kar_src_gryakupushoutwall_c
+
+# .data:0x8C | 0x804A6524 | size: 0xB4
+.obj kar_src_gryakupushoutwall_ground_h, global
+	.4byte 0x67726F75
+	.4byte 0x6E642E68
+	.4byte 0x00000000
+	.4byte 0x30203C20
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x20262620
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x203C3D20
+	.4byte 0x47725961
+	.4byte 0x6B755075
+	.4byte 0x73684F75
+	.4byte 0x7457616C
+	.4byte 0x6C437472
+	.4byte 0x6C5F474F
+	.4byte 0x626A4E75
+	.4byte 0x6D4D6178
+	.4byte 0x00000000
+	.4byte 0x30203C20
+	.4byte 0x70617261
+	.4byte 0x6D2D3E65
+	.4byte 0x6E645461
+	.4byte 0x72676574
+	.4byte 0x4E756D20
+	.4byte 0x26262070
+	.4byte 0x6172616D
+	.4byte 0x2D3E656E
+	.4byte 0x64546172
+	.4byte 0x6765744E
+	.4byte 0x756D203C
+	.4byte 0x3D204772
+	.4byte 0x59616B75
+	.4byte 0x50757368
+	.4byte 0x4F757457
+	.4byte 0x616C6C43
+	.4byte 0x74726C5F
+	.4byte 0x474F626A
+	.4byte 0x4E756D4D
+	.4byte 0x61780000
+	.4byte 0x00000000
+.endobj kar_src_gryakupushoutwall_ground_h
+
+# .data:0x140 | 0x804A65D8 | size: 0x40
+.obj kar_gryakupushoutwall_kind51_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind51_lightzone_open_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind51_delay_to_mode3
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakupushoutwall_update_kind51_lightzone_close_motion
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind51_callback_table
+
+# .data:0x180 | 0x804A6618 | size: 0x14
+.obj kar_gryakupushoutwall_kind51_callback_table_ptr, global
+	.4byte kar_gryakupushoutwall_kind51_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakupushoutwall_kind51_callback_table_ptr
+
+# 0x805D6280..0x805D62A0 | size: 0x20
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6280 | size: 0x5
+.obj lbl_805D6280, global
+	.string "aobj"
+.endobj lbl_805D6280
+
+# .sdata:0x5 | 0x805D6285 | size: 0x3
+.obj gap_09_805D6285_sdata, global
+.hidden gap_09_805D6285_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6285_sdata
+
+# .sdata:0x8 | 0x805D6288 | size: 0x2
+.obj lbl_805D6288, global
+	.string "0"
+.endobj lbl_805D6288
+
+# .sdata:0xA | 0x805D628A | size: 0x6
+.obj gap_09_805D628A_sdata, global
+.hidden gap_09_805D628A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D628A_sdata
+
+# .sdata:0x10 | 0x805D6290 | size: 0x5
+.obj lbl_805D6290, global
+	.string "aobj"
+.endobj lbl_805D6290
+
+# .sdata:0x15 | 0x805D6295 | size: 0x3
+.obj gap_09_805D6295_sdata, global
+.hidden gap_09_805D6295_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6295_sdata
+
+# .sdata:0x18 | 0x805D6298 | size: 0x7
+.obj kar_srcfile_aobj_h_805d6298, global
+	.string "aobj.h"
+.endobj kar_srcfile_aobj_h_805d6298
+
+# .sdata:0x1F | 0x805D629F | size: 0x1
+.obj gap_09_805D629F_sdata, global
+.hidden gap_09_805D629F_sdata
+	.byte 0x00
+.endobj gap_09_805D629F_sdata
+
+# 0x805DF938..0x805DF940 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF938 | size: 0x4
+.obj lbl_805DF938, global
+	.float 0
+.endobj lbl_805DF938
+
+# .sdata2:0x4 | 0x805DF93C | size: 0x4
+.obj lbl_805DF93C, global
+	.float 1
+.endobj lbl_805DF93C

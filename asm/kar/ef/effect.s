@@ -914,3 +914,48 @@
 /* 80234E44 00231C44  38 21 00 10 */	addi r1, r1, 0x10
 /* 80234E48 00231C48  4E 80 00 20 */	blr
 .endfn kar_effect__near_80234e2c
+
+# 0x804B4D9C..0x804B4E08 | size: 0x6C
+.data
+.balign 4
+
+# .data:0x0 | 0x804B4D9C | size: 0x40
+.obj kar_src_effect_804b4d9c, global
+	.4byte 0x65666665
+	.4byte 0x63742E63
+	.4byte 0x00000000
+	.4byte 0x6265666F
+	.4byte 0x72652D3E
+	.4byte 0x6E657874
+	.4byte 0x3D3D6570
+	.4byte 0x00000000
+	.4byte 0x6566476C
+	.4byte 0x6F62616C
+	.4byte 0x2E656666
+	.4byte 0x6563745F
+	.4byte 0x746F705B
+	.4byte 0x6B65795D
+	.4byte 0x3D3D6570
+	.4byte 0x00000000
+.endobj kar_src_effect_804b4d9c
+
+# .data:0x40 | 0x804B4DDC | size: 0x26
+.obj lbl_804B4DDC, global
+	.string "group>EfGroup_None&&group<EfGroup_Max"
+.endobj lbl_804B4DDC
+
+# .data:0x66 | 0x804B4E02 | size: 0x6
+.obj gap_07_804B4E02_data, global
+.hidden gap_07_804B4E02_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804B4E02_data
+
+# 0x8055D7A0..0x8055DA08 | size: 0x268
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8055D7A0 | size: 0x268
+.obj lbl_8055D7A0, global
+	.skip 0x268
+.endobj lbl_8055D7A0

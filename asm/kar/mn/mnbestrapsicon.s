@@ -7397,3 +7397,762 @@
 /* 8018CF8C 00189D8C  98 64 00 08 */	stb r3, 0x8(r4)
 /* 8018CF90 00189D90  4E 80 00 20 */	blr
 .endfn kar_collision_object_set_system_enabled
+
+# 0x804AD8F0..0x804ADAE8 | size: 0x1F8
+.data
+.balign 8
+
+# .data:0x0 | 0x804AD8F0 | size: 0x11
+.obj kar_src_mnbestrapsicon_c, global
+	.string "mnbestrapsicon.c"
+.endobj kar_src_mnbestrapsicon_c
+
+# .data:0x11 | 0x804AD901 | size: 0x7
+.obj gap_07_804AD901_data, global
+.hidden gap_07_804AD901_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804AD901_data
+
+# .data:0x18 | 0x804AD908 | size: 0x1E
+.obj kar_mnbestrapsicon_sboard_kicon_scene_models_name, global
+	.string "ScMenSboardKicon_scene_models"
+.endobj kar_mnbestrapsicon_sboard_kicon_scene_models_name
+
+# .data:0x36 | 0x804AD926 | size: 0x2
+.obj gap_07_804AD926_data, global
+.hidden gap_07_804AD926_data
+	.2byte 0x0000
+.endobj gap_07_804AD926_data
+
+# .data:0x38 | 0x804AD928 | size: 0x24
+.obj lbl_804AD928, global
+	.4byte 0x02030405
+	.4byte 0x06070809
+	.4byte 0x0A000000
+	.4byte 0x12131415
+	.4byte 0x16171819
+	.4byte 0x1A1B1C1D
+	.4byte 0x1E1F2021
+	.4byte 0x22232425
+	.4byte 0x26272829
+.endobj lbl_804AD928
+
+# .data:0x5C | 0x804AD94C | size: 0xF
+.obj kar_linkfile_sisbestrap_dat_804ad94c, global
+	.string "SisBestrap.dat"
+.endobj kar_linkfile_sisbestrap_dat_804ad94c
+
+# .data:0x6B | 0x804AD95B | size: 0x1
+.obj gap_07_804AD95B_data, global
+.hidden gap_07_804AD95B_data
+	.byte 0x00
+.endobj gap_07_804AD95B_data
+
+# .data:0x6C | 0x804AD95C | size: 0x6C
+.obj kar_mnbestrapsicon_sis_bestrapdata_group_name, global
+	.4byte 0x5349535F
+	.4byte 0x42657374
+	.4byte 0x72617044
+	.4byte 0x61746100
+	.4byte 0x6D6E4265
+	.4byte 0x73747261
+	.4byte 0x70536E61
+	.4byte 0x6D654469
+	.4byte 0x73702829
+	.4byte 0x3A207374
+	.4byte 0x61676520
+	.4byte 0x6B696E64
+	.4byte 0x20256420
+	.4byte 0x6973206F
+	.4byte 0x76657221
+	.4byte 0x0A000000
+	.4byte 0x6D6E4265
+	.4byte 0x73747261
+	.4byte 0x70536E61
+	.4byte 0x6D654469
+	.4byte 0x73702829
+	.4byte 0x3A206C69
+	.4byte 0x6E652025
+	.4byte 0x64206973
+	.4byte 0x206F7665
+	.4byte 0x72210A00
+	.4byte 0x00000000
+.endobj kar_mnbestrapsicon_sis_bestrapdata_group_name
+
+# .data:0xD8 | 0x804AD9C8 | size: 0x48
+.obj kar_movie_assets_mvtopmenu_quad_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x44400000
+	.4byte 0x43400000
+	.4byte 0x00000000
+	.4byte 0xC3800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x44000000
+	.4byte 0x43400000
+	.4byte 0x00000000
+	.4byte 0xC4000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x43800000
+	.4byte 0x43400000
+	.4byte 0x00000000
+.endobj kar_movie_assets_mvtopmenu_quad_table
+
+# .data:0x120 | 0x804ADA10 | size: 0x5C
+.obj kar_movie_assets_mvtopmenu_tobj_desc, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x000000FF
+	.4byte 0x00000004
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x01010000
+	.4byte 0x00450010
+	.4byte 0x3F800000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_movie_assets_mvtopmenu_tobj_desc
+
+# .data:0x17C | 0x804ADA6C | size: 0xE
+.obj kar_movie_assets_mvtopmenu_h4m_name, global
+	.string "MvTopMenu.h4m"
+.endobj kar_movie_assets_mvtopmenu_h4m_name
+
+# .data:0x18A | 0x804ADA7A | size: 0x2
+.obj gap_07_804ADA7A_data, global
+.hidden gap_07_804ADA7A_data
+	.2byte 0x0000
+.endobj gap_07_804ADA7A_data
+
+# .data:0x18C | 0x804ADA7C | size: 0x14
+.obj lbl_804ADA7C, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x3F800000
+	.4byte 0x00000000
+.endobj lbl_804ADA7C
+
+# .data:0x1A0 | 0x804ADA90 | size: 0x14
+.obj lbl_804ADA90, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804ADA90
+
+# .data:0x1B4 | 0x804ADAA4 | size: 0x44
+.obj kar_movie_assets_mvtopmenu_camera_desc, global
+	.4byte 0x00000000
+	.4byte 0x00000003
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte 0x00000280
+	.4byte 0x000001E0
+	.4byte lbl_804ADA7C
+	.4byte lbl_804ADA90
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x47000000
+	.4byte 0x00000000
+	.4byte 0x43F00000
+	.4byte 0x00000000
+	.4byte 0x44200000
+	.4byte 0x00000000
+.endobj kar_movie_assets_mvtopmenu_camera_desc
+
+# 0x80559AC0..0x80559E38 | size: 0x378
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80559AC0 | size: 0x134
+.obj kar_collision_object_handle_pool, global
+	.skip 0x134
+.endobj kar_collision_object_handle_pool
+
+# .bss:0x134 | 0x80559BF4 | size: 0x244
+.obj lbl_80559BF4, global
+	.skip 0x244
+.endobj lbl_80559BF4
+
+# 0x805D6E88..0x805D6EE0 | size: 0x58
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6E88 | size: 0x2
+.obj lbl_805D6E88, global
+	.string "0"
+.endobj lbl_805D6E88
+
+# .sdata:0x2 | 0x805D6E8A | size: 0x6
+.obj gap_09_805D6E8A_sdata, global
+.hidden gap_09_805D6E8A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6E8A_sdata
+
+# .sdata:0x8 | 0x805D6E90 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6e90, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6e90
+
+# .sdata:0xF | 0x805D6E97 | size: 0x1
+.obj gap_09_805D6E97_sdata, global
+.hidden gap_09_805D6E97_sdata
+	.byte 0x00
+.endobj gap_09_805D6E97_sdata
+
+# .sdata:0x10 | 0x805D6E98 | size: 0x5
+.obj lbl_805D6E98, global
+	.string "jobj"
+.endobj lbl_805D6E98
+
+# .sdata:0x15 | 0x805D6E9D | size: 0x3
+.obj gap_09_805D6E9D_sdata, global
+.hidden gap_09_805D6E9D_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6E9D_sdata
+
+# .sdata:0x18 | 0x805D6EA0 | size: 0x8
+.obj lbl_805D6EA0, global
+	.4byte 0x0B0C0D0E
+	.4byte 0x0F101100
+.endobj lbl_805D6EA0
+
+# .sdata:0x20 | 0x805D6EA8 | size: 0x3
+.obj lbl_805D6EA8, global
+	.string "%d"
+.endobj lbl_805D6EA8
+
+# .sdata:0x23 | 0x805D6EAB | size: 0x1
+.obj gap_09_805D6EAB_sdata, global
+.hidden gap_09_805D6EAB_sdata
+	.byte 0x00
+.endobj gap_09_805D6EAB_sdata
+
+# .sdata:0x24 | 0x805D6EAC | size: 0x4
+.obj lbl_805D6EAC, global
+	.4byte 0x81460000
+.endobj lbl_805D6EAC
+
+# .sdata:0x28 | 0x805D6EB0 | size: 0x2
+.obj lbl_805D6EB0, global
+	.string "P"
+.endobj lbl_805D6EB0
+
+# .sdata:0x2A | 0x805D6EB2 | size: 0x2
+.obj gap_09_805D6EB2_sdata, global
+.hidden gap_09_805D6EB2_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6EB2_sdata
+
+# .sdata:0x2C | 0x805D6EB4 | size: 0x2
+.obj lbl_805D6EB4, global
+	.string "t"
+.endobj lbl_805D6EB4
+
+# .sdata:0x2E | 0x805D6EB6 | size: 0x2
+.obj gap_09_805D6EB6_sdata, global
+.hidden gap_09_805D6EB6_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6EB6_sdata
+
+# .sdata:0x30 | 0x805D6EB8 | size: 0x2
+.obj lbl_805D6EB8, global
+	.string "s"
+.endobj lbl_805D6EB8
+
+# .sdata:0x32 | 0x805D6EBA | size: 0x2
+.obj gap_09_805D6EBA_sdata, global
+.hidden gap_09_805D6EBA_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6EBA_sdata
+
+# .sdata:0x34 | 0x805D6EBC | size: 0x2
+.obj lbl_805D6EBC, global
+	.string "."
+.endobj lbl_805D6EBC
+
+# .sdata:0x36 | 0x805D6EBE | size: 0x2
+.obj gap_09_805D6EBE_sdata, global
+.hidden gap_09_805D6EBE_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6EBE_sdata
+
+# .sdata:0x38 | 0x805D6EC0 | size: 0x4
+.obj lbl_805D6EC0, global
+	.4byte 0x8CC20000
+.endobj lbl_805D6EC0
+
+# .sdata:0x3C | 0x805D6EC4 | size: 0x4
+.obj lbl_805D6EC4, global
+	.4byte 0x96870000
+.endobj lbl_805D6EC4
+
+# .sdata:0x40 | 0x805D6EC8 | size: 0x4
+.obj lbl_805D6EC8, global
+	.4byte 0x81480000
+.endobj lbl_805D6EC8
+
+# .sdata:0x44 | 0x805D6ECC | size: 0x2
+.obj lbl_805D6ECC, global
+	.string "f"
+.endobj lbl_805D6ECC
+
+# .sdata:0x46 | 0x805D6ECE | size: 0x2
+.obj gap_09_805D6ECE_sdata, global
+.hidden gap_09_805D6ECE_sdata
+	.2byte 0x0000
+.endobj gap_09_805D6ECE_sdata
+
+# .sdata:0x48 | 0x805D6ED0 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6ed0, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6ed0
+
+# .sdata:0x4F | 0x805D6ED7 | size: 0x1
+.obj gap_09_805D6ED7_sdata, global
+.hidden gap_09_805D6ED7_sdata
+	.byte 0x00
+.endobj gap_09_805D6ED7_sdata
+
+# .sdata:0x50 | 0x805D6ED8 | size: 0x5
+.obj lbl_805D6ED8, global
+	.string "jobj"
+.endobj lbl_805D6ED8
+
+# .sdata:0x55 | 0x805D6EDD | size: 0x3
+.obj gap_09_805D6EDD_sdata, global
+.hidden gap_09_805D6EDD_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6EDD_sdata
+
+# 0x805DD7F8..0x805DD838 | size: 0x40
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD7F8 | size: 0x4
+.obj lbl_805DD7F8, global
+	.skip 0x4
+.endobj lbl_805DD7F8
+
+# .sbss:0x4 | 0x805DD7FC | size: 0x4
+.obj lbl_805DD7FC, global
+	.skip 0x4
+.endobj lbl_805DD7FC
+
+# .sbss:0x8 | 0x805DD800 | size: 0x4
+.obj lbl_805DD800, global
+	.skip 0x4
+.endobj lbl_805DD800
+
+# .sbss:0xC | 0x805DD804 | size: 0x4
+.obj lbl_805DD804, global
+	.skip 0x4
+.endobj lbl_805DD804
+
+# .sbss:0x10 | 0x805DD808 | size: 0x8
+.obj lbl_805DD808, global
+	.skip 0x8
+.endobj lbl_805DD808
+
+# .sbss:0x18 | 0x805DD810 | size: 0x4
+.obj lbl_805DD810, global
+	.skip 0x4
+.endobj lbl_805DD810
+
+# .sbss:0x1C | 0x805DD814 | size: 0x4
+.obj lbl_805DD814, global
+	.skip 0x4
+.endobj lbl_805DD814
+
+# .sbss:0x20 | 0x805DD818 | size: 0x4
+.obj lbl_805DD818, global
+	.skip 0x4
+.endobj lbl_805DD818
+
+# .sbss:0x24 | 0x805DD81C | size: 0x4
+.obj lbl_805DD81C, global
+	.skip 0x4
+.endobj lbl_805DD81C
+
+# .sbss:0x28 | 0x805DD820 | size: 0x8
+.obj lbl_805DD820, global
+	.skip 0x8
+.endobj lbl_805DD820
+
+# .sbss:0x30 | 0x805DD828 | size: 0x4
+.obj lbl_805DD828, global
+	.skip 0x4
+.endobj lbl_805DD828
+
+# .sbss:0x34 | 0x805DD82C | size: 0x4
+.obj lbl_805DD82C, global
+	.skip 0x4
+.endobj lbl_805DD82C
+
+# .sbss:0x38 | 0x805DD830 | size: 0x4
+.obj lbl_805DD830, global
+	.skip 0x4
+.endobj lbl_805DD830
+
+# .sbss:0x3C | 0x805DD834 | size: 0x4
+.obj lbl_805DD834, global
+	.skip 0x4
+.endobj lbl_805DD834
+
+# 0x805E0F10..0x805E1048 | size: 0x138
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E0F10 | size: 0x8
+.obj lbl_805E0F10, global
+	.double 4503601774854144
+.endobj lbl_805E0F10
+
+# .sdata2:0x8 | 0x805E0F18 | size: 0x4
+.obj lbl_805E0F18, global
+	.float 0
+.endobj lbl_805E0F18
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805E0F20 | size: 0x8
+.obj lbl_805E0F20, global
+	.double 4503601774854144
+.endobj lbl_805E0F20
+
+# .sdata2:0x18 | 0x805E0F28 | size: 0x4
+.obj lbl_805E0F28, global
+	.float -137
+.endobj lbl_805E0F28
+
+# .sdata2:0x1C | 0x805E0F2C | size: 0x4
+.obj lbl_805E0F2C, global
+	.float 320
+.endobj lbl_805E0F2C
+
+# .sdata2:0x20 | 0x805E0F30 | size: 0x4
+.obj lbl_805E0F30, global
+	.float 10.557377
+.endobj lbl_805E0F30
+
+# .sdata2:0x24 | 0x805E0F34 | size: 0x4
+.obj lbl_805E0F34, global
+	.float 240
+.endobj lbl_805E0F34
+
+# .sdata2:0x28 | 0x805E0F38 | size: 0x4
+.obj lbl_805E0F38, global
+	.float -9.93185
+.endobj lbl_805E0F38
+
+# .sdata2:0x2C | 0x805E0F3C | size: 0x4
+.obj lbl_805E0F3C, global
+	.float 10
+.endobj lbl_805E0F3C
+
+# .sdata2:0x30 | 0x805E0F40 | size: 0x4
+.obj lbl_805E0F40, global
+	.float 40
+.endobj lbl_805E0F40
+
+# .sdata2:0x34 | 0x805E0F44 | size: 0x4
+.obj lbl_805E0F44, global
+	.float 1
+.endobj lbl_805E0F44
+
+# .sdata2:0x38 | 0x805E0F48 | size: 0x8
+.obj lbl_805E0F48, global
+	.double 4503601774854144
+.endobj lbl_805E0F48
+
+# .sdata2:0x40 | 0x805E0F50 | size: 0x8
+.obj lbl_805E0F50, global
+	.double 4503599627370496
+.endobj lbl_805E0F50
+
+# .sdata2:0x48 | 0x805E0F58 | size: 0x4
+.obj lbl_805E0F58, global
+	.float -20
+.endobj lbl_805E0F58
+
+# .sdata2:0x4C | 0x805E0F5C | size: 0x4
+.obj lbl_805E0F5C, global
+	.float 37
+.endobj lbl_805E0F5C
+
+# .sdata2:0x50 | 0x805E0F60 | size: 0x4
+.obj lbl_805E0F60, global
+	.float 90
+.endobj lbl_805E0F60
+
+# .sdata2:0x54 | 0x805E0F64 | size: 0x4
+.obj lbl_805E0F64, global
+	.float 99
+.endobj lbl_805E0F64
+
+# .sdata2:0x58 | 0x805E0F68 | size: 0x4
+.obj lbl_805E0F68, global
+	.float 59
+.endobj lbl_805E0F68
+
+# .sdata2:0x5C | 0x805E0F6C | size: 0x4
+.obj lbl_805E0F6C, global
+	.float 0
+.endobj lbl_805E0F6C
+
+# .sdata2:0x60 | 0x805E0F70 | size: 0x4
+.obj lbl_805E0F70, global
+	.float 13.5
+.endobj lbl_805E0F70
+
+# .sdata2:0x64 | 0x805E0F74 | size: 0x4
+.obj lbl_805E0F74, global
+	.float 23
+.endobj lbl_805E0F74
+
+# .sdata2:0x68 | 0x805E0F78 | size: 0x4
+.obj lbl_805E0F78, global
+	.float 32
+.endobj lbl_805E0F78
+
+# .sdata2:0x6C | 0x805E0F7C | size: 0x4
+.obj lbl_805E0F7C, global
+	.float 45.5
+.endobj lbl_805E0F7C
+
+# .sdata2:0x70 | 0x805E0F80 | size: 0x4
+.obj lbl_805E0F80, global
+	.float 55
+.endobj lbl_805E0F80
+
+# .sdata2:0x74 | 0x805E0F84 | size: 0x4
+.obj lbl_805E0F84, global
+	.float 64
+.endobj lbl_805E0F84
+
+# .sdata2:0x78 | 0x805E0F88 | size: 0x4
+.obj lbl_805E0F88, global
+	.float 77.5
+.endobj lbl_805E0F88
+
+# .sdata2:0x7C | 0x805E0F8C | size: 0x4
+.obj lbl_805E0F8C, global
+	.float 0.4
+.endobj lbl_805E0F8C
+
+# .sdata2:0x80 | 0x805E0F90 | size: 0x4
+.obj lbl_805E0F90, global
+	.float 0.55
+.endobj lbl_805E0F90
+
+# .sdata2:0x84 | 0x805E0F94 | size: 0x4
+.obj lbl_805E0F94, global
+	.float 15
+.endobj lbl_805E0F94
+
+# .sdata2:0x88 | 0x805E0F98 | size: 0x4
+.obj lbl_805E0F98, global
+	.float 8
+.endobj lbl_805E0F98
+
+# .sdata2:0x8C | 0x805E0F9C | size: 0x4
+.obj lbl_805E0F9C, global
+	.float 7
+.endobj lbl_805E0F9C
+
+# .sdata2:0x90 | 0x805E0FA0 | size: 0x4
+.obj lbl_805E0FA0, global
+	.float 0.45
+.endobj lbl_805E0FA0
+
+# .sdata2:0x94 | 0x805E0FA4 | size: 0x4
+.obj lbl_805E0FA4, global
+	.float 0.6
+.endobj lbl_805E0FA4
+
+# .sdata2:0x98 | 0x805E0FA8 | size: 0x4
+.obj lbl_805E0FA8, global
+	.float 0.5
+.endobj lbl_805E0FA8
+
+# .sdata2:0x9C | 0x805E0FAC | size: 0x4
+.obj lbl_805E0FAC, global
+	.float 30
+.endobj lbl_805E0FAC
+
+# .sdata2:0xA0 | 0x805E0FB0 | size: 0x4
+.obj lbl_805E0FB0, global
+	.float 18
+.endobj lbl_805E0FB0
+
+# .sdata2:0xA4 | 0x805E0FB4 | size: 0x4
+.obj lbl_805E0FB4, global
+	.float 0.304788
+.endobj lbl_805E0FB4
+
+# .sdata2:0xA8 | 0x805E0FB8 | size: 0x4
+.obj lbl_805E0FB8, global
+	.float 10000
+.endobj lbl_805E0FB8
+
+# .sdata2:0xAC | 0x805E0FBC | size: 0x4
+.obj lbl_805E0FBC, global
+	.float 100
+.endobj lbl_805E0FBC
+
+# .sdata2:0xB0 | 0x805E0FC0 | size: 0x4
+.obj lbl_805E0FC0, global
+	.float 1000
+.endobj lbl_805E0FC0
+
+# .sdata2:0xB4 | 0x805E0FC4 | size: 0x4
+.obj lbl_805E0FC4, global
+	.float 12
+.endobj lbl_805E0FC4
+
+# .sdata2:0xB8 | 0x805E0FC8 | size: 0x4
+.obj lbl_805E0FC8, global
+	.float 7.5
+.endobj lbl_805E0FC8
+
+# .sdata2:0xBC | 0x805E0FCC | size: 0x4
+.obj lbl_805E0FCC, global
+	.float 6.5
+.endobj lbl_805E0FCC
+
+# .sdata2:0xC0 | 0x805E0FD0 | size: 0x8
+.obj lbl_805E0FD0, global
+	.float 14
+	.float 0
+.endobj lbl_805E0FD0
+
+# .sdata2:0xC8 | 0x805E0FD8 | size: 0x4
+.obj lbl_805E0FD8, global
+	.float 0
+.endobj lbl_805E0FD8
+
+# .sdata2:0xCC | 0x805E0FDC | size: 0x4
+.obj lbl_805E0FDC, global
+	.float 192
+.endobj lbl_805E0FDC
+
+# .sdata2:0xD0 | 0x805E0FE0 | size: 0x8
+.obj lbl_805E0FE0, global
+	.float 256
+	.float 0
+.endobj lbl_805E0FE0
+
+# .sdata2:0xD8 | 0x805E0FE8 | size: 0x4
+.obj lbl_805E0FE8, global
+	.float 0.00001
+.endobj lbl_805E0FE8
+
+# .sdata2:0xDC | 0x805E0FEC | size: 0x4
+.obj lbl_805E0FEC, global
+	.float -0.00001
+.endobj lbl_805E0FEC
+
+# .sdata2:0xE0 | 0x805E0FF0 | size: 0x4
+.obj lbl_805E0FF0, global
+	.float 0
+.endobj lbl_805E0FF0
+
+# .sdata2:0xE4 | 0x805E0FF4 | size: 0x4
+.obj lbl_805E0FF4, global
+	.float 1
+.endobj lbl_805E0FF4
+
+# .sdata2:0xE8 | 0x805E0FF8 | size: 0x8
+.obj lbl_805E0FF8, global
+	.double 0.5
+.endobj lbl_805E0FF8
+
+# .sdata2:0xF0 | 0x805E1000 | size: 0x8
+.obj lbl_805E1000, global
+	.double 3
+.endobj lbl_805E1000
+
+# .sdata2:0xF8 | 0x805E1008 | size: 0x4
+.obj lbl_805E1008, global
+	.float 0.5
+.endobj lbl_805E1008
+
+# .sdata2:0xFC | 0x805E100C | size: 0x4
+.obj lbl_805E100C, global
+	.float -1
+.endobj lbl_805E100C
+
+# .sdata2:0x100 | 0x805E1010 | size: 0x8
+.obj lbl_805E1010, global
+	.double 4503601774854144
+.endobj lbl_805E1010
+
+# .sdata2:0x108 | 0x805E1018 | size: 0x4
+.obj lbl_805E1018, global
+	.float 1
+.endobj lbl_805E1018
+
+# .sdata2:0x10C | 0x805E101C | size: 0x4
+.obj lbl_805E101C, global
+	.float 0.1
+.endobj lbl_805E101C
+
+# .sdata2:0x110 | 0x805E1020 | size: 0x4
+.obj lbl_805E1020, global
+	.float 0.00001
+.endobj lbl_805E1020
+
+# .sdata2:0x114 | 0x805E1024 | size: 0x4
+.obj lbl_805E1024, global
+	.float 0
+.endobj lbl_805E1024
+
+# .sdata2:0x118 | 0x805E1028 | size: 0x8
+.obj lbl_805E1028, global
+	.double 0.000009999999747378752
+.endobj lbl_805E1028
+
+# .sdata2:0x120 | 0x805E1030 | size: 0x4
+.obj lbl_805E1030, global
+	.float 0.2
+.endobj lbl_805E1030
+
+# .sdata2:0x124 | 0x805E1034 | size: 0x4
+.obj lbl_805E1034, global
+	.float 1.0125
+.endobj lbl_805E1034
+
+# .sdata2:0x128 | 0x805E1038 | size: 0x8
+.obj lbl_805E1038, global
+	.float 1.43
+	.float 0
+.endobj lbl_805E1038
+
+# .sdata2:0x130 | 0x805E1040 | size: 0x4
+.obj lbl_805E1040, global
+	.float 0
+.endobj lbl_805E1040
+
+# .sdata2:0x134 | 0x805E1044 | size: 0x4
+.obj lbl_805E1044, global
+	.float 1
+.endobj lbl_805E1044

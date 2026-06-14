@@ -822,3 +822,97 @@
 /* 801080E4 00104EE4  38 21 00 20 */	addi r1, r1, 0x20
 /* 801080E8 00104EE8  4E 80 00 20 */	blr
 .endfn kar_gryakubreakcoll_cleanup_multi_target_allocs_and_fgm_handles
+
+# 0x804A6F90..0x804A7080 | size: 0xF0
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6F90 | size: 0xB4
+.obj kar_gryakubreakcoll_shared_callback_table, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakcoll_update_effects_audio_then_destroy
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x67727961
+	.4byte 0x6B756272
+	.4byte 0x65616B63
+	.4byte 0x6F6C6C2E
+	.4byte 0x63000000
+	.4byte 0x30203C3D
+	.4byte 0x2066676D
+	.4byte 0x49642026
+	.4byte 0x26206667
+	.4byte 0x6D496420
+	.4byte 0x3C206779
+	.4byte 0x702D3E66
+	.4byte 0x676D2E69
+	.4byte 0x64446174
+	.4byte 0x614E756D
+	.4byte 0x00000000
+	.4byte 0x70617261
+	.4byte 0x6D2D3E65
+	.4byte 0x66427265
+	.4byte 0x616B4E75
+	.4byte 0x6D203C3D
+	.4byte 0x20477259
+	.4byte 0x616B7542
+	.4byte 0x7265616B
+	.4byte 0x436F6C6C
+	.4byte 0x5F52656D
+	.4byte 0x6F766545
+	.4byte 0x66666563
+	.4byte 0x7449644E
+	.4byte 0x756D4D61
+	.4byte 0x78000000
+	.4byte 0x69203C20
+	.4byte 0x70617261
+	.4byte 0x6D2D3E74
+	.4byte 0x61726765
+	.4byte 0x744E756D
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoll_shared_callback_table
+
+# .data:0xB4 | 0x804A7044 | size: 0x14
+.obj kar_gryakubreakcoll_kind33_callback_table_ptr, global
+	.4byte kar_gryakubreakcoll_shared_callback_table
+	.4byte kar_gryakubreakcoll_handle_damage_falloff_grcoll_hit
+	.4byte kar_gryakubreakfan_cleanup_shared_allocs_and_fgm_handles
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoll_kind33_callback_table_ptr
+
+# .data:0xC8 | 0x804A7058 | size: 0x14
+.obj kar_gryakubreakcoll_kind34_callback_table_ptr, global
+	.4byte kar_gryakubreakcoll_shared_callback_table
+	.4byte kar_gryakubreakcoll_handle_damage_falloff_grcoll_hit
+	.4byte kar_gryakubreakfan_cleanup_shared_allocs_and_fgm_handles
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoll_kind34_callback_table_ptr
+
+# .data:0xDC | 0x804A706C | size: 0x14
+.obj kar_gryakubreakcoll_kind35_callback_table_ptr, global
+	.4byte kar_gryakubreakcoll_shared_callback_table
+	.4byte kar_gryakubreakcoll_handle_damage_falloff_grcoll_hit
+	.4byte kar_gryakubreakfan_cleanup_shared_allocs_and_fgm_handles
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakcoll_kind35_callback_table_ptr
+
+# 0x805DFA70..0x805DFA78 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DFA70 | size: 0x4
+.obj lbl_805DFA70, global
+	.float 0
+.endobj lbl_805DFA70
+
+# .sdata2:0x4 | 0x805DFA74 | size: 0x4
+.obj lbl_805DFA74, global
+	.float 1
+.endobj lbl_805DFA74

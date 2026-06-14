@@ -556,3 +556,64 @@
 /* 800DB998 000D8798  38 21 00 20 */	addi r1, r1, 0x20
 /* 800DB99C 000D879C  4E 80 00 20 */	blr
 .endfn kar_grcommon__near_800db8d8
+
+# 0x804A3E68..0x804A3EE0 | size: 0x78
+.data
+.balign 8
+
+# .data:0x0 | 0x804A3E68 | size: 0x42
+.obj lbl_804A3E68, global
+	.string "lbKdtreeObjGetFlags(kdtree, objKind) & LbKdtree_Flags_Type_Static"
+.endobj lbl_804A3E68
+
+# .data:0x42 | 0x804A3EAA | size: 0x2
+.obj gap_07_804A3EAA_data, global
+.hidden gap_07_804A3EAA_data
+	.2byte 0x0000
+.endobj gap_07_804A3EAA_data
+
+# .data:0x44 | 0x804A3EAC | size: 0xB
+.obj kar_src_grcommon_804a3eac, global
+	.string "grcommon.c"
+.endobj kar_src_grcommon_804a3eac
+
+# .data:0x4F | 0x804A3EB7 | size: 0x1
+.obj gap_07_804A3EB7_data, global
+.hidden gap_07_804A3EB7_data
+	.byte 0x00
+.endobj gap_07_804A3EB7_data
+
+# .data:0x50 | 0x804A3EB8 | size: 0x28
+.obj lbl_804A3EB8, global
+	.string "bitCounterIdAll->idParamNum > idParamId"
+.endobj lbl_804A3EB8
+
+# 0x805D60D0..0x805D60D8 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D60D0 | size: 0x2
+.obj lbl_805D60D0, global
+	.string "0"
+.endobj lbl_805D60D0
+
+# .sdata:0x2 | 0x805D60D2 | size: 0x6
+.obj gap_09_805D60D2_sdata, global
+.hidden gap_09_805D60D2_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D60D2_sdata
+
+# 0x805DF688..0x805DF690 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF688 | size: 0x4
+.obj lbl_805DF688, global
+	.float 0
+.endobj lbl_805DF688
+
+# .sdata2:0x4 | 0x805DF68C | size: 0x4
+.obj lbl_805DF68C, global
+	.float 1
+.endobj lbl_805DF68C

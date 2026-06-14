@@ -211,3 +211,69 @@
 /* 800EEE68 000EBC68  38 21 01 C0 */	addi r1, r1, 0x1c0
 /* 800EEE6C 000EBC6C  4E 80 00 20 */	blr
 .endfn kar_grpointstrike_init_panel_handles
+
+# 0x804A5648..0x804A56F0 | size: 0xA8
+.data
+.balign 8
+
+# .data:0x0 | 0x804A5648 | size: 0xA8
+.obj kar_src_grpointstrike_804a5648, global
+	.4byte 0x6772706F
+	.4byte 0x696E7473
+	.4byte 0x7472696B
+	.4byte 0x652E6300
+	.4byte 0x67702D3E
+	.4byte 0x6C732E70
+	.4byte 0x6F696E74
+	.4byte 0x53747269
+	.4byte 0x6B652E70
+	.4byte 0x616E656C
+	.4byte 0x5F6E756D
+	.4byte 0x203C2047
+	.4byte 0x725F506F
+	.4byte 0x696E7453
+	.4byte 0x7472696B
+	.4byte 0x6550616E
+	.4byte 0x656C5F4D
+	.4byte 0x61780000
+	.4byte 0x70616E65
+	.4byte 0x6C5F6E75
+	.4byte 0x6D203D3D
+	.4byte 0x2070616E
+	.4byte 0x656C5F64
+	.4byte 0x6174612D
+	.4byte 0x3E6A6F69
+	.4byte 0x6E745F6E
+	.4byte 0x756D0000
+	.4byte 0x73746164
+	.4byte 0x69756D5F
+	.4byte 0x64617461
+	.4byte 0x20262620
+	.4byte 0x73746164
+	.4byte 0x69756D5F
+	.4byte 0x64617461
+	.4byte 0x2D3E6B69
+	.4byte 0x6E64203D
+	.4byte 0x3D204772
+	.4byte 0x53444B5F
+	.4byte 0x506F696E
+	.4byte 0x74537472
+	.4byte 0x696B6500
+	.4byte 0x00000000
+.endobj kar_src_grpointstrike_804a5648
+
+# 0x805D6190..0x805D6198 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6190 | size: 0x2
+.obj lbl_805D6190, global
+	.string "0"
+.endobj lbl_805D6190
+
+# .sdata:0x2 | 0x805D6192 | size: 0x6
+.obj gap_09_805D6192_sdata, global
+.hidden gap_09_805D6192_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6192_sdata

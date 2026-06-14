@@ -340,3 +340,48 @@
 /* 8010E790 0010B590  38 21 00 10 */	addi r1, r1, 0x10
 /* 8010E794 0010B594  4E 80 00 20 */	blr
 .endfn kar_grdesert1_trigger_risingcube_by_stage_index
+
+# 0x804A75C0..0x804A7610 | size: 0x50
+.data
+.balign 8
+
+# .data:0x0 | 0x804A75C0 | size: 0xC
+.obj kar_grdesert1_main_callback_table, global
+	.4byte kar_grdesert1_init_loop_anim_and_switch_group
+	.4byte kar_grdesert1_create_main_stage_yaku_objects
+	.4byte 0x00000000
+.endobj kar_grdesert1_main_callback_table
+
+# .data:0xC | 0x804A75CC | size: 0xC
+.obj kar_src_grdesert1_c, global
+	.string "grdesert1.c"
+.endobj kar_src_grdesert1_c
+
+# .data:0x18 | 0x804A75D8 | size: 0x28
+.obj kar_grdesert1_assert_loop_anim_param_present, global
+	.string "indiviParam && indiviParam->loopAnimAll"
+.endobj kar_grdesert1_assert_loop_anim_param_present
+
+# .data:0x40 | 0x804A7600 | size: 0x10
+.obj kar_grdesert1_recovery_callback_table, global
+	.4byte kar_grdesert1_init_recovery_area_switch_group
+	.4byte kar_grdesert1_create_recovery_zone_stage_yaku_objects
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_grdesert1_recovery_callback_table
+
+# 0x805D6358..0x805D6368 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6358 | size: 0x8
+.obj lbl_805D6358, global
+	.4byte kar_grdesert1_trigger_invisibleball_by_stage_index
+	.4byte kar_grdesert1_trigger_pillar_controller_by_stage_index
+.endobj lbl_805D6358
+
+# .sdata:0x8 | 0x805D6360 | size: 0x8
+.obj lbl_805D6360, global
+	.4byte kar_grdesert1_trigger_risingcube_by_stage_index
+	.4byte 0x00000000
+.endobj lbl_805D6360

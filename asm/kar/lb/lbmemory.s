@@ -1270,3 +1270,145 @@
 /* 80058918 00055718  38 21 00 20 */	addi r1, r1, 0x20
 /* 8005891C 0005571C  4E 80 00 20 */	blr
 .endfn kar_lbmemory__near_8005884c
+
+# 0x80497E10..0x80497F60 | size: 0x150
+.data
+.balign 8
+
+# .data:0x0 | 0x80497E10 | size: 0x84
+.obj kar_src_lbmemory_80497e10, global
+	.4byte 0x6C626D65
+	.4byte 0x6D6F7279
+	.4byte 0x2E630000
+	.4byte 0x5F702866
+	.4byte 0x7265655F
+	.4byte 0x68656170
+	.4byte 0x29000000
+	.4byte 0x28753332
+	.4byte 0x29617265
+	.4byte 0x6E614C6F
+	.4byte 0x203E3D20
+	.4byte 0x28753332
+	.4byte 0x295F7028
+	.4byte 0x615F6172
+	.4byte 0x656E614C
+	.4byte 0x6F292026
+	.4byte 0x26202875
+	.4byte 0x33322961
+	.4byte 0x72656E61
+	.4byte 0x4869203C
+	.4byte 0x3D202875
+	.4byte 0x3332295F
+	.4byte 0x7028615F
+	.4byte 0x6172656E
+	.4byte 0x61486929
+	.4byte 0x00000000
+	.4byte 0x5F702866
+	.4byte 0x7265655F
+	.4byte 0x6D656D29
+	.4byte 0x00000000
+	.4byte 0x6D656D70
+	.4byte 0x5F6B6F75
+	.4byte 0x686F0000
+.endobj kar_src_lbmemory_80497e10
+
+# .data:0x84 | 0x80497E94 | size: 0x24
+.obj lbl_80497E94, global
+	.string "[LbMem] Error: lbMemFreeToHeap %x.\n"
+.endobj lbl_80497E94
+
+# .data:0xA8 | 0x80497EB8 | size: 0x18
+.obj lbl_80497EB8, global
+	.4byte 0x21702D3E
+	.4byte 0x73697A65
+	.4byte 0x00000000
+	.4byte 0x2163616E
+	.4byte 0x63656C66
+	.4byte 0x6C616700
+.endobj lbl_80497EB8
+
+# .data:0xC0 | 0x80497ED0 | size: 0x90
+.obj lbl_80497ED0, global
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x00007800
+	.4byte 0x00000003
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00235000
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte 0x00000003
+	.4byte 0x0085C000
+	.4byte 0x00000005
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0x00020000
+	.4byte 0x00000007
+	.4byte 0x00000002
+	.4byte 0x0000000A
+	.4byte 0x0036B000
+	.4byte 0x00000008
+	.4byte 0x00000002
+	.4byte 0x00000007
+	.4byte 0x000FA000
+	.4byte 0x00000006
+	.4byte 0x00000004
+	.4byte 0x0000000A
+	.4byte 0x003A9800
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x01400000
+	.4byte 0x0000000A
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80497ED0
+
+# 0x80537510..0x80537F40 | size: 0xA30
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80537510 | size: 0xA30
+.obj lbmemory_arena_lo, global
+	.skip 0xA30
+.endobj lbmemory_arena_lo
+
+# 0x805D5240..0x805D5258 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5240 | size: 0x7
+.obj lbl_805D5240, global
+	.string "handle"
+.endobj lbl_805D5240
+
+# .sdata:0x7 | 0x805D5247 | size: 0x1
+.obj gap_09_805D5247_sdata, global
+.hidden gap_09_805D5247_sdata
+	.byte 0x00
+.endobj gap_09_805D5247_sdata
+
+# .sdata:0x8 | 0x805D5248 | size: 0x2
+.obj lbl_805D5248, global
+	.string "0"
+.endobj lbl_805D5248
+
+# .sdata:0xA | 0x805D524A | size: 0x2
+.obj gap_09_805D524A_sdata, global
+.hidden gap_09_805D524A_sdata
+	.2byte 0x0000
+.endobj gap_09_805D524A_sdata
+
+# .sdata:0xC | 0x805D524C | size: 0x8
+.obj lbl_805D524C, global
+	.string "p->size"
+.endobj lbl_805D524C
+
+# .sdata:0x14 | 0x805D5254 | size: 0x4
+.obj gap_09_805D5254_sdata, global
+.hidden gap_09_805D5254_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D5254_sdata

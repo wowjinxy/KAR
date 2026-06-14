@@ -198,3 +198,53 @@
 .fn fn_8010EC0C, global
 /* 8010EC0C 0010BA0C  4E 80 00 20 */	blr
 .endfn fn_8010EC0C
+
+# 0x804A7698..0x804A7730 | size: 0x98
+.data
+.balign 8
+
+# .data:0x0 | 0x804A7698 | size: 0x88
+.obj kar_grmachine2_callback_table, global
+	.4byte kar_grmachine2_init_loop_anim_and_individual_fgm_ids
+	.4byte kar_grmachine2_create_stage_mechanism_yaku_objects
+	.4byte kar_grmachine2_update_individual_fgm_timers
+	.4byte 0x67726D61
+	.4byte 0x6368696E
+	.4byte 0x65322E63
+	.4byte 0x00000000
+	.4byte 0x696E6469
+	.4byte 0x76695061
+	.4byte 0x72616D20
+	.4byte 0x26262069
+	.4byte 0x6E646976
+	.4byte 0x69506172
+	.4byte 0x616D2D3E
+	.4byte 0x6C6F6F70
+	.4byte 0x416E696D
+	.4byte 0x416C6C00
+	.4byte 0x696E6469
+	.4byte 0x76695061
+	.4byte 0x72616D2D
+	.4byte 0x3E696E64
+	.4byte 0x69766946
+	.4byte 0x676D416C
+	.4byte 0x6C2D3E69
+	.4byte 0x6E646976
+	.4byte 0x6946676D
+	.4byte 0x4E756D20
+	.4byte 0x3C3D2047
+	.4byte 0x724D6163
+	.4byte 0x68696E65
+	.4byte 0x325F4667
+	.4byte 0x6D436F75
+	.4byte 0x6E746572
+	.4byte 0x4E756D00
+.endobj kar_grmachine2_callback_table
+
+# .data:0x88 | 0x804A7720 | size: 0x10
+.obj lbl_804A7720, global
+	.4byte fn_8010EC0C
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_804A7720

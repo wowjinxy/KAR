@@ -619,3 +619,28 @@
 /* 804309E0 0042D7E0  38 21 00 80 */	addi r1, r1, 0x80
 /* 804309E4 0042D7E4  4E 80 00 20 */	blr
 .endfn kar_psinterpret__near_8043070c
+
+# 0x8050521C..0x80505230 | size: 0x14
+.data
+.balign 4
+
+# .data:0x0 | 0x8050521C | size: 0xE
+.obj kar_src_psinterpret_8050521c, global
+	.string "psinterpret.c"
+.endobj kar_src_psinterpret_8050521c
+
+# .data:0xE | 0x8050522A | size: 0x6
+.obj gap_07_8050522A_data, global
+.hidden gap_07_8050522A_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_8050522A_data
+
+# 0x805E5F20..0x805E5F24 | size: 0x4
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E5F20 | size: 0x4
+.obj lbl_805E5F20, global
+	.float 0
+.endobj lbl_805E5F20

@@ -3012,6 +3012,7 @@
 /* 8005C820 00059620  7C C7 30 2E */	lwzx r6, r7, r6
 /* 8005C824 00059624  7C C9 03 A6 */	mtctr r6
 /* 8005C828 00059628  4E 80 04 20 */	bctr
+.L_8005C82C:
 /* 8005C82C 0005962C  7C 15 18 40 */	cmplw r21, r3
 /* 8005C830 00059630  7F 39 02 14 */	add r25, r25, r0
 /* 8005C834 00059634  3B BD 00 01 */	addi r29, r29, 0x1
@@ -3019,6 +3020,7 @@
 /* 8005C83C 0005963C  7C 75 1B 78 */	mr r21, r3
 /* 8005C840 00059640  7F CE F3 78 */	mr r14, r30
 /* 8005C844 00059644  48 00 00 E0 */	b .L_8005C924
+.L_8005C848:
 /* 8005C848 00059648  7C 14 18 40 */	cmplw r20, r3
 /* 8005C84C 0005964C  7F 18 02 14 */	add r24, r24, r0
 /* 8005C850 00059650  3B 9C 00 01 */	addi r28, r28, 0x1
@@ -3026,6 +3028,7 @@
 /* 8005C858 00059658  7C 74 1B 78 */	mr r20, r3
 /* 8005C85C 0005965C  7F D0 F3 78 */	mr r16, r30
 /* 8005C860 00059660  48 00 00 C4 */	b .L_8005C924
+.L_8005C864:
 /* 8005C864 00059664  7C 13 18 40 */	cmplw r19, r3
 /* 8005C868 00059668  7E F7 02 14 */	add r23, r23, r0
 /* 8005C86C 0005966C  3B 7B 00 01 */	addi r27, r27, 0x1
@@ -3033,6 +3036,7 @@
 /* 8005C874 00059674  7C 73 1B 78 */	mr r19, r3
 /* 8005C878 00059678  7F CF F3 78 */	mr r15, r30
 /* 8005C87C 0005967C  48 00 00 A8 */	b .L_8005C924
+.L_8005C880:
 /* 8005C880 00059680  7C 12 18 40 */	cmplw r18, r3
 /* 8005C884 00059684  7E D6 02 14 */	add r22, r22, r0
 /* 8005C888 00059688  3B 5A 00 01 */	addi r26, r26, 0x1
@@ -3040,6 +3044,7 @@
 /* 8005C890 00059690  93 C1 00 24 */	stw r30, 0x24(r1)
 /* 8005C894 00059694  7C 72 1B 78 */	mr r18, r3
 /* 8005C898 00059698  48 00 00 8C */	b .L_8005C924
+.L_8005C89C:
 /* 8005C89C 0005969C  80 C1 00 38 */	lwz r6, 0x38(r1)
 /* 8005C8A0 000596A0  7C 11 18 40 */	cmplw r17, r3
 /* 8005C8A4 000596A4  7C C6 02 14 */	add r6, r6, r0
@@ -3051,6 +3056,7 @@
 /* 8005C8BC 000596BC  93 C1 00 20 */	stw r30, 0x20(r1)
 /* 8005C8C0 000596C0  7C 71 1B 78 */	mr r17, r3
 /* 8005C8C4 000596C4  48 00 00 60 */	b .L_8005C924
+.L_8005C8C8:
 /* 8005C8C8 000596C8  80 C1 00 2C */	lwz r6, 0x2c(r1)
 /* 8005C8CC 000596CC  7C 06 18 40 */	cmplw r6, r3
 /* 8005C8D0 000596D0  80 C1 00 34 */	lwz r6, 0x34(r1)
@@ -3063,6 +3069,7 @@
 /* 8005C8EC 000596EC  90 61 00 2C */	stw r3, 0x2c(r1)
 /* 8005C8F0 000596F0  93 C1 00 1C */	stw r30, 0x1c(r1)
 /* 8005C8F4 000596F4  48 00 00 30 */	b .L_8005C924
+.L_8005C8F8:
 /* 8005C8F8 000596F8  80 C1 00 28 */	lwz r6, 0x28(r1)
 /* 8005C8FC 000596FC  7C 06 18 40 */	cmplw r6, r3
 /* 8005C900 00059700  80 C1 00 30 */	lwz r6, 0x30(r1)
@@ -3634,18 +3641,25 @@
 /* 8005D0A8 00059EA8  7C 0A 00 2E */	lwzx r0, r10, r0
 /* 8005D0AC 00059EAC  7C 09 03 A6 */	mtctr r0
 /* 8005D0B0 00059EB0  4E 80 04 20 */	bctr
+.L_8005D0B4:
 /* 8005D0B4 00059EB4  3B FF 00 01 */	addi r31, r31, 0x1
 /* 8005D0B8 00059EB8  48 00 00 30 */	b .L_8005D0E8
+.L_8005D0BC:
 /* 8005D0BC 00059EBC  3B DE 00 01 */	addi r30, r30, 0x1
 /* 8005D0C0 00059EC0  48 00 00 28 */	b .L_8005D0E8
+.L_8005D0C4:
 /* 8005D0C4 00059EC4  3B BD 00 01 */	addi r29, r29, 0x1
 /* 8005D0C8 00059EC8  48 00 00 20 */	b .L_8005D0E8
+.L_8005D0CC:
 /* 8005D0CC 00059ECC  3B 9C 00 01 */	addi r28, r28, 0x1
 /* 8005D0D0 00059ED0  48 00 00 18 */	b .L_8005D0E8
+.L_8005D0D4:
 /* 8005D0D4 00059ED4  3B 7B 00 01 */	addi r27, r27, 0x1
 /* 8005D0D8 00059ED8  48 00 00 10 */	b .L_8005D0E8
+.L_8005D0DC:
 /* 8005D0DC 00059EDC  3B 5A 00 01 */	addi r26, r26, 0x1
 /* 8005D0E0 00059EE0  48 00 00 08 */	b .L_8005D0E8
+.L_8005D0E4:
 /* 8005D0E4 00059EE4  3B 39 00 01 */	addi r25, r25, 0x1
 .L_8005D0E8:
 /* 8005D0E8 00059EE8  39 8C 00 01 */	addi r12, r12, 0x1
@@ -12418,3 +12432,2062 @@
 /* 80064768 00061568  38 21 01 10 */	addi r1, r1, 0x110
 /* 8006476C 0006156C  4E 80 00 20 */	blr
 .endfn kar_lbvector_project_world_to_screen
+
+# 0x80498238..0x80499430 | size: 0x11F8
+.data
+.balign 8
+
+# .data:0x0 | 0x80498238 | size: 0xA
+.obj lbl_80498238, global
+	.string "stageauto"
+.endobj lbl_80498238
+
+# .data:0xA | 0x80498242 | size: 0x2
+.obj gap_07_80498242_data, global
+.hidden gap_07_80498242_data
+	.2byte 0x0000
+.endobj gap_07_80498242_data
+
+# .data:0xC | 0x80498244 | size: 0xC
+.obj kar_linkfile_jp_menu_hps_80498244, global
+	.string "jp/menu.hps"
+.endobj kar_linkfile_jp_menu_hps_80498244
+
+# .data:0x18 | 0x80498250 | size: 0x11
+.obj kar_linkfile_jp_2d_desert_hps_80498250, global
+	.string "jp/2d_desert.hps"
+.endobj kar_linkfile_jp_2d_desert_hps_80498250
+
+# .data:0x29 | 0x80498261 | size: 0x3
+.obj gap_07_80498261_data, global
+.hidden gap_07_80498261_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498261_data
+
+# .data:0x2C | 0x80498264 | size: 0x15
+.obj kar_linkfile_jp_2d_desert_ura_hps_80498264, global
+	.string "jp/2d_desert_ura.hps"
+.endobj kar_linkfile_jp_2d_desert_ura_hps_80498264
+
+# .data:0x41 | 0x80498279 | size: 0x3
+.obj gap_07_80498279_data, global
+.hidden gap_07_80498279_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498279_data
+
+# .data:0x44 | 0x8049827C | size: 0x10
+.obj kar_linkfile_jp_2d_kazan_hps_8049827c, global
+	.string "jp/2d_kazan.hps"
+.endobj kar_linkfile_jp_2d_kazan_hps_8049827c
+
+# .data:0x54 | 0x8049828C | size: 0x14
+.obj kar_linkfile_jp_2d_kazan_ura_hps_8049828c, global
+	.string "jp/2d_kazan_ura.hps"
+.endobj kar_linkfile_jp_2d_kazan_ura_hps_8049828c
+
+# .data:0x68 | 0x804982A0 | size: 0x10
+.obj kar_linkfile_jp_2d_kekka_hps_804982a0, global
+	.string "jp/2d_kekka.hps"
+.endobj kar_linkfile_jp_2d_kekka_hps_804982a0
+
+# .data:0x78 | 0x804982B0 | size: 0x10
+.obj kar_linkfile_jp_2d_light_hps_804982b0, global
+	.string "jp/2d_light.hps"
+.endobj kar_linkfile_jp_2d_light_hps_804982b0
+
+# .data:0x88 | 0x804982C0 | size: 0x14
+.obj kar_linkfile_jp_2d_light_ura_hps_804982c0, global
+	.string "jp/2d_light_ura.hps"
+.endobj kar_linkfile_jp_2d_light_ura_hps_804982c0
+
+# .data:0x9C | 0x804982D4 | size: 0x12
+.obj kar_linkfile_jp_2d_machine_hps_804982d4, global
+	.string "jp/2d_machine.hps"
+.endobj kar_linkfile_jp_2d_machine_hps_804982d4
+
+# .data:0xAE | 0x804982E6 | size: 0x2
+.obj gap_07_804982E6_data, global
+.hidden gap_07_804982E6_data
+	.2byte 0x0000
+.endobj gap_07_804982E6_data
+
+# .data:0xB0 | 0x804982E8 | size: 0x16
+.obj kar_linkfile_jp_2d_machine_ura_hps_804982e8, global
+	.string "jp/2d_machine_ura.hps"
+.endobj kar_linkfile_jp_2d_machine_ura_hps_804982e8
+
+# .data:0xC6 | 0x804982FE | size: 0x2
+.obj gap_07_804982FE_data, global
+.hidden gap_07_804982FE_data
+	.2byte 0x0000
+.endobj gap_07_804982FE_data
+
+# .data:0xC8 | 0x80498300 | size: 0x11
+.obj kar_linkfile_jp_2d_plants_hps_80498300, global
+	.string "jp/2d_plants.hps"
+.endobj kar_linkfile_jp_2d_plants_hps_80498300
+
+# .data:0xD9 | 0x80498311 | size: 0x3
+.obj gap_07_80498311_data, global
+.hidden gap_07_80498311_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498311_data
+
+# .data:0xDC | 0x80498314 | size: 0x15
+.obj kar_linkfile_jp_2d_plants_ura_hps_80498314, global
+	.string "jp/2d_plants_ura.hps"
+.endobj kar_linkfile_jp_2d_plants_ura_hps_80498314
+
+# .data:0xF1 | 0x80498329 | size: 0x3
+.obj gap_07_80498329_data, global
+.hidden gap_07_80498329_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498329_data
+
+# .data:0xF4 | 0x8049832C | size: 0xE
+.obj kar_linkfile_jp_2d_sky_hps_8049832c, global
+	.string "jp/2d_sky.hps"
+.endobj kar_linkfile_jp_2d_sky_hps_8049832c
+
+# .data:0x102 | 0x8049833A | size: 0x2
+.obj gap_07_8049833A_data, global
+.hidden gap_07_8049833A_data
+	.2byte 0x0000
+.endobj gap_07_8049833A_data
+
+# .data:0x104 | 0x8049833C | size: 0x12
+.obj kar_linkfile_jp_2d_sky_ura_hps_8049833c, global
+	.string "jp/2d_sky_ura.hps"
+.endobj kar_linkfile_jp_2d_sky_ura_hps_8049833c
+
+# .data:0x116 | 0x8049834E | size: 0x2
+.obj gap_07_8049834E_data, global
+.hidden gap_07_8049834E_data
+	.2byte 0x0000
+.endobj gap_07_8049834E_data
+
+# .data:0x118 | 0x80498350 | size: 0x10
+.obj kar_linkfile_jp_2d_water_hps_80498350, global
+	.string "jp/2d_water.hps"
+.endobj kar_linkfile_jp_2d_water_hps_80498350
+
+# .data:0x128 | 0x80498360 | size: 0x14
+.obj kar_linkfile_jp_2d_water_ura_hps_80498360, global
+	.string "jp/2d_water_ura.hps"
+.endobj kar_linkfile_jp_2d_water_ura_hps_80498360
+
+# .data:0x13C | 0x80498374 | size: 0x10
+.obj kar_linkfile_jp_3d_check_hps_80498374, global
+	.string "jp/3d_check.hps"
+.endobj kar_linkfile_jp_3d_check_hps_80498374
+
+# .data:0x14C | 0x80498384 | size: 0x14
+.obj kar_linkfile_jp_3d_check_ura_hps_80498384, global
+	.string "jp/3d_check_ura.hps"
+.endobj kar_linkfile_jp_3d_check_ura_hps_80498384
+
+# .data:0x160 | 0x80498398 | size: 0x11
+.obj kar_linkfile_jp_3d_desert_hps_80498398, global
+	.string "jp/3d_desert.hps"
+.endobj kar_linkfile_jp_3d_desert_hps_80498398
+
+# .data:0x171 | 0x804983A9 | size: 0x3
+.obj gap_07_804983A9_data, global
+.hidden gap_07_804983A9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804983A9_data
+
+# .data:0x174 | 0x804983AC | size: 0x15
+.obj kar_linkfile_jp_3d_desert_ura_hps_804983ac, global
+	.string "jp/3d_desert_ura.hps"
+.endobj kar_linkfile_jp_3d_desert_ura_hps_804983ac
+
+# .data:0x189 | 0x804983C1 | size: 0x3
+.obj gap_07_804983C1_data, global
+.hidden gap_07_804983C1_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804983C1_data
+
+# .data:0x18C | 0x804983C4 | size: 0xE
+.obj kar_linkfile_jp_3d_ice_hps_804983c4, global
+	.string "jp/3d_ice.hps"
+.endobj kar_linkfile_jp_3d_ice_hps_804983c4
+
+# .data:0x19A | 0x804983D2 | size: 0x2
+.obj gap_07_804983D2_data, global
+.hidden gap_07_804983D2_data
+	.2byte 0x0000
+.endobj gap_07_804983D2_data
+
+# .data:0x19C | 0x804983D4 | size: 0x12
+.obj kar_linkfile_jp_3d_ice_ura_hps_804983d4, global
+	.string "jp/3d_ice_ura.hps"
+.endobj kar_linkfile_jp_3d_ice_ura_hps_804983d4
+
+# .data:0x1AE | 0x804983E6 | size: 0x2
+.obj gap_07_804983E6_data, global
+.hidden gap_07_804983E6_data
+	.2byte 0x0000
+.endobj gap_07_804983E6_data
+
+# .data:0x1B0 | 0x804983E8 | size: 0x10
+.obj kar_linkfile_jp_3d_kazan_hps_804983e8, global
+	.string "jp/3d_kazan.hps"
+.endobj kar_linkfile_jp_3d_kazan_hps_804983e8
+
+# .data:0x1C0 | 0x804983F8 | size: 0x14
+.obj kar_linkfile_jp_3d_kazan_ura_hps_804983f8, global
+	.string "jp/3d_kazan_ura.hps"
+.endobj kar_linkfile_jp_3d_kazan_ura_hps_804983f8
+
+# .data:0x1D4 | 0x8049840C | size: 0x10
+.obj kar_linkfile_jp_3d_kekka_hps_8049840c, global
+	.string "jp/3d_kekka.hps"
+.endobj kar_linkfile_jp_3d_kekka_hps_8049840c
+
+# .data:0x1E4 | 0x8049841C | size: 0x12
+.obj kar_linkfile_jp_3d_machine_hps_8049841c, global
+	.string "jp/3d_machine.hps"
+.endobj kar_linkfile_jp_3d_machine_hps_8049841c
+
+# .data:0x1F6 | 0x8049842E | size: 0x2
+.obj gap_07_8049842E_data, global
+.hidden gap_07_8049842E_data
+	.2byte 0x0000
+.endobj gap_07_8049842E_data
+
+# .data:0x1F8 | 0x80498430 | size: 0x16
+.obj kar_linkfile_jp_3d_machine_ura_hps_80498430, global
+	.string "jp/3d_machine_ura.hps"
+.endobj kar_linkfile_jp_3d_machine_ura_hps_80498430
+
+# .data:0x20E | 0x80498446 | size: 0x2
+.obj gap_07_80498446_data, global
+.hidden gap_07_80498446_data
+	.2byte 0x0000
+.endobj gap_07_80498446_data
+
+# .data:0x210 | 0x80498448 | size: 0x11
+.obj kar_linkfile_jp_3d_plants_hps_80498448, global
+	.string "jp/3d_plants.hps"
+.endobj kar_linkfile_jp_3d_plants_hps_80498448
+
+# .data:0x221 | 0x80498459 | size: 0x3
+.obj gap_07_80498459_data, global
+.hidden gap_07_80498459_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498459_data
+
+# .data:0x224 | 0x8049845C | size: 0x15
+.obj kar_linkfile_jp_3d_plants_ura_hps_8049845c, global
+	.string "jp/3d_plants_ura.hps"
+.endobj kar_linkfile_jp_3d_plants_ura_hps_8049845c
+
+# .data:0x239 | 0x80498471 | size: 0x3
+.obj gap_07_80498471_data, global
+.hidden gap_07_80498471_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498471_data
+
+# .data:0x23C | 0x80498474 | size: 0xE
+.obj kar_linkfile_jp_3d_sky_hps_80498474, global
+	.string "jp/3d_sky.hps"
+.endobj kar_linkfile_jp_3d_sky_hps_80498474
+
+# .data:0x24A | 0x80498482 | size: 0x2
+.obj gap_07_80498482_data, global
+.hidden gap_07_80498482_data
+	.2byte 0x0000
+.endobj gap_07_80498482_data
+
+# .data:0x24C | 0x80498484 | size: 0x12
+.obj kar_linkfile_jp_3d_sky_ura_hps_80498484, global
+	.string "jp/3d_sky_ura.hps"
+.endobj kar_linkfile_jp_3d_sky_ura_hps_80498484
+
+# .data:0x25E | 0x80498496 | size: 0x2
+.obj gap_07_80498496_data, global
+.hidden gap_07_80498496_data
+	.2byte 0x0000
+.endobj gap_07_80498496_data
+
+# .data:0x260 | 0x80498498 | size: 0x10
+.obj kar_linkfile_jp_3d_space_hps_80498498, global
+	.string "jp/3d_space.hps"
+.endobj kar_linkfile_jp_3d_space_hps_80498498
+
+# .data:0x270 | 0x804984A8 | size: 0x14
+.obj kar_linkfile_jp_3d_space_ura_hps_804984a8, global
+	.string "jp/3d_space_ura.hps"
+.endobj kar_linkfile_jp_3d_space_ura_hps_804984a8
+
+# .data:0x284 | 0x804984BC | size: 0x11
+.obj kar_linkfile_jp_3d_valley_hps_804984bc, global
+	.string "jp/3d_valley.hps"
+.endobj kar_linkfile_jp_3d_valley_hps_804984bc
+
+# .data:0x295 | 0x804984CD | size: 0x3
+.obj gap_07_804984CD_data, global
+.hidden gap_07_804984CD_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804984CD_data
+
+# .data:0x298 | 0x804984D0 | size: 0x15
+.obj kar_linkfile_jp_3d_valley_ura_hps_804984d0, global
+	.string "jp/3d_valley_ura.hps"
+.endobj kar_linkfile_jp_3d_valley_ura_hps_804984d0
+
+# .data:0x2AD | 0x804984E5 | size: 0x3
+.obj gap_07_804984E5_data, global
+.hidden gap_07_804984E5_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804984E5_data
+
+# .data:0x2B0 | 0x804984E8 | size: 0x14
+.obj kar_linkfile_jp_stadiumintro_hps_804984e8, global
+	.string "jp/stadiumintro.hps"
+.endobj kar_linkfile_jp_stadiumintro_hps_804984e8
+
+# .data:0x2C4 | 0x804984FC | size: 0xC
+.obj kar_linkfile_jp_city_hps_804984fc, global
+	.string "jp/city.hps"
+.endobj kar_linkfile_jp_city_hps_804984fc
+
+# .data:0x2D0 | 0x80498508 | size: 0x12
+.obj kar_linkfile_jp_city_isogi_hps_80498508, global
+	.string "jp/city_isogi.hps"
+.endobj kar_linkfile_jp_city_isogi_hps_80498508
+
+# .data:0x2E2 | 0x8049851A | size: 0x2
+.obj gap_07_8049851A_data, global
+.hidden gap_07_8049851A_data
+	.2byte 0x0000
+.endobj gap_07_8049851A_data
+
+# .data:0x2E4 | 0x8049851C | size: 0x10
+.obj kar_linkfile_jp_city_ura_hps_8049851c, global
+	.string "jp/city_ura.hps"
+.endobj kar_linkfile_jp_city_ura_hps_8049851c
+
+# .data:0x2F4 | 0x8049852C | size: 0x14
+.obj kar_linkfile_jp_clearchecker_hps_8049852c, global
+	.string "jp/clearchecker.hps"
+.endobj kar_linkfile_jp_clearchecker_hps_8049852c
+
+# .data:0x308 | 0x80498540 | size: 0xF
+.obj kar_linkfile_jp_dragoon_hps_80498540, global
+	.string "jp/dragoon.hps"
+.endobj kar_linkfile_jp_dragoon_hps_80498540
+
+# .data:0x317 | 0x8049854F | size: 0x1
+.obj gap_07_8049854F_data, global
+.hidden gap_07_8049854F_data
+	.byte 0x00
+.endobj gap_07_8049854F_data
+
+# .data:0x318 | 0x80498550 | size: 0xE
+.obj kar_linkfile_jp_ending_hps_80498550, global
+	.string "jp/ending.hps"
+.endobj kar_linkfile_jp_ending_hps_80498550
+
+# .data:0x326 | 0x8049855E | size: 0x2
+.obj gap_07_8049855E_data, global
+.hidden gap_07_8049855E_data
+	.2byte 0x0000
+.endobj gap_07_8049855E_data
+
+# .data:0x328 | 0x80498560 | size: 0x16
+.obj kar_linkfile_jp_ending_city_us_hps_80498560, global
+	.string "jp/ending_city_us.hps"
+.endobj kar_linkfile_jp_ending_city_us_hps_80498560
+
+# .data:0x33E | 0x80498576 | size: 0x2
+.obj gap_07_80498576_data, global
+.hidden gap_07_80498576_data
+	.2byte 0x0000
+.endobj gap_07_80498576_data
+
+# .data:0x340 | 0x80498578 | size: 0x11
+.obj kar_linkfile_jp_event_fog_hps_80498578, global
+	.string "jp/event_fog.hps"
+.endobj kar_linkfile_jp_event_fog_hps_80498578
+
+# .data:0x351 | 0x80498589 | size: 0x3
+.obj gap_07_80498589_data, global
+.hidden gap_07_80498589_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498589_data
+
+# .data:0x354 | 0x8049858C | size: 0x13
+.obj kar_linkfile_jp_event_gordo_hps_8049858c, global
+	.string "jp/event_gordo.hps"
+.endobj kar_linkfile_jp_event_gordo_hps_8049858c
+
+# .data:0x367 | 0x8049859F | size: 0x1
+.obj gap_07_8049859F_data, global
+.hidden gap_07_8049859F_data
+	.byte 0x00
+.endobj gap_07_8049859F_data
+
+# .data:0x368 | 0x804985A0 | size: 0x17
+.obj kar_linkfile_jp_event_itembound_hps_804985a0, global
+	.string "jp/event_itembound.hps"
+.endobj kar_linkfile_jp_event_itembound_hps_804985a0
+
+# .data:0x37F | 0x804985B7 | size: 0x1
+.obj gap_07_804985B7_data, global
+.hidden gap_07_804985B7_data
+	.byte 0x00
+.endobj gap_07_804985B7_data
+
+# .data:0x380 | 0x804985B8 | size: 0x15
+.obj kar_linkfile_jp_event_kyoseki_hps_804985b8, global
+	.string "jp/event_kyoseki.hps"
+.endobj kar_linkfile_jp_event_kyoseki_hps_804985b8
+
+# .data:0x395 | 0x804985CD | size: 0x3
+.obj gap_07_804985CD_data, global
+.hidden gap_07_804985CD_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804985CD_data
+
+# .data:0x398 | 0x804985D0 | size: 0x13
+.obj kar_linkfile_jp_event_meteo_hps_804985d0, global
+	.string "jp/event_meteo.hps"
+.endobj kar_linkfile_jp_event_meteo_hps_804985d0
+
+# .data:0x3AB | 0x804985E3 | size: 0x1
+.obj gap_07_804985E3_data, global
+.hidden gap_07_804985E3_data
+	.byte 0x00
+.endobj gap_07_804985E3_data
+
+# .data:0x3AC | 0x804985E4 | size: 0x15
+.obj kar_linkfile_jp_event_monster_hps_804985e4, global
+	.string "jp/event_monster.hps"
+.endobj kar_linkfile_jp_event_monster_hps_804985e4
+
+# .data:0x3C1 | 0x804985F9 | size: 0x3
+.obj gap_07_804985F9_data, global
+.hidden gap_07_804985F9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804985F9_data
+
+# .data:0x3C4 | 0x804985FC | size: 0x19
+.obj kar_linkfile_jp_event_stationfire_hps_804985fc, global
+	.string "jp/event_stationfire.hps"
+.endobj kar_linkfile_jp_event_stationfire_hps_804985fc
+
+# .data:0x3DD | 0x80498615 | size: 0x3
+.obj gap_07_80498615_data, global
+.hidden gap_07_80498615_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498615_data
+
+# .data:0x3E0 | 0x80498618 | size: 0x19
+.obj kar_linkfile_jp_event_supercharge_hps_80498618, global
+	.string "jp/event_supercharge.hps"
+.endobj kar_linkfile_jp_event_supercharge_hps_80498618
+
+# .data:0x3F9 | 0x80498631 | size: 0x3
+.obj gap_07_80498631_data, global
+.hidden gap_07_80498631_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498631_data
+
+# .data:0x3FC | 0x80498634 | size: 0x19
+.obj kar_linkfile_jp_event_syoukinkubi_hps_80498634, global
+	.string "jp/event_syoukinkubi.hps"
+.endobj kar_linkfile_jp_event_syoukinkubi_hps_80498634
+
+# .data:0x415 | 0x8049864D | size: 0x3
+.obj gap_07_8049864D_data, global
+.hidden gap_07_8049864D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_8049864D_data
+
+# .data:0x418 | 0x80498650 | size: 0x14
+.obj kar_linkfile_jp_event_toudai_hps_80498650, global
+	.string "jp/event_toudai.hps"
+.endobj kar_linkfile_jp_event_toudai_hps_80498650
+
+# .data:0x42C | 0x80498664 | size: 0x10
+.obj kar_linkfile_jp_finish_1_hps_80498664, global
+	.string "jp/finish_1.hps"
+.endobj kar_linkfile_jp_finish_1_hps_80498664
+
+# .data:0x43C | 0x80498674 | size: 0x10
+.obj kar_linkfile_jp_finish_2_hps_80498674, global
+	.string "jp/finish_2.hps"
+.endobj kar_linkfile_jp_finish_2_hps_80498674
+
+# .data:0x44C | 0x80498684 | size: 0x11
+.obj kar_linkfile_jp_finish_cp_hps_80498684, global
+	.string "jp/finish_cp.hps"
+.endobj kar_linkfile_jp_finish_cp_hps_80498684
+
+# .data:0x45D | 0x80498695 | size: 0x3
+.obj gap_07_80498695_data, global
+.hidden gap_07_80498695_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498695_data
+
+# .data:0x460 | 0x80498698 | size: 0xD
+.obj kar_linkfile_jp_graph_hps_80498698, global
+	.string "jp/graph.hps"
+.endobj kar_linkfile_jp_graph_hps_80498698
+
+# .data:0x46D | 0x804986A5 | size: 0x3
+.obj gap_07_804986A5_data, global
+.hidden gap_07_804986A5_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804986A5_data
+
+# .data:0x470 | 0x804986A8 | size: 0xD
+.obj kar_linkfile_jp_howto_hps_804986a8, global
+	.string "jp/howto.hps"
+.endobj kar_linkfile_jp_howto_hps_804986a8
+
+# .data:0x47D | 0x804986B5 | size: 0x3
+.obj gap_07_804986B5_data, global
+.hidden gap_07_804986B5_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804986B5_data
+
+# .data:0x480 | 0x804986B8 | size: 0xF
+.obj kar_linkfile_jp_opening_hps_804986b8, global
+	.string "jp/opening.hps"
+.endobj kar_linkfile_jp_opening_hps_804986b8
+
+# .data:0x48F | 0x804986C7 | size: 0x1
+.obj gap_07_804986C7_data, global
+.hidden gap_07_804986C7_data
+	.byte 0x00
+.endobj gap_07_804986C7_data
+
+# .data:0x490 | 0x804986C8 | size: 0xE
+.obj kar_linkfile_jp_retire_hps_804986c8, global
+	.string "jp/retire.hps"
+.endobj kar_linkfile_jp_retire_hps_804986c8
+
+# .data:0x49E | 0x804986D6 | size: 0x2
+.obj gap_07_804986D6_data, global
+.hidden gap_07_804986D6_data
+	.2byte 0x0000
+.endobj gap_07_804986D6_data
+
+# .data:0x4A0 | 0x804986D8 | size: 0x12
+.obj kar_linkfile_jp_studium_04_hps_804986d8, global
+	.string "jp/studium_04.hps"
+.endobj kar_linkfile_jp_studium_04_hps_804986d8
+
+# .data:0x4B2 | 0x804986EA | size: 0x2
+.obj gap_07_804986EA_data, global
+.hidden gap_07_804986EA_data
+	.2byte 0x0000
+.endobj gap_07_804986EA_data
+
+# .data:0x4B4 | 0x804986EC | size: 0x19
+.obj kar_linkfile_jp_studium_airgrider_hps_804986ec, global
+	.string "jp/studium_airgrider.hps"
+.endobj kar_linkfile_jp_studium_airgrider_hps_804986ec
+
+# .data:0x4CD | 0x80498705 | size: 0x3
+.obj gap_07_80498705_data, global
+.hidden gap_07_80498705_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498705_data
+
+# .data:0x4D0 | 0x80498708 | size: 0x16
+.obj kar_linkfile_jp_studium_battle_hps_80498708, global
+	.string "jp/studium_battle.hps"
+.endobj kar_linkfile_jp_studium_battle_hps_80498708
+
+# .data:0x4E6 | 0x8049871E | size: 0x2
+.obj gap_07_8049871E_data, global
+.hidden gap_07_8049871E_data
+	.2byte 0x0000
+.endobj gap_07_8049871E_data
+
+# .data:0x4E8 | 0x80498720 | size: 0x16
+.obj kar_linkfile_jp_studium_dedede_hps_80498720, global
+	.string "jp/studium_dedede.hps"
+.endobj kar_linkfile_jp_studium_dedede_hps_80498720
+
+# .data:0x4FE | 0x80498736 | size: 0x2
+.obj gap_07_80498736_data, global
+.hidden gap_07_80498736_data
+	.2byte 0x0000
+.endobj gap_07_80498736_data
+
+# .data:0x500 | 0x80498738 | size: 0x15
+.obj kar_linkfile_jp_studium_point_hps_80498738, global
+	.string "jp/studium_point.hps"
+.endobj kar_linkfile_jp_studium_point_hps_80498738
+
+# .data:0x515 | 0x8049874D | size: 0x3
+.obj gap_07_8049874D_data, global
+.hidden gap_07_8049874D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_8049874D_data
+
+# .data:0x518 | 0x80498750 | size: 0x450
+.obj lbl_80498750, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte lbl_805D5280
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte lbl_80498238
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_menu_hps_80498244
+	.4byte 0x00000001
+	.4byte 0x00000003
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_desert_hps_80498250
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_desert_ura_hps_80498264
+	.4byte 0x00000001
+	.4byte 0x00000005
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_kazan_hps_8049827c
+	.4byte 0x00000001
+	.4byte 0x00000006
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_kazan_ura_hps_8049828c
+	.4byte 0x00000001
+	.4byte 0x00000007
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_kekka_hps_804982a0
+	.4byte 0x00000001
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_light_hps_804982b0
+	.4byte 0x00000001
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_light_ura_hps_804982c0
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_machine_hps_804982d4
+	.4byte 0x00000001
+	.4byte 0x0000000B
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_machine_ura_hps_804982e8
+	.4byte 0x00000001
+	.4byte 0x0000000C
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_plants_hps_80498300
+	.4byte 0x00000001
+	.4byte 0x0000000D
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_plants_ura_hps_80498314
+	.4byte 0x00000001
+	.4byte 0x0000000E
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_sky_hps_8049832c
+	.4byte 0x00000001
+	.4byte 0x0000000F
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_sky_ura_hps_8049833c
+	.4byte 0x00000001
+	.4byte 0x00000010
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_water_hps_80498350
+	.4byte 0x00000001
+	.4byte 0x00000011
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_2d_water_ura_hps_80498360
+	.4byte 0x00000001
+	.4byte 0x00000012
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_check_hps_80498374
+	.4byte 0x00000001
+	.4byte 0x00000013
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_check_ura_hps_80498384
+	.4byte 0x00000001
+	.4byte 0x00000014
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_desert_hps_80498398
+	.4byte 0x00000001
+	.4byte 0x00000015
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_desert_ura_hps_804983ac
+	.4byte 0x00000001
+	.4byte 0x00000016
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_ice_hps_804983c4
+	.4byte 0x00000001
+	.4byte 0x00000017
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_ice_ura_hps_804983d4
+	.4byte 0x00000001
+	.4byte 0x00000018
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_kazan_hps_804983e8
+	.4byte 0x00000001
+	.4byte 0x00000019
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_kazan_ura_hps_804983f8
+	.4byte 0x00000001
+	.4byte 0x0000001A
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_kekka_hps_8049840c
+	.4byte 0x00000001
+	.4byte 0x0000001B
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_machine_hps_8049841c
+	.4byte 0x00000001
+	.4byte 0x0000001C
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_machine_ura_hps_80498430
+	.4byte 0x00000001
+	.4byte 0x0000001D
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_plants_hps_80498448
+	.4byte 0x00000001
+	.4byte 0x0000001E
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_plants_ura_hps_8049845c
+	.4byte 0x00000001
+	.4byte 0x0000001F
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_sky_hps_80498474
+	.4byte 0x00000001
+	.4byte 0x00000020
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_sky_ura_hps_80498484
+	.4byte 0x00000001
+	.4byte 0x00000021
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_space_hps_80498498
+	.4byte 0x00000001
+	.4byte 0x00000022
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_space_ura_hps_804984a8
+	.4byte 0x00000001
+	.4byte 0x00000023
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_valley_hps_804984bc
+	.4byte 0x00000001
+	.4byte 0x00000024
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_3d_valley_ura_hps_804984d0
+	.4byte 0x00000001
+	.4byte 0x00000025
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_stadiumintro_hps_804984e8
+	.4byte 0x00000001
+	.4byte 0x00000026
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_city_hps_804984fc
+	.4byte 0x00000001
+	.4byte 0x00000027
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_city_isogi_hps_80498508
+	.4byte 0x00000001
+	.4byte 0x00000028
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_city_ura_hps_8049851c
+	.4byte 0x00000001
+	.4byte 0x00000029
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_clearchecker_hps_8049852c
+	.4byte 0x00000001
+	.4byte 0x0000002A
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_dragoon_hps_80498540
+	.4byte 0x00000001
+	.4byte 0x0000002B
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_ending_hps_80498550
+	.4byte 0x00000001
+	.4byte 0x0000002C
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_ending_city_us_hps_80498560
+	.4byte 0x00000001
+	.4byte 0x0000002D
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_fog_hps_80498578
+	.4byte 0x00000001
+	.4byte 0x0000002E
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_gordo_hps_8049858c
+	.4byte 0x00000001
+	.4byte 0x0000002F
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_itembound_hps_804985a0
+	.4byte 0x00000001
+	.4byte 0x00000030
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_kyoseki_hps_804985b8
+	.4byte 0x00000001
+	.4byte 0x00000031
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_meteo_hps_804985d0
+	.4byte 0x00000001
+	.4byte 0x00000032
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_monster_hps_804985e4
+	.4byte 0x00000001
+	.4byte 0x00000033
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_stationfire_hps_804985fc
+	.4byte 0x00000001
+	.4byte 0x00000034
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_supercharge_hps_80498618
+	.4byte 0x00000001
+	.4byte 0x00000035
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_syoukinkubi_hps_80498634
+	.4byte 0x00000001
+	.4byte 0x00000036
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_event_toudai_hps_80498650
+	.4byte 0x00000001
+	.4byte 0x00000037
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_finish_1_hps_80498664
+	.4byte 0x00000001
+	.4byte 0x00000038
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_finish_2_hps_80498674
+	.4byte 0x00000001
+	.4byte 0x00000039
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_finish_cp_hps_80498684
+	.4byte 0x00000001
+	.4byte 0x0000003A
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_graph_hps_80498698
+	.4byte 0x00000001
+	.4byte 0x0000003B
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_howto_hps_804986a8
+	.4byte 0x00000001
+	.4byte 0x0000003C
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_menu_hps_80498244
+	.4byte 0x00000001
+	.4byte 0x0000003D
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_opening_hps_804986b8
+	.4byte 0x00000001
+	.4byte 0x0000003E
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_retire_hps_804986c8
+	.4byte 0x00000001
+	.4byte 0x0000003F
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_studium_04_hps_804986d8
+	.4byte 0x00000001
+	.4byte 0x00000040
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_studium_airgrider_hps_804986ec
+	.4byte 0x00000001
+	.4byte 0x00000041
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_studium_battle_hps_80498708
+	.4byte 0x00000001
+	.4byte 0x00000042
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_studium_dedede_hps_80498720
+	.4byte 0x00000001
+	.4byte 0x00000043
+	.4byte 0x00000001
+	.4byte kar_linkfile_jp_studium_point_hps_80498738
+	.4byte 0x00000001
+	.4byte 0x00000044
+	.4byte 0x00000000
+	.4byte lbl_805D5288
+	.4byte 0x00000000
+.endobj lbl_80498750
+
+# .data:0x968 | 0x80498BA0 | size: 0xF
+.obj kar_asset_airride_80498ba0, global
+	.string "jp/airride.sem"
+.endobj kar_asset_airride_80498ba0
+
+# .data:0x977 | 0x80498BAF | size: 0x1
+.obj gap_07_80498BAF_data, global
+.hidden gap_07_80498BAF_data
+	.byte 0x00
+.endobj gap_07_80498BAF_data
+
+# .data:0x978 | 0x80498BB0 | size: 0xF
+.obj kar_asset_m_2d_item_80498bb0, global
+	.string "jp/2d_item.ssm"
+.endobj kar_asset_m_2d_item_80498bb0
+
+# .data:0x987 | 0x80498BBF | size: 0x1
+.obj gap_07_80498BBF_data, global
+.hidden gap_07_80498BBF_data
+	.byte 0x00
+.endobj gap_07_80498BBF_data
+
+# .data:0x988 | 0x80498BC0 | size: 0xF
+.obj kar_asset_m_2d_main_80498bc0, global
+	.string "jp/2d_main.ssm"
+.endobj kar_asset_m_2d_main_80498bc0
+
+# .data:0x997 | 0x80498BCF | size: 0x1
+.obj gap_07_80498BCF_data, global
+.hidden gap_07_80498BCF_data
+	.byte 0x00
+.endobj gap_07_80498BCF_data
+
+# .data:0x998 | 0x80498BD0 | size: 0x10
+.obj kar_asset_m_2d_stage_80498bd0, global
+	.string "jp/2d_stage.ssm"
+.endobj kar_asset_m_2d_stage_80498bd0
+
+# .data:0x9A8 | 0x80498BE0 | size: 0xC
+.obj kar_asset_city_80498be0, global
+	.string "jp/city.ssm"
+.endobj kar_asset_city_80498be0
+
+# .data:0x9B4 | 0x80498BEC | size: 0xE
+.obj kar_asset_ground_80498bec, global
+	.string "jp/ground.ssm"
+.endobj kar_asset_ground_80498bec
+
+# .data:0x9C2 | 0x80498BFA | size: 0x2
+.obj gap_07_80498BFA_data, global
+.hidden gap_07_80498BFA_data
+	.2byte 0x0000
+.endobj gap_07_80498BFA_data
+
+# .data:0x9C4 | 0x80498BFC | size: 0xC
+.obj kar_asset_main_80498bfc, global
+	.string "jp/main.ssm"
+.endobj kar_asset_main_80498bfc
+
+# .data:0x9D0 | 0x80498C08 | size: 0x10
+.obj kar_asset_map_chk2_80498c08, global
+	.string "jp/map_chk2.ssm"
+.endobj kar_asset_map_chk2_80498c08
+
+# .data:0x9E0 | 0x80498C18 | size: 0x11
+.obj kar_asset_map_city1_80498c18, global
+	.string "jp/map_city1.ssm"
+.endobj kar_asset_map_city1_80498c18
+
+# .data:0x9F1 | 0x80498C29 | size: 0x3
+.obj gap_07_80498C29_data, global
+.hidden gap_07_80498C29_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498C29_data
+
+# .data:0x9F4 | 0x80498C2C | size: 0x12
+.obj kar_asset_map_desert_80498c2c, global
+	.string "jp/map_desert.ssm"
+.endobj kar_asset_map_desert_80498c2c
+
+# .data:0xA06 | 0x80498C3E | size: 0x2
+.obj gap_07_80498C3E_data, global
+.hidden gap_07_80498C3E_data
+	.2byte 0x0000
+.endobj gap_07_80498C3E_data
+
+# .data:0xA08 | 0x80498C40 | size: 0x10
+.obj kar_asset_map_heat_80498c40, global
+	.string "jp/map_heat.ssm"
+.endobj kar_asset_map_heat_80498c40
+
+# .data:0xA18 | 0x80498C50 | size: 0xF
+.obj kar_asset_map_ice_80498c50, global
+	.string "jp/map_ice.ssm"
+.endobj kar_asset_map_ice_80498c50
+
+# .data:0xA27 | 0x80498C5F | size: 0x1
+.obj gap_07_80498C5F_data, global
+.hidden gap_07_80498C5F_data
+	.byte 0x00
+.endobj gap_07_80498C5F_data
+
+# .data:0xA28 | 0x80498C60 | size: 0x13
+.obj kar_asset_map_machine_80498c60, global
+	.string "jp/map_machine.ssm"
+.endobj kar_asset_map_machine_80498c60
+
+# .data:0xA3B | 0x80498C73 | size: 0x1
+.obj gap_07_80498C73_data, global
+.hidden gap_07_80498C73_data
+	.byte 0x00
+.endobj gap_07_80498C73_data
+
+# .data:0xA3C | 0x80498C74 | size: 0x12
+.obj kar_asset_map_plants_80498c74, global
+	.string "jp/map_plants.ssm"
+.endobj kar_asset_map_plants_80498c74
+
+# .data:0xA4E | 0x80498C86 | size: 0x2
+.obj gap_07_80498C86_data, global
+.hidden gap_07_80498C86_data
+	.2byte 0x0000
+.endobj gap_07_80498C86_data
+
+# .data:0xA50 | 0x80498C88 | size: 0xF
+.obj kar_asset_map_sky_80498c88, global
+	.string "jp/map_sky.ssm"
+.endobj kar_asset_map_sky_80498c88
+
+# .data:0xA5F | 0x80498C97 | size: 0x1
+.obj gap_07_80498C97_data, global
+.hidden gap_07_80498C97_data
+	.byte 0x00
+.endobj gap_07_80498C97_data
+
+# .data:0xA60 | 0x80498C98 | size: 0x11
+.obj kar_asset_map_space_80498c98, global
+	.string "jp/map_space.ssm"
+.endobj kar_asset_map_space_80498c98
+
+# .data:0xA71 | 0x80498CA9 | size: 0x3
+.obj gap_07_80498CA9_data, global
+.hidden gap_07_80498CA9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498CA9_data
+
+# .data:0xA74 | 0x80498CAC | size: 0x12
+.obj kar_asset_map_valley_80498cac, global
+	.string "jp/map_valley.ssm"
+.endobj kar_asset_map_valley_80498cac
+
+# .data:0xA86 | 0x80498CBE | size: 0x2
+.obj gap_07_80498CBE_data, global
+.hidden gap_07_80498CBE_data
+	.2byte 0x0000
+.endobj gap_07_80498CBE_data
+
+# .data:0xA88 | 0x80498CC0 | size: 0xC
+.obj kar_asset_menu_80498cc0, global
+	.string "jp/menu.ssm"
+.endobj kar_asset_menu_80498cc0
+
+# .data:0xA94 | 0x80498CCC | size: 0xD
+.obj kar_asset_pinfo_80498ccc, global
+	.string "jp/pinfo.ssm"
+.endobj kar_asset_pinfo_80498ccc
+
+# .data:0xAA1 | 0x80498CD9 | size: 0x3
+.obj gap_07_80498CD9_data, global
+.hidden gap_07_80498CD9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498CD9_data
+
+# .data:0xAA4 | 0x80498CDC | size: 0xC
+.obj kar_asset_star_80498cdc, global
+	.string "jp/star.ssm"
+.endobj kar_asset_star_80498cdc
+
+# .data:0xAB0 | 0x80498CE8 | size: 0xC
+.obj lbl_80498CE8, global
+	.string "jp/zako.ssm"
+.endobj lbl_80498CE8
+
+# .data:0xABC | 0x80498CF4 | size: 0x160
+.obj lbl_80498CF4, global
+	.4byte 0x00000003
+	.4byte 0x00000001
+	.4byte 0x00008664
+	.4byte kar_asset_airride_80498ba0
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x0007F180
+	.4byte kar_asset_m_2d_item_80498bb0
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x0013FDE0
+	.4byte kar_asset_m_2d_main_80498bc0
+	.4byte 0x00000002
+	.4byte 0x00000001
+	.4byte 0x0018BCE0
+	.4byte kar_asset_m_2d_stage_80498bd0
+	.4byte 0x00000004
+	.4byte 0x00000001
+	.4byte 0x00119D00
+	.4byte kar_asset_city_80498be0
+	.4byte 0x00000005
+	.4byte 0x00000001
+	.4byte 0x00090CE0
+	.4byte kar_asset_ground_80498bec
+	.4byte 0x00000006
+	.4byte 0x00000001
+	.4byte 0x002FC640
+	.4byte kar_asset_main_80498bfc
+	.4byte 0x00000007
+	.4byte 0x00000001
+	.4byte 0x00070C80
+	.4byte kar_asset_map_chk2_80498c08
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0013DE00
+	.4byte kar_asset_map_city1_80498c18
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x0001DAC0
+	.4byte kar_asset_map_desert_80498c2c
+	.4byte 0x0000000A
+	.4byte 0x00000001
+	.4byte 0x00071EE0
+	.4byte kar_asset_map_heat_80498c40
+	.4byte 0x0000000B
+	.4byte 0x00000001
+	.4byte 0x0002C7A0
+	.4byte kar_asset_map_ice_80498c50
+	.4byte 0x0000000C
+	.4byte 0x00000001
+	.4byte 0x00044440
+	.4byte kar_asset_map_machine_80498c60
+	.4byte 0x0000000D
+	.4byte 0x00000001
+	.4byte 0x0002FA80
+	.4byte kar_asset_map_plants_80498c74
+	.4byte 0x0000000E
+	.4byte 0x00000001
+	.4byte 0x000419C0
+	.4byte kar_asset_map_sky_80498c88
+	.4byte 0x0000000F
+	.4byte 0x00000001
+	.4byte 0x00023100
+	.4byte kar_asset_map_space_80498c98
+	.4byte 0x00000010
+	.4byte 0x00000001
+	.4byte 0x00039580
+	.4byte kar_asset_map_valley_80498cac
+	.4byte 0x00000011
+	.4byte 0x00000001
+	.4byte 0x000634A0
+	.4byte kar_asset_menu_80498cc0
+	.4byte 0x00000012
+	.4byte 0x00000001
+	.4byte 0x000B2AA0
+	.4byte kar_asset_pinfo_80498ccc
+	.4byte 0x00000013
+	.4byte 0x00000001
+	.4byte 0x0017EAE0
+	.4byte kar_asset_star_80498cdc
+	.4byte 0x00000014
+	.4byte 0x00000001
+	.4byte 0x0007C7C0
+	.4byte lbl_80498CE8
+	.4byte 0x00000015
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte lbl_805D5288
+.endobj lbl_80498CF4
+
+# .data:0xC1C | 0x80498E54 | size: 0x50
+.obj lbl_80498E54, global
+	.2byte 0x0011
+	.2byte 0x0000
+	.2byte 0x0006
+	.2byte 0x0001
+	.2byte 0x0001
+	.2byte 0x0002
+	.2byte 0x0012
+	.2byte 0x0003
+	.2byte 0x0004
+	.2byte 0x0004
+	.2byte 0x0000
+	.2byte 0x0004
+	.2byte 0x0007
+	.2byte 0x0005
+	.2byte 0x0008
+	.2byte 0x0005
+	.2byte 0x0009
+	.2byte 0x0005
+	.2byte 0x000A
+	.2byte 0x0005
+	.2byte 0x000B
+	.2byte 0x0005
+	.2byte 0x000C
+	.2byte 0x0005
+	.2byte 0x000D
+	.2byte 0x0005
+	.2byte 0x000E
+	.2byte 0x0005
+	.2byte 0x000F
+	.2byte 0x0005
+	.2byte 0x0010
+	.2byte 0x0005
+	.2byte 0x0002
+	.2byte 0x0005
+	.2byte 0x0005
+	.2byte 0x0006
+	.2byte 0x0013
+	.2byte 0x0007
+	.2byte 0x0014
+	.2byte 0x0008
+.endobj lbl_80498E54
+
+# .data:0xC6C | 0x80498EA4 | size: 0x120
+.obj lbl_80498EA4, global
+	.4byte 0x00000003
+	.4byte 0x00000007
+	.4byte 0x00000001
+	.4byte 0x00000000
+	.4byte 0x0000000D
+	.4byte 0x00000001
+	.4byte 0x00000005
+	.4byte 0x0000000C
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x00000009
+	.4byte 0x00000001
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x00000001
+	.4byte 0x00000008
+	.4byte 0x0000000B
+	.4byte 0x00000001
+	.4byte 0x00000007
+	.4byte 0x0000000E
+	.4byte 0x00000001
+	.4byte 0x00000006
+	.4byte 0x0000000F
+	.4byte 0x00000001
+	.4byte 0x00000004
+	.4byte 0x00000010
+	.4byte 0x00000001
+	.4byte 0x00000009
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000A
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000B
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000C
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000D
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000E
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x0000000F
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x00000010
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x00000012
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x00000013
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x00000014
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x00000015
+	.4byte 0x00000008
+	.4byte 0x00000001
+	.4byte 0x43616E20
+	.4byte 0x6E6F7420
+	.4byte 0x616C6C6F
+	.4byte 0x63617465
+	.4byte 0x206D656D
+	.4byte 0x6F727920
+	.4byte 0x666F7220
+	.4byte 0x61756469
+	.4byte 0x6F2E0A00
+.endobj lbl_80498EA4
+
+# .data:0xD8C | 0x80498FC4 | size: 0x28
+.obj kar_src_lbaudio_80498fc4, global
+	.4byte 0x6C626175
+	.4byte 0x64696F2E
+	.4byte 0x63000000
+	.4byte 0x43616E20
+	.4byte 0x6E6F7420
+	.4byte 0x63726561
+	.4byte 0x74652061
+	.4byte 0x7564696F
+	.4byte 0x20686561
+	.4byte 0x702E0A00
+.endobj kar_src_lbaudio_80498fc4
+
+# .data:0xDB4 | 0x80498FEC | size: 0x60
+.obj lbl_80498FEC, global
+	.4byte 0x54686973
+	.4byte 0x2066756E
+	.4byte 0x6374696F
+	.4byte 0x6E206973
+	.4byte 0x20647565
+	.4byte 0x20746F20
+	.4byte 0x62652064
+	.4byte 0x656C6574
+	.4byte 0x65642E0A
+	.4byte 0x00000000
+	.4byte 0x6C624175
+	.4byte 0x64696F47
+	.4byte 0x6C6F6261
+	.4byte 0x6C2E706C
+	.4byte 0x61796C69
+	.4byte 0x73740000
+	.4byte 0x693C4C62
+	.4byte 0x41756469
+	.4byte 0x6F5F4669
+	.4byte 0x6C655F4D
+	.4byte 0x61780000
+	.4byte 0x66696C65
+	.4byte 0x6E616D65
+	.4byte 0x00000000
+.endobj lbl_80498FEC
+
+# .data:0xE14 | 0x8049904C | size: 0x17
+.obj lbl_8049904C, global
+	.string "Cannot open file.(%s)\n"
+.endobj lbl_8049904C
+
+# .data:0xE2B | 0x80499063 | size: 0x1
+.obj gap_07_80499063_data, global
+.hidden gap_07_80499063_data
+	.byte 0x00
+.endobj gap_07_80499063_data
+
+# .data:0xE2C | 0x80499064 | size: 0x178
+.obj lbl_80499064, global
+	.4byte 0x4572726F
+	.4byte 0x72206F63
+	.4byte 0x63757265
+	.4byte 0x64207768
+	.4byte 0x656E2072
+	.4byte 0x65616469
+	.4byte 0x6E672066
+	.4byte 0x696C6520
+	.4byte 0x28646174
+	.4byte 0x6120626F
+	.4byte 0x6479292E
+	.4byte 0x00000000
+	.4byte 0x2D2D2D2D
+	.4byte 0x20747261
+	.4byte 0x636B2075
+	.4byte 0x73656420
+	.4byte 0x6C697374
+	.4byte 0x202D2D2D
+	.4byte 0x2D0A0000
+	.4byte 0x20202020
+	.4byte 0x20202020
+	.4byte 0x20757365
+	.4byte 0x64207265
+	.4byte 0x6C656173
+	.4byte 0x65206672
+	.4byte 0x616D6520
+	.4byte 0x6669642E
+	.4byte 0x2E2E0A00
+	.4byte 0x6E6F6E65
+	.4byte 0x2020203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x72696465
+	.4byte 0x7220203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x76656869
+	.4byte 0x636C653A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x77656170
+	.4byte 0x6F6E203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x656E656D
+	.4byte 0x7920203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x6974656D
+	.4byte 0x2020203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x6D617020
+	.4byte 0x2020203A
+	.4byte 0x20202533
+	.4byte 0x64202020
+	.4byte 0x20202533
+	.4byte 0x64202537
+	.4byte 0x64200000
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D2D2D2D
+	.4byte 0x2D0A0000
+	.4byte 0x5761726E
+	.4byte 0x696E673A
+	.4byte 0x20617564
+	.4byte 0x696F2074
+	.4byte 0x7261636B
+	.4byte 0x20697320
+	.4byte 0x66756C6C
+	.4byte 0x2121286D
+	.4byte 0x61783D25
+	.4byte 0x64290A00
+.endobj lbl_80499064
+
+# .data:0xFA4 | 0x804991DC | size: 0x1C
+.obj jumptable_804991DC, local
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C82C
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C848
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C864
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C880
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C89C
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C8C8
+	.rel kar_lbaudio_alloc_track_slot, .L_8005C8F8
+.endobj jumptable_804991DC
+
+# .data:0xFC0 | 0x804991F8 | size: 0x20
+.obj jumptable_804991F8, local
+	.rel kar_lbaudio__near_8005d054, .L_8005D0B4
+	.rel kar_lbaudio__near_8005d054, .L_8005D0BC
+	.rel kar_lbaudio__near_8005d054, .L_8005D0C4
+	.rel kar_lbaudio__near_8005d054, .L_8005D0CC
+	.rel kar_lbaudio__near_8005d054, .L_8005D0D4
+	.rel kar_lbaudio__near_8005d054, .L_8005D0E4
+	.rel kar_lbaudio__near_8005d054, .L_8005D0DC
+	.rel kar_lbaudio__near_8005d054, .L_8005D0E4
+.endobj jumptable_804991F8
+
+# .data:0xFE0 | 0x80499218 | size: 0x45
+.obj lbl_80499218, global
+	.string "track >= LbAudio_Track_Auto_Start && track <= LbAudio_Track_Auto_End"
+.endobj lbl_80499218
+
+# .data:0x1025 | 0x8049925D | size: 0x3
+.obj gap_07_8049925D_data, global
+.hidden gap_07_8049925D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_8049925D_data
+
+# .data:0x1028 | 0x80499260 | size: 0x30
+.obj lbl_80499260, global
+	.string "Warning: audio virtual group is full!!(max=%d)\n"
+.endobj lbl_80499260
+
+# .data:0x1058 | 0x80499290 | size: 0x2C
+.obj lbl_80499290, global
+	.string "warning: stop track owner differ. %d -> %d\n"
+.endobj lbl_80499290
+
+# .data:0x1084 | 0x804992BC | size: 0x84
+.obj lbl_804992BC, global
+	.4byte 0x20202020
+	.4byte 0x2020203A
+	.4byte 0x20616464
+	.4byte 0x72202530
+	.4byte 0x38782025
+	.4byte 0x30387820
+	.4byte 0x25303878
+	.4byte 0x20253038
+	.4byte 0x780A0000
+	.4byte 0x54686973
+	.4byte 0x20747261
+	.4byte 0x636B2069
+	.4byte 0x7320616C
+	.4byte 0x72656164
+	.4byte 0x79207265
+	.4byte 0x6D6F7665
+	.4byte 0x642E2028
+	.4byte 0x6669643D
+	.4byte 0x25642074
+	.4byte 0x7261636B
+	.4byte 0x3D256429
+	.4byte 0x0A000000
+	.4byte 0x756E6B6E
+	.4byte 0x6F776E20
+	.4byte 0x74726163
+	.4byte 0x6B207374
+	.4byte 0x61747573
+	.4byte 0x2E202564
+	.4byte 0x20286669
+	.4byte 0x643D2564
+	.4byte 0x20747261
+	.4byte 0x636B3D25
+	.4byte 0x64290A00
+.endobj lbl_804992BC
+
+# .data:0x1108 | 0x80499340 | size: 0x16
+.obj lbl_80499340, global
+	.string "i<LbAudio_Suspend_Max"
+.endobj lbl_80499340
+
+# .data:0x111E | 0x80499356 | size: 0x2
+.obj gap_07_80499356_data, global
+.hidden gap_07_80499356_data
+	.2byte 0x0000
+.endobj gap_07_80499356_data
+
+# .data:0x1120 | 0x80499358 | size: 0x17
+.obj lbl_80499358, global
+	.string "owner=%d dist_kind=%d\n"
+.endobj lbl_80499358
+
+# .data:0x1137 | 0x8049936F | size: 0x1
+.obj gap_07_8049936F_data, global
+.hidden gap_07_8049936F_data
+	.byte 0x00
+.endobj gap_07_8049936F_data
+
+# .data:0x1138 | 0x80499370 | size: 0xC0
+.obj lbl_80499370, global
+	.4byte 0x00020076
+	.4byte 0x0000000C
+	.4byte 0x00020077
+	.4byte 0x0000000D
+	.4byte 0x00020078
+	.4byte 0x0000000E
+	.4byte 0x00020079
+	.4byte 0x0000000F
+	.4byte 0x0002007B
+	.4byte 0x00000010
+	.4byte 0x0002007C
+	.4byte 0x00000011
+	.4byte 0x0002007D
+	.4byte 0x00000012
+	.4byte 0x0002007E
+	.4byte 0x00000013
+	.4byte 0x0002007F
+	.4byte 0x00000014
+	.4byte 0x00020081
+	.4byte 0x00000015
+	.4byte 0x00020082
+	.4byte 0x00000016
+	.4byte 0x00020083
+	.4byte 0x00000017
+	.4byte 0x00020084
+	.4byte 0x00000018
+	.4byte 0x00020085
+	.4byte 0x00000019
+	.4byte 0x00020088
+	.4byte 0x0000001A
+	.4byte 0x0002008A
+	.4byte 0x0000001B
+	.4byte 0x0002008B
+	.4byte 0x0000001C
+	.4byte 0x0002008C
+	.4byte 0x0000001D
+	.4byte 0x0002008D
+	.4byte 0x0000001E
+	.4byte 0x00020090
+	.4byte 0x0000001F
+	.4byte 0x00050009
+	.4byte 0x00000020
+	.4byte 0x00050006
+	.4byte 0x00000021
+	.4byte 0x00050007
+	.4byte 0x00000021
+	.4byte 0x00050008
+	.4byte 0x00000021
+.endobj lbl_80499370
+
+# 0x80538088..0x80550D58 | size: 0x18CD0
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80538088 | size: 0x17A28
+.obj lbAudioGlobal, global
+	.skip 0x17A28
+.endobj lbAudioGlobal
+
+# .bss:0x17A28 | 0x8054FAB0 | size: 0x788
+.obj lbl_8054FAB0, global
+	.skip 0x788
+.endobj lbl_8054FAB0
+
+# .bss:0x181B0 | 0x80550238 | size: 0x880
+.obj lbAudioGlobal_hps_basename_table, global
+	.skip 0x880
+.endobj lbAudioGlobal_hps_basename_table
+
+# .bss:0x18A30 | 0x80550AB8 | size: 0x1F0
+.obj lbl_80550AB8, global
+	.skip 0x1F0
+.endobj lbl_80550AB8
+
+# .bss:0x18C20 | 0x80550CA8 | size: 0xB0
+.obj lbl_80550CA8, global
+	.skip 0xB0
+.endobj lbl_80550CA8
+
+# 0x805D5290..0x805D52C8 | size: 0x38
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5290 | size: 0x2
+.obj lbl_805D5290, global
+	.string "0"
+.endobj lbl_805D5290
+
+# .sdata:0x2 | 0x805D5292 | size: 0x2
+.obj gap_09_805D5292_sdata, global
+.hidden gap_09_805D5292_sdata
+	.2byte 0x0000
+.endobj gap_09_805D5292_sdata
+
+# .sdata:0x4 | 0x805D5294 | size: 0x5
+.obj lbl_805D5294, global
+	.string "gobj"
+.endobj lbl_805D5294
+
+# .sdata:0x9 | 0x805D5299 | size: 0x3
+.obj gap_09_805D5299_sdata, global
+.hidden gap_09_805D5299_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D5299_sdata
+
+# .sdata:0xC | 0x805D529C | size: 0x7
+.obj lbl_805D529C, global
+	.string "audio/"
+.endobj lbl_805D529C
+
+# .sdata:0x13 | 0x805D52A3 | size: 0x1
+.obj gap_09_805D52A3_sdata, global
+.hidden gap_09_805D52A3_sdata
+	.byte 0x00
+.endobj gap_09_805D52A3_sdata
+
+# .sdata:0x14 | 0x805D52A4 | size: 0x7
+.obj lbl_805D52A4, global
+	.string "%d:%d "
+.endobj lbl_805D52A4
+
+# .sdata:0x1B | 0x805D52AB | size: 0x1
+.obj gap_09_805D52AB_sdata, global
+.hidden gap_09_805D52AB_sdata
+	.byte 0x00
+.endobj gap_09_805D52AB_sdata
+
+# .sdata:0x1C | 0x805D52AC | size: 0x2
+.obj lbl_805D52AC, global
+	.string "\n"
+.endobj lbl_805D52AC
+
+# .sdata:0x1E | 0x805D52AE | size: 0x2
+.obj gap_09_805D52AE_sdata, global
+.hidden gap_09_805D52AE_sdata
+	.2byte 0x0000
+.endobj gap_09_805D52AE_sdata
+
+# .sdata:0x20 | 0x805D52B0 | size: 0x5
+.obj lbl_805D52B0, global
+	.string "name"
+.endobj lbl_805D52B0
+
+# .sdata:0x25 | 0x805D52B5 | size: 0x3
+.obj gap_09_805D52B5_sdata, global
+.hidden gap_09_805D52B5_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D52B5_sdata
+
+# .sdata:0x28 | 0x805D52B8 | size: 0x5
+.obj lbl_805D52B8, global
+	.string "size"
+.endobj lbl_805D52B8
+
+# .sdata:0x2D | 0x805D52BD | size: 0x3
+.obj gap_09_805D52BD_sdata, global
+.hidden gap_09_805D52BD_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D52BD_sdata
+
+# .sdata:0x30 | 0x805D52C0 | size: 0x8
+.obj lbl_805D52C0, global
+	.string "gp->req"
+.endobj lbl_805D52C0
+
+# 0x805DD5B0..0x805DD5B8 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD5B0 | size: 0x8
+.obj lbl_805DD5B0, global
+	.skip 0x8
+.endobj lbl_805DD5B0
+
+# 0x805DE978..0x805DEAD4 | size: 0x15C
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DE978 | size: 0x4
+.obj lbl_805DE978, global
+	.float 200
+.endobj lbl_805DE978
+
+# .sdata2:0x4 | 0x805DE97C | size: 0x4
+.obj lbl_805DE97C, global
+	.float 60
+.endobj lbl_805DE97C
+
+# .sdata2:0x8 | 0x805DE980 | size: 0x8
+.obj lbl_805DE980, global
+	.double 4503601774854144
+.endobj lbl_805DE980
+
+# .sdata2:0x10 | 0x805DE988 | size: 0x4
+.obj lbl_805DE988, global
+	.float 255
+.endobj lbl_805DE988
+
+# .sdata2:0x14 | 0x805DE98C | size: 0x4
+.obj lbl_805DE98C, global
+	.float 1
+.endobj lbl_805DE98C
+
+# .sdata2:0x18 | 0x805DE990 | size: 0x4
+.obj lbl_805DE990, global
+	.float 0
+.endobj lbl_805DE990
+
+# .sdata2:0x1C | 0x805DE994 | size: 0x4
+.obj lbl_805DE994, global
+	.float 2
+.endobj lbl_805DE994
+
+# .sdata2:0x20 | 0x805DE998 | size: 0x4
+.obj lbl_805DE998, global
+	.float 57.29578
+.endobj lbl_805DE998
+
+# .sdata2:0x24 | 0x805DE99C | size: 0x4
+.obj lbl_805DE99C, global
+	.float 90
+.endobj lbl_805DE99C
+
+# .sdata2:0x28 | 0x805DE9A0 | size: 0x4
+.obj lbl_805DE9A0, global
+	.float 127
+.endobj lbl_805DE9A0
+
+# .sdata2:0x2C | 0x805DE9A4 | size: 0x4
+.obj lbl_805DE9A4, global
+	.float 40
+.endobj lbl_805DE9A4
+
+# .sdata2:0x30 | 0x805DE9A8 | size: 0x4
+.obj lbl_805DE9A8, global
+	.float 128
+.endobj lbl_805DE9A8
+
+# .sdata2:0x34 | 0x805DE9AC | size: 0x4
+.obj lbl_805DE9AC, global
+	.float 167
+.endobj lbl_805DE9AC
+
+# .sdata2:0x38 | 0x805DE9B0 | size: 0x4
+.obj lbl_805DE9B0, global
+	.float -80
+.endobj lbl_805DE9B0
+
+# .sdata2:0x3C | 0x805DE9B4 | size: 0x4
+.obj lbl_805DE9B4, global
+	.float 91
+.endobj lbl_805DE9B4
+
+# .sdata2:0x40 | 0x805DE9B8 | size: 0x4
+.obj lbl_805DE9B8, global
+	.float 178
+.endobj lbl_805DE9B8
+
+# .sdata2:0x44 | 0x805DE9BC | size: 0x4
+.obj lbl_805DE9BC, global
+	.float -128
+.endobj lbl_805DE9BC
+
+# .sdata2:0x48 | 0x805DE9C0 | size: 0x4
+.obj lbl_805DE9C0, global
+	.float 269
+.endobj lbl_805DE9C0
+
+# .sdata2:0x4C | 0x805DE9C4 | size: 0x4
+.obj lbl_805DE9C4, global
+	.float 270
+.endobj lbl_805DE9C4
+
+# .sdata2:0x50 | 0x805DE9C8 | size: 0x4
+.obj lbl_805DE9C8, global
+	.float 87
+.endobj lbl_805DE9C8
+
+# .sdata2:0x54 | 0x805DE9CC | size: 0x4
+.obj lbl_805DE9CC, global
+	.float -127
+.endobj lbl_805DE9CC
+
+# .sdata2:0x58 | 0x805DE9D0 | size: 0x4
+.obj lbl_805DE9D0, global
+	.float 20
+.endobj lbl_805DE9D0
+
+# .sdata2:0x5C | 0x805DE9D4 | size: 0x4
+.obj lbl_805DE9D4, global
+	.float 18
+.endobj lbl_805DE9D4
+
+# .sdata2:0x60 | 0x805DE9D8 | size: 0x4
+.obj lbl_805DE9D8, global
+	.float 340282350000000000000000000000000000000
+.endobj lbl_805DE9D8
+
+# .sdata2:0x64 | 0x805DE9DC | size: 0x4
+.obj lbl_805DE9DC, global
+	.float 0.00001
+.endobj lbl_805DE9DC
+
+# .sdata2:0x68 | 0x805DE9E0 | size: 0x4
+.obj lbl_805DE9E0, global
+	.float -1
+.endobj lbl_805DE9E0
+
+# .sdata2:0x6C | 0x805DE9E4 | size: 0x4
+.obj lbl_805DE9E4, global
+	.float 181.99998
+.endobj lbl_805DE9E4
+
+# .sdata2:0x70 | 0x805DE9E8 | size: 0x4
+.obj lbl_805DE9E8, global
+	.float -60
+.endobj lbl_805DE9E8
+
+# .sdata2:0x74 | 0x805DE9EC | size: 0x4
+.obj lbl_805DE9EC, global
+	.float -0.5
+.endobj lbl_805DE9EC
+
+# .sdata2:0x78 | 0x805DE9F0 | size: 0x4
+.obj lbl_805DE9F0, global
+	.float 190.74998
+.endobj lbl_805DE9F0
+
+# .sdata2:0x7C | 0x805DE9F4 | size: 0x4
+.obj lbl_805DE9F4, global
+	.float -8
+.endobj lbl_805DE9F4
+
+# .sdata2:0x80 | 0x805DE9F8 | size: 0x4
+.obj lbl_805DE9F8, global
+	.float 17.5
+.endobj lbl_805DE9F8
+
+# .sdata2:0x84 | 0x805DE9FC | size: 0x4
+.obj lbl_805DE9FC, global
+	.float -7.2916665
+.endobj lbl_805DE9FC
+
+# .sdata2:0x88 | 0x805DEA00 | size: 0x4
+.obj lbl_805DEA00, global
+	.float 95
+.endobj lbl_805DEA00
+
+# .sdata2:0x8C | 0x805DEA04 | size: 0x4
+.obj lbl_805DEA04, global
+	.float 7.2916665
+.endobj lbl_805DEA04
+
+# .sdata2:0x90 | 0x805DEA08 | size: 0x4
+.obj lbl_805DEA08, global
+	.float -95
+.endobj lbl_805DEA08
+	.4byte 0x00000000
+
+# .sdata2:0x98 | 0x805DEA10 | size: 0x8
+.obj lbl_805DEA10, global
+	.double 6.283185307179586
+.endobj lbl_805DEA10
+
+# .sdata2:0xA0 | 0x805DEA18 | size: 0x4
+.obj lbl_805DEA18, global
+	.float 0.88
+.endobj lbl_805DEA18
+
+# .sdata2:0xA4 | 0x805DEA1C | size: 0x4
+.obj lbl_805DEA1C, global
+	.float 0.77
+.endobj lbl_805DEA1C
+
+# .sdata2:0xA8 | 0x805DEA20 | size: 0x4
+.obj lbl_805DEA20, global
+	.float 0.67
+.endobj lbl_805DEA20
+
+# .sdata2:0xAC | 0x805DEA24 | size: 0x4
+.obj lbl_805DEA24, global
+	.float 0.5
+.endobj lbl_805DEA24
+
+# .sdata2:0xB0 | 0x805DEA28 | size: 0x4
+.obj lbl_805DEA28, global
+	.float 0.0001
+.endobj lbl_805DEA28
+
+# .sdata2:0xB4 | 0x805DEA2C | size: 0x4
+.obj lbl_805DEA2C, global
+	.float 350
+.endobj lbl_805DEA2C
+
+# .sdata2:0xB8 | 0x805DEA30 | size: 0x8
+.obj lbl_805DEA30, global
+	.float 1750
+	.float 0
+.endobj lbl_805DEA30
+
+# .sdata2:0xC0 | 0x805DEA38 | size: 0x4
+.obj lbl_805DEA38, global
+	.float 0.016666668
+.endobj lbl_805DEA38
+	.4byte 0x00000000
+
+# .sdata2:0xC8 | 0x805DEA40 | size: 0x8
+.obj lbl_805DEA40, global
+	.double 4503599627370496
+.endobj lbl_805DEA40
+
+# .sdata2:0xD0 | 0x805DEA48 | size: 0x8
+.obj lbl_805DEA48, global
+	.double 4503601774854144
+.endobj lbl_805DEA48
+
+# .sdata2:0xD8 | 0x805DEA50 | size: 0x4
+.obj lbl_805DEA50, global
+	.float 0
+.endobj lbl_805DEA50
+
+# .sdata2:0xDC | 0x805DEA54 | size: 0x4
+.obj lbl_805DEA54, global
+	.float 1
+.endobj lbl_805DEA54
+
+# .sdata2:0xE0 | 0x805DEA58 | size: 0x4
+.obj lbl_805DEA58, global
+	.float -1
+.endobj lbl_805DEA58
+	.4byte 0x00000000
+
+# .sdata2:0xE8 | 0x805DEA60 | size: 0x8
+.obj lbl_805DEA60, global
+	.double 0.5
+.endobj lbl_805DEA60
+
+# .sdata2:0xF0 | 0x805DEA68 | size: 0x8
+.obj lbl_805DEA68, global
+	.double 3
+.endobj lbl_805DEA68
+
+# .sdata2:0xF8 | 0x805DEA70 | size: 0x4
+.obj lbl_805DEA70, global
+	.float 3.1415927
+.endobj lbl_805DEA70
+
+# .sdata2:0xFC | 0x805DEA74 | size: 0x4
+.obj lbl_805DEA74, global
+	.float 0.00001
+.endobj lbl_805DEA74
+
+# .sdata2:0x100 | 0x805DEA78 | size: 0x8
+.obj lbl_805DEA78, global
+	.double 1
+.endobj lbl_805DEA78
+
+# .sdata2:0x108 | 0x805DEA80 | size: 0x4
+.obj lbl_805DEA80, global
+	.float 0.5
+.endobj lbl_805DEA80
+	.4byte 0x00000000
+
+# .sdata2:0x110 | 0x805DEA88 | size: 0x8
+.obj lbl_805DEA88, global
+	.double 1.5707963267948966
+.endobj lbl_805DEA88
+
+# .sdata2:0x118 | 0x805DEA90 | size: 0x4
+.obj lbl_805DEA90, global
+	.float 2
+.endobj lbl_805DEA90
+	.4byte 0x00000000
+
+# .sdata2:0x120 | 0x805DEA98 | size: 0x8
+.obj lbl_805DEA98, global
+	.double 6.283185307179586
+.endobj lbl_805DEA98
+
+# .sdata2:0x128 | 0x805DEAA0 | size: 0x8
+.obj lbl_805DEAA0, global
+	.double 3.141592653589793
+.endobj lbl_805DEAA0
+
+# .sdata2:0x130 | 0x805DEAA8 | size: 0x4
+.obj lbl_805DEAA8, global
+	.float 0.16666669
+.endobj lbl_805DEAA8
+
+# .sdata2:0x134 | 0x805DEAAC | size: 0x4
+.obj lbl_805DEAAC, global
+	.float 0.008332824
+.endobj lbl_805DEAAC
+
+# .sdata2:0x138 | 0x805DEAB0 | size: 0x4
+.obj lbl_805DEAB0, global
+	.float 0.00019587841
+.endobj lbl_805DEAB0
+
+# .sdata2:0x13C | 0x805DEAB4 | size: 0x4
+.obj lbl_805DEAB4, global
+	.float 0.9999998
+.endobj lbl_805DEAB4
+
+# .sdata2:0x140 | 0x805DEAB8 | size: 0x4
+.obj lbl_805DEAB8, global
+	.float 0.49999395
+.endobj lbl_805DEAB8
+
+# .sdata2:0x144 | 0x805DEABC | size: 0x4
+.obj lbl_805DEABC, global
+	.float 0.04163633
+.endobj lbl_805DEABC
+
+# .sdata2:0x148 | 0x805DEAC0 | size: 0x4
+.obj lbl_805DEAC0, global
+	.float 0.0013400711
+.endobj lbl_805DEAC0
+	.4byte 0x00000000
+
+# .sdata2:0x150 | 0x805DEAC8 | size: 0x8
+.obj lbl_805DEAC8, global
+	.double 0.7853981633974483
+.endobj lbl_805DEAC8
+
+# .sdata2:0x158 | 0x805DEAD0 | size: 0x4
+.obj lbl_805DEAD0, global
+	.float -0.93
+.endobj lbl_805DEAD0

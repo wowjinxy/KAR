@@ -2390,3 +2390,271 @@
 /* 80185938 00182738  38 21 00 10 */	addi r1, r1, 0x10
 /* 8018593C 0018273C  4E 80 00 20 */	blr
 .endfn kar_mnlandialogue_destroy_sboard_bg_panel
+
+# 0x804AD6B8..0x804AD810 | size: 0x158
+.data
+.balign 8
+
+# .data:0x0 | 0x804AD6B8 | size: 0x10
+.obj kar_src_mnlandialogue_c, global
+	.string "mnlandialogue.c"
+.endobj kar_src_mnlandialogue_c
+
+# .data:0x10 | 0x804AD6C8 | size: 0x1E
+.obj kar_mnlandialogue_scene_models_name, global
+	.string "ScMenLanDialogue_scene_models"
+.endobj kar_mnlandialogue_scene_models_name
+
+# .data:0x2E | 0x804AD6E6 | size: 0x2
+.obj gap_07_804AD6E6_data, global
+.hidden gap_07_804AD6E6_data
+	.2byte 0x0000
+.endobj gap_07_804AD6E6_data
+
+# .data:0x30 | 0x804AD6E8 | size: 0x1D
+.obj kar_mnlandialogue_connect_scene_models_name, global
+	.string "ScMenLanConnect_scene_models"
+.endobj kar_mnlandialogue_connect_scene_models_name
+
+# .data:0x4D | 0x804AD705 | size: 0x3
+.obj gap_07_804AD705_data, global
+.hidden gap_07_804AD705_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804AD705_data
+
+# .data:0x50 | 0x804AD708 | size: 0x1A
+.obj kar_mnlandialogue_wait_scene_models_name, global
+	.string "ScMenLanWait_scene_models"
+.endobj kar_mnlandialogue_wait_scene_models_name
+
+# .data:0x6A | 0x804AD722 | size: 0x6
+.obj gap_07_804AD722_data, global
+.hidden gap_07_804AD722_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804AD722_data
+
+# .data:0x70 | 0x804AD728 | size: 0x1C
+.obj kar_mnlandialogue_select_scene_models_name, global
+	.string "ScMenLanSelect_scene_models"
+.endobj kar_mnlandialogue_select_scene_models_name
+
+# .data:0x8C | 0x804AD744 | size: 0x4
+.obj gap_07_804AD744_data, global
+.hidden gap_07_804AD744_data
+	.4byte 0x00000000
+.endobj gap_07_804AD744_data
+
+# .data:0x90 | 0x804AD748 | size: 0x1D
+.obj kar_mnlandialogue_airride_scene_models_name, global
+	.string "ScMenLanAirride_scene_models"
+.endobj kar_mnlandialogue_airride_scene_models_name
+
+# .data:0xAD | 0x804AD765 | size: 0x3
+.obj gap_07_804AD765_data, global
+.hidden gap_07_804AD765_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804AD765_data
+
+# .data:0xB0 | 0x804AD768 | size: 0x1A
+.obj kar_mnlandialogue_city_scene_models_name, global
+	.string "ScMenLanCity_scene_models"
+.endobj kar_mnlandialogue_city_scene_models_name
+
+# .data:0xCA | 0x804AD782 | size: 0x6
+.obj gap_07_804AD782_data, global
+.hidden gap_07_804AD782_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804AD782_data
+
+# .data:0xD0 | 0x804AD788 | size: 0x1A
+.obj kar_mnlandialogue_time_scene_models_name, global
+	.string "ScMenLanTime_scene_models"
+.endobj kar_mnlandialogue_time_scene_models_name
+
+# .data:0xEA | 0x804AD7A2 | size: 0x6
+.obj gap_07_804AD7A2_data, global
+.hidden gap_07_804AD7A2_data
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_07_804AD7A2_data
+
+# .data:0xF0 | 0x804AD7A8 | size: 0x68
+.obj kar_mnlandialogue_sboard_bg_scene_models_name, global
+	.4byte 0x53634D65
+	.4byte 0x6E53626F
+	.4byte 0x61726442
+	.4byte 0x675F7363
+	.4byte 0x656E655F
+	.4byte 0x6D6F6465
+	.4byte 0x6C730000
+	.4byte 0x62657374
+	.4byte 0x72617062
+	.4byte 0x675F676F
+	.4byte 0x626A2069
+	.4byte 0x73204E55
+	.4byte 0x4C4C210A
+	.4byte 0x00000000
+	.4byte 0x6D6E6265
+	.4byte 0x73747261
+	.4byte 0x7062672E
+	.4byte 0x63000000
+	.4byte 0x62657374
+	.4byte 0x7261705F
+	.4byte 0x6B696E64
+	.4byte 0x20256420
+	.4byte 0x69732069
+	.4byte 0x6C6C6567
+	.4byte 0x616C210A
+	.4byte 0x00000000
+.endobj kar_mnlandialogue_sboard_bg_scene_models_name
+
+# 0x805D6E38..0x805D6E50 | size: 0x18
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6E38 | size: 0x7
+.obj kar_srcfile_jobj_h_805d6e38, global
+	.string "jobj.h"
+.endobj kar_srcfile_jobj_h_805d6e38
+
+# .sdata:0x7 | 0x805D6E3F | size: 0x1
+.obj gap_09_805D6E3F_sdata, global
+.hidden gap_09_805D6E3F_sdata
+	.byte 0x00
+.endobj gap_09_805D6E3F_sdata
+
+# .sdata:0x8 | 0x805D6E40 | size: 0x5
+.obj lbl_805D6E40, global
+	.string "jobj"
+.endobj lbl_805D6E40
+
+# .sdata:0xD | 0x805D6E45 | size: 0x3
+.obj gap_09_805D6E45_sdata, global
+.hidden gap_09_805D6E45_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D6E45_sdata
+
+# .sdata:0x10 | 0x805D6E48 | size: 0x2
+.obj lbl_805D6E48, global
+	.string "0"
+.endobj lbl_805D6E48
+
+# .sdata:0x12 | 0x805D6E4A | size: 0x6
+.obj gap_09_805D6E4A_sdata, global
+.hidden gap_09_805D6E4A_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6E4A_sdata
+
+# 0x805E0E80..0x805E0EE0 | size: 0x60
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E0E80 | size: 0x4
+.obj lbl_805E0E80, global
+	.float 0
+.endobj lbl_805E0E80
+
+# .sdata2:0x4 | 0x805E0E84 | size: 0x4
+.obj lbl_805E0E84, global
+	.float 1
+.endobj lbl_805E0E84
+
+# .sdata2:0x8 | 0x805E0E88 | size: 0x4
+.obj lbl_805E0E88, global
+	.float 2
+.endobj lbl_805E0E88
+
+# .sdata2:0xC | 0x805E0E8C | size: 0x4
+.obj lbl_805E0E8C, global
+	.float 3
+.endobj lbl_805E0E8C
+
+# .sdata2:0x10 | 0x805E0E90 | size: 0x8
+.obj lbl_805E0E90, global
+	.float 4
+	.float 0
+.endobj lbl_805E0E90
+
+# .sdata2:0x18 | 0x805E0E98 | size: 0x4
+.obj lbl_805E0E98, global
+	.float 0
+.endobj lbl_805E0E98
+
+# .sdata2:0x1C | 0x805E0E9C | size: 0x4
+.obj lbl_805E0E9C, global
+	.float 1
+.endobj lbl_805E0E9C
+
+# .sdata2:0x20 | 0x805E0EA0 | size: 0x4
+.obj lbl_805E0EA0, global
+	.float 0
+.endobj lbl_805E0EA0
+
+# .sdata2:0x24 | 0x805E0EA4 | size: 0x4
+.obj lbl_805E0EA4, global
+	.float 1
+.endobj lbl_805E0EA4
+
+# .sdata2:0x28 | 0x805E0EA8 | size: 0x4
+.obj lbl_805E0EA8, global
+	.float 0
+.endobj lbl_805E0EA8
+
+# .sdata2:0x2C | 0x805E0EAC | size: 0x4
+.obj lbl_805E0EAC, global
+	.float 1
+.endobj lbl_805E0EAC
+
+# .sdata2:0x30 | 0x805E0EB0 | size: 0x8
+.obj lbl_805E0EB0, global
+	.float 2
+	.float 0
+.endobj lbl_805E0EB0
+
+# .sdata2:0x38 | 0x805E0EB8 | size: 0x4
+.obj lbl_805E0EB8, global
+	.float 0
+.endobj lbl_805E0EB8
+
+# .sdata2:0x3C | 0x805E0EBC | size: 0x4
+.obj lbl_805E0EBC, global
+	.float 1
+.endobj lbl_805E0EBC
+
+# .sdata2:0x40 | 0x805E0EC0 | size: 0x4
+.obj lbl_805E0EC0, global
+	.float 0
+.endobj lbl_805E0EC0
+
+# .sdata2:0x44 | 0x805E0EC4 | size: 0x4
+.obj lbl_805E0EC4, global
+	.float 1
+.endobj lbl_805E0EC4
+
+# .sdata2:0x48 | 0x805E0EC8 | size: 0x4
+.obj lbl_805E0EC8, global
+	.float 2
+.endobj lbl_805E0EC8
+
+# .sdata2:0x4C | 0x805E0ECC | size: 0x4
+.obj lbl_805E0ECC, global
+	.float 3
+.endobj lbl_805E0ECC
+
+# .sdata2:0x50 | 0x805E0ED0 | size: 0x8
+.obj lbl_805E0ED0, global
+	.double 4503601774854144
+.endobj lbl_805E0ED0
+
+# .sdata2:0x58 | 0x805E0ED8 | size: 0x4
+.obj lbl_805E0ED8, global
+	.float 0
+.endobj lbl_805E0ED8
+
+# .sdata2:0x5C | 0x805E0EDC | size: 0x4
+.obj lbl_805E0EDC, global
+	.float 1
+.endobj lbl_805E0EDC

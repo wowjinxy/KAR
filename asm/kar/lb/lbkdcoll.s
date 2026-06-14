@@ -7251,3 +7251,760 @@
 /* 80077724 00074524  38 21 00 30 */	addi r1, r1, 0x30
 /* 80077728 00074528  4E 80 00 20 */	blr
 .endfn kar_lbkdcoll__near_8007744c
+
+# 0x80489648..0x80489C68 | size: 0x620
+.rodata
+.balign 8
+
+# .rodata:0x0 | 0x80489648 | size: 0x620
+.obj kar_resource_load_table_common_80489648, global
+	.4byte 0x02000000
+	.4byte kar_linkfile_lbrumble_dat_80499ddc
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_stage_dat_80499dec
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_gmdata_dat_80499df8
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_lbmcgame_dat_80499e04
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_mnmemiconall_dat_80499e14
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_pldata_dat_80499e28
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_enemy_dat_80499e34
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_lbbgflash_dat_80499e40
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_dbcommon_dat_80499e50
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_cmcommon_dat_80499e60
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_rdcommon_dat_80499e70
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_itcommon_dat_80499e80
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_grcommon_dat_80499e90
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_ykcommon_dat_80499ea0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_wncommon_dat_80499eb0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vccommon_dat_80499ec0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_rdkirby_dat_80499ed0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_ifall1c_dat_80499edc
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_efcommon_dat_80499ee8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_efptclvehicle_dat_80499ef8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_embroomdata_dat_80499f0c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_embrontdata_dat_80499f1c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emscarfydata_dat_80499f2c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emsworddata_dat_80499f40
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emcappydata_dat_80499f50
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emwheeliedata_dat_80499f60
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emelephantdata_dat_80499f74
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emnoddydata_dat_80499f88
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emchillydata_dat_80499f98
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emflappydata_dat_80499fac
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emplasmadata_dat_80499fc0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emgordodata_dat_80499fd4
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_embombbonedata_dat_80499fe4
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_empichicridata_dat_80499ff8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emdayldata_dat_8049a00c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emwalkydata_dat_8049a01c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_emdeedata_dat_8049a02c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_pldata_dat_80499e28
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_enemy_dat_80499e34
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_lbbgflash_dat_80499e40
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_dbcommon_dat_80499e50
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_cmcommon_dat_80499e60
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_rdcommon_dat_80499e70
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_itcommon_dat_80499e80
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_grcommon_dat_80499e90
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_ykcommon_dat_80499ea0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_wncommon_dat_80499eb0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vccommon_dat_80499ec0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_rdkirby_dat_80499ed0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_ifall1c_dat_80499edc
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_efcommon_dat_80499ee8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_efptclvehicle_dat_80499ef8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstar_dat_8049a03c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstardevil_dat_8049a048
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarflight_dat_8049a058
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarformula_dat_8049a06c
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarheavy_dat_8049a080
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarjet_dat_8049a090
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarlight_dat_8049a0a0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarnormal_dat_8049a0b0
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarrocket_dat_8049a0c4
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarruins_dat_8049a0d8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarslick_dat_8049a0e8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarturbo_dat_8049a0f8
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarwagon_dat_8049a108
+	.4byte 0x00000000
+	.4byte 0x05000000
+	.4byte kar_linkfile_vcstarwing_dat_8049a118
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte kar_linkfile_a2item_dat_8049a128
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte kar_linkfile_a2kirby_dat_8049a134
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte kar_linkfile_a2texture_dat_8049a140
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte kar_linkfile_a2window_dat_8049a150
+	.4byte 0x00000000
+	.4byte 0x01000000
+	.4byte kar_linkfile_a2info_dat_8049a160
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_pldata_dat_80499e28
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_enemy_dat_80499e34
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_lbbgflash_dat_80499e40
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_dbcommon_dat_80499e50
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_cmcommon_dat_80499e60
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_rdcommon_dat_80499e70
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_itcommon_dat_80499e80
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_grcommon_dat_80499e90
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_ykcommon_dat_80499ea0
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_wncommon_dat_80499eb0
+	.4byte 0x00000000
+	.4byte 0x02000000
+	.4byte kar_linkfile_vccommon_dat_80499ec0
+	.4byte 0x00000000
+	.4byte kar_linkfile_rdkirbymotiondemo_dat_8049a16c
+	.4byte kar_linkfile_rdkirbymotion_dat_8049a184
+	.4byte kar_linkfile_rdkirbymotionwalk_dat_8049a198
+	.4byte kar_linkfile_rdkirbyability_dat_8049a1b0
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x02020000
+	.4byte kar_linkfile_vcstar_dat_8049a03c
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x02020000
+	.4byte kar_linkfile_vcwheel_dat_8049a1c4
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x02020000
+	.4byte kar_linkfile_vcwingkirby_dat_8049a1d0
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x02020000
+	.4byte kar_linkfile_vcwheelkirby_dat_8049a1e0
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_pldata_dat_80499e28
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_lbbgflash_dat_80499e40
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_cmcommon_dat_80499e60
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_rdcommon_dat_80499e70
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_itcommon_dat_80499e80
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_grcommon_dat_80499e90
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_vccommon_dat_80499ec0
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_efptclvehicle_dat_80499ef8
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_efptclmenu_dat_8049a1f4
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_rdkirby_dat_80499ed0
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_rdkirbymotiondemo_dat_8049a16c
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_vcstar_dat_8049a03c
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_vcstarfree_dat_8049a204
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg00_dat_8049a214
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg01_dat_8049a224
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg03_dat_8049a234
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg04_dat_8049a244
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg05_dat_8049a254
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg08_dat_8049a264
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efbg0a_dat_8049a274
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20050000
+	.4byte kar_linkfile_a2efcom_dat_8049a284
+	.4byte 0x00000000
+	.4byte 0x00000001
+	.4byte 0x00000002
+	.4byte 0x20010000
+	.4byte kar_linkfile_a2item_dat_8049a128
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20010000
+	.4byte kar_linkfile_a2kirby_dat_8049a134
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20010000
+	.4byte kar_linkfile_a2texture_dat_8049a140
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20010000
+	.4byte kar_linkfile_a2window_dat_8049a150
+	.4byte 0x00000000
+	.4byte 0x00000002
+	.4byte 0x20010000
+	.4byte kar_linkfile_a2info_dat_8049a160
+	.4byte 0x00000000
+.endobj kar_resource_load_table_common_80489648
+
+# 0x80499CA8..0x80499DC8 | size: 0x120
+.data
+.balign 8
+
+# .data:0x0 | 0x80499CA8 | size: 0x22
+.obj lbl_80499CA8, global
+	.string "not find FreeLbKdColl!! kcp = %x\n"
+.endobj lbl_80499CA8
+
+# .data:0x22 | 0x80499CCA | size: 0x2
+.obj gap_07_80499CCA_data, global
+.hidden gap_07_80499CCA_data
+	.2byte 0x0000
+.endobj gap_07_80499CCA_data
+
+# .data:0x24 | 0x80499CCC | size: 0xB
+.obj kar_src_lbkdcoll_80499ccc, global
+	.string "lbkdcoll.c"
+.endobj kar_src_lbkdcoll_80499ccc
+
+# .data:0x2F | 0x80499CD7 | size: 0x1
+.obj gap_07_80499CD7_data, global
+.hidden gap_07_80499CD7_data
+	.byte 0x00
+.endobj gap_07_80499CD7_data
+
+# .data:0x30 | 0x80499CD8 | size: 0xD
+.obj kar_linkfile_lbrumble_dat_80499cd8, global
+	.string "LbRumble.dat"
+.endobj kar_linkfile_lbrumble_dat_80499cd8
+
+# .data:0x3D | 0x80499CE5 | size: 0x3
+.obj gap_07_80499CE5_data, global
+.hidden gap_07_80499CE5_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80499CE5_data
+
+# .data:0x40 | 0x80499CE8 | size: 0xD
+.obj lbl_80499CE8, global
+	.string "lbRumbleData"
+.endobj lbl_80499CE8
+
+# .data:0x4D | 0x80499CF5 | size: 0x3
+.obj gap_07_80499CF5_data, global
+.hidden gap_07_80499CF5_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80499CF5_data
+
+# .data:0x50 | 0x80499CF8 | size: 0xE
+.obj kar_linkfile_lbbgflash_dat_80499cf8, global
+	.string "LbBgFlash.dat"
+.endobj kar_linkfile_lbbgflash_dat_80499cf8
+
+# .data:0x5E | 0x80499D06 | size: 0x2
+.obj gap_07_80499D06_data, global
+.hidden gap_07_80499D06_data
+	.2byte 0x0000
+.endobj gap_07_80499D06_data
+
+# .data:0x60 | 0x80499D08 | size: 0x15
+.obj lbl_80499D08, global
+	.string "lbBgFlashColAnimData"
+.endobj lbl_80499D08
+
+# .data:0x75 | 0x80499D1D | size: 0x3
+.obj gap_07_80499D1D_data, global
+.hidden gap_07_80499D1D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80499D1D_data
+
+# .data:0x78 | 0x80499D20 | size: 0x80
+.obj lbl_80499D20, global
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x0000003B
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x13000000
+	.4byte 0x00000000
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x13000000
+	.4byte 0x00000000
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x13000000
+	.4byte 0x00000000
+	.4byte 0xFFFFFFFF
+	.4byte 0xFFFFFFFF
+	.4byte 0x13000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0xFF000000
+.endobj lbl_80499D20
+
+# .data:0xF8 | 0x80499DA0 | size: 0x28
+.obj lbl_80499DA0, global
+	.4byte 0x00000000
+	.4byte 0xFF00FFFF
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj lbl_80499DA0
+
+# 0x80550ED8..0x80552348 | size: 0x1470
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80550ED8 | size: 0x30
+.obj lbl_80550ED8, global
+	.skip 0x30
+.endobj lbl_80550ED8
+
+# .bss:0x30 | 0x80550F08 | size: 0x30
+.obj lbl_80550F08, global
+	.skip 0x30
+.endobj lbl_80550F08
+
+# .bss:0x60 | 0x80550F38 | size: 0x30
+.obj lbl_80550F38, global
+	.skip 0x30
+.endobj lbl_80550F38
+
+# .bss:0x90 | 0x80550F68 | size: 0x13D0
+.obj kar_resource_load_config_queue_80550f68, global
+	.skip 0x13D0
+.endobj kar_resource_load_config_queue_80550f68
+
+# .bss:0x1460 | 0x80552338 | size: 0x10
+.obj lbl_80552338, global
+	.skip 0x10
+.endobj lbl_80552338
+
+# 0x805D5390..0x805D53C0 | size: 0x30
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5390 | size: 0x2
+.obj lbl_805D5390, global
+	.string "0"
+.endobj lbl_805D5390
+
+# .sdata:0x2 | 0x805D5392 | size: 0x6
+.obj gap_09_805D5392_sdata, global
+.hidden gap_09_805D5392_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D5392_sdata
+
+# .sdata:0x8 | 0x805D5398 | size: 0x8
+.obj kar_srcfile_lbdvd_c_805d5398, global
+	.string "lbdvd.c"
+.endobj kar_srcfile_lbdvd_c_805d5398
+
+# .sdata:0x10 | 0x805D53A0 | size: 0x8
+.obj lbl_805D53A0, global
+	.string "%d, %d\n"
+.endobj lbl_805D53A0
+
+# .sdata:0x18 | 0x805D53A8 | size: 0x2
+.obj lbl_805D53A8, global
+	.string "0"
+.endobj lbl_805D53A8
+
+# .sdata:0x1A | 0x805D53AA | size: 0x2
+.obj gap_09_805D53AA_sdata, global
+.hidden gap_09_805D53AA_sdata
+	.2byte 0x0000
+.endobj gap_09_805D53AA_sdata
+
+# .sdata:0x1C | 0x805D53AC | size: 0xC
+.obj lbl_805D53AC, global
+	.4byte 0x00000004
+	.4byte 0x00000006
+	.4byte 0x00000000
+.endobj lbl_805D53AC
+
+# .sdata:0x28 | 0x805D53B8 | size: 0x4
+.obj lbl_805D53B8, global
+	.4byte 0x00000000
+.endobj lbl_805D53B8
+
+# .sdata:0x2C | 0x805D53BC | size: 0x3
+.obj lbl_805D53BC, global
+	.string "%s"
+.endobj lbl_805D53BC
+
+# .sdata:0x2F | 0x805D53BF | size: 0x1
+.obj gap_09_805D53BF_sdata, global
+.hidden gap_09_805D53BF_sdata
+	.byte 0x00
+.endobj gap_09_805D53BF_sdata
+
+# 0x805DD5C8..0x805DD5EC | size: 0x24
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD5C8 | size: 0x8
+.obj lbl_805DD5C8, global
+	.skip 0x8
+.endobj lbl_805DD5C8
+
+# .sbss:0x8 | 0x805DD5D0 | size: 0x8
+.obj lbl_805DD5D0, global
+	.skip 0x8
+.endobj lbl_805DD5D0
+
+# .sbss:0x10 | 0x805DD5D8 | size: 0x8
+.obj lbl_805DD5D8, global
+	.skip 0x8
+.endobj lbl_805DD5D8
+
+# .sbss:0x18 | 0x805DD5E0 | size: 0x8
+.obj lbl_805DD5E0, global
+	.skip 0x8
+.endobj lbl_805DD5E0
+
+# .sbss:0x20 | 0x805DD5E8 | size: 0x4
+.obj lbl_805DD5E8, global
+	.skip 0x4
+.endobj lbl_805DD5E8
+
+# 0x805DECD8..0x805DED50 | size: 0x78
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DECD8 | size: 0x4
+.obj lbl_805DECD8, global
+	.float 0
+.endobj lbl_805DECD8
+
+# .sdata2:0x4 | 0x805DECDC | size: 0x4
+.obj lbl_805DECDC, global
+	.float 0.01
+.endobj lbl_805DECDC
+
+# .sdata2:0x8 | 0x805DECE0 | size: 0x4
+.obj lbl_805DECE0, global
+	.float 0.5
+.endobj lbl_805DECE0
+	.4byte 0x00000000
+
+# .sdata2:0x10 | 0x805DECE8 | size: 0x8
+.obj lbl_805DECE8, global
+	.double 4503601774854144
+.endobj lbl_805DECE8
+
+# .sdata2:0x18 | 0x805DECF0 | size: 0x4
+.obj lbl_805DECF0, global
+	.float 1
+.endobj lbl_805DECF0
+	.4byte 0x00000000
+
+# .sdata2:0x20 | 0x805DECF8 | size: 0x8
+.obj lbl_805DECF8, global
+	.double 4503599627370496
+.endobj lbl_805DECF8
+
+# .sdata2:0x28 | 0x805DED00 | size: 0x4
+.obj lbl_805DED00, global
+	.float 0.67
+.endobj lbl_805DED00
+
+# .sdata2:0x2C | 0x805DED04 | size: 0x4
+.obj lbl_805DED04, global
+	.float 0.75
+.endobj lbl_805DED04
+
+# .sdata2:0x30 | 0x805DED08 | size: 0x4
+.obj lbl_805DED08, global
+	.float 0.58
+.endobj lbl_805DED08
+
+# .sdata2:0x34 | 0x805DED0C | size: 0x4
+.obj lbl_805DED0C, global
+	.float 0.7
+.endobj lbl_805DED0C
+
+# .sdata2:0x38 | 0x805DED10 | size: 0x4
+.obj lbl_805DED10, global
+	.float 0
+.endobj lbl_805DED10
+
+# .sdata2:0x3C | 0x805DED14 | size: 0x4
+.obj lbl_805DED14, global
+	.float -68
+.endobj lbl_805DED14
+
+# .sdata2:0x40 | 0x805DED18 | size: 0x8
+.obj lbl_805DED18, global
+	.float -34
+	.float 0
+.endobj lbl_805DED18
+
+# .sdata2:0x48 | 0x805DED20 | size: 0x4
+.obj lbl_805DED20, global
+	.float 0.016666668
+.endobj lbl_805DED20
+	.4byte 0x00000000
+
+# .sdata2:0x50 | 0x805DED28 | size: 0x8
+.obj lbl_805DED28, global
+	.double 4503599627370496
+.endobj lbl_805DED28
+
+# .sdata2:0x58 | 0x805DED30 | size: 0x4
+.obj lbl_805DED30, global
+	.4byte 0xFF910000
+.endobj lbl_805DED30
+
+# .sdata2:0x5C | 0x805DED34 | size: 0x4
+.obj lbl_805DED34, global
+	.4byte 0xFF760044
+.endobj lbl_805DED34
+
+# .sdata2:0x60 | 0x805DED38 | size: 0x4
+.obj lbl_805DED38, global
+	.4byte 0x6600FF32
+.endobj lbl_805DED38
+
+# .sdata2:0x64 | 0x805DED3C | size: 0x4
+.obj lbl_805DED3C, global
+	.4byte 0x94009494
+.endobj lbl_805DED3C
+
+# .sdata2:0x68 | 0x805DED40 | size: 0x4
+.obj lbl_805DED40, global
+	.4byte 0xCB0005CF
+.endobj lbl_805DED40
+
+# .sdata2:0x6C | 0x805DED44 | size: 0x4
+.obj lbl_805DED44, global
+	.4byte 0x00FF0000
+.endobj lbl_805DED44
+
+# .sdata2:0x70 | 0x805DED48 | size: 0x8
+.obj lbl_805DED48, global
+	.float 0
+	.float 0
+.endobj lbl_805DED48

@@ -735,3 +735,44 @@
 /* 800DE0E0 000DAEE0  38 21 00 10 */	addi r1, r1, 0x10
 /* 800DE0E4 000DAEE4  4E 80 00 20 */	blr
 .endfn kar_grzonecover__near_800de0c8
+
+# 0x804A4170..0x804A4180 | size: 0x10
+.data
+.balign 8
+
+# .data:0x0 | 0x804A4170 | size: 0xE
+.obj kar_src_grzonecover_804a4170, global
+	.string "grzonecover.c"
+.endobj kar_src_grzonecover_804a4170
+
+# .data:0xE | 0x804A417E | size: 0x2
+.obj gap_07_804A417E_data, global
+.hidden gap_07_804A417E_data
+	.2byte 0x0000
+.endobj gap_07_804A417E_data
+
+# 0x805D6110..0x805D6118 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D6110 | size: 0x2
+.obj lbl_805D6110, global
+	.string "0"
+.endobj lbl_805D6110
+
+# .sdata:0x2 | 0x805D6112 | size: 0x6
+.obj gap_09_805D6112_sdata, global
+.hidden gap_09_805D6112_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D6112_sdata
+
+# 0x805DF6C0..0x805DF6C8 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF6C0 | size: 0x8
+.obj lbl_805DF6C0, global
+	.float -1
+	.float 0
+.endobj lbl_805DF6C0

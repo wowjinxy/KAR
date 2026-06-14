@@ -654,3 +654,107 @@
 /* 80059D70 00056B70  38 21 00 10 */	addi r1, r1, 0x10
 /* 80059D74 00056B74  4E 80 00 20 */	blr
 .endfn kar_lbarchive__near_80059d50
+
+# 0x80498188..0x80498238 | size: 0xB0
+.data
+.balign 8
+
+# .data:0x0 | 0x80498188 | size: 0x19
+.obj lbl_80498188, global
+	.string "HSD_ArchiveParse error!\n"
+.endobj lbl_80498188
+
+# .data:0x19 | 0x804981A1 | size: 0x3
+.obj gap_07_804981A1_data, global
+.hidden gap_07_804981A1_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804981A1_data
+
+# .data:0x1C | 0x804981A4 | size: 0xC
+.obj kar_src_lbarchive_804981a4, global
+	.string "lbarchive.c"
+.endobj kar_src_lbarchive_804981a4
+
+# .data:0x28 | 0x804981B0 | size: 0x18
+.obj lbl_804981B0, global
+	.string "Cannot find symbol %s.\n"
+.endobj lbl_804981B0
+
+# .data:0x40 | 0x804981C8 | size: 0x70
+.obj lbl_804981C8, global
+	.4byte 0x61726368
+	.4byte 0x6976652D
+	.4byte 0x3E666C61
+	.4byte 0x67732026
+	.4byte 0x20485344
+	.4byte 0x5F415243
+	.4byte 0x48495645
+	.4byte 0x5F444F4E
+	.4byte 0x545F4652
+	.4byte 0x45450000
+	.4byte 0x6C624172
+	.4byte 0x63686976
+	.4byte 0x6552656C
+	.4byte 0x6F636174
+	.4byte 0x653A2062
+	.4byte 0x7974652D
+	.4byte 0x6F726465
+	.4byte 0x72206D69
+	.4byte 0x736D6174
+	.4byte 0x63682120
+	.4byte 0x506C6561
+	.4byte 0x73652063
+	.4byte 0x6865636B
+	.4byte 0x20646174
+	.4byte 0x6120666F
+	.4byte 0x726D6174
+	.4byte 0x20257820
+	.4byte 0x25780A00
+.endobj lbl_804981C8
+
+# 0x805D5270..0x805D5290 | size: 0x20
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5270 | size: 0x2
+.obj lbl_805D5270, global
+	.string "0"
+.endobj lbl_805D5270
+
+# .sdata:0x2 | 0x805D5272 | size: 0x2
+.obj gap_09_805D5272_sdata, global
+.hidden gap_09_805D5272_sdata
+	.2byte 0x0000
+.endobj gap_09_805D5272_sdata
+
+# .sdata:0x4 | 0x805D5274 | size: 0x8
+.obj lbl_805D5274, global
+	.string "archive"
+.endobj lbl_805D5274
+
+# .sdata:0xC | 0x805D527C | size: 0x4
+.obj gap_09_805D527C_sdata, global
+.hidden gap_09_805D527C_sdata
+	.4byte 0x00000000
+.endobj gap_09_805D527C_sdata
+
+# .sdata:0x10 | 0x805D5280 | size: 0x5
+.obj lbl_805D5280, global
+	.string "none"
+.endobj lbl_805D5280
+
+# .sdata:0x15 | 0x805D5285 | size: 0x3
+.obj gap_09_805D5285_sdata, global
+.hidden gap_09_805D5285_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D5285_sdata
+
+# .sdata:0x18 | 0x805D5288 | size: 0x4
+.obj lbl_805D5288, global
+	.4byte 0x00000000
+.endobj lbl_805D5288
+
+# .sdata:0x1C | 0x805D528C | size: 0x4
+.obj lbl_805D528C, global
+	.4byte 0xFFFFFFFF
+.endobj lbl_805D528C

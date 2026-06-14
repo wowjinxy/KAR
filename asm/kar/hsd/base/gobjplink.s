@@ -1,7 +1,7 @@
 .include "macros.inc"
 .file "gobjplink.c"
 
-# 0x80428C50..0x804293F4 | size: 0x7A4
+# 0x80428C50..0x80429464 | size: 0x814
 .text
 .balign 4
 
@@ -584,3 +584,59 @@
 /* 804293EC 004261EC  38 21 00 30 */	addi r1, r1, 0x30
 /* 804293F0 004261F0  4E 80 00 20 */	blr
 .endfn HSD_GObjPLinkChange_Internal
+
+# .text:0x7A4 | 0x804293F4 | size: 0x3C
+.fn HSD_GObjPLinkChange, global
+/* 804293F4 004261F4  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 804293F8 004261F8  7C 08 02 A6 */	mflr r0
+/* 804293FC 004261FC  7C 67 1B 78 */	mr r7, r3
+/* 80429400 00426200  7C A6 2B 78 */	mr r6, r5
+/* 80429404 00426204  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80429408 00426208  7C 80 23 78 */	mr r0, r4
+/* 8042940C 0042620C  7C E4 3B 78 */	mr r4, r7
+/* 80429410 00426210  38 60 00 00 */	li r3, 0x0
+/* 80429414 00426214  7C 05 03 78 */	mr r5, r0
+/* 80429418 00426218  38 E0 00 00 */	li r7, 0x0
+/* 8042941C 0042621C  4B FF FC 31 */	bl HSD_GObjPLinkChange_Internal
+/* 80429420 00426220  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80429424 00426224  7C 08 03 A6 */	mtlr r0
+/* 80429428 00426228  38 21 00 10 */	addi r1, r1, 0x10
+/* 8042942C 0042622C  4E 80 00 20 */	blr
+.endfn HSD_GObjPLinkChange
+
+# .text:0x7E0 | 0x80429430 | size: 0x34
+.fn HSD_GObjPLinkChangeAfter, global
+/* 80429430 00426230  94 21 FF F0 */	stwu r1, -0x10(r1)
+/* 80429434 00426234  7C 08 02 A6 */	mflr r0
+/* 80429438 00426238  7C 87 23 78 */	mr r7, r4
+/* 8042943C 0042623C  90 01 00 14 */	stw r0, 0x14(r1)
+/* 80429440 00426240  88 A4 00 02 */	lbz r5, 0x2(r4)
+/* 80429444 00426244  7C 64 1B 78 */	mr r4, r3
+/* 80429448 00426248  88 C7 00 04 */	lbz r6, 0x4(r7)
+/* 8042944C 0042624C  38 60 00 03 */	li r3, 0x3
+/* 80429450 00426250  4B FF FB FD */	bl HSD_GObjPLinkChange_Internal
+/* 80429454 00426254  80 01 00 14 */	lwz r0, 0x14(r1)
+/* 80429458 00426258  7C 08 03 A6 */	mtlr r0
+/* 8042945C 0042625C  38 21 00 10 */	addi r1, r1, 0x10
+/* 80429460 00426260  4E 80 00 20 */	blr
+.endfn HSD_GObjPLinkChangeAfter
+
+# 0x80504DD8..0x80504E10 | size: 0x38
+.data
+.balign 8
+
+# .data:0x0 | 0x80504DD8 | size: 0xC
+.obj kar_src_gobjplink_80504dd8, global
+	.string "gobjplink.c"
+.endobj kar_src_gobjplink_80504dd8
+
+# .data:0xC | 0x80504DE4 | size: 0x29
+.obj lbl_80504DE4, global
+	.string "p_link <= HSD_GObjLibInitData.p_link_max"
+.endobj lbl_80504DE4
+
+# .data:0x35 | 0x80504E0D | size: 0x3
+.obj gap_07_80504E0D_data, global
+.hidden gap_07_80504E0D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80504E0D_data

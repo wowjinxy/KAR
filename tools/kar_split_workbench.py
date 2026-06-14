@@ -393,21 +393,26 @@ def generate_audit_markdown(
             f"{markdown_escape(format_assignments(counts))} |"
         )
 
+    auto_data_sections = [
+        sec for sec in data_sections if bool(sec["auto"]) and int(sec["size"]) > 0
+    ]
+    data_note = (
+        "No auto-owned data sections remain in the current report."
+        if not auto_data_sections
+        else "The largest remaining auto-owned data sections are listed below."
+    )
+
     lines.extend(
         [
             "",
             "## Auto Data Snapshot",
             "",
-            "The data sections are still mostly monolithic. Treat this as the next",
-            "major shiftability blocker after the largest text gaps.",
+            data_note,
             "",
             "| Section | Range | Size | Unit |",
             "| --- | --- | ---: | --- |",
         ]
     )
-    auto_data_sections = [
-        sec for sec in data_sections if bool(sec["auto"]) and int(sec["size"]) > 0
-    ]
     for sec in sorted(auto_data_sections, key=lambda item: int(item["size"]), reverse=True)[:20]:
         lines.append(
             "| "

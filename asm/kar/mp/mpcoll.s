@@ -267,3 +267,105 @@
 /* 80241784 0023E584  38 21 00 10 */	addi r1, r1, 0x10
 /* 80241788 0023E588  4E 80 00 20 */	blr
 .endfn kar_mpcoll_init_report_subpools
+
+# 0x804B5688..0x804B56D8 | size: 0x50
+.data
+.balign 8
+
+# .data:0x0 | 0x804B5688 | size: 0x9
+.obj kar_src_mpcoll_c, global
+	.string "mpcoll.c"
+.endobj kar_src_mpcoll_c
+
+# .data:0x9 | 0x804B5691 | size: 0x3
+.obj gap_07_804B5691_data, global
+.hidden gap_07_804B5691_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B5691_data
+
+# .data:0xC | 0x804B5694 | size: 0x9
+.obj kar_src_mpcoll_h, global
+	.string "mpcoll.h"
+.endobj kar_src_mpcoll_h
+
+# .data:0x15 | 0x804B569D | size: 0x3
+.obj gap_07_804B569D_data, global
+.hidden gap_07_804B569D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804B569D_data
+
+# .data:0x18 | 0x804B56A0 | size: 0x33
+.obj kar_mpcoll_assert_shape_is_sphere, global
+	.string "mpCollGetShapeKind(mcp) == Mp_CollShapeKind_Sphere"
+.endobj kar_mpcoll_assert_shape_is_sphere
+
+# .data:0x4B | 0x804B56D3 | size: 0x5
+.obj gap_07_804B56D3_data, global
+.hidden gap_07_804B56D3_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804B56D3_data
+
+# 0x8055DBC8..0x8055DD00 | size: 0x138
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x8055DBC8 | size: 0x2C
+.obj kar_mpcoll_handle_pool, global
+	.skip 0x2C
+.endobj kar_mpcoll_handle_pool
+
+# .bss:0x2C | 0x8055DBF4 | size: 0x2C
+.obj kar_mpcoll_sphere_shape_pool, global
+	.skip 0x2C
+.endobj kar_mpcoll_sphere_shape_pool
+
+# .bss:0x58 | 0x8055DC20 | size: 0x2C
+.obj kar_mpcoll_sphere_extra_pool_a, global
+	.skip 0x2C
+.endobj kar_mpcoll_sphere_extra_pool_a
+
+# .bss:0x84 | 0x8055DC4C | size: 0x2C
+.obj kar_mpcoll_sphere_rough_check_pool, global
+	.skip 0x2C
+.endobj kar_mpcoll_sphere_rough_check_pool
+
+# .bss:0xB0 | 0x8055DC78 | size: 0x2C
+.obj kar_mpcoll_report_pool, global
+	.skip 0x2C
+.endobj kar_mpcoll_report_pool
+
+# .bss:0xDC | 0x8055DCA4 | size: 0x2C
+.obj kar_mpcoll_report_detail_pool, global
+	.skip 0x2C
+.endobj kar_mpcoll_report_detail_pool
+
+# .bss:0x108 | 0x8055DCD0 | size: 0x30
+.obj kar_mpcoll_report_subentry_pool, global
+	.skip 0x30
+.endobj kar_mpcoll_report_subentry_pool
+
+# 0x805D7330..0x805D7338 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D7330 | size: 0x2
+.obj lbl_805D7330, global
+	.string "0"
+.endobj lbl_805D7330
+
+# .sdata:0x2 | 0x805D7332 | size: 0x6
+.obj gap_09_805D7332_sdata, global
+.hidden gap_09_805D7332_sdata
+	.4byte 0x00000000
+	.2byte 0x0000
+.endobj gap_09_805D7332_sdata
+
+# 0x805E2B40..0x805E2B48 | size: 0x8
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805E2B40 | size: 0x8
+.obj lbl_805E2B40, global
+	.double 4503601774854144
+.endobj lbl_805E2B40

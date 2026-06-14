@@ -157,3 +157,51 @@
 /* 80107574 00104374  38 21 00 20 */	addi r1, r1, 0x20
 /* 80107578 00104378  4E 80 00 20 */	blr
 .endfn kar_gryakubreakfan_cleanup_shared_allocs_and_fgm_handles
+
+# 0x804A6F08..0x804A6F90 | size: 0x88
+.data
+.balign 8
+
+# .data:0x0 | 0x804A6F08 | size: 0x20
+.obj kar_gryakubreakfloor_kind30_breakfan_callback_table, global
+	.4byte kar_gryakubreakfloor_configure_kind30_breakfan_fgm
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte kar_gryakubreakfloor_update_kind30_breakfan_effects_then_destroy
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind30_breakfan_callback_table
+
+# .data:0x20 | 0x804A6F28 | size: 0x14
+.obj kar_gryakubreakfloor_kind30_breakfan_callback_table_ptr, global
+	.4byte kar_gryakubreakfloor_kind30_breakfan_callback_table
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+	.4byte 0x00000000
+.endobj kar_gryakubreakfloor_kind30_breakfan_callback_table_ptr
+
+# .data:0x34 | 0x804A6F3C | size: 0x11
+.obj kar_src_gryakubreakfan_c, global
+	.string "gryakubreakfan.c"
+.endobj kar_src_gryakubreakfan_c
+
+# .data:0x45 | 0x804A6F4D | size: 0x3
+.obj gap_07_804A6F4D_data, global
+.hidden gap_07_804A6F4D_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A6F4D_data
+
+# .data:0x48 | 0x804A6F50 | size: 0x39
+.obj kar_gryakubreakfan_assert_remove_effect_count, global
+	.string "param->efBreakNum <= GrYakuBreakFan_RemoveEffectIdNumMax"
+.endobj kar_gryakubreakfan_assert_remove_effect_count
+
+# .data:0x81 | 0x804A6F89 | size: 0x7
+.obj gap_07_804A6F89_data, global
+.hidden gap_07_804A6F89_data
+	.4byte 0x00000000
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A6F89_data

@@ -1049,3 +1049,95 @@
 /* 800DC7DC 000D95DC  98 04 00 03 */	stb r0, 0x3(r4)
 /* 800DC7E0 000D95E0  4E 80 00 20 */	blr
 .endfn kar_granim__near_800dc7a4
+
+# 0x804A3EE0..0x804A3F18 | size: 0x38
+.data
+.balign 8
+
+# .data:0x0 | 0x804A3EE0 | size: 0x9
+.obj kar_src_granim_804a3ee0, global
+	.string "granim.c"
+.endobj kar_src_granim_804a3ee0
+
+# .data:0x9 | 0x804A3EE9 | size: 0x3
+.obj gap_07_804A3EE9_data, global
+.hidden gap_07_804A3EE9_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_804A3EE9_data
+
+# .data:0xC | 0x804A3EEC | size: 0xF
+.obj lbl_804A3EEC, global
+	.string "parts_num != 0"
+.endobj lbl_804A3EEC
+
+# .data:0x1B | 0x804A3EFB | size: 0x5
+.obj gap_07_804A3EFB_data, global
+.hidden gap_07_804A3EFB_data
+	.4byte 0x00000000
+	.byte 0x00
+.endobj gap_07_804A3EFB_data
+
+# .data:0x20 | 0x804A3F00 | size: 0x14
+.obj lbl_804A3F00, global
+	.string "!HSD_FogGetAdj(fog)"
+.endobj lbl_804A3F00
+
+# .data:0x34 | 0x804A3F14 | size: 0x4
+.obj gap_07_804A3F14_data, global
+.hidden gap_07_804A3F14_data
+	.4byte 0x00000000
+.endobj gap_07_804A3F14_data
+
+# 0x80557584..0x805575DC | size: 0x58
+.section .bss, "wa", @nobits
+.balign 4
+
+# .bss:0x0 | 0x80557584 | size: 0x2C
+.obj gryaku_userdata_objalloc_data, global
+	.skip 0x2C
+.endobj gryaku_userdata_objalloc_data
+
+# .bss:0x2C | 0x805575B0 | size: 0x2C
+.obj lbl_805575B0, global
+	.skip 0x2C
+.endobj lbl_805575B0
+
+# 0x805D60D8..0x805D60E0 | size: 0x8
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D60D8 | size: 0x8
+.obj kar_srcfile_grfog_c_805d60d8, global
+	.string "grfog.c"
+.endobj kar_srcfile_grfog_c_805d60d8
+
+# 0x805DF690..0x805DF6B0 | size: 0x20
+.section .sdata2, "a"
+.balign 8
+
+# .sdata2:0x0 | 0x805DF690 | size: 0x8
+.obj lbl_805DF690, global
+	.float -1
+	.float 0
+.endobj lbl_805DF690
+
+# .sdata2:0x8 | 0x805DF698 | size: 0x4
+.obj lbl_805DF698, global
+	.float 0
+.endobj lbl_805DF698
+
+# .sdata2:0xC | 0x805DF69C | size: 0x4
+.obj lbl_805DF69C, global
+	.float -1
+.endobj lbl_805DF69C
+
+# .sdata2:0x10 | 0x805DF6A0 | size: 0x4
+.obj lbl_805DF6A0, global
+	.float 1
+.endobj lbl_805DF6A0
+	.4byte 0x00000000
+
+# .sdata2:0x18 | 0x805DF6A8 | size: 0x8
+.obj lbl_805DF6A8, global
+	.double 4503601774854144
+.endobj lbl_805DF6A8

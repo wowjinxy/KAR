@@ -475,3 +475,105 @@
 /* 8005947C 0005627C  38 21 00 60 */	addi r1, r1, 0x60
 /* 80059480 00056280  4E 80 00 20 */	blr
 .endfn kar_lbfile_read_path_blocking
+
+# 0x80498108..0x80498188 | size: 0x80
+.data
+.balign 8
+
+# .data:0x0 | 0x80498108 | size: 0x9
+.obj kar_src_lbfile_80498108, global
+	.string "lbfile.c"
+.endobj kar_src_lbfile_80498108
+
+# .data:0x9 | 0x80498111 | size: 0x3
+.obj gap_07_80498111_data, global
+.hidden gap_07_80498111_data
+	.byte 0x00, 0x00, 0x00
+.endobj gap_07_80498111_data
+
+# .data:0xC | 0x80498114 | size: 0xC
+.obj lbl_80498114, global
+	.string "!cancelflag"
+.endobj lbl_80498114
+
+# .data:0x18 | 0x80498120 | size: 0x1F
+.obj lbl_80498120, global
+	.string "Error : file name too long %s."
+.endobj lbl_80498120
+
+# .data:0x37 | 0x8049813F | size: 0x1
+.obj gap_07_8049813F_data, global
+.hidden gap_07_8049813F_data
+	.byte 0x00
+.endobj gap_07_8049813F_data
+
+# .data:0x38 | 0x80498140 | size: 0x48
+.obj lbl_80498140, global
+	.4byte 0x43616E6E
+	.4byte 0x6F74206F
+	.4byte 0x70656E20
+	.4byte 0x66696C65
+	.4byte 0x206E6F3D
+	.4byte 0x25642E00
+	.4byte 0x66696C65
+	.4byte 0x2069736E
+	.4byte 0x27742065
+	.4byte 0x78697374
+	.4byte 0x20257320
+	.4byte 0x3D202564
+	.4byte 0x0A000000
+	.4byte 0x656E7472
+	.4byte 0x795F6E75
+	.4byte 0x6D20213D
+	.4byte 0x202D3100
+	.4byte 0x00000000
+.endobj lbl_80498140
+
+# 0x80538068..0x80538088 | size: 0x20
+.section .bss, "wa", @nobits
+.balign 8
+
+# .bss:0x0 | 0x80538068 | size: 0x20
+.obj kar_lbfile_path_buffer, global
+	.skip 0x20
+.endobj kar_lbfile_path_buffer
+
+# 0x805D5260..0x805D5270 | size: 0x10
+.section .sdata, "wa"
+.balign 8
+
+# .sdata:0x0 | 0x805D5260 | size: 0x5
+.obj lbl_805D5260, global
+	.string "NULL"
+.endobj lbl_805D5260
+
+# .sdata:0x5 | 0x805D5265 | size: 0x3
+.obj gap_09_805D5265_sdata, global
+.hidden gap_09_805D5265_sdata
+	.byte 0x00, 0x00, 0x00
+.endobj gap_09_805D5265_sdata
+
+# .sdata:0x8 | 0x805D5268 | size: 0x4
+.obj lbl_805D5268, global
+	.string "dat"
+.endobj lbl_805D5268
+
+# .sdata:0xC | 0x805D526C | size: 0x2
+.obj lbl_805D526C, global
+	.string "0"
+.endobj lbl_805D526C
+
+# .sdata:0xE | 0x805D526E | size: 0x2
+.obj gap_09_805D526E_sdata, global
+.hidden gap_09_805D526E_sdata
+	.2byte 0x0000
+.endobj gap_09_805D526E_sdata
+
+# 0x805DD5A8..0x805DD5B0 | size: 0x8
+.section .sbss, "wa", @nobits
+.balign 8
+
+# .sbss:0x0 | 0x805DD5A8 | size: 0x8
+.obj lbl_805DD5A8, global
+	.skip 0x8
+.endobj lbl_805DD5A8
