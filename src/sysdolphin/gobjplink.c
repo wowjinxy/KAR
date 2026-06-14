@@ -108,7 +108,7 @@ void func_80428F64(HSD_GObj* gobj)
         return;
     }
     GObj_RemoveUserData(gobj);
-    func_80429CB0(gobj);
+    HSD_GObjObjectRemove(gobj);
     func_80428AD8(gobj);
     if (gobj->gx_link != HSD_GOBJ_GXLINK_NONE) {
         func_80429774(gobj);

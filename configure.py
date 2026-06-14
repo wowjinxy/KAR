@@ -452,7 +452,12 @@ kar_objects = [
     Object(NonMatching, "lbhvqm.c"),
     Object(NonMatching, "lbarealight.c"),
     Object(NonMatching, "lbarealightuser.c"),
-    Object(NonMatching, "lbarealightzone.c"),
+    Object(
+        Matching,
+        "lbarealightzone.c",
+        extra_cflags=["-pooldata off", "-sdata 0"],
+    ),
+    Object(Matching, "lbarealightzone_bss.s"),
     Object(NonMatching, "lbshadow.c"),
     Object(NonMatching, "dbposition.c"),
     Object(NonMatching, "dbscreenshot.c"),
@@ -608,7 +613,7 @@ kar_objects = [
     Object(NonMatching, "gobjproc.c"),
     Object(NonMatching, "gobjplink.c"),
     Object(NonMatching, "gobjgxlink.c"),
-    Object(NonMatching, "gobjobject.c"),
+    Object(Matching, "gobjobject.c"),
     Object(NonMatching, "gobjuserdata.c"),
     Object(NonMatching, "particle.c"),
     Object(NonMatching, "psinterpret.c"),
@@ -681,16 +686,19 @@ config.libs = [
 # For example, this adds "dummy.c" to the end of the DOL link order if configured with --non-matching.
 # "dummy.c" *must* be configured as a Matching (or Equivalent) object in order to be linked.
 def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
-    # Don't modify the link order for matching builds
-    if not config.non_matching:
-        return objects
     if module_id == 0:  # DOL
-        return objects + ["dummy.c"]
+        result = []
+        for obj in objects:
+            result.append(obj)
+            if obj == "lbarealightzone.c":
+                result.append("lbarealightzone_bss.s")
+        if config.non_matching:
+            result.append("dummy.c")
+        return result
     return objects
 
 
-# Uncomment to enable the link order callback.
-# config.link_order_callback = link_order_callback
+config.link_order_callback = link_order_callback
 
 
 # Optional extra categories for progress tracking
