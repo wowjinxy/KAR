@@ -194,6 +194,8 @@ config.scratch_preset_id = None
 
 # Compiler: CodeWarrior for GameCube 2.4.2 build 81 (GC MW 1.3.2).
 # The first group is the observed KAR game-code flag set.
+DOLPHIN_SDK_COMPILER_VERSION = "GC/1.0"
+
 cflags_base = [
     "-O4,p",
     "-nodefaults",
@@ -228,6 +230,41 @@ elif args.warn == "off":
 elif args.warn == "error":
     cflags_base.append("-W error")
 
+# Flags used by doldecomp/kar for the source-backed SysDolphin and SDK files.
+# Keep this separate from the broader game-code baseline: upstream's src files
+# are trusted, but Dolphin SDK objects were not built with the same compiler as
+# the KAR game objects.
+cflags_doldecomp_src = [
+    "-cwd source",
+    "-Cpp_exceptions off",
+    "-proc gekko",
+    "-fp hard",
+    "-O4,p",
+    "-nodefaults",
+    "-I-",
+    "-i include",
+    f"-i build/{config.version}/include",
+    "-inline all",
+    "-nosyspath",
+    "-multibyte",
+    f"-DBUILD_VERSION={version_num}",
+    f"-DVERSION_{config.version}",
+]
+
+if args.debug:
+    cflags_doldecomp_src.extend(["-sym on", "-DDEBUG=1"])
+else:
+    cflags_doldecomp_src.append("-DNDEBUG=1")
+
+if args.warn == "all":
+    cflags_doldecomp_src.append("-W all")
+elif args.warn == "off":
+    cflags_doldecomp_src.append("-W off")
+elif args.warn == "error":
+    cflags_doldecomp_src.append("-W error")
+
+cflags_dolphin_sdk = list(cflags_doldecomp_src)
+
 # Metrowerks library flags
 cflags_runtime = [
     *cflags_base,
@@ -252,8 +289,8 @@ config.linker_version = "GC/1.3.2"
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": config.linker_version,
-        "cflags": cflags_base,
+        "mw_version": DOLPHIN_SDK_COMPILER_VERSION,
+        "cflags": cflags_dolphin_sdk,
         "progress_category": "sdk",
         "objects": objects,
     }
@@ -335,6 +372,35 @@ KAR_SOURCE_PREFIXES = [
     ("cp", "cp"),
 ]
 
+DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
+    "aobj.c",
+    "archive.c",
+    "class.c",
+    "dobj.c",
+    "fobj.c",
+    "fog.c",
+    "gobjobject.c",
+    "gobjplink.c",
+    "gobjuserdata.c",
+    "id.c",
+    "initialize.c",
+    "list.c",
+    "lobj.c",
+    "mobj.c",
+    "object.c",
+    "pobj.c",
+    "robj.c",
+    "shadow.c",
+    "util.c",
+    "wobj.c",
+}
+
+DOLPHIN_SDK_SOURCE_OBJECTS = {
+    "OSThread.c",
+    "dolphin_sdk.c",
+    "dolphin_sdk2.c",
+}
+
 
 def kar_source_path(name: str) -> str:
     path = Path(name)
@@ -397,6 +463,8 @@ kar_objects = [
     Object(NonMatching, "dbmapdispbbox.c"),
     Object(NonMatching, "dbmapgravity.c"),
     Object(NonMatching, "textlib.c"),
+    Object(NonMatching, "smsoundtest.c"),
+    Object(NonMatching, "kar_objalloc.c"),
     Object(NonMatching, "camera.c"),
     Object(NonMatching, "cmreplay.c"),
     Object(NonMatching, "cmanimation.c"),
@@ -436,6 +504,8 @@ kar_objects = [
     Object(NonMatching, "gryakucatchzone.c"),
     Object(NonMatching, "gryakurecoveryzone.c"),
     Object(NonMatching, "gryakurotjumphill.c"),
+    Object(NonMatching, "gryakuinvisibleball.c"),
+    Object(NonMatching, "gryakurisingcube.c"),
     Object(NonMatching, "gryakugondola.c"),
     Object(NonMatching, "gryakucannon.c"),
     Object(NonMatching, "gryakupushoutwall.c"),
@@ -457,13 +527,15 @@ kar_objects = [
     Object(NonMatching, "grdesert1.c"),
     Object(NonMatching, "grvalley2.c"),
     Object(NonMatching, "grmachine2.c"),
-    Object(NonMatching, "grsky2.c"),
+    Object(Matching, "grsky2.c"),
     Object(NonMatching, "grice1.c"),
     Object(NonMatching, "grcity1.c"),
     Object(NonMatching, "grcolosseum1.c"),
     Object(NonMatching, "greventrock.c"),
     Object(NonMatching, "greventlighthouse.c"),
     Object(NonMatching, "ifround.c"),
+    Object(NonMatching, "mnselrule.c"),
+    Object(NonMatching, "mntitle.c"),
     Object(NonMatching, "mndialoguebg.c"),
     Object(NonMatching, "mnclearchecker.c"),
     Object(NonMatching, "mnlannumber.c"),
@@ -482,6 +554,7 @@ kar_objects = [
     Object(NonMatching, "wnparts.c"),
     Object(NonMatching, "wneffect.c"),
     Object(NonMatching, "wnguided.c"),
+    Object(NonMatching, "plclearchecker.c"),
     Object(NonMatching, "plclearcheckerlib.c"),
     Object(NonMatching, "pltrick.c"),
     Object(NonMatching, "effect.c"),
@@ -555,6 +628,13 @@ kar_objects = [
 
 for obj in kar_objects:
     obj.options["source"] = kar_source_path(obj.name)
+    if obj.name in DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS:
+        obj.options["source"] = str(Path("sysdolphin") / obj.name).replace("\\", "/")
+        obj.options["cflags"] = cflags_doldecomp_src
+    if obj.name in DOLPHIN_SDK_SOURCE_OBJECTS:
+        obj.options["mw_version"] = DOLPHIN_SDK_COMPILER_VERSION
+        obj.options["cflags"] = cflags_dolphin_sdk
+        obj.options["progress_category"] = "sdk"
 
 config.libs = [
     {
@@ -570,8 +650,26 @@ config.libs = [
         "cflags": cflags_runtime,
         "progress_category": "sdk",  # str | List[str]
         "objects": [
+            Object(NonMatching, "runtime.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
+            Object(NonMatching, "runtime_support.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
+            Object(NonMatching, "runtime_libc.c"),
+            Object(NonMatching, "metrotrk.c"),
+            Object(
+                NonMatching,
+                "dolphin_sdk.c",
+                mw_version=DOLPHIN_SDK_COMPILER_VERSION,
+                cflags=cflags_dolphin_sdk,
+            ),
+            Object(
+                NonMatching,
+                "dolphin_sdk2.c",
+                mw_version=DOLPHIN_SDK_COMPILER_VERSION,
+                cflags=cflags_dolphin_sdk,
+            ),
+            Object(NonMatching, "metrotrk_bridge.c"),
+            Object(NonMatching, "hsd_runtime.c"),
         ],
     },
 ]
