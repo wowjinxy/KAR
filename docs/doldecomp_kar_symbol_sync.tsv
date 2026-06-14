@@ -1,0 +1,996 @@
+action	category	address	old_name	new_name	source	reason
+same	runtime_sdk	80003100	memset	memset	asm/Runtime.PPCEABI.H/__mem.s	already named
+same	runtime_sdk	80003130	__fill_mem	__fill_mem	asm/Runtime.PPCEABI.H/__mem.s	already named
+same	runtime_sdk	800031e8	memcpy	memcpy	asm/Runtime.PPCEABI.H/__mem.s	already named
+skip	game_asm	80003238	fn_80003238	TRK_memset	asm/TRK_MINNOW_DOLPHIN/mem_TRK.s	category not enabled
+skip	game_asm	80003268	TRK_memcpy	TRK_memcpy	asm/TRK_MINNOW_DOLPHIN/mem_TRK.s	category not enabled
+skip	game_asm	8000328c	gTRKInterruptVectorTable	gTRKInterruptVectorTable	asm/TRK_MINNOW_DOLPHIN/__exception.s	category not enabled
+skip	game_asm	800051c0	TEA_HotReset	gTRKInterruptVectorTableEnd	asm/TRK_MINNOW_DOLPHIN/__exception.s	category not enabled
+skip	game_asm	800051c0	gTRKInterruptVectorTableEnd	gTRKInterruptVectorTableEnd	asm/TRK_MINNOW_DOLPHIN/__exception.s	category not enabled
+same	runtime_sdk	800054ec	__init_hardware	__init_hardware	asm/os/__ppc_eabi_init.s	already named
+same	runtime_sdk	80005510	__flush_cache	__flush_cache	asm/os/__ppc_eabi_init.s	already named
+skip	game_asm	80005800	fn_80005800	Pad_InitCallback	asm/gmmain.s	category not enabled
+skip	game_asm	80005898	main	main	asm/gmmain.s	category not enabled
+skip	game_asm	80005d78	kar_gmmain__near_80005d78	gmSetFreezeGameFlag	asm/gmglobal.s	category not enabled
+skip	game_asm	80005dcc	kar_gmmain__near_80005dcc	gmUnsetFreezeGameFlag	asm/gmglobal.s	category not enabled
+skip	game_asm	800067a4	kar_gmmain__near_800067a4	branchToMiscFunction	asm/gmglobal.s	category not enabled
+skip	game_asm	80006c14	kar_gmmain__near_80006c14	gmGetGlobalP	asm/gmglobal.s	category not enabled
+skip	game_asm	80006c20	kar_gmmain__near_80006c20	gmGetClearcheckerP	asm/gmglobal.s	category not enabled
+skip	game_asm	80006c38	kar_gmmain__near_80006c38	gmGetUnkP	asm/gmglobal.s	category not enabled
+skip	game_asm	80006eec	kar_gmmain__near_80006eec	memcard_storeValuesIntoMemory	asm/gmglobal.s	category not enabled
+skip	game_asm	8000714c	kar_gmglobal__8000714c	memcard_StoreDefaultValues	asm/gmglobal.s	category not enabled
+skip	game_asm	80007640	kar_gmglobal__near_80007640	hwActivateStudio	asm/gmglobal.s	category not enabled
+skip	game_asm	80007660	kar_gmglobal__near_80007660	gmGet_Dist	asm/gmglobal.s	category not enabled
+skip	game_asm	80007670	kar_gmglobal__near_80007670	gmSet_Dist	asm/gmglobal.s	category not enabled
+skip	game_asm	80007680	kar_gmglobal__near_80007680	gmGet_Language	asm/gmglobal.s	category not enabled
+skip	game_asm	80007690	kar_gmglobal__near_80007690	gmSet_Language	asm/gmglobal.s	category not enabled
+skip	game_asm	800076a0	kar_gmglobal__800076a0	gmGetClearcheckerTypeP	asm/gmglobal.s	category not enabled
+skip	game_asm	8000771c	kar_gmglobal__near_8000771c	gmGetClearcheckerType0Ptr	asm/gmglobal.s	category not enabled
+skip	game_asm	8000772c	kar_gmglobal__near_8000772c	gmGetClearcheckerType1Ptr	asm/gmglobal.s	category not enabled
+skip	game_asm	8000773c	kar_gmglobal__near_8000773c	gmGetClearcheckerType1_2Ptr	asm/gmglobal.s	category not enabled
+skip	game_asm	8000774c	kar_gmglobal__near_8000774c	gmGetClearcheckerType2Ptr	asm/gmglobal.s	category not enabled
+skip	game_asm	8000775c	kar_gmglobal__8000775c	gmGetClearcheckerTypeP_2	asm/gmglobal.s	category not enabled
+skip	game_asm	800077e0	kar_gmglobal__near_800077e0	gmGet_80536EDC_Ptr	asm/gmglobal.s	category not enabled
+skip	game_asm	800077f0	kar_gmglobal__near_800077f0	gmGet_80536EDC_Array	asm/gmglobal.s	category not enabled
+skip	game_asm	80007968	kar_gmglobal__near_80007968	hwDeactivateStudio	asm/gmglobal.s	category not enabled
+skip	game_asm	80007988	kar_gmglobal__near_80007988	salStartAi	asm/gmglobal.s	category not enabled
+skip	game_asm	800082a0	kar_gmlanmenu__800082a0	menuGetNextMenuID	asm/gmglobal.s	category not enabled
+skip	game_asm	800082d0	kar_gmglobal__near_800082d0	loadMain_Two	asm/gmglobal.s	category not enabled
+skip	game_asm	80008ad4	kar_gmglobal__near_80008ad4	loadMain_One	asm/gmglobal.s	category not enabled
+skip	game_asm	800092b4	fn_800092B4	getPlayerCount	asm/gmglobal.s	category not enabled
+skip	game_asm	80009394	fn_80009394	setMap	asm/gmglobal.s	category not enabled
+skip	game_asm	800095a0	fn_800095A0	EnableMetroTRKInterrupts	asm/gmglobal.s	category not enabled
+skip	game_asm	8000aa2c	fn_8000AA2C	playerDies	asm/gmglobal.s	category not enabled
+skip	game_asm	8000aaf0	fn_8000AAF0	getMaxStatsValue	asm/gmglobal.s	category not enabled
+skip	game_asm	8000ab1c	fn_8000AB1C	getMinStatsValue	asm/gmglobal.s	category not enabled
+skip	game_asm	8000acb0	kar_diag__8000acb0	getTrialFlag	asm/gmglobal.s	category not enabled
+skip	game_asm	8000aea8	kar_gmracenormal__8000aea8	menu_getCurrentMenuID	asm/gmglobal.s	category not enabled
+skip	game_asm	8000b62c	fn_8000B62C	loadCSS_CityTrial_initTimerValue	asm/gmglobal.s	category not enabled
+skip	game_asm	8000bba0	kar_gmlanmenu__8000bba0	loadMainMenuMusic	asm/gmglobal.s	category not enabled
+skip	game_asm	8000d26c	kar_gmautodemo_start_opening_movie	loadTitlePlayer	asm/gmglobal.s	category not enabled
+skip	game_asm	8000fc70	kar_gm_assets__asset_8000fc70	gmLoadData	asm/gmautodemo.s	category not enabled
+skip	game_asm	80010bbc	kar_gmautodemo__near_80010bbc	race3D_isFinished	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800135ec	kar_gmracecommon__near_800135ec	loadPlayer	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80013b08	kar_gmracenormal__80013b08	renderPlayerCam	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800181b0	fn_800181B0	menuInputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80018548	kar_gmlanmenu__80018548	loadMainMenu	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800189e4	fn_800189E4	goTo_menuInputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8001ae7c	fn_8001AE7C	hwIRQLeaveCritical	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8001ee60	fn_8001EE60	cityTrial_gameSettingsThink	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80021654	fn_80021654	CSS_airRide_colorChanger	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80023600	fn_80023600	loadCPU	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80024d04	fn_80024D04	CSS_airRide_chooseVehicleInputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80026110	fn_80026110	CSS_airRide_inputGrabberReadyScreen	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80026f20	fn_80026F20	CSS_airRide_inputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80027fa4	fn_80027FA4	CSS_airRide_FreeRuInputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8002860c	fn_8002860C	CSS_airRide_Main	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8002a3e0	fn_8002A3E0	goToCSS_airRide_Main	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8002a400	fn_8002A400	CSS_topRide_colorChanger	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8002e3c4	fn_8002E3C4	CSS_stadium_getSelectableMachines	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8002f238	fn_8002F238	CSS_cityTrial_colorChanger	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80032d34	fn_80032D34	CSS_inputGrabber	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80038d6c	fn_80038D6C	loadCSS_CityTrialMain	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80039e20	fn_80039E20	loadCSS_CityTrialStadium	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8003a904	fn_8003A904	loadCSS_CityTrialFree	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8003b2c0	fn_8003B2C0	loadCSS_CityTrial	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8003f6cc	kar_gmracenormal__8003f6cc	menu_cityTrial_checkMode	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800406dc	fn_800406DC	isStadiumTrialRemain	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80040b80	fn_80040B80	vsDedede_CPU_Cheating	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80040e7c	fn_80040E7C	pauseMain	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800476b8	kar_gmdialogue__near_800476b8	bootMenu	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80052c40	kar_gmlanmenu__near_80052c40	HSD_FogAdjGetFlags	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80052c8c	HSD_DObjGetNext	HSD_DObjGetNext	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80054904	kar_lbairride__80054904	sAObjAnimeAll	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80055a30	kar_lbairride__near_80055a30	sAddAnimAll	asm/text_80010BBC.s	category not enabled
+skip	game_asm	800560ac	kar_lbairride__near_800560ac	HSD_TObjAddAnimAll	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80059a20	kar_lbarchive__80059a20	lbLoadArchive	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80059d50	kar_lbarchive__near_80059d50	HasCamera	asm/text_80010BBC.s	category not enabled
+skip	game_asm	8005e1a8	kar_lbaudio__near_8005e1a8	lbLoadMusicLocation	asm/text_80010BBC.s	category not enabled
+skip	game_asm	80061658	kar_lbaudio__near_80061658	playSoundFX_menuSound	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800616c8	kar_lbaudio__near_800616c8	CSS_playerQuit	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800616fc	kar_lbaudio__near_800616fc	CSS_playSoundFX	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80066d1c	kar_lbfade_load_overlay_cobj	InitCamera	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80071cc0	kar_lb_assets__asset_80071cc0	lbLoadRumble	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80071d00	kar_lbkdcoll__near_80071d00	Rumble	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80077fc0	kar_lbhvqm__near_80077fc0	HVQM4PlayerExSetAudioFilter	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80077ff4	kar_lbhvqm__near_80077ff4	HVQM4PlayerExGetAudioFilter	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80078990	kar_lbhvqm__near_80078990	debug_memCard_reqSave	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80078c3c	kar_lbhvqm__near_80078c3c	debug_memCard_reqDelete	asm/text_80060ED0.s	category not enabled
+skip	game_asm	80078f98	kar_lb_assets__asset_80078f98	lbLoadMcGame	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8007ade8	shadowRendering	shadowRendering	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8007b284	makeShadow	makeShadow	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8007b770	kar_shadow__near_8007b770	initBroadbandInfo	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8007cf78	kar_db_assets__asset_8007cf78	dbLoadCommon	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8008115c	fn_8008115C	debug_mainSpawnStar	asm/text_80060ED0.s	category not enabled
+skip	game_asm	8008134c	fn_8008134C	debug_SpawnItems	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800a3754	kar_dbmapzone__near_800a3754	debug_Race3D_loadLocations	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ab2d4	kar_textlib__800ab2d4	debugInitMenu	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ab50c	kar_textlib__near_800ab50c	debugPutSpace	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ab78c	kar_textlib__near_800ab78c	dbPutString	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ac500	kar_textlib__near_800ac500	debug_mainMenuThink	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800aca04	kar_textlib__near_800aca04	debug_openSubMenu	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ad244	fn_800AD244	debug_subMenu_InBetween1	asm/text_80060ED0.s	category not enabled
+skip	game_asm	800ad97c	kar_smsoundtest__near_800ad97c	debug_openRace3DMode	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800ad9f4	kar_smsoundtest__near_800ad9f4	debug_openRace2DMode	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800ada30	kar_smsoundtest__near_800ada30	debug_openOptionMode	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800ada94	kar_smsoundtest__near_800ada94	debug_openClearCheck	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adb24	kar_smsoundtest__near_800adb24	debug_openSoundTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adb90	kar_smsoundtest__near_800adb90	debug_openRumbleTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adbf4	kar_smsoundtest__near_800adbf4	debug_openMovieTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adc58	kar_smsoundtest__near_800adc58	debug_openMemcardTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adcbc	kar_smsoundtest__near_800adcbc	debug_openEndingTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800add20	kar_smsoundtest__near_800add20	debug_openLANEmulate	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800add84	kar_smsoundtest__near_800add84	debug_openLANMenuTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800adde8	kar_smsoundtest__near_800adde8	debug_openSyncTest	asm/db_800AD79C.s	category not enabled
+skip	game_asm	800af594	kar_smsoundtest__near_800af594	debug_movieTestinBetween	asm/text_800AF474.s	category not enabled
+skip	game_asm	800afdf8	kar_objalloc__near_800afdf8	menu_loadLANMenu	asm/text_800AF474.s	category not enabled
+skip	game_asm	800b67cc	kar_camera__near_800b67cc	cameraControlThink	asm/text_800AF474.s	category not enabled
+skip	game_asm	800bc054	kar_grlib2__near_800bc054	pauseZoomIntoPlayers	asm/text_800AF474.s	category not enabled
+skip	game_asm	800bc17c	kar_grlib2__near_800bc17c	pauseMain_unfreezeCamera	asm/text_800AF474.s	category not enabled
+skip	game_asm	800bc3e0	kar_cm_assets__asset_800bc3e0	cmLoadCommon	asm/text_800AF474.s	category not enabled
+skip	game_asm	800c04b0	fn_800C04B0	cameraControl	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ce270	kar_ground__800ce270	grInitObject	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ce754	kar_gr_assets__asset_800ce754	grLoadCommon	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ce7a0	kar_grdata__800ce7a0	grLoadGroundArchive	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ce924	kar_gr_assets__asset_800ce924	grLoadCityEventArchive	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ceab8	kar_grdata__near_800ceab8	grGetGroundMinimapScale	asm/text_800AF474.s	category not enabled
+skip	game_asm	800d1434	kar_grcommon_get_yakumonopos_num	grGetYakumonoposNum	asm/text_800AF474.s	category not enabled
+skip	game_asm	800da518	kar_grparts__near_800da518	grGetItemData	asm/text_800AF474.s	category not enabled
+skip	game_asm	800e3f80	kar_grnullpos_init_stage_null_positions	grSetupNullpos	asm/text_800AF474.s	category not enabled
+skip	game_asm	800ee778	kar_greventgenerator_request_event_kind	eventInit	asm/text_800AF474.s	category not enabled
+skip	game_asm	800f25b4	kar_grairglider_cleanup_spawned_enemies	parse_Stage.dat	asm/text_800AF474.s	category not enabled
+skip	game_asm	8010f268	kar_grcity1_create_stage_city_yaku_objects	grYakuUpdate	asm/grcity1.s	category not enabled
+skip	game_asm	8010f7c4	kar_grcity1_patch_asset_material_anim_params	grSetupCityEventData	asm/grcity1.s	category not enabled
+skip	game_asm	80110184	kar_grcolosseum1_event_kind4d_init_shuffle_positions	event_dynablade_start	asm/text_8010F854.s	category not enabled
+skip	game_asm	8011024c	kar_grcolosseum1_event_kind4d_update_spawn_until_timeout	event_dynablade	asm/text_8010F854.s	category not enabled
+skip	game_asm	80110448	kar_grcolosseum1_event_kind4d_cleanup_reset_positions	event_dynablade_end2	asm/text_8010F854.s	category not enabled
+skip	game_asm	801104cc	kar_grcolosseum1_event_kind4c_init_boxgenerator_state	event_tac_start	asm/text_8010F854.s	category not enabled
+skip	game_asm	801104fc	kar_grcolosseum1_event_kind4c_update_spawn_until_gone	event_tac	asm/text_8010F854.s	category not enabled
+skip	game_asm	80112af8	kar_greventlighthouse_set_ui_refresh_flag	THPSimpleAudioStop	asm/text_8010F854.s	category not enabled
+skip	game_asm	80112b0c	kar_greventlighthouse_clear_ui_refresh_flag	THPSimpleAudioStop2	asm/text_8010F854.s	category not enabled
+skip	game_asm	80116d8c	fn_80116D8C	cityTrial_calculateStats	asm/text_801166B4.s	category not enabled
+skip	game_asm	801247e0	fn_801247E0	drawHUD_renderMap	asm/text_801166B4.s	category not enabled
+skip	game_asm	80127234	fn_80127234	cityTrial_drawStatNameAndArrow	asm/text_801166B4.s	category not enabled
+skip	game_asm	80127864	fn_80127864	stadiumPrediction	asm/text_801166B4.s	category not enabled
+skip	game_asm	8013540c	fn_8013540C	CSS_initDescriptionText	asm/text_801166B4.s	category not enabled
+skip	game_asm	801354d4	fn_801354D4	CSS_updatePlayerIndicatorColorInside	asm/text_801166B4.s	category not enabled
+skip	game_asm	801354f4	fn_801354F4	CSS_updatePlayerSelectFrame	asm/text_801166B4.s	category not enabled
+skip	game_asm	801a5fb8	fn_801A5FB8	randomAbility_mainLoop	asm/text_801166B4.s	category not enabled
+skip	game_asm	801a61d4	fn_801A61D4	randomAbility_giveAbility	asm/text_801166B4.s	category not enabled
+skip	game_asm	801a81a4	fn_801A81A4	cityTrial_collideWithAbility	asm/text_801166B4.s	category not enabled
+skip	game_asm	801b5480	fn_801B5480	ability_Bird	asm/text_801166B4.s	category not enabled
+skip	game_asm	801c6d0c	kar_vc_assets__asset_801c6d0c	vcLoadCommon	asm/text_801166B4.s	category not enabled
+skip	game_asm	801c6d74	fn_801C6D74	vcLoadVehicleArchive	asm/text_801166B4.s	category not enabled
+skip	game_asm	801c81c0	fn_801C81C0	cityTrial_getMasterStats	asm/text_801166B4.s	category not enabled
+skip	game_asm	801dd2fc	fn_801DD2FC	setOnVehicleValue	asm/text_801D443C.s	category not enabled
+skip	game_asm	801defac	kar_vcgenerator__801defac	cityTrialSpawnStar	asm/text_801D443C.s	category not enabled
+skip	game_asm	801df408	kar_vcgenerator__near_801df408	cityTrialSpawnFormationStar	asm/text_801D443C.s	category not enabled
+skip	game_asm	801df840	kar_vcgenerator__near_801df840	cityTrialCheckToSpawnStar	asm/text_801D443C.s	category not enabled
+skip	game_asm	801e0cbc	fn_801E0CBC	SAV2_fn_ucGetNumberOfExistingSave	asm/text_801D443C.s	category not enabled
+skip	game_asm	801e2df8	fn_801E2DF8	operator.delete	asm/text_801D443C.s	category not enabled
+skip	game_asm	801ed720	kar_mpcoll__near_801ed720	scale	asm/text_801D443C.s	category not enabled
+skip	game_asm	8022c67c	kar_plclearchecker_get_template_byte_08c	plGetPlayerColor	asm/text_801D443C.s	category not enabled
+skip	game_asm	8022c694	kar_plclearchecker_set_template_byte_08c	plSetPlayerColor	asm/text_801D443C.s	category not enabled
+skip	game_asm	8022c858	kar_plclearcheckerlib__near_8022c858	plGetPlayerKind	asm/text_801D443C.s	category not enabled
+skip	game_asm	80257158	fn_80257158	Box_CheckHP	asm/text_801D443C.s	category not enabled
+skip	game_asm	802582dc	fn_802582DC	Box_Break	asm/text_801D443C.s	category not enabled
+skip	game_asm	802d9ec0	fn_802D9EC0	GetNumRounds	asm/a2d/a2d_gamesession.s	category not enabled
+skip	game_asm	80315af0	fn_80315AF0	DevelopMode_CheckForDuplicateScreenshotAndSend	asm/a2d/a2d_kirbyjointanim.s	category not enabled
+skip	game_asm	803272c0	kar_a2d_grindrail__near_803272c0	HSD_AObjLoadDesc_	asm/a2d/a2d_grindrail.s	category not enabled
+skip	game_asm	8037102c	fn_8037102C	HVQM4PlayerExControlCheckNormal	asm/a2d/a2d_kurakko.s	category not enabled
+same	runtime_sdk	803ad0a0	__va_arg	__va_arg	asm/runtime/__va_arg.s	already named
+same	runtime_sdk	803ad168	__destroy_global_chain	__destroy_global_chain	asm/runtime/global_destructor_chain.s	already named
+same	runtime_sdk	803ad1b0	__register_global_object	__register_global_object	asm/runtime/global_destructor_chain.s	already named
+rename	runtime_sdk	803ad1c8	fn_803AD1C8	__destroy_new_array2	asm/runtime/global_destructor_chain.s	generic local name
+rename	runtime_sdk	803ad248	fn_803AD248	__destroy_arr	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ad2c0	fn_803AD2C0	__construct_array	asm/runtime/NMWException.s	generic local name
+skip	runtime_sdk	803ad3bc	dtor_803AD3BC	__partial_array_destructor	asm/runtime/NMWException.s	local name is non-generic
+rename	runtime_sdk	803ad474	fn_803AD474	__throw_catch_compare	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ad6a0	fn_803AD6A0	unexpected	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ad6c8	fn_803AD6C8	terminate	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ad6f0	fn_803AD6F0	set_terminate	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ad718	fn_803AD718	dthandler	asm/runtime/NMWException.s	generic local name
+rename	runtime_sdk	803ada2c	fn_803ADA2C	__cvt_fp2unsigned	asm/runtime/runtime.s	generic local name
+same	runtime_sdk	803ada88	__save_fpr	__save_fpr	asm/runtime/runtime.s	already named
+skip	runtime_sdk	803ada88	_savefpr_14	__save_fpr	asm/runtime/runtime.s	local name is non-generic
+same	runtime_sdk	803adab4	_savefpr_25	_savefpr_25	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adabc	_savefpr_27	_savefpr_27	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adad4	__restore_fpr	__restore_fpr	asm/runtime/runtime.s	already named
+skip	runtime_sdk	803adad4	_restfpr_14	__restore_fpr	asm/runtime/runtime.s	local name is non-generic
+same	runtime_sdk	803adb00	_restfpr_25	_restfpr_25	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb08	_restfpr_27	_restfpr_27	asm/runtime/runtime.s	already named
+skip	runtime_sdk	803adb20	__save_gpr	_savegpr_14	asm/runtime/runtime.s	local name is non-generic
+same	runtime_sdk	803adb20	_savegpr_14	_savegpr_14	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb24	_savegpr_15	_savegpr_15	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb28	_savegpr_16	_savegpr_16	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb2c	_savegpr_17	_savegpr_17	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb30	_savegpr_18	_savegpr_18	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb34	_savegpr_19	_savegpr_19	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb38	_savegpr_20	_savegpr_20	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb3c	_savegpr_21	_savegpr_21	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb40	_savegpr_22	_savegpr_22	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb44	_savegpr_23	_savegpr_23	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb48	_savegpr_24	_savegpr_24	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb4c	_savegpr_25	_savegpr_25	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb50	_savegpr_26	_savegpr_26	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb54	_savegpr_27	_savegpr_27	asm/runtime/runtime.s	already named
+skip	runtime_sdk	803adb6c	__restore_gpr	_restgpr_14	asm/runtime/runtime.s	local name is non-generic
+same	runtime_sdk	803adb6c	_restgpr_14	_restgpr_14	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb70	_restgpr_15	_restgpr_15	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb74	_restgpr_16	_restgpr_16	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb78	_restgpr_17	_restgpr_17	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb7c	_restgpr_18	_restgpr_18	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb80	_restgpr_19	_restgpr_19	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb84	_restgpr_20	_restgpr_20	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb88	_restgpr_21	_restgpr_21	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb8c	_restgpr_22	_restgpr_22	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb90	_restgpr_23	_restgpr_23	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb94	_restgpr_24	_restgpr_24	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb98	_restgpr_25	_restgpr_25	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adb9c	_restgpr_26	_restgpr_26	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adba0	_restgpr_27	_restgpr_27	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adbb8	__div2u	__div2u	asm/runtime/runtime.s	already named
+rename	runtime_sdk	803adca4	fn_803ADCA4	__div2i	asm/runtime/runtime.s	generic local name
+same	runtime_sdk	803adddc	__mod2u	__mod2u	asm/runtime/runtime.s	already named
+rename	runtime_sdk	803adec0	fn_803ADEC0	__mod2i	asm/runtime/runtime.s	generic local name
+same	runtime_sdk	803adfcc	__shl2i	__shl2i	asm/runtime/runtime.s	already named
+same	runtime_sdk	803adff0	__shr2u	__shr2u	asm/runtime/runtime.s	already named
+same	runtime_sdk	803ae014	__shr2i	__shr2i	asm/runtime/runtime.s	already named
+rename	runtime_sdk	803ae03c	fn_803AE03C	__cvt_sll_flt	asm/runtime/runtime.s	generic local name
+rename	runtime_sdk	803ae0f0	fn_803AE0F0	__cvt_dbl_usll	asm/runtime/runtime.s	generic local name
+skip	runtime_sdk	803ae1bc	GetR2__Fv	GetR2	asm/runtime/__init_cpp_exceptions.s	local name is non-generic
+same	runtime_sdk	803ae1c4	__fini_cpp_exceptions	__fini_cpp_exceptions	asm/runtime/__init_cpp_exceptions.s	already named
+same	runtime_sdk	803ae1f8	__init_cpp_exceptions	__init_cpp_exceptions	asm/runtime/__init_cpp_exceptions.s	already named
+rename	runtime_sdk	803ae238	fn_803AE238	ExPPC_UnwindStack	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803ae33c	fn_803AE33C	ExPPC_IsInSpecification	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803ae44c	fn_803AE44C	ExPPC_LongJump	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803ae550	fn_803AE550	__throw	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803ae694	fn_803AE694	__end__catch	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803ae6d8	fn_803AE6D8	ExPPC_ThrowHandler	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+rename	runtime_sdk	803aeae8	fn_803AEAE8	__unexpected	asm/runtime/Gecko_ExceptionPPC.s	generic local name
+skip	runtime_sdk	803af884	kar_diag__803af884	__sys_alloc	asm/runtime/GCN_mem_alloc.s	local name is non-generic
+same	runtime_sdk	803af93c	exit	exit	asm/abort_exit.s	already named
+rename	runtime_sdk	803afa2c	fn_803AFA2C	abort	asm/abort_exit.s	generic local name
+skip	game_asm	803affec	__close_all	__close_all	asm/text_803AFAC8.s	category not enabled
+skip	game_asm	803b1c74	fn_803B1C74	__two_exp	asm/text_803AFAC8.s	category not enabled
+skip	game_asm	803b3864	__end_critical_region	__end_critical_region	asm/text_803AFAC8.s	category not enabled
+skip	game_asm	803b3868	__begin_critical_region	__begin_critical_region	asm/text_803AFAC8.s	category not enabled
+skip	game_asm	803b386c	__kill_critical_regions	__kill_critical_regions	asm/text_803AFAC8.s	category not enabled
+same	runtime_sdk	803b4670	memcmp	memcmp	asm/cstring.s	already named
+same	runtime_sdk	803b46bc	__memrchr	__memrchr	asm/cstring.s	already named
+skip	runtime_sdk	803b46e8	memchr	memrchr	asm/cstring.s	local name is non-generic
+same	runtime_sdk	803b4714	memmove	memmove	asm/cstring.s	already named
+rename	runtime_sdk	803b47e0	fn_803B47E0	__copy_longs_rev_unaligned	asm/cstring.s	generic local name
+rename	runtime_sdk	803b488c	fn_803B488C	__copy_longs_unaligned	asm/cstring.s	generic local name
+rename	runtime_sdk	803b494c	fn_803B494C	__copy_longs_rev_aligned	asm/cstring.s	generic local name
+rename	runtime_sdk	803b49f4	fn_803B49F4	__copy_longs_aligned	asm/cstring.s	generic local name
+skip	runtime_sdk	803b4ab0	__stdio_atexit	__sinit_AILoader_cpp	asm/cstring.s	local name is non-generic
+same	dolphin_sdk	803b4ac0	sprintf	sprintf	asm/dolphin/dolphin_sdk_other.s	already named
+rename	dolphin_sdk	803b4c74	fn_803B4C74	vsnprintf	asm/dolphin/dolphin_sdk_other.s	generic local name
+same	dolphin_sdk	803b4ce8	vprintf	vprintf	asm/dolphin/dolphin_sdk_other.s	already named
+same	dolphin_sdk	803b5ee0	double2hex	double2hex	asm/dolphin/dolphin_sdk_other.s	already named
+same	dolphin_sdk	803b6218	longlong2str	longlong2str	asm/dolphin/dolphin_sdk_other.s	already named
+same	dolphin_sdk	803b652c	long2str	long2str	asm/dolphin/dolphin_sdk_other.s	already named
+same	dolphin_sdk	803b7eb0	strcmp	strcmp	asm/dolphin/dolphin_sdk_other.s	already named
+rename	dolphin_sdk	803bd310	fn_803BD310	tan	asm/dolphin/dolphin_sdk_other.s	generic local name
+skip	dolphin_sdk	803bd408	kar_axdriver__near_803bd408	fmod	asm/dolphin/dolphin_sdk_other.s	local name is non-generic
+skip	game_asm	803bd630	TRKNubMainLoop	TRKNubMainLoop	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd728	TRKDestructEvent	TRKDestructEvent	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd74c	fn_803BD74C	TRKConstructEvent	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd764	kar_diagnostic__803bd764	TRKPostEvent	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd844	TRKGetNextEvent	TRKGetNextEvent	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd8f8	TRKInitializeEventQueue	TRKInitializeEventQueue	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd950	TRKNubWelcome	TRKNubWelcome	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd978	TRKTerminateNub	TRKTerminateNub	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bd99c	TRKInitializeNub	TRKInitializeNub	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdae8	kar_diagnostic__803bdae8	TRKMessageSend	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdb2c	kar_diagnostic__803bdb2c	TRKReadBuffer_ui32	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdc1c	kar_diagnostic__near_803bdc1c	TRKReadBuffer_ui8	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdcb4	kar_diagnostic__803bdcb4	TRKReadBuffer1_ui64	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdd9c	kar_diagnostic__803bdd9c	TRKAppendBuffer_ui32	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bde98	kar_diagnostic__803bde98	TRKAppendBuffer_ui8	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdf00	kar_diagnostic__803bdf00	TRKAppendBuffer1_ui64	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803bdffc	kar_diagnostic__near_803bdffc	TRKReadBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be088	kar_diagnostic__803be088	TRKAppendBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be12c	kar_diagnostic__803be12c	TRKSetBufferPosition	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be15c	kar_diagnostic__803be15c	TRKResetBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be19c	kar_diagnostic__803be19c	TRKReleaseBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be200	TRKGetBuffer	TRKGetBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be22c	kar_diag__803be22c	TRKGetFreeBuffer	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be2f4	TRKInitializeMessageBuffers	TRKInitializeMessageBuffers	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be370	TRKInitializeSerialHandler	TRKInitializeSerialHandler	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be434	kar_diag__near_803be434	TRKProcessInput	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be484	TRKGetInput	TRKGetInput	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be4e4	kar_diag__803be4e4	TRKTestForPacket	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be6ac	TRKDispatchMessage	TRKDispatchMessage	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be824	kar_diagnostic__near_803be824	TRKDoSetOption	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be8cc	kar_diagnostic__near_803be8cc	TRKDoStop	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803be974	kar_diagnostic__803be974	TRKDoStep	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c1ea0	InitMetroTRK	InitMetroTRK	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c1f38	InitMetroTRK_BBA	InitMetroTRK_BBA	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c21bc	TRK_main	TRK_main	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c24c8	InitMetroTRKCommTable	InitMetroTRKCommTable	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c276c	TRKTargetContinue	TRKTargetContinue	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c27b0	kar_diag__near_803c27b0	_SetUseSerialIO	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c2878	kar_diag__near_803c2878	__TRK_write_console	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+skip	game_asm	803c32e8	kar_diagnostic__803c32e8	MWEnterCriticalSection	asm/MetroTRK/TRK_MINNOW_DOLPHIN.s	category not enabled
+same	runtime_sdk	803c331c	PPCMfmsr	PPCMfmsr	asm/PPCArch.s	already named
+same	runtime_sdk	803c3324	PPCMtmsr	PPCMtmsr	asm/PPCArch.s	already named
+same	runtime_sdk	803c332c	PPCMfhid0	PPCMfhid0	asm/PPCArch.s	already named
+same	runtime_sdk	803c3334	PPCMthid0	PPCMthid0	asm/PPCArch.s	already named
+same	runtime_sdk	803c333c	PPCMfl2cr	PPCMfl2cr	asm/PPCArch.s	already named
+same	runtime_sdk	803c3344	PPCMtl2cr	PPCMtl2cr	asm/PPCArch.s	already named
+same	runtime_sdk	803c334c	PPCMtdec	PPCMtdec	asm/PPCArch.s	already named
+skip	runtime_sdk	803c3354	kar_diagnostic__near_803c3354	PPCSync	asm/PPCArch.s	local name is non-generic
+same	runtime_sdk	803c335c	PPCHalt	PPCHalt	asm/PPCArch.s	already named
+same	runtime_sdk	803c3370	PPCMtmmcr0	PPCMtmmcr0	asm/PPCArch.s	already named
+same	runtime_sdk	803c3378	PPCMtmmcr1	PPCMtmmcr1	asm/PPCArch.s	already named
+same	dolphin_sdk	803c3430	DBInit	DBInit	asm/dolphin/dolphin_sdk_db.s	already named
+rename	dolphin_sdk	803c3458	fn_803C3458	DBIsDebuggerPresent	asm/dolphin/dolphin_sdk_db.s	generic local name
+same	dolphin_sdk	803c34e8	DBPrintf	DBPrintf	asm/dolphin/dolphin_sdk_db.s	already named
+same	dolphin_sdk	803c3538	DSPCheckMailToDSP	DSPCheckMailToDSP	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3548	DSPCheckMailFromDSP	DSPCheckMailFromDSP	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3558	DSPReadMailFromDSP	DSPReadMailFromDSP	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3570	DSPSendMailToDSP	DSPSendMailToDSP	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3584	DSPInit	DSPInit	asm/dolphin/dolphin_sdk_dsp.s	already named
+rename	dolphin_sdk	803c3648	fn_803C3648	DSPCheckInit	asm/dolphin/dolphin_sdk_dsp.s	generic local name
+same	dolphin_sdk	803c3650	DSPAddTask	DSPAddTask	asm/dolphin/dolphin_sdk_dsp.s	already named
+rename	dolphin_sdk	803c36c0	fn_803C36C0	DSPAssertTask	asm/dolphin/dolphin_sdk_dsp.s	generic local name
+rename	dolphin_sdk	803c3788	fn_803C3788	__DSP_debug_printf	asm/dolphin/dolphin_sdk_dsp.s	generic local name
+same	dolphin_sdk	803c37d8	__DSPHandler	__DSPHandler	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3bfc	__DSP_exec_task	__DSP_exec_task	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3d9c	__DSP_boot_task	__DSP_boot_task	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3f28	__DSP_insert_task	__DSP_insert_task	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c3fc8	__DSP_remove_task	__DSP_remove_task	asm/dolphin/dolphin_sdk_dsp.s	already named
+same	dolphin_sdk	803c4600	DVDLowRead	DVDLowRead	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c492c	DVDLowWaitCoverClose	DVDLowWaitCoverClose	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c4a88	fn_803C4A88	DVDLowRequestError	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c4c48	DVDLowRequestAudioStatus	DVDLowRequestAudioStatus	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c4cd4	DVDLowAudioBufferConfig	DVDLowAudioBufferConfig	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c4d70	DVDLowReset	DVDLowReset	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c4e2c	fn_803C4E2C	DVDLowBreak	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c4e40	fn_803C4E40	DVDLowClearCallback	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c4e58	__DVDLowSetWAType	__DVDLowSetWAType	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c4e9c	__DVDFSInit	__DVDFSInit	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c4ed4	DVDConvertPathToEntrynum	DVDConvertPathToEntrynum	asm/dolphin/dolphin_sdk_dvd.s	already named
+skip	dolphin_sdk	803c51c8	kar_lbfile__803c51c8	DVDFastOpen	asm/dolphin/dolphin_sdk_dvd.s	local name is non-generic
+same	dolphin_sdk	803c523c	DVDOpen	DVDOpen	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c554c	DVDReadAsyncPrio	DVDReadAsyncPrio	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c560c	fn_803C560C	cbForReadAsync	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c577c	DVDInit	DVDInit	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c5848	fn_803C5848	stateReadingFST	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c58dc	fn_803C58DC	cbForStateReadingFST	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c5968	cbForStateError	cbForStateError	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c5a14	fn_803C5A14	stateTimeout	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5a48	fn_803C5A48	stateGettingError	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5a70	fn_803C5A70	CategorizeError	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5b24	fn_803C5B24	cbForStateGettingError	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5db8	fn_803C5DB8	cbForUnrecoveredError	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5e20	fn_803C5E20	cbForUnrecoveredErrorRetry	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5eb8	fn_803C5EB8	stateGoToRetry	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c5ee0	fn_803C5EE0	cbForStateGoToRetry	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6038	fn_803C6038	stateCheckID	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6118	fn_803C6118	stateCheckID3	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c614c	fn_803C614C	stateCheckID2a	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6180	fn_803C6180	cbForStateCheckID2a	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c61f4	fn_803C61F4	stateCheckID2	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c622c	fn_803C622C	cbForStateCheckID1	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6340	fn_803C6340	cbForStateCheckID2	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6424	fn_803C6424	cbForStateCheckID3	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6564	fn_803C6564	stateCoverClosed	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6630	fn_803C6630	stateCoverClosed_CMD	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c6660	fn_803C6660	cbForStateCoverClosed	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+rename	dolphin_sdk	803c66d0	fn_803C66D0	stateMotorStopped	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c66f8	cbForStateMotorStopped	cbForStateMotorStopped	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c67dc	stateReady	stateReady	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c6a0c	stateBusy	stateBusy	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c6d2c	fn_803C6D2C	cbForStateBusy	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+skip	dolphin_sdk	803c75e4	DVDCancelStreamAsync	DVDGetStreamPlayAddrAsync	asm/dolphin/dolphin_sdk_dvd.s	local name is non-generic
+same	dolphin_sdk	803c76a0	DVDInquiryAsync	DVDInquiryAsync	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c7770	DVDReset	DVDReset	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c77b4	DVDGetCommandBlockStatus	DVDGetCommandBlockStatus	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c7800	DVDGetDriveStatus	DVDGetDriveStatus	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c78ac	fn_803C78AC	DVDSetAutoInvalidation	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c790c	DVDCancelAsync	DVDCancelAsync	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c7b88	DVDCancel	DVDCancel	asm/dolphin/dolphin_sdk_dvd.s	already named
+rename	dolphin_sdk	803c7c58	fn_803C7C58	DVDGetCurrentDiskID	asm/dolphin/dolphin_sdk_dvd.s	generic local name
+same	dolphin_sdk	803c7c60	DVDCheckDisk	DVDCheckDisk	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c7d58	__DVDPrepareResetAsync	__DVDPrepareResetAsync	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c7fb4	__DVDCheckWaitingQueue	__DVDCheckWaitingQueue	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c8188	__DVDStoreErrorCode	__DVDStoreErrorCode	asm/dolphin/dolphin_sdk_dvd.s	already named
+same	dolphin_sdk	803c856c	__GXDefaultTexRegionCallback	__GXDefaultTexRegionCallback	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c879c	GXInit	GXInit	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c902c	__GXInitGX	__GXInitGX	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9a24	GXInitFifoBase	GXInitFifoBase	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9a90	GXInitFifoPtrs	GXInitFifoPtrs	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9b00	GXInitFifoLimits	GXInitFifoLimits	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9b0c	GXSetCPUFifo	GXSetCPUFifo	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9c1c	GXSetGPFifo	GXSetGPFifo	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803c9dd8	__GXFifoInit	__GXFifoInit	asm/dolphin/dolphin_sdk_gx.s	already named
+rename	dolphin_sdk	803c9e24	fn_803C9E24	__GXFifoReadEnable	asm/dolphin/dolphin_sdk_gx.s	generic local name
+rename	dolphin_sdk	803c9e48	fn_803C9E48	__GXFifoReadDisable	asm/dolphin/dolphin_sdk_gx.s	generic local name
+rename	dolphin_sdk	803c9e68	fn_803C9E68	__GXFifoLink	asm/dolphin/dolphin_sdk_gx.s	generic local name
+rename	dolphin_sdk	803c9ea4	fn_803C9EA4	__GXWriteFifoIntEnable	asm/dolphin/dolphin_sdk_gx.s	generic local name
+rename	dolphin_sdk	803c9ee0	fn_803C9EE0	__GXWriteFifoIntReset	asm/dolphin/dolphin_sdk_gx.s	generic local name
+same	dolphin_sdk	803ca02c	__GXXfVtxSpecs	__GXXfVtxSpecs	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803ca184	GXSetVtxDesc	GXSetVtxDesc	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cac3c	GXSetVtxAttrFmt	GXSetVtxAttrFmt	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cb69c	GXSetArray	GXSetArray	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cb728	GXInvalidateVtxCache	GXInvalidateVtxCache	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cb738	GXSetTexCoordGen2	GXSetTexCoordGen2	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cba08	GXSetNumTexGens	GXSetNumTexGens	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cba48	GXSetMisc	GXSetMisc	asm/dolphin/dolphin_sdk_gx.s	already named
+rename	dolphin_sdk	803cbe9c	fn_803CBE9C	GXPixModeSync	asm/dolphin/dolphin_sdk_gx.s	generic local name
+same	dolphin_sdk	803cc2b4	GXBegin	GXBegin	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cc42c	GXSetLineWidth	GXSetLineWidth	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cc654	GXSetTexCopySrc	GXSetTexCopySrc	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cc720	GXSetTexCopyDst	GXSetTexCopyDst	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803ccdd4	GXCopyTex	GXCopyTex	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803ccf88	GXInitLightAttn	GXInitLightAttn	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803cd23c	GXLoadLightObjImm	GXLoadLightObjImm	asm/dolphin/dolphin_sdk_gx.s	already named
+skip	dolphin_sdk	803cd5b0	kar_shadow__803cd5b0	GXGetTexBufferSize	asm/dolphin/dolphin_sdk_gx.s	local name is non-generic
+same	dolphin_sdk	803ce084	GXInvalidateTexAll	GXInvalidateTexAll	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803d0568	GXSetProjection	GXSetProjection	asm/dolphin/dolphin_sdk_gx.s	already named
+rename	dolphin_sdk	803d073c	fn_803D073C	GXLoadPosMtxImm	asm/dolphin/dolphin_sdk_gx.s	generic local name
+same	dolphin_sdk	803d07dc	GXSetCurrentMtx	GXSetCurrentMtx	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803d08c8	GXSetViewportJitter	GXSetViewportJitter	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803d09cc	GXSetViewport	GXSetViewport	asm/dolphin/dolphin_sdk_gx.s	already named
+same	dolphin_sdk	803d0a28	GXSetScissor	GXSetScissor	asm/dolphin/dolphin_sdk_gx.s	already named
+skip	dolphin_sdk	803d13fc	kar_fl_indirectload__803d13fc	PSMTXIdentity	asm/dolphin/dolphin_sdk_mtx.s	local name is non-generic
+same	dolphin_sdk	803d1428	PSMTXCopy	PSMTXCopy	asm/dolphin/dolphin_sdk_mtx.s	already named
+rename	dolphin_sdk	803d145c	fn_803D145C	PSMTXConcat	asm/dolphin/dolphin_sdk_mtx.s	generic local name
+same	dolphin_sdk	803d1a78	C_MTXLookAt	C_MTXLookAt	asm/dolphin/dolphin_sdk_mtx.s	already named
+rename	dolphin_sdk	803d1c04	fn_803D1C04	C_MTXLightFrustum	asm/dolphin/dolphin_sdk_mtx.s	generic local name
+rename	dolphin_sdk	803d1c98	fn_803D1C98	C_MTXLightPerspective	asm/dolphin/dolphin_sdk_mtx.s	generic local name
+rename	dolphin_sdk	803d1d64	fn_803D1D64	C_MTXLightOrtho	asm/dolphin/dolphin_sdk_mtx.s	generic local name
+rename	dolphin_sdk	803d1dec	fn_803D1DEC	PSMTXMultVec	asm/dolphin/dolphin_sdk_mtxvec.s	generic local name
+same	dolphin_sdk	803d1e94	C_MTXFrustum	C_MTXFrustum	asm/dolphin/dolphin_sdk_mtx44.s	already named
+same	dolphin_sdk	803d1f30	C_MTXPerspective	C_MTXPerspective	asm/dolphin/dolphin_sdk_mtx44.s	already named
+same	dolphin_sdk	803d2000	C_MTXOrtho	C_MTXOrtho	asm/dolphin/dolphin_sdk_mtx44.s	already named
+same	dolphin_sdk	803d20bc	PSVECSubtract	PSVECSubtract	asm/dolphin/dolphin_sdk_vec.s	already named
+same	dolphin_sdk	803d20e0	PSVECScale	PSVECScale	asm/dolphin/dolphin_sdk_vec.s	already named
+rename	dolphin_sdk	803d20fc	fn_803D20FC	PSVECNormalize	asm/dolphin/dolphin_sdk_vec.s	generic local name
+rename	dolphin_sdk	803d2158	fn_803D2158	PSVECMag	asm/dolphin/dolphin_sdk_vec.s	generic local name
+same	dolphin_sdk	803d219c	PSVECDotProduct	PSVECDotProduct	asm/dolphin/dolphin_sdk_vec.s	already named
+same	dolphin_sdk	803d21bc	PSVECCrossProduct	PSVECCrossProduct	asm/dolphin/dolphin_sdk_vec.s	already named
+same	dolphin_sdk	803d2348	__OSFPRInit	__OSFPRInit	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d2470	fn_803D2470	OSGetConsoleType	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d2498	ClearArena	ClearArena	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d25c0	InquiryCallback	InquiryCallback	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d25fc	OSInit	OSInit	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d29d4	OSExceptionInit	OSExceptionInit	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d2c7c	__OSDBJUMPEND	__OSSetExceptionHandler	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d2c7c	__OSSetExceptionHandler	__OSSetExceptionHandler	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2c98	__OSGetExceptionHandler	__OSGetExceptionHandler	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2da0	__OSPSInit	__OSPSInit	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2df4	__OSGetDIConfig	__OSGetDIConfig	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2e08	OSRegisterVersion	OSRegisterVersion	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2e34	OSInitAlarm	OSInitAlarm	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2e80	OSCreateAlarm	OSCreateAlarm	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d2e90	InsertAlarm	InsertAlarm	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d30e0	OSSetAlarm	OSSetAlarm	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d31c4	OSCancelAlarm	OSCancelAlarm	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d3784	fn_803D3784	OSSetCurrentHeap	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d3794	OSInitAlloc	OSInitAlloc	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3804	OSCreateHeap	OSCreateHeap	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d3870	fn_803D3870	OSDestroyHeap	asm/dolphin/dolphin_sdk_os.s	generic local name
+skip	dolphin_sdk	803d3884	kar_diag__803d3884	OSCheckHeap	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d3be4	OSGetArenaHi	OSGetArenaHi	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3bec	OSGetArenaLo	OSGetArenaLo	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3bf4	OSSetArenaHi	OSSetArenaHi	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3bfc	OSSetArenaLo	OSSetArenaLo	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3e0c	__OSStopAudioSystem	__OSStopAudioSystem	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3ee4	DCEnable	DCEnable	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3fe4	ICFlashInvalidate	ICFlashInvalidate	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d3ff4	ICEnable	ICEnable	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4030	L2GlobalInvalidate	L2GlobalInvalidate	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4228	__OSCacheInit	__OSCacheInit	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d431c	__OSLoadFPUContext	OSLoadFPUContext	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d4440	__OSSaveFPUContext	__OSSaveFPUContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4570	OSSetCurrentContext	OSSetCurrentContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d45cc	OSGetCurrentContext	OSGetCurrentContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d45d8	OSSaveContext	OSSaveContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4658	OSLoadContext	OSLoadContext	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d4730	fn_803D4730	OSGetStackPointer	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d4768	OSClearContext	OSClearContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d478c	OSInitContext	OSInitContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4848	OSDumpContext	OSDumpContext	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d4b74	__OSContextInit	__OSContextInit	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d4ce8	OSReport	_OSReport	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d4d68	OSPanic	OSPanic	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d50ac	__OSUnhandledException	__OSUnhandledException	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d6354	OSGetFontEncode	OSGetFontEncode	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d6e20	OSInitFont	OSInitFont	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d70a8	OSDisableInterrupts	OSDisableInterrupts	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d70bc	OSEnableInterrupts	OSEnableInterrupts	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d70d0	OSRestoreInterrupts	OSRestoreInterrupts	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d70f4	__OSSetInterruptHandler	__OSSetInterruptHandler	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d7110	fn_803D7110	__OSGetInterruptHandler	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d7124	__OSInterruptInit	__OSInterruptInit	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d7198	fn_803D7198	SetInterruptMask	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d7470	__OSMaskInterrupts	__OSMaskInterrupts	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d74f8	__OSUnmaskInterrupts	__OSUnmaskInterrupts	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d7914	__OSModuleInit	__OSModuleInit	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d7b30	OSGetPhysicalMemSize	OSGetPhysicalMemSize	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d7b3c	fn_803D7B3C	OSGetConsoleSimulatedMemSize	asm/dolphin/dolphin_sdk_os.s	generic local name
+rename	dolphin_sdk	803d7b48	fn_803D7B48	OSOnReset	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d7cf0	RealMode	RealMode	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d7ffc	__OSUnlockAllMutex	__OSUnlockAllMutex	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d806c	fn_803D806C	__OSCheckMutex	asm/dolphin/dolphin_sdk_os.s	generic local name
+rename	dolphin_sdk	803d816c	fn_803D816C	__OSCheckDeadLock	asm/dolphin/dolphin_sdk_os.s	generic local name
+rename	dolphin_sdk	803d81a4	fn_803D81A4	__OSCheckMutexes	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d8234	__OSReboot	__OSReboot	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d8574	OSRegisterResetFunction	OSRegisterResetFunction	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d868c	Reset	Reset	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d86fc	__OSDoHotReset	__OSDoHotReset	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d8744	OSResetSystem	OSResetSystem	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d89cc	OSGetResetCode	OSGetResetCode	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d8af0	OSGetResetButtonState	OSGetResetButtonState	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d8d88	fn_803D8D88	OSGetResetSwitchState	asm/dolphin/dolphin_sdk_os.s	generic local name
+rename	dolphin_sdk	803d8e08	fn_803D8E08	WriteSram	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d8f20	__OSInitSram	__OSInitSram	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9054	__OSLockSram	__OSLockSram	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d90b0	__OSLockSramEx	__OSLockSramEx	asm/dolphin/dolphin_sdk_os.s	already named
+rename	dolphin_sdk	803d910c	fn_803D910C	UnlockSram	asm/dolphin/dolphin_sdk_os.s	generic local name
+same	dolphin_sdk	803d9414	__OSUnlockSram	__OSUnlockSram	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9438	__OSUnlockSramEx	__OSUnlockSramEx	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d945c	__OSSyncSram	__OSSyncSram	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9590	OSGetSoundMode	OSGetSoundMode	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9610	OSSetSoundMode	OSSetSoundMode	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d96b4	kar_osthread__near_803d96b4	OSGetProgressiveMode	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+skip	dolphin_sdk	803d9724	kar_osthread__near_803d9724	OSSetProgressiveMode	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d97c8	OSGetWirelessID	OSGetWirelessID	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d984c	OSSetWirelessID	OSSetWirelessID	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9918	__OSInitSystemCall	__OSInitSystemCall	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9980	__OSThreadInit	__OSThreadInit	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9ad8	OSInitThreadQueue	OSInitThreadQueue	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9ae8	OSGetCurrentThread	OSGetCurrentThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9b44	OSDisableScheduler	OSDisableScheduler	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803d9b84	OSEnableScheduler	OSEnableScheduler	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d9bc4	kar_osthread__near_803d9bc4	UnsetRun	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d9c2c	__OSGetEffectivePriority	__OSGetEffectivePriority	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803d9c68	kar_osthread__near_803d9c68	SetEffectivePriority	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803d9e78	SelectThread	SelectThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da0a0	__OSReschedule	__OSReschedule	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da0d0	OSCreateThread	OSCreateThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da2b8	OSExitThread	OSExitThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da39c	OSCancelThread	OSCancelThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da698	OSResumeThread	OSResumeThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803da920	OSSuspendThread	OSSuspendThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803daa90	OSSleepThread	OSSleepThread	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803dab7c	OSWakeupThread	OSWakeupThread	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803dac80	kar_osthread__near_803dac80	CheckThreadQueue	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+skip	dolphin_sdk	803dad1c	kar_osthread__803dad1c	OSCheckActiveThreads	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	dolphin_sdk	803db518	OSGetTime	OSGetTime	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803db530	OSGetTick	OSGetTick	asm/dolphin/dolphin_sdk_os.s	already named
+same	dolphin_sdk	803db538	__OSGetSystemTime	__OSGetSystemTime	asm/dolphin/dolphin_sdk_os.s	already named
+skip	dolphin_sdk	803db59c	kar_osthread__near_803db59c	__OSTimeToSystemTime	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+skip	dolphin_sdk	803db5f4	kar_osthread__near_803db5f4	GetDates	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+skip	dolphin_sdk	803db790	kar_osthread__near_803db790	OSTicksToCalendarTime	asm/dolphin/dolphin_sdk_os.s	local name is non-generic
+same	runtime_sdk	803db994	__init_user	__init_user	asm/init/__ppc_eabi_init.s	already named
+same	runtime_sdk	803db9b4	__init_cpp	__init_cpp	asm/init/__ppc_eabi_init.s	already named
+same	runtime_sdk	803dba08	_ExitProcess	_ExitProcess	asm/init/__ppc_eabi_init.s	already named
+skip	dolphin_sdk	803dba28	kar_osthread__near_803dba28	ClampStick	asm/dolphin/dolphin_sdk_pad.s	local name is non-generic
+same	dolphin_sdk	803dbb58	PADClamp	PADClamp	asm/dolphin/dolphin_sdk_pad.s	already named
+skip	dolphin_sdk	803dbc6c	kar_osthread__near_803dbc6c	UpdateOrigin	asm/dolphin/dolphin_sdk_pad.s	local name is non-generic
+same	dolphin_sdk	803dbe10	PADOriginCallback	PADOriginCallback	asm/dolphin/dolphin_sdk_pad.s	already named
+same	dolphin_sdk	803dbed4	PADOriginUpdateCallback	PADOriginUpdateCallback	asm/dolphin/dolphin_sdk_pad.s	already named
+same	dolphin_sdk	803dc6d0	PADInit	PADInit	asm/dolphin/dolphin_sdk_pad.s	already named
+rename	dolphin_sdk	803dccb4	fn_803DCCB4	PADControlMotor	asm/dolphin/dolphin_sdk_pad.s	generic local name
+same	dolphin_sdk	803dcd58	PADSetSpec	PADSetSpec	asm/dolphin/dolphin_sdk_pad.s	already named
+same	dolphin_sdk	803dd6e0	__PADDisableRecalibration	__PADDisableRecalibration	asm/dolphin/dolphin_sdk_pad.s	already named
+same	dolphin_sdk	803dd75c	__VIRetraceHandler	__VIRetraceHandler	asm/dolphin/dolphin_sdk_vi.s	already named
+rename	dolphin_sdk	803dd98c	fn_803DD98C	VISetPreRetraceCallback	asm/dolphin/dolphin_sdk_vi.s	generic local name
+rename	dolphin_sdk	803dd9d0	fn_803DD9D0	VISetPostRetraceCallback	asm/dolphin/dolphin_sdk_vi.s	generic local name
+rename	dolphin_sdk	803dda14	fn_803DDA14	getTiming	asm/dolphin/dolphin_sdk_vi.s	generic local name
+same	dolphin_sdk	803de164	VIWaitForRetrace	VIWaitForRetrace	asm/dolphin/dolphin_sdk_vi.s	already named
+rename	dolphin_sdk	803df408	fn_803DF408	getCurrentFieldEvenOdd	asm/dolphin/dolphin_sdk_vi.s	generic local name
+same	dolphin_sdk	803df470	VIGetNextField	VIGetNextField	asm/dolphin/dolphin_sdk_vi.s	already named
+rename	dolphin_sdk	803df654	fn_803DF654	AIRegisterDMACallback	asm/dolphin/dolphin_sdk_ai.s	generic local name
+same	dolphin_sdk	803df698	AIInitDMA	AIInitDMA	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803df720	AIStartDMA	AIStartDMA	asm/dolphin/dolphin_sdk_ai.s	already named
+rename	dolphin_sdk	803df738	fn_803DF738	AIStopDMA	asm/dolphin/dolphin_sdk_ai.s	generic local name
+same	dolphin_sdk	803df750	AISetStreamPlayState	AISetStreamPlayState	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803df828	AIGetStreamPlayState	AIGetStreamPlayState	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803df838	AISetDSPSampleRate	AISetDSPSampleRate	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803df918	AIGetDSPSampleRate	AIGetDSPSampleRate	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803df92c	__AI_set_stream_sample_rate	__AI_set_stream_sample_rate	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803dfa00	AIGetStreamSampleRate	AIGetStreamSampleRate	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803dfa10	AISetStreamVolLeft	AISetStreamVolLeft	asm/dolphin/dolphin_sdk_ai.s	already named
+skip	dolphin_sdk	803dfa2c	AIGetStreamVolLeft	AIGetStreamPlayState_2	asm/dolphin/dolphin_sdk_ai.s	local name is non-generic
+same	dolphin_sdk	803dfa3c	AISetStreamVolRight	AISetStreamVolRight	asm/dolphin/dolphin_sdk_ai.s	already named
+skip	dolphin_sdk	803dfa58	AIGetStreamVolRight	AIGetStreamPlayState_3	asm/dolphin/dolphin_sdk_ai.s	local name is non-generic
+same	dolphin_sdk	803dfa68	AIInit	AIInit	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803dfbd4	__AISHandler	__AISHandler	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803dfcfc	__AICallbackStackSwitch	__AICallbackStackSwitch	asm/dolphin/dolphin_sdk_ai.s	already named
+same	dolphin_sdk	803dfd54	__AI_SRC_INIT	__AI_SRC_INIT	asm/dolphin/dolphin_sdk_ai.s	already named
+rename	dolphin_sdk	803dff38	fn_803DFF38	__tmp_aid_callback	asm/dolphin/dolphin_sdk_ai.s	generic local name
+same	dolphin_sdk	803dff7c	ARStartDMA	ARStartDMA	asm/dolphin/dolphin_sdk_ar.s	already named
+rename	dolphin_sdk	803e006c	fn_803E006C	ARAlloc	asm/dolphin/dolphin_sdk_ar.s	generic local name
+rename	dolphin_sdk	803e00d4	fn_803E00D4	ARFree	asm/dolphin/dolphin_sdk_ar.s	generic local name
+same	dolphin_sdk	803e0148	ARInit	ARInit	asm/dolphin/dolphin_sdk_ar.s	already named
+rename	dolphin_sdk	803e020c	fn_803E020C	ARReset	asm/dolphin/dolphin_sdk_ar.s	generic local name
+rename	dolphin_sdk	803e0218	fn_803E0218	ARGet_BaseAddressOrSizeOrInternalSize	asm/dolphin/dolphin_sdk_ar.s	generic local name
+same	dolphin_sdk	803e0220	__ARHandler	__ARHandler	asm/dolphin/dolphin_sdk_ar.s	already named
+same	dolphin_sdk	803e0298	__ARChecksize	__ARChecksize	asm/dolphin/dolphin_sdk_ar.s	already named
+same	dolphin_sdk	803e1a8c	__ARQServiceQueueLo	__ARQServiceQueueLo	asm/dolphin/dolphin_sdk_arq.s	already named
+rename	dolphin_sdk	803e1b8c	fn_803E1B8C	__ARQCallbackHack	asm/dolphin/dolphin_sdk_arq.s	generic local name
+same	dolphin_sdk	803e1b90	__ARQInterruptServiceRoutine	__ARQInterruptServiceRoutine	asm/dolphin/dolphin_sdk_arq.s	already named
+same	dolphin_sdk	803e1c5c	ARQInit	ARQInit	asm/dolphin/dolphin_sdk_arq.s	already named
+same	dolphin_sdk	803e1ccc	ARQPostRequest	ARQPostRequest	asm/dolphin/dolphin_sdk_arq.s	already named
+rename	dolphin_sdk	803e1e28	fn_803E1E28	__CARDDefaultApiCallback	asm/dolphin/dolphin_sdk_card.s	generic local name
+rename	dolphin_sdk	803e1e2c	fn_803E1E2C	__CARDSyncCallback	asm/dolphin/dolphin_sdk_card.s	generic local name
+same	dolphin_sdk	803e1e60	__CARDExtHandler	__CARDExtHandler	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e1f38	__CARDExiHandler	__CARDExiHandler	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e2050	__CARDTxHandler	__CARDTxHandler	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e20f8	__CARDUnlockedHandler	__CARDUnlockedHandler	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e217c	__CARDEnableInterrupt	__CARDEnableInterrupt	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e223c	__CARDReadStatus	__CARDReadStatus	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e232c	__CARDClearStatus	__CARDClearStatus	asm/dolphin/dolphin_sdk_card.s	already named
+rename	dolphin_sdk	803e23d8	fn_803E23D8	TimeoutHandler	asm/dolphin/dolphin_sdk_card.s	generic local name
+rename	dolphin_sdk	803e247c	fn_803E247C	Retry	asm/dolphin/dolphin_sdk_card.s	generic local name
+rename	dolphin_sdk	803e26a8	fn_803E26A8	UnlockedCallback	asm/dolphin/dolphin_sdk_card.s	generic local name
+same	dolphin_sdk	803e27b8	__CARDStart	__CARDStart	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e296c	__CARDReadSegment	__CARDReadSegment	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e2aa0	__CARDWritePage	__CARDWritePage	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e2bbc	__CARDEraseSector	__CARDEraseSector	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e2c9c	CARDInit	CARDInit	asm/dolphin/dolphin_sdk_card.s	already named
+rename	dolphin_sdk	803e2d48	fn_803E2D48	__CARDGetFontEncode	asm/dolphin/dolphin_sdk_card.s	generic local name
+rename	dolphin_sdk	803e2d50	fn_803E2D50	__CARDSetDiskID	asm/dolphin/dolphin_sdk_card.s	generic local name
+same	dolphin_sdk	803e2d88	__CARDGetControlBlock	__CARDGetControlBlock	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e2e40	__CARDPutControlBlock	__CARDPutControlBlock	asm/dolphin/dolphin_sdk_card.s	already named
+rename	dolphin_sdk	803e2ea4	fn_803E2EA4	CARDGetResultCode	asm/dolphin/dolphin_sdk_card.s	generic local name
+same	dolphin_sdk	803e2ed4	CARDFreeBlocks	CARDFreeBlocks	asm/dolphin/dolphin_sdk_card.s	already named
+same	dolphin_sdk	803e9f40	SIRefreshSamplingRate	SIRefreshSamplingRate	asm/dolphin/dolphin_sdk_si.s	already named
+same	dolphin_sdk	803e9f64	SetExiInterruptMask	SetExiInterruptMask	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea058	EXIImm	EXIImm	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea2b4	EXIImmEx	EXIImmEx	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea354	EXIDma	EXIDma	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea440	EXISync	EXISync	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea68c	EXIClearInterrupts	EXIClearInterrupts	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea6d4	EXISetExiCallback	EXISetExiCallback	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea750	__EXIProbe	__EXIProbe	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea8c4	EXIProbe	EXIProbe	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea944	EXIProbeEx	EXIProbeEx	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ea9f8	EXIAttach	EXIAttach	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eab04	EXIDetach	EXIDetach	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eabc0	EXISelect	EXISelect	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eacec	EXIDeselect	EXIDeselect	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eb380	EXILock	EXILock	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eb474	EXIUnlock	EXIUnlock	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eb550	EXIGetState	EXIGetState	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803eb590	EXIGetID	EXIGetID	asm/dolphin/dolphin_sdk_exi.s	already named
+same	dolphin_sdk	803ebe10	WriteUARTN	WriteUARTN	asm/dolphin/dolphin_sdk_exi.s	already named
+rename	dolphin_sdk	803ec02c	fn_803EC02C	AXInitEx	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec068	fn_803EC068	__AXGetStackHead	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec080	fn_803EC080	__AXServiceCallbackStack	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec0f4	fn_803EC0F4	__AXAllocInit	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec1a8	fn_803EC1A8	__AXPushFreeStack	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec1c8	fn_803EC1C8	__AXPushCallbackStack	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec1d8	fn_803EC1D8	__AXPopCallbackStack	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec1f4	fn_803EC1F4	__AXRemoveFromStack	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec288	fn_803EC288	AXFreeVoice	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ec308	fn_803EC308	AXAcquireVoice	asm/dolphin/dolphin_sdk_ax.s	generic local name
+skip	dolphin_sdk	803ec47c	kar_axdriver__803ec47c	AXSetVoicePriority	asm/dolphin/dolphin_sdk_ax.s	local name is non-generic
+rename	dolphin_sdk	803ec524	fn_803EC524	__AXAuxInit	asm/dolphin/dolphin_sdk_ax.s	generic local name
+rename	dolphin_sdk	803ed0a8	fn_803ED0A8	__AXClInit	asm/dolphin/dolphin_sdk_ax.s	generic local name
+skip	dolphin_sdk	803ed42c	salInitAi	__AXOutInit	asm/dolphin/dolphin_sdk_ax.s	local name is non-generic
+rename	dolphin_sdk	803edb78	fn_803EDB78	__AXSPBInit	asm/dolphin/dolphin_sdk_ax.s	generic local name
+skip	dolphin_sdk	803ee5f8	salInitDspCtrl	__AXVPBInit	asm/dolphin/dolphin_sdk_ax.s	local name is non-generic
+skip	dolphin_sdk	803f03fc	ReverbSTD_HandleReverb	HandleReverb	asm/dolphin/dolphin_sdk_mix.s	local name is non-generic
+same	sysdolphin	803f4b7c	HSD_TObjRemoveAnimAll	HSD_TObjRemoveAnimAll	asm/sysdolphin/tobj.s	already named
+skip	sysdolphin	803f4bdc	HSD_TObjAddAnimAll	HSD_TObjAddAnim	asm/sysdolphin/tobj.s	local name is non-generic
+same	sysdolphin	803f4d30	HSD_TObjReqAnimAllByFlags	HSD_TObjReqAnimAllByFlags	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f4da4	TObjUpdateFunc	TObjUpdateFunc	asm/sysdolphin/tobj.s	already named
+skip	sysdolphin	803f5370	HSD_TObjInterpretAnim	HSD_TObjAnim	asm/sysdolphin/tobj.s	local name is non-generic
+same	sysdolphin	803f53a8	HSD_TObjAnimAll	HSD_TObjAnimAll	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5404	TObjLoad	TObjLoad	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f552c	HSD_TObjLoadDesc	HSD_TObjLoadDesc	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f55c4	HSD_TlutLoadDesc	HSD_TlutLoadDesc	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5610	HSD_TObjTevLoadDesc	HSD_TObjTevLoadDesc	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f565c	_HSD_TObjGetCurrentByType	_HSD_TObjGetCurrentByType	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5698	HSD_TexMapID2PTTexMtx	HSD_TexMapID2PTTexMtx	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f572c	MakeTextureMtx	MakeTextureMtx	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5900	TObjSetupMtx	TObjSetupMtx	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5be8	HSD_TObjSetupTextureCoordGen	HSD_TObjSetupTextureCoordGen	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5e78	HSD_TObjSetupVolatileTev	HSD_TObjSetupVolatileTev	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f5f98	MakeColorGenTExp	MakeColorGenTExp	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f6860	TObjMakeTExp	TObjMakeTExp	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f6ec8	HSD_TObjAssignResources	HSD_TObjAssignResources	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7158	HSD_TObjSetup	HSD_TObjSetup	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f743c	HSD_TGTex2Index	HSD_TGTex2Index	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f74d0	HSD_TexCoordID2TexGenSrc	HSD_TexCoordID2TexGenSrc	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f75e8	HSD_TexMtx2Index	HSD_TexMtx2Index	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7698	HSD_Index2TexMtx	HSD_Index2TexMtx	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f77e4	HSD_TObjRemoveAll	HSD_TObjRemoveAll	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7858	HSD_TObjGetNext	HSD_TObjGetNext	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7894	HSD_TObjAlloc	HSD_TObjAlloc	asm/sysdolphin/tobj.s	already named
+skip	sysdolphin	803f78f0	HSD_TObjRemove	HSD_TObjFree	asm/sysdolphin/tobj.s	local name is non-generic
+same	sysdolphin	803f7924	HSD_TlutAlloc	HSD_TlutAlloc	asm/sysdolphin/tobj.s	already named
+skip	sysdolphin	803f797c	HSD_TlutRemove	HSD_TlutFree	asm/sysdolphin/tobj.s	local name is non-generic
+same	sysdolphin	803f79a8	HSD_TObjTevAlloc	HSD_TObjTevAlloc	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7a00	HSD_ImageDescAlloc	HSD_ImageDescAlloc	asm/sysdolphin/tobj.s	already named
+skip	sysdolphin	803f7a58	HSD_ImageDescRemove	HSD_ImageDescFree	asm/sysdolphin/tobj.s	local name is non-generic
+same	sysdolphin	803f7a7c	HSD_ImageDescCopyFromEFB	HSD_ImageDescCopyFromEFB	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7b2c	TObjInit	TObjInit	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7b84	TObjRelease	TObjRelease	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7c40	TObjAmnesia	TObjAmnesia	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7ca0	TObjInfoInit	TObjInfoInit	asm/sysdolphin/tobj.s	already named
+same	sysdolphin	803f7d44	HSD_SetupChannelMode	HSD_SetupChannelMode	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f7f80	HSD_SetupPEMode	HSD_SetupPEMode	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f80f4	HSD_SetupRenderModeWithCustomPE	HSD_SetupRenderModeWithCustomPE	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f82c4	HSD_SetupRenderMode	HSD_SetupRenderMode	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8404	HSD_SetMaterialColor	HSD_SetMaterialColor	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8478	HSD_SetMaterialShininess	HSD_SetMaterialShininess	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8488	HSD_StateSetLineWidth	HSD_StateSetLineWidth	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f84ec	HSD_StateSetCullMode	HSD_StateSetCullMode	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8528	HSD_StateSetBlendMode	HSD_StateSetBlendMode	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8658	HSD_StateSetPointSize	HSD_StateSetPointSize	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f86bc	HSD_StateSetAlphaCompare	HSD_StateSetAlphaCompare	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f876c	HSD_StateSetColorUpdate	HSD_StateSetColorUpdate	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f87b4	HSD_StateSetAlphaUpdate	HSD_StateSetAlphaUpdate	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f87fc	HSD_StateSetDstAlpha	HSD_StateSetDstAlpha	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8868	HSD_StateSetZCompLoc	HSD_StateSetZCompLoc	asm/sysdolphin/tev.s	already named
+skip	sysdolphin	803f88b0	HSD_StateSetDither	HSD_StateSetColorDither	asm/sysdolphin/tev.s	local name is non-generic
+same	sysdolphin	803f88f8	_HSD_StateInvalidatePrimitive	_HSD_StateInvalidatePrimitive	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8914	_HSD_StateInvalidateVtxAttr	_HSD_StateInvalidateVtxAttr	asm/sysdolphin/tev.s	already named
+rename	sysdolphin	803f8934	fn_803F8934	_HSD_StateInvalidateRenderMode	asm/sysdolphin/tev.s	generic local name
+same	sysdolphin	803f898c	HSD_StateInvalidate	HSD_StateInvalidate	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f89ec	HSD_RenderInitAllocData	HSD_RenderInitAllocData	asm/sysdolphin/tev.s	already named
+rename	sysdolphin	803f8a48	fn_803F8A48	HSD_RenderGetAllocData	asm/sysdolphin/tev.s	generic local name
+rename	sysdolphin	803f8a54	fn_803F8A54	HSD_TevRegGetAllocData	asm/sysdolphin/tev.s	generic local name
+rename	sysdolphin	803f8a60	fn_803F8A60	HSD_ChanGetAllocData	asm/sysdolphin/tev.s	generic local name
+same	sysdolphin	803f8f48	HSD_SetupChannelAll	HSD_SetupChannelAll	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f8ff8	HSD_StateSetNumTexGens	HSD_StateSetNumTexGens	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f9028	HSD_StateInitTev	HSD_StateInitTev	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803f941c	HSD_SetupTevStageAll	HSD_SetupTevStageAll	asm/sysdolphin/tev.s	already named
+same	sysdolphin	803fb304	HSD_AObjInterpretAnim	HSD_AObjInterpretAnim	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fb4bc	HSD_AObjLoadDesc	HSD_AObjLoadDesc	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fb5e4	HSD_AObjRemove	HSD_AObjRemove	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fb654	HSD_AObjAlloc	HSD_AObjAlloc	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fb6c0	HSD_AObjFree	HSD_AObjFree	asm/sysdolphin/aobj.s	already named
+skip	sysdolphin	803fb6f4	CObjForeachAnim	callbackForeachFunc	asm/sysdolphin/aobj.s	local name is non-generic
+same	sysdolphin	803fda3c	HSD_AObjSetRate	HSD_AObjSetRate	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fda4c	HSD_AObjSetRewindFrame	HSD_AObjSetRewindFrame	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fda5c	HSD_AObjSetEndFrame	HSD_AObjSetEndFrame	asm/sysdolphin/aobj.s	already named
+same	sysdolphin	803fda6c	HSD_AObjSetCurrentFrame	HSD_AObjSetCurrentFrame	asm/sysdolphin/aobj.s	already named
+rename	sysdolphin	803fdac0	fn_803FDAC0	_HSD_AObjForgetMemory	asm/sysdolphin/aobj.s	generic local name
+same	sysdolphin	803ff8e4	HSD_LightID2Index	HSD_LightID2Index	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffc4c	HSD_LObjSetColor	HSD_LObjSetColor	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffc58	HSD_LObjGetColor	HSD_LObjGetColor	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffc64	HSD_LObjSetPosition	HSD_LObjSetPosition	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffcec	HSD_LObjGetPosition	HSD_LObjGetPosition	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffd2c	HSD_LObjSetInterest	HSD_LObjSetInterest	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffdb4	HSD_LObjGetInterest	HSD_LObjGetInterest	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffdf4	HSD_LObjGetPositionWObj	HSD_LObjGetPositionWObj	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	803ffe0c	HSD_LObjGetInterestWObj	HSD_LObjGetInterestWObj	asm/sysdolphin/lobj.s	already named
+same	sysdolphin	80400654	LObjInfoInit	LObjInfoInit	asm/sysdolphin/lobj.s	already named
+skip	sysdolphin	804006d4	HSD_CObjSetViewportScale	HSD_CObjEraseScreen	asm/sysdolphin/cobj.s	local name is non-generic
+same	sysdolphin	80400878	HSD_CObjAddAnim	HSD_CObjAddAnim	asm/sysdolphin/cobj.s	already named
+skip	sysdolphin	804008f4	CObjUpdateFunc	HSD_CObjUpdateFunc	asm/sysdolphin/cobj.s	local name is non-generic
+same	sysdolphin	80400a38	HSD_CObjAnim	HSD_CObjAnim	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80400a88	HSD_CObjReqAnim	HSD_CObjReqAnim	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80400ae4	setupTopHalfCamera	setupTopHalfCamera	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80400d48	setupBottomHalfCamera	setupBottomHalfCamera	asm/sysdolphin/cobj.s	already named
+rename	sysdolphin	80401150	fn_80401150	HSD_CObjSetCurrent	asm/sysdolphin/cobj.s	generic local name
+same	sysdolphin	804016c4	HSD_CObjEndCurrent	HSD_CObjEndCurrent	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804016e8	HSD_CObjGetInterestWObj	HSD_CObjGetInterestWObj	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80401728	HSD_CObjGetEyePositionWObj	HSD_CObjGetEyePositionWObj	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80401768	HSD_CObjGetInterest	HSD_CObjGetInterest	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804017d4	HSD_CObjSetInterest	HSD_CObjSetInterest	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80401840	HSD_CObjGetEyePosition	HSD_CObjGetEyePosition	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804018ac	HSD_CObjSetEyePosition	HSD_CObjSetEyePosition	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80401a9c	HSD_CObjGetEyeDistance	HSD_CObjGetEyeDistance	asm/sysdolphin/cobj.s	already named
+skip	sysdolphin	80402138	HSD_CObjSetUpVector	HSD_CObjGetUpVector	asm/sysdolphin/cobj.s	local name is non-generic
+same	sysdolphin	804026a8	HSD_CObjSetMtxDirty	HSD_CObjSetMtxDirty	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804026b8	HSD_CObjMtxIsDirty	HSD_CObjMtxIsDirty	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402704	HSD_CObjGetViewingMtx	HSD_CObjGetViewingMtx	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402738	HSD_CObjGetInvViewingMtxPtrDirect	HSD_CObjGetInvViewingMtxPtrDirect	asm/sysdolphin/cobj.s	already named
+skip	sysdolphin	80402ba4	vec_normalize_check	upvec2roll	asm/sysdolphin/cobj.s	local name is non-generic
+same	sysdolphin	80402c2c	HSD_CObjGetFov	HSD_CObjGetFov	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402c50	HSD_CObjSetFov	HSD_CObjSetFov	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402c70	HSD_CObjGetAspect	HSD_CObjGetAspect	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402c94	HSD_CObjSetAspect	HSD_CObjSetAspect	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402cb4	HSD_CObjGetNear	HSD_CObjGetNear	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402ccc	HSD_CObjSetNear	HSD_CObjSetNear	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402cdc	HSD_CObjGetFar	HSD_CObjGetFar	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402cf4	HSD_CObjSetFar	HSD_CObjSetFar	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402d04	HSD_CObjGetScissor	HSD_CObjGetScissor	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402d20	HSD_CObjSetScissor	HSD_CObjSetScissor	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402d3c	HSD_CObjSetScissorx4	HSD_CObjSetScissorx4	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402dbc	HSD_CObjGetViewportf	HSD_CObjGetViewportf	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402de8	HSD_CObjSetViewport	HSD_CObjSetViewport	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402e74	HSD_CObjSetViewportf	HSD_CObjSetViewportf	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402ea0	HSD_CObjSetViewportfx4	HSD_CObjSetViewportfx4	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402ebc	HSD_CObjGetProjectionType	HSD_CObjGetProjectionType	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402ed4	HSD_CObjSetProjectionType	HSD_CObjSetProjectionType	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402ee4	HSD_CObjSetFrustum	HSD_CObjSetFrustum	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402f08	HSD_CObjSetOrtho	HSD_CObjSetOrtho	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402f2c	HSD_CObjSetFlags	HSD_CObjSetFlags	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402f44	HSD_CObjClearFlags	HSD_CObjClearFlags	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402f5c	HSD_CObjGetCurrent	HSD_CObjGetCurrent	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80402f64	HSD_CObjAlloc	HSD_CObjAlloc	asm/sysdolphin/cobj.s	already named
+skip	sysdolphin	80402fc0	CObjLoad	HSD_CObjLoad	asm/sysdolphin/cobj.s	local name is non-generic
+same	sysdolphin	804031ec	HSD_CObjLoadDesc	HSD_CObjLoadDesc	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804032b0	CObjInit	CObjInit	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80403324	CObjRelease	CObjRelease	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	804034a8	CObjAmnesia	CObjAmnesia	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80403508	CObjInfoInit	CObjInfoInit	asm/sysdolphin/cobj.s	already named
+same	sysdolphin	80404928	HSD_FObjInterpretAnim	HSD_FObjInterpretAnim	asm/sysdolphin/fobj.s	already named
+same	sysdolphin	80404ffc	HSD_FObjInterpretAnimAll	HSD_FObjInterpretAnimAll	asm/sysdolphin/fobj.s	already named
+same	sysdolphin	8040506c	HSD_FObjLoadDesc	HSD_FObjLoadDesc	asm/sysdolphin/fobj.s	already named
+same	sysdolphin	80405294	HSD_FObjAlloc	HSD_FObjAlloc	asm/sysdolphin/fobj.s	already named
+same	sysdolphin	804052f0	HSD_FObjFree	HSD_FObjFree	asm/sysdolphin/fobj.s	already named
+same	sysdolphin	804054ac	PObjUpdateFunc	PObjUpdateFunc	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	804054f8	HSD_PObjAnimAll	HSD_PObjAnimAll	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80405554	PObjLoad	PObjLoad	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80405790	HSD_PObjLoadDesc	HSD_PObjLoadDesc	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80405828	HSD_PObjRemoveAll	HSD_PObjRemoveAll	asm/sysdolphin/pobj.s	already named
+skip	sysdolphin	8040589c	HSD_PObjSetCurrent	HSD_PObjSetDefaultClass	asm/sysdolphin/pobj.s	local name is non-generic
+same	sysdolphin	8040590c	HSD_PObjAlloc	HSD_PObjAlloc	asm/sysdolphin/pobj.s	already named
+skip	sysdolphin	80405968	kar_object__80405968	HSD_PObjResolveRefsAll	asm/sysdolphin/pobj.s	local name is non-generic
+same	sysdolphin	80405b3c	HSD_ClearVtxDesc	HSD_ClearVtxDesc	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80405b68	get_shape_vertex_xyz	get_shape_vertex_xyz	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80405ef4	get_shape_normal_xyz	get_shape_normal_xyz	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80406280	get_shape_nbt_xyz	get_shape_nbt_xyz	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80406688	interpretShapeAnimDisplayList	interpretShapeAnimDisplayList	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	804069ac	drawShapeAnim	drawShapeAnim	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	804070d4	HSD_PObjClearMtxMark	HSD_PObjClearMtxMark	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	804070ec	SetupSharedVtxModelMtx	SetupSharedVtxModelMtx	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	8040736c	SetupEnvelopeModelMtx	SetupEnvelopeModelMtx	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	804076f4	PObjSetupMtx	PObjSetupMtx	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80407988	HSD_PObjDisp	HSD_PObjDisp	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80407c70	PObjRelease	PObjRelease	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80407d9c	PObjAmnesia	PObjAmnesia	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80407e48	PObjInfoInit	PObjInfoInit	asm/sysdolphin/pobj.s	already named
+same	sysdolphin	80407ee0	HSD_JObjCheckDepend	HSD_JObjCheckDepend	asm/sysdolphin/jobj.s	already named
+same	sysdolphin	8040a7b8	HSD_JObjDispAll	HSD_JObjDispAll	asm/sysdolphin/jobj.s	already named
+same	sysdolphin	8040afe8	HSD_JObjLoadJoint	HSD_JObjLoadJoint	asm/sysdolphin/jobj.s	already named
+same	sysdolphin	8040b528	HSD_JObjUnref	HSD_JObjUnref	asm/sysdolphin/jobj.s	already named
+same	sysdolphin	8040d6b4	HSD_JObjSetupMatrixSub	HSD_JObjSetupMatrixSub	asm/sysdolphin/jobj.s	already named
+same	sysdolphin	8040e360	HSD_ZListInitAllocData	HSD_ZListInitAllocData	asm/sysdolphin/displayfunc.s	already named
+same	sysdolphin	8040f684	_HSD_ZListSort	_HSD_ZListSort	asm/sysdolphin/displayfunc.s	already named
+same	sysdolphin	8040f6d4	_HSD_ZListDisp	_HSD_ZListDisp	asm/sysdolphin/displayfunc.s	already named
+same	sysdolphin	8040f79c	_HSD_ZListClear	_HSD_ZListClear	asm/sysdolphin/displayfunc.s	already named
+skip	sysdolphin	8040f8a4	kar_displayfunc_draw_viewport_scale_quad	HSD_EraseRect	asm/sysdolphin/displayfunc.s	local name is non-generic
+rename	sysdolphin	8040fbe8	fn_8040FBE8	_HSD_DispForgetMemory	asm/sysdolphin/displayfunc.s	generic local name
+same	sysdolphin	8040fd5c	HSD_AllocateXFB	HSD_AllocateXFB	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	8040fe90	HSD_AllocateFIFO	HSD_AllocateFIFO	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	8040fee0	HSD_GXInit	HSD_GXInit	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	8040ff8c	HSD_OSInit	HSD_OSInit	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	8041053c	HSD_GetCurrentRenderPass	HSD_GetCurrentRenderPass	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	80410544	HSD_StartRender	HSD_StartRender	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	8041065c	HSD_ObjInit	HSD_ObjInit	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	804107b4	HSD_SetInitParameter	HSD_SetInitParameter	asm/sysdolphin/initialize.s	already named
+same	sysdolphin	80410a90	HSD_VISetUserPreRetraceCallback	HSD_VISetUserPreRetraceCallback	asm/sysdolphin/video.s	already named
+same	sysdolphin	80411a84	HSD_VIInit	HSD_VIInit	asm/sysdolphin/video.s	already named
+rename	sysdolphin	80414148	fn_80414148	HSD_PadInit	asm/sysdolphin/controller.s	generic local name
+same	sysdolphin	80414374	HSD_PadRumbleOn	HSD_PadRumbleOn	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	804143f4	HSD_PadRumbleOffH	HSD_PadRumbleOffH	asm/sysdolphin/rumble.s	already named
+skip	sysdolphin	80414474	HSD_PadRumbleOffN	HSD_PadRumbleFree	asm/sysdolphin/rumble.s	local name is non-generic
+same	sysdolphin	804144f4	HSD_PadRumbleRemove	HSD_PadRumbleRemove	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	804145b8	HSD_PadRumbleRemoveAll	HSD_PadRumbleRemoveAll	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414694	HSD_PadRumbleRemoveId	HSD_PadRumbleRemoveId	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414770	HSD_PadRumblePauseAll	HSD_PadRumblePauseAll	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414820	HSD_PadRumbleActiveAll	HSD_PadRumbleActiveAll	asm/sysdolphin/rumble.s	already named
+skip	sysdolphin	804148d0	HSD_PadRumbleAdd	HSD_PadRumbleActiveId	asm/sysdolphin/rumble.s	local name is non-generic
+same	sysdolphin	804149f8	HSD_PadRumbleInterpret1	HSD_PadRumbleInterpret1	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414b88	HSD_PadRumbleInterpret	HSD_PadRumbleInterpret	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414cb0	HSD_PadRumbleInit	HSD_PadRumbleInit	asm/sysdolphin/rumble.s	already named
+same	sysdolphin	80414e84	splGetHelmite	splGetHelmite	asm/sysdolphin/spline.s	already named
+same	sysdolphin	80415958	splArcLengthPoint	splArcLengthPoint	asm/sysdolphin/spline.s	already named
+same	sysdolphin	80415c08	HSD_MtxInverseConcat	HSD_MtxInverseConcat	asm/sysdolphin/mtx.s	already named
+rename	sysdolphin	80417cd4	fn_80417CD4	HSD_VecGetAllocData	asm/sysdolphin/mtx.s	generic local name
+same	sysdolphin	80417ce0	HSD_VecInitAllocData	HSD_VecInitAllocData	asm/sysdolphin/mtx.s	already named
+rename	sysdolphin	80417d10	fn_80417D10	HSD_MtxGetAllocData	asm/sysdolphin/mtx.s	generic local name
+same	sysdolphin	80417d1c	HSD_MtxInitAllocData	HSD_MtxInitAllocData	asm/sysdolphin/mtx.s	already named
+same	sysdolphin	80417db8	HSD_GetNbBits	HSD_GetNbBits	asm/sysdolphin/util.s	already named
+same	sysdolphin	80417e78	HSD_ObjSetHeap	HSD_ObjSetHeap	asm/sysdolphin/objalloc.s	already named
+same	sysdolphin	80417e94	HSD_ObjAllocAddFree	HSD_ObjAllocAddFree	asm/sysdolphin/objalloc.s	already named
+same	sysdolphin	804180e4	HSD_ObjAlloc	HSD_ObjAlloc	asm/sysdolphin/objalloc.s	already named
+same	sysdolphin	80418234	HSD_ObjFree	HSD_ObjFree	asm/sysdolphin/objalloc.s	already named
+same	sysdolphin	8041825c	HSD_ObjAllocInit	HSD_ObjAllocInit	asm/sysdolphin/objalloc.s	already named
+rename	sysdolphin	80418380	fn_80418380	_HSD_ObjAllocForgetMemory	asm/sysdolphin/objalloc.s	generic local name
+same	sysdolphin	80418708	HSD_RObjGetGlobalPosition	HSD_RObjGetGlobalPosition	asm/sysdolphin/robj.s	already named
+same	sysdolphin	80419530	HSD_RObjResolveRefsAll	HSD_RObjResolveRefsAll	asm/sysdolphin/robj.s	already named
+same	sysdolphin	80419644	HSD_RObjLoadDesc	HSD_RObjLoadDesc	asm/sysdolphin/robj.s	already named
+same	sysdolphin	80419b2c	HSD_RObjRemoveAll	HSD_RObjRemoveAll	asm/sysdolphin/robj.s	already named
+same	sysdolphin	8041b0fc	HSD_FogSet	HSD_FogSet	asm/sysdolphin/fog.s	already named
+same	sysdolphin	8041b450	HSD_FogInit	HSD_FogInit	asm/sysdolphin/fog.s	already named
+same	sysdolphin	8041b91c	FogInfoInit	FogInfoInit	asm/sysdolphin/fog.s	already named
+same	sysdolphin	8041b980	FogAdjInfoInit	FogAdjInfoInit	asm/sysdolphin/fog.s	already named
+same	sysdolphin	8041b9c4	HSD_PerfInitStat	HSD_PerfInitStat	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041ba28	HSD_PerfSetStartTime	HSD_PerfSetStartTime	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041ba50	HSD_PerfSetCPUTime	HSD_PerfSetCPUTime	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041bac4	HSD_PerfSetDrawTime	HSD_PerfSetDrawTime	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041bb3c	HSD_PerfSetTotalTime	HSD_PerfSetTotalTime	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041bbb4	HSD_PerfCountEnvelopeBlending	HSD_PerfCountEnvelopeBlending	asm/sysdolphin/pref.s	already named
+same	sysdolphin	8041cd84	_HSD_MemSetCallbacks	_HSD_MemSetCallbacks	asm/sysdolphin/memory.s	already named
+same	sysdolphin	8041cdf8	_HSD_MemAlloc	_HSD_MemAlloc	asm/sysdolphin/memory.s	already named
+skip	sysdolphin	8041ce24	_HSD_MemGetRemain	_HSD_MemFree	asm/sysdolphin/memory.s	local name is non-generic
+skip	sysdolphin	8041ce54	_HSD_MemClear	_HSD_MemGetRemain	asm/sysdolphin/memory.s	local name is non-generic
+same	sysdolphin	8041ce84	_HSD_MemCheckOwn	_HSD_MemCheckOwn	asm/sysdolphin/memory.s	already named
+same	sysdolphin	8041ceb4	HSD_Free	HSD_Free	asm/sysdolphin/memory.s	already named
+same	sysdolphin	8041cee4	HSD_Alloc	HSD_Alloc	asm/sysdolphin/memory.s	already named
+same	sysdolphin	8041da78	makeMatrix	makeMatrix	asm/sysdolphin/shadow.s	already named
+same	sysdolphin	8041dbb8	HSD_ShadowSetViewingRect	HSD_ShadowSetViewingRect	asm/sysdolphin/shadow.s	already named
+skip	sysdolphin	8041e014	HSD_ViewingRectAddRect	Shadows_SmoothEdges_Math	asm/sysdolphin/shadow.s	local name is non-generic
+same	sysdolphin	8041e5e0	HSD_Rand	HSD_Rand	asm/sysdolphin/random.s	already named
+same	sysdolphin	8041e610	HSD_Randf	HSD_Randf	asm/sysdolphin/random.s	already named
+same	sysdolphin	8041e668	HSD_Randi	HSD_Randi	asm/sysdolphin/random.s	already named
+same	sysdolphin	8041e6d8	HSD_ByteCodeEval	HSD_ByteCodeEval	asm/sysdolphin/bytecode.s	already named
+same	sysdolphin	804216c0	HSD_HashSearch	HSD_HashSearch	asm/sysdolphin/hash.s	already named
+same	sysdolphin	804217c0	HSD_TExpGetType	HSD_TExpGetType	asm/sysdolphin/texp.s	already named
+same	sysdolphin	804217fc	HSD_TExpRef	HSD_TExpRef	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80421884	HSD_TExpUnref	HSD_TExpUnref	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80421e00	HSD_TExpFreeList	HSD_TExpFreeList	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80422120	HSD_TExpTev	HSD_TExpTev	asm/sysdolphin/texp.s	already named
+same	sysdolphin	804221e0	HSD_TExpCnst	HSD_TExpCnst	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80422300	HSD_TExpColorOp	HSD_TExpColorOp	asm/sysdolphin/texp.s	already named
+same	sysdolphin	804223e8	HSD_TExpAlphaOp	HSD_TExpAlphaOp	asm/sysdolphin/texp.s	already named
+same	sysdolphin	804224d0	HSD_TExpColorInSub	HSD_TExpColorInSub	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80422a88	HSD_TExpColorIn	HSD_TExpColorIn	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80422b90	HSD_TExpAlphaInSub	HSD_TExpAlphaInSub	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80422f88	HSD_TExpAlphaIn	HSD_TExpAlphaIn	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80423090	HSD_TExpOrder	HSD_TExpOrder	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80424128	HSD_TExpSetReg	HSD_TExpSetReg	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80424624	HSD_TExpSetupTev	HSD_TExpSetupTev	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80424690	HSD_TExpCompile	HSD_TExpCompile	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80424940	HSD_TExpFreeTevDesc	HSD_TExpFreeTevDesc	asm/sysdolphin/texp.s	already named
+same	sysdolphin	80424980	assign_reg	assign_reg	asm/sysdolphin/texpdag.s	already named
+same	sysdolphin	804251a0	HSD_TExpMakeDag	HSD_TExpMakeDag	asm/sysdolphin/texpdag.s	already named
+same	sysdolphin	80425650	HSD_TExpSchedule	HSD_TExpSchedule	asm/sysdolphin/texpdag.s	already named
+same	sysdolphin	8042810c	HSD_TExpSimplify	HSD_TExpSimplify	asm/sysdolphin/texpdag.s	already named
+same	sysdolphin	8042819c	HSD_TExpSimplify2	HSD_TExpSimplify2	asm/sysdolphin/texpdag.s	already named
+same	sysdolphin	80428398	HSD_SaveContext	HSD_SaveContext	asm/sysdolphin/debug.s	already named
+same	sysdolphin	804284b8	__assert	__assert	asm/sysdolphin/debug.s	already named
+same	sysdolphin	80428514	HSD_Panic	HSD_Panic	asm/sysdolphin/debug.s	already named
+skip	sysdolphin	804288a4	HSD_GObjProcCreate	HSD_GObj_AddProc	asm/sysdolphin/gobjproc.s	local name is non-generic
+skip	sysdolphin	80429464	HSD_GObjGXLink_Internal	HSD_GObj_AddGXLink_2	asm/sysdolphin/gobjgxlink.s	local name is non-generic
+skip	sysdolphin	80429690	HSD_GObjGXLink	HSD_GObj_AddGXLink	asm/sysdolphin/gobjgxlink.s	local name is non-generic
+skip	sysdolphin	80429ed4	HSD_GObjProcRunAll	HSD_GObj_DispatchProc	asm/sysdolphin/gobj.s	local name is non-generic
+skip	sysdolphin	8042a0b4	GObj_SetTextureCamera	HSD_GObj_DispatchGXLink	asm/sysdolphin/gobj.s	local name is non-generic
+skip	game_asm	8042cba4	kar_particle__near_8042cba4	HSD_JObjSetupMatrix	asm/text_8042AD44.s	category not enabled
+skip	game_asm	804309e8	kar_generator__804309e8	generateParticle	asm/text_8042AD44.s	category not enabled
+skip	game_asm	8043f5d4	kar_pslist__near_8043f5d4	HSD_PadRenewRawStatus	asm/text_8042AD44.s	category not enabled
+skip	sysdolphin	804443e4	kar_axdriver_set_output_effect	AXDriverSetupAux	asm/sysdolphin/axdriver.s	local name is non-generic
+skip	sysdolphin	804447f8	kar_axdriver_configure_output_effect	Audio_InitReverb	asm/sysdolphin/axdriver.s	local name is non-generic
+skip	game_asm	8045be58	kar_gcpmemcard_set_worker_entry	TRKTargetSetInputPendingPtr	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045c748	kar_gcpmemcard_decode_sector_payload	debug_memCard_reqLoad	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045d684	kar_gcpmemcard__near_8045d684	cPlayer_PostPhysicsUpdate	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045d6f4	kar_gcpmemcard__near_8045d6f4	HVQM4BufvCreate	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045d874	kar_gcpmemcard__near_8045d874	HVQM4BufvSetFree	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045d8e0	kar_gcpmemcard__near_8045d8e0	HVQM4BufvGetFree	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045daa4	kar_gcpmemcard__near_8045daa4	HVQM4BufvChkDisp	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045dae4	kar_gcpmemcard__near_8045dae4	HVQM4BufaCreate	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045dc00	kar_gcpmemcard__near_8045dc00	LexicalCast	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045dc24	kar_gcpmemcard__near_8045dc24	HVQM4BufaSetFree	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045dc8c	kar_gcpmemcard__near_8045dc8c	HVQM4BufaGetFree	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045ddec	kar_gcpmemcard__near_8045ddec	HVQM4BufvChkFree	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045f6b8	kar_hvqm4playerdx__near_8045f6b8	setDoneCallFunc	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045f6c4	kar_hvqm4playerdx__near_8045f6c4	HVQM4PlayerExStart	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045f838	kar_hvqm4playerdx__near_8045f838	UpdatePlay	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045f938	kar_hvqm4playerdx__near_8045f938	HVQM4PlayerExGetMaxAudioTrack	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045f944	kar_hvqm4playerdx__near_8045f944	HVQM4PlayerExControlNormal	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045fa14	kar_hvqm4playerdx__near_8045fa14	HVQM4PlayerExControlStep	asm/text_804452A0.s	category not enabled
+skip	game_asm	8045fa70	kar_hvqm4playerdx__near_8045fa70	HVQM4PlayerExControlExit	asm/text_804452A0.s	category not enabled
+skip	game_asm	8046454c	fn_8046454C	HVQM4InitSeqObj	asm/text_804452A0.s	category not enabled
+skip	game_asm	80464570	fn_80464570	HVQM4BuffSize	asm/text_804452A0.s	category not enabled
+skip	game_asm	80464c9c	fn_80464C9C	HVQM4DecodeIpic	asm/text_804452A0.s	category not enabled
+skip	game_asm	804650f0	fn_804650F0	HVQM4DecodePpic	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465114	fn_80465114	HVQM4DecodeBpic	asm/text_804452A0.s	category not enabled
+skip	game_asm	8046559c	fn_8046559C	HVQM4DecodeAdpcmCh1	asm/text_804452A0.s	category not enabled
+skip	game_asm	804657c0	fn_804657C0	HVQM4DecodeAdpcmCh2	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465bc8	fn_80465BC8	HVQM4DecodeAdp8xCh2	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465cc0	fn_80465CC0	HVQM4DecSoundCreate	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465d18	fn_80465D18	HVQM4DecSoundClose	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465d4c	fn_80465D4C	HVQM4DecSoundDecode	asm/text_804452A0.s	category not enabled
+skip	game_asm	80465ea0	fn_80465EA0	HVQM4DecSoundMaxDecodeSize	asm/text_804452A0.s	category not enabled
+skip	game_asm	80469628	fn_80469628	MD5Init	asm/text_804452A0.s	category not enabled
+skip	game_asm	80469668	fn_80469668	MD5Update	asm/text_804452A0.s	category not enabled
+skip	game_asm	80469758	fn_80469758	MD5Final	asm/text_804452A0.s	category not enabled
+skip	game_asm	804697fc	fn_804697FC	MD5Transform	asm/text_804452A0.s	category not enabled
+skip	network_sdk	8047a634	kar_ipsocket__near_8047a634	SOInetNtoP	asm/IPSocket.s	category not enabled
+skip	network_sdk	8047db1c	kar_ipsocket__near_8047db1c	SOGetHostID	asm/IPSocket.s	category not enabled
+skip	network_sdk	80481a08	kar_ipsocket__near_80481a08	IGMPCheckSum	asm/IPIgmp.s	category not enabled
+skip	network_sdk	80482524	kar_ipigmp__near_80482524	IPClose	asm/IPIgmp.s	category not enabled

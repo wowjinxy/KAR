@@ -5,101 +5,23 @@ and the local KAR boundary/rename evidence TSVs.
 
 ## Summary
 
-- Source-named `.text`: 1,563,796 bytes across 193 units
-- Remaining auto `.text`: 3,170,192 bytes across 65 units
-- Source-named data: 4 bytes
-- Remaining auto data: 1,429,223 bytes
+- Source-named `.text`: 4,733,988 bytes across 210 units
+- Remaining auto `.text`: 0 bytes across 0 units
+- Source-named data: 1,429,227 bytes
+- Remaining auto data: 0 bytes
 - Currently claimable text gaps under the widening heuristic: 0
 
 ## Remaining Auto Text Units
 
 | Rank | Range | Size | Category | Previous explicit | Next explicit | Rename evidence |
 | ---: | --- | ---: | --- | --- | --- | --- |
-| 1 | `8011D0D0-8017B778` | 386,728 | core gameplay | `ifround` | `mndialoguebg` | - |
-| 2 | `8018DB84-801DEC44` | 331,968 | menu/object/gameplay | `clobject` | `vcgenerator` | - |
-| 3 | `802BA0DC-802EED00` | 216,100 | Air Ride 2D/gameplay | `a2d_gamesession` | `a2d_cpu_kirby` | - |
-| 4 | `803DB46C-8040F00C` | 211,872 | runtime/sdk-risk | `OSThread` | `displayfunc` | - |
-| 5 | `80014D5C-8004788C` | 207,664 | core gameplay | `gmracenormal` | `gmdialogue` | - |
-| 6 | `802EFD8C-803215F8` | 202,860 | Air Ride 2D/gameplay | `a2d_kirbyjointanim` | `a2d_lavabomb` | - |
-| 7 | `803AF810-803DAD1C` | 177,420 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 8 | `8028B974-802B5E3C` | 173,256 | Air Ride 2D/gameplay | `a2d_game_lib` | `a2d_gamehistory` | - |
-| 9 | `803448A4-8036E92C` | 172,168 | Air Ride 2D/gameplay | `a2d_bg8000` | `a2d_kurakko` | - |
-| 10 | `80252970-80275CBC` | 144,204 | menu/object/gameplay | `itparts` | `cpcmdscript` | - |
-| 11 | `8045F4D0-8047A950` | 111,744 | HSD/backend/network | `HVQM4PlayerDx` | `IPSocket` | - |
-| 12 | `801E5628-80200838` | 111,120 | menu/object/gameplay | `vcdevice` | `emanim` | - |
-| 13 | `80397080-803AD168` | 90,344 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 14 | `8020AAD8-80220750` | 89,208 | menu/object/gameplay | `empass` | `wnanim` | - |
-| 15 | `80277394-802894BC` | 74,024 | Air Ride 2D/gameplay | `cpmapdata` | `a2d_game_lib` | - |
-| 16 | `80388190-80396210` | 57,472 | Air Ride 2D/gameplay | `a2d_refract` | `fl_indirectload` | - |
-| 17 | `800B5AF0-800C3510` | 55,840 | core gameplay | `camera` | `cmreplay` | - |
-| 18 | `8007B284-8008754C` | 49,864 | core gameplay | `lbshadow` | `dbposition` | - |
-| 19 | `80111FB0-8011CFF0` | 45,120 | core gameplay | `greventlighthouse` | `ifround` | - |
-| 20 | `8022425C-8022DE74` | 39,960 | menu/object/gameplay | `wnguided` | `plclearcheckerlib` | - |
-| 21 | `800AB4C0-800B31D4` | 32,020 | core gameplay | `textlib` | `camera` | - |
-| 22 | `80481CE8-80489424` | 30,524 | HSD/backend/network | `IPIgmp` | `-` | - |
-| 23 | `800CE924-800D59F0` | 28,876 | core gameplay | `grdata` | `grlib2` | - |
-| 24 | `800077E0-8000E1D8` | 27,128 | core gameplay | `gmglobal` | `gmautodemo` | - |
-| 25 | `801DF408-801E5108` | 23,808 | menu/object/gameplay | `vcgenerator` | `vcdevice` | - |
-| 26 | `8041FC98-804251A0` | 21,768 | HSD/backend/network | `bytecode` | `texpdag` | bytecode.c:13 |
-| 27 | `803842E8-8038814C` | 15,972 | Air Ride 2D/gameplay | `a2d_refract` | `fl_indirectload` | - |
-| 28 | `80425650-804288A4` | 12,884 | HSD/backend/network | `texpdag` | `gobjproc` | - |
-| 29 | `800FC2D0-800FE71C` | 9,292 | core gameplay | `gryakurotjumphill` | `gryakugondola` | - |
-| 30 | `80047B4C-80048F68` | 5,148 | core gameplay | `gmdialogue` | `gmdialoguestatus` | - |
-| 31 | `803ADA20-803AE1C4` | 1,956 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 32 | `800A3E00-800A448C` | 1,676 | core gameplay | `dbmapmpcoll` | `dbmapdispbbox` | - |
-| 33 | `803AECF8-803AF204` | 1,292 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 34 | `803AE238-803AE694` | 1,116 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 35 | `803AE6D8-803AEAE8` | 1,040 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 36 | `8042898C-80428C50` | 708 | HSD/backend/network | `gobjproc` | `gobjplink` | - |
-| 37 | `804293F4-80429690` | 668 | HSD/backend/network | `gobjplink` | `gobjgxlink` | - |
-| 38 | `803AD760-803AD9C4` | 612 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 39 | `803AF204-803AF44C` | 584 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 40 | `803AD474-803AD6A0` | 556 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 41 | `803AF60C-803AF810` | 516 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 42 | `803AF44C-803AF60C` | 448 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 43 | `803AEAE8-803AEC9C` | 436 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 44 | `803AD2C0-803AD3BC` | 252 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 45 | `802762B4-802763A8` | 244 | menu/object/gameplay | `cpcmdscript` | `cpdata` | - |
-| 46 | `803AD3BC-803AD474` | 184 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 47 | `8010EC90-8010ED44` | 180 | core gameplay | `grsky2` | `grice1` | - |
-| 48 | `80005800-80005898` | 152 | init/runtime | `-` | `gmmain` | - |
-| 49 | `80429C80-80429D0C` | 140 | HSD/backend/network | `gobjobject` | `gobjuserdata` | - |
-| 50 | `803AD248-803AD2C0` | 120 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 51 | `803AD1C8-803AD23C` | 116 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 52 | `803AE1C4-803AE238` | 116 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 53 | `80429BAC-80429C14` | 104 | HSD/backend/network | `gobjgxlink` | `gobjobject` | - |
-| 54 | `803AD9C4-803ADA20` | 92 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 55 | `803AEC9C-803AECF8` | 92 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 56 | `803AD168-803AD1B0` | 72 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 57 | `8038814C-80388190` | 68 | Air Ride 2D/gameplay | `a2d_refract` | `fl_indirectload` | - |
-| 58 | `803AE694-803AE6D8` | 68 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 59 | `803AD6A0-803AD6C8` | 40 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 60 | `803AD6C8-803AD6F0` | 40 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 61 | `803AD6F0-803AD718` | 40 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 62 | `803AD738-803AD760` | 40 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 63 | `803AD718-803AD738` | 32 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 64 | `803AD1B0-803AD1C8` | 24 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
-| 65 | `803AD23C-803AD248` | 12 | runtime/sdk-risk | `fl_indirectload` | `OSThread` | - |
 
 ## Auto Data Snapshot
 
-The data sections are still mostly monolithic. Treat this as the next
-major shiftability blocker after the largest text gaps.
+No auto-owned data sections remain in the current report.
 
 | Section | Range | Size | Unit |
 | --- | --- | ---: | --- |
-| `.data` | `80494E60-805352FC` | 656,540 | `auto_07_80494E60_data` |
-| `.bss` | `80535300-805D50D0` | 654,800 | `auto_08_80535300_bss` |
-| `.rodata` | `80489480-80494E48` | 47,560 | `auto_06_80489480_rodata` |
-| `.sdata` | `805D50E0-805DD51F` | 33,855 | `auto_09_805D50E0_sdata` |
-| `.sdata2` | `805DE700-805E62D0` | 31,696 | `auto_11_805DE700_sdata2` |
-| `.sbss` | `805DD520-805DDE68` | 2,376 | `auto_10_805DD520_sbss` |
-| `.sbss` | `805DDE68-805DE700` | 2,200 | `auto_10_805DDE68_sbss` |
-| `.sbss2` | `805E62E0-805E6390` | 176 | `auto_12_805E62E0_sbss2` |
-| `.dtors` | `80489460-80489468` | 8 | `__init_cpp_exceptions` |
-| `.ctors` | `80489440-80489444` | 4 | `__init_cpp_exceptions` |
-| `.ctors` | `80489448-8048944C` | 4 | `auto_fn_8038814C_text` |
-| `.dtors` | `80489468-8048946C` | 4 | `auto_destroy_global_chain_text` |
 
 ## Notes
 

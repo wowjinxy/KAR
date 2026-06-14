@@ -1,46 +1,49 @@
 # KAR Data Split Notes
 
-The current `GKYE01` split is text-heavy. Data ownership is still the main
-reason the project is only provisionally shiftable.
+The current `GKYE01` split has no auto-owned data, BSS, small-data, ctor, or
+dtor sections in `build/GKYE01/report.json`.
 
-## Current Auto Data Blocks
+## Current Data Coverage
 
-- `.data`: `80494E60-805352FC`, 656,540 bytes
-- `.bss`: `80535300-805D50D0`, 654,800 bytes
-- `.rodata`: `80489480-80494E48`, 47,560 bytes
-- `.sdata`: `805D50E0-805DD51F`, 33,855 bytes
-- `.sdata2`: `805DE700-805E62D0`, 31,696 bytes
-- `.sbss`: `805DD520-805DDE68`, 2,376 bytes
-- `.sbss`: `805DDE68-805DE700`, 2,200 bytes
-- `.sbss2`: `805E62E0-805E6390`, 176 bytes
+All listed bytes are assigned to source-named objects:
 
-## Conservative Split Order
+- `.rodata`: 47,560 bytes
+- `.data`: 656,540 bytes
+- `.sdata`: 33,855 bytes
+- `.sdata2`: 31,696 bytes
+- `.bss`: 654,800 bytes
+- `.sbss`: 4,576 bytes
+- `.sbss2`: 176 bytes
+- `.ctors`: 12 bytes
+- `.dtors`: 12 bytes
 
-1. Split `.rodata` first using filename strings, nearby string clusters, and
-   direct xrefs from already source-named `.text`.
-2. Pair `.data` ranges with the source files that reference their strings,
-   tables, or object records. Do not split large arrays by visual pattern alone.
-3. Split `.sdata` and `.sdata2` only after their access functions are known;
-   small-data ordering mistakes are painful to port.
-4. Split `.bss`, `.sbss`, and `.sbss2` after global object ownership is clearer.
-   BSS can look clean while still being wrong because there are no bytes to
-   compare.
-5. Leave exception metadata and runtime-adjacent records alone until the
-   `80397080-803DAD1C` runtime region is identified in detail.
+## Evidence Used
 
-## First Evidence Sources To Use
+- Filename strings and neighboring string clusters
+- Direct xrefs from source-named `.text`
+- Existing source-order and split-order adjacency
+- Known CodeWarrior runtime exception metadata
+- Conservative runtime, SDK, HSD, audio, and network buckets where source-level
+  names are not yet recovered
 
-- `KAR_Linked_File_String_Report.md`
-- `KAR_Source_File_Xrefs_Report.md`
-- `KAR_Source_File_Function_Boundaries.tsv`
-- `KAR_Source_Boundary_Rename_Pass.tsv`
-- Current `build/GKYE01/report.json`
+## Remaining Risk
 
-## Definition Of Done For A Data Split Pass
+Some small-data and BSS ownership is still provisional because those sections do
+not always carry enough bytes or xrefs to prove exact source-file provenance.
+The normal build is hash-clean, and a temporary all-asm shifted link test passes.
+Runtime shifted tests should still be used to expose hidden boundary mistakes
+that a linker-only probe cannot catch.
 
-- `python configure.py --version GKYE01` succeeds without missing object config
-  warnings introduced by the pass.
-- `ninja` reports `build/GKYE01/main.dol: OK`.
-- The data split can be explained by xrefs, string adjacency, or version-shift
-  evidence.
-- Any intentionally unresolved range is still left as an `auto_*` unit.
+When a shifted build fails, keep the fix in the split metadata: move ownership
+to the source object that actually owns the bytes, or split a range more tightly.
+Do not add support assembly just to preserve the original layout.
+
+## Definition Of Done For Future Data Refinement
+
+- `python configure.py --version GKYE01` succeeds without new object-config
+  warnings.
+- `ninja build/GKYE01/ok` reports `build/GKYE01/main.dol: OK`.
+- A shifted-layout test still builds and, where an emulator or hardware check is
+  available, runs.
+- The changed range can be explained by xrefs, string adjacency, symbol
+  neighborhood, source-order evidence, or version-shift evidence.
