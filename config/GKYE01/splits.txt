@@ -206,11 +206,17 @@ lbarealightzone.c:
 	.bss        start:0x80552978 end:0x80552A30
 
 lbshadow.c:
-	.text       start:0x8007ADE8 end:0x80086120
-	.data       start:0x8049ADB8 end:0x8049BF18
+	.text       start:0x8007ADE8 end:0x8007B4C8
+	.data       start:0x8049ADB8 end:0x8049AE10
+	.sdata      start:0x805D53F8 end:0x805D5408
+	.sdata2     start:0x805DED90 end:0x805DEDC0
+
+lbnet.c:
+	.text       start:0x8007B4C8 end:0x80086120
+	.data       start:0x8049AE10 end:0x8049BF18
 	.bss        start:0x80552A30 end:0x80552FB0
-	.sdata      start:0x805D53F8 end:0x805D5430
-	.sdata2     start:0x805DED90 end:0x805DEEE0
+	.sdata      start:0x805D5408 end:0x805D5430
+	.sdata2     start:0x805DEDC0 end:0x805DEEE0
 
 dbposition.c:
 	.text       start:0x80086120 end:0x8008A980
