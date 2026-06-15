@@ -542,7 +542,7 @@ kar_objects = [
     Object(NonMatching, "mntitle.c"),
     Object(NonMatching, "mndialoguebg.c"),
     Object(NonMatching, "mnclearchecker.c"),
-    Object(NonMatching, "mnlannumber.c"),
+    Object(Matching, "mnlannumber.c"),
     Object(NonMatching, "mnlandialogue.c"),
     Object(NonMatching, "mnbestrapbg.c"),
     Object(NonMatching, "mnbestrapsicon.c"),
