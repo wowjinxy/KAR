@@ -501,7 +501,7 @@ kar_objects = [
     Object(NonMatching, "gryaku.c"),
     Object(NonMatching, "gryakuanim.c"),
     Object(NonMatching, "gryakueffect.c"),
-    Object(NonMatching, "gryakuaudio.c"),
+    Object(Matching, "gryakuaudio.c"),
     Object(NonMatching, "gryakulib.c"),
     Object(NonMatching, "gryakucommon.c"),
     Object(NonMatching, "gryakudownforcezone.c"),
