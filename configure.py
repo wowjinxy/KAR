@@ -495,7 +495,7 @@ kar_objects = [
     Object(NonMatching, "graudio.c"),
     Object(NonMatching, "grboxgenerator.c"),
     Object(NonMatching, "greventgenerator.c"),
-    Object(NonMatching, "grglobaldead.c"),
+    Object(Matching, "grglobaldead.c"),
     Object(NonMatching, "grpointstrike.c"),
     Object(NonMatching, "grairglider.c"),
     Object(NonMatching, "gryaku.c"),
