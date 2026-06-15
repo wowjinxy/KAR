@@ -151,6 +151,15 @@ config.non_matching = args.non_matching
 config.sjiswrap_path = args.sjiswrap
 config.ninja_path = args.ninja
 config.progress = args.progress
+config.progress_use_fancy = True
+config.progress_code_fancy_frac = 360
+config.progress_code_fancy_item = "checkboxes"
+config.progress_code_fancy_extra_files = [
+    "assets/kar/db/dbscreenshot_icon_rgb5a3.bin",
+    "assets/kar/debug/debugconsole_font_i4_8x14.bin",
+    "assets/kar/hsd/base/sislib_romfont_glyphs_i4_32x32.bin",
+    "assets/kar/lb/lbnet/upnp_rootdesc.xml",
+]
 if not is_windows():
     config.wrapper = args.wrapper
 # Don't build asm unless we're --non-matching
@@ -458,6 +467,7 @@ kar_objects = [
         extra_cflags=["-pooldata off", "-sdata 0"],
     ),
     Object(NonMatching, "lbshadow.c"),
+    Object(NonMatching, "lbnet.c"),
     Object(NonMatching, "dbposition.c"),
     Object(NonMatching, "dbscreenshot.c"),
     Object(NonMatching, "dbcamera.c"),

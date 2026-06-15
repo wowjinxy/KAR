@@ -225,6 +225,7 @@ class ProjectConfig:
         self.progress_use_fancy: bool = False
         self.progress_code_fancy_frac: int = 0
         self.progress_code_fancy_item: str = ""
+        self.progress_code_fancy_extra_files: List[Union[str, Path]] = []
         self.progress_data_fancy_frac: int = 0
         self.progress_data_fancy_item: str = ""
 
@@ -2063,22 +2064,64 @@ def calculate_progress(config: ProjectConfig) -> None:
     if config.progress_use_fancy:
         measures = report_data["measures"]
         total_code = measures.get("total_code", 0)
-        total_data = measures.get("total_data", 0)
-        if total_code == 0 or total_data == 0:
+        if total_code == 0 or config.progress_code_fancy_frac == 0:
             return
-        code_frac = measures.get("complete_code", 0) / total_code
-        data_frac = measures.get("complete_data", 0) / total_data
-
-        progress_print(
-            "\nYou have {} out of {} {} and {} out of {} {}.".format(
-                math.floor(code_frac * config.progress_code_fancy_frac),
-                config.progress_code_fancy_frac,
-                config.progress_code_fancy_item,
-                math.floor(data_frac * config.progress_data_fancy_frac),
-                config.progress_data_fancy_frac,
-                config.progress_data_fancy_item,
+        source_object_stems = set()
+        for obj in config.objects().values():
+            if obj.src_path is None or not obj.src_path.exists():
+                continue
+            if obj.src_path.suffix.lower() not in (".c", ".cc", ".cpp", ".cxx"):
+                continue
+            source_object_stems.add(
+                Path(obj.name).with_suffix("").as_posix().replace("\\", "/")
             )
+
+        source_code = 0
+        for unit in report_data.get("units", []):
+            unit_name = str(unit.get("name", ""))
+            if not any(
+                unit_name == stem or unit_name.endswith(f"/{stem}")
+                for stem in source_object_stems
+            ):
+                continue
+            source_code += int(unit.get("measures", {}).get("total_code", 0) or 0)
+
+        code_progress = source_code or measures.get("complete_code", 0)
+        code_frac = code_progress / total_code
+        extra_file_count = sum(
+            1 for path in config.progress_code_fancy_extra_files if Path(path).is_file()
         )
+        code_count = min(
+            config.progress_code_fancy_frac,
+            math.floor(code_frac * config.progress_code_fancy_frac)
+            + extra_file_count,
+        )
+
+        if config.progress_data_fancy_frac != 0 and config.progress_data_fancy_item:
+            total_data = measures.get("total_data", 0)
+            if total_data == 0:
+                return
+            data_frac = measures.get("complete_data", 0) / total_data
+            data_count = math.floor(data_frac * config.progress_data_fancy_frac)
+
+            progress_print(
+                "\nYou have {} out of {} {} and {} out of {} {}.".format(
+                    code_count,
+                    config.progress_code_fancy_frac,
+                    config.progress_code_fancy_item,
+                    data_count,
+                    config.progress_data_fancy_frac,
+                    config.progress_data_fancy_item,
+                )
+            )
+        else:
+            progress_print(
+                "\nYou have {} out of {} {}.".format(
+                    code_count,
+                    config.progress_code_fancy_frac,
+                    config.progress_code_fancy_item,
+                )
+            )
 
     # Finalize GitHub Actions job summary
     if summary_file:
