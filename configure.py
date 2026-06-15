@@ -610,7 +610,7 @@ kar_objects = [
     Object(NonMatching, "bytecode.c"),
     Object(NonMatching, "texpdag.c"),
     Object(NonMatching, "gobjproc.c"),
-    Object(NonMatching, "gobjplink.c"),
+    Object(Matching, "gobjplink.c"),
     Object(NonMatching, "gobjgxlink.c"),
     Object(Matching, "gobjobject.c"),
     Object(NonMatching, "gobjuserdata.c"),
