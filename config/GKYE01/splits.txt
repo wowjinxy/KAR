@@ -196,14 +196,14 @@ lbarealight.c:
 lbarealightuser.c:
 	.text       start:0x800799BC end:0x8007AC30
 	.data       start:0x8049AD38 end:0x8049AD98
-	.bss        start:0x8055294C end:0x805529A4
+	.bss        start:0x8055294C end:0x80552978
 	.sdata      start:0x805D53F0 end:0x805D53F8
 	.sdata2     start:0x805DED60 end:0x805DED90
 
 lbarealightzone.c:
 	.text       start:0x8007AC30 end:0x8007ADE8
 	.data       start:0x8049AD98 end:0x8049ADB8
-	.bss        start:0x805529A4 end:0x80552A30
+	.bss        start:0x80552978 end:0x80552A30
 
 lbshadow.c:
 	.text       start:0x8007ADE8 end:0x80086120
