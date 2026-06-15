@@ -20261,7 +20261,7 @@
 	.4byte 0x00000000
 	.4byte 0x00000000
 	.4byte 0x00000000
-	.4byte lbl_8049C720
+	.4byte kar_dbscreenshot_save_icon_rgb5a3
 	.4byte 0x00000000
 	.4byte 0x00001000
 	.4byte 0x00000000

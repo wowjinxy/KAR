@@ -488,9 +488,9 @@
 /* 8043FE88 0043CC88  38 08 00 01 */	addi r0, r8, 0x1
 /* 8043FE8C 0043CC8C  90 E9 00 30 */	stw r7, 0x30(r9)
 /* 8043FE90 0043CC90  39 00 00 00 */	li r8, 0x0
-/* 8043FE94 0043CC94  3C 60 80 50 */	lis r3, lbl_80505680@ha
+/* 8043FE94 0043CC94  3C 60 80 50 */	lis r3, kar_debugconsole_font_i4_8x14@ha
 /* 8043FE98 0043CC98  90 09 00 38 */	stw r0, 0x38(r9)
-/* 8043FE9C 0043CC9C  38 03 56 80 */	addi r0, r3, lbl_80505680@l
+/* 8043FE9C 0043CC9C  38 03 56 80 */	addi r0, r3, kar_debugconsole_font_i4_8x14@l
 /* 8043FEA0 0043CCA0  38 A5 8B A3 */	subi r5, r5, 0x745d
 /* 8043FEA4 0043CCA4  38 84 49 25 */	addi r4, r4, 0x4925
 /* 8043FEA8 0043CCA8  91 09 00 34 */	stw r8, 0x34(r9)
