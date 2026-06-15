@@ -31,11 +31,13 @@ typedef struct ObjAllocDataStorage {
     u8 pad_2C[4];
 } ObjAllocDataStorage;
 
-// lbl_805529D0 and lbl_80552A00 are HSD_ObjAllocData at offset 0, but the
-// base symbols include the trailing 4-byte gaps before the next BSS symbol.
-extern ObjAllocDataStorage lbl_80552A00;
-extern ObjAllocDataStorage lbl_805529D0;
-extern HSD_ObjAllocData lbl_805529A4;
+// This TU owns the contiguous allocator storage from 0x80552978 to
+// 0x80552A30. MWCC emits BSS in reverse declaration order, so keep these
+// declarations in address-descending order.
+ObjAllocDataStorage lbl_80552A00;
+ObjAllocDataStorage lbl_805529D0;
+HSD_ObjAllocData lbl_805529A4;
+HSD_ObjAllocData lbl_80552978;
 
 void* kar_lbhvqm__near_80079428(s32 kind, void* desc, void* data);
 void kar_lbarealight__80079518(AreaLight* light);
