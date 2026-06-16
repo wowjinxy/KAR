@@ -385,6 +385,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "aobj.c",
     "archive.c",
     "class.c",
+    "displayfunc.c",
     "dobj.c",
     "fobj.c",
     "fog.c",

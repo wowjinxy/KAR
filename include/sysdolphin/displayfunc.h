@@ -8,5 +8,11 @@
 #include <sysdolphin/jobj.h>
 
 void HSD_ZListInitAllocData(void);
+void HSD_SetZSortMode(s32 mode, s32 sort);
+void HSD_JObjDispDObj(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rendermode);
+void HSD_JObjDispSub(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask,
+                     u32 rendermode);
+void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx);
+MtxPtr _HSD_mkEnvelopeModelNodeMtx(HSD_JObj* jobj, Mtx dst);
 
 #endif

@@ -1,0 +1,556 @@
+#include <global.h>
+
+#include <dolphin/gx/gxtypes.h>
+#include <dolphin/mtx/mtxtypes.h>
+#include <sysdolphin/cobj.h>
+#include <sysdolphin/displayfunc.h>
+#include <sysdolphin/dobj.h>
+#include <sysdolphin/initialize.h>
+#include <sysdolphin/jobj.h>
+#include <sysdolphin/video.h>
+
+#define HSD_JOBJ_METHOD(o) ((HSD_JObjInfo*) ((o)->object.parent.class_info))
+#define HSD_ZLIST_NEXT(list, offset) (*(HSD_ZList**) ((u8*) (list) + (offset)))
+#define HSD_ZLIST_DEPTH(list) (*(f32*) ((u8*) (list) + 0x2C))
+#define GX_FIFO_U8 (*(volatile u8*) 0xCC008000)
+#define GX_FIFO_F32 (*(volatile f32*) 0xCC008000)
+
+typedef struct _GXTexObj {
+    u8 pad[0x20];
+} GXTexObj;
+
+typedef struct _HSD_ZList {
+    Mtx pmtx;
+    MtxPtr vmtx;
+    HSD_JObj* jobj;
+    u32 rendermode;
+    struct _HSD_ZList* next_opa;
+    struct _HSD_ZList* next_xlu;
+    struct _HSD_ZList* next_all;
+} HSD_ZList;
+
+extern void HSD_Panic(char* file, s32 line, char* msg);
+extern void HSD_LObjSetupSpecularInit(Mtx pmtx);
+extern void HSD_PObjClearMtxMark(u32 arg0, u32 arg1);
+extern void HSD_JObjSetCurrent(HSD_JObj* jobj);
+extern HSD_CObj* HSD_CObjGetCurrent(void);
+extern MtxPtr HSD_MtxAlloc(void);
+extern void HSD_MtxFree(MtxPtr mtx);
+extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
+extern void PSMTXCopy(Mtx src, Mtx dst);
+extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
+extern void fn_803D1578(MtxPtr src, Mtx dst);
+extern void mkBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst);
+extern void mkVBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst);
+extern void mkHBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst);
+extern void mkRBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst);
+extern void memset(void* ptr, s32 value, u32 size);
+
+extern void DVDInit(void);
+extern void* GXInit(void* fifo, u32 size);
+extern void VIWaitForRetrace(void);
+extern void HSD_AllocateXFB(s32 count, GXRenderModeObj* rmode);
+extern void HSD_GXInit(void);
+extern void HSD_OSInit(void);
+extern void HSD_IDSetup(void);
+extern void HSD_ObjInit(void);
+
+extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 format,
+                         u32 wrap_s, u32 wrap_t, u32 mipmap);
+extern void GXLoadTexObj(GXTexObj* obj, u32 mapid);
+extern void GXSetNumTexGens(u32 n);
+extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx, u32 normalize,
+                              u32 post_mtx);
+extern void GXSetNumTevStages(u8 n);
+extern void GXSetTevOrder(u8 stage, u32 coord, u32 map, u32 color);
+extern void GXSetTevOp(u8 stage, u32 mode);
+extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
+extern void GXSetCullMode(u32 mode);
+extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
+extern void GXSetZCompLoc(u32 before_tex);
+extern void GXSetZMode(u32 enable, u32 func, u32 update_enable);
+extern void GXSetBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
+extern void GXSetColorUpdate(u32 update_enable);
+extern void GXSetAlphaUpdate(u32 update_enable);
+extern void GXSetNumChans(u8 n);
+extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
+                          u32 diff_fn, u32 attn_fn);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxAttrFmt(u8 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
+extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
+extern void GXSetCurrentMtx(u32 id);
+extern void GXSetVtxDesc(u32 attr, u32 type);
+extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
+extern void HSD_StateInvalidate(s32 mask);
+
+extern u8 lbl_805DCB88[4];
+extern HSD_ObjAllocData lbl_80589A18;
+extern void* lbl_80589A48[3];
+extern HSD_MemReport lbl_80589A54;
+extern void* lbl_805DE2A8;
+extern s32 lbl_805DE2B0;
+extern GXRenderModeObj lbl_804F9C20;
+extern Mtx lbl_80503FC0;
+
+void _HSD_ZListClear(void);
+
+extern HSD_ZList* lbl_805DE278;
+extern HSD_ZList* lbl_805DE27C;
+extern HSD_ZList* lbl_805DE284;
+
+char kar_src_displayfunc_80503ba0[] = "displayfunc.c";
+char lbl_80503BB0[] = "unkown type of billboard.\n";
+u32 lbl_80503BE0[32] = {
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};
+
+HSD_ZList** lbl_805DCB8C = &lbl_805DE278;
+HSD_ZList** lbl_805DCB90 = &lbl_805DE27C;
+HSD_ZList** lbl_805DCB94 = &lbl_805DE284;
+char lbl_805DCB98[] = "jobj";
+char lbl_805DCBA0[] = "x";
+char kar_srcfile_jobj_h_805dcba4[] = "jobj.h";
+s32 lbl_805DCBB0 = -1;
+GXRenderModeObj* lbl_805DCBB4 = &lbl_804F9C20;
+s32 lbl_805DCBB8 = 2;
+s32 lbl_805DCBBC = 0x40000;
+s32 lbl_805DCBC0 = 2;
+s32 lbl_805DCBC4 = 0;
+char lbl_805DCBC8[] = "addr";
+
+s32 lbl_805DE270;
+s32 lbl_805DE274;
+HSD_ZList* lbl_805DE278;
+HSD_ZList* lbl_805DE27C;
+s32 lbl_805DE280;
+HSD_ZList* lbl_805DE284;
+s32 lbl_805DE288[2];
+const u32 lbl_805E6378[2];
+
+static inline BOOL displayfunc_jobj_mtx_is_dirty(HSD_JObj* jobj)
+{
+    BOOL result;
+
+    if (jobj == NULL) {
+        __assert(kar_srcfile_jobj_h_805dcba4, 0x25D, lbl_805DCB98);
+    }
+    result = FALSE;
+    if (!(jobj->flags & 0x800000) && (jobj->flags & MTX_DIRTY)) {
+        result = TRUE;
+    }
+    return result;
+}
+
+void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx)
+{
+    Mtx sp8;
+
+    if (jobj->flags & 0xE00) {
+        PSMTXConcat(vmtx, jobj->mtx, sp8);
+        switch (jobj->flags & 0xE00) {
+        case 0x200:
+            mkBillBoardMtx(jobj, sp8, pmtx);
+            break;
+        case 0x400:
+            mkVBillBoardMtx(jobj, sp8, pmtx);
+            break;
+        case 0x600:
+            mkHBillBoardMtx(jobj, sp8, pmtx);
+            break;
+        case 0x800:
+            mkRBillBoardMtx(jobj, sp8, pmtx);
+            break;
+        default:
+            HSD_Panic(kar_src_displayfunc_80503ba0, 0x16E, lbl_80503BB0);
+            break;
+        }
+    } else {
+        PSMTXConcat(vmtx, jobj->mtx, pmtx);
+    }
+}
+
+MtxPtr _HSD_mkEnvelopeModelNodeMtx(HSD_JObj* jobj, Mtx dst)
+{
+    HSD_JObj* x;
+    Mtx sp8;
+
+    if (jobj->flags & SKELETON_ROOT) {
+        return NULL;
+    }
+    x = jobj;
+    if (x == NULL) {
+        __assert(kar_src_displayfunc_80503ba0, 0x182, lbl_805DCB98);
+    }
+
+    while (x != NULL) {
+        if ((x->flags & 3) == 0) {
+            x = x->parent;
+        } else {
+            break;
+        }
+    }
+    if (x == NULL) {
+        __assert(kar_src_displayfunc_80503ba0, 0x1D2, lbl_805DCBA0);
+    }
+
+    if (x == jobj) {
+        fn_803D1578(x->envelopemtx, dst);
+    } else if (x->flags & SKELETON_ROOT) {
+        HSD_MtxInverseConcat(x->mtx, jobj->mtx, dst);
+    } else {
+        PSMTXConcat(x->mtx, x->envelopemtx, sp8);
+        HSD_MtxInverseConcat(sp8, jobj->mtx, dst);
+    }
+    return dst;
+}
+
+void HSD_JObjDispSub(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask,
+                     u32 rendermode)
+{
+    HSD_DObj* dobj;
+
+    HSD_JObjSetCurrent(jobj);
+    trsp_mask <<= 1;
+    if (!(rendermode & 0x4000000) && (jobj->flags & SPECULAR)) {
+        HSD_LObjSetupSpecularInit(pmtx);
+    }
+    HSD_PObjClearMtxMark(0, 0);
+
+    for (dobj = jobj->u.dobj; dobj != NULL; dobj = dobj->next) {
+        if (!(dobj->flags & 1) && (dobj->flags & trsp_mask)) {
+            HSD_DObjSetCurrent(dobj);
+            HSD_DOBJ_METHOD(dobj)->disp(dobj, vmtx, pmtx, rendermode);
+        }
+    }
+
+    HSD_DObjSetCurrent(NULL);
+    HSD_JObjSetCurrent(NULL);
+}
+
+void HSD_JObjDispDObj(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rendermode)
+{
+    HSD_DObj* dobj;
+    u32 mask;
+    Mtx pmtx;
+    HSD_ZList* entry;
+
+    if (jobj->flags & HIDDEN) {
+        return;
+    }
+
+    for (dobj = jobj->u.dobj; dobj != NULL; dobj = dobj->next) {
+        if (!(dobj->flags & 1)) {
+            break;
+        }
+    }
+    if (dobj == NULL) {
+        return;
+    }
+
+    mask = jobj->flags & (trsp_mask << 18);
+    if (mask == 0) {
+        return;
+    }
+
+    if (jobj != NULL && displayfunc_jobj_mtx_is_dirty(jobj)) {
+        HSD_JObjSetupMatrixSub(jobj);
+    }
+    if (vmtx == NULL) {
+        vmtx = HSD_CObjGetCurrent()->view_mtx;
+    }
+
+    HSD_JOBJ_METHOD(jobj)->make_pmtx(jobj, vmtx, pmtx);
+
+    if (mask & 0x40000) {
+        HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 1, rendermode);
+    }
+
+    if (lbl_805DE270 == 0) {
+        if (mask & 0x100000) {
+            HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 4, rendermode);
+        }
+        if (mask & 0x80000) {
+            HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 2, rendermode);
+        }
+    } else if (mask & 0x180000) {
+        entry = HSD_ObjAlloc(&lbl_80589A18);
+        memset(&entry->vmtx, 0, 0x18);
+        PSMTXCopy(pmtx, entry->pmtx);
+        if (vmtx != NULL) {
+            entry->vmtx = HSD_MtxAlloc();
+            PSMTXCopy(vmtx, entry->vmtx);
+        }
+        entry->jobj = jobj;
+        entry->rendermode = rendermode;
+        *lbl_805DCB8C = entry;
+        lbl_805DCB8C = &entry->next_all;
+        if (mask & 0x100000) {
+            *lbl_805DCB90 = entry;
+            lbl_805DCB90 = &entry->next_opa;
+            lbl_805DE280++;
+        }
+        if (mask & 0x80000) {
+            *lbl_805DCB94 = entry;
+            lbl_805DCB94 = &entry->next_xlu;
+            lbl_805DE288[0]++;
+        }
+    }
+}
+
+static HSD_ZList* zlist_sort(HSD_ZList* list, s32 count, s32 next_offset)
+{
+    HSD_ZList* left;
+    HSD_ZList* right;
+    HSD_ZList** tail;
+    s32 left_count;
+    s32 right_count;
+    s32 i;
+
+    if (count <= 1) {
+        if (list != NULL) {
+            HSD_ZLIST_NEXT(list, next_offset) = NULL;
+        }
+        return list;
+    }
+
+    left_count = count / 2;
+    right_count = count - left_count;
+    right = list;
+    for (i = 0; i < left_count; i++) {
+        right = HSD_ZLIST_NEXT(right, next_offset);
+    }
+
+    left = zlist_sort(list, left_count, next_offset);
+    right = zlist_sort(right, right_count, next_offset);
+
+    list = NULL;
+    tail = &list;
+    while (left != NULL && right != NULL) {
+        if (HSD_ZLIST_DEPTH(left) <= HSD_ZLIST_DEPTH(right)) {
+            *tail = left;
+            left = HSD_ZLIST_NEXT(left, next_offset);
+        } else {
+            *tail = right;
+            right = HSD_ZLIST_NEXT(right, next_offset);
+        }
+        tail = &HSD_ZLIST_NEXT(*tail, next_offset);
+    }
+    if (left != NULL) {
+        *tail = left;
+    } else if (right != NULL) {
+        *tail = right;
+    }
+    return list;
+}
+
+void _HSD_ZListSort(void)
+{
+    if (lbl_805DE274 != 0) {
+        lbl_805DE27C = zlist_sort(lbl_805DE27C, lbl_805DE280, 0x3C);
+        lbl_805DE284 = zlist_sort(lbl_805DE284, lbl_805DE288[0], 0x40);
+    }
+}
+
+void _HSD_ZListDisp(void)
+{
+    MtxPtr default_vmtx;
+    HSD_ZList* entry;
+    MtxPtr vmtx;
+
+    default_vmtx = HSD_CObjGetCurrent()->view_mtx;
+    for (entry = lbl_805DE27C; entry != NULL; entry = entry->next_opa) {
+        vmtx = entry->vmtx != NULL ? entry->vmtx : default_vmtx;
+        HSD_JOBJ_METHOD(entry->jobj)->disp(entry->jobj, vmtx, entry->pmtx, 4, entry->rendermode);
+    }
+    for (entry = lbl_805DE284; entry != NULL; entry = entry->next_xlu) {
+        vmtx = entry->vmtx != NULL ? entry->vmtx : default_vmtx;
+        HSD_JOBJ_METHOD(entry->jobj)->disp(entry->jobj, vmtx, entry->pmtx, 2, entry->rendermode);
+    }
+    _HSD_ZListClear();
+}
+
+static void reset_zlist(void)
+{
+    lbl_805DE278 = NULL;
+    lbl_805DCB8C = &lbl_805DE278;
+    lbl_805DE27C = NULL;
+    lbl_805DCB90 = &lbl_805DE27C;
+    lbl_805DE280 = 0;
+    lbl_805DE284 = NULL;
+    lbl_805DCB94 = &lbl_805DE284;
+    lbl_805DE288[0] = 0;
+}
+
+void _HSD_ZListClear(void)
+{
+    HSD_ZList* entry;
+    HSD_ZList* next;
+
+    for (entry = lbl_805DE278; entry != NULL; entry = next) {
+        next = entry->next_all;
+        if (entry->vmtx != NULL) {
+            HSD_MtxFree(entry->vmtx);
+        }
+        HSD_ObjFree(&lbl_80589A18, entry);
+    }
+    reset_zlist();
+}
+
+void HSD_SetZSortMode(s32 mode, s32 sort)
+{
+    lbl_805DE270 = mode;
+    lbl_805DE274 = sort;
+}
+
+#pragma push
+asm void HSD_JObjDisp(HSD_JObj* jobj)
+{
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    cmplwi r3, 0
+    stw r0, 0x14(r1)
+    beq lbl_8040F874
+    lwz r0, 0x14(r3)
+    andi. r0, r0, 0x4020
+    cntlzw r0, r0
+    srwi. r0, r0, 5
+    beq lbl_8040F874
+    bl HSD_JObjDispDObj
+lbl_8040F874:
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
+}
+#pragma pop
+
+void HSD_JObjSetSPtclCallback(u8 arg0, u8 arg1, u8 arg2, u8 arg3)
+{
+    lbl_805DCB88[0] = arg0;
+    lbl_805DCB88[1] = arg1;
+    lbl_805DCB88[2] = arg2;
+    lbl_805DCB88[3] = arg3;
+}
+
+u32 fn_8040F89C(void)
+{
+    return *(u32*) lbl_805DCB88;
+}
+
+static void write_quad_vertex(f32 x, f32 y, f32 z, u8* color, u8 s, u8 t)
+{
+    GX_FIFO_F32 = x;
+    GX_FIFO_F32 = y;
+    GX_FIFO_F32 = z;
+    GX_FIFO_U8 = color[0];
+    GX_FIFO_U8 = color[1];
+    GX_FIFO_U8 = color[2];
+    GX_FIFO_U8 = color[3];
+    GX_FIFO_U8 = s;
+    GX_FIFO_U8 = t;
+}
+
+void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top, f32 bottom,
+                                              s32 alpha_update, f32 left, s32 tex_enable,
+                                              f32 right, f32 z)
+{
+    GXTexObj texobj;
+    u32 color;
+
+    if (color_update == 0 && alpha_update == 0 && tex_enable == 0) {
+        return;
+    }
+
+    if (tex_enable != 0) {
+        GXInitTexObj(&texobj, lbl_80503BE0, 4, 4, 0x11, 1, 1, 0);
+        GXLoadTexObj(&texobj, 0);
+        GXSetNumTexGens(1);
+        GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
+        GXSetNumTevStages(1);
+        GXSetTevOrder(0, 0, 0, 4);
+        GXSetTevOp(0, 4);
+        GXSetZTexture(2, 0x11, 0);
+    } else {
+        GXSetNumTexGens(0);
+        GXSetNumTevStages(1);
+        GXSetTevOrder(0, 0xFF, 0xFF, 4);
+        GXSetTevOp(0, 4);
+    }
+
+    GXSetCullMode(0);
+    GXSetAlphaCompare(7, 0, 1, 7, 0);
+    GXSetZCompLoc(1);
+    GXSetZMode(1, 7, tex_enable != 0);
+    GXSetBlendMode(2, 1, 0, 3);
+    GXSetColorUpdate(color_update != 0);
+    GXSetAlphaUpdate(alpha_update != 0);
+    GXSetNumChans(1);
+    GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+    GXClearVtxDesc();
+    GXSetVtxAttrFmt(0, 9, 1, 4, 0);
+    GXSetVtxAttrFmt(0, 0xB, 1, 5, 0);
+    GXSetVtxAttrFmt(0, 0xD, 1, 0, 0);
+    GXLoadPosMtxImm(lbl_80503FC0, 0);
+    GXSetCurrentMtx(0);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xB, 1);
+    GXSetVtxDesc(0xD, 1);
+
+    color = *(u32*) lbl_805DCB88;
+    GXBegin(0x80, 0, 4);
+    write_quad_vertex(left, top, z, (u8*) &color, 0, 0);
+    write_quad_vertex(right, top, z, (u8*) &color, 1, 0);
+    write_quad_vertex(right, bottom, z, (u8*) &color, 1, 1);
+    write_quad_vertex(left, bottom, z, (u8*) &color, 0, 1);
+
+    GXSetZTexture(0, 0x11, 0);
+    HSD_StateInvalidate(-1);
+}
+
+void _HSD_DispForgetMemory(void)
+{
+    reset_zlist();
+}
+
+void HSD_Init(void)
+{
+    HSD_VIStatus vi_status;
+    void* fifo;
+
+    DVDInit();
+    HSD_AllocateXFB(lbl_805DCBC0, lbl_805DCBB4);
+    fifo = HSD_AllocateFIFO(lbl_805DCBBC);
+    lbl_805DE2A8 = GXInit(fifo, lbl_805DCBBC);
+    lbl_80589A54.gxfifo = lbl_805DCBBC;
+    HSD_OSInit();
+
+    vi_status.rmode = *lbl_805DCBB4;
+    vi_status.black = GX_TRUE;
+    vi_status.vf = GX_TRUE;
+    vi_status.gamma = GX_GM_1_0;
+    vi_status.clear_clr = *(GXColor*) lbl_805E6378;
+    vi_status.clear_z = GX_MAX_Z24;
+    vi_status.update_clr = GX_ENABLE;
+    vi_status.update_alpha = GX_ENABLE;
+    vi_status.update_z = GX_ENABLE;
+    HSD_VIInit(&vi_status, lbl_80589A48[0], lbl_80589A48[1], lbl_80589A48[2]);
+
+    HSD_GXInit();
+    HSD_DVDInit();
+    HSD_IDSetup();
+    VIWaitForRetrace();
+    HSD_ObjInit();
+    lbl_805DE2B0 = TRUE;
+}
+
+void HSD_DVDInit(void)
+{
+}

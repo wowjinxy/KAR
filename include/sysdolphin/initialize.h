@@ -14,7 +14,7 @@ typedef struct _HSD_MemReport
     u32 heap;
 } HSD_MemReport;
 
-void HSD_InitComponent(void);
+void HSD_Init(void);
 void HSD_GXSetFifoObj(GXFifoObj* fifo);
 void HSD_DVDInit(void);
 void* HSD_AllocateFIFO(u32 size);
