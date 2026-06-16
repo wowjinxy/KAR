@@ -628,7 +628,7 @@ kar_objects = [
     Object(Matching, "gobjplink.c"),
     Object(Matching, "gobjgxlink.c"),
     Object(Matching, "gobjobject.c"),
-    Object(NonMatching, "gobjuserdata.c"),
+    Object(Matching, "gobjuserdata.c"),
     Object(NonMatching, "particle.c"),
     Object(NonMatching, "psinterpret.c"),
     Object(NonMatching, "generator.c"),

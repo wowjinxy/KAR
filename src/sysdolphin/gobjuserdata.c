@@ -59,24 +59,24 @@ extern HSD_ObjAllocData hsdGObj_alloc_data;
 extern HSD_ObjAllocData hsdGObjProc_alloc_data;
 extern HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
 
-GObjFunc* lbl_805DE318;
-HSD_GObj* lbl_805DE31C;
-HSD_GObj* lbl_805DE320;
-HSD_GObj* lbl_805DE324;
-HSD_GObj** lbl_805DE328;
-HSD_GObj** lbl_805DE32C;
-HSD_GObj** lbl_805DE330;
-HSD_GObj** lbl_805DE334;
-HSD_GObjProc* lbl_805DE338;
-s32 lbl_805DE33C;
-HSD_GObjProc* lbl_805DE340;
-s32 lbl_805DE344;
-HSD_GObjProc** lbl_805DE348;
-HSD_GObjProc** lbl_805DE34C;
-u8 lbl_805DE350;
-u8 lbl_805DE351;
+u8 lbl_805DE353;
 u8 lbl_805DE352;
-u8 lbl_805DE353[5];
+u8 lbl_805DE351;
+u8 lbl_805DE350;
+HSD_GObjProc** lbl_805DE34C;
+HSD_GObjProc** lbl_805DE348;
+s32 lbl_805DE344;
+HSD_GObjProc* lbl_805DE340;
+s32 lbl_805DE33C;
+HSD_GObjProc* lbl_805DE338;
+HSD_GObj** lbl_805DE334;
+HSD_GObj** lbl_805DE330;
+HSD_GObj** lbl_805DE32C;
+HSD_GObj** lbl_805DE328;
+HSD_GObj* lbl_805DE324;
+HSD_GObj* lbl_805DE320;
+HSD_GObj* lbl_805DE31C;
+GObjFunc* lbl_805DE318;
 
 void HSD_GObjDefaultObjectRemove(HSD_Obj* obj);
 void HSD_GObjDefaultObjectRemoveAlt(HSD_Obj* obj);
@@ -353,7 +353,7 @@ void GObj_RegisterDefaultFuncs(HSD_GObjLibInitDataType* init_data)
 {
     u8 count = GObj_AddFuncTable(init_data, &gobj_default_func_node);
 
-    lbl_805DE353[0] = count++;
+    lbl_805DE353 = count++;
     lbl_805DE352 = count++;
     lbl_805DE351 = count++;
     lbl_805DE350 = count;
@@ -382,12 +382,10 @@ void GObj_InitializeLibInitData(HSD_GObjLibInitDataType* init_data)
 
 #pragma push
 #pragma dont_inline on
-// Nonmatching: this attempt is close, but the TU remains unlinked until GObj_Init matches.
 void GObj_Init(HSD_GObjLibInitDataType* init_data)
 {
     int i;
     int count;
-    int pos;
     GObjFuncs* funcs;
 
     GObj_RegisterDefaultFuncs(init_data);
@@ -426,12 +424,12 @@ void GObj_Init(HSD_GObjLibInitDataType* init_data)
     }
 
     if (count != 0) {
-        pos = 0;
-
         lbl_805DE318 = HSD_Alloc(sizeof(GObjFunc) * count);
+
+        count = 0;
         for (funcs = init_data->funcs; funcs != NULL; funcs = funcs->next) {
-            for (i = 0; i < funcs->size; i++, pos++) {
-                lbl_805DE318[pos] = funcs->funcs[i];
+            for (i = 0; i < funcs->size; i++, count++) {
+                lbl_805DE318[count] = funcs->funcs[i];
             }
         }
     } else {
@@ -447,7 +445,7 @@ void GObj_Init(HSD_GObjLibInitDataType* init_data)
 }
 #pragma pop
 
-HSD_GObjLibInitDataType hsdGObj_p_link_max;
-HSD_ObjAllocData hsdGObj_alloc_data;
-HSD_ObjAllocData hsdGObjProc_alloc_data;
 HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
+HSD_ObjAllocData hsdGObjProc_alloc_data;
+HSD_ObjAllocData hsdGObj_alloc_data;
+HSD_GObjLibInitDataType hsdGObj_p_link_max;
