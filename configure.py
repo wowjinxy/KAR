@@ -400,6 +400,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "lobj.c",
     "memory.c",
     "mobj.c",
+    "objalloc.c",
     "object.c",
     "pobj.c",
     "robj.c",
