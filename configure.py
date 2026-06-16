@@ -397,6 +397,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "initialize.c",
     "list.c",
     "lobj.c",
+    "memory.c",
     "mobj.c",
     "object.c",
     "pobj.c",

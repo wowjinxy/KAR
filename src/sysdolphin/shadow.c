@@ -4,54 +4,20 @@
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
 
-extern HSD_ObjAllocData shadow_alloc_data;
+extern u8 lbl_8058BE98[];
 
 struct _HSD_CObj* HSD_CObjAlloc();
 void HSD_CObjSetViewportfx4(struct _HSD_CObj*, f32, f32, f32, f32);
 
 #define HSD_OBJ(o) ((HSD_Obj*)o)
+#define SHADOW_ALLOC_DATA ((HSD_ObjAllocData*) lbl_8058BE98)
 
 HSD_ObjAllocData* HSD_ShadowGetAllocData(void)
 {
-    return &shadow_alloc_data;
-}
-
-void HSD_ShadowInitAllocData(void)
-{
-    HSD_ObjAllocInit(&shadow_alloc_data, sizeof(HSD_Shadow), 4);
-}
-
-HSD_TObj* allocShadowTObj()
-{
-    HSD_TObj* tobj = HSD_TObjAlloc();
-    tobj->src = 0;
-    tobj->wrap_s = 0;
-    tobj->wrap_t = 0;
-    tobj->flags = 0x540103;
-    tobj->imagedesc = HSD_ImageDescAlloc();
-    return tobj;
+    return SHADOW_ALLOC_DATA;
 }
 
 void HSD_CObjSetScissorx4(struct _HSD_CObj*, s32, u16, s32, u16);        /* extern */
-
-HSD_Shadow* HSD_ShadowAlloc(void)
-{
-    HSD_Shadow* shadow = HSD_ObjAlloc(&shadow_alloc_data);
-    memset(shadow, 0, sizeof(HSD_Shadow));
-    shadow->camera = HSD_CObjAlloc();
-    shadow->texture = allocShadowTObj();
-    shadow->scaleS = 0.5;
-    shadow->scaleT = -0.5;
-    shadow->transS = 0.5;
-    shadow->transT = 0.5;
-    shadow->intensity = 0;
-    shadow->texture->imagedesc->format = 0;
-    shadow->texture->imagedesc->width = 256;
-    shadow->texture->imagedesc->height = 256;
-    HSD_CObjSetViewportfx4(shadow->camera, 0, 256, 0, 256);
-    HSD_CObjSetScissorx4(shadow->camera, 0, 256, 0, 256);
-    return shadow;
-}
 
 inline BOOL decref(HSD_Obj* obj)
 {
@@ -88,7 +54,7 @@ void HSD_ShadowFree(HSD_Shadow* shadow)
     tobj = shadow->texture;
     HSD_ImageDescFree(tobj->imagedesc);
     HSD_TObjFree(tobj);
-    HSD_ObjFree(&shadow_alloc_data, shadow);
+    HSD_ObjFree(SHADOW_ALLOC_DATA, shadow);
 }
 
 void HSD_ShadowInit(HSD_Shadow* shadow)
