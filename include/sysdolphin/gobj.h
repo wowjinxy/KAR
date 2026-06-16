@@ -37,6 +37,7 @@ typedef struct _HSD_GObjProc {
     u8 flags_1:1; //0xD
     u8 flags_2:1;
     u8 flags_3:2;
+    u8 flags_4:2;
     struct _HSD_GObj* gobj; //0x10
     void (*callback)(struct _HSD_GObj*); //0x14
 } HSD_GObjProc;
