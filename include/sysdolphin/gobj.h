@@ -41,14 +41,22 @@ typedef struct _HSD_GObjProc {
     void (*callback)(struct _HSD_GObj*); //0x14
 } HSD_GObjProc;
 
+typedef void (*GObjFunc)(struct _HSD_Obj*);
+
+typedef struct _GObjFuncs {
+    struct _GObjFuncs* next;
+    u8 size;
+    GObjFunc* funcs;
+    u32 pad;
+} GObjFuncs;
+
 typedef struct _HSD_GObjLibInitDataType {
     u8 p_link_max; //804CE380
     u8 gx_link_max; //804CE381
     u8 gproc_pri_max; //804CE382
-    u32 unk_1; //804CE384
-    u32* unk_2; //804CE388
-    HSD_ObjAllocData gobj_def; //804CE38C
-    HSD_ObjAllocData gobj_proc_def; //804CE3B8
+    u8 pad;
+    GObjFuncs* funcs; //804CE384
+    u64* unk_2; //804CE388
 } HSD_GObjLibInitDataType;
 
 extern struct _unk_gobj_struct {
