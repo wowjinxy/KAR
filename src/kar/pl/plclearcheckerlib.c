@@ -343,13 +343,13 @@ u32 kar_plclearcheckerlib__near_8022cdc8(s32 slot)
 
 void kar_plclearcheckerlib__near_8022ce28(void)
 {
-    PlClearCheckerTemplate* template = plclearchecker_player_template_table;
     s32 i;
 
-    for (i = 0; i < 5; i++, template++) {
-        if (template->cl_object != NULL && template->unk_040 != NULL) {
-            fn_80191C38(template->cl_object);
-            fn_801C7698(template->unk_040);
+    for (i = 0; i < 5; i++) {
+        if (plclearchecker_player_template_table[i].cl_object != NULL &&
+            plclearchecker_player_template_table[i].unk_040 != NULL) {
+            fn_80191C38(plclearchecker_player_template_table[i].cl_object);
+            fn_801C7698(plclearchecker_player_template_table[i].unk_040);
         }
     }
 }
