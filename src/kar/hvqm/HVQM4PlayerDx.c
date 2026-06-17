@@ -119,6 +119,14 @@ void fn_80471D90(HVQM4StreamCursor* cursor, void* base, u32 size)
 
 void fn_8047558C(void) {}
 
+s32 fn_804755EC(u8* obj)
+{
+    if (obj[0] != 6) {
+        return -12;
+    }
+    return *(s32*) (obj + 0x8C);
+}
+
 #pragma push
 #pragma dont_inline on
 void IpicLineDec(void* obj, u8* outbuf, s32 stride, HVQM4IpicContext* ctx,
