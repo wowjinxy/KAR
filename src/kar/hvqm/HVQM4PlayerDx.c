@@ -54,6 +54,14 @@ typedef struct HVQM4PlaneDesc {
     u16 stride;
 } HVQM4PlaneDesc;
 
+typedef struct HVQM4BitStream {
+    u32* input;
+    void* unk4;
+    u32 cache;
+    s32 bit;
+    s32* tree;
+} HVQM4BitStream;
+
 void* HVQM4Alloc(u32 size);
 void HVQM4Free(void* ptr);
 
@@ -66,9 +74,26 @@ void HVQM4DecodeAdp8xCh2(u32* state, u8* recd, u8* outp, u32 rec_size,
 void HVQM4DecodeBpic(HVQM4SeqObj* obj, void* code, void* outbuf, void* ref2,
                      void* ref1);
 void IpicBlockDec(void* obj, u8* outbuf, s32 stride, HVQM4IpicContext* ctx);
+s16 _readTree(s32* tree, HVQM4BitStream* stream);
 
 extern s32* lbl_80533FC0[];
+extern u32 lbl_805B5438[];
+extern u32 lbl_805B543C[];
 extern u32 lbl_805B5448[];
+
+void readTree(HVQM4BitStream* stream, u32 arg1, u32 arg2)
+{
+    s32* tree = stream->tree;
+
+    lbl_805B5438[0] = arg1;
+    lbl_805B543C[0] = arg2;
+    tree[0] = 0x100;
+    if (stream->unk4 != NULL) {
+        tree[1] = _readTree(tree, stream);
+    } else {
+        tree[1] = 0;
+    }
+}
 
 #pragma push
 #pragma dont_inline on
