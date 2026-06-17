@@ -13,15 +13,33 @@ union VcDeviceWord {
 };
 
 struct VcDeviceConfig {
-    u8 pad_0[0x58];
+    u8 pad_0[0x20];
+    u8 field_20[0x38];
     f32 field_58;
-    u8 pad_5C[0xA0];
+    f32 field_5C;
+    u8 pad_60[0x9C];
     f32 field_FC;
+    u8 pad_100[0x10];
+    f32 field_110;
+    u8 pad_114[0x48];
+    f32 field_15C;
 };
 
 struct VcDevice {
     HSD_GObj* gobj_0;
-    u8 pad_4[0x388];
+    u8 pad_4[0x38];
+    u8 field_3C[0x3C];
+    u8 flags_78;
+    u8 pad_79[0x273];
+    f32 field_2EC;
+    f32 field_2F0;
+    f32 field_2F4;
+    u8 pad_2F8[0x38];
+    f32 field_330;
+    f32 field_334;
+    f32 field_338;
+    f32 field_33C;
+    u8 pad_340[0x4C];
     f32 field_38C;
     u8 pad_390[0x80];
     void* field_410;
@@ -36,11 +54,21 @@ struct VcDevice {
     u8 pad_6EC[0x4C];
     u8 field_738[0xC];
     f32 field_744;
-    u8 pad_748[0x18C];
+    u8 pad_748[0x4];
+    f32 field_74C;
+    u8 pad_750[0x18];
+    f32 field_768;
+    f32 field_76C;
+    f32 field_770;
+    u8 pad_774[0x160];
     f32 field_8D4;
     u8 pad_8D8[0x2D4];
     s32 field_BAC;
-    u8 pad_BB0[0x90];
+    u8 pad_BB0[0x80];
+    u8 flags_C30;
+    u8 pad_C31[0x2];
+    u8 flags_C33;
+    u8 pad_C34[0xC];
     f32 field_C40;
     f32 field_C44;
     VcDeviceWord field_C48;
@@ -51,7 +79,9 @@ struct VcDevice {
     s32 field_1598;
     u8 pad_159C[0x5A4];
     s32 field_1B40;
-    u8 pad_1B44[0x58];
+    u8 pad_1B44[0x4];
+    VcDeviceWord field_1B48;
+    u8 pad_1B4C[0x50];
     volatile s32 field_1B9C;
 };
 
@@ -64,16 +94,22 @@ extern f32 lbl_805E1E48;
 extern const f32 lbl_805E1EE0;
 extern const f32 lbl_805E2060;
 extern const f32 lbl_805E2064;
+extern const f32 lbl_805E2090;
 
 extern void HSD_GObjDestroy(HSD_GObj* gobj);
 extern void HSD_JObjClearFlagsAll(void* jobj, u32 flags);
 extern void HSD_JObjSetFlagsAll(void* jobj, u32 flags);
+extern void fn_801D33CC(VcDevice* device, f32 value);
+extern void fn_801D4584(VcDevice* device, void* arg1, f32 value);
+extern void fn_801D7E5C(VcDevice* device, f32 value);
 extern void fn_801DA028(VcDevice* device, void* arg1);
 extern BOOL fn_801E1200(VcDevice* device);
 extern void fn_801E1DC0(VcDevice* device);
 extern void fn_801E1E6C(VcDevice* device);
 extern void fn_801E441C(VcDevice* device);
 extern void fn_801E45CC(VcDevice* device);
+extern void fn_801E5838(VcDevice* device);
+extern void fn_801EF908(VcDevice* device);
 extern BOOL fn_801EFB68(VcDevice* device);
 extern void kar_collision_object_flush_dirty_motion_slots(void* object);
 extern void kar_grairglider_release_spawn_handle(HSD_GObj* gobj);
@@ -83,6 +119,10 @@ extern BOOL fn_801F05BC(VcDevice* device);
 extern BOOL fn_801FA710(VcDevice* device);
 extern BOOL fn_801FAB88(VcDevice* device);
 extern BOOL fn_801F9EC4(VcDevice* device);
+extern void fn_801FA96C(VcDevice* device);
+extern BOOL kar_mpcoll__801cf1b8(VcDevice* device, f32 value);
+extern void kar_clobject__near_8018d850(void* object);
+extern f32 kar_lbvector_lerp_float_table_sample(void* table, f32 arg1, f32 arg2);
 extern void fn_801E6670(VcDevice* device);
 extern void fn_801E6D24(VcDevice* device);
 extern void fn_801E7154(VcDevice* device);
@@ -100,6 +140,8 @@ extern void kar_mpcoll__near_801d04d8(VcDevice* device);
 extern void kar_mpcoll__near_801edd20(VcDevice* device);
 extern void kar_mpcoll__near_801eddd0(VcDevice* device);
 extern BOOL kar_mpcoll__near_801eec30(VcDevice* device);
+extern BOOL kar_mpcoll__near_801eed68(VcDevice* device);
+extern void kar_mpcoll__near_801eef30(VcDevice* device);
 extern BOOL kar_mpcoll__near_801ef150(VcDevice* device);
 extern void kar_mpcoll__near_801ef454(VcDevice* device);
 extern BOOL kar_mpcoll__near_801f91b8(VcDevice* device);
@@ -108,10 +150,12 @@ extern BOOL kar_mpcoll__near_801f9aa8(VcDevice* device);
 extern void kar_mpcoll__near_801f8578(VcDevice* device);
 extern void kar_mpcoll__near_801f8ef4(VcDevice* device);
 extern void kar_mpcoll__near_801f8f44(VcDevice* device);
+extern BOOL kar_mpcoll__near_801f8f78(VcDevice* device);
 extern void kar_mpcoll__near_801f913c(VcDevice* device);
 extern void kar_mpcoll__near_801f9160(VcDevice* device);
 extern void kar_mpcoll__near_801f9184(VcDevice* device);
 extern void kar_mpcoll__near_801f94a0(VcDevice* device);
+extern void kar_mpcoll__near_801f9454(VcDevice* device);
 extern void kar_mpcoll__near_801f94c4(VcDevice* device);
 extern void kar_mpcoll__near_801f9594(VcDevice* device);
 extern void kar_mpcoll__near_801f9738(VcDevice* device);
@@ -862,4 +906,144 @@ void fn_801FECF8(void* jobj)
 void fn_801FED1C(VcDevice* device)
 {
     kar_grairglider_release_spawn_handle(device->gobj_0);
+}
+
+void kar_mpcoll__near_801ed720(VcDevice* device, f32 scale)
+{
+    device->field_330 = device->field_768 * scale;
+    device->field_334 = device->field_76C * scale;
+    device->field_338 = device->field_770 * scale;
+}
+
+void kar_mpcoll__near_801ef5c4(VcDevice* device)
+{
+    fn_801D4584(device, device->field_3C, device->field_1B48.f);
+}
+
+void fn_801F61E4(VcDevice* device, f32 arg1, f32 arg2)
+{
+    if ((device->flags_C33 & 1) == 0) {
+        device->field_C44 += arg2;
+    }
+    device->field_38C += arg1;
+}
+
+void kar_mpcoll__near_801f85bc(VcDevice* device)
+{
+    fn_801D33CC(device, device->config_650->field_110);
+}
+
+void fn_801FA440(VcDevice* device)
+{
+    fn_801D4584(device, device->field_3C, device->field_1B48.f);
+}
+
+void fn_801FC670(HSD_GObj* gobj)
+{
+    kar_clobject__near_8018d850(((VcDevice*) gobj->user_data)->field_410);
+}
+
+void fn_801FD6EC(VcDevice* device, f32 scale)
+{
+    device->field_2EC = device->field_334 * scale;
+    device->field_2F0 = device->field_338 * scale;
+    device->field_2F4 = device->field_33C * scale;
+}
+
+f32 fn_801F5FD8(VcDevice* device)
+{
+    f32 value = device->field_C44;
+
+    if (!(value > lbl_805E2064)) {
+        return lbl_805E2064;
+    }
+
+    value /= device->field_C40;
+    if (value > lbl_805E2060) {
+        return lbl_805E2060;
+    }
+    return value;
+}
+
+BOOL fn_801EF7A4(VcDevice* device)
+{
+    return kar_mpcoll__801cf1b8(device, device->config_650->field_15C) == 0;
+}
+
+f32 fn_801F605C(VcDevice* device)
+{
+    return kar_lbvector_lerp_float_table_sample(device->config_650->field_20, lbl_805E2090,
+                                                lbl_805E2060);
+}
+
+void fn_801F633C(VcDevice* device)
+{
+    fn_801D7E5C(device, device->field_74C * device->config_650->field_5C);
+}
+
+void kar_mpcoll__near_801ef338(VcDevice* device)
+{
+    if ((device->flags_C30 >> 6) & 1) {
+        kar_mpcoll__near_801cc480(device);
+    }
+}
+
+void fn_801EFEE8(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        kar_mpcoll__near_801eef30(device);
+    }
+}
+
+void fn_801F0234(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        fn_801E5838(device);
+    }
+}
+
+void fn_801F0568(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        fn_801EF908(device);
+    }
+}
+
+void kar_mpcoll__near_801f9400(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        fn_801FA96C(device);
+    }
+}
+
+void fn_801FAF20(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        kar_mpcoll__near_801f9454(device);
+    }
+}
+
+void fn_801FB3D0(VcDevice* device)
+{
+    if ((device->flags_78 >> 6) & 1) {
+        fn_801E5838(device);
+    }
+}
+
+void kar_mpcoll__near_801eecd0(VcDevice* device)
+{
+    if (device->field_1B48.s == 0) {
+        if (kar_mpcoll__near_801eed68(device)) {
+            return;
+        }
+    }
+}
+
+void kar_mpcoll__near_801f8ef4(VcDevice* device)
+{
+    if (device->field_1B48.s == 0) {
+        if (kar_mpcoll__near_801f8f78(device)) {
+            return;
+        }
+    }
 }
