@@ -34,6 +34,26 @@ typedef struct HVQM4DecSound {
     u32 format;
 } HVQM4DecSound;
 
+typedef struct HVQM4IpicContext {
+    void* unk0;
+    u8* left_ptr;
+    u16* code_ptr;
+    u8* upper_ptr;
+    u16 current;
+    u16 left;
+    u8 previous;
+} HVQM4IpicContext;
+
+typedef struct HVQM4PlaneDesc {
+    u8 pad0[4];
+    u8* data;
+    u16 blocks_x;
+    u16 blocks_y;
+    u16 upper_offset;
+    u8 padE[0x28 - 0xE];
+    u16 stride;
+} HVQM4PlaneDesc;
+
 void* HVQM4Alloc(u32 size);
 void HVQM4Free(void* ptr);
 
@@ -45,9 +65,78 @@ void HVQM4DecodeAdp8xCh2(u32* state, u8* recd, u8* outp, u32 rec_size,
                          u32 samples, s32 track);
 void HVQM4DecodeBpic(HVQM4SeqObj* obj, void* code, void* outbuf, void* ref2,
                      void* ref1);
+void IpicBlockDec(void* obj, u8* outbuf, s32 stride, HVQM4IpicContext* ctx);
 
 extern s32* lbl_80533FC0[];
 extern u32 lbl_805B5448[];
+
+#pragma push
+#pragma dont_inline on
+void IpicLineDec(void* obj, u8* outbuf, s32 stride, HVQM4IpicContext* ctx,
+                 s32 blocks)
+{
+    u16* code_ptr;
+
+    ctx->current = *ctx->code_ptr;
+    ctx->previous = *(u8*) ctx->code_ptr;
+    blocks--;
+
+    while (blocks > 0) {
+        ctx->left = ctx->current;
+        code_ptr = ctx->code_ptr + 1;
+        ctx->code_ptr = code_ptr;
+        ctx->current = *code_ptr;
+        IpicBlockDec(obj, outbuf, stride, ctx);
+        outbuf += 4;
+        blocks--;
+    }
+
+    ctx->left = ctx->current;
+    ctx->code_ptr = (u16*) ((u8*) ctx->code_ptr + 6);
+    IpicBlockDec(obj, outbuf, stride, ctx);
+    ctx->left_ptr += 4;
+    ctx->upper_ptr += 4;
+}
+
+// NONMATCHING: flow verified against 80461C64; remaining diff is regalloc.
+void IpicPlaneDec(void* obj, s32 plane, u8* outbuf)
+{
+    HVQM4IpicContext ctx;
+    HVQM4PlaneDesc* desc = (HVQM4PlaneDesc*) ((u8*) obj + plane * 0x38);
+    u32 stride = desc->stride;
+    u32 row_stride = stride * 4;
+    s32 rows = desc->blocks_y;
+    u32 upper_offset = desc->upper_offset;
+    u32 blocks = desc->blocks_x;
+    u32 middle_stride;
+    u8* data;
+
+    ctx.unk0 = (void*) plane;
+    data = desc->data;
+    ctx.left_ptr = data;
+    ctx.code_ptr = (u16*) data;
+    ctx.upper_ptr = data + upper_offset * 2;
+
+    if (rows > 0) {
+        IpicLineDec(obj, outbuf, stride, &ctx, blocks);
+        outbuf += row_stride;
+        rows--;
+    }
+
+    ctx.left_ptr = desc->data;
+    middle_stride = stride;
+    while (rows > 1) {
+        IpicLineDec(obj, outbuf, middle_stride, &ctx, blocks);
+        outbuf += row_stride;
+        rows--;
+    }
+
+    if (rows > 0) {
+        ctx.upper_ptr = (u8*) ctx.code_ptr;
+        IpicLineDec(obj, outbuf, stride, &ctx, blocks);
+    }
+}
+#pragma pop
 
 void HVQM4InitSeqObj(HVQM4SeqObj* obj, HVQM4VideoInfo* header)
 {
