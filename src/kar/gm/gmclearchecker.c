@@ -454,9 +454,6 @@ void kar_gmclearchecker__near_8004a994(s32 arg0)
 void kar_gmclearchecker__near_8004aa58(void)
 {
     GmGlobalData* global;
-    GmClearCheckerPredicate* predicates;
-    u8* numbers;
-    GmClearCheckerPredicate predicate;
     s32 i;
     s32 number;
 
@@ -466,15 +463,16 @@ void kar_gmclearchecker__near_8004aa58(void)
     if ((s8) fn_8000AAC4() != 0) {
         return;
     }
-    if ((s8) kar_gmracenormal__8000af5c() == 0) {
+
+    switch ((s8) kar_gmracenormal__8000af5c()) {
+    case 0:
         if ((s8) kar_gmracenormal__8000aea8() == 4) {
             global = kar_gmglobal__near_8000771c();
-            numbers = lbl_80497674;
-            predicates = lbl_804975B8;
-            for (i = 0; i < 0x1E; i++, predicates++, numbers++) {
-                number = *numbers;
+            for (i = 0; i < 0x1E; i++) {
+                number = lbl_80497674[i];
                 if ((kar_gmclearchecker__8004a130(0, number) & 5) == 0) {
-                    predicate = *predicates;
+                    GmClearCheckerPredicate predicate = lbl_804975B8[i];
+
                     if (predicate != NULL && predicate(number) == 1) {
                         kar_gmclearchecker__8004a054(0, number);
                     }
