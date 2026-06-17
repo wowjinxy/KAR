@@ -294,11 +294,9 @@ s32 kar_gmclearchecker__near_8004a1a4(void)
 
 void kar_gmclearchecker__near_8004a648(void)
 {
-    s32 state = (u8) kar_mnclearchecker_get_main_state_or_assert_operating();
     s32 minor;
-    s32 next;
 
-    switch (state) {
+    switch (kar_mnclearchecker_get_main_state_or_assert_operating()) {
     case 0xB:
         kar_gmglobal__near_800088c8(-1);
         kar_gmmain__near_800064f0();
@@ -306,36 +304,27 @@ void kar_gmclearchecker__near_8004a648(void)
     case 0xC:
         kar_lbaudio__near_8006176c(0x1000A);
         minor = (s8) fn_8000AECC();
-        next = 0x20;
-        minor++;
-        if (minor <= 0x22) {
-            next = minor;
-        }
-        kar_gmglobal__near_800088c8((s8) next);
+        kar_gmglobal__near_800088c8((s8) (++minor > 0x22 ? 0x20 : minor));
         kar_gmmain__near_800064f0();
         break;
     case 0xD:
         kar_lbaudio__near_8006176c(0x1000A);
         minor = (s8) fn_8000AECC();
-        next = 0x22;
-        minor--;
-        if (minor >= 0x20) {
-            next = minor;
-        }
-        kar_gmglobal__near_800088c8((s8) next);
+        kar_gmglobal__near_800088c8((s8) (--minor < 0x20 ? 0x22 : minor));
         kar_gmmain__near_800064f0();
         break;
     case 0xE:
         fn_8000BC10();
-        minor = (s8) fn_8000AECC();
-        if (minor == 0x21) {
+        switch ((s8) fn_8000AECC()) {
+        case 0x20:
+            kar_gmglobal__near_800088c8(0x1C);
+            break;
+        case 0x21:
             kar_gmglobal__near_800088c8(0x1D);
-        } else if (minor < 0x21) {
-            if (minor > 0x1F) {
-                kar_gmglobal__near_800088c8(0x1C);
-            }
-        } else if (minor < 0x23) {
+            break;
+        case 0x22:
             kar_gmglobal__near_800088c8(0x1E);
+            break;
         }
         kar_gmmain__near_800064f0();
         break;
