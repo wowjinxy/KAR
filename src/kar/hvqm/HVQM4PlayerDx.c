@@ -41,10 +41,13 @@ void HVQM4DecodeAdpcmCh1(u32* state, void* recd, void* outp, u32 rec_size,
                          u32 samples, s32 track);
 void HVQM4DecodeAdpcmCh2(u32* state, void* recd, void* outp, u32 rec_size,
                          u32 samples, s32 track);
-void HVQM4DecodeAdp8xCh2(u32* state, void* recd, void* outp, u32 rec_size,
+void HVQM4DecodeAdp8xCh2(u32* state, u8* recd, u8* outp, u32 rec_size,
                          u32 samples, s32 track);
 void HVQM4DecodeBpic(HVQM4SeqObj* obj, void* code, void* outbuf, void* ref2,
                      void* ref1);
+
+extern s32* lbl_80533FC0[];
+extern u32 lbl_805B5448[];
 
 void HVQM4InitSeqObj(HVQM4SeqObj* obj, HVQM4VideoInfo* header)
 {
@@ -125,6 +128,66 @@ void HVQM4DecodePcm16Ch2(u8* recd, u8* outp, u32 rec_size, s32 samples,
     }
 }
 #pragma pop
+
+void HVQM4DecodeAdp8xCh2(u32* state, u8* recd, u8* outp, u32 rec_size,
+                         u32 samples, s32 track)
+{
+    s32 left;
+    u8* data;
+    u32 offset;
+    s32 has_header;
+    s32 right;
+
+    if (recd == NULL) {
+        return;
+    }
+
+    has_header = (rec_size >> 7) & 1;
+    rec_size = (u32) lbl_80533FC0[rec_size & 3];
+    offset = samples * 2;
+    if (has_header) {
+        offset += 4;
+        lbl_805B5448[0] = track;
+    }
+
+    offset *= lbl_805B5448[0];
+    data = recd + offset;
+
+    if (has_header) {
+        state[0] = (s16) ((data[0] << 8) | data[1]);
+        state[2] = (s16) ((data[2] << 8) | data[3]);
+        data += 4;
+    }
+
+    left = state[0];
+    right = state[2];
+    while (samples > 0) {
+        left += ((s32*) rec_size)[data[0]];
+        if (left < -0x8000) {
+            left = -0x8000;
+        }
+        if (left > 0x7FFF) {
+            left = 0x7FFF;
+        }
+        ((s16*) outp)[1] = left;
+
+        right += ((s32*) rec_size)[data[1]];
+        if (right < -0x8000) {
+            right = -0x8000;
+        }
+        if (right > 0x7FFF) {
+            right = 0x7FFF;
+        }
+        ((s16*) outp)[0] = right;
+
+        data += 2;
+        outp += 4;
+        samples--;
+    }
+
+    state[0] = left;
+    state[2] = right;
+}
 
 HVQM4DecSound* HVQM4DecSoundCreate(HVQM4AudioInfo* info)
 {
