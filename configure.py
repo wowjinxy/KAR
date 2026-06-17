@@ -554,7 +554,7 @@ kar_objects = [
     Object(NonMatching, "greventlighthouse.c"),
     Object(NonMatching, "ifround.c"),
     Object(NonMatching, "mnselrule.c"),
-    Object(NonMatching, "mntitle.c"),
+    Object(Matching, "mntitle.c"),
     Object(NonMatching, "mndialoguebg.c"),
     Object(NonMatching, "mnclearchecker.c"),
     Object(Matching, "mnlannumber.c"),
