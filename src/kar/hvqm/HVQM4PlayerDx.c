@@ -62,6 +62,13 @@ typedef struct HVQM4BitStream {
     s32* tree;
 } HVQM4BitStream;
 
+typedef struct HVQM4StreamCursor {
+    void* base;
+    u32 size;
+    void* current;
+    u32 offset;
+} HVQM4StreamCursor;
+
 void* HVQM4Alloc(u32 size);
 void HVQM4Free(void* ptr);
 
@@ -94,6 +101,23 @@ void readTree(HVQM4BitStream* stream, u32 arg1, u32 arg2)
         tree[1] = 0;
     }
 }
+
+void fn_8046F250(void) {}
+
+BOOL fn_80471034(void)
+{
+    return TRUE;
+}
+
+void fn_80471D90(HVQM4StreamCursor* cursor, void* base, u32 size)
+{
+    cursor->size = size;
+    cursor->base = base;
+    cursor->current = base;
+    cursor->offset = 0;
+}
+
+void fn_8047558C(void) {}
 
 #pragma push
 #pragma dont_inline on
