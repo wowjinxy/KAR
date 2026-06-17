@@ -409,7 +409,8 @@ void kar_gmclearchecker__near_8004a90c(s32 arg0)
     if ((s8) fn_8000AAC4() != 0) {
         return;
     }
-    if ((s8) kar_gmracenormal__8000af5c() == 0) {
+    switch ((s8) kar_gmracenormal__8000af5c()) {
+    case 0:
         if ((s8) kar_gmracenormal__8000aea8() == 4) {
             if (kar_plclearcheckerlib__near_8022c858(arg0) == 0) {
                 if ((s8) kar_gmracenormal__8003d5f0() == 2) {
