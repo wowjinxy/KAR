@@ -379,7 +379,8 @@ void kar_gmclearchecker__near_8004a7f0(void)
     if ((s8) kar_gmracenormal__8000af5c() != 0) {
         return;
     }
-    if ((s8) fn_8000A97C() == 0) {
+    switch ((s8) fn_8000A97C()) {
+    case 0:
         if ((s8) kar_gmracenormal__8000aea8() == 4) {
             main = kar_gmmain__near_80006c14();
             for (i = 0; i < 4; i++) {
