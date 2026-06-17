@@ -605,7 +605,8 @@ s32 kar_gmclearchecker__near_8004b23c(void)
         }
     }
 
-    return total >= 3;
+    total = total >= 3;
+    return total;
 }
 
 s32 kar_gmclearchecker__near_8004b2b8(void)
