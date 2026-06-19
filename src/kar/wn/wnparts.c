@@ -6,7 +6,6 @@
 
 typedef struct WnParts WnParts;
 typedef struct WnModel WnModel;
-typedef struct WnPartsStrings WnPartsStrings;
 
 struct WnModel {
     u8 pad_00[0x28];
@@ -27,17 +26,9 @@ struct WnParts {
     f32 timer;
 };
 
-struct WnPartsStrings {
-    char parts_num_over[0x1C];
-    char filename[0x0C];
-    char parts_num_not_match[0x20];
-};
-
-WnPartsStrings lbl_804B4450 = {
-    "weapon parts num over! %d\n",
-    "wnparts.c",
-    "weapon parts num not match! %d\n",
-};
+char lbl_804B4450[] = "weapon parts num over! %d\n";
+char lbl_804B446C[] = "wnparts.c";
+char lbl_804B4478[] = "weapon parts num not match! %d\n";
 char lbl_805D71C0[] = "0";
 const f32 lbl_805E2858[2] = { 9999.0f, 0.0f };
 
@@ -52,19 +43,17 @@ void kar_efdata__near_80236358(void* effect);
 
 void kar_wnparts__80221914(WnParts* parts)
 {
-    WnPartsStrings* strings;
     s32 offset;
     HSD_JObj* jobj;
     s32 count;
     HSD_JObj* temp;
     HSD_JObj* parent;
 
-    strings = &lbl_804B4450;
     count = 0;
     jobj = parts->model->jobj;
     if (parts->part_num > WNPARTS_MAX_PARTS) {
-        OSReport((char*) strings + 0x00, parts->kind);
-        __assert((char*) strings + 0x1C, 0x23, lbl_805D71C0);
+        OSReport(lbl_804B4450, parts->kind);
+        __assert(lbl_804B446C, 0x23, lbl_805D71C0);
     }
 
     offset = 0;
@@ -147,8 +136,8 @@ parent_check:
     }
 
     if (count != parts->part_num) {
-        OSReport((char*) strings + 0x28, parts->kind);
-        __assert((char*) strings + 0x1C, 0x45, lbl_805D71C0);
+        OSReport(lbl_804B4478, parts->kind);
+        __assert(lbl_804B446C, 0x45, lbl_805D71C0);
     }
 }
 
