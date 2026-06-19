@@ -155,10 +155,10 @@ config.progress_use_fancy = True
 config.progress_code_fancy_frac = 360
 config.progress_code_fancy_item = "checkboxes"
 config.progress_code_fancy_extra_files = [
-    "assets/kar/db/dbscreenshot_icon_rgb5a3.bin",
-    "assets/kar/debug/debugconsole_font_i4_8x14.bin",
-    "assets/kar/hsd/base/sislib_romfont_glyphs_i4_32x32.bin",
-    "assets/kar/lb/lbnet/upnp_rootdesc.xml",
+    "src/kar/db/dbscreenshot_icon.s",
+    "src/kar/hsd/particle/pslist_debugconsole_font.s",
+    "src/kar/hsd/base/sislib_romfont_glyphs.s",
+    "src/kar/lb/lbnet_upnp_rootdesc.s",
 ]
 if not is_windows():
     config.wrapper = args.wrapper
@@ -645,7 +645,7 @@ kar_objects = [
     Object(NonMatching, "dvdsche.c"),
     Object(NonMatching, "sislib.c"),
     Object(Matching, "hsd/base/sislib_romfont_glyphs.s"),
-    Object(NonMatching, "hsd/base/sislib_data_tail.s"),
+    Object(Matching, "hsd/base/sislib_data_tail.s"),
     Object(NonMatching, "gcpmemcard.c"),
     Object(NonMatching, "HVQM4PlayerDx.c"),
     Object(NonMatching, "IPSocket.c"),

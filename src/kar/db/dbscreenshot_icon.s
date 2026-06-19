@@ -8,5 +8,5 @@
 	.global kar_dbscreenshot_save_icon_rgb5a3
 	.type kar_dbscreenshot_save_icon_rgb5a3, @object
 kar_dbscreenshot_save_icon_rgb5a3:
-	.incbin "assets/kar/db/dbscreenshot_icon_rgb5a3.bin"
+	.incbin "build/GKYE01/bin/kar/db/dbscreenshot_icon_rgb5a3.bin"
 	.size kar_dbscreenshot_save_icon_rgb5a3, . - kar_dbscreenshot_save_icon_rgb5a3

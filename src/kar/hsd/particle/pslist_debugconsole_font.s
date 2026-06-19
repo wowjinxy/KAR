@@ -7,5 +7,5 @@
 	.global kar_debugconsole_font_i4_8x14
 	.type kar_debugconsole_font_i4_8x14, @object
 kar_debugconsole_font_i4_8x14:
-	.incbin "assets/kar/debug/debugconsole_font_i4_8x14.bin"
+	.incbin "build/GKYE01/bin/kar/debug/debugconsole_font_i4_8x14.bin"
 	.size kar_debugconsole_font_i4_8x14, . - kar_debugconsole_font_i4_8x14
