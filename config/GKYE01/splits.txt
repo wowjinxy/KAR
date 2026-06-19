@@ -216,9 +216,12 @@ lbshadow.c:
 	.sdata      start:0x805D53F8 end:0x805D5408
 	.sdata2     start:0x805DED90 end:0x805DEDC0
 
+lbnet_upnp_rootdesc.s:
+	.data       start:0x8049AE10 end:0x8049B0C8
+
 lbnet.c:
 	.text       start:0x8007B4C8 end:0x80086120
-	.data       start:0x8049AE10 end:0x8049BF18
+	.data       start:0x8049B0C8 end:0x8049BF18
 	.bss        start:0x80552A30 end:0x80552FB0
 	.sdata      start:0x805D5408 end:0x805D5430
 	.sdata2     start:0x805DEDC0 end:0x805DEEE0
@@ -233,10 +236,13 @@ dbposition.c:
 
 dbscreenshot.c:
 	.text       start:0x8008A980 end:0x8008EF10
-	.data       start:0x8049BFB0 end:0x8049D720
+	.data       start:0x8049BFB0 end:0x8049C720
 	.bss        start:0x805530D8 end:0x80553C9C
 	.sdata      start:0x805D5758 end:0x805D5814
 	.sdata2     start:0x805DEF20 end:0x805DEF98
+
+dbscreenshot_icon.s:
+	.data       start:0x8049C720 end:0x8049D720
 
 dbcamera.c:
 	.text       start:0x8008EF10 end:0x800A0DD0
@@ -1256,11 +1262,17 @@ psdisp.c:
 
 pslist.c:
 	.text       start:0x80438314 end:0x8043F820
-	.data       start:0x80505390 end:0x805088CC
+	.data       start:0x80505390 end:0x80505680
 	.bss        start:0x8058CE68 end:0x8058D298
 	.sdata      start:0x805DCE28 end:0x805DD160
 	.sbss       start:0x805DE3F0 end:0x805DE430
 	.sdata2     start:0x805E6040 end:0x805E60E0
+
+hsd/particle/pslist_debugconsole_font.s:
+	.data       start:0x80505680 end:0x80507280
+
+hsd/particle/pslist_data_tail.s:
+	.data       start:0x80507280 end:0x805088CC
 
 debugconsole_main.c:
 	.text       start:0x8043F820 end:0x804407E0
@@ -1293,11 +1305,17 @@ dvdsche.c:
 
 sislib.c:
 	.text       start:0x8044EDEC end:0x80457E0C
-	.data       start:0x80509678 end:0x805321D4
+	.data       start:0x80509678 end:0x8050A040
 	.bss        start:0x8059A848 end:0x805B1E80
 	.sdata      start:0x805DD1A8 end:0x805DD1B8
 	.sbss       start:0x805DE558 end:0x805DE578
 	.sdata2     start:0x805E6218 end:0x805E6298
+
+hsd/base/sislib_romfont_glyphs.s:
+	.data       start:0x8050A040 end:0x80531E40
+
+hsd/base/sislib_data_tail.s:
+	.data       start:0x80531E40 end:0x805321D4
 
 gcpmemcard.c:
 	.text       start:0x80457E0C end:0x8045DFA4
