@@ -72,7 +72,11 @@ typedef unsigned long	size_t;
 #endif // __cplusplus
 #endif // NULL
 
-#define assert_line(line, cond)                                                \
-    ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(*arr))
+
+#define artificial_padding(lastKnownOffset, desiredOffset,                     \
+                           typeofLastKnownMember)                              \
+  u8 pad_to_##desiredOffset[desiredOffset - lastKnownOffset -                  \
+                            sizeof(typeofLastKnownMember)]
 
 #endif // __TYPES_H__

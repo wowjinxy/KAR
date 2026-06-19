@@ -1,3 +1,6 @@
+#ifndef __UNKNOWN_FUNCTION_LOCATIONS_H_
+#define  __UNKNOWN_FUNCTION_LOCATIONS_H_
+
 //void __check_pad3(void);
 //void OSResetSystem(int, int, int);
 //void main(int);
@@ -31,7 +34,13 @@
 //
 //void Pad_InitCallback();
 
+#define assert_line(line, cond)                                                \
+    ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
+
 void __assert(const char*, unsigned long, const char*);
 void _OSReport(const char*, ...);
+extern void OSReport(const char *, ...);
 
 struct _HSD_ClassInfo* hsdSearchClassInfo(char*);
+
+#endif // !__UNKNOWN_FUNCTION_LOCATIONS_H_
