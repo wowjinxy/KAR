@@ -1289,7 +1289,7 @@ int kar_gmclearchecker__near_8004c038(int unused) {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c0ec() {
+int kar_gmclearchecker__near_8004c0ec(int unused) {
   int i;
 
   if (kar_gmclearchecker__near_8004b578_sub() != 0) {
@@ -1317,7 +1317,7 @@ int kar_gmclearchecker__near_8004c1a0(int unused) {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c254() {
+int kar_gmclearchecker__near_8004c254(int unused) {
   int i;
   for (i = 0; i < 5; i++) {
     if (kar_plclearcheckerlib__near_8022c858(i) == 0 &&
@@ -1328,7 +1328,7 @@ int kar_gmclearchecker__near_8004c254() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c2b4() {
+int kar_gmclearchecker__near_8004c2b4(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 0) {
     int i;
@@ -1342,7 +1342,7 @@ int kar_gmclearchecker__near_8004c2b4() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c3bc() {
+int kar_gmclearchecker__near_8004c3bc(int unused) {
   if (fn_80261CE8(fn_800092D8()) == 0) {
     int i;
     for (i = 0; i < 5; i++) {
@@ -1355,7 +1355,7 @@ int kar_gmclearchecker__near_8004c3bc() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c430() {
+int kar_gmclearchecker__near_8004c430(int unused) {
   if (fn_80261CE8(fn_800092D8()) == 7) {
     int i;
     for (i = 0; i < 5; i++) {
@@ -1368,7 +1368,7 @@ int kar_gmclearchecker__near_8004c430() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c4a4() {
+int kar_gmclearchecker__near_8004c4a4(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 7) {
     int i;
@@ -1382,7 +1382,7 @@ int kar_gmclearchecker__near_8004c4a4() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c5ac() {
+int kar_gmclearchecker__near_8004c5ac(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 3) {
     int i;
@@ -1396,7 +1396,7 @@ int kar_gmclearchecker__near_8004c5ac() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c6b4() {
+int kar_gmclearchecker__near_8004c6b4(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 3) {
     int i;
@@ -1410,7 +1410,7 @@ int kar_gmclearchecker__near_8004c6b4() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004c7bc() {
+int kar_gmclearchecker__near_8004c7bc(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 3) {
     int i;
@@ -1480,7 +1480,7 @@ int kar_gmclearchecker__near_8004cbe0(int unused) {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004cce8() {
+int kar_gmclearchecker__near_8004cce8(int unused) {
   if (fn_80261CE8(fn_800092D8()) == 5) {
     int i;
     for (i = 0; i < 5; i++) {
@@ -1507,7 +1507,7 @@ int kar_gmclearchecker__near_8004cd5c(int unused) {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004ce64() {
+int kar_gmclearchecker__near_8004ce64(int unused) {
   if (kar_gmclearchecker__near_8004afc0_sub() &&
       fn_80261CE8(fn_800092D8()) == 1) {
     int i;
@@ -1521,12 +1521,12 @@ int kar_gmclearchecker__near_8004ce64() {
   return 0;
 }
 
-int kar_gmclearchecker__near_8004cf6c() {
+int kar_gmclearchecker__near_8004cf6c(int unused) {
   if (fn_80261CE8(fn_800092D8()) == 1) {
     int i;
     for (i = 0; i < 5; i++) {
       if (kar_plclearcheckerlib__near_8022c858(i) == 0 &&
-          (u32)kar_plclearcheckerlib__80230ae0(i) != 0) {
+          kar_plclearcheckerlib__80230ae0(i) != 0) {
         return 1;
       }
     }
