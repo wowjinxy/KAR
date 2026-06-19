@@ -446,7 +446,7 @@ kar_objects = [
     Object(NonMatching, "gmdialogue.c"),
     Object(NonMatching, "gmdialoguestatus.c"),
     Object(NonMatching, "gmspecialmovie.c"),
-    Object(NonMatching, "gmclearchecker.c"),
+    Object(NonMatching, "gmclearchecker.c", extra_cflags=["-str reuse"]),
     Object(Matching, "gmviconfigure.c"),
     Object(NonMatching, "gmlanmenu.c"),
     Object(NonMatching, "lbairride.c"),

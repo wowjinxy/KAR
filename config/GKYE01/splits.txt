@@ -57,14 +57,14 @@ gmdialoguestatus.c:
 
 gmspecialmovie.c:
 	.text       start:0x80049198 end:0x80049C20
-	.data       start:0x804972F0 end:0x80497568
+	.data       start:0x804972F0 end:0x804973E8
 	.sdata      start:0x805D51C8 end:0x805D51D0
 	.sbss       start:0x805DD578 end:0x805DD590
 	.sdata2     start:0x805DE900 end:0x805DE910
 
 gmclearchecker.c:
 	.text       start:0x80049C20 end:0x8004F5E0
-	.data       start:0x80497568 end:0x80497BA8
+	.data       start:0x804973E8 end:0x80497BA8
 	.sdata      start:0x805D51D0 end:0x805D51D8
 	.sbss       start:0x805DD590 end:0x805DD5A0
 	.sdata2     start:0x805DE910 end:0x805DE960
