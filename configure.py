@@ -545,7 +545,7 @@ kar_objects = [
     Object(Matching, "grheat2.c"),
     Object(NonMatching, "grdesert1.c"),
     Object(Matching, "grvalley2.c"),
-    Object(NonMatching, "grmachine2.c"),
+    Object(Matching, "grmachine2.c"),
     Object(Matching, "grsky2.c"),
     Object(NonMatching, "grice1.c"),
     Object(NonMatching, "grcity1.c"),
