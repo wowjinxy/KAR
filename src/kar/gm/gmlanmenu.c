@@ -7,10 +7,12 @@ typedef struct HSD_AObj HSD_AObj;
 typedef struct HSD_DObj HSD_DObj;
 typedef struct HSD_JObj HSD_JObj;
 typedef struct HSD_MObj HSD_MObj;
+typedef struct SBoardPanelPos SBoardPanelPos;
+typedef struct SBoardRecord SBoardRecord;
 
 struct GmLanWork {
     u8 pad_000[0x7C8];
-    s8 sboard_bg_kind;
+    u8 sboard_bg_kind;
     s8 field_7C9;
     u8 pad_7CA[0x02];
     s32 sboard_child0_visible;
@@ -33,6 +35,20 @@ struct HSD_JObj {
     HSD_AObj* aobj;
 };
 
+struct SBoardPanelPos {
+    s32 x;
+    s32 y;
+};
+
+struct SBoardRecord {
+    u8 kicon_kind;
+    u8 digit;
+    u8 extra_visible;
+    u8 pad_03;
+    s32 value;
+    SBoardPanelPos panel_pos;
+};
+
 #define DOBJ_MOBJ(dobj) ((dobj) != NULL ? (dobj)->mobj : NULL)
 #define DOBJ_NEXT(dobj) ((dobj) != NULL ? (dobj)->next : NULL)
 #define JOBJ_ANIM_ACTIVE(jobj) \
@@ -48,10 +64,10 @@ struct HSD_JObj {
         work1->field_7C9 = 0;                                                    \
         work1->sboard_child0_visible = 0;                                        \
         work1->sboard_child1_visible = 0;                                        \
-        if ((s32) kar_gmracenormal__8000aea8() == 3) {                           \
-            kar_mnbestrapbg_set_sboard_bg_subtitle_pair_visible(1);              \
-        } else {                                                                 \
+        if ((s32) kar_gmracenormal__8000aea8() != 3) {                           \
             kar_mnbestrapbg_set_sboard_bg_subtitle_pair_visible(0);              \
+        } else {                                                                 \
+            kar_mnbestrapbg_set_sboard_bg_subtitle_pair_visible(1);              \
         }                                                                        \
         work0->sboard_bg_kind = (kind_value);                                    \
         kar_mnbestrapbg_request_sboard_bg_kind_anim(work0->sboard_bg_kind);      \
@@ -138,10 +154,36 @@ void kar_gmlanmenu__near_8005299c(HSD_DObj* dobj, HSD_MObj* current);
 void kar_gmlanmenu__near_80052ca4(HSD_DObj* dobj, HSD_MObj* current);
 void fn_8013927C(void);
 void fn_80139314(void);
+SBoardRecord* fn_8004161C(void);
 s8 kar_gmracenormal__8000aea8(void);
+s32 kar_gmracenormal__8000ae50(void);
+s8 fn_8000C228(s8 index);
 void kar_mnbestrapbg_set_sboard_bg_subtitle_pair_visible(s32 visible);
-void kar_mnbestrapbg_request_sboard_bg_kind_anim(s32 kind);
+void kar_mnbestrapbg_request_sboard_bg_kind_anim(u8 kind);
 void kar_mnbestrapbg_set_sboard_bg_child_pair_visible(s32 child0, s32 child1);
+void kar_mnbestrapbg_set_sboard_num_panels_hidden_by_mask(u8 line, s32 mask,
+                                                          s32 hidden);
+void kar_mnbestrapbg_set_sboard_sicon_panels_hidden_by_mask(u8 line, s32 mask,
+                                                            s32 hidden);
+void kar_mnbestrapsicon_set_sboard_kicon_panels_hidden_by_mask(u8 line,
+                                                               s32 mask,
+                                                               s32 hidden);
+void kar_mnbestrapsicon_create_stage_name_text_for_line(u8 line, u8 bg_kind,
+                                                        s32 stage_kind);
+void kar_mnbestrapbg_update_sboard_num_panels_by_mask(u8 line, s32 side,
+                                                      s32* panel_pos);
+void kar_mnbestrapbg_set_sboard_num_extra_jobj_visible(u8 line, s32 side,
+                                                       s32 visible);
+void kar_mnbestrapsicon_update_sboard_kicon_panels_by_mask(u8 line, s32 side,
+                                                           u8 bg_kind, s32 k0,
+                                                           s32 k1);
+void kar_mnbestrapsicon_update_sboard_kicon_digit_panels_by_mask(u8 line,
+                                                                 s32 side,
+                                                                 u8 bg_kind,
+                                                                 s32 digit0,
+                                                                 s32 digit1);
+void kar_mnbestrapsicon_create_record_value_text_for_line_side(
+    u8 line, s32 side, s32 format, s32 value, f32 scale);
 void kar_lbhvqm__near_80078990(void);
 void _HSD_StateInvalidateTexCoordGen(HSD_MObj* mobj);
 HSD_DObj* HSD_JObjGetDObj(HSD_JObj* jobj);
@@ -149,14 +191,11 @@ u32 HSD_AObjGetFlags(HSD_AObj* aobj);
 void HSD_MObjSetCurrent(HSD_MObj* mobj, HSD_MObj* current);
 void kar_lbvector_cross_normalize(Vec* a, Vec* b, Vec* out);
 
-// NONMATCHING: wrapper shape is clear, but call/return scheduling differs.
 void kar_gmlanmenu__near_80051d7c(void)
 {
     kar_gmlanmenu__near_80051aa4();
 }
 
-// NONMATCHING: behavior matches the menu background setup; remaining diff is
-// register allocation around repeated kar_gmmain__near_80006c14 calls.
 void kar_gmlanmenu__near_80051d9c(void)
 {
     SETUP_SBOARD_KIND(0);
@@ -165,7 +204,6 @@ void kar_gmlanmenu__near_80051d9c(void)
     kar_lbhvqm__near_80078990();
 }
 
-// NONMATCHING: same helperized setup as 80051D9C.
 void kar_gmlanmenu__near_80051e44(void)
 {
     SETUP_SBOARD_KIND(1);
@@ -174,7 +212,6 @@ void kar_gmlanmenu__near_80051e44(void)
     kar_lbhvqm__near_80078990();
 }
 
-// NONMATCHING: same helperized setup as 80051D9C, with the extra mode-2 refresh.
 void kar_gmlanmenu__near_80051eec(void)
 {
     SETUP_SBOARD_KIND(2);
@@ -188,7 +225,7 @@ void kar_gmlanmenu__near_80051f98(void)
 {
     GmLanWork* work = (GmLanWork*) kar_gmmain__near_80006c14();
 
-    switch (work->sboard_bg_kind) {
+    switch ((s8) work->sboard_bg_kind) {
     case 0:
         kar_gmlanmenu__near_80052028();
         break;
@@ -208,72 +245,203 @@ void kar_gmlanmenu__near_80051ff8(void)
                                                      work->sboard_child1_visible);
 }
 
-// NONMATCHING: behavior is the same first-child/next-sibling traversal; target
-// uses pointer arithmetic on the stack cursor a little differently.
+void kar_gmlanmenu__near_800522b8(void)
+{
+    GmLanWork* work = (GmLanWork*) kar_gmmain__near_80006c14();
+    register SBoardRecord* record = fn_8004161C();
+    register s32 stage;
+    register s32 line;
+    SBoardPanelPos panel_pos0;
+    SBoardPanelPos panel_pos1;
+    SBoardRecord* side_record;
+
+    work->sboard_child0_visible = 0;
+    stage = 0;
+    line = 0;
+    work->sboard_child1_visible = 0;
+
+    while (line < 9 && (s8) stage <= 6) {
+        kar_mnbestrapbg_set_sboard_num_panels_hidden_by_mask(line, 3, 1);
+        kar_mnbestrapsicon_create_stage_name_text_for_line(
+            line, work->sboard_bg_kind, stage);
+
+        panel_pos0 = record->panel_pos;
+        kar_mnbestrapbg_update_sboard_num_panels_by_mask(
+            line, 2, (s32*) &panel_pos0);
+        if ((s8) record->extra_visible != 0) {
+            kar_mnbestrapbg_set_sboard_num_extra_jobj_visible(line, 2, 1);
+        } else {
+            kar_mnbestrapbg_set_sboard_num_extra_jobj_visible(line, 2, 0);
+        }
+        kar_mnbestrapsicon_update_sboard_kicon_panels_by_mask(
+            line, 2, work->sboard_bg_kind, -1, record->kicon_kind);
+        kar_mnbestrapsicon_update_sboard_kicon_digit_panels_by_mask(
+            line, 2, work->sboard_bg_kind, 0, record->digit);
+        kar_mnbestrapsicon_create_record_value_text_for_line_side(
+            line, 2, 0, record->value, lbl_805DE960[0]);
+
+        side_record = (SBoardRecord*) ((u8*) record + 0x80);
+        panel_pos1 = side_record->panel_pos;
+        kar_mnbestrapbg_update_sboard_num_panels_by_mask(
+            line, 1, (s32*) &panel_pos1);
+        if ((s8) side_record->extra_visible != 0) {
+            kar_mnbestrapbg_set_sboard_num_extra_jobj_visible(line, 1, 1);
+        } else {
+            kar_mnbestrapbg_set_sboard_num_extra_jobj_visible(line, 1, 0);
+        }
+        kar_mnbestrapsicon_update_sboard_kicon_panels_by_mask(
+            line, 1, work->sboard_bg_kind, -1, side_record->kicon_kind);
+        kar_mnbestrapsicon_update_sboard_kicon_digit_panels_by_mask(
+            line, 1, work->sboard_bg_kind, 0, side_record->digit);
+        kar_mnbestrapsicon_create_record_value_text_for_line_side(
+            line, 1, 0, side_record->value, lbl_805DE960[0]);
+
+        line++;
+        record++;
+        stage++;
+    }
+
+    while (line < 9) {
+        kar_mnbestrapbg_set_sboard_num_panels_hidden_by_mask(line, 3, 0);
+        kar_mnbestrapbg_set_sboard_sicon_panels_hidden_by_mask(line, 3, 0);
+        kar_mnbestrapsicon_set_sboard_kicon_panels_hidden_by_mask(line, 3, 0);
+        line++;
+    }
+}
+
+// NONMATCHING: behavior matches, but saved-register assignment differs from
+// the target.
+void kar_gmlanmenu__near_800524cc(void)
+{
+    register GmLanWork* work = (GmLanWork*) kar_gmmain__near_80006c14();
+    register s32 current;
+    register s32 total;
+    register s32 before;
+    register s32 i;
+
+    if ((s32) kar_gmracenormal__8000aea8() != 3) {
+        current = (s8) kar_gmracenormal__8000ae50();
+        for (before = total = 0; before <= 0x17; before++) {
+            if (fn_8000C228(before) != 0) {
+                total++;
+            }
+        }
+
+        before = 0;
+        if (current <= 0x17) {
+            for (i = 0; i <= current; i++) {
+                if (fn_8000C228(i) != 0) {
+                    before++;
+                }
+            }
+        }
+
+        if (total <= 9) {
+            work->field_7C9 = 0;
+        }
+        if (before <= 5) {
+            work->field_7C9 = 0;
+        } else if (before >= total - 4) {
+            work->field_7C9 = total - 9;
+        } else {
+            work->field_7C9 = before - 5;
+        }
+    }
+}
+
+// NONMATCHING: instruction flow matches except for a trailing unreachable blr
+// in the target symbol.
 void kar_gmlanmenu__near_80052844(void** cursor, s32* depth)
 {
     u8* node = *cursor;
     s32 count = *depth;
+    void** stack_cursor;
     void* next;
 
     if (*(void**) (node + 0x0) != NULL) {
         lbl_80537470[count] = node;
         count++;
         next = *(void**) (node + 0x0);
+        goto done;
     } else if (*(void**) (node + 0x4) != NULL) {
         next = *(void**) (node + 0x4);
-    } else {
-        for (;;) {
-            if (count == 0) {
-                next = NULL;
-                break;
-            }
-
-            count--;
-            node = lbl_80537470[count];
-            if (*(void**) (node + 0x4) != NULL) {
-                next = *(void**) (node + 0x4);
-                break;
-            }
-        }
+        goto done;
     }
 
+    goto init_stack;
+
+check_stack:
+    if (count == 0) {
+        next = NULL;
+        goto done;
+    }
+
+    node = stack_cursor[-1];
+    if (*(void**) (node + 0x4) != NULL) {
+        count--;
+        node = lbl_80537470[count];
+        next = *(void**) (node + 0x4);
+        goto done;
+    }
+    stack_cursor--;
+    count--;
+    goto check_stack;
+
+done:
     *cursor = next;
     *depth = count;
+    return;
+
+init_stack:
+    stack_cursor = &lbl_80537470[count];
+    goto check_stack;
 }
 
-// NONMATCHING: same traversal as 80052844, using the alternate child/sibling
-// offsets and stack.
+// NONMATCHING: same traversal shape as 80052844 with the alternate stack.
 void kar_gmlanmenu__near_800528f0(void** cursor, s32* depth)
 {
     u8* node = *cursor;
     s32 count = *depth;
+    void** stack_cursor;
     void* next;
 
     if (*(void**) (node + 0x8) != NULL) {
         lbl_805374C0[count] = node;
         count++;
         next = *(void**) (node + 0x8);
+        goto done;
     } else if (*(void**) (node + 0xC) != NULL) {
         next = *(void**) (node + 0xC);
-    } else {
-        for (;;) {
-            if (count == 0) {
-                next = NULL;
-                break;
-            }
-
-            count--;
-            node = lbl_805374C0[count];
-            if (*(void**) (node + 0xC) != NULL) {
-                next = *(void**) (node + 0xC);
-                break;
-            }
-        }
+        goto done;
     }
 
+    goto init_stack;
+
+check_stack:
+    if (count == 0) {
+        next = NULL;
+        goto done;
+    }
+
+    node = stack_cursor[-1];
+    if (*(void**) (node + 0xC) != NULL) {
+        count--;
+        node = lbl_805374C0[count];
+        next = *(void**) (node + 0xC);
+        goto done;
+    }
+    stack_cursor--;
+    count--;
+    goto check_stack;
+
+done:
     *cursor = next;
     *depth = count;
+    return;
+
+init_stack:
+    stack_cursor = &lbl_805374C0[count];
+    goto check_stack;
 }
 
 HSD_MObj* kar_gmlanmenu__near_80052c40(HSD_DObj* dobj)
@@ -330,8 +498,6 @@ void kar_gmlanmenu__near_80053770(HSD_JObj* jobj, HSD_MObj* current)
     }
 }
 
-// NONMATCHING: matrix contents are correct; remaining diff is stack/register
-// layout around the normalized cross vector.
 void kar_gmlanmenu__near_80054320(Mtx out, Vec* z_axis, Vec* y_axis, Vec* trans,
                                   Vec* scale)
 {
