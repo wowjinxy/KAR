@@ -1,4 +1,5 @@
 Kirby Air Ride Decompilation
+![Code Progress]
 ============================
 
 [Code Progress]: https://decomp.dev/wowjinxy/KAR.svg?mode=shield&measure=code&label=Matching%20Code
