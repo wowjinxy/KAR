@@ -69,15 +69,20 @@ gmclearchecker.c:
 	.sbss       start:0x805DD590 end:0x805DD598
 
 gmclearchecker_8004a648.c:
-	.text       start:0x8004A648 end:0x8004F5E0
-	.data       start:0x804975B8 end:0x80497BA8
+	.text       start:0x8004A648 end:0x8004DB74
+	.data       start:0x804975B8 end:0x80497738
+	.sdata2     start:0x805DE910 end:0x805DE930
+
+gmclearchecker_8004db74.c:
+	.text       start:0x8004DB74 end:0x8004F5B0
+	.data       start:0x80497738 end:0x80497AE8
 	.sbss       start:0x805DD598 end:0x805DD5A0
-	.sdata2     start:0x805DE910 end:0x805DE960
+	.sdata2     start:0x805DE930 end:0x805DE960
 
 gmviconfigure.c:
-	.text       start:0x8004F5E0 end:0x8004F85C
+	.text       start:0x8004F5B0 end:0x8004F85C
 	.rodata     start:0x80489480 end:0x80489618
-	.data       start:0x80497BA8 end:0x80497BB8
+	.data       start:0x80497AE8 end:0x80497BB8
 	.bss        start:0x80537430 end:0x80537470
 	.sdata      start:0x805D51D8 end:0x805D51E0
 
