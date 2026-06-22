@@ -104,7 +104,7 @@ void OSReport(const char*, ...);
 void* kar_gmmain__near_80006c14(void);
 void kar_gmautodemo__near_80011024(HSD_GObj* gobj);
 void* kar_gmautodemo__near_8000fcb0(void);
-void kar_gmclearchecker__near_8004a10c(void);
+void ClearChecker_MarkUnlockSfxPlayedThisFrame(void);
 s32 kar_diag__8000acb0(void);
 s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
@@ -305,7 +305,7 @@ void kar_gmracecommon__near_800130a8(void)
     GET_U32(race_common, 0x25C) = 0;
     GET_U32(race_common, 0x260) = 0;
     kar_gmracecommon__near_80012efc();
-    kar_gmclearchecker__near_8004a10c();
+    ClearChecker_MarkUnlockSfxPlayedThisFrame();
 }
 
 u32 kar_gmracecommon__near_800132b8(void)

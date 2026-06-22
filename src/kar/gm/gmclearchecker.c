@@ -30,12 +30,12 @@ extern int HSD_Randi(int);
   } while (0)
 
 typedef struct {
-  u8 _0;
-  u8 _1;
-  u8 _2;
-} lbl_8049755C_sub;
+  u8 reward_type;
+  u8 reward_value;
+  u8 clear_kind;
+} ClearCheckerRewardEntry;
 
-static lbl_8049755C_sub lbl_804973E8[] = {
+static ClearCheckerRewardEntry ClearChecker_Type0RewardTable[] = {
     {0x00, 0x00, 0x0E}, {0x00, 0x00, 0x6F}, {0x00, 0x00, 0x74},
     {0x00, 0x00, 0x5E}, {0x00, 0x00, 0x67}, {0x04, 0x01, 0x3C},
     {0x04, 0x01, 0x0C}, {0x04, 0x01, 0x2F}, {0x04, 0x01, 0x45},
@@ -54,7 +54,7 @@ static lbl_8049755C_sub lbl_804973E8[] = {
     {0x05, 0x01, 0x01},
 };
 
-static lbl_8049755C_sub lbl_80497474[] = {
+static ClearCheckerRewardEntry ClearChecker_Type1RewardTable[] = {
     {0x00, 0x00, 0x4E}, {0x00, 0x00, 0x5B}, {0x00, 0x00, 0x3C},
     {0x00, 0x00, 0x2A}, {0x00, 0x00, 0x0C}, {0x02, 0x00, 0x06},
     {0x02, 0x00, 0x74}, {0x02, 0x00, 0x45}, {0x24, 0x00, 0x19},
@@ -68,7 +68,7 @@ static lbl_8049755C_sub lbl_80497474[] = {
     {0x05, 0x01, 0x52}, {0x05, 0x01, 0x63}, {0x05, 0x01, 0x64},
 };
 
-static lbl_8049755C_sub lbl_804974D8[] = {
+static ClearCheckerRewardEntry ClearChecker_Type2RewardTable[] = {
     {0x00, 0x00, 0x31}, {0x00, 0x00, 0x0B}, {0x00, 0x00, 0x00},
     {0x00, 0x00, 0x28}, {0x00, 0x00, 0x3B}, {0x04, 0x01, 0x0A},
     {0x04, 0x01, 0x06}, {0x04, 0x01, 0x30}, {0x04, 0x01, 0x34},
@@ -86,112 +86,117 @@ static lbl_8049755C_sub lbl_804974D8[] = {
     {0x03, 0x00, 0x0C}, {0x08, 0x00, 0x03},
 };
 
-static lbl_8049755C_sub *lbl_8049755C[] = {
-    lbl_804973E8,
-    lbl_80497474,
-    lbl_804974D8,
+static ClearCheckerRewardEntry *ClearChecker_RewardTables[] = {
+    ClearChecker_Type0RewardTable,
+    ClearChecker_Type1RewardTable,
+    ClearChecker_Type2RewardTable,
 };
 
-static u8 lbl_805D51D0[] = {
-    ARRAY_SIZE(lbl_804973E8),
-    ARRAY_SIZE(lbl_80497474),
-    ARRAY_SIZE(lbl_804974D8),
+static u8 ClearChecker_RewardTableCounts[] = {
+    ARRAY_SIZE(ClearChecker_Type0RewardTable),
+    ARRAY_SIZE(ClearChecker_Type1RewardTable),
+    ARRAY_SIZE(ClearChecker_Type2RewardTable),
 };
 
-static u32 lbl_805DD590 = 0;
+static u32 ClearChecker_LastUnlockSfxFrame = 0;
 
-static inline lbl_8049755C_sub *Get_lbl_8049755C_Collection_37(u8 type) {
+static inline ClearCheckerRewardEntry *GetClearCheckerRewardTable(u8 type) {
   CHECK_TYPE(type, 0x37);
-  return lbl_8049755C[type];
+  return ClearChecker_RewardTables[type];
 }
 
-int kar_gmclearchecker__80049c20(u8 type) {
-  CHECK_TYPE(type, 0x41);
-  return lbl_805D51D0[type];
+int ClearChecker_GetRewardCount(u8 mode) {
+  CHECK_TYPE(mode, 0x41);
+  return ClearChecker_RewardTableCounts[mode];
 }
 
-u8 kar_gmclearchecker__80049c84(u8 type, u8 index) {
-  lbl_8049755C_sub *entry = &Get_lbl_8049755C_Collection_37(type)[index];
-  return entry->_2;
+u8 ClearChecker_GetClearKindFromRewardKind(u8 mode, u8 reward_kind) {
+  ClearCheckerRewardEntry *entry =
+      &GetClearCheckerRewardTable(mode)[reward_kind];
+  return entry->clear_kind;
 }
 
-u8 kar_gmclearchecker__80049d10(u8 type, u8 index) {
-  lbl_8049755C_sub *entry = &Get_lbl_8049755C_Collection_37(type)[index];
-  return entry->_0;
+u8 ClearChecker_GetRewardTypeFromRewardKind(u8 mode, u8 reward_kind) {
+  ClearCheckerRewardEntry *entry =
+      &GetClearCheckerRewardTable(mode)[reward_kind];
+  return entry->reward_type;
 }
 
-u8 kar_gmclearchecker__80049d98(u8 type, u8 index) {
-  lbl_8049755C_sub *entry = &Get_lbl_8049755C_Collection_37(type)[index];
-  return entry->_1;
+u8 ClearChecker_GetRewardValueFromRewardKind(u8 mode, u8 reward_kind) {
+  ClearCheckerRewardEntry *entry =
+      &GetClearCheckerRewardTable(mode)[reward_kind];
+  return entry->reward_value;
 }
 
-u8 kar_gmclearchecker__80049e24(int type, u8 index) {
-  lbl_8049755C_sub *entry = &Get_lbl_8049755C_Collection_37(type)[index];
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(type);
-  return (save->clearchecker_flags[entry->_2] & 8) >> 3;
+u8 ClearChecker_CheckUnlocked(int mode, u8 reward_kind) {
+  ClearCheckerRewardEntry *entry =
+      &GetClearCheckerRewardTable(mode)[reward_kind];
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
+  return (save->clearchecker_flags[entry->clear_kind] & 8) >> 3;
 }
 
-void kar_gmclearchecker__80049ec4(int type, u8 number, u8 *out_index,
-                                  u8 *out_value) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(type);
+void ClearChecker_FindRewardByClearKind(int mode, u8 clear_kind,
+                                        u8 *out_reward_kind,
+                                        u8 *out_reward_value) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
 
-  if ((save->clearchecker_flags[number] & 6) != 0) {
+  if ((save->clearchecker_flags[clear_kind] & 6) != 0) {
     int i;
-    for (i = 0; i < kar_gmclearchecker__80049c20(type); i++) {
-      lbl_8049755C_sub *entry;
+    for (i = 0; i < ClearChecker_GetRewardCount(mode); i++) {
+      ClearCheckerRewardEntry *entry;
 
-      entry = &Get_lbl_8049755C_Collection_37(type)[(u8)i];
-      if (number == entry->_2) {
-        *out_index = i;
-        *out_value = entry->_1;
+      entry = &GetClearCheckerRewardTable(mode)[(u8)i];
+      if (clear_kind == entry->clear_kind) {
+        *out_reward_kind = i;
+        *out_reward_value = entry->reward_value;
         return;
       }
     }
   }
 
-  *out_index = -1;
+  *out_reward_kind = -1;
 }
 
-void kar_gmclearchecker__80049fcc(s32 type, s32 index) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(type);
+void ClearChecker_SetNewUnlockNoSfx(s32 mode, s32 clear_kind) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
 
   if (kar_shadow__near_8007b650() != 0) {
     return;
   }
-  CHECK_NUMBER(index, 148);
-  save->clearchecker_flags[(u8)index] |= 1;
+  CHECK_NUMBER(clear_kind, 148);
+  save->clearchecker_flags[(u8)clear_kind] |= 1;
 }
 
-void kar_gmclearchecker__8004a054(s32 arg0, u8 number) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(arg0);
+void ClearChecker_SetNewUnlock(s32 mode, u8 clear_kind) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
 
   if (kar_shadow__near_8007b650() != 0) {
     return;
   }
-  CHECK_NUMBER(number, 165);
-  if ((save->clearchecker_flags[number] & 5) == 0) {
+  CHECK_NUMBER(clear_kind, 165);
+  if ((save->clearchecker_flags[clear_kind] & 5) == 0) {
     u32 frame = kar_gmmain__near_80005ce0();
-    if (lbl_805DD590 != frame) {
+    if (ClearChecker_LastUnlockSfxFrame != frame) {
       kar_lbaudio__near_8006176c(0x10008);
-      lbl_805DD590 = kar_gmmain__near_80005ce0();
+      ClearChecker_LastUnlockSfxFrame = kar_gmmain__near_80005ce0();
     }
   }
-  save->clearchecker_flags[number] |= 1;
+  save->clearchecker_flags[clear_kind] |= 1;
 }
 
-void kar_gmclearchecker__near_8004a10c(void) {
-  lbl_805DD590 = kar_gmmain__near_80005ce0();
+void ClearChecker_MarkUnlockSfxPlayedThisFrame(void) {
+  ClearChecker_LastUnlockSfxFrame = kar_gmmain__near_80005ce0();
 }
 
-u8 kar_gmclearchecker__8004a130(s32 arg0, u8 number) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(arg0);
+u8 ClearChecker_GetClearKindFlags(s32 mode, u8 clear_kind) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
 
-  CHECK_NUMBER(number, 198);
-  return save->clearchecker_flags[number];
+  CHECK_NUMBER(clear_kind, 198);
+  return save->clearchecker_flags[clear_kind];
 }
 
-s32 kar_gmclearchecker__near_8004a1a4(s32 arg0) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(arg0);
+s32 ClearChecker_HasPendingUnlock(s32 mode) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
   s32 i;
 
   if (kar_shadow__near_8007b650() != 0) {
@@ -208,8 +213,8 @@ s32 kar_gmclearchecker__near_8004a1a4(s32 arg0) {
   return 0;
 }
 
-void kar_gmclearchecker__near_8004a2bc(int type) {
-  GmGlobalSaveData *save = kar_gmglobal__800076a0(type);
+void ClearChecker_ShuffleRewardSlots(int mode) {
+  GmGlobalSaveData *save = kar_gmglobal__800076a0(mode);
   const int arrSize = ARRAY_SIZE(save->pad_0);
   int i;
   int r30;
@@ -218,25 +223,25 @@ void kar_gmclearchecker__near_8004a2bc(int type) {
     save->pad_0[i] = -1;
   }
 
-  switch ((u8)type) {
+  switch ((u8)mode) {
   case 0:
     r30 = 1;
-    save->pad_0[lbl_804973E8[0x24]._2] = 0x77;
+    save->pad_0[ClearChecker_Type0RewardTable[0x24].clear_kind] = 0x77;
     break;
   case 1:
     r30 = 1;
-    save->pad_0[lbl_80497474[0x19]._2] = 0x77;
+    save->pad_0[ClearChecker_Type1RewardTable[0x19].clear_kind] = 0x77;
     break;
   case 2:
     r30 = 3;
-    save->pad_0[lbl_804974D8[0x1e]._2] = 0;
-    save->pad_0[lbl_804974D8[0x22]._2] = 0xb;
-    save->pad_0[lbl_804974D8[0x1a]._2] = 0x77;
+    save->pad_0[ClearChecker_Type2RewardTable[0x1e].clear_kind] = 0;
+    save->pad_0[ClearChecker_Type2RewardTable[0x22].clear_kind] = 0xb;
+    save->pad_0[ClearChecker_Type2RewardTable[0x1a].clear_kind] = 0x77;
     break;
   }
 
   for (i = 0; i < arrSize; i++) {
-    if (i != 119 && ((u8)type != 2 || (i != 0 && i != 0xb))) {
+    if (i != 119 && ((u8)mode != 2 || (i != 0 && i != 0xb))) {
       int j;
       int rand = HSD_Randi((arrSize - i) - r30);
       for (j = 0; j < arrSize; j++) {

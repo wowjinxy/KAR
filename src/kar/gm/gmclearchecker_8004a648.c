@@ -84,7 +84,7 @@ extern int fn_80009FB8(void);
 
 typedef int (*GmClearCheckerPredicate)(int number);
 
-GmClearCheckerPredicate lbl_804975B8[30] = {
+GmClearCheckerPredicate AirRide_ClearCheckerMainPredicates[30] = {
     &kar_gmclearchecker__near_8004ac34,
     &kar_gmclearchecker__near_8004ac34,
     &kar_gmclearchecker__near_8004afc0,
@@ -117,7 +117,7 @@ GmClearCheckerPredicate lbl_804975B8[30] = {
     &kar_gmclearchecker__near_8004cfe0,
 };
 
-GmClearCheckerPredicate lbl_80497630[] = {
+GmClearCheckerPredicate AirRide_ClearCheckerSecondaryPredicates[] = {
 	&kar_gmclearchecker__near_8004ad90,
 	&kar_gmclearchecker__near_8004ad90,
 	&kar_gmclearchecker__near_8004aef8,
@@ -137,13 +137,13 @@ GmClearCheckerPredicate lbl_80497630[] = {
 	&kar_gmclearchecker__near_8004d1d4,
 };
 
-u8 lbl_80497674[] = {
+u8 AirRide_ClearCheckerMainRewardKinds[] = {
     0x00, 0x01, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x10, 0x1C, 0x1E, 0x55,
     0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B, 0x5C, 0x5F, 0x62, 0x63, 0x64,
     0x65, 0x66, 0x67, 0x68, 0x6A, 0x6D, 0x6E, 0x70,
 };
 
-u8 lbl_80497694[] = {
+u8 AirRide_ClearCheckerSecondaryRewardKinds[] = {
     0x02, 0x03, 0x04, 0x05, 0x0E, 0x0F, 0x1F, 0x20, 0x53, 0x54,
     0x5E, 0x60, 0x61, 0x6B, 0x6F, 0x72, 0x74,
 };
@@ -186,7 +186,7 @@ void kar_gmclearchecker__near_8004a648(void) {
   }
 }
 
-void kar_gmclearchecker__near_8004a768(void) {
+void Checklist_LoadScreenResources(void) {
   GmMainData *main = kar_gmmain__near_80006c14();
   s32 flag;
   s8 minor;
@@ -200,7 +200,7 @@ void kar_gmclearchecker__near_8004a768(void) {
   }
 }
 
-void kar_gmclearchecker__near_8004a7d0(void) { fn_80138E00(); }
+void Checklist_UnloadScreenResources(void) { fn_80138E00(); }
 
 void kar_gmclearchecker__near_8004a7f0(void) {
   GmMainData *main;
@@ -224,12 +224,12 @@ void kar_gmclearchecker__near_8004a7f0(void) {
       main = kar_gmmain__near_80006c14();
       for (i = 0; i < 4; i++) {
         index = main->clearchecker_index;
-        number = lbl_80497694[index];
-        if ((kar_gmclearchecker__8004a130(0, number) & 5) == 0) {
+        number = AirRide_ClearCheckerSecondaryRewardKinds[index];
+        if ((ClearChecker_GetClearKindFlags(0, number) & 5) == 0) {
           index = main->clearchecker_index;
-          predicate = lbl_80497630[index];
+          predicate = AirRide_ClearCheckerSecondaryPredicates[index];
           if (predicate != NULL && predicate(number) == 1) {
-            kar_gmclearchecker__8004a054(0, number);
+            ClearChecker_SetNewUnlock(0, number);
           }
         }
         main->clearchecker_index++;
@@ -283,7 +283,7 @@ void kar_gmclearchecker__near_8004a994(s32 arg0) {
   }
 }
 
-void kar_gmclearchecker__near_8004aa58(void) {
+void AirRide_UpdateClearCheckerUnlocksAndTotals(void) {
   GmGlobalData *global;
   s32 i;
   s32 number;
@@ -300,12 +300,12 @@ void kar_gmclearchecker__near_8004aa58(void) {
     if (kar_gmracenormal__8000aea8() == 4) {
       global = kar_gmglobal__near_8000771c();
       for (i = 0; i < 0x1E; i++) {
-        number = lbl_80497674[i];
-        if ((kar_gmclearchecker__8004a130(0, number) & 5) == 0) {
-          GmClearCheckerPredicate predicate = lbl_804975B8[i];
+        number = AirRide_ClearCheckerMainRewardKinds[i];
+        if ((ClearChecker_GetClearKindFlags(0, number) & 5) == 0) {
+          GmClearCheckerPredicate predicate = AirRide_ClearCheckerMainPredicates[i];
 
           if (predicate != NULL && predicate(number) == 1) {
-            kar_gmclearchecker__8004a054(0, number);
+            ClearChecker_SetNewUnlock(0, number);
           }
         }
       }
@@ -1198,8 +1198,8 @@ void kar_gmclearchecker__near_8004d248(s32 type) {
     }
     for (i = 0; i < 2; i++) {
       if (r31 != 0 && b[i] != 0 && r31 <= b[i]) {
-        if (((u8)kar_gmclearchecker__8004a130(0, (u8)a[i]) & 0x5) == 0) {
-          kar_gmclearchecker__8004a054(0, (u8)a[i]);
+        if (((u8)ClearChecker_GetClearKindFlags(0, (u8)a[i]) & 0x5) == 0) {
+          ClearChecker_SetNewUnlock(0, (u8)a[i]);
         }
       }
     }
@@ -1259,8 +1259,8 @@ void kar_gmclearchecker__near_8004d454(void) {
     if (kar_plclearcheckerlib__near_8022c858(i) == 0) {
       f32 f0 = fn_80009568(i) / 0.304788f;
       if (r28 != 0 && r30 != 0 && r28 == r30 && f0 >= f31 &&
-          (kar_gmclearchecker__8004a130(0, r29) & 5) == 0) {
-        kar_gmclearchecker__8004a054(0, r29);
+          (ClearChecker_GetClearKindFlags(0, r29) & 5) == 0) {
+        ClearChecker_SetNewUnlock(0, r29);
       }
     }
   }
@@ -1361,8 +1361,8 @@ void kar_gmclearchecker__near_8004d5d4(s32 arg0) {
   if (r31 != 0) {
     for (i = 0; i < 3; i++) {
       if (sp14[i] != 0 && r31 <= sp14[i] &&
-          (kar_gmclearchecker__8004a130(0, (u8)sp8[i]) & 5) == 0) {
-        kar_gmclearchecker__8004a054(0, (u8)sp8[i]);
+          (ClearChecker_GetClearKindFlags(0, (u8)sp8[i]) & 5) == 0) {
+        ClearChecker_SetNewUnlock(0, (u8)sp8[i]);
       }
     }
   }
@@ -1463,8 +1463,8 @@ void kar_gmclearchecker__near_8004d8a8(s32 arg0) {
   if (r31 != 0) {
     for (i = 0; i < 3; i++) {
       if (sp14[i] != 0 && r31 <= sp14[i] &&
-          (kar_gmclearchecker__8004a130(0, (u8)sp8[i]) & 5) == 0) {
-        kar_gmclearchecker__8004a054(0, (u8)sp8[i]);
+          (ClearChecker_GetClearKindFlags(0, (u8)sp8[i]) & 5) == 0) {
+        ClearChecker_SetNewUnlock(0, (u8)sp8[i]);
       }
     }
   }

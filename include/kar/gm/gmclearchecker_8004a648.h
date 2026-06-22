@@ -4,12 +4,12 @@
 #include <dolphin/types.h>
 
 void kar_gmclearchecker__near_8004a648(void);
-void kar_gmclearchecker__near_8004a768(void);
-void kar_gmclearchecker__near_8004a7d0(void);
+void Checklist_LoadScreenResources(void);
+void Checklist_UnloadScreenResources(void);
 void kar_gmclearchecker__near_8004a7f0(void);
 void kar_gmclearchecker__near_8004a90c(s32 arg0);
 void kar_gmclearchecker__near_8004a994(s32 arg0);
-void kar_gmclearchecker__near_8004aa58(void);
+void AirRide_UpdateClearCheckerUnlocksAndTotals(void);
 s32 kar_gmclearchecker__near_8004ab90(void);
 int kar_gmclearchecker__near_8004ac34(int type);
 s32 kar_gmclearchecker__near_8004acf4(void);

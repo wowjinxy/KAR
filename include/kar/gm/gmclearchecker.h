@@ -3,18 +3,19 @@
 
 #include <dolphin/types.h>
 
-int kar_gmclearchecker__80049c20(u8 type);
-u8 kar_gmclearchecker__80049c84(u8 type, u8 index);
-u8 kar_gmclearchecker__80049d10(u8 type, u8 index);
-u8 kar_gmclearchecker__80049d98(u8 type, u8 index);
-u8 kar_gmclearchecker__80049e24(int type, u8 index);
-void kar_gmclearchecker__80049ec4(int type, u8 number, u8 *out_index,
-                                  u8 *out_value);
-void kar_gmclearchecker__80049fcc(s32 type, s32 index);
-void kar_gmclearchecker__8004a054(s32 arg0, u8 number);
-void kar_gmclearchecker__near_8004a10c(void);
-u8 kar_gmclearchecker__8004a130(s32 arg0, u8 number);
-s32 kar_gmclearchecker__near_8004a1a4(s32 arg0);
-void kar_gmclearchecker__near_8004a2bc(int type);
+int ClearChecker_GetRewardCount(u8 mode);
+u8 ClearChecker_GetClearKindFromRewardKind(u8 mode, u8 reward_kind);
+u8 ClearChecker_GetRewardTypeFromRewardKind(u8 mode, u8 reward_kind);
+u8 ClearChecker_GetRewardValueFromRewardKind(u8 mode, u8 reward_kind);
+u8 ClearChecker_CheckUnlocked(int mode, u8 reward_kind);
+void ClearChecker_FindRewardByClearKind(int mode, u8 clear_kind,
+                                        u8 *out_reward_kind,
+                                        u8 *out_reward_value);
+void ClearChecker_SetNewUnlockNoSfx(s32 mode, s32 clear_kind);
+void ClearChecker_SetNewUnlock(s32 mode, u8 clear_kind);
+void ClearChecker_MarkUnlockSfxPlayedThisFrame(void);
+u8 ClearChecker_GetClearKindFlags(s32 mode, u8 clear_kind);
+s32 ClearChecker_HasPendingUnlock(s32 mode);
+void ClearChecker_ShuffleRewardSlots(int mode);
 
 #endif // !__GMCLEARCHECKER_H_
