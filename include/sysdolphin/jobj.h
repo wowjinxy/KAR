@@ -75,7 +75,7 @@
 
 #define JOBJ_INSTANCE(o) ((o->flags & INSTANCE) == 0)
 #define JOBJ_USE_QUATERNION(o) ((o->flags & USE_QUATERNION))
-#define union_type_dobj(o) ((o->flags & 0x4020) == 0)
+#define union_type_dobj(o) ((o->flags & 0x4020) ? FALSE : TRUE)
 #define union_type_ptcl(o) ((o->flags & PTCL) != 0)
 
 typedef u32 HSD_TrspMask;

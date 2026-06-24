@@ -1165,7 +1165,7 @@ dolphin_sdk2.c:
 
 hsd_runtime.c:
 	.rodata     start:0x8048C458 end:0x8048C4A8
-	.sdata2     start:0x805E59C8 end:0x805E5B68
+	.sdata2     start:0x805E59C8 end:0x805E5A08
 
 metrotrk_bridge.c:
 	.text       start:0x803F3920 end:0x803F43D8
@@ -1187,43 +1187,52 @@ tev.c:
 
 mobj.c:
 	.text       start:0x803F98DC end:0x803FB13C
-	.data       start:0x80502AC0 end:0x80503188
+	.data       start:0x80502AC0 end:0x80502C30
 	.sdata      start:0x805DCAA0 end:0x805DCAC8
+	.sdata2     start:0x805E5A08 end:0x805E5A18
 
 aobj.c:
 	.text       start:0x803FB13C end:0x803FDACC
+	.data       start:0x80502C30 end:0x80503188
 	.bss        start:0x80589980 end:0x805899B0
 	.sdata      start:0x805DCAC8 end:0x805DCAD8
+	.sdata2     start:0x805E5A18 end:0x805E5A20
 
 lobj.c:
 	.text       start:0x803FDACC end:0x804006D4
 	.data       start:0x80503188 end:0x805032E8
 	.sdata      start:0x805DCAD8 end:0x805DCB08
+	.sdata2     start:0x805E5A20 end:0x805E5A48
 
 cobj.c:
 	.text       start:0x804006D4 end:0x804035A0
 	.data       start:0x805032E8 end:0x80503488
 	.sdata      start:0x805DCB08 end:0x805DCB20
+	.sdata2     start:0x805E5A48 end:0x805E5AA0
 
 fobj.c:
 	.text       start:0x804035A0 end:0x80405334
 	.sdata      start:0x805DCB20 end:0x805DCB30
+	.sdata2     start:0x805E5AA0 end:0x805E5AC8
 
 pobj.c:
 	.text       start:0x80405334 end:0x80407EE0
 	.data       start:0x80503488 end:0x805037C8
 	.sdata      start:0x805DCB30 end:0x805DCB40
+	.sdata2     start:0x805E5AC8 end:0x805E5AF8
 
 jobj.c:
 	.text       start:0x80407EE0 end:0x8040E360
 	.data       start:0x805037C8 end:0x80503BA0
 	.sdata      start:0x805DCB40 end:0x805DCB8C
+	.sdata2     start:0x805E5AF8 end:0x805E5B48
 
 displayfunc.c:
 	.text       start:0x8040E360 end:0x8040FC1C
 	.data       start:0x80503BA0 end:0x80503C60
 	.sdata      start:0x805DCB8C end:0x805DCBD0
 	.sbss       start:0x805DE270 end:0x805DE290
+	.sdata2     start:0x805E5B48 end:0x805E5B68
 	.sbss2      start:0x805E6378 end:0x805E6380
 
 initialize.c:

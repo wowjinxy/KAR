@@ -45,18 +45,19 @@ typedef struct _unk_struct_pobj {
 };
 
 typedef struct _HSD_PObj {
-    HSD_Class parent;
-    struct _HSD_PObj* next;
-    struct _HSD_VtxDescList* verts;
-    u16 flags;
-    u16 n_display;
-    u8* display; //u8 primitive, u8 vtxcnt, u16* indices
+    HSD_Class parent; // 0x00
+    struct _HSD_PObj* next; // 0x04
+    struct _HSD_VtxDescList* verts; // 0x08
+    u16 flags; // 0x0C
+    u16 n_display; // 0x0E
+    u8* display; // 0x10, u8 primitive, u8 vtxcnt, u16* indices
     union {
         struct _HSD_JObj* jobj;
         struct _HSD_ShapeSet* shape_set;
         struct _HSD_SList* envelope_list;
         struct _unk_struct_pobj* x14_unk;
-    } u;
+    } u; // 0x14
+    struct _HSD_AObj* aobj; // 0x18
 } HSD_PObj;
 
 typedef struct _HSD_PObjDesc {
@@ -107,7 +108,6 @@ typedef struct _HSD_ShapeSet {
         f32* bp;
         f32 bl;
     } blend;
-    struct _HSD_AObj* aobj;
 } HSD_ShapeSet;
 
 typedef struct _HSD_ShapeSetDesc {

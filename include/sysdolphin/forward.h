@@ -1,0 +1,122 @@
+#ifndef SYSDOLPHIN_BASELIB_FORWARD_H
+#define SYSDOLPHIN_BASELIB_FORWARD_H
+
+#include <dolphin/types.h>
+
+typedef s32 enum_t;
+#ifndef __cplusplus
+typedef BOOL bool;
+#endif
+
+typedef struct _GObjFuncs GObjFuncs;
+typedef struct _HSD_AnimJoint HSD_AnimJoint;
+typedef struct _HSD_AObj HSD_AObj;
+typedef struct _HSD_AObjDesc HSD_AObjDesc;
+typedef struct _HSD_Archive HSD_Archive;
+typedef struct _HSD_ArchiveExternInfo HSD_ArchiveExternInfo;
+typedef struct _HSD_ArchiveHeader HSD_ArchiveHeader;
+typedef struct _HSD_ArchivePublicInfo HSD_ArchivePublicInfo;
+typedef struct _HSD_ArchiveRelocationInfo HSD_ArchiveRelocationInfo;
+typedef struct _HSD_ByteCodeExpDesc HSD_ByteCodeExpDesc;
+typedef struct _HSD_CameraAnim HSD_CameraAnim;
+typedef struct HSD_CameraDescCommon HSD_CameraDescCommon;
+typedef struct HSD_CameraDescFrustum HSD_CameraDescFrustum;
+typedef struct HSD_CameraDescPerspective HSD_CameraDescPerspective;
+typedef struct _HSD_CObj HSD_CObj;
+typedef struct _HSD_CObjDesc HSD_CObjDesc;
+typedef struct _HSD_CObjInfo HSD_CObjInfo;
+typedef struct HSD_DevCom HSD_DevCom;
+typedef struct _HSD_DObj HSD_DObj;
+typedef struct _HSD_DObjDesc HSD_DObjDesc;
+typedef struct _HSD_DObjInfo HSD_DObjInfo;
+typedef struct _HSD_Envelope HSD_Envelope;
+typedef struct _HSD_EnvelopeDesc HSD_EnvelopeDesc;
+typedef struct _HSD_Exp HSD_Exp;
+typedef struct _HSD_ExpDesc HSD_ExpDesc;
+typedef struct _HSD_FObj HSD_FObj;
+typedef struct _HSD_FObjDesc HSD_FObjDesc;
+typedef struct _HSD_Fog HSD_Fog;
+typedef struct _HSD_FogAdj HSD_FogAdj;
+typedef struct _HSD_FogAdjDesc HSD_FogAdjDesc;
+typedef struct _HSD_FogAdjInfo HSD_FogAdjInfo;
+typedef struct _HSD_FogDesc HSD_FogDesc;
+typedef struct _HSD_FogInfo HSD_FogInfo;
+typedef struct HSD_Generator HSD_Generator;
+typedef struct _HSD_GObj HSD_GObj;
+typedef struct _HSD_GObjProc HSD_GObjProc;
+typedef struct HSD_Hash HSD_Hash;
+typedef struct HSD_HashEntry HSD_HashEntry;
+typedef struct _HSD_IKHint HSD_IKHint;
+typedef struct _HSD_IKHintDesc HSD_IKHintDesc;
+typedef struct _HSD_ImageDesc HSD_ImageDesc;
+typedef struct _HSD_JObj HSD_JObj;
+typedef struct _HSD_Joint HSD_Joint;
+typedef struct _HSD_LightAnim HSD_LightAnim;
+typedef struct _HSD_LightAttn HSD_LightAttn;
+typedef struct _HSD_LightDesc HSD_LightDesc;
+typedef struct _HSD_LightPoint HSD_LightPoint;
+typedef struct _HSD_LightPointDesc HSD_LightPointDesc;
+typedef struct _HSD_LightSpot HSD_LightSpot;
+typedef struct _HSD_LightSpotDesc HSD_LightSpotDesc;
+typedef struct _HSD_LObj HSD_LObj;
+typedef struct _HSD_LObjInfo HSD_LObjInfo;
+typedef struct _HSD_MatAnimJoint HSD_MatAnimJoint;
+typedef struct _HSD_Material HSD_Material;
+typedef struct _HSD_MObj HSD_MObj;
+typedef struct _HSD_MObjDesc HSD_MObjDesc;
+typedef struct _HSD_MObjInfo HSD_MObjInfo;
+typedef struct _HSD_Obj HSD_Obj;
+typedef struct HSD_PadData HSD_PadData;
+typedef struct HSD_PadRumbleListData HSD_PadRumbleListData;
+typedef struct HSD_PadStatus HSD_PadStatus;
+typedef struct HSD_Particle HSD_Particle;
+typedef struct _HSD_PEDesc HSD_PEDesc;
+typedef struct _HSD_PObj HSD_PObj;
+typedef struct _HSD_PObjDesc HSD_PObjDesc;
+typedef struct _HSD_PObjInfo HSD_PObjInfo;
+typedef struct HSD_psAppSRT HSD_psAppSRT;
+typedef struct _HSD_RObj HSD_RObj;
+typedef struct _HSD_RObjAnimJoint HSD_RObjAnimJoint;
+typedef struct _HSD_RObjDesc HSD_RObjDesc;
+typedef struct HSD_RumbleData HSD_RumbleData;
+typedef struct _HSD_Rvalue HSD_Rvalue;
+typedef struct _HSD_RvalueList HSD_RvalueList;
+typedef struct _HSD_Shadow HSD_Shadow;
+typedef struct _HSD_ShapeAnim HSD_ShapeAnim;
+typedef struct _HSD_ShapeAnimDObj HSD_ShapeAnimDObj;
+typedef struct _HSD_ShapeAnimJoint HSD_ShapeAnimJoint;
+typedef struct _HSD_ShapeSet HSD_ShapeSet;
+typedef struct _HSD_ShapeSetDesc HSD_ShapeSetDesc;
+typedef struct HSD_SM HSD_SM;
+typedef struct HSD_SObj HSD_SObj;
+typedef struct _HSD_Spline HSD_Spline;
+typedef struct HSD_TExpDag HSD_TExpDag;
+typedef struct HSD_TExpRes HSD_TExpRes;
+typedef struct HSD_Text HSD_Text;
+typedef struct _HSD_TObj HSD_TObj;
+typedef struct _HSD_ViewingRect HSD_ViewingRect;
+typedef struct _HSD_VtxDescList HSD_VtxDescList;
+typedef struct _HSD_WObj HSD_WObj;
+typedef struct _HSD_WObjAnim HSD_WObjAnim;
+typedef struct _HSD_WObjDesc HSD_WObjDesc;
+typedef struct _HSD_WObjInfo HSD_WObjInfo;
+typedef struct PadLibData PadLibData;
+typedef struct RumbleCommand RumbleCommand;
+typedef struct RumbleInfo RumbleInfo;
+typedef struct sislib_UnkAlloc3 sislib_UnkAlloc3;
+typedef struct SisBlock SisBlock;
+typedef struct TextKerning TextKerning;
+typedef union HSD_ObjData HSD_ObjData;
+typedef union HSD_Rumble HSD_Rumble;
+typedef union _HSD_TExp HSD_TExp;
+
+typedef void (*GObj_RenderFunc)(HSD_GObj* gobj, int code);
+typedef void (*HSD_ObjUpdateFunc)(void* obj, enum_t type, HSD_ObjData* fval);
+typedef void (*HSD_DevComCallback)(int, int, void*, bool cancelflag);
+typedef void (*HSD_GObjEvent)(HSD_GObj* gobj);
+typedef void (*HSD_UserDataEvent)(void* user_data);
+typedef bool (*HSD_GObjPredicate)(HSD_GObj* gobj);
+typedef void (*HSD_GObjInteraction)(HSD_GObj* gobj0, HSD_GObj* gobj1);
+typedef void (*HSD_MObjSetupFunc)(HSD_MObj* mobj, u32 rendermode);
+
+#endif

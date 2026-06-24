@@ -3,11 +3,12 @@
 
 #include <sysdolphin/class.h>
 
-#define HSD_OBJ_NOREF -1
+#define HSD_OBJ_NOREF 0xFFFF
 
 #define HSD_OBJECT_INFO(o) (o.parent.parent)
 #define HSD_OBJECT_METHOD(o) (o->parent.parent.class_info)
 #define HSD_OBJECT_PARENT_INFO(o) ((o)->parent.parent.head.parent)
+#define HSD_OBJ(o) ((HSD_Obj*) (o))
 
 typedef enum _HSD_Type {
     AOBJ_TYPE = 1,
@@ -60,8 +61,8 @@ typedef struct _HSD_Obj {
 inline void ref_INC(void* o)
 {
     if (o != NULL) {
-        ((HSD_Obj*) o)->ref_count++;
-        assert_line(93, ((HSD_Obj*) o)->ref_count != HSD_OBJ_NOREF);
+        HSD_OBJ(o)->ref_count++;
+        assert_line(93, HSD_OBJ(o)->ref_count != HSD_OBJ_NOREF);
     }
 }
 

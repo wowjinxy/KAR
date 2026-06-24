@@ -3,6 +3,7 @@
 
 #include <dolphin/types.h>
 
+#include <sysdolphin/forward.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/objalloc.h>
@@ -36,8 +37,6 @@ typedef union _callbackArg {
     u32 d;
     void* v;
 } callbackArg;
-
-typedef void (*HSD_ObjUpdateFunc)(void* obj, u32 type, FObjData* fval);
 
 typedef struct _HSD_AObj {
     u32 flags;
@@ -76,7 +75,6 @@ void HSD_AObjReqAnim(HSD_AObj* aobj, f32 frame);
 void HSD_AObjStopAnim(HSD_AObj* aobj, void* obj, HSD_ObjUpdateFunc func);
 void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj,
                            HSD_ObjUpdateFunc update_func);
-float fmod(float x, float y);
 HSD_AObj* HSD_AObjLoadDesc(HSD_AObjDesc* aobjdesc);
 void HSD_AObjRemove(HSD_AObj* aobj);
 HSD_AObj* HSD_AObjAlloc(void);
