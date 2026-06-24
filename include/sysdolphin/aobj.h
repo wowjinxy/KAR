@@ -16,6 +16,29 @@
 #define AOBJ_LOOP (1 << 29)
 #define AOBJ_NO_ANIM (1 << 30)
 
+typedef enum _AObj_Arg_Type {
+    AOBJ_ARG_A,
+    AOBJ_ARG_AF,
+    AOBJ_ARG_AV,
+    AOBJ_ARG_AU,
+    AOBJ_ARG_AO,
+    AOBJ_ARG_AOF,
+    AOBJ_ARG_AOV,
+    AOBJ_ARG_AOU,
+    AOBJ_ARG_AOT,
+    AOBJ_ARG_AOTF,
+    AOBJ_ARG_AOTV,
+    AOBJ_ARG_AOTU,
+} AObj_Arg_Type;
+
+typedef union _callbackArg {
+    f32 f;
+    u32 d;
+    void* v;
+} callbackArg;
+
+typedef void (*HSD_ObjUpdateFunc)(void* obj, u32 type, FObjData* fval);
+
 typedef struct _HSD_AObj {
     u32 flags;
     f32 curr_frame;
@@ -50,21 +73,20 @@ void HSD_AObjSetFObj(HSD_AObj* aobj, HSD_FObj* fobj);
 void HSD_AObjInitEndCallBack(void);
 void HSD_AObjInvokeCallBacks(void);
 void HSD_AObjReqAnim(HSD_AObj* aobj, f32 frame);
-void HSD_AObjStopAnim(HSD_AObj* aobj, void* obj, void (*func)());
-void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj, void (*update_func)());
-f32 fmod(f64 x, f64 y);
+void HSD_AObjStopAnim(HSD_AObj* aobj, void* obj, HSD_ObjUpdateFunc func);
+void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj,
+                           HSD_ObjUpdateFunc update_func);
+float fmod(float x, float y);
 HSD_AObj* HSD_AObjLoadDesc(HSD_AObjDesc* aobjdesc);
 void HSD_AObjRemove(HSD_AObj* aobj);
 HSD_AObj* HSD_AObjAlloc(void);
 void HSD_AObjFree(HSD_AObj* aobj);
-//void func_803645D8(void);
-//void func_803646F4(void);
-//void func_803647DC(void);
-//void func_80364924(void);
+void HSD_ForeachAnim(void* obj, HSD_Type type, HSD_TypeMask mask, void* func,
+                     AObj_Arg_Type arg_type, ...);
 void HSD_AObjSetRate(HSD_AObj* aobj, f32 rate);
 void HSD_AObjSetRewindFrame(HSD_AObj* aobj, f32 frame);
 void HSD_AObjSetEndFrame(HSD_AObj* aobj, f32 frame);
 void HSD_AObjSetCurrentFrame(HSD_AObj* aobj, f32 frame);
-void _HSD_AObjForgetMemory(void);
+void _HSD_AObjForgetMemory(void* low, void* high);
 
 #endif

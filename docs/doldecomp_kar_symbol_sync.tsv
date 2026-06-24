@@ -749,7 +749,7 @@ same	sysdolphin	803fb4bc	HSD_AObjLoadDesc	HSD_AObjLoadDesc	asm/sysdolphin/aobj.s
 same	sysdolphin	803fb5e4	HSD_AObjRemove	HSD_AObjRemove	asm/sysdolphin/aobj.s	already named
 same	sysdolphin	803fb654	HSD_AObjAlloc	HSD_AObjAlloc	asm/sysdolphin/aobj.s	already named
 same	sysdolphin	803fb6c0	HSD_AObjFree	HSD_AObjFree	asm/sysdolphin/aobj.s	already named
-skip	sysdolphin	803fb6f4	CObjForeachAnim	callbackForeachFunc	asm/sysdolphin/aobj.s	local name is non-generic
+same	sysdolphin	803fb6f4	CObjForeachAnim	CObjForeachAnim	asm/sysdolphin/aobj.s	KAR inlines callbackForeachFunc/WObjForeachAnim into CObjForeachAnim
 same	sysdolphin	803fda3c	HSD_AObjSetRate	HSD_AObjSetRate	asm/sysdolphin/aobj.s	already named
 same	sysdolphin	803fda4c	HSD_AObjSetRewindFrame	HSD_AObjSetRewindFrame	asm/sysdolphin/aobj.s	already named
 same	sysdolphin	803fda5c	HSD_AObjSetEndFrame	HSD_AObjSetEndFrame	asm/sysdolphin/aobj.s	already named

@@ -1163,25 +1163,71 @@ dolphin_sdk2.c:
 	.sbss       start:0x805DDF38 end:0x805DE270
 	.sdata2     start:0x805E5940 end:0x805E59C8
 
+hsd_runtime.c:
+	.rodata     start:0x8048C458 end:0x8048C4A8
+	.sdata2     start:0x805E59C8 end:0x805E5B68
+
 metrotrk_bridge.c:
 	.text       start:0x803F3920 end:0x803F43D8
 
-hsd_runtime.c:
-	.text       start:0x803F43D8 end:0x8040F00C
-	.rodata     start:0x8048C458 end:0x8048C4A8
-	.data       start:0x80501D10 end:0x80503BA0
-	.sdata      start:0x805DCA38 end:0x805DCB8C
-	.sdata2     start:0x805E59C8 end:0x805E5B68
+dobj.c:
+	.text       start:0x803F43D8 end:0x803F4B7C
+	.data       start:0x80501D10 end:0x80501E30
+	.sdata      start:0x805DCA38 end:0x805DCA50
+
+tobj.c:
+	.text       start:0x803F4B7C end:0x803F7D44
+	.data       start:0x80501E30 end:0x80502AC0
+	.sdata      start:0x805DCA50 end:0x805DCA90
+
+tev.c:
+	.text       start:0x803F7D44 end:0x803F98DC
+	.bss        start:0x80589278 end:0x80589980
+	.sdata      start:0x805DCA90 end:0x805DCAA0
+
+mobj.c:
+	.text       start:0x803F98DC end:0x803FB13C
+	.data       start:0x80502AC0 end:0x80503188
+	.sdata      start:0x805DCAA0 end:0x805DCAC8
+
+aobj.c:
+	.text       start:0x803FB13C end:0x803FDACC
+	.bss        start:0x80589980 end:0x805899B0
+	.sdata      start:0x805DCAC8 end:0x805DCAD8
+
+lobj.c:
+	.text       start:0x803FDACC end:0x804006D4
+	.data       start:0x80503188 end:0x805032E8
+	.sdata      start:0x805DCAD8 end:0x805DCB08
+
+cobj.c:
+	.text       start:0x804006D4 end:0x804035A0
+	.data       start:0x805032E8 end:0x80503488
+	.sdata      start:0x805DCB08 end:0x805DCB20
+
+fobj.c:
+	.text       start:0x804035A0 end:0x80405334
+	.sdata      start:0x805DCB20 end:0x805DCB30
+
+pobj.c:
+	.text       start:0x80405334 end:0x80407EE0
+	.data       start:0x80503488 end:0x805037C8
+	.sdata      start:0x805DCB30 end:0x805DCB40
+
+jobj.c:
+	.text       start:0x80407EE0 end:0x8040E360
+	.data       start:0x805037C8 end:0x80503BA0
+	.sdata      start:0x805DCB40 end:0x805DCB8C
 
 displayfunc.c:
-	.text       start:0x8040F00C end:0x8040FD5C
+	.text       start:0x8040E360 end:0x8040FC1C
 	.data       start:0x80503BA0 end:0x80503C60
 	.sdata      start:0x805DCB8C end:0x805DCBD0
 	.sbss       start:0x805DE270 end:0x805DE290
 	.sbss2      start:0x805E6378 end:0x805E6380
 
 initialize.c:
-	.text       start:0x8040FD5C end:0x80417E94
+	.text       start:0x8040FC1C end:0x80417E94
 	.rodata     start:0x8048C4A8 end:0x8048C548
 	.data       start:0x80503C60 end:0x80504028
 	.sdata      start:0x805DCBD0 end:0x805DCD00
@@ -1192,7 +1238,7 @@ objalloc.c:
 	.text       start:0x80417E94 end:0x8041CD84
 	.rodata     start:0x8048C548 end:0x8048C570
 	.data       start:0x80504028 end:0x80504500
-	.bss        start:0x80589278 end:0x8058BE80
+	.bss        start:0x805899B0 end:0x8058BE80
 	.sdata      start:0x805DCD00 end:0x805DCE28
 	.sbss       start:0x805DE2D0 end:0x805DE318
 	.sdata2     start:0x805E5CB8 end:0x805E5DB8

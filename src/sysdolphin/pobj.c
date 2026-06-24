@@ -13,9 +13,11 @@ void HSD_PObjRemoveAnimAllByFlags(HSD_PObj* pobj, u32 flags)
     if (pobj != NULL) {
         HSD_PObj* cur;
         for (cur = pobj; cur != NULL; cur = cur->next) {
-            if (cur != NULL && flags & 8) {
-                HSD_AObjRemove(cur->aobj);
-                cur->aobj = NULL;
+            if (cur != NULL && flags & POBJ_ANIM &&
+                pobj_type(cur) == POBJ_SHAPEANIM && cur->u.shape_set != NULL)
+            {
+                HSD_AObjRemove(cur->u.shape_set->aobj);
+                cur->u.shape_set->aobj = NULL;
             }
         }
     }
@@ -32,11 +34,13 @@ void HSD_PObjRemoveAnimAll(HSD_PObj* pobj, HSD_ShapeAnim* anim)
     cur_pobj = pobj;
     cur_anim = anim;
     while (cur_pobj != NULL) {
-        if (cur_pobj != NULL) {
-            if (cur_pobj->aobj != NULL) {
-                HSD_AObjRemove(cur_pobj->aobj);
+        if (cur_pobj != NULL && pobj_type(cur_pobj) == POBJ_SHAPEANIM &&
+            cur_pobj->u.shape_set != NULL)
+        {
+            if (cur_pobj->u.shape_set->aobj != NULL) {
+                HSD_AObjRemove(cur_pobj->u.shape_set->aobj);
             }
-            cur_pobj->aobj = HSD_AObjLoadDesc(cur_anim->aobjdesc);
+            cur_pobj->u.shape_set->aobj = HSD_AObjLoadDesc(cur_anim->aobjdesc);
         }
         cur_pobj = cur_pobj->next;
         if (cur_anim != NULL) {
@@ -54,8 +58,10 @@ void HSD_PObjReqAnimAllByFlags(HSD_PObj* pobj, f32 arg8, u32 flags)
         return;
     }
     for (cur = pobj; cur != NULL; cur = cur->next) {
-        if (cur != NULL && flags & 8) {
-            HSD_AObjReqAnim(cur->aobj, arg8);
+        if (cur != NULL && flags & POBJ_ANIM &&
+            pobj_type(cur) == POBJ_SHAPEANIM && cur->u.shape_set != NULL)
+        {
+            HSD_AObjReqAnim(cur->u.shape_set->aobj, arg8);
         }
     }
 }

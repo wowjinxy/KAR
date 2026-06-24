@@ -9,11 +9,61 @@
 #define HSD_OBJECT_METHOD(o) (o->parent.parent.class_info)
 #define HSD_OBJECT_PARENT_INFO(o) ((o)->parent.parent.head.parent)
 
+typedef enum _HSD_Type {
+    AOBJ_TYPE = 1,
+    COBJ_TYPE,
+    DOBJ_TYPE,
+    FOBJ_TYPE,
+    FOG_TYPE,
+    JOBJ_TYPE,
+    LOBJ_TYPE,
+    MOBJ_TYPE,
+    POBJ_TYPE,
+    ROBJ_TYPE,
+    TOBJ_TYPE,
+    WOBJ_TYPE,
+    RENDER_TYPE,
+    CHAN_TYPE,
+    TEVREG_TYPE,
+    CBOBJ_TYPE,
+    HSD_MAX_TYPE,
+} HSD_Type;
+
+#define MASK_OF(type) (1 << ((type) - 1))
+
+typedef enum _HSD_TypeMask {
+    AOBJ_MASK = MASK_OF(AOBJ_TYPE),
+    COBJ_MASK = MASK_OF(COBJ_TYPE),
+    DOBJ_MASK = MASK_OF(DOBJ_TYPE),
+    FOBJ_MASK = MASK_OF(FOBJ_TYPE),
+    FOG_MASK = MASK_OF(FOG_TYPE),
+    JOBJ_MASK = MASK_OF(JOBJ_TYPE),
+    LOBJ_MASK = MASK_OF(LOBJ_TYPE),
+    MOBJ_MASK = MASK_OF(MOBJ_TYPE),
+    POBJ_MASK = MASK_OF(POBJ_TYPE),
+    ROBJ_MASK = MASK_OF(ROBJ_TYPE),
+    TOBJ_MASK = MASK_OF(TOBJ_TYPE),
+    WOBJ_MASK = MASK_OF(WOBJ_TYPE),
+    RENDER_MASK = MASK_OF(RENDER_TYPE),
+    CHAN_MASK = MASK_OF(CHAN_TYPE),
+    TEVREG_MASK = MASK_OF(TEVREG_TYPE),
+    CBOBJ_MASK = MASK_OF(CBOBJ_TYPE),
+    ALL_TYPE_MASK = MASK_OF(HSD_MAX_TYPE) - 1,
+} HSD_TypeMask;
+
 typedef struct _HSD_Obj {
     struct _HSD_Class parent;
     u16 ref_count;
     u16 ref_count_individual;
 } HSD_Obj;
+
+inline void ref_INC(void* o)
+{
+    if (o != NULL) {
+        ((HSD_Obj*) o)->ref_count++;
+        assert_line(93, ((HSD_Obj*) o)->ref_count != HSD_OBJ_NOREF);
+    }
+}
 
 typedef struct _HSD_ObjInfo {
     struct _HSD_ClassInfo parent;

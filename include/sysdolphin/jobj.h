@@ -138,8 +138,6 @@ void HSD_JObjClearFlagsAll(HSD_JObj* jobj, u32 flags);
 void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
 void HSD_JObjReqAnimAllByFlags(HSD_JObj* jobj, s32 flags, f32 frame);
 void HSD_JObjAnimAll(HSD_JObj* jobj);
-void HSD_ForeachAnim(HSD_JObj* jobj, s32 type, u32 flags, void (*callback)(),
-                     s32 arg_count, ...);
 
 inline struct _HSD_RObj* HSD_JObjGetRObj(HSD_JObj* jobj)
 {
