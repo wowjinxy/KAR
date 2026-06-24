@@ -1260,9 +1260,17 @@ memory.c:
 	.sdata2     start:0x805E5DB8 end:0x805E5DC8
 
 shadow.c:
-	.text       start:0x8041D15C end:0x8041E6D8
-	.data       start:0x80504528 end:0x80504708
-	.sdata2     start:0x805E5DC8 end:0x805E5DF8
+	.text       start:0x8041D15C end:0x8041E224
+	.data       start:0x80504528 end:0x805046C0
+	.sdata2     start:0x805E5DC8 end:0x805E5DE8
+
+archive.c:
+	.text       start:0x8041E224 end:0x8041E5E0
+	.data       start:0x805046C0 end:0x80504708
+
+random.c:
+	.text       start:0x8041E5E0 end:0x8041E6D8
+	.sdata2     start:0x805E5DE8 end:0x805E5DF8
 
 bytecode.c:
 	.text       start:0x8041E6D8 end:0x804217C0
