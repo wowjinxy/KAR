@@ -9,7 +9,6 @@ extern u8 lbl_8058BE98[];
 struct _HSD_CObj* HSD_CObjAlloc();
 void HSD_CObjSetViewportfx4(struct _HSD_CObj*, f32, f32, f32, f32);
 
-#define HSD_OBJ(o) ((HSD_Obj*)o)
 #define SHADOW_ALLOC_DATA ((HSD_ObjAllocData*) lbl_8058BE98)
 
 HSD_ObjAllocData* HSD_ShadowGetAllocData(void)
