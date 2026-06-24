@@ -409,6 +409,49 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "wobj.c",
 }
 
+DOLDECOMP_SYSDOLPHIN_HSD_OBJECTS = {
+    "bytecode.c",
+    "texpdag.c",
+    "particle.c",
+    "psinterpret.c",
+    "generator.c",
+    "psdisp.c",
+    "pslist.c",
+    "debugconsole_main.c",
+    "sislib.c",
+}
+
+DOLDECOMP_SYSDOLPHIN_ASSET_OBJECTS = {
+    "hsd/particle/pslist_debugconsole_font.s",
+    "hsd/particle/pslist_data_tail.s",
+    "hsd/base/sislib_romfont_glyphs.s",
+    "hsd/base/sislib_data_tail.s",
+}
+
+TOP_RIDE_OBJECTS = {
+    "a2d_game_lib.cpp",
+    "a2d_gamehistory.cpp",
+    "a2d_gamesession.cpp",
+    "a2d_cpu_kirby.cpp",
+    "a2d_kirbyjointanim.cpp",
+    "a2d_lavabomb.cpp",
+    "a2d_grindrail.cpp",
+    "a2d_bg3000.cpp",
+    "a2d_bg4000.cpp",
+    "a2d_bg5000.cpp",
+    "a2d_bg8000.cpp",
+    "a2d_kurakko.cpp",
+    "a2d_game_audio.cpp",
+    "a2d_soundhandle.cpp",
+    "a2d_game_effect.cpp",
+    "a2d_effecthandle.cpp",
+    "a2d_wipeeffect.cpp",
+    "a2d_effect_slideblur.cpp",
+    "a2d_kirbydisp.cpp",
+    "a2d_refract.cpp",
+    "fl_indirectload.cpp",
+}
+
 DOLPHIN_SDK_SOURCE_OBJECTS = {
     "OSThread.c",
     "dolphin_sdk.c",
@@ -658,6 +701,13 @@ for obj in kar_objects:
     if obj.name in DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS:
         obj.options["source"] = str(Path("sysdolphin") / obj.name).replace("\\", "/")
         obj.options["cflags"] = cflags_doldecomp_src
+        obj.options["progress_category"] = "sysdolphin"
+    if obj.name in DOLDECOMP_SYSDOLPHIN_HSD_OBJECTS:
+        obj.options["progress_category"] = "sysdolphin"
+    if obj.name in DOLDECOMP_SYSDOLPHIN_ASSET_OBJECTS:
+        obj.options["progress_category"] = "sysdolphin"
+    if obj.name in TOP_RIDE_OBJECTS:
+        obj.options["progress_category"] = "topride"
     if obj.name in DOLPHIN_SDK_SOURCE_OBJECTS:
         obj.options["mw_version"] = DOLPHIN_SDK_COMPILER_VERSION
         obj.options["cflags"] = cflags_dolphin_sdk
@@ -724,6 +774,8 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
 # Adjust as desired for your project
 config.progress_categories = [
     ProgressCategory("game", "Game Code"),
+    ProgressCategory("topride", "Top Ride Code"),
+    ProgressCategory("sysdolphin", "SysDolphin"),
     ProgressCategory("sdk", "SDK Code"),
 ]
 config.progress_each_module = args.verbose
