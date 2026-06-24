@@ -60,7 +60,7 @@ typedef struct _HSD_GObjLibInitDataType {
     u64* unk_2; //804CE388
 } HSD_GObjLibInitDataType;
 
-extern struct _unk_gobj_struct {
+typedef struct _HSD_GObjDeferredActionFlags {
     union {
         u32 flags;
         struct {
@@ -70,11 +70,39 @@ extern struct _unk_gobj_struct {
             u32 b3 : 1;
         };
     };
-    u32 type;
+    s32 type;
     u8 p_link;
     u8 p_prio;
+    u8 pad[2];
     HSD_GObj* gobj;
-} lbl_8058C1F4;
+    u32 unused;
+} HSD_GObjDeferredActionFlags;
+
+extern HSD_GObjLibInitDataType hsdGObj_p_link_max;
+extern HSD_ObjAllocData hsdGObj_alloc_data;
+extern HSD_ObjAllocData hsdGObjProc_alloc_data;
+extern HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
+
+extern u8 hsdGObj_default_object_kind;
+extern u8 hsdGObj_lobj_kind;
+extern u8 hsdGObj_jobj_kind;
+extern u8 hsdGObj_default_object_alt_kind;
+
+extern HSD_GObjProc** hsdGObjProc_link_heads;
+extern HSD_GObjProc** hsdGObjProc_priority_heads;
+extern s32 hsdGObjProc_run_id;
+extern HSD_GObjProc* hsdGObjProc_current;
+extern s32 hsdGObjProc_current_s_link;
+extern HSD_GObjProc* hsdGObjProc_next;
+
+extern HSD_GObj** hsdGObj_p_link_heads;
+extern HSD_GObj** hsdGObj_p_link_tails;
+extern HSD_GObj** hsdGObj_gx_link_heads;
+extern HSD_GObj** hsdGObj_gx_link_tails;
+extern HSD_GObj* hsdGObj_current;
+extern HSD_GObj* hsdGObj_current_gx;
+extern HSD_GObj* hsdGObj_current_render;
+extern GObjFunc* hsdGObj_obj_remove_funcs;
 
 void func_80390C5C(HSD_GObj* gobj);
 void func_80390C84(HSD_GObj* gobj);
@@ -83,8 +111,14 @@ void func_80390CAC(HSD_GObj* gobj);
 void HSD_GObjObjectLink(HSD_GObj* gobj, u8 kind, void* obj);
 void* HSD_GObjObjectUnlink(HSD_GObj* gobj);
 void HSD_GObjObjectRemove(HSD_GObj* gobj);
+HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
+void HSD_GObjGXLinkRemove(HSD_GObj* gobj);
+void HSD_GObjPLinkChange_Internal(s32 type, HSD_GObj* gobj, u8 p_link,
+                                  u8 priority, HSD_GObj* position);
 HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj,
                                  void (*callback)(HSD_GObj*), u8 priority);
+void HSD_GObjProcRemove(HSD_GObjProc* proc);
+void HSD_GObjProcRemoveAll(HSD_GObj* gobj);
 void HSD_GObjDestroy(HSD_GObj* gobj);
 
 #endif

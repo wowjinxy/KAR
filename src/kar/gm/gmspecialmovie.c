@@ -73,8 +73,7 @@ const f32 lbl_805DE904 = 640.0f;
 const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
 extern u8 lbl_8058B634[];
-extern u8 lbl_805DE353;
-
+extern u8 hsdGObj_default_object_kind;
 void* kar_gmmain__near_80006c14(void);
 void kar_gmmain__near_800064f0(void);
 void kar_gmglobal__near_800088c8(s32 arg0);
@@ -150,7 +149,8 @@ void kar_lbvector__near_8006595c(void);
             HSD_GObjGXLink(MOVIE_GOBJ(), kar_gmspecialmovie__near_80049250,   \
                            0x15, 1);                                          \
             CAMERA_GOBJ() = HSD_GObjCreate(5, 0x1A, 0);                       \
-            HSD_GObjObjectLink(CAMERA_GOBJ(), lbl_805DE353,                   \
+            HSD_GObjObjectLink(CAMERA_GOBJ(),                                \
+                               hsdGObj_default_object_kind,                   \
                                HSD_CObjLoadDesc(lbl_8049732C));               \
             GObj_SetupGXLinkMax(CAMERA_GOBJ(), GObj_SetCamera, 5);            \
             camera = CAMERA_GOBJ();                                           \

@@ -4,24 +4,6 @@ typedef s32 (*HSD_DebugExceptionCallback)(s32, s32, void*, void*);
 typedef void (*HSD_DebugConsoleCallback)(void*);
 typedef void (*HSD_DebugUserCallback)(s32, u32);
 
-typedef struct _HSD_GObjDeferredActionFlags {
-    union {
-        u32 flags;
-        struct {
-            u32 b0 : 1;
-            u32 b1 : 1;
-            u32 b2 : 1;
-            u32 b3 : 1;
-        };
-    };
-    s32 type;
-    u8 p_link;
-    u8 p_prio;
-    u8 pad[2];
-    HSD_GObj* gobj;
-    u32 unused;
-} HSD_GObjDeferredActionFlags;
-
 typedef struct _HSD_StackFrame {
     struct _HSD_StackFrame* next;
     u32 ret_addr;
@@ -36,15 +18,6 @@ extern u8 __files[];
 extern u8 hsd_saved_context[];
 extern char lbl_805DCDA8[];
 extern char lbl_805DCDB0[];
-
-extern HSD_GObjLibInitDataType hsdGObj_p_link_max;
-extern HSD_ObjAllocData hsdGObjProc_alloc_data;
-extern HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
-extern HSD_GObjProc* lbl_805DE338;
-extern s32 lbl_805DE33C;
-extern HSD_GObjProc* lbl_805DE340;
-extern HSD_GObjProc** lbl_805DE348;
-extern HSD_GObjProc** lbl_805DE34C;
 
 extern HSD_DebugExceptionCallback lbl_805DE308;
 extern s32 lbl_805DE30C;
@@ -180,15 +153,15 @@ void HSD_GObjProcLink_Internal(HSD_GObjProc* proc)
     s32 p_link = gobj->p_link;
     s32 index = p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1);
 
-    if (lbl_805DE34C[index] != NULL) {
+    if (hsdGObjProc_link_heads[index] != NULL) {
         HSD_GObj* cur_gobj = gobj;
 
         while (cur_gobj != NULL) {
             dst_proc = cur_gobj->proc;
             while (dst_proc != NULL) {
                 if (dst_proc->s_link == s_link) {
-                    if (lbl_805DE34C[index] == dst_proc) {
-                        lbl_805DE34C[index] = proc;
+                    if (hsdGObjProc_link_heads[index] == dst_proc) {
+                        hsdGObjProc_link_heads[index] = proc;
                     }
                     goto insert_at_dst;
                 }
@@ -197,18 +170,18 @@ void HSD_GObjProcLink_Internal(HSD_GObjProc* proc)
             cur_gobj = cur_gobj->prev;
         }
     } else {
-        lbl_805DE34C[index] = proc;
+        hsdGObjProc_link_heads[index] = proc;
     }
 
     while (p_link-- != 0) {
-        dst_proc = lbl_805DE34C[p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1)];
+        dst_proc = hsdGObjProc_link_heads[p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1)];
         if (dst_proc != NULL) {
             goto insert_at_dst;
         }
     }
 
-    proc->next = lbl_805DE348[s_link];
-    lbl_805DE348[s_link] = proc;
+    proc->next = hsdGObjProc_priority_heads[s_link];
+    hsdGObjProc_priority_heads[s_link] = proc;
     proc->prev = NULL;
     goto inserted;
 
@@ -223,9 +196,9 @@ inserted:
     }
     proc->child = gobj->proc;
     gobj->proc = proc;
-    if (hsdGObj_deferred_action_flags.b0 && proc->prev == lbl_805DE340 &&
-        proc->next == lbl_805DE338 && s_link == lbl_805DE33C) {
-        lbl_805DE338 = proc;
+    if (hsdGObj_deferred_action_flags.b0 && proc->prev == hsdGObjProc_current &&
+        proc->next == hsdGObjProc_next && s_link == hsdGObjProc_current_s_link) {
+        hsdGObjProc_next = proc;
     }
 }
 
@@ -236,20 +209,20 @@ void HSD_GObjProcUnlink_Internal(HSD_GObjProc* proc)
     s32 s_link = proc->s_link;
     s32 index = p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1);
 
-    if (hsdGObj_deferred_action_flags.b0 && proc == lbl_805DE338) {
-        lbl_805DE338 = proc->next;
+    if (hsdGObj_deferred_action_flags.b0 && proc == hsdGObjProc_next) {
+        hsdGObjProc_next = proc->next;
     }
-    if (proc == lbl_805DE34C[index]) {
+    if (proc == hsdGObjProc_link_heads[index]) {
         if (proc->prev != NULL && proc->prev->gobj->p_link == p_link) {
-            lbl_805DE34C[index] = proc->prev;
+            hsdGObjProc_link_heads[index] = proc->prev;
         } else {
-            lbl_805DE34C[index] = NULL;
+            hsdGObjProc_link_heads[index] = NULL;
         }
     }
     if (proc->prev != NULL) {
         proc->prev->next = proc->next;
     } else {
-        lbl_805DE348[s_link] = proc->next;
+        hsdGObjProc_priority_heads[s_link] = proc->next;
     }
     if (proc->next != NULL) {
         proc->next->prev = proc->prev;
@@ -297,7 +270,7 @@ HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj, void (*callback)(HSD_GObj*), u8
 
 void HSD_GObjProcRemove(HSD_GObjProc* proc)
 {
-    if (!hsdGObj_deferred_action_flags.b0 && proc == lbl_805DE340) {
+    if (!hsdGObj_deferred_action_flags.b0 && proc == hsdGObjProc_current) {
         hsdGObj_deferred_action_flags.b2 = TRUE;
         return;
     }

@@ -1,9 +1,5 @@
 #include <sysdolphin/gobj.h>
 
-extern HSD_GObjLibInitDataType hsdGObj_p_link_max;
-extern HSD_GObj** lbl_805DE328;
-extern HSD_GObj** lbl_805DE32C;
-
 char kar_src_gobjgxlink_80504e10[0x10] = "gobjgxlink.c";
 char lbl_80504E20[0x2C] = "gx_link <= HSD_GObjLibInitData.gx_link_max";
 char lbl_80504E4C[0x26] = "gobj->gx_link != HSD_GOBJ_GXLINK_NONE";
@@ -17,20 +13,20 @@ static inline void gx_link_after(HSD_GObj* gobj, HSD_GObj* position)
         gobj->next_gx = position->next_gx;
         position->next_gx = gobj;
     } else {
-        gobj->next_gx = lbl_805DE32C[link];
-        lbl_805DE32C[link] = gobj;
+        gobj->next_gx = hsdGObj_gx_link_heads[link];
+        hsdGObj_gx_link_heads[link] = gobj;
     }
 
     if (gobj->next_gx != NULL) {
         gobj->next_gx->prev_gx = gobj;
     } else {
-        lbl_805DE328[gobj->gx_link] = gobj;
+        hsdGObj_gx_link_tails[gobj->gx_link] = gobj;
     }
 }
 
 static inline void gx_link_first_lower_prio(HSD_GObj* gobj)
 {
-    HSD_GObj* cur = lbl_805DE328[gobj->gx_link];
+    HSD_GObj* cur = hsdGObj_gx_link_tails[gobj->gx_link];
 
     while (cur != NULL && cur->render_priority > gobj->render_priority) {
         cur = cur->prev_gx;
@@ -40,12 +36,12 @@ static inline void gx_link_first_lower_prio(HSD_GObj* gobj)
 
 static inline void gx_link_first_higher_prio(HSD_GObj* gobj)
 {
-    HSD_GObj* cur = lbl_805DE32C[gobj->gx_link];
+    HSD_GObj* cur = hsdGObj_gx_link_heads[gobj->gx_link];
 
     while (cur != NULL && cur->render_priority < gobj->render_priority) {
         cur = cur->next_gx;
     }
-    gx_link_after(gobj, cur != NULL ? cur->prev_gx : lbl_805DE328[gobj->gx_link]);
+    gx_link_after(gobj, cur != NULL ? cur->prev_gx : hsdGObj_gx_link_tails[gobj->gx_link]);
 }
 
 static inline void gx_link_before_position(HSD_GObj* gobj, HSD_GObj* position)
@@ -58,13 +54,13 @@ static inline void gx_unlink(HSD_GObj* gobj)
     if (gobj->prev_gx != NULL) {
         gobj->prev_gx->next_gx = gobj->next_gx;
     } else {
-        lbl_805DE32C[gobj->gx_link] = gobj->next_gx;
+        hsdGObj_gx_link_heads[gobj->gx_link] = gobj->next_gx;
     }
 
     if (gobj->next_gx != NULL) {
         gobj->next_gx->prev_gx = gobj->prev_gx;
     } else {
-        lbl_805DE328[gobj->gx_link] = gobj->prev_gx;
+        hsdGObj_gx_link_tails[gobj->gx_link] = gobj->prev_gx;
     }
 }
 

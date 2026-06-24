@@ -103,8 +103,6 @@ union YakuKind41FlagByte {
 #define YAKU_FLAGS_13C_BITS(yaku) (*(YakuFlagByte*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_144_BITS(yaku) (*(YakuKind41FlagByte*) ((u8*) (yaku) + 0x144))
 extern Ground* lbl_805DD6CC;
-extern HSD_GObj** lbl_805DE330;
-extern HSD_GObj** lbl_805DE334;
 extern const f32 lbl_805DC8BC[];
 extern const f32 lbl_805DF8D4;
 extern const f32 lbl_805DF8D8;
@@ -235,7 +233,7 @@ s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* o
     HSD_GObj* gobj;
     s32 found;
 
-    for (gobj = lbl_805DE330[8]; gobj != NULL; gobj = gobj->prev) {
+    for (gobj = hsdGObj_p_link_tails[8]; gobj != NULL; gobj = gobj->prev) {
         if (kar_gryakulib_get_yaku_data_checked(gobj) == 0x14) {
             s32 state = kar_gryakulib_get_yaku_state_or_none(gobj);
 
@@ -363,7 +361,7 @@ void kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku(
     while (i < param->ground_count) {
         s32 index = *(s32*) ((u8*) param->ground_indices + offset);
         s32 ground_index = 0;
-        HSD_GObj* ground = lbl_805DE334[8];
+        HSD_GObj* ground = hsdGObj_p_link_heads[8];
 
         while (ground != NULL) {
             if (index != ground_index) {

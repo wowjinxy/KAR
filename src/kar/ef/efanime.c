@@ -120,7 +120,7 @@ void kar_efanime__8023ffc4(EffectObject* effect)
         if (jobj == NULL) {
             __assert(kar_src_efanime_804b5628, 0x13B, lbl_805D7308);
         }
-        HSD_GObjObjectLink(effect->gobj, lbl_805DE351, jobj);
+        HSD_GObjObjectLink(effect->gobj, hsdGObj_jobj_kind, jobj);
     }
 }
 

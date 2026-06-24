@@ -1,41 +1,6 @@
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjuserdata.h>
 
-typedef struct _HSD_GObjDeferredActionFlags {
-    union {
-        u32 flags;
-        struct {
-            u32 b0 : 1;
-            u32 b1 : 1;
-            u32 b2 : 1;
-            u32 b3 : 1;
-        };
-    };
-    s32 type;
-    u8 p_link;
-    u8 p_prio;
-    HSD_GObj* gobj;
-} HSD_GObjDeferredActionFlags;
-
-typedef struct _HSD_GObjLibInfo {
-    u8 p_link_max;
-    u8 gx_link_max;
-    u8 gproc_pri_max;
-    u8 pad;
-    u32 unk1;
-    u32* unk2;
-} HSD_GObjLibInfo;
-
-extern HSD_GObjLibInfo hsdGObj_p_link_max;
-extern HSD_ObjAllocData hsdGObj_alloc_data;
-extern HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
-extern HSD_GObj* lbl_805DE324;
-extern HSD_GObj** lbl_805DE330;
-extern HSD_GObj** lbl_805DE334;
-extern s32 lbl_805DE344;
-
-void HSD_GObjProcRemoveAll(HSD_GObj* gobj);
-void HSD_GObjGXLinkRemove(HSD_GObj* gobj);
-void HSD_GObjUserDataRemove(HSD_GObj* gobj);
 void HSD_GObjProcUnlink_Internal(HSD_GObjProc* proc);
 void HSD_GObjProcLink_Internal(HSD_GObjProc* proc);
 
@@ -50,19 +15,19 @@ static inline void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
         gobj->next = hiprio_gobj->next;
         hiprio_gobj->next = gobj;
     } else {
-        gobj->next = lbl_805DE334[link];
-        lbl_805DE334[link] = gobj;
+        gobj->next = hsdGObj_p_link_heads[link];
+        hsdGObj_p_link_heads[link] = gobj;
     }
     if (gobj->next != NULL) {
         gobj->next->prev = gobj;
     } else {
-        lbl_805DE330[link] = gobj;
+        hsdGObj_p_link_tails[link] = gobj;
     }
 }
 
 static inline void gobj_first_lower_prio(HSD_GObj* gobj)
 {
-    HSD_GObj* cur = lbl_805DE330[gobj->p_link];
+    HSD_GObj* cur = hsdGObj_p_link_tails[gobj->p_link];
     while (cur != NULL && cur->p_priority > gobj->p_priority) {
         cur = cur->prev;
     }
@@ -71,11 +36,11 @@ static inline void gobj_first_lower_prio(HSD_GObj* gobj)
 
 static inline void gobj_first_higher_prio(HSD_GObj* gobj)
 {
-    HSD_GObj* cur = lbl_805DE334[gobj->p_link];
+    HSD_GObj* cur = hsdGObj_p_link_heads[gobj->p_link];
     while (cur != NULL && cur->p_priority < gobj->p_priority) {
         cur = cur->next;
     }
-    GObj_PReorder(gobj, cur != NULL ? cur->prev : lbl_805DE330[gobj->p_link]);
+    GObj_PReorder(gobj, cur != NULL ? cur->prev : hsdGObj_p_link_tails[gobj->p_link]);
 }
 
 static inline void gobj_insert_before(HSD_GObj* gobj, HSD_GObj* position)
@@ -88,12 +53,12 @@ static inline void gobj_unlink(HSD_GObj* gobj)
     if (gobj->prev != NULL) {
         gobj->prev->next = gobj->next;
     } else {
-        lbl_805DE334[gobj->p_link] = gobj->next;
+        hsdGObj_p_link_heads[gobj->p_link] = gobj->next;
     }
     if (gobj->next != NULL) {
         gobj->next->prev = gobj->prev;
     } else {
-        lbl_805DE330[gobj->p_link] = gobj->prev;
+        hsdGObj_p_link_tails[gobj->p_link] = gobj->prev;
     }
 }
 
@@ -151,7 +116,7 @@ HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority)
 
 void HSD_GObjDestroy(HSD_GObj* gobj)
 {
-    if (!hsdGObj_deferred_action_flags.b0 && gobj == lbl_805DE324) {
+    if (!hsdGObj_deferred_action_flags.b0 && gobj == hsdGObj_current) {
         hsdGObj_deferred_action_flags.b1 = 1;
         return;
     }
@@ -181,7 +146,7 @@ void HSD_GObjPLinkChange_Internal(s32 where, HSD_GObj* gobj, u8 p_link, u8 prior
         __assert(kar_src_gobjplink_80504dd8, 0x19F, lbl_80504DE4);
     }
 
-    if (!hsdGObj_deferred_action_flags.b0 && gobj == lbl_805DE324) {
+    if (!hsdGObj_deferred_action_flags.b0 && gobj == hsdGObj_current) {
         hsdGObj_deferred_action_flags.type = where;
         hsdGObj_deferred_action_flags.b3 = 1;
         hsdGObj_deferred_action_flags.p_link = p_link;
@@ -220,7 +185,7 @@ void HSD_GObjPLinkChange_Internal(s32 where, HSD_GObj* gobj, u8 p_link, u8 prior
     }
 
     new_slot = 2;
-    old_slot = lbl_805DE344;
+    old_slot = hsdGObjProc_run_id;
     if (old_slot != 0) {
         new_slot = old_slot - 1;
     }
