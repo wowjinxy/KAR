@@ -130,6 +130,11 @@ typedef struct _HSD_JObjInfo {
 
 extern HSD_JObjInfo hsdJObj;
 
+HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint);
+u32 HSD_JObjGetFlags(HSD_JObj* jobj);
+struct _HSD_DObj* HSD_JObjGetDObj(HSD_JObj* jobj);
+void HSD_JObjSetFlagsAll(HSD_JObj* jobj, u32 flags);
+void HSD_JObjClearFlagsAll(HSD_JObj* jobj, u32 flags);
 void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
 void HSD_JObjReqAnimAllByFlags(HSD_JObj* jobj, s32 flags, f32 frame);
 void HSD_JObjAnimAll(HSD_JObj* jobj);

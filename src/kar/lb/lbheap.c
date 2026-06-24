@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <sysdolphin/memory.h>
 
 typedef struct LbHeapConfig LbHeapConfig;
 typedef struct LbHeapEntry LbHeapEntry;
@@ -78,8 +79,6 @@ char lbl_805D5258[] = "%s :";
 
 u32 OSDisableInterrupts(void);
 void OSRestoreInterrupts(u32 level);
-void OSReport(const char* fmt, ...);
-void HSD_Free(void* ptr);
 s32 HSD_GetHeap(void);
 void HSD_SetHeap(s32 heap);
 void HSD_GetNextArena(void** start, void** end);

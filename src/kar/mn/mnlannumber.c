@@ -1,4 +1,6 @@
 #include "functions.h"
+#include <kar/mn/mnlandialogue.h>
+#include <kar/mn/mnlannumber.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 
@@ -28,10 +30,6 @@ void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3
 void kar_lbvector_project_world_to_screen(void* cobj, Vec* world, Vec* screen, s32 arg3);
 void kar_menu_gobj_userdata_hide(HSD_GObj* gobj);
 void kar_menu_gobj_userdata_show(HSD_GObj* gobj);
-
-void kar_mnlandialogue_project_box0_origin_to_screen(Vec* out);
-void kar_mnlandialogue_project_box0_right_edge_to_screen(Vec* out);
-void kar_mnlandialogue_project_box0_bottom_edge_to_screen(Vec* out);
 
 #define PROJECT_BOX_TO_SCREEN(out, member)                                      \
     do {                                                                        \

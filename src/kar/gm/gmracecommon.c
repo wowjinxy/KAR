@@ -100,7 +100,6 @@ extern u8 lbl_8058B080[];
 extern const f32 lbl_805DE7A8;
 
 void* memset(void* dst, int val, unsigned long n);
-void OSReport(const char*, ...);
 void* kar_gmmain__near_80006c14(void);
 void kar_gmautodemo__near_80011024(HSD_GObj* gobj);
 void* kar_gmautodemo__near_8000fcb0(void);

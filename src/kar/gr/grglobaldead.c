@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <sysdolphin/memory.h>
 
 typedef struct GlobalDeadConfig GlobalDeadConfig;
 typedef struct GlobalDeadEntry GlobalDeadEntry;
@@ -42,8 +43,6 @@ static const f32 lbl_805DF794 = -1.0f;
 
 s32 kar_grnullpos_get_global_dead_pos_count(void);
 void kar_grnullpos_get_global_dead_pos(s32 index, Vec* pos, Vec* dir, Vec* scale);
-void* HSD_Alloc(u32 size);
-void HSD_Free(void* ptr);
 void kar_grcommon__800ceeb8(Vec* pos, s32 pos_id, GlobalDeadEntry* out);
 f32 kar_grcommon__near_800d066c(s32 a, s32 b, f32 c, f32 d);
 

@@ -1,5 +1,8 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmlanmenu.h>
+#include <kar/mn/mnlandialogue.h>
+#include <kar/mn/mnlannumber.h>
 
 
 u8 lbl_80497AE8[] = {
@@ -46,8 +49,6 @@ struct GmViConfigState {
     u8 pad_12[0x02];
     s32 field_14;
 };
-
-extern void* lbl_80497B9C[];
 
 const u64 lbl_80489480[] = {
     0xFFAABD00FFE85200ull,
@@ -105,25 +106,9 @@ void kar_gmglobal__near_800088c8(s32 arg0);
 void fn_801390E0(void);
 void fn_80139188(void);
 void fn_801391C8(void);
-void kar_gmlanmenu_show_lan_bg_panel(void);
-void kar_mnlannumber_show_panel(void);
-void kar_mnlandialogue_show_panel(void);
-void kar_mnlandialogue_show_connect_panel(void);
-void kar_mnlandialogue_show_wait_panel(void);
-void kar_mnlandialogue_show_select_panel(void);
-void kar_mnlandialogue_show_airride_panel(void);
-void kar_mnlandialogue_show_city_panel(void);
-void kar_mnlandialogue_show_time_panel(void);
-void kar_gmlanmenu_set_sis_lan_box0_message_id_adjusted(s32 id);
-void kar_gmlanmenu_set_sis_lan_box1_message_id(s32 id);
-void kar_gmlanmenu_set_sis_lan_box4_message_id(s32 id);
-void kar_gmlanmenu_set_sis_lan_box2_message_id(s32 id);
-void kar_gmlanmenu_set_sis_lan_box3_message_id(s32 id);
-void kar_mnlandialogue_request_connect_panel_state0_anim(void);
 void kar_lbkdcoll__near_80072aa0(void);
 void kar_lbfile_wait_for_group6_loads(void);
 void kar_pltrick__near_8023295c(void);
-void kar_gmlanmenu__80277748(void);
 s32 kar_lbhvqm__near_80078d24(void);
 void fn_801391F0(void);
 extern void shadowRendering(void);

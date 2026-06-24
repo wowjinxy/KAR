@@ -68,7 +68,6 @@ extern MpCollHandle* lbl_805DD8C4;
 extern char kar_mpcoll_report_free_not_found_fmt[];
 extern const f32 lbl_805E2B38;
 
-void OSReport(const char* fmt, ...);
 void kar_mpcollreport_alloc_contact_lists(MpCollReport* report, s32 arg1);
 void kar_mpcollreport_free_contact_lists(MpCollReport* report);
 void kar_mpresponse_build_swept_sphere_aabb_center_extents(Vec* pos, Vec* next_pos,

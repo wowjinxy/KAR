@@ -1,7 +1,9 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/memory.h>
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -131,7 +133,6 @@ void kar_grcoll__near_800d7ad0(void* collision, s32 enabled);
 void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
                                      s32 joint_index, s32 arg4, f32 start, f32 end,
                                      f32 arg7);
-s32 kar_gmlanmenu__near_800547e0(void* jobj);
 u64 kar_gryakueffect_request_by_entry_mode(HSD_GObj* gobj, void* effect_entry,
                                            s32 effect_resource, s32 arg3, s32 arg4,
                                            Vec* pos, s32 arg6);
@@ -143,8 +144,6 @@ void kar_gryakulib_get_model_root_position(HSD_GObj* gobj, Vec* out);
 f32 fn_803D22F4(Vec* a, Vec* b);
 f32 kar_gryakurecoveryzone_update_recovery_progress(HSD_GObj* gobj, void* arg,
                                                     f32 delta);
-void* HSD_Alloc(u32 size);
-void HSD_Free(void* ptr);
 
 void kar_gryakurecoveryzone_create_stage_linked_recoveryzone_yaku(HSD_GObj* ground_gobj)
 {

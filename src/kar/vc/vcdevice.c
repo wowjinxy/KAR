@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/types.h>
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/jobj.h>
 
 typedef struct VcDevice VcDevice;
 typedef struct VcDeviceConfig VcDeviceConfig;
@@ -98,9 +99,6 @@ extern const f32 lbl_805E2060;
 extern const f32 lbl_805E2064;
 extern const f32 lbl_805E2090;
 
-extern void HSD_GObjDestroy(HSD_GObj* gobj);
-extern void HSD_JObjClearFlagsAll(void* jobj, u32 flags);
-extern void HSD_JObjSetFlagsAll(void* jobj, u32 flags);
 extern void fn_801D33CC(VcDevice* device, f32 value);
 extern void fn_801D4584(VcDevice* device, void* arg1, f32 value);
 extern void fn_801D7E5C(VcDevice* device, f32 value);

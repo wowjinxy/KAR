@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 
@@ -38,7 +39,6 @@ void* fn_801388A8(void* arg0);
 void fn_80138B10(HSD_JObj* jobj, s32 arg1, void* arg2, f32 arg3, f32 arg4);
 void* kar_diag__80138a00(HSD_GObj* gobj, s32 arg1);
 AutodemoContext* kar_gmautodemo__near_8000cdbc(void);
-s32 kar_gmlanmenu__near_800547e0(HSD_JObj* jobj);
 void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3,
                                   ...);
 

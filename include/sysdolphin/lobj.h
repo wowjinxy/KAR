@@ -145,6 +145,10 @@ typedef struct _HSD_LObjInfo {
 u32 HSD_LObjGetFlags(HSD_LObj* lobj);
 void HSD_LObjSetFlags(HSD_LObj* lobj, u32 flags);
 void HSD_LObjClearFlags(HSD_LObj* lobj, u32 flags);
+void HSD_LObjGetPosition(HSD_LObj* lobj, Vec* pos);
+void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* pos);
+void HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest);
+void HSD_LObjSetInterest(HSD_LObj* lobj, Vec* interest);
 s32 HSD_LObjGetLightMaskDiffuse(void);
 s32 HSD_LObjGetLightMaskAttnFunc(void);
 s32 HSD_LObjGetLightMaskAlpha(void);

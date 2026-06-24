@@ -3,6 +3,7 @@
 #include <dolphin/types.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/memory.h>
 
 typedef struct Ground Ground;
 typedef struct GroundJObjEntry GroundJObjEntry;
@@ -68,7 +69,6 @@ void kar_gryakubreakfloor_configure_kind30_breakfan_fgm(HSD_GObj* gobj);
 void kar_gryakubreakfloor_update_kind30_breakfan_effects_then_destroy(HSD_GObj* gobj);
 void fn_801C7628(void* event, Vec* out);
 void fn_80191B4C(void* event, Vec* out);
-void HSD_JObjSetFlagsAll(HSD_JObj* jobj, u32 flags);
 void kar_collision_object_begin_disable(void* collision_object);
 u64 kar_gryakueffect_request_by_entry_mode(HSD_GObj* gobj, void* effect_entry,
                                            s32 effect_resource, s32 arg3, s32 arg4,
@@ -78,7 +78,6 @@ void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 arg1, void* path_nodes,
                                      s32 joint_index, s32 arg4, f32 start, f32 end,
                                      f32 arg7);
 void kar_graudio_release_fgm_track_group_handle(s32 handle);
-void HSD_Free(void* ptr);
 
 GroundCallback kar_gryakubreakfloor_kind30_breakfan_callback_table[] = {
     (GroundCallback) kar_gryakubreakfloor_configure_kind30_breakfan_fgm,

@@ -10,10 +10,6 @@ char kar_src_lblight_80497e00[] = "lblight.c";
 char lbl_805D5238[] = "0";
 
 u32 kar_lblight__803fdacc(HSD_LObj* lobj);
-void HSD_LObjGetPosition(HSD_LObj* lobj, Vec* pos);
-void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* pos);
-void HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest);
-void HSD_LObjSetInterest(HSD_LObj* lobj, Vec* interest);
 
 HSD_LObj* kar_lblight__80057514(HSD_LObj* lobj)
 {

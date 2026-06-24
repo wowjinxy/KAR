@@ -32,8 +32,6 @@ char lbl_804B4478[] = "weapon parts num not match! %d\n";
 char lbl_805D71C0[] = "0";
 const f32 lbl_805E2858[2] = { 9999.0f, 0.0f };
 
-void OSReport(const char* fmt, ...);
-u32 HSD_JObjGetFlags(HSD_JObj* jobj);
 void* kar_efdata__near_802364e0(void);
 void kar_efdata__near_8023641c(void* effect);
 void kar_efdata__near_80236778(void* effect);
