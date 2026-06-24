@@ -1,4 +1,5 @@
 #include <sysdolphin/archive.h>
+#include <sysdolphin/memory.h>
 
 inline void Locate(HSD_Archive* archive)
 {
@@ -24,7 +25,7 @@ s32 HSD_ArchiveParse(HSD_Archive* archive, u8* src, u32 file_size)
     memcpy(archive, src, sizeof(HSD_ArchiveHeader));
 
     if (archive->header.file_size != file_size) {
-        _OSReport("HSD_ArchiveParse: byte-order mismatch! Please check data format\n");
+        OSReport("HSD_ArchiveParse: byte-order mismatch! Please check data format\n");
         return -1;
     }
 
@@ -96,5 +97,32 @@ void HSD_ArchiveLocateExtern(HSD_Archive* archive, char* symbols, void* addr)
         next = *(u32*)((u32)archive->data + offset);
         *(u32*)((u32)archive->data + offset) = (u32)addr;
         offset = next;
+    }
+}
+
+void HSD_ArchiveFree(HSD_Archive* archive)
+{
+    if (archive != NULL) {
+        if (!(archive->flags & HSD_ARCHIVE_DONT_FREE)) {
+            if (archive->data != NULL) {
+                HSD_Free(archive->data);
+            }
+            if (archive->reloc_info != NULL) {
+                HSD_Free(archive->reloc_info);
+            }
+            if (archive->public_info != NULL) {
+                HSD_Free(archive->public_info);
+            }
+            if (archive->extern_info != NULL) {
+                HSD_Free(archive->extern_info);
+            }
+            if (archive->symbols != NULL) {
+                HSD_Free(archive->symbols);
+            }
+            if (archive->name != NULL) {
+                HSD_Free(archive->name);
+            }
+        }
+        HSD_Free(archive);
     }
 }

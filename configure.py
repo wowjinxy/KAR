@@ -689,7 +689,7 @@ kar_objects = [
     Object(NonMatching, "objalloc.c"),
     Object(NonMatching, "memory.c"),
     Object(NonMatching, "shadow.c"),
-    Object(NonMatching, "archive.c"),
+    Object(Matching, "archive.c"),
     Object(NonMatching, "random.c"),
     Object(NonMatching, "bytecode.c"),
     Object(NonMatching, "texpdag.c"),
