@@ -195,7 +195,10 @@ if args.map:
     # config.ldflags.append("-listclosure") # For Wii linkers
 
 # Use for any additional files that should cause a re-configure when modified
-config.reconfig_deps = []
+config.reconfig_deps = [
+    Path("config") / config.version / "splits.txt",
+    Path("config") / config.version / "symbols.txt",
+]
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
