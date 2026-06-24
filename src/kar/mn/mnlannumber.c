@@ -28,10 +28,6 @@ void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3
 void kar_lbvector_project_world_to_screen(void* cobj, Vec* world, Vec* screen, s32 arg3);
 void kar_menu_gobj_userdata_hide(HSD_GObj* gobj);
 void kar_menu_gobj_userdata_show(HSD_GObj* gobj);
-void HSD_GObjProcCreate(HSD_GObj* gobj, void (*proc)(void), u8 priority);
-void HSD_GObjDestroy(HSD_GObj* gobj);
-void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
-void HSD_JObjAnimAll(HSD_JObj* jobj);
 
 void kar_mnlandialogue_project_box0_origin_to_screen(Vec* out);
 void kar_mnlandialogue_project_box0_right_edge_to_screen(Vec* out);
@@ -113,7 +109,7 @@ void kar_mnlannumber_show_panel(void)
     }
 }
 
-void fn_80183874(void)
+void fn_80183874(HSD_GObj* gobj)
 {
 }
 

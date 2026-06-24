@@ -149,8 +149,6 @@ u64 fn_803AE0F0(f32 arg0);
 f32 fn_803AE03C(u64 arg0);
 void kar_lbaudio__near_80062874(u64 arg0);
 HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
-void HSD_GObjProcCreate(HSD_GObj* gobj, void (*callback)(HSD_GObj*),
-                        u8 priority);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_S8(base, offset) (*(s8*) ((u8*) (base) + (offset)))

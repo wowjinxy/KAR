@@ -41,9 +41,6 @@ AutodemoContext* kar_gmautodemo__near_8000cdbc(void);
 s32 kar_gmlanmenu__near_800547e0(HSD_JObj* jobj);
 void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3,
                                   ...);
-void HSD_GObjProcCreate(HSD_GObj* gobj, void (*proc)(HSD_GObj*), u8 priority);
-void HSD_GObjDestroy(HSD_GObj* gobj);
-void HSD_JObjAnimAll(HSD_JObj* jobj);
 
 void kar_mntitle_load_bg_fg_scene_models(void)
 {

@@ -83,5 +83,8 @@ void func_80390CAC(HSD_GObj* gobj);
 void HSD_GObjObjectLink(HSD_GObj* gobj, u8 kind, void* obj);
 void* HSD_GObjObjectUnlink(HSD_GObj* gobj);
 void HSD_GObjObjectRemove(HSD_GObj* gobj);
+HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj,
+                                 void (*callback)(HSD_GObj*), u8 priority);
+void HSD_GObjDestroy(HSD_GObj* gobj);
 
 #endif

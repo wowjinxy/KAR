@@ -1,30 +1,13 @@
 #include "functions.h"
 #include <dolphin/types.h>
-
-typedef struct EffectEntry EffectEntry;
-typedef s32 (*EffectCallback)(EffectEntry*, void*);
+#include <kar/ef/efcallback.h>
+#include <kar/ef/effect.h>
+#include <kar/ef/particle.h>
+#include <kar/ef/pltrick.h>
+#include <sysdolphin/gobj.h>
 
 extern char lbl_8055D7A0[];
 extern char lbl_804B510C[];
-
-s32 kar_efcallback__80234e4c(void* gobj);
-void kar_efcallback__near_80235008(void* handle);
-
-EffectEntry* kar_effect__near_80234a04(void* handle, EffectEntry** prev);
-EffectEntry* kar_effect__near_802344dc(void* owner, void* particle, s32 arg2,
-                                       s32 arg3);
-EffectEntry* kar_effect_find_entry_by_owner_key(void* owner, void* key,
-                                                EffectEntry** prev);
-void kar_effect__802341ec(EffectEntry* entry, EffectEntry* prev);
-void kar_effect__near_802349b0(EffectEntry* entry);
-void kar_pltrick__near_802341c0(EffectEntry* dst, EffectEntry* src);
-s32 kar_pltrick__near_80233ecc(void* obj);
-void kar_particle__near_8042b5a8(u8 id, void* particle);
-void kar_particle__near_8042ba60(void* particle, void* callbacks);
-s32 kar_particle__8042a734(u16 id, void* particle, void* arg2, void* arg3,
-                           void* arg4);
-void HSD_GObjDestroy(void* gobj);
-void OSReport(const char* fmt, ...);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))
@@ -176,7 +159,7 @@ s32 kar_efcallback__near_8023515c(s32 bank, void* table)
     return 1;
 }
 
-void* kar_efcallback__near_80235190(s32 id)
+EffectAnimResource* kar_efcallback__near_80235190(s32 id)
 {
     s32 bank;
     void* table;
