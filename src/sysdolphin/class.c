@@ -374,7 +374,7 @@ BOOL hsdIsDescendantOf(HSD_ClassInfo* info, HSD_ClassInfo* class_info)
     return FALSE;
 }
 
-BOOL hsdIsDerivedFrom(HSD_Class* cls, HSD_ClassInfo* class_info)
+BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info)
 {
     HSD_ClassInfo* var_r31;
 
@@ -399,14 +399,14 @@ void class_set_flags(HSD_ClassInfo* class_info, s32 arg1, s32 arg2)
     class_info->head.flags = class_info->head.flags & ~arg2 | arg1;
 }
 
-void func_80420FD0(HSD_ClassInfo* class_info)
+void ForgetClassLibraryReal(HSD_ClassInfo* class_info)
 {
     HSD_ClassInfo* cur = class_info->head.child;
     HSD_ClassInfo* next;
     while (cur != NULL) {
         next = cur->head.next;
         cur->head.next = NULL;
-        func_80420FD0(cur);
+        ForgetClassLibraryReal(cur);
         cur = next;
     }
     class_info->amnesia(class_info);
@@ -415,12 +415,12 @@ void func_80420FD0(HSD_ClassInfo* class_info)
     class_set_flags(class_info, 0, 1);
 }
 
-void func_804211B4(char* name, HSD_ClassInfo* class_info)
+void ForgetClassLibraryChild(char* name, HSD_ClassInfo* class_info)
 {
     HSD_ClassInfo** cur = &class_info->head.child;
     while (*cur != NULL) {
         if (strcmp(name, (*cur)->head.library_name) == 0) {
-            func_80420FD0(*cur);
+            ForgetClassLibraryReal(*cur);
             *cur = (*cur)->head.next;
         } else {
             cur = &(*cur)->head.next;
@@ -428,7 +428,7 @@ void func_804211B4(char* name, HSD_ClassInfo* class_info)
     }
 }
 
-void func_8042122C(char* name)
+void hsdForgetClassLibrary(char* name)
 {
     if (name == NULL) {
         name = lbl_805048BC;
@@ -438,9 +438,9 @@ void func_8042122C(char* name)
     }
     if (strcmp(name, hsdClass.head.library_name) == 0) {
         lbl_805DE300 = 0;
-        func_80420FD0(&hsdClass);
+        ForgetClassLibraryReal(&hsdClass);
     } else {
-        func_804211B4(name, &hsdClass);
+        ForgetClassLibraryChild(name, &hsdClass);
     }
 }
 
@@ -458,11 +458,28 @@ HSD_ClassInfo* hsdSearchClassInfo(char* arg0)
 char unused5[] = "info_hash";
 #pragma pop
 
-void func_804212F4(HSD_ClassInfo* info, s32 indent)
+void DumpClassStat(HSD_ClassInfo* info, s32 indent)
 {
     OSReport_PrintSpaces(indent);
     _OSReport("<class %s>\n", info->head.class_name);
     OSReport_PrintSpaces(indent);
     _OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
         info->head.info_size, info->head.obj_size, info->head.nb_exist, info->head.nb_peak);
+}
+
+void hsdDumpClassStat(HSD_ClassInfo* info, BOOL recursive, s32 indent)
+{
+    if (info == NULL) {
+        hsdDumpClassStat(&hsdClass, TRUE, indent);
+    } else if (info->head.flags & 1) {
+        DumpClassStat(info, indent);
+        if (recursive) {
+            indent += 2;
+            info = info->head.child;
+            while (info != NULL) {
+                hsdDumpClassStat(info, TRUE, indent);
+                info = info->head.next;
+            }
+        }
+    }
 }

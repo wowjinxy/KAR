@@ -343,6 +343,8 @@ KAR_SOURCE_EXACT = {
     "shadow.c": "hsd/base",
     "random.c": "hsd/base",
     "bytecode.c": "hsd/base",
+    "class.c": "hsd/base",
+    "hash.c": "hsd/base",
     "texpdag.c": "hsd/base",
     "gobjproc.c": "hsd/base",
     "gobjplink.c": "hsd/base",
@@ -420,6 +422,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
 
 DOLDECOMP_SYSDOLPHIN_HSD_OBJECTS = {
     "bytecode.c",
+    "hash.c",
     "random.c",
     "texpdag.c",
     "particle.c",
@@ -692,6 +695,8 @@ kar_objects = [
     Object(Matching, "archive.c"),
     Object(NonMatching, "random.c"),
     Object(NonMatching, "bytecode.c"),
+    Object(NonMatching, "class.c"),
+    Object(NonMatching, "hash.c"),
     Object(NonMatching, "texpdag.c"),
     Object(NonMatching, "gobjproc.c"),
     Object(Matching, "gobjplink.c"),
