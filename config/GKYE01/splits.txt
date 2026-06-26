@@ -385,15 +385,17 @@ grzonecover.c:
 	.sdata2     start:0x805DF6C0 end:0x805DF6C8
 
 grkdtree.c:
-	.text       start:0x800DE0E8 end:0x800DE8A8
+	.text       start:0x800DE0E8 end:0x800DE514
 	.data       start:0x804A4180 end:0x804A41F8
-	.sdata2     start:0x805DF6C8 end:0x805DF6CC
+
+grspline.c:
+	.text       start:0x800DE514 end:0x800DE77C
 
 grcoursespline.c:
-	.text       start:0x800DE8A8 end:0x800E1940
+	.text       start:0x800DE77C end:0x800E1940
 	.data       start:0x804A41F8 end:0x804A4518
 	.sdata      start:0x805D6118 end:0x805D6120
-	.sdata2     start:0x805DF6CC end:0x805DF6E8
+	.sdata2     start:0x805DF6C8 end:0x805DF6E8
 
 grrangespline.c:
 	.text       start:0x800E1940 end:0x800E3CB8

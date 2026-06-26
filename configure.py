@@ -558,6 +558,7 @@ kar_objects = [
     Object(NonMatching, "grzone.c"),
     Object(NonMatching, "grzonecover.c"),
     Object(NonMatching, "grkdtree.c"),
+    Object(NonMatching, "grspline.c"),
     Object(NonMatching, "grcoursespline.c"),
     Object(NonMatching, "grrangespline.c"),
     Object(NonMatching, "grnullpos.c"),
