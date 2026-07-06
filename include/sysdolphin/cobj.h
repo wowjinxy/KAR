@@ -86,7 +86,7 @@ typedef struct _HSD_CObj {
     struct _HSD_AObj* aobj; //0x84
     MtxPtr proj_mtx; //0x88
     Vec eye_vector; //0x8C
-    u32 unk_98; //0x98, no observed xrefs; class size is 0x9C
+    u32 unk_98; //0x98
 } HSD_CObj;
 
 typedef struct _HSD_CObjDesc {
@@ -146,6 +146,7 @@ typedef struct _HSD_CObjDesc {
 typedef struct _HSD_CObjInfo {
     HSD_ObjInfo parent;
     int (*load)(HSD_CObj* cobj, HSD_CObjDesc* desc);
+    HSD_ObjUpdateFunc update;
 } HSD_CObjInfo;
 
 typedef struct _HSD_CameraAnim {
