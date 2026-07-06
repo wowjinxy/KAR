@@ -5,23 +5,11 @@ void* hsdAllocMemPiece();
 void MObjInfoInit();
 HSD_MObjInfo hsdMObj = { MObjInfoInit };
 
-static HSD_TObj* tobj_shadows;
-static HSD_TObj* tobj_toon;
-static HSD_MObj* current_mobj;
-static HSD_MObjInfo* default_class;
+extern HSD_MObjInfo* lbl_805DE1E8; /* default_class */
+extern HSD_TObj* lbl_805DE1F0;     /* tobj_toon */
+extern HSD_TObj* lbl_805DE1F4;     /* tobj_shadows */
 
-void HSD_MObjSetCurrent(HSD_MObj *mobj)
-{
-    current_mobj = mobj;
-}
-
-void HSD_MObjSetFlags(HSD_MObj *mobj, u32 flags)
-{
-    if (mobj != NULL)
-        mobj->rendermode |= flags;
-}
-
-void HSD_MObjClearFlags(HSD_MObj *mobj, u32 flags)
+void HSD_MObjSetCurrent(HSD_MObj* mobj, u32 flags)
 {
     if (mobj != NULL)
         mobj->rendermode &= ~flags;
@@ -51,7 +39,7 @@ void HSD_MObjAddAnim(HSD_MObj* mobj, HSD_MatAnim* matanim)
             HSD_AObjRemove(mobj->aobj);
         }
         mobj->aobj = HSD_AObjLoadDesc(matanim->aobjdesc);
-        HSD_TObjAddAnim(mobj->tobj, matanim->texanim);
+        HSD_TObjAddAnimAll(mobj->tobj, matanim->texanim);
     }
 }
 
@@ -164,18 +152,19 @@ int MObjLoad(HSD_MObj *mobj, HSD_MObjDesc *desc)
 }
 
 char lbl_805DCAA0[] = "mobj.c";
-extern HSD_MObjInfo hsdMObj;
-void HSD_MObjSetDefaultClass(HSD_MObjInfo* info) {
+
+void kar_fl_indirectload__803f9fa4(HSD_MObjInfo* info)
+{
     if (info != NULL) {
         if (!hsdIsDescendantOf(info, &hsdMObj))
             __assert(lbl_805DCAA0, 0x14E, "hsdIsDescendantOf(info, &hsdMObj)");
     }
-    default_class = info;
+    lbl_805DE1E8 = info;
 }
 
 HSD_MObjInfo* HSD_MObjGetDefaultClass(void)
 {
-    return default_class? default_class : &hsdMObj;
+    return lbl_805DE1E8 ? lbl_805DE1E8 : &hsdMObj;
 }
 
 void* hsdNew(HSD_ClassInfo* info);
@@ -905,16 +894,16 @@ void HSD_MObjCompileTev(HSD_MObj* mobj)
         mobj->texp = NULL;
     }
     sp8 = mobj->tobj;
-    if (mobj->rendermode & RENDER_SHADOW && tobj_shadows != NULL) {
+    if (mobj->rendermode & RENDER_SHADOW && lbl_805DE1F4 != NULL) {
         var_r31 = &sp8;
         while (*var_r31 != NULL) {
             var_r31 = &(*var_r31)->next;
         }
-        *var_r31 = tobj_shadows;
+        *var_r31 = lbl_805DE1F4;
     }
-    if (mobj->rendermode & RENDER_TOON && tobj_toon != NULL && tobj_toon->imagedesc != NULL) {
-        tobj_toon->next = sp8;
-        sp8 = tobj_toon;
+    if (mobj->rendermode & RENDER_TOON && lbl_805DE1F0 != NULL && lbl_805DE1F0->imagedesc != NULL) {
+        lbl_805DE1F0->next = sp8;
+        sp8 = lbl_805DE1F0;
     }
     HSD_TObjAssignResources(sp8);
     texp = HSD_MOBJ_METHOD(mobj)->make_texp(mobj, sp8, &mobj->texp);
@@ -952,16 +941,16 @@ void HSD_MObjSetup(HSD_MObj* mobj, u32 rendermode)
     }
     tail = NULL;
     tobj = mobj->tobj;
-    if (rendermode & RENDER_SHADOW && tobj_shadows != NULL) {
+    if (rendermode & RENDER_SHADOW && lbl_805DE1F4 != NULL) {
         tail = &tobj;
         while (*tail != NULL) {
             tail = &(*tail)->next;
         }
-        *tail = tobj_shadows;
+        *tail = lbl_805DE1F4;
     }
-    if (rendermode & RENDER_TOON && tobj_toon != NULL && tobj_toon->imagedesc != NULL) {
-        tobj_toon->next = tobj;
-        tobj = tobj_toon;
+    if (rendermode & RENDER_TOON && lbl_805DE1F0 != NULL && lbl_805DE1F0->imagedesc != NULL) {
+        lbl_805DE1F0->next = tobj;
+        tobj = lbl_805DE1F0;
     }
     HSD_TObjSetup(tobj);
     HSD_TObjSetupTextureCoordGen(tobj);
@@ -1027,19 +1016,19 @@ void HSD_MObjAddShadowTexture(HSD_TObj* tobj)
     HSD_TObj* tp;
     if (tobj == NULL)
         __assert(lbl_805DCAA0, 0x495, "tobj");
-    for (tp = tobj_shadows; tp != NULL; tp = tp->next) {
+    for (tp = lbl_805DE1F4; tp != NULL; tp = tp->next) {
         if (tp == tobj)
             return;
     }
-    tobj->next = tobj_shadows;
-    tobj_shadows = tobj;
+    tobj->next = lbl_805DE1F4;
+    lbl_805DE1F4 = tobj;
 }
 
 void HSD_MObjDeleteShadowTexture(HSD_TObj* tobj)
 {
     if (tobj != NULL) {
         HSD_TObj** tp;
-        for (tp = &tobj_shadows; *tp != NULL; tp = &(*tp)->next) {
+        for (tp = &lbl_805DE1F4; *tp != NULL; tp = &(*tp)->next) {
             if (*tp == tobj) {
                 *tp = tobj->next;
                 tobj->next = NULL;
@@ -1047,10 +1036,10 @@ void HSD_MObjDeleteShadowTexture(HSD_TObj* tobj)
             }
         }
     } else {
-        while (tobj_shadows != NULL) {
-            HSD_TObj* next = tobj_shadows->next;
-            tobj_shadows->next = NULL;
-            tobj_shadows = next;
+        while (lbl_805DE1F4 != NULL) {
+            HSD_TObj* next = lbl_805DE1F4->next;
+            lbl_805DE1F4->next = NULL;
+            lbl_805DE1F4 = next;
         }
     }
 }
@@ -1074,12 +1063,12 @@ void MObjRelease(HSD_Class* o)
 
 void MObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(default_class)) {
-        default_class = NULL;
+    if (info == HSD_CLASS_INFO(lbl_805DE1E8)) {
+        lbl_805DE1E8 = NULL;
     }
     if (info == HSD_CLASS_INFO(&hsdMObj)) {
-        tobj_toon = NULL;
-        tobj_shadows = NULL;
+        lbl_805DE1F0 = NULL;
+        lbl_805DE1F4 = NULL;
     }
     HSD_PARENT_INFO(&hsdMObj)->amnesia(info);
 }
