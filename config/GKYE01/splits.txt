@@ -1238,12 +1238,15 @@ displayfunc.c:
 	.sbss2      start:0x805E6378 end:0x805E6380
 
 initialize.c:
-	.text       start:0x8040FC1C end:0x80417E94
+	.text       start:0x8040FC1C end:0x80410A90
 	.rodata     start:0x8048C4A8 end:0x8048C548
 	.data       start:0x80503C60 end:0x80504028
 	.sdata      start:0x805DCBD0 end:0x805DCD00
 	.sbss       start:0x805DE290 end:0x805DE2D0
 	.sdata2     start:0x805E5B68 end:0x805E5CB8
+
+video.c:
+	.text       start:0x80410A90 end:0x80411CAC
 
 objalloc.c:
 	.text       start:0x80417E94 end:0x8041CD84

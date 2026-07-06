@@ -420,6 +420,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "texpdag.c",
     "tobj.c",
     "util.c",
+    "video.c",
     "wobj.c",
     "jobj.c",
 }
@@ -694,6 +695,7 @@ kar_objects = [
     Object(NonMatching, "jobj.c"),
     Object(NonMatching, "displayfunc.c"),
     Object(NonMatching, "initialize.c"),
+    Object(NonMatching, "video.c"),
     Object(NonMatching, "objalloc.c"),
     Object(NonMatching, "memory.c"),
     Object(NonMatching, "shadow.c"),
