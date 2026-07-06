@@ -416,6 +416,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "robj.c",
     "shadow.c",
     "tev.c",
+    "texpdag.c",
     "tobj.c",
     "util.c",
     "wobj.c",
