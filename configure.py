@@ -403,6 +403,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "gobjplink.c",
     "gobjproc.c",
     "gobjuserdata.c",
+    "hash.c",
     "id.c",
     "initialize.c",
     "list.c",
