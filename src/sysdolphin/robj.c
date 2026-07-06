@@ -54,7 +54,7 @@ HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype)
 
 extern double lbl_805E5CB8;
 
-void RObjUpdateFunc(void* obj, s32 type, FObjData val)
+void RObjUpdateFunc(void* obj, s32 type, FObjData* val)
 {
     HSD_RObj* robj;
 
@@ -67,7 +67,7 @@ void RObjUpdateFunc(void* obj, s32 type, FObjData val)
     }
 
     robj = (HSD_RObj*)obj;
-    if (val.fv >= lbl_805E5CB8) {
+    if (val->fv >= lbl_805E5CB8) {
         robj->flags = robj->flags | 0x80000000;
         return;
     }

@@ -1264,7 +1264,7 @@ util.c:
 	.text       start:0x80417D4C end:0x80417E94
 
 objalloc.c:
-	.text       start:0x80417E94 end:0x8041CD84
+	.text       start:0x80417E94 end:0x8041838C
 	.rodata     start:0x8048C548 end:0x8048C570
 	.data       start:0x80504028 end:0x80504500
 	.bss        start:0x805899B0 end:0x8058BE80
@@ -1272,6 +1272,9 @@ objalloc.c:
 	.sbss       start:0x805DE2D0 end:0x805DE2F8
 	.sdata2     start:0x805E5CB8 end:0x805E5DB8
 	.sbss2      start:0x805E6380 end:0x805E6390
+
+robj.c:
+	.text       start:0x8041838C end:0x8041A548
 
 memory.c:
 	.text       start:0x8041CD84 end:0x8041D15C
