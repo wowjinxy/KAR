@@ -6,6 +6,7 @@ static HSD_DObj* current_dobj;
 static HSD_DObjInfo* default_class;
 
 void DObjInfoInit(void);
+void _HSD_StateInvalidateTevRegister();
 
 HSD_DObjInfo hsdDObj = { DObjInfoInit };
 
@@ -114,8 +115,6 @@ void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
     }
 }
 
-// Not quite matching when copied from melee (SSBM).
-// Seems that HSD_ClassInfo was altered.
 extern void HSD_MObjAnim();
 extern void HSD_PObjAnimAll();
 #pragma push
@@ -269,7 +268,7 @@ void HSD_DObjDisp(HSD_DObj* dobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
 {
     HSD_PObj* p;
 
-    HSD_MObjSetCurrent(dobj->mobj);
+    _HSD_StateInvalidateTevRegister(dobj->mobj);
     if ((rendermode & 0x4000000) == 0) {
         HSD_MOBJ_METHOD(dobj->mobj)->setup(dobj->mobj, rendermode);
     }
@@ -279,7 +278,7 @@ void HSD_DObjDisp(HSD_DObj* dobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
     if ((rendermode & 0x4000000) == 0) {
         HSD_MOBJ_METHOD(dobj->mobj)->unset(dobj->mobj, rendermode);
     }
-    HSD_MObjSetCurrent(NULL);
+    _HSD_StateInvalidateTevRegister(NULL);
 }
 
 void DObjRelease(HSD_Class* o)
