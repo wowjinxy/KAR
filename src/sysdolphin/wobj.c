@@ -4,13 +4,25 @@
 
 void WObjInfoInit(void);
 
-HSD_WObjInfo lbl_805041C8 = { WObjInfoInit };
+HSD_WObjInfo hsdWObj = { WObjInfoInit };
+extern HSD_WObjInfo* lbl_805DE2E0;
 
-static HSD_WObjInfo* lbl_805DE2E0;
+extern HSD_ClassInfo hsdObj;
 
-extern HSD_ClassInfo objInfo;
+extern char kar_srcfile_wobj_c_805dcc98[7]; // "wobj.c"
+extern char lbl_805DCCA4[5];                // "wobj"
+extern char lbl_805DCCA0[3];                // "jp"
+extern char lbl_8050420C[];                 // "wobj->aobj"
+extern char lbl_80504218[];                 // "jp->u.spline"
+#define assert_line_named(line, cond, condstr)                                 \
+    ((cond) ? ((void) 0) : __assert(kar_srcfile_wobj_c_805dcc98, line, condstr))
 
-void HSD_WObjRemoveAnim(HSD_WObj* wobj)
+extern double lbl_805E5CF0; // 0.0
+extern float lbl_805E5CF8;  // 0.0f
+extern double lbl_805E5D00; // 1.0
+extern float lbl_805E5D08;  // 1.0f
+
+static inline void HSD_WObjRemoveAnim(HSD_WObj* wobj)
 {
     if (wobj != NULL) {
         HSD_AObjRemove(wobj->aobj);
@@ -48,17 +60,17 @@ void WObjUpdateFunc(void* obj, u32 type, f32* fval)
     if (wobj != NULL) {
         switch (type) {
         case 4:
-            if (*fval < 0.0) {
-                *fval = 0.0;
+            if (*fval < lbl_805E5CF0) {
+                *fval = lbl_805E5CF8;
             }
-            if (1.0 < *fval) {
-                *fval = 1.0;
+            if (lbl_805E5D00 < *fval) {
+                *fval = lbl_805E5D08;
             }
 
-            assert_line(152, wobj->aobj);
+            assert_line_named(152, wobj->aobj, lbl_8050420C);
             jp = (HSD_JObj*)wobj->aobj->hsd_obj;
-            assert_line(154, jp);
-            assert_line(155, jp->u.spline);
+            assert_line_named(154, jp, lbl_805DCCA0);
+            assert_line_named(155, jp->u.spline, lbl_80504218);
 
             splArcLengthPoint(&p, jp->u.spline, *fval);
             HSD_WObjSetPosition(wobj, &p);
@@ -80,32 +92,16 @@ void WObjUpdateFunc(void* obj, u32 type, f32* fval)
     }
 }
 
-#pragma push
 void HSD_RObjAnimAll();
-asm void HSD_WObjInterpretAnim()
+
+void HSD_WObjInterpretAnim(HSD_WObj* wobj)
 {
-    nofralloc
-/* 8041A9F0 004177F0  94 21 FF F0 */    stwu r1, -0x10(r1)
-/* 8041A9F4 004177F4  7C 08 02 A6 */    mflr r0
-/* 8041A9F8 004177F8  90 01 00 14 */    stw r0, 0x14(r1)
-/* 8041A9FC 004177FC  93 E1 00 0C */    stw r31, 0xc(r1)
-/* 8041AA00 00417800  7C 7F 1B 79 */    or. r31, r3, r3
-/* 8041AA04 00417804  41 82 00 20 */    beq lbl_8041AA24
-/* 8041AA08 00417808  80 BF 00 00 */    lwz r5, 0(r31)
-/* 8041AA0C 0041780C  7F E4 FB 78 */    mr r4, r31
-/* 8041AA10 00417810  80 7F 00 18 */    lwz r3, 0x18(r31)
-/* 8041AA14 00417814  80 A5 00 40 */    lwz r5, 0x40(r5)
-/* 8041AA18 00417818  4B FE 08 ED */    bl HSD_AObjInterpretAnim
-/* 8041AA1C 0041781C  80 7F 00 1C */    lwz r3, 0x1c(r31)
-/* 8041AA20 00417820  4B FF DA 7D */    bl HSD_RObjAnimAll
-lbl_8041AA24:
-/* 8041AA24 00417824  80 01 00 14 */    lwz r0, 0x14(r1)
-/* 8041AA28 00417828  83 E1 00 0C */    lwz r31, 0xc(r1)
-/* 8041AA2C 0041782C  7C 08 03 A6 */    mtlr r0
-/* 8041AA30 00417830  38 21 00 10 */    addi r1, r1, 0x10
-/* 8041AA34 00417834  4E 80 00 20 */    blr
+    if (wobj != NULL) {
+        HSD_AObjInterpretAnim(wobj->aobj, wobj,
+                              (HSD_ObjUpdateFunc) HSD_WOBJ_METHOD(wobj)->update);
+        HSD_RObjAnimAll(wobj->robj);
+    }
 }
-#pragma pop
 
 int WObjLoad(HSD_WObj* wobj, HSD_WObjDesc* desc)
 {
@@ -143,7 +139,7 @@ HSD_WObj* HSD_WObjLoadDesc(HSD_WObjDesc* desc)
             wobj = HSD_WObjAlloc();
         } else {
             wobj = hsdNew(info);
-            assert_line(260, wobj);
+            assert_line_named(260, wobj, lbl_805DCCA4);
         }
         HSD_WOBJ_METHOD(wobj)->load(wobj, desc);
         return wobj;
@@ -236,8 +232,8 @@ void HSD_WObjGetPosition(HSD_WObj* wobj, Vec* vec)
 
 HSD_WObj* HSD_WObjAlloc(void)
 {
-    HSD_WObj* wobj = hsdNew((HSD_ClassInfo*) (lbl_805DE2E0 ? lbl_805DE2E0 : &lbl_805041C8));
-    assert_line(599, wobj);
+    HSD_WObj* wobj = hsdNew((HSD_ClassInfo*) (lbl_805DE2E0 ? lbl_805DE2E0 : &hsdWObj));
+    assert_line_named(599, wobj, lbl_805DCCA4);
     return wobj;
 }
 
@@ -246,7 +242,7 @@ void WObjRelease(HSD_Class* o)
     HSD_WObj* wobj = (HSD_WObj*) o;
     HSD_RObjRemoveAll(wobj->robj);
     HSD_AObjRemove(wobj->aobj);
-    HSD_OBJECT_PARENT_INFO(&lbl_805041C8)->release(o);
+    HSD_OBJECT_PARENT_INFO(&hsdWObj)->release(o);
 }
 
 void WObjAmnesia(HSD_ClassInfo* info)
@@ -254,7 +250,7 @@ void WObjAmnesia(HSD_ClassInfo* info)
     if (info == HSD_CLASS_INFO(lbl_805DE2E0)) {
         lbl_805DE2E0 = NULL;
     }
-    HSD_OBJECT_PARENT_INFO(&lbl_805041C8)->amnesia(info);
+    HSD_OBJECT_PARENT_INFO(&hsdWObj)->amnesia(info);
 }
 
 #pragma push
@@ -264,11 +260,11 @@ static char unused[] = "hsdIsDescendantOf(info, &hsdWObj)";
 
 void WObjInfoInit(void)
 {
-    hsdInitClassInfo(HSD_CLASS_INFO(&lbl_805041C8), &objInfo,
+    hsdInitClassInfo(HSD_CLASS_INFO(&hsdWObj), &hsdObj,
         "sysdolphin_base_library", "had_wobj",
         sizeof(HSD_WObjInfo), sizeof(HSD_WObj));
-    HSD_CLASS_INFO(&lbl_805041C8)->release = WObjRelease;
-    HSD_CLASS_INFO(&lbl_805041C8)->amnesia = WObjAmnesia;
-    lbl_805041C8.load = &WObjLoad;
-    lbl_805041C8.update = &WObjUpdateFunc;
+    HSD_CLASS_INFO(&hsdWObj)->release = WObjRelease;
+    HSD_CLASS_INFO(&hsdWObj)->amnesia = WObjAmnesia;
+    hsdWObj.load = &WObjLoad;
+    hsdWObj.update = &WObjUpdateFunc;
 }
