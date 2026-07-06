@@ -45,34 +45,32 @@
 
 typedef struct _HSD_LightPoint {
     f32 cutoff;
-    u8 point_func;
+    s32 point_func;
     f32 ref_br;
     f32 ref_dist;
-    u8 dist_func;
+    s32 dist_func;
 } HSD_LightPoint;
 
 typedef struct _HSD_LightPointDesc {
-    f32 cutoff;
-    u8 point_func;
     f32 ref_br;
     f32 ref_dist;
-    u8 dist_func;
+    s32 dist_func;
 } HSD_LightPointDesc;
 
 typedef struct _HSD_LightSpot {
     f32 cutoff;
-    u8 spot_func;
+    s32 spot_func;
     f32 ref_br;
     f32 ref_dist;
-    u8 dist_func;
+    s32 dist_func;
 } HSD_LightSpot;
 
 typedef struct _HSD_LightSpotDesc {
     f32 cutoff;
-    u8 spot_func;
+    s32 spot_func;
     f32 ref_br;
     f32 ref_dist;
-    u8 dist_func;
+    s32 dist_func;
 } HSD_LightSpotDesc;
 
 typedef struct _HSD_LightAttn {
@@ -107,6 +105,12 @@ typedef struct _HSD_LObj {
     GXLightObj spec_lightobj; //0x94
 } HSD_LObj;
 
+inline u32 HSD_LObjGetPriority(HSD_LObj* lobj)
+{
+    assert_line(355, lobj);
+    return lobj->priority & 0xFF;
+}
+
 typedef struct _HSD_LightDesc {
     char* class_name; //0x00
     struct _HSD_LightDesc* next; //0x04
@@ -135,7 +139,6 @@ typedef struct _HSD_LObjInfo {
     HSD_ObjInfo parent;
     int (*load)(HSD_LObj* lobj, HSD_LightDesc* ldesc);
     void (*update)();
-    //void (*update)(void* obj, u32 type, FObjData* val);
 } HSD_LObjInfo;
 
 #define HSD_LOBJ(o) ((HSD_LObj*)(o))
@@ -145,9 +148,9 @@ typedef struct _HSD_LObjInfo {
 u32 HSD_LObjGetFlags(HSD_LObj* lobj);
 void HSD_LObjSetFlags(HSD_LObj* lobj, u32 flags);
 void HSD_LObjClearFlags(HSD_LObj* lobj, u32 flags);
-void HSD_LObjGetPosition(HSD_LObj* lobj, Vec* pos);
+BOOL HSD_LObjGetPosition(HSD_LObj* lobj, Vec* pos);
 void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* pos);
-void HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest);
+BOOL HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest);
 void HSD_LObjSetInterest(HSD_LObj* lobj, Vec* interest);
 s32 HSD_LObjGetLightMaskDiffuse(void);
 s32 HSD_LObjGetLightMaskAttnFunc(void);

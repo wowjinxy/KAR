@@ -1,80 +1,84 @@
+#include <global.h>
 #include <sysdolphin/lobj.h>
+#include <sysdolphin/wobj.h>
+#include <sysdolphin/aobj.h>
+#include <sysdolphin/list.h>
+#include <sysdolphin/cobj.h>
 
-extern s32 lightmask_diffuse;
-extern s32 lightmask_attnfunc;
-extern s32 lightmask_alpha;
-extern s32 lightmask_specular;
-extern s32 nb_active_lights;
+#undef MAX_GXLIGHT
+#define MAX_GXLIGHT 9
+
+typedef u32 GXLightID;
+#define GX_LIGHT0 0x001
+#define GX_LIGHT1 0x002
+#define GX_LIGHT2 0x004
+#define GX_LIGHT3 0x008
+#define GX_LIGHT4 0x010
+#define GX_LIGHT5 0x020
+#define GX_LIGHT6 0x040
+#define GX_LIGHT7 0x080
+#define GX_MAX_LIGHT 0x100
+#define GX_LIGHT_NULL 0
+
+void GXInitLightColor(GXLightObj*, GXColor);
+void GXInitLightPos(GXLightObj*, f32, f32, f32);
+void GXInitLightDir(GXLightObj*, f32, f32, f32);
+void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
+void GXInitLightDistAttn(GXLightObj*, f32, f32, s32);
+void GXInitLightSpot(GXLightObj*, f32, s32);
+void GXLoadLightObjImm(GXLightObj*, GXLightID);
+
+void PSVECNormalize(Vec*, Vec*);
+void PSVECSubtract(Vec*, Vec*, Vec*);
+void PSVECAdd(Vec*, Vec*, Vec*);
+void PSMTXMultVec(Mtx, Vec*, Vec*);
+void MTXMultVec(Mtx, Vec*, Vec*);
+void fn_803D1E40(Mtx, Vec*, Vec*); /* PSMTXMultVecSR */
+
+extern HSD_ClassInfo hsdObj;
+void* hsdNew(HSD_ClassInfo*);
+void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
+BOOL hsdIsDescendantOf(HSD_ClassInfo*, HSD_ClassInfo*);
+extern void HSD_Panic(const char* file, s32 line, const char* msg);
+
+extern HSD_LObjInfo* lbl_805DE208; /* default_class */
+extern HSD_SList* lbl_805DE20C; /* current_lights */
+extern s32 lbl_805DE210;        /* nb_active_lights */
+extern s32 lbl_805DE214;        /* lightmask_diffuse */
+extern s32 lbl_805DE218;        /* lightmask_specular */
+extern s32 lbl_805DE21C;        /* lightmask_attnfunc */
+extern s32 lbl_805DE220;        /* lightmask_alpha */
+
+extern HSD_LObj* lbl_805899B0[MAX_GXLIGHT]; /* active_lights */
+
+extern f32 lbl_805DC8B8[]; /* epsilon */
+extern f32 lbl_805DC8C0;   /* epsilon */
+extern Vec lbl_8048C458;  /* zero vector */
+extern Vec lbl_8048C464;  /* zero vector */
+extern char lbl_805DCAD8[8]; /* "lobj.c" */
+extern char lbl_805DCAE0[8]; /* "0" */
+
+extern f64 lbl_805E5A20; /* 0.5 (double) */
+extern f32 lbl_805E5A28; /* 0.0 */
+extern f32 lbl_805E5A2C; /* 1.0 */
+extern f32 lbl_805E5A30; /* 255.0 */
+extern f32 lbl_805E5A34; /* 0.5 */
+extern f32 lbl_805E5A38; /* -1.0 */
+extern f32 lbl_805E5A3C; /* 50.0 */
+extern f32 lbl_805E5A40; /* 1048576.0 */
 
 void LObjInfoInit(void);
 HSD_LObjInfo hsdLObj = { LObjInfoInit };
 
-HSD_LObj* active_lights[MAX_GXLIGHT];
+s32 HSD_LightID2Index(GXLightID);
+s32 HSD_Index2LightID(s32);
+HSD_WObj* HSD_LObjGetPositionWObj(HSD_LObj*);
+HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj*);
+void HSD_LObjDeleteCurrent(HSD_LObj*);
 
-s32 HSD_LightID2Index(u32);
+HSD_SList* HSD_SListPrepend(HSD_SList* prev, void* data);
 
-u32 HSD_LObjGetFlags(HSD_LObj* lobj)
-{
-    return (lobj) ? lobj->flags : 0;
-}
-
-void HSD_LObjSetFlags(HSD_LObj* lobj, u32 flags)
-{
-    if (lobj == NULL)
-        return;
-    lobj->flags |= flags;
-}
-
-void HSD_LObjClearFlags(HSD_LObj* lobj, u32 flags)
-{
-    if (lobj == NULL)
-        return;
-    lobj->flags &= ~flags;
-}
-
-s32 HSD_LObjGetLightMaskDiffuse(void)
-{
-    return lightmask_diffuse;
-}
-
-s32 HSD_LObjGetLightMaskAttnFunc(void)
-{
-    return lightmask_attnfunc;
-}
-
-s32 HSD_LObjGetLightMaskAlpha(void)
-{
-    return lightmask_alpha;
-}
-
-s32 HSD_LObjGetLightMaskSpecular(void)
-{
-    return lightmask_specular;
-}
-
-s32 HSD_LObjGetNbActive(void)
-{
-    return nb_active_lights;
-}
-
-HSD_LObj* HSD_LObjGetActiveByID(u32 id)
-{
-    s32 idx = HSD_LightID2Index(id);
-    if (idx >= 0 && idx < 9) {
-        return active_lights[idx];
-    }
-    return NULL;
-}
-
-HSD_LObj* HSD_LObjGetActiveByIndex(s32 idx)
-{
-    if (idx >= 0 && idx < 8) {
-        return active_lights[idx];
-    }
-    return NULL;
-}
-
-inline f32 HSD_ClampFloat(f32 val, f32 min, f32 max)
+static inline f32 HSD_ClampFloat(f32 val, f32 min, f32 max)
 {
     if (val <= min) {
         return min;
@@ -84,22 +88,88 @@ inline f32 HSD_ClampFloat(f32 val, f32 min, f32 max)
     return val;
 }
 
-void LObjUpdateFunc(HSD_LObj* lobj, s32 type, FObjData* val)
+u32 kar_lblight__803fdacc(HSD_LObj* lobj)
+{
+    if (lobj) {
+        return lobj->flags;
+    }
+    return 0;
+}
+
+void HSD_LObjSetFlags(HSD_LObj* lobj, u32 flags)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    lobj->flags |= flags;
+}
+
+void HSD_LObjClearFlags(HSD_LObj* lobj, u32 flags)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    lobj->flags &= ~flags;
+}
+
+s32 HSD_LObjGetLightMaskDiffuse(void)
+{
+    return lbl_805DE214;
+}
+
+s32 HSD_LObjGetLightMaskAttnFunc(void)
+{
+    return lbl_805DE21C;
+}
+
+s32 HSD_LObjGetLightMaskAlpha(void)
+{
+    return lbl_805DE220;
+}
+
+s32 HSD_LObjGetLightMaskSpecular(void)
+{
+    return lbl_805DE218;
+}
+
+s32 HSD_LObjGetNbActive(void)
+{
+    return lbl_805DE210;
+}
+
+HSD_LObj* HSD_LObjGetActiveByID(GXLightID id)
+{
+    s32 idx = HSD_LightID2Index(id);
+    if (idx >= 0 && idx < MAX_GXLIGHT) {
+        return lbl_805899B0[idx];
+    }
+    return NULL;
+}
+
+HSD_LObj* HSD_LObjGetActiveByIndex(s32 idx)
+{
+    if (idx >= 0 && idx < MAX_GXLIGHT - 1) {
+        return lbl_805899B0[idx];
+    }
+    return NULL;
+}
+
+void fn_803FDBB0(HSD_LObj* lobj, s32 type, FObjData* val)
 {
     if (lobj == NULL) {
         return;
     }
     switch (type) {
     case HSD_A_L_VIS:
-        if (val->fv >= 0.5) {
-            lobj->flags &= ~0x20;
+        if (val->fv >= lbl_805E5A20) {
+            lobj->flags &= ~LOBJ_HIDDEN;
         } else {
-            lobj->flags |= 0x20;
+            lobj->flags |= LOBJ_HIDDEN;
         }
         break;
     case HSD_A_L_A0:
     case HSD_A_L_CUTOFF:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.a0 = val->fv;
         } else {
             lobj->u.spot.cutoff = val->fv;
@@ -107,7 +177,7 @@ void LObjUpdateFunc(HSD_LObj* lobj, s32 type, FObjData* val)
         break;
     case HSD_A_L_A1:
     case HSD_A_L_REFDIST:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.a1 = val->fv;
         } else {
             lobj->u.spot.ref_dist = val->fv;
@@ -115,38 +185,46 @@ void LObjUpdateFunc(HSD_LObj* lobj, s32 type, FObjData* val)
         break;
     case HSD_A_L_A2:
     case HSD_A_L_REFBRIGHT:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.a2 = val->fv;
         } else {
             lobj->u.spot.ref_br = val->fv;
         }
         break;
     case HSD_A_L_K0:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.k0 = val->fv;
         }
         break;
     case HSD_A_L_K1:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.k1 = val->fv;
         }
         break;
     case HSD_A_L_K2:
-        if (lobj->flags & 0x40) {
+        if (lobj->flags & LOBJ_RAW_PARAM) {
             lobj->u.attn.k2 = val->fv;
         }
         break;
     case HSD_A_L_LITC_R:
-        lobj->color.r = 255.0F * HSD_ClampFloat(val->fv, 0, 1);
+        lobj->color.r = lbl_805E5A30 *
+            (val->fv <= lbl_805E5A28 ? lbl_805E5A28 :
+             val->fv >= lbl_805E5A2C ? lbl_805E5A2C : val->fv);
         break;
     case HSD_A_L_LITC_G:
-        lobj->color.g = 255.0F * HSD_ClampFloat(val->fv, 0, 1);
+        lobj->color.g = lbl_805E5A30 *
+            (val->fv <= lbl_805E5A28 ? lbl_805E5A28 :
+             val->fv >= lbl_805E5A2C ? lbl_805E5A2C : val->fv);
         break;
     case HSD_A_L_LITC_B:
-        lobj->color.b = 255.0F * HSD_ClampFloat(val->fv, 0, 1);
+        lobj->color.b = lbl_805E5A30 *
+            (val->fv <= lbl_805E5A28 ? lbl_805E5A28 :
+             val->fv >= lbl_805E5A2C ? lbl_805E5A2C : val->fv);
         break;
     case HSD_A_L_LITC_A:
-        lobj->color.a = 255.0F * HSD_ClampFloat(val->fv, 0, 1);
+        lobj->color.a = lbl_805E5A30 *
+            (val->fv <= lbl_805E5A28 ? lbl_805E5A28 :
+             val->fv >= lbl_805E5A2C ? lbl_805E5A2C : val->fv);
         break;
     }
 }
@@ -162,42 +240,47 @@ void HSD_LObjAnim(HSD_LObj* lobj)
 
 void HSD_LObjAnimAll(HSD_LObj* lobj)
 {
-    if (lobj != NULL) {
-        HSD_LObj* cur;
-        for (cur = lobj; cur != NULL; cur = cur->next) {
-            HSD_LObjAnim(cur);
-        }
+    HSD_LObj* lp;
+
+    if (lobj == NULL) {
+        return;
+    }
+
+    for (lp = lobj; lp; lp = lp->next) {
+        HSD_LObjAnim(lp);
     }
 }
 
 void HSD_LObjReqAnim(HSD_LObj* lobj, f32 startframe)
 {
-    if (lobj != NULL) {
-        HSD_AObjReqAnim(lobj->aobj, startframe);
-        HSD_WObjReqAnim(HSD_LObjGetPositionWObj(lobj), startframe);
-        HSD_WObjReqAnim(HSD_LObjGetInterestWObj(lobj), startframe);
+    if (lobj == NULL) {
+        return;
     }
+
+    HSD_AObjReqAnim(lobj->aobj, startframe);
+    HSD_WObjReqAnim(HSD_LObjGetPositionWObj(lobj), startframe);
+    HSD_WObjReqAnim(HSD_LObjGetInterestWObj(lobj), startframe);
 }
 
 void HSD_LObjReqAnimAll(HSD_LObj* lobj, f32 startframe)
 {
-    if (lobj != NULL) {
-        HSD_LObj* cur;
-        for (cur = lobj; cur != NULL; cur = cur->next) {
-            HSD_LObjReqAnim(cur, startframe);
-        }
+    HSD_LObj* lp;
+
+    if (lobj == NULL) {
+        return;
+    }
+
+    for (lp = lobj; lp; lp = lp->next) {
+        HSD_LObjReqAnim(lp, startframe);
     }
 }
 
-extern f32 lbl_805DC8B8[];
-
-inline BOOL TryNormalize(Vec* v)
+static inline BOOL TryNormalize(Vec* v)
 {
     if (v == NULL || v == NULL) {
         return ~0;
     }
-    if (__fabs(v->x) <= lbl_805DC8B8[0] &&
-        __fabs(v->y) <= lbl_805DC8B8[0] &&
+    if (__fabs(v->x) <= lbl_805DC8B8[0] && __fabs(v->y) <= lbl_805DC8B8[0] &&
         __fabs(v->z) <= lbl_805DC8B8[0]) {
         return ~0;
     }
@@ -207,8 +290,8 @@ inline BOOL TryNormalize(Vec* v)
 
 void HSD_LObjGetLightVector(HSD_LObj* lobj, Vec* v)
 {
-    Vec position = { 0, 0, 0 };
-    Vec interest = { 0, 0, 0 };
+    Vec position = lbl_8048C458;
+    Vec interest = lbl_8048C464;
 
     if (lobj == NULL) {
         return;
@@ -217,24 +300,25 @@ void HSD_LObjGetLightVector(HSD_LObj* lobj, Vec* v)
     HSD_LObjGetInterest(lobj, &interest);
     PSVECSubtract(&interest, &position, v);
     if (TryNormalize(v)) {
-        v->x = 0;
-        v->y = 0;
-        v->z = 1;
+        f32 a = lbl_805E5A28;
+        f32 b = lbl_805E5A2C;
+        v->x = a;
+        v->y = a;
+        v->z = b;
     }
 }
 
-void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
-extern f32 lbl_805E5A34;
-
-void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 arg8)
+void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 shininess)
 {
+    f32 k0 = shininess;
+
     if (lobj->flags & LOBJ_HIDDEN || HSD_LObjGetType(lobj) == LOBJ_AMBIENT) {
         return;
     }
     if (lobj->flags & (LOBJ_DIFFUSE | LOBJ_ALPHA)) {
         if (lobj->hw_color.r != color->r || lobj->hw_color.g != color->g ||
             lobj->hw_color.b != color->b || lobj->hw_color.a != color->a) {
-            func_803CD230(&lobj->lightobj, *color);
+            GXInitLightColor(&lobj->lightobj, *color);
             lobj->hw_color = *color;
             lobj->flags |= LOBJ_DIFF_DIRTY;
         }
@@ -243,11 +327,13 @@ void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 arg8)
             lobj->flags &= ~LOBJ_DIFF_DIRTY;
         }
     }
-    if (lobj->spec_id != 0) {
-        if (lobj->shininess != arg8) {
-            f32 temp_f4 = arg8 * lbl_805E5A34;
-            lobj->shininess = arg8;
-            GXInitLightAttn(&lobj->spec_lightobj, 0.0f, 0.0f, 1.0f, temp_f4, 0.0f, 1.0f - temp_f4);
+    if (lobj->spec_id != GX_LIGHT_NULL) {
+        if (lobj->shininess != shininess) {
+            k0 *= lbl_805E5A34;
+            lobj->shininess = shininess;
+            GXInitLightAttn(&lobj->spec_lightobj, lbl_805E5A28, lbl_805E5A28,
+                            lbl_805E5A2C, k0, lbl_805E5A28,
+                            lbl_805E5A2C - k0);
             lobj->flags |= LOBJ_SPEC_DIRTY;
         }
         if (lobj->flags & LOBJ_SPEC_DIRTY) {
@@ -257,190 +343,829 @@ void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 arg8)
     }
 }
 
-extern f32 lbl_805E5A38;
-extern char lbl_805DCAD8[8];
-extern char lbl_805DCAE0[8];
-extern void func_803CD214();
-extern void func_803D2098();
-asm void func_803FE234()
+static inline BOOL TryNormalize2(Vec* src, Vec* dst)
 {
-    nofralloc
-/* 803FE234 003FB034  94 21 FF B0 */	stwu r1, -0x50(r1)
-/* 803FE238 003FB038  7C 08 02 A6 */	mflr r0
-/* 803FE23C 003FB03C  3C 80 80 5E */	lis r4, lbl_805DC8B8@ha
-/* 803FE240 003FB040  90 01 00 54 */	stw r0, 0x54(r1)
-/* 803FE244 003FB044  93 E1 00 4C */	stw r31, 0x4c(r1)
-/* 803FE248 003FB048  93 C1 00 48 */	stw r30, 0x48(r1)
-/* 803FE24C 003FB04C  93 A1 00 44 */	stw r29, 0x44(r1)
-/* 803FE250 003FB050  93 81 00 40 */	stw r28, 0x40(r1)
-/* 803FE254 003FB054  C0 03 00 0C */	lfs f0, 0xc(r3)
-/* 803FE258 003FB058  D0 01 00 20 */	stfs f0, 0x20(r1)
-/* 803FE25C 003FB05C  FC 20 02 10 */	fabs f1, f0
-/* 803FE260 003FB060  C0 04 C8 B8 */	lfs f0, lbl_805DC8B8@l(r4)
-/* 803FE264 003FB064  C0 43 00 1C */	lfs f2, 0x1c(r3)
-/* 803FE268 003FB068  FC 01 00 40 */	fcmpo cr0, f1, f0
-/* 803FE26C 003FB06C  D0 41 00 24 */	stfs f2, 0x24(r1)
-/* 803FE270 003FB070  C0 23 00 2C */	lfs f1, 0x2c(r3)
-/* 803FE274 003FB074  D0 21 00 28 */	stfs f1, 0x28(r1)
-/* 803FE278 003FB078  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE27C 003FB07C  40 82 00 2C */	bne lbl_803FE2A8
-/* 803FE280 003FB080  FC 40 12 10 */	fabs f2, f2
-/* 803FE284 003FB084  FC 02 00 40 */	fcmpo cr0, f2, f0
-/* 803FE288 003FB088  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE28C 003FB08C  40 82 00 1C */	bne lbl_803FE2A8
-/* 803FE290 003FB090  FC 20 0A 10 */	fabs f1, f1
-/* 803FE294 003FB094  FC 01 00 40 */	fcmpo cr0, f1, f0
-/* 803FE298 003FB098  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE29C 003FB09C  40 82 00 0C */	bne lbl_803FE2A8
-/* 803FE2A0 003FB0A0  38 00 FF FF */	li r0, -1
-/* 803FE2A4 003FB0A4  48 00 00 14 */	b lbl_803FE2B8
-lbl_803FE2A8:
-/* 803FE2A8 003FB0A8  38 61 00 20 */	addi r3, r1, 0x20
-/* 803FE2AC 003FB0AC  38 81 00 2C */	addi r4, r1, 0x2c
-/* 803FE2B0 003FB0B0  4B FD 3E 4D */	bl PSVECNormalize
-/* 803FE2B4 003FB0B4  38 00 00 00 */	li r0, 0
-lbl_803FE2B8:
-/* 803FE2B8 003FB0B8  2C 00 00 00 */	cmpwi r0, 0
-/* 803FE2BC 003FB0BC  41 82 00 18 */	beq lbl_803FE2D4
-/* 803FE2C0 003FB0C0  C0 22 F3 28 */	lfs f1, 0.0f
-/* 803FE2C4 003FB0C4  C0 02 F3 38 */	lfs f0, lbl_805E5A38
-/* 803FE2C8 003FB0C8  D0 21 00 2C */	stfs f1, 0x2c(r1)
-/* 803FE2CC 003FB0CC  D0 21 00 30 */	stfs f1, 0x30(r1)
-/* 803FE2D0 003FB0D0  D0 01 00 34 */	stfs f0, 0x34(r1)
-lbl_803FE2D4:
-/* 803FE2D4 003FB0D4  3C 60 80 59 */	lis r3, active_lights@ha
-/* 803FE2D8 003FB0D8  83 CD 11 30 */	lwz r30, nb_active_lights(r13)
-/* 803FE2DC 003FB0DC  3B A3 99 B0 */	addi r29, r3, active_lights@l
-/* 803FE2E0 003FB0E0  3B 80 00 00 */	li r28, 0
-/* 803FE2E4 003FB0E4  48 00 01 AC */	b lbl_803FE490
-lbl_803FE2E8:
-/* 803FE2E8 003FB0E8  2C 1C 00 00 */	cmpwi r28, 0
-/* 803FE2EC 003FB0EC  41 80 00 14 */	blt lbl_803FE300
-/* 803FE2F0 003FB0F0  2C 1C 00 08 */	cmpwi r28, 8
-/* 803FE2F4 003FB0F4  40 80 00 0C */	bge lbl_803FE300
-/* 803FE2F8 003FB0F8  83 FD 00 00 */	lwz r31, 0(r29)
-/* 803FE2FC 003FB0FC  48 00 00 08 */	b lbl_803FE304
-lbl_803FE300:
-/* 803FE300 003FB100  3B E0 00 00 */	li r31, 0
-lbl_803FE304:
-/* 803FE304 003FB104  80 1F 00 90 */	lwz r0, 0x90(r31)
-/* 803FE308 003FB108  2C 00 00 00 */	cmpwi r0, 0
-/* 803FE30C 003FB10C  41 82 01 7C */	beq lbl_803FE488
-/* 803FE310 003FB110  A0 1F 00 08 */	lhz r0, 8(r31)
-/* 803FE314 003FB114  54 00 07 BE */	clrlwi r0, r0, 0x1e
-/* 803FE318 003FB118  2C 00 00 01 */	cmpwi r0, 1
-/* 803FE31C 003FB11C  41 82 00 B0 */	beq lbl_803FE3CC
-/* 803FE320 003FB120  41 80 00 C0 */	blt lbl_803FE3E0
-/* 803FE324 003FB124  2C 00 00 04 */	cmpwi r0, 4
-/* 803FE328 003FB128  40 80 00 B8 */	bge lbl_803FE3E0
-/* 803FE32C 003FB12C  38 61 00 20 */	addi r3, r1, 0x20
-/* 803FE330 003FB130  38 9F 00 3C */	addi r4, r31, 0x3c
-/* 803FE334 003FB134  38 A1 00 08 */	addi r5, r1, 8
-/* 803FE338 003FB138  4B FD 3D 85 */	bl PSVECSubtract
-/* 803FE33C 003FB13C  C0 01 00 08 */	lfs f0, 8(r1)
-/* 803FE340 003FB140  3C 60 80 5E */	lis r3, lbl_805DC8B8@ha
-/* 803FE344 003FB144  C0 23 C8 B8 */	lfs f1, lbl_805DC8B8@l(r3)
-/* 803FE348 003FB148  FC 00 02 10 */	fabs f0, f0
-/* 803FE34C 003FB14C  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE350 003FB150  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE354 003FB154  40 82 00 34 */	bne lbl_803FE388
-/* 803FE358 003FB158  C0 01 00 0C */	lfs f0, 0xc(r1)
-/* 803FE35C 003FB15C  FC 00 02 10 */	fabs f0, f0
-/* 803FE360 003FB160  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE364 003FB164  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE368 003FB168  40 82 00 20 */	bne lbl_803FE388
-/* 803FE36C 003FB16C  C0 01 00 10 */	lfs f0, 0x10(r1)
-/* 803FE370 003FB170  FC 00 02 10 */	fabs f0, f0
-/* 803FE374 003FB174  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE378 003FB178  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE37C 003FB17C  40 82 00 0C */	bne lbl_803FE388
-/* 803FE380 003FB180  38 00 FF FF */	li r0, -1
-/* 803FE384 003FB184  48 00 00 14 */	b lbl_803FE398
-lbl_803FE388:
-/* 803FE388 003FB188  38 61 00 08 */	addi r3, r1, 8
-/* 803FE38C 003FB18C  7C 64 1B 78 */	mr r4, r3
-/* 803FE390 003FB190  4B FD 3D 6D */	bl PSVECNormalize
-/* 803FE394 003FB194  38 00 00 00 */	li r0, 0
-lbl_803FE398:
-/* 803FE398 003FB198  2C 00 00 00 */	cmpwi r0, 0
-/* 803FE39C 003FB19C  40 82 00 18 */	bne lbl_803FE3B4
-/* 803FE3A0 003FB1A0  38 61 00 08 */	addi r3, r1, 8
-/* 803FE3A4 003FB1A4  38 81 00 2C */	addi r4, r1, 0x2c
-/* 803FE3A8 003FB1A8  38 A1 00 14 */	addi r5, r1, 0x14
-/* 803FE3AC 003FB1AC  4B FD 3C ED */	bl func_803D2098
-/* 803FE3B0 003FB1B0  48 00 00 40 */	b lbl_803FE3F0
-lbl_803FE3B4:
-/* 803FE3B4 003FB1B4  C0 22 F3 28 */	lfs f1, 0.0f
-/* 803FE3B8 003FB1B8  C0 02 F3 2C */	lfs f0, 1.0f
-/* 803FE3BC 003FB1BC  D0 21 00 14 */	stfs f1, 0x14(r1)
-/* 803FE3C0 003FB1C0  D0 21 00 18 */	stfs f1, 0x18(r1)
-/* 803FE3C4 003FB1C4  D0 01 00 1C */	stfs f0, 0x1c(r1)
-/* 803FE3C8 003FB1C8  48 00 00 A0 */	b lbl_803FE468
-lbl_803FE3CC:
-/* 803FE3CC 003FB1CC  38 7F 00 3C */	addi r3, r31, 0x3c
-/* 803FE3D0 003FB1D0  38 81 00 2C */	addi r4, r1, 0x2c
-/* 803FE3D4 003FB1D4  38 A1 00 14 */	addi r5, r1, 0x14
-/* 803FE3D8 003FB1D8  4B FD 3C C1 */	bl func_803D2098
-/* 803FE3DC 003FB1DC  48 00 00 14 */	b lbl_803FE3F0
-lbl_803FE3E0:
-/* 803FE3E0 003FB1E0  38 6D F9 F8 */	la r3, lbl_805DCAD8
-/* 803FE3E4 003FB1E4  38 80 02 7A */	li r4, 0x27a
-/* 803FE3E8 003FB1E8  38 AD FA 00 */	la r5, lbl_805DCAE0
-/* 803FE3EC 003FB1EC  48 02 A0 CD */	bl __assert
-lbl_803FE3F0:
-/* 803FE3F0 003FB1F0  C0 01 00 14 */	lfs f0, 0x14(r1)
-/* 803FE3F4 003FB1F4  3C 60 80 5E */	lis r3, lbl_805DC8B8@ha
-/* 803FE3F8 003FB1F8  C0 23 C8 B8 */	lfs f1, lbl_805DC8B8@l(r3)
-/* 803FE3FC 003FB1FC  FC 00 02 10 */	fabs f0, f0
-/* 803FE400 003FB200  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE404 003FB204  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE408 003FB208  40 82 00 34 */	bne lbl_803FE43C
-/* 803FE40C 003FB20C  C0 01 00 18 */	lfs f0, 0x18(r1)
-/* 803FE410 003FB210  FC 00 02 10 */	fabs f0, f0
-/* 803FE414 003FB214  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE418 003FB218  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE41C 003FB21C  40 82 00 20 */	bne lbl_803FE43C
-/* 803FE420 003FB220  C0 01 00 1C */	lfs f0, 0x1c(r1)
-/* 803FE424 003FB224  FC 00 02 10 */	fabs f0, f0
-/* 803FE428 003FB228  FC 00 08 40 */	fcmpo cr0, f0, f1
-/* 803FE42C 003FB22C  4C 40 13 82 */	cror 2, 0, 2
-/* 803FE430 003FB230  40 82 00 0C */	bne lbl_803FE43C
-/* 803FE434 003FB234  38 00 FF FF */	li r0, -1
-/* 803FE438 003FB238  48 00 00 14 */	b lbl_803FE44C
-lbl_803FE43C:
-/* 803FE43C 003FB23C  38 61 00 14 */	addi r3, r1, 0x14
-/* 803FE440 003FB240  7C 64 1B 78 */	mr r4, r3
-/* 803FE444 003FB244  4B FD 3C B9 */	bl PSVECNormalize
-/* 803FE448 003FB248  38 00 00 00 */	li r0, 0
-lbl_803FE44C:
-/* 803FE44C 003FB24C  2C 00 00 00 */	cmpwi r0, 0
-/* 803FE450 003FB250  41 82 00 18 */	beq lbl_803FE468
-/* 803FE454 003FB254  C0 22 F3 28 */	lfs f1, 0.0f
-/* 803FE458 003FB258  C0 02 F3 2C */	lfs f0, 1.0f
-/* 803FE45C 003FB25C  D0 21 00 14 */	stfs f1, 0x14(r1)
-/* 803FE460 003FB260  D0 21 00 18 */	stfs f1, 0x18(r1)
-/* 803FE464 003FB264  D0 01 00 1C */	stfs f0, 0x1c(r1)
-lbl_803FE468:
-/* 803FE468 003FB268  C0 21 00 14 */	lfs f1, 0x14(r1)
-/* 803FE46C 003FB26C  38 7F 00 94 */	addi r3, r31, 0x94
-/* 803FE470 003FB270  C0 41 00 18 */	lfs f2, 0x18(r1)
-/* 803FE474 003FB274  C0 61 00 1C */	lfs f3, 0x1c(r1)
-/* 803FE478 003FB278  4B FC ED 9D */	bl func_803CD214
-/* 803FE47C 003FB27C  A0 1F 00 08 */	lhz r0, 8(r31)
-/* 803FE480 003FB280  60 00 01 00 */	ori r0, r0, 0x100
-/* 803FE484 003FB284  B0 1F 00 08 */	sth r0, 8(r31)
-lbl_803FE488:
-/* 803FE488 003FB288  3B BD 00 04 */	addi r29, r29, 4
-/* 803FE48C 003FB28C  3B 9C 00 01 */	addi r28, r28, 1
-lbl_803FE490:
-/* 803FE490 003FB290  7C 1C F0 00 */	cmpw r28, r30
-/* 803FE494 003FB294  41 80 FE 54 */	blt lbl_803FE2E8
-/* 803FE498 003FB298  80 01 00 54 */	lwz r0, 0x54(r1)
-/* 803FE49C 003FB29C  83 E1 00 4C */	lwz r31, 0x4c(r1)
-/* 803FE4A0 003FB2A0  83 C1 00 48 */	lwz r30, 0x48(r1)
-/* 803FE4A4 003FB2A4  83 A1 00 44 */	lwz r29, 0x44(r1)
-/* 803FE4A8 003FB2A8  83 81 00 40 */	lwz r28, 0x40(r1)
-/* 803FE4AC 003FB2AC  7C 08 03 A6 */	mtlr r0
-/* 803FE4B0 003FB2B0  38 21 00 50 */	addi r1, r1, 0x50
-/* 803FE4B4 003FB2B4  4E 80 00 20 */	blr
+    if (__fabs(src->x) <= lbl_805DC8B8[0] && __fabs(src->y) <= lbl_805DC8B8[0] &&
+        __fabs(src->z) <= lbl_805DC8B8[0]) {
+        return ~0;
+    }
+    PSVECNormalize(src, dst);
+    return 0;
+}
+
+void HSD_LObjSetupSpecularInit(Mtx pmtx)
+{
+    s32 i;
+    s32 num;
+    Vec cdir;
+    Vec jpos;
+
+    jpos.x = pmtx[0][3];
+    jpos.y = pmtx[1][3];
+    jpos.z = pmtx[2][3];
+
+    if (TryNormalize2(&jpos, &cdir)) {
+        cdir.x = lbl_805E5A28;
+        cdir.y = lbl_805E5A28;
+        cdir.z = lbl_805E5A38;
+    }
+
+    num = HSD_LObjGetNbActive();
+    for (i = 0; i < num; i++) {
+        Vec half, ldir;
+        HSD_LObj* lobj = HSD_LObjGetActiveByIndex(i);
+
+        if (lobj->spec_id == GX_LIGHT_NULL) {
+            continue;
+        }
+
+        switch (HSD_LObjGetType(lobj)) {
+        case LOBJ_POINT:
+        case LOBJ_SPOT:
+            PSVECSubtract(&jpos, &lobj->lvec, &ldir);
+            if (!TryNormalize2(&ldir, &ldir)) {
+                PSVECAdd(&ldir, &cdir, &half);
+                break;
+            }
+            half.x = lbl_805E5A28;
+            half.y = lbl_805E5A28;
+            half.z = lbl_805E5A2C;
+            goto init_light_dir;
+
+        case LOBJ_INFINITE:
+            PSVECAdd(&lobj->lvec, &cdir, &half);
+            break;
+
+        default:
+            assert_line(634, 0);
+        }
+
+        if (TryNormalize2(&half, &half)) {
+            half.x = lbl_805E5A28;
+            half.y = lbl_805E5A28;
+            half.z = lbl_805E5A2C;
+        }
+
+    init_light_dir:
+        GXInitLightDir(&lobj->spec_lightobj, half.x, half.y, half.z);
+        lobj->flags |= LOBJ_SPEC_DIRTY;
+    }
+}
+
+static inline void LObjSetActive(HSD_LObj* lobj)
+{
+    s32 idx;
+
+    if (HSD_LObjGetType(lobj) == LOBJ_AMBIENT) {
+        idx = MAX_GXLIGHT - 1;
+        if (lbl_805899B0[idx]) {
+            return;
+        }
+    } else {
+        idx = lbl_805DE210++;
+    }
+    lbl_805899B0[idx] = lobj;
+    lobj->id = HSD_Index2LightID(idx);
+}
+
+static inline void setup_infinite_lightobj(HSD_LObj* lobj, MtxPtr vmtx)
+{
+    Vec lpos;
+
+    HSD_LObjGetPosition(lobj, &lpos);
+    lpos.x *= lbl_805E5A40;
+    lpos.y *= lbl_805E5A40;
+    lpos.z *= lbl_805E5A40;
+    PSMTXMultVec(vmtx, &lpos, &lpos);
+    if (lobj->flags & LOBJ_DIFFUSE) {
+        GXInitLightPos(&lobj->lightobj, lpos.x, lpos.y, lpos.z);
+        GXInitLightAttn(&lobj->lightobj, lbl_805E5A2C, lbl_805E5A28,
+                        lbl_805E5A28, lbl_805E5A2C, lbl_805E5A28,
+                        lbl_805E5A28);
+    }
+    if (lobj->flags & LOBJ_SPECULAR) {
+        GXInitLightPos(&lobj->spec_lightobj, lpos.x, lpos.y, lpos.z);
+    }
+}
+
+static inline void setup_point_lightobj(HSD_LObj* lobj, Mtx mtx)
+{
+    Vec lpos;
+
+    GXInitLightColor(&lobj->lightobj, lobj->color);
+    lobj->hw_color = lobj->color;
+    HSD_LObjGetPosition(lobj, &lpos);
+    PSMTXMultVec(mtx, &lpos, &lpos);
+    GXInitLightPos(&lobj->lightobj, lpos.x, lpos.y, lpos.z);
+    GXInitLightPos(&lobj->spec_lightobj, lpos.x, lpos.y, lpos.z);
+    if (lobj->flags & LOBJ_RAW_PARAM) {
+        GXInitLightAttn(&lobj->lightobj, lbl_805E5A2C, lbl_805E5A28,
+                        lbl_805E5A28, lobj->u.attn.k0, lobj->u.attn.k1,
+                        lobj->u.attn.k2);
+    } else {
+        f32 ref_br = lobj->u.point.ref_br;
+        f32 cutoff = lobj->u.point.cutoff;
+        s32 dist_func = lobj->u.point.dist_func;
+
+        if (ref_br < lbl_805DC8C0) {
+            ref_br = lbl_805DC8C0;
+        }
+        if (cutoff < lbl_805DC8C0) {
+            cutoff = lbl_805DC8C0;
+        }
+        GXInitLightDistAttn(&lobj->lightobj, cutoff, ref_br, dist_func);
+        GXInitLightSpot(&lobj->lightobj, lbl_805E5A28, 0);
+        GXInitLightDistAttn(&lobj->spec_lightobj, cutoff, ref_br, dist_func);
+    }
+}
+
+static inline void setup_spot_lightobj(HSD_LObj* lobj, Mtx mtx)
+{
+    Vec lpos;
+    Vec ldir;
+
+    HSD_LObjGetPosition(lobj, &lpos);
+    PSMTXMultVec(mtx, &lpos, &lpos);
+    HSD_LObjGetLightVector(lobj, &ldir);
+    fn_803D1E40(mtx, &ldir, &ldir);
+    PSVECNormalize(&ldir, &ldir);
+    GXInitLightPos(&lobj->lightobj, lpos.x, lpos.y, lpos.z);
+    GXInitLightPos(&lobj->spec_lightobj, lpos.x, lpos.y, lpos.z);
+    GXInitLightDir(&lobj->lightobj, ldir.x, ldir.y, ldir.z);
+    if (lobj->flags & LOBJ_RAW_PARAM) {
+        GXInitLightAttn(&lobj->lightobj, lobj->u.attn.a0, lobj->u.attn.a1,
+                        lobj->u.attn.a2, lobj->u.attn.k0, lobj->u.attn.k1,
+                        lobj->u.attn.k2);
+    } else {
+        f32 ref_br = lobj->u.spot.ref_br;
+        f32 ref_dist = lobj->u.spot.ref_dist;
+        f32 cutoff = lobj->u.spot.cutoff;
+        s32 spot_func = lobj->u.spot.spot_func;
+        s32 dist_func = lobj->u.spot.dist_func;
+
+        if (ref_br < lbl_805DC8C0) {
+            ref_br = lbl_805DC8C0;
+        }
+        if (ref_dist < lbl_805DC8C0) {
+            ref_dist = lbl_805DC8C0;
+        }
+        GXInitLightDistAttn(&lobj->lightobj, ref_dist, ref_br, dist_func);
+        GXInitLightSpot(&lobj->lightobj, cutoff, 0);
+        GXInitLightDistAttn(&lobj->spec_lightobj, ref_dist, ref_br, dist_func);
+    }
+}
+
+static inline void setup_diffuse_lightobj(HSD_LObj* lobj)
+{
+    GXInitLightColor(&lobj->lightobj, lobj->color);
+    lobj->hw_color = lobj->color;
+    lobj->flags |= LOBJ_DIFF_DIRTY;
+    lbl_805DE214 |= lobj->id;
+
+    switch (HSD_LObjGetType(lobj)) {
+    case LOBJ_SPOT:
+    case LOBJ_POINT:
+        lbl_805DE21C |= lobj->id;
+        break;
+    case LOBJ_INFINITE:
+        break;
+    default:
+        assert_line(664, 0);
+    }
+
+    if (lobj->flags & LOBJ_ALPHA) {
+        lbl_805DE220 |= lobj->id;
+    }
+}
+
+static inline void setup_spec_lightobj(HSD_LObj* lobj, Mtx mtx, GXLightID spec_id)
+{
+    f32 x;
+
+    lobj->spec_id = spec_id;
+    if (spec_id != GX_LIGHT_NULL) {
+        GXInitLightColor(&lobj->spec_lightobj, lobj->color);
+        lobj->shininess = lbl_805E5A3C;
+
+        x = lobj->shininess;
+        x *= lbl_805E5A34;
+        GXInitLightAttn(&lobj->spec_lightobj, lbl_805E5A28, lbl_805E5A28,
+                        lbl_805E5A2C, x, lbl_805E5A28, lbl_805E5A2C - x);
+        switch (HSD_LObjGetType(lobj)) {
+        case LOBJ_POINT:
+        case LOBJ_SPOT:
+            HSD_LObjGetPosition(lobj, &lobj->lvec);
+            PSMTXMultVec(mtx, &lobj->lvec, &lobj->lvec);
+            break;
+        case LOBJ_INFINITE:
+            HSD_LObjGetLightVector(lobj, &lobj->lvec);
+            fn_803D1E40(mtx, &lobj->lvec, &lobj->lvec);
+            PSVECNormalize(&lobj->lvec, &lobj->lvec);
+            break;
+        default:
+            assert_line(704, 0);
+        }
+        lobj->flags |= LOBJ_SPEC_DIRTY;
+        lbl_805DE218 |= spec_id;
+    }
+}
+
+void HSD_LObjSetupInit(HSD_CObj* cobj)
+{
+    MtxPtr vmtx;
+    s32 idx, num, i;
+    HSD_SList* list;
+
+    lbl_805DE214 = GX_LIGHT_NULL;
+    list = lbl_805DE20C;
+    vmtx = cobj->view_mtx;
+
+    lbl_805899B0[0] = NULL;
+    lbl_805899B0[1] = NULL;
+    lbl_805899B0[2] = NULL;
+    lbl_805899B0[3] = NULL;
+    lbl_805899B0[4] = NULL;
+    lbl_805899B0[5] = NULL;
+    lbl_805899B0[6] = NULL;
+    lbl_805899B0[7] = NULL;
+    lbl_805899B0[8] = NULL;
+    lbl_805DE218 = GX_LIGHT_NULL;
+    lbl_805DE21C = GX_LIGHT_NULL;
+    lbl_805DE220 = GX_LIGHT_NULL;
+    lbl_805DE210 = 0;
+    idx = 0;
+
+    for (; idx < MAX_GXLIGHT - 1 && list; list = list->next) {
+        HSD_LObj* lobj = list->data;
+        u32 flags;
+        u32 type;
+        s32 ref_type;
+
+        if (lobj == NULL) {
+            continue;
+        }
+
+        flags = lobj->flags;
+
+        if (flags & LOBJ_HIDDEN) {
+            continue;
+        }
+
+        type = HSD_LObjGetType(lobj);
+        ref_type = flags & (LOBJ_DIFFUSE | LOBJ_SPECULAR | LOBJ_ALPHA);
+
+        if (ref_type == 0) {
+            continue;
+        }
+
+        LObjSetActive(lobj);
+        idx = HSD_LObjGetNbActive();
+
+        lobj->spec_id = GX_LIGHT_NULL;
+
+        switch (type) {
+        case LOBJ_INFINITE:
+            setup_infinite_lightobj(lobj, vmtx);
+            break;
+        case LOBJ_POINT:
+            setup_point_lightobj(lobj, vmtx);
+            break;
+        case LOBJ_SPOT:
+            setup_spot_lightobj(lobj, vmtx);
+            break;
+        case LOBJ_AMBIENT:
+            continue;
+        }
+
+        if (ref_type & (LOBJ_DIFFUSE | LOBJ_ALPHA)) {
+            setup_diffuse_lightobj(lobj);
+        } else if (ref_type & LOBJ_SPECULAR) {
+            setup_spec_lightobj(lobj, vmtx, lobj->id);
+        }
+    }
+
+    if (!HSD_LObjGetActiveByID(GX_MAX_LIGHT)) {
+        for (; list; list = list->next) {
+            HSD_LObj* lobj = list->data;
+            u32 flags;
+
+            if (lobj == NULL) {
+                continue;
+            }
+            flags = lobj->flags;
+            if (flags & LOBJ_HIDDEN) {
+                continue;
+            }
+            if (HSD_LObjGetType(lobj) != LOBJ_AMBIENT) {
+                continue;
+            }
+            if (!(flags & (LOBJ_DIFFUSE | LOBJ_ALPHA))) {
+                continue;
+            }
+            LObjSetActive(lobj);
+            break;
+        }
+    }
+
+    num = HSD_LObjGetNbActive();
+    for (i = 0; idx < MAX_GXLIGHT - 1 && i < num; i++) {
+        HSD_LObj* lobj = HSD_LObjGetActiveByIndex(i);
+
+        if (lobj == NULL) {
+            continue;
+        }
+        if (!(lobj->flags & LOBJ_SPECULAR)) {
+            continue;
+        }
+        if (!(lobj->flags & (LOBJ_DIFFUSE | LOBJ_ALPHA))) {
+            continue;
+        }
+        setup_spec_lightobj(lobj, vmtx, HSD_Index2LightID(idx++));
+    }
+
+    for (i = 0; i < MAX_GXLIGHT - 1; i++) {
+        HSD_LObj* lobj;
+
+        if (!(lobj = HSD_LObjGetActiveByIndex(i))) {
+            return;
+        }
+        HSD_LObjSetup(lobj, &lobj->color, lobj->shininess);
+    }
+}
+
+void HSD_LObjAddCurrent(HSD_LObj* lobj)
+{
+    HSD_SList* node;
+    HSD_SList** p;
+
+    if (lobj != NULL) {
+        node = lbl_805DE20C;
+        while (node != NULL) {
+            if (node->data == lobj) {
+                HSD_LObjDeleteCurrent(lobj);
+                break;
+            }
+            node = node->next;
+        }
+        ref_INC(lobj);
+        for (p = &lbl_805DE20C; *p != NULL; p = &(*p)->next) {
+            if (HSD_LObjGetPriority((*p)->data) > HSD_LObjGetPriority(lobj)) {
+                break;
+            }
+        }
+        *p = HSD_SListPrepend(*p, lobj);
+    }
+}
+
+static inline bool ref_DEC(void* o)
+{
+    bool ret;
+    if ((ret = (HSD_OBJ(o)->ref_count == HSD_OBJ_NOREF))) {
+        return ret;
+    }
+    return HSD_OBJ(o)->ref_count-- == 0;
+}
+
+static inline void HSD_WObjUnref(HSD_WObj* wobj)
+{
+    if (wobj == NULL) {
+        return;
+    }
+    if (ref_DEC(wobj)) {
+        if (wobj != NULL) {
+            HSD_OBJECT_METHOD(wobj)->release((HSD_Class*) wobj);
+            HSD_OBJECT_METHOD(wobj)->destroy((HSD_Class*) wobj);
+        }
+    }
+}
+
+static inline void HSD_LObjUnrefThis(HSD_LObj* lobj)
+{
+    if (lobj != NULL && ref_DEC(lobj)) {
+        if (lobj != NULL) {
+            HSD_OBJECT_METHOD(lobj)->release((HSD_Class*) lobj);
+            HSD_OBJECT_METHOD(lobj)->destroy((HSD_Class*) lobj);
+        }
+    }
+}
+
+void HSD_LObjDeleteCurrent(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        HSD_SList** p;
+        for (p = &lbl_805DE20C; *p != NULL; p = &(*p)->next) {
+            if ((*p)->data == lobj) {
+                s32 i;
+                for (i = 0; i < MAX_GXLIGHT; i++) {
+                    if (lobj == lbl_805899B0[i]) {
+                        lbl_805899B0[i] = NULL;
+                    }
+                }
+                *p = HSD_SListRemove(*p);
+                HSD_LObjUnrefThis(lobj);
+                return;
+            }
+        }
+    }
+}
+
+static inline void LObjRemoveAll(void)
+{
+    lbl_805899B0[0] = NULL;
+    lbl_805899B0[1] = NULL;
+    lbl_805899B0[2] = NULL;
+    lbl_805899B0[3] = NULL;
+    lbl_805899B0[4] = NULL;
+    lbl_805899B0[5] = NULL;
+    lbl_805899B0[6] = NULL;
+    lbl_805899B0[7] = NULL;
+    lbl_805899B0[8] = NULL;
+    lbl_805DE210 = 0;
+    while (lbl_805DE20C != NULL) {
+        HSD_LObjUnrefThis(lbl_805DE20C->data);
+        lbl_805DE20C = HSD_SListRemove(lbl_805DE20C);
+    }
+}
+
+void HSD_LObjDeleteCurrentAll(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        while (lobj != NULL) {
+            HSD_LObjDeleteCurrent(lobj);
+            lobj = lobj->next;
+        }
+        return;
+    }
+    LObjRemoveAll();
+}
+
+void HSD_LObjSetCurrentAll(HSD_LObj* lobj)
+{
+    HSD_LObj* cur;
+
+    LObjRemoveAll();
+    for (cur = lobj; cur != NULL; cur = cur->next) {
+        HSD_LObjAddCurrent(cur);
+    }
+}
+
+HSD_LObj* HSD_LObjGetCurrentByType(u16 flags)
+{
+    u32 type = flags & LOBJ_TYPE_MASK;
+    HSD_SList* cur = lbl_805DE20C;
+    while (cur != NULL) {
+        HSD_LObj* lobj = cur->data;
+        if (type == (lobj->flags & LOBJ_TYPE_MASK)) {
+            return lobj;
+        }
+        cur = cur->next;
+    }
+    return NULL;
+}
+
+s32 HSD_LightID2Index(GXLightID id)
+{
+    s32 idx;
+
+    switch (id) {
+    case GX_LIGHT0:
+        idx = 0;
+        break;
+    case GX_LIGHT1:
+        idx = 1;
+        break;
+    case GX_LIGHT2:
+        idx = 2;
+        break;
+    case GX_LIGHT3:
+        idx = 3;
+        break;
+    case GX_LIGHT4:
+        idx = 4;
+        break;
+    case GX_LIGHT5:
+        idx = 5;
+        break;
+    case GX_LIGHT6:
+        idx = 6;
+        break;
+    case GX_LIGHT7:
+        idx = 7;
+        break;
+    case GX_MAX_LIGHT:
+        idx = 8;
+        break;
+    default:
+        assert_line(1192, 0);
+    }
+    return idx;
+}
+
+s32 HSD_Index2LightID(s32 index)
+{
+    switch (index) {
+    case 0:
+        return GX_LIGHT0;
+    case 1:
+        return GX_LIGHT1;
+    case 2:
+        return GX_LIGHT2;
+    case 3:
+        return GX_LIGHT3;
+    case 4:
+        return GX_LIGHT4;
+    case 5:
+        return GX_LIGHT5;
+    case 6:
+        return GX_LIGHT6;
+    case 7:
+        return GX_LIGHT7;
+    case 8:
+        return GX_MAX_LIGHT;
+    default:
+        return GX_LIGHT_NULL;
+    }
+}
+
+void HSD_LObjRemoveAll(HSD_LObj* lobj)
+{
+    HSD_LObj* next;
+    HSD_LObj* cur;
+
+    cur = lobj;
+    while (cur != NULL) {
+        next = cur->next;
+        HSD_LObjDeleteCurrent(cur);
+        HSD_LObjUnrefThis(cur);
+        cur = next;
+    }
+}
+
+void HSD_LObjSetColor(HSD_LObj* lobj, GXColor color)
+{
+    lobj->color = color;
+}
+
+void HSD_LObjGetColor(HSD_LObj* lobj, GXColor* color)
+{
+    *color = lobj->color;
+}
+
+void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* position)
+{
+    assert_line(1391, lobj);
+    if (lobj->position == NULL) {
+        lobj->position = HSD_WObjAlloc();
+        assert_line(1394, lobj->position);
+    }
+    HSD_WObjSetPosition(lobj->position, position);
+}
+
+BOOL HSD_LObjGetPosition(HSD_LObj* lobj, Vec* pos)
+{
+    if (lobj != NULL && lobj->position != NULL) {
+        HSD_WObjGetPosition(lobj->position, pos);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void HSD_LObjSetInterest(HSD_LObj* lobj, Vec* interest)
+{
+    assert_line(1427, lobj);
+    if (lobj->interest == NULL) {
+        lobj->interest = HSD_WObjAlloc();
+        assert_line(1430, lobj->interest);
+    }
+    HSD_WObjSetPosition(lobj->interest, interest);
+}
+
+BOOL HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest)
+{
+    if (lobj != NULL && lobj->interest != NULL) {
+        HSD_WObjGetPosition(lobj->interest, interest);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+HSD_WObj* HSD_LObjGetPositionWObj(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        return lobj->position;
+    }
+    return NULL;
+}
+
+HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        return lobj->interest;
+    }
+    return NULL;
+}
+
+static inline void HSD_LObjSetPositionWObj(HSD_LObj* lobj, HSD_WObj* wobj)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    HSD_WObjUnref(lobj->position);
+    lobj->position = wobj;
+}
+
+static inline void HSD_LObjSetInterestWObj(HSD_LObj* lobj, HSD_WObj* wobj)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    HSD_WObjUnref(lobj->interest);
+    lobj->interest = wobj;
+}
+
+static inline void HSD_LObjSetSpot(HSD_LObj* lobj, f32 cutoff, s32 point_func)
+{
+    if (lobj != NULL) {
+        lobj->u.point.cutoff = cutoff;
+        lobj->u.point.point_func = point_func;
+    }
+}
+
+static inline void HSD_LObjSetDistAttn(HSD_LObj* lobj, f32 ref_dist, f32 ref_br,
+                                       s32 dist_func)
+{
+    if (lobj != NULL) {
+        lobj->u.point.ref_dist = ref_dist;
+        lobj->u.point.ref_br = ref_br;
+        lobj->u.point.dist_func = dist_func;
+    }
+}
+
+static inline void HSD_LObjSetAttnA(HSD_LObj* lobj, f32 a0, f32 a1, f32 a2)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    lobj->u.attn.a0 = a0;
+    lobj->u.attn.a1 = a1;
+    lobj->u.attn.a2 = a2;
+}
+
+static inline void HSD_LObjSetAttnK(HSD_LObj* lobj, f32 k0, f32 k1, f32 k2)
+{
+    if (lobj == NULL) {
+        return;
+    }
+    lobj->u.attn.k0 = k0;
+    lobj->u.attn.k1 = k1;
+    lobj->u.attn.k2 = k2;
+}
+
+static inline void HSD_LObjSetAttn(HSD_LObj* lobj, f32 a0, f32 a1, f32 a2,
+                                   f32 k0, f32 k1, f32 k2)
+{
+    HSD_LObjSetAttnA(lobj, a0, a1, a2);
+    HSD_LObjSetAttnK(lobj, k0, k1, k2);
+}
+
+#pragma push
+#pragma force_active on
+static char unused[] = "hsdIsDescendantOf(info, &hsdLObj)";
+#pragma pop
+
+int LObjLoad(HSD_LObj* lobj, HSD_LightDesc* ldesc)
+{
+    HSD_LObjSetColor(lobj, ldesc->color);
+    HSD_LObjSetFlags(lobj, ldesc->flags);
+    switch (ldesc->flags & LOBJ_TYPE_MASK) {
+    case LOBJ_AMBIENT:
+        break;
+    case LOBJ_INFINITE:
+        HSD_LObjSetPositionWObj(lobj, HSD_WObjLoadDesc(ldesc->position));
+        break;
+    case LOBJ_POINT:
+        HSD_LObjSetPositionWObj(lobj, HSD_WObjLoadDesc(ldesc->position));
+        if (ldesc->attnflags & LOBJ_LIGHT_ATTN) {
+            HSD_LObjSetFlags(lobj, LOBJ_RAW_PARAM);
+            HSD_LObjSetAttnK(lobj, ldesc->u.attn->k0, ldesc->u.attn->k1,
+                             ldesc->u.attn->k2);
+        } else {
+            HSD_LObjSetDistAttn(lobj, ldesc->u.point->ref_dist,
+                                ldesc->u.point->ref_br,
+                                ldesc->u.point->dist_func);
+        }
+        break;
+    case LOBJ_SPOT:
+        HSD_LObjSetPositionWObj(lobj, HSD_WObjLoadDesc(ldesc->position));
+        HSD_LObjSetInterestWObj(lobj, HSD_WObjLoadDesc(ldesc->interest));
+        if (ldesc->attnflags & LOBJ_LIGHT_ATTN) {
+            HSD_LObjSetFlags(lobj, LOBJ_RAW_PARAM);
+            HSD_LObjSetAttn(lobj, ldesc->u.attn->a0, ldesc->u.attn->a1,
+                            ldesc->u.attn->a2, ldesc->u.attn->k0,
+                            ldesc->u.attn->k1, ldesc->u.attn->k2);
+        } else {
+            HSD_LObjSetDistAttn(lobj, ldesc->u.spot->ref_dist,
+                                ldesc->u.spot->ref_br,
+                                ldesc->u.spot->dist_func);
+            HSD_LObjSetSpot(lobj, ldesc->u.spot->cutoff,
+                            ldesc->u.spot->spot_func);
+        }
+        break;
+    default:
+        OSReport("unexpected lightdesc flags (%x)\n", ldesc->flags);
+        HSD_Panic(__FILE__, 0x660, "");
+        break;
+    }
+    return 0;
+}
+
+HSD_ClassInfo* hsdSearchClassInfo(char*);
+
+HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* ldesc)
+{
+    HSD_LObj *top, **p = &top;
+
+    for (; ldesc; ldesc = ldesc->next) {
+        HSD_ClassInfo* info;
+
+        if (!ldesc->class_name ||
+            !(info = hsdSearchClassInfo(ldesc->class_name))) {
+            HSD_LObj* new =
+                hsdNew(lbl_805DE208 ? HSD_CLASS_INFO(lbl_805DE208)
+                                     : HSD_CLASS_INFO(&hsdLObj));
+            assert_line(1500, new);
+            *p = new;
+        } else {
+            *p = hsdNew(info);
+            assert_line(1666, *p);
+        }
+        HSD_LOBJ_INFO(HSD_CLASS_METHOD(*p))->load(*p, ldesc);
+        p = &(*p)->next;
+    }
+    *p = NULL;
+
+    return top;
+}
+
+void HSD_LObjAddAnim(HSD_LObj* lobj, HSD_LightAnim* lanim)
+{
+    if (lobj == NULL) {
+        return;
+    }
+
+    if (lanim != NULL) {
+        if (lobj->aobj) {
+            HSD_AObjRemove(lobj->aobj);
+        }
+        lobj->aobj = HSD_AObjLoadDesc(lanim->aobjdesc);
+        HSD_WObjAddAnim(HSD_LObjGetPositionWObj(lobj), lanim->position_anim);
+        HSD_WObjAddAnim(HSD_LObjGetInterestWObj(lobj), lanim->interest_anim);
+    }
+}
+
+void HSD_LObjAddAnimAll(HSD_LObj* lobj, HSD_LightAnim* lanim)
+{
+    HSD_LObj* lp;
+    HSD_LightAnim* la;
+
+    if (lobj == NULL) {
+        return;
+    }
+
+    for (lp = lobj, la = lanim; lp; lp = next_p(lp), la = next_p(la)) {
+        HSD_LObjAddAnim(lp, la);
+    }
+}
+
+void LObjRelease(HSD_Class* o)
+{
+    HSD_LObj* lobj = HSD_LOBJ(o);
+
+    HSD_AObjRemove(lobj->aobj);
+    HSD_WObjUnref(HSD_LObjGetPositionWObj(lobj));
+    HSD_WObjUnref(HSD_LObjGetInterestWObj(lobj));
+
+    HSD_OBJECT_PARENT_INFO(&hsdLObj)->release(o);
+}
+
+void LObjAmnesia(HSD_ClassInfo* info)
+{
+    if (info == HSD_CLASS_INFO(lbl_805DE208)) {
+        lbl_805DE208 = NULL;
+    }
+    if (info == HSD_CLASS_INFO(&hsdLObj)) {
+        lbl_805DE20C = NULL;
+    }
+    HSD_OBJECT_PARENT_INFO(&hsdLObj)->amnesia(info);
+}
+
+void LObjInfoInit(void)
+{
+    hsdInitClassInfo(HSD_CLASS_INFO(&hsdLObj), &hsdObj,
+                     "sysdolphin_base_library", "hsd_lobj",
+                     sizeof(HSD_LObjInfo), sizeof(HSD_LObj));
+    HSD_CLASS_INFO(&hsdLObj)->release = LObjRelease;
+    HSD_CLASS_INFO(&hsdLObj)->amnesia = LObjAmnesia;
+    HSD_LOBJ_INFO(&hsdLObj)->load = LObjLoad;
+    HSD_LOBJ_INFO(&hsdLObj)->update = (void (*)()) fn_803FDBB0;
 }
