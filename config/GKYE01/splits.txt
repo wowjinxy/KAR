@@ -1251,6 +1251,9 @@ video.c:
 controller.c:
 	.text       start:0x80411CAC end:0x80414374
 
+rumble.c:
+	.text       start:0x80414374 end:0x80414E84
+
 objalloc.c:
 	.text       start:0x80417E94 end:0x8041CD84
 	.rodata     start:0x8048C548 end:0x8048C570
