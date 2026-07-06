@@ -1282,6 +1282,9 @@ id.c:
 wobj.c:
 	.text       start:0x8041A7F8 end:0x8041B0D0
 
+fog.c:
+	.text       start:0x8041B0D0 end:0x8041B9C4
+
 memory.c:
 	.text       start:0x8041CD84 end:0x8041D15C
 	.data       start:0x80504500 end:0x80504528

@@ -709,6 +709,7 @@ kar_objects = [
     Object(NonMatching, "robj.c"),
     Object(NonMatching, "id.c"),
     Object(NonMatching, "wobj.c"),
+    Object(NonMatching, "fog.c"),
     Object(NonMatching, "memory.c"),
     Object(NonMatching, "shadow.c"),
     Object(Matching, "archive.c"),
