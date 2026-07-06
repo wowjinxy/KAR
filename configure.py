@@ -391,6 +391,7 @@ KAR_SOURCE_PREFIXES = [
 DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "aobj.c",
     "archive.c",
+    "bytecode.c",
     "class.c",
     "cobj.c",
     "displayfunc.c",
