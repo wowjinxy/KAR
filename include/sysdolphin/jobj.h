@@ -8,9 +8,6 @@
 #include <sysdolphin/list.h>
 
 #include <sysdolphin/aobj.h>
-/*#include <sysdolphin/dobj.h>
-#include <sysdolphin/mobj.h>
-#include <sysdolphin/robj.h>*/
 
 #define HSD_A_J_ROTX 1
 #define HSD_A_J_ROTY 2
@@ -77,8 +74,15 @@
 #define JOBJ_USE_QUATERNION(o) ((o->flags & USE_QUATERNION))
 #define union_type_dobj(o) ((o->flags & 0x4020) ? FALSE : TRUE)
 #define union_type_ptcl(o) ((o->flags & PTCL) != 0)
+#define union_type_spline(o) ((o->flags & SPLINE) != 0)
+
+#define JOBJ_ROOT_MASK (ROOT_OPA | ROOT_XLU | ROOT_TEXEDGE)
+#define JOBJ_JOINT (JOINT1 | JOINT2 | EFFECTOR)
 
 typedef u32 HSD_TrspMask;
+
+typedef void (*HSD_JObjWalkTreeCallback)(struct _HSD_JObj* jobj, f32** cb_args, s32 type);
+typedef void (*DPCtlCallback)(int, int lo, int hi, struct _HSD_JObj* jobj);
 
 typedef struct _HSD_JObj {
     HSD_Obj object;
@@ -126,9 +130,13 @@ typedef struct _HSD_JObjInfo {
     void (*make_pmtx)(HSD_JObj* jobj, Mtx mtx, Mtx rmtx);
     void (*disp)(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
     void (*release_child)(HSD_JObj* jobj);
+    void (*update)();
 } HSD_JObjInfo;
 
 extern HSD_JObjInfo hsdJObj;
+
+void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
+void HSD_JObjSetMtxDirtySub(HSD_JObj* jobj);
 
 HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint);
 u32 HSD_JObjGetFlags(HSD_JObj* jobj);
