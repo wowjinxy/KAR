@@ -704,6 +704,7 @@ kar_objects = [
     Object(NonMatching, "rumble.c"),
     Object(NonMatching, "spline.c"),
     Object(NonMatching, "mtx.c"),
+    Object(NonMatching, "util.c"),
     Object(NonMatching, "objalloc.c"),
     Object(NonMatching, "memory.c"),
     Object(NonMatching, "shadow.c"),

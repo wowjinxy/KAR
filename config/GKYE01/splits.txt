@@ -1260,6 +1260,9 @@ spline.c:
 mtx.c:
 	.text       start:0x804159A0 end:0x80417D4C
 
+util.c:
+	.text       start:0x80417D4C end:0x80417E94
+
 objalloc.c:
 	.text       start:0x80417E94 end:0x8041CD84
 	.rodata     start:0x8048C548 end:0x8048C570
