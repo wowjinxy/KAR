@@ -66,6 +66,12 @@ inline void ref_INC(void* o)
     }
 }
 
+inline void iref_INC(void* o)
+{
+    HSD_OBJ(o)->ref_count_individual++;
+    assert_line(158, HSD_OBJ(o)->ref_count_individual != 0);
+}
+
 typedef struct _HSD_ObjInfo {
     struct _HSD_ClassInfo parent;
 } HSD_ObjInfo;
