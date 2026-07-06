@@ -127,20 +127,20 @@
 #define tobj_bump(T) ((T)->flags & TEX_BUMP)
 #define TEX_MTX_DIRTY (1U << 31)
 
-//Texture Object
 typedef struct _HSD_TObj {
     HSD_Obj parent;
     struct _HSD_TObj* next;
-    u32 id; //GXTexMapID
+    s32 map_id; //GXTexMapID
     u32 src; //GXTexGenSrc
     GXTexMtx mtxid;
     Quaternion rotate;
     Vec scale;
     Vec translate;
     u32 wrap_s; //GXTexWrapMode
-    u32 wrap_t; //GXTexWrapMode
+    s32 wrap_t; //GXTexWrapMode
     u8 repeat_s;
     u8 repeat_t;
+    u16 id; //GXTexMapID
     u32 flags;
     f32 blending;
     u32 magFilt; //GXTexFilter
@@ -244,6 +244,7 @@ typedef struct _HSD_TObjInfo {
     void (*make_mtx)(HSD_TObj* tobj);
     int (*load)(HSD_TObj* tobj, HSD_TObjDesc* desc);
     void (*make_texp)(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done, HSD_TExp** c, HSD_TExp** a, HSD_TExp** list);
+    HSD_ObjUpdateFunc update;
 } HSD_TObjInfo;
 
 typedef struct _HSD_TexAnim {
@@ -256,19 +257,22 @@ typedef struct _HSD_TexAnim {
     u16 n_tluttbl;
 } HSD_TexAnim;
 
-extern HSD_TObjInfo hsdTObj;
+typedef struct _HSD_TObjInfoBlock {
+    HSD_TObjInfo info;
+    u32 texcoord_tbl[8]; //GXTexCoordID
+    u32 texmap_tbl[8];   //GXTexMapID
+} HSD_TObjInfoBlock;
+
+extern HSD_TObjInfoBlock hsdTObj;
 
 #define HSD_TOBJ(o) ((HSD_TObj*)(o))
 #define HSD_TOBJ_INFO(i) ((HSD_TObjInfo*)(i))
 #define HSD_TOBJ_METHOD(o) HSD_TOBJ_INFO(HSD_OBJECT_METHOD(o))
 
 void HSD_TObjRemoveAnimAll(HSD_TObj* tobj);
-void HSD_TObjAddAnim(HSD_TObj* tobj, HSD_TexAnim* texanim);
 void HSD_TObjAddAnimAll(HSD_TObj* tobj, HSD_TexAnim* texanim);
 void HSD_TObjReqAnimAllByFlags(HSD_TObj* tobj, f32 startframe, u32 flags);
-void HSD_TObjReqAnim(HSD_TObj* tobj, f32 startframe);
-void HSD_TObjReqAnimAll(HSD_TObj* tobj, f32 startframe);
-void HSD_TObjAnim(HSD_TObj* tobj);
+void HSD_TObjInterpretAnim(HSD_TObj* tobj);
 void HSD_TObjAnimAll(HSD_TObj* tobj);
 
 int TObjLoad(HSD_TObj* tobj, HSD_TObjDesc* td);
@@ -278,18 +282,6 @@ HSD_Tlut* HSD_TlutLoadDesc(HSD_TlutDesc* tlutdesc);
 HSD_TObjTev* HSD_TObjTevLoadDesc(HSD_TObjTevDesc* tevdesc);
 HSD_TObj* _HSD_TObjGetCurrentByType(HSD_TObj* from, u32 mapping);
 
-void HSD_TObjRemoveAll(HSD_TObj* tobj);
-HSD_TObj* HSD_TObjGetNext(HSD_TObj* tobj);
-HSD_TObj* HSD_TObjAlloc(void);
-void HSD_TObjFree(HSD_TObj* tobj);
-void HSD_TObjSetDefaultClass(HSD_TObjInfo* info);
-HSD_TObjInfo* HSD_TObjGetDefaultClass(void);
-HSD_Tlut* HSD_TlutAlloc(void);
-void HSD_TlutFree(HSD_Tlut* tlut);
-HSD_TObjTev* HSD_TObjTevAlloc(void);
-HSD_ImageDesc* HSD_ImageDescAlloc(void);
-void HSD_ImageDescFree(HSD_ImageDesc* idesc);
-void HSD_ImageDescCopyFromEFB(HSD_ImageDesc* idesc, u16 origx, u16 origy, u8 clear, s32 sync);
 void HSD_TObjSetupTextureCoordGen(HSD_TObj* tobj);
 void HSD_TObjSetupVolatileTev(HSD_TObj* tobj, u32 rendermode);
 s32 HSD_TObjAssignResources(HSD_TObj* tobj_top);
@@ -300,7 +292,18 @@ u32 HSD_TexCoord2Index(u32 coord_id);
 u32 HSD_Index2TexCoord(u32 index);
 u32 HSD_TexMtx2Index(u32 texmtx);
 u32 HSD_Index2TexMtx(u32 index);
-u8 HSD_Index2TexMap(u32 index);
-u32 HSD_TexMap2Index(u8 mapid);
+u32 HSD_Index2TexMap(u32 index);
+
+void HSD_TObjRemoveAll(HSD_TObj* tobj);
+HSD_TObj* HSD_TObjGetNext(HSD_TObj* tobj);
+void HSD_TObjInsertNext(HSD_TObj* tobj, HSD_TObj* next);
+HSD_TObj* HSD_TObjAlloc(void);
+void HSD_TObjRemove(HSD_TObj* tobj);
+HSD_Tlut* HSD_TlutAlloc(void);
+void HSD_TlutRemove(HSD_Tlut* tlut);
+HSD_TObjTev* HSD_TObjTevAlloc(void);
+HSD_ImageDesc* HSD_ImageDescAlloc(void);
+void HSD_ImageDescRemove(HSD_ImageDesc* idesc);
+void HSD_ImageDescCopyFromEFB(HSD_ImageDesc* idesc, u16 origx, u16 origy, u8 clear, s32 sync);
 
 #endif
