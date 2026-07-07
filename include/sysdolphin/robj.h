@@ -9,7 +9,10 @@
 #include <sysdolphin/jobj.h>
 
 #define TYPE_MASK 0x70000000
+#define REFTYPE_EXP 0x0
 #define REFTYPE_JOBJ 0x10000000
+#define REFTYPE_LIMIT 0x20000000
+#define REFTYPE_BYTECODE 0x30000000
 #define REFTYPE_IKHINT 0x40000000
 
 typedef struct _HSD_Rvalue {
@@ -36,7 +39,7 @@ typedef struct _HSD_IKHintDesc {
 
 typedef struct _HSD_Exp {
     union {
-        f32 (*func)(void);
+        f32 (*func)(void*);
         u8* bytecode;
     } expr;
     struct _HSD_Rvalue* rvalue;
@@ -45,7 +48,7 @@ typedef struct _HSD_Exp {
 } HSD_Exp;
 
 typedef struct _HSD_ExpDesc {
-    f32 (*func)(void);
+    f32 (*func)(void*);
     struct _HSD_RvalueList* rvalue;
 } HSD_ExpDesc;
 
@@ -86,9 +89,20 @@ typedef struct _HSD_RObjAnimJoint {
 
 
 void HSD_RObjInitAllocData(void);
-HSD_ObjAllocData* HSD_RObjGetAllocData(void);
-HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
 void HSD_RObjSetFlags(HSD_RObj* robj, u32 flags);
+void HSD_RObjAnimAll(HSD_RObj* robj);
+void HSD_RObjRemoveAnimAllByFlags(HSD_RObj* robj, u32 flags);
+void HSD_RObjReqAnimAllByFlags(HSD_RObj* robj, f32 startframe, u32 flags);
+void HSD_RObjReqAnimAll(HSD_RObj* robj, f32 startframe);
+void HSD_RObjAddAnimAll(HSD_RObj* robj, HSD_RObjAnimJoint* anim);
+void HSD_RObjRemoveAll(HSD_RObj* robj);
 HSD_RObj* HSD_RObjLoadDesc(HSD_RObjDesc*);
+void HSD_RObjResolveRefsAll(HSD_RObj* robj, HSD_RObjDesc* desc);
+void HSD_RObjSetConstraintObj(HSD_RObj* robj, void* o);
+
+inline void HSD_RObjRemoveAnimAll(HSD_RObj* robj)
+{
+    HSD_RObjRemoveAnimAllByFlags(robj, 0x7FF);
+}
 
 #endif
