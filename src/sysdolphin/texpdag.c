@@ -1397,6 +1397,8 @@ void HSD_TExpFreeTevDesc(HSD_TExpTevDesc* tdesc)
     }
 }
 
+#pragma push
+#pragma dont_inline on
 int assign_reg(int num, u32* unused, HSD_TExpDag* list, int* order)
 {
     u8 color_refs[4] = { 0 };
@@ -1455,6 +1457,7 @@ int assign_reg(int num, u32* unused, HSD_TExpDag* list, int* order)
     }
     return (4 - min_color_reg) + (4 - min_alpha_reg);
 }
+#pragma pop
 
 void order_dag(int num, u32* dep, u32* full_dep, HSD_TExpDag* list, int depth,
               int idx, u32 done_set, u32 ready_set, int* order, int* min,
@@ -1537,6 +1540,8 @@ void CalcDistance(HSD_TExp** tevs, int* dist, HSD_TExp* tev, int num,
 
 #define HSD_TEXP_MAX_NUM 32
 
+#pragma push
+#pragma dont_inline on
 int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
 {
     HSD_TExp* sp94[HSD_TEXP_MAX_NUM];
@@ -1676,6 +1681,7 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
     }
     return num;
 }
+#pragma pop
 
 static inline void make_dependancy_mtx(int num, HSD_TExpDag* list, u32* dep_mtx)
 {
@@ -1777,6 +1783,8 @@ void HSD_TExpSchedule(int num, HSD_TExpDag* list, HSD_TExp** result,
 
 static HSD_TEArg lbl_zero_arg = { 0x00, 0x07, 0xFF };
 
+#pragma push
+#pragma dont_inline on
 int SimplifySrc(HSD_TExp* arg0)
 {
     int i;
@@ -1918,6 +1926,7 @@ int SimplifySrc(HSD_TExp* arg0)
     }
     return result;
 }
+#pragma pop
 
 #define CLEAR_ARG(arg)                                                       \
     do {                                                                     \
@@ -2616,6 +2625,8 @@ int SimplifyByMerge(HSD_TExp* arg0)
     return result;
 }
 
+#pragma push
+#pragma dont_inline on
 void CalcTevRange(HSD_TExp* texp)
 {
     HSD_TETev* tev = &texp->tev;
@@ -2731,7 +2742,10 @@ alpha:
     }
     tev->a_range = (range > 0x100);
 }
+#pragma pop
 
+#pragma push
+#pragma dont_inline on
 int HSD_TExpSimplify(HSD_TExp* texp_)
 {
     HSD_TExp* texp = texp_;
@@ -2751,7 +2765,10 @@ int HSD_TExpSimplify(HSD_TExp* texp_)
     CalcTevRange(texp);
     return res;
 }
+#pragma pop
 
+#pragma push
+#pragma dont_inline on
 int HSD_TExpSimplify2(HSD_TExp* texp_)
 {
     HSD_TExp* texp = (HSD_TExp*) texp_;
@@ -2763,7 +2780,10 @@ int HSD_TExpSimplify2(HSD_TExp* texp_)
         src_exp = texp->tev.c_in[i].exp;
         src_sel = texp->tev.c_in[i].sel;
         if (texp->tev.c_in[i].type == HSD_TE_TEV && src_sel == 1 &&
-            IsThroughColor(src_exp))
+            src_exp->tev.c_op == GX_TEV_ADD &&
+            src_exp->tev.c_in[0].sel == HSD_TE_0 &&
+            src_exp->tev.c_in[1].sel == HSD_TE_0 &&
+            src_exp->tev.c_bias == 0 && src_exp->tev.c_scale == 0)
         {
             switch (src_exp->tev.c_in[3].type) {
             case HSD_TE_KONST:
@@ -2784,7 +2804,12 @@ int HSD_TExpSimplify2(HSD_TExp* texp_)
     for (i = 0; i < 4; i++) {
         src_exp = texp->tev.a_in[i].exp;
         src_sel = texp->tev.a_in[i].sel;
-        if (texp->tev.a_in[i].type == HSD_TE_TEV && IsThroughAlpha(src_exp)) {
+        if (texp->tev.a_in[i].type == HSD_TE_TEV &&
+            src_exp->tev.a_op == GX_TEV_ADD &&
+            src_exp->tev.a_in[0].sel == HSD_TE_0 &&
+            src_exp->tev.a_in[1].sel == HSD_TE_0 &&
+            src_exp->tev.a_bias == 0 && src_exp->tev.a_scale == 0)
+        {
             switch (src_exp->tev.a_in[3].type) {
             case HSD_TE_KONST:
                 if (texp->tev.kasel == 0xFF) {
@@ -2803,3 +2828,4 @@ int HSD_TExpSimplify2(HSD_TExp* texp_)
     }
     return 0;
 }
+#pragma pop
