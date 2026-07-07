@@ -14,13 +14,34 @@ extern char lbl_805DCCA4[5];                // "wobj"
 extern char lbl_805DCCA0[3];                // "jp"
 extern char lbl_8050420C[];                 // "wobj->aobj"
 extern char lbl_80504218[];                 // "jp->u.spline"
+extern char kar_srcfile_jobj_h_805dccac[7]; // "jobj.h"
+extern char lbl_805DCCB4[5];                // "jobj"
 #define assert_line_named(line, cond, condstr)                                 \
     ((cond) ? ((void) 0) : __assert(kar_srcfile_wobj_c_805dcc98, line, condstr))
+#define assert_line_jobjh(line, cond)                                          \
+    ((cond) ? ((void) 0) : __assert(kar_srcfile_jobj_h_805dccac, line, lbl_805DCCB4))
 
 extern double lbl_805E5CF0; // 0.0
 extern float lbl_805E5CF8;  // 0.0f
 extern double lbl_805E5D00; // 1.0
 extern float lbl_805E5D08;  // 1.0f
+
+static inline void wobj_JObjSetupMatrix(HSD_JObj* jobj)
+{
+    BOOL dirty;
+
+    if (jobj == NULL) {
+        return;
+    }
+    assert_line_jobjh(0x25d, jobj);
+    dirty = FALSE;
+    if (!(jobj->flags & 0x800000) && (jobj->flags & 0x40)) {
+        dirty = TRUE;
+    }
+    if (dirty) {
+        HSD_JObjSetupMatrixSub(jobj);
+    }
+}
 
 static inline void HSD_WObjRemoveAnim(HSD_WObj* wobj)
 {
@@ -166,7 +187,7 @@ void HSD_WObjSetPositionX(HSD_WObj* wobj, f32 val)
         if ((wobj->flags & 1) != 0) {
             if (wobj->aobj != NULL && wobj->aobj->hsd_obj != NULL) {
                 jp = (HSD_JObj*) wobj->aobj->hsd_obj;
-                HSD_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
+                wobj_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
                 PSMTXMultVec(jp->mtx, &wobj->pos, &wobj->pos);
             }
             wobj->flags &= 0xFFFFFFFE;
@@ -184,7 +205,7 @@ void HSD_WObjSetPositionY(HSD_WObj* wobj, f32 val)
         if ((wobj->flags & 1) != 0) {
             if (wobj->aobj != NULL && wobj->aobj->hsd_obj != NULL) {
                 jp = (HSD_JObj*) wobj->aobj->hsd_obj;
-                HSD_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
+                wobj_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
                 PSMTXMultVec(jp->mtx, &wobj->pos, &wobj->pos);
             }
             wobj->flags &= 0xFFFFFFFE;
@@ -202,7 +223,7 @@ void HSD_WObjSetPositionZ(HSD_WObj* wobj, f32 val)
         if ((wobj->flags & 1) != 0) {
             if (wobj->aobj != NULL && wobj->aobj->hsd_obj != NULL) {
                 jp = (HSD_JObj*) wobj->aobj->hsd_obj;
-                HSD_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
+                wobj_JObjSetupMatrix((HSD_JObj*) wobj->aobj->hsd_obj);
                 PSMTXMultVec(jp->mtx, &wobj->pos, &wobj->pos);
             }
             wobj->flags &= 0xFFFFFFFE;
@@ -222,7 +243,7 @@ void HSD_WObjGetPosition(HSD_WObj* wobj, Vec* vec)
     if ((wobj->flags & 1) != 0) {
         if (wobj->aobj != NULL && wobj->aobj->hsd_obj != NULL) {
             jp = (HSD_JObj*)wobj->aobj->hsd_obj;
-            HSD_JObjSetupMatrix((HSD_JObj*)wobj->aobj->hsd_obj);
+            wobj_JObjSetupMatrix((HSD_JObj*)wobj->aobj->hsd_obj);
             PSMTXMultVec(jp->mtx, &wobj->pos, &wobj->pos);
         }
         wobj->flags &= 0xFFFFFFFE;
