@@ -79,7 +79,7 @@ static inline f32 mtx_sqrtf(f32 x)
 
 static inline f32 mtx_calcVal(f32 x, f32 y)
 {
-    if (x == lbl_805E5C3C) {
+    if (lbl_805E5C3C == x) {
         return y >= lbl_805E5C3C ? lbl_805E5C50 : lbl_805E5C58;
     }
     return (f32) fn_803BD3C8(y, x);
@@ -95,9 +95,13 @@ static inline f32 mtx_safe_recip(f32 x)
 
 static inline f32 HSD_CalcDeterminantMatrix3x4(Mtx m)
 {
-    return m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +
-           m[0][2] * m[1][0] * m[2][1] - m[2][0] * m[1][1] * m[0][2] -
-           m[1][0] * m[0][1] * m[2][2] - m[0][0] * m[2][1] * m[1][2];
+    f32 det = m[2][0] * (m[0][1] * m[1][2]);
+    det = __fmadds(m[2][2], m[0][0] * m[1][1], det);
+    det = __fmadds(m[2][1], m[0][2] * m[1][0], det);
+    det = __fnmsubs(m[0][2], m[2][0] * m[1][1], det);
+    det = __fnmsubs(m[2][2], m[1][0] * m[0][1], det);
+    det = __fnmsubs(m[1][2], m[0][0] * m[2][1], det);
+    return det;
 }
 
 void HSD_MtxInverse(Mtx src, Mtx dest)
@@ -120,22 +124,42 @@ void HSD_MtxInverse(Mtx src, Mtx dest)
 
     det = lbl_805E5C38 / det;
 
-    dest[0][0] = (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * det;
-    dest[0][1] = -(m[0][1] * m[2][2] - m[2][1] * m[0][2]) * det;
-    dest[0][2] = (m[0][1] * m[1][2] - m[1][1] * m[0][2]) * det;
-    dest[1][0] = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]) * det;
-    dest[1][1] = (m[0][0] * m[2][2] - m[2][0] * m[0][2]) * det;
-    dest[1][2] = -(m[0][0] * m[1][2] - m[1][0] * m[0][2]) * det;
-    dest[2][0] = (m[1][0] * m[2][1] - m[2][0] * m[1][1]) * det;
-    dest[2][1] = -(m[0][0] * m[2][1] - m[2][0] * m[0][1]) * det;
-    dest[2][2] = (m[0][0] * m[1][1] - m[1][0] * m[0][1]) * det;
+    {
+        f32 t;
+        t = m[2][1] * m[1][2];
+        dest[0][0] = __fmsubs(m[1][1], m[2][2], t) * det;
+        t = m[2][1] * m[0][2];
+        dest[0][1] = __fnmsubs(m[0][1], m[2][2], t) * det;
+        t = m[1][1] * m[0][2];
+        dest[0][2] = __fmsubs(m[0][1], m[1][2], t) * det;
+        t = m[2][0] * m[1][2];
+        dest[1][0] = __fnmsubs(m[1][0], m[2][2], t) * det;
+        t = m[2][0] * m[0][2];
+        dest[1][1] = __fmsubs(m[0][0], m[2][2], t) * det;
+        t = m[1][0] * m[0][2];
+        dest[1][2] = __fnmsubs(m[0][0], m[1][2], t) * det;
+        t = m[2][0] * m[1][1];
+        dest[2][0] = __fmsubs(m[1][0], m[2][1], t) * det;
+        t = m[2][0] * m[0][1];
+        dest[2][1] = __fnmsubs(m[0][0], m[2][1], t) * det;
+        t = m[1][0] * m[0][1];
+        dest[2][2] = __fmsubs(m[0][0], m[1][1], t) * det;
+    }
 
-    dest[0][3] = -(dest[0][2] * src[2][3] -
-                   (-dest[0][0] * src[0][3] - dest[0][1] * src[1][3]));
-    dest[1][3] = -(dest[1][2] * src[2][3] -
-                   (-dest[1][0] * src[0][3] - dest[1][1] * src[1][3]));
-    dest[2][3] = -(dest[2][2] * src[2][3] -
-                   (-dest[2][0] * src[0][3] - dest[2][1] * src[1][3]));
+    {
+        f32 t, v;
+        t = dest[0][1] * m[1][3];
+        v = __fmsubs(-dest[0][0], m[0][3], t);
+        dest[0][3] = __fnmsubs(dest[0][2], m[2][3], v);
+
+        t = dest[1][1] * m[1][3];
+        v = __fmsubs(-dest[1][0], m[0][3], t);
+        dest[1][3] = __fnmsubs(dest[1][2], m[2][3], v);
+
+        t = dest[2][1] * m[1][3];
+        v = __fmsubs(-dest[2][0], m[0][3], t);
+        dest[2][3] = __fnmsubs(dest[2][2], m[2][3], v);
+    }
 }
 
 void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
@@ -153,23 +177,41 @@ void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
             PSMTXCopy(src, dest);
         }
     } else {
+        f32 t, v;
+
         det = lbl_805E5C38 / det;
-        temp1 = (inv[1][1] * inv[2][2] - inv[2][1] * inv[1][2]) * det;
-        temp2 = -(inv[0][1] * inv[2][2] - inv[2][1] * inv[0][2]) * det;
         new_var = inv[1][1];
-        temp3 = -(inv[1][0] * inv[2][2] - inv[2][0] * inv[1][2]) * det;
-        temp7 = (inv[0][1] * inv[1][2] - new_var * inv[0][2]) * det;
-        temp4 = (inv[0][0] * inv[2][2] - inv[2][0] * inv[0][2]) * det;
-        temp8 = -(inv[0][0] * inv[1][2] - inv[1][0] * inv[0][2]) * det;
-        temp5 = (inv[1][0] * inv[2][1] - inv[2][0] * new_var) * det;
-        temp6 = -(inv[0][0] * inv[2][1] - inv[2][0] * inv[0][1]) * det;
-        temp9 = (inv[0][0] * inv[1][1] - inv[1][0] * inv[0][1]) * det;
-        temp10 = -(temp7 * inv[2][3] -
-                   (-temp1 * inv[0][3] - temp2 * inv[1][3]));
-        temp11 = -(temp8 * inv[2][3] -
-                   (-temp3 * inv[0][3] - temp4 * inv[1][3]));
-        temp12 = -(temp9 * inv[2][3] -
-                   (-temp5 * (new_var = inv[0][3]) - temp6 * inv[1][3]));
+
+        t = inv[2][1] * inv[1][2];
+        temp1 = __fmsubs(inv[1][1], inv[2][2], t) * det;
+        t = inv[2][1] * inv[0][2];
+        temp2 = __fnmsubs(inv[0][1], inv[2][2], t) * det;
+        t = inv[2][0] * inv[1][2];
+        temp3 = __fnmsubs(inv[1][0], inv[2][2], t) * det;
+        t = inv[2][0] * inv[0][2];
+        temp4 = __fmsubs(inv[0][0], inv[2][2], t) * det;
+        t = inv[2][0] * new_var;
+        temp5 = __fmsubs(inv[1][0], inv[2][1], t) * det;
+        t = inv[2][0] * inv[0][1];
+        temp6 = __fnmsubs(inv[0][0], inv[2][1], t) * det;
+        t = new_var * inv[0][2];
+        temp7 = __fmsubs(inv[0][1], inv[1][2], t) * det;
+        t = inv[0][2] * inv[1][0];
+        temp8 = __fnmsubs(inv[0][0], inv[1][2], t) * det;
+        t = inv[1][0] * inv[0][1];
+        temp9 = __fmsubs(inv[0][0], inv[1][1], t) * det;
+
+        t = temp2 * inv[1][3];
+        v = __fmsubs(-temp1, inv[0][3], t);
+        temp10 = __fnmsubs(temp7, inv[2][3], v);
+
+        t = temp4 * inv[1][3];
+        v = __fmsubs(-temp3, inv[0][3], t);
+        temp11 = __fnmsubs(temp8, inv[2][3], v);
+
+        t = temp6 * inv[1][3];
+        v = __fmsubs(-temp5, (new_var = inv[0][3]), t);
+        temp12 = __fnmsubs(temp9, inv[2][3], v);
 
         if (inv == dest || src == dest) {
             m[0][0] = temp7 * src[2][0] + (temp1 * src[0][0] + temp2 * src[1][0]);
@@ -529,19 +571,20 @@ void HSD_MkRotationMtx(Mtx arg0, Vec* arg1)
     sinZ = kar_math_mtx_sinf_approx(arg1->z);
     cosZ = kar_math_mtx_cosf_approx(arg1->z);
 
-    temp1 = sinX * sinY;
-    arg0[0][0] = cosY * cosZ;
-    arg0[1][0] = cosY * sinZ;
-    arg0[2][0] = -sinY;
-    temp2 = cosX * sinY;
-    arg0[0][1] = __fmsubs(cosZ, temp1, cosX * sinZ);
-    arg0[1][1] = __fmadds(sinZ, temp1, cosX * cosZ);
-    arg0[2][1] = sinX * cosY;
-    arg0[0][2] = __fmadds(cosZ, temp2, sinX * sinZ);
-    arg0[1][2] = __fmsubs(sinZ, temp2, sinX * cosZ);
-    arg0[2][2] = cosX * cosY;
     {
-        f32 zero = lbl_805E5C3C;
+        f32 zero;
+        temp1 = sinX * sinY;
+        zero = lbl_805E5C3C;
+        arg0[0][0] = cosY * cosZ;
+        arg0[1][0] = cosY * sinZ;
+        arg0[2][0] = -sinY;
+        temp2 = cosX * sinY;
+        arg0[0][1] = __fmsubs(cosZ, temp1, cosX * sinZ);
+        arg0[1][1] = __fmadds(sinZ, temp1, cosX * cosZ);
+        arg0[2][1] = sinX * cosY;
+        arg0[0][2] = __fmadds(cosZ, temp2, sinX * sinZ);
+        arg0[1][2] = __fmsubs(sinZ, temp2, sinX * cosZ);
+        arg0[2][2] = cosX * cosY;
         arg0[0][3] = zero;
         arg0[1][3] = zero;
         arg0[2][3] = zero;
