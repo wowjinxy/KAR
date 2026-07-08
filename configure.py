@@ -418,6 +418,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "perf.c",
     "pobj.c",
     "psdisp.c",
+    "pslist.c",
     "quatlib.c",
     "random.c",
     "robj.c",
