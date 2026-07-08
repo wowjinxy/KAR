@@ -694,7 +694,7 @@ kar_objects = [
     Object(NonMatching, "a2d_refract.cpp"),
     Object(NonMatching, "fl_indirectload.cpp"),
     Object(NonMatching, "OSThread.c"),
-    Object(NonMatching, "dobj.c"),
+    Object(Matching, "dobj.c"),
     Object(NonMatching, "tobj.c"),
     Object(NonMatching, "tev.c"),
     Object(Matching, "mobj.c"),
