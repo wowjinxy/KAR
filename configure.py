@@ -721,7 +721,7 @@ kar_objects = [
     Object(Matching, "list.c"),
     Object(Matching, "object.c"),
     Object(NonMatching, "quatlib.c"),
-    Object(NonMatching, "memory.c"),
+    Object(Matching, "memory.c"),
     Object(NonMatching, "shadow.c"),
     Object(Matching, "archive.c"),
     Object(Matching, "random.c"),
