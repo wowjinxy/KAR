@@ -898,92 +898,141 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
         cos2 * (cosAngle * cos1) + (sin2 * (-sinR * cos1) - cosR * sin1);
 }
 
-static inline f32 particle_trig_poly(f32 z)
-{
-    f32 z2 = z * z;
-    if (z <= 0.7853981633974483F) {
-        return z *
-               (1.0F -
-                z2 * (0.16666669F - z2 * (0.008332824F - z2 * 0.00019587841F)));
-    } else {
-        f32 w = (f32) (1.5707963267948966 - (f64) z);
-        f32 w2 = w * w;
-        return 0.9999998F -
-               w2 * (0.49999395F - w2 * (0.04163633F - w2 * 0.0013400711F));
+#define TRIG_POLY(z, out)                                                      \
+    if ((z) <= 0.7853981633974483) {                                           \
+        f32 z2 = (z) * (z);                                                    \
+        f32 t = z2 * (0.16666669F -                                            \
+                      z2 * (0.008332824F - z2 * 0.00019587841F));              \
+        out = (z) * (1.0F - t);                                                \
+    } else {                                                                   \
+        f32 w = (f32) (1.5707963267948966 - (f64) (z));                        \
+        f32 w2 = w * w;                                                        \
+        f32 t = w2 * (0.49999395F - w2 * (0.04163633F - w2 * 0.0013400711F));  \
+        out = 0.9999998F - t;                                                  \
     }
-}
 
 f32 kar_particle__near_8042bedc(f32 x)
 {
     f32 y;
-    f32 z;
-    BOOL neg = FALSE;
+    f32 poly;
+    BOOL neg;
 
-    if (x == 0.0F) {
-        return 1.0F;
+    if (x != 0.0F) {
+        y = (f32) ((f64) x + 1.5707963267948966);
+        if (y < 0.0F) {
+            y = -y;
+            neg = TRUE;
+            while (y > 6.283185307179586) {
+                y = (f32) (y - 6.283185307179586);
+            }
+            if (y <= 3.141592653589793) {
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            } else {
+                y = (f32) (y - 3.141592653589793);
+                neg = !neg;
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            }
+        } else {
+            neg = FALSE;
+            while (y > 6.283185307179586) {
+                y = (f32) (y - 6.283185307179586);
+            }
+            if (y <= 3.141592653589793) {
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            } else {
+                y = (f32) (y - 3.141592653589793);
+                neg = !neg;
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            }
+        }
     }
-
-    y = (f32) ((f64) x + 1.5707963267948966);
-    if (y < 0.0F) {
-        y = -y;
-        neg = TRUE;
-    }
-
-    while (y > 6.283185307179586) {
-        y = (f32) (y - 6.283185307179586);
-    }
-
-    if (y <= 3.141592653589793) {
-        z = y;
-    } else {
-        z = (f32) (y - 3.141592653589793);
-        neg = !neg;
-    }
-
-    if (z > 1.5707963267948966) {
-        z = (f32) (3.141592653589793 - (f64) z);
-    }
-
-    {
-        f32 poly = particle_trig_poly(z);
-        return neg ? -poly : poly;
-    }
+    return 1.0F;
 }
 
 f32 kar_particle__near_8042c338(f32 x)
 {
-    f32 y = x;
-    f32 z;
-    BOOL neg = FALSE;
+    f32 y;
+    f32 poly;
+    BOOL neg;
 
-    if (x == 0.0F) {
-        return 0.0F;
+    if (x != 0.0F) {
+        if (x < 0.0F) {
+            y = -x;
+            neg = TRUE;
+            while (y > 6.283185307179586) {
+                y = (f32) (y - 6.283185307179586);
+            }
+            if (y <= 3.141592653589793) {
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            } else {
+                y = (f32) (y - 3.141592653589793);
+                neg = !neg;
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            }
+        } else {
+            y = x;
+            neg = FALSE;
+            while (y > 6.283185307179586) {
+                y = (f32) (y - 6.283185307179586);
+            }
+            if (y <= 3.141592653589793) {
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            } else {
+                y = (f32) (y - 3.141592653589793);
+                neg = !neg;
+                if (y <= 1.5707963267948966) {
+                    TRIG_POLY(y, poly);
+                } else {
+                    y = (f32) (3.141592653589793 - (f64) y);
+                    TRIG_POLY(y, poly);
+                }
+                return neg ? -poly : poly;
+            }
+        }
     }
-
-    if (y < 0.0F) {
-        y = -y;
-        neg = TRUE;
-    }
-
-    while (y > 6.283185307179586) {
-        y = (f32) (y - 6.283185307179586);
-    }
-
-    if (y <= 3.141592653589793) {
-        z = y;
-    } else {
-        z = (f32) (y - 3.141592653589793);
-        neg = !neg;
-    }
-
-    if (z > 1.5707963267948966) {
-        z = (f32) (3.141592653589793 - (f64) z);
-    }
-
-    {
-        f32 poly = particle_trig_poly(z);
-        return neg ? -poly : poly;
-    }
+    return 0.0F;
 }
 
 void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
