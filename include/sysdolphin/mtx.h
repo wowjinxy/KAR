@@ -6,7 +6,7 @@
 #include <sysdolphin/objalloc.h>
 
 void HSD_MtxInverse(Mtx src, Mtx dest);
-void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
+BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 void HSD_MtxGetRotation(Mtx m, Vec* vec);
 void HSD_MtxGetRotationMtx(Mtx v0, Mtx dest, char axis0, char axis1);
 void HSD_MtxGetTranslate(Mtx mat, Vec* vec);

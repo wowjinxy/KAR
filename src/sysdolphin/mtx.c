@@ -162,7 +162,7 @@ void HSD_MtxInverse(Mtx src, Mtx dest)
     }
 }
 
-void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
+BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
 {
     Mtx m;
     f32 det;
@@ -176,6 +176,7 @@ void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
         if (src != dest) {
             PSMTXCopy(src, dest);
         }
+        return FALSE;
     } else {
         f32 t, v;
 
@@ -248,6 +249,7 @@ void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
             dest[2][3] = temp9 * src[2][3] +
                          (temp5 * src[0][3] + temp6 * src[1][3]) + temp12;
         }
+        return TRUE;
     }
 }
 
@@ -495,23 +497,24 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             vec3.y = arg0[1][2];
             vec3.z = arg0[2][2];
 
-            PSVECScale(PSVECDotProduct(&vec1, &vec3), &vec1, &vec4);
-            PSVECSubtract(&vec3, &vec4, &vec3);
             PSVECScale(PSVECDotProduct(&vec2, &vec3), &vec2, &vec4);
+            PSVECSubtract(&vec3, &vec4, &vec3);
+            PSVECScale(PSVECDotProduct(&vec1, &vec3), &vec1, &vec4);
             PSVECSubtract(&vec3, &vec4, &vec3);
 
             sq3 = PSVECSquareMag(&vec3);
             if (sq3 > lbl_805E5CA0) {
                 arg1->z = mtx_sqrtf(sq3);
+
+                PSVECCrossProduct(&vec2, &vec3, &vec4);
+                if (PSVECDotProduct(&vec1, &vec4) < lbl_805E5CA8) {
+                    f64 neg;
+                    arg1->x = (f32) (arg1->x * (neg = lbl_805E5CB0));
+                    arg1->y = (f32) (arg1->y * neg);
+                    arg1->z = (f32) (arg1->z * neg);
+                }
             } else {
                 arg1->z = lbl_805E5C3C;
-            }
-
-            PSVECCrossProduct(&vec2, &vec3, &vec4);
-            if (PSVECDotProduct(&vec1, &vec4) < lbl_805E5CA8) {
-                arg1->x = (f32) (arg1->x * lbl_805E5CB0);
-                arg1->y = (f32) (arg1->y * lbl_805E5CB0);
-                arg1->z = (f32) (arg1->z * lbl_805E5CB0);
             }
         } else {
             arg1->y = lbl_805E5C3C;
@@ -531,7 +534,7 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             }
         }
     } else {
-        arg1->x = lbl_805E5C38;
+        arg1->x = lbl_805E5C3C;
 
         vec2.x = arg0[0][1];
         vec2.y = arg0[1][1];
@@ -542,14 +545,23 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             f32 invMag2 = mtx_sqrtf(lbl_805E5C38 / sq2);
             arg1->y = lbl_805E5C38 / invMag2;
             PSVECScale(invMag2, &vec2, &vec2);
+
+            vec3.x = arg0[0][2];
+            vec3.y = arg0[1][2];
+            vec3.z = arg0[2][2];
+
+            PSVECScale(PSVECDotProduct(&vec2, &vec3), &vec2, &vec4);
+            PSVECSubtract(&vec3, &vec4, &vec3);
+            arg1->z = PSVECMag(&vec3);
         } else {
             arg1->y = lbl_805E5C3C;
-        }
 
-        vec3.x = arg0[0][2];
-        vec3.y = arg0[1][2];
-        vec3.z = arg0[2][2];
-        arg1->z = PSVECMag(&vec3);
+            vec3.x = arg0[0][2];
+            vec3.y = arg0[1][2];
+            vec3.z = arg0[2][2];
+
+            arg1->z = PSVECMag(&vec3);
+        }
     }
 }
 
