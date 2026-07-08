@@ -414,6 +414,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "mtx.c",
     "objalloc.c",
     "object.c",
+    "particle.c",
     "perf.c",
     "pobj.c",
     "quatlib.c",
