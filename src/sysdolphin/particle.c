@@ -6,6 +6,8 @@
 
 extern void memset(void*, int, int);
 extern f32 sqrtf(f32);
+extern f64 __frsqrte(f64 x);
+extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 tanf(f32);
 extern f64 atan2(f64, f64);
 extern f32 HSD_Randf(void);
@@ -48,6 +50,21 @@ extern char kar_src_object_80504fb0[9]; /* "object.h" */
 extern char lbl_80504FBC[0x27];         /* "HSD_OBJ(o)->ref_count != HSD_OBJ_NOREF" */
 extern char kar_src_object_805051e8[9]; /* "object.h" */
 extern char lbl_805051F4[0x27];         /* "HSD_OBJ(o)->ref_count != HSD_OBJ_NOREF" */
+
+static inline f32 particle_sqrtf(f32 x)
+{
+    volatile f32 y;
+
+    if (x > 0.0F) {
+        f64 guess = __frsqrte((f64) x);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        y = (f32) (x * guess);
+        return y;
+    }
+    return x;
+}
 
 static inline void particle_ref_INC_a(void* o)
 {
@@ -1028,10 +1045,10 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
         cos2 * (cosAngle * cos1) + (sin2 * (-sinR * cos1) - cosR * sin1);
 }
 
-void kar_particle__near_8042c9fc(HSD_JObj* jobj, HSD_Particle* pp)
+void kar_particle__near_8042c9fc(HSD_Particle* pp, HSD_JObj* jobj)
 {
-    f32 dx, dy, dz;
-    f32 distSq;
+    f32 vmagsq, vmag;
+    f32 dx, dy, dz, distsq, dist;
 
     if (jobj == NULL) {
         return;
@@ -1039,24 +1056,21 @@ void kar_particle__near_8042c9fc(HSD_JObj* jobj, HSD_Particle* pp)
 
     particle_JObjSetupMatrix(jobj);
 
+    vmagsq = pp->vel.x * pp->vel.x + pp->vel.y * pp->vel.y + pp->vel.z * pp->vel.z;
     dx = jobj->mtx[0][3] - pp->pos.x;
     dy = jobj->mtx[1][3] - pp->pos.y;
     dz = jobj->mtx[2][3] - pp->pos.z;
-
-    distSq = dz * dz + dx * dx + dy * dy;
-    if (distSq != 0.0F) {
-        f32 speedSq = pp->vel.z * pp->vel.z + pp->vel.x * pp->vel.x +
-                      pp->vel.y * pp->vel.y;
-        f32 speed = speedSq;
-        if (speedSq > 0.0F) {
-            speed = sqrtf(speedSq);
-        }
-        {
-            f32 scale = speed / distSq;
-            pp->vel.x = dx * scale;
-            pp->vel.y = dy * scale;
-            pp->vel.z = dz * scale;
-        }
+    vmag = particle_sqrtf(vmagsq);
+    distsq = dy * dy + dx * dx + dz * dz;
+    if (distsq == 0.0F) {
+        return;
+    }
+    dist = particle_sqrtf(distsq);
+    {
+        f32 scale = vmag / dist;
+        pp->vel.x = dx * scale;
+        pp->vel.y = dy * scale;
+        pp->vel.z = dz * scale;
     }
 }
 
@@ -1881,32 +1895,8 @@ void psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev)
 
             case 0xB7: {
                 s32 idx = *pc++;
-                HSD_JObj* jobj;
-                f32 vmagsq, vmag;
-                f32 dx, dy, dz, distsq, dist;
-
-                jobj = (HSD_JObj*) hsd_804D0908[idx + pp->pJObjOfs];
-                if (jobj == NULL) {
-                    break;
-                }
-                kar_particle__near_80430044(jobj);
-                vmagsq = pp->vel.x * pp->vel.x + pp->vel.y * pp->vel.y +
-                         pp->vel.z * pp->vel.z;
-                dx = jobj->mtx[0][3] - pp->pos.x;
-                dy = jobj->mtx[1][3] - pp->pos.y;
-                dz = jobj->mtx[2][3] - pp->pos.z;
-                vmag = sqrtf(vmagsq);
-                distsq = dy * dy + dx * dx + dz * dz;
-                if (distsq == 0.0F) {
-                    break;
-                }
-                dist = sqrtf(distsq);
-                {
-                    f32 scale = vmag / dist;
-                    pp->vel.x = dx * scale;
-                    pp->vel.y = dy * scale;
-                    pp->vel.z = dz * scale;
-                }
+                kar_particle__near_8042c9fc(
+                    pp, (HSD_JObj*) lbl_8058C808[idx + pp->pJObjOfs]);
                 break;
             }
 
