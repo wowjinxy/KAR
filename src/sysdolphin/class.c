@@ -1,7 +1,5 @@
 #include <sysdolphin/class.h>
 
-extern u32 lbl_805DE300;
-
 extern void _hsdClassInfoInit();
 HSD_ClassInfo hsdClass = { _hsdClassInfoInit };
 
@@ -37,13 +35,15 @@ void OSReport_PrintSpaces(s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {
-        _OSReport(lbl_805DCD58);
+        OSReport(lbl_805DCD58);
     }
 }
 
 void* _HSD_MemAlloc();                     /* extern */
-extern HSD_MemoryEntry** memory_list;
-extern s32 nb_memory_list;
+
+u32 lbl_805DE300[2];
+s32 lbl_805DE2FC;
+HSD_MemoryEntry** lbl_805DE2F8;
 
 extern char lbl_805048B0[0xC];
 
@@ -63,25 +63,25 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
 {
     assert_line(174, idx >= 0);
 
-    if (idx >= nb_memory_list) {
-        if (nb_memory_list == 0) {
+    if (idx >= lbl_805DE2FC) {
+        if (lbl_805DE2FC == 0) {
             s32 new_nb;
             for (new_nb = 32; idx >= new_nb;) {
                 new_nb *= 2;
             }
-            memory_list = _HSD_MemAlloc(new_nb * 4, 4, 1);
-            if (memory_list == NULL) {
+            lbl_805DE2F8 = _HSD_MemAlloc(new_nb * 4, 4, 1);
+            if (lbl_805DE2F8 == NULL) {
                 return NULL;
             }
-            memset(memory_list, 0, new_nb * 4);
-            nb_memory_list = new_nb;
+            memset(lbl_805DE2F8, 0, new_nb * 4);
+            lbl_805DE2FC = new_nb;
         } else {
             s32 new_nb;
             HSD_FreeList* old_list;
             HSD_MemoryEntry** new_list;
             s32 old_nb;
 
-            new_nb = nb_memory_list * 2;
+            new_nb = lbl_805DE2FC * 2;
             while (idx >= new_nb) {
                 new_nb *= 2;
             }
@@ -91,45 +91,45 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
                 return NULL;
             }
 
-            memcpy(new_list, memory_list, 4 * nb_memory_list);
-            memset(&new_list[nb_memory_list], 0, (new_nb - nb_memory_list) * 4);
+            memcpy(new_list, lbl_805DE2F8, 4 * lbl_805DE2FC);
+            memset(&new_list[lbl_805DE2FC], 0, (new_nb - lbl_805DE2FC) * 4);
 
-            old_list = (HSD_FreeList*) memory_list;
-            old_nb = OSRoundDown32B(nb_memory_list * 4);
-            memory_list = new_list;
-            nb_memory_list = new_nb;
+            old_list = (HSD_FreeList*) lbl_805DE2F8;
+            old_nb = OSRoundDown32B(lbl_805DE2FC * 4);
+            lbl_805DE2F8 = new_list;
+            lbl_805DE2FC = new_nb;
 
             hsdFreeMemPiece(old_list, old_nb);
-            memory_list[OSRoundUp32B(old_nb)/32 - 1]->nb_alloc += 1;
+            lbl_805DE2F8[OSRoundUp32B(old_nb)/32 - 1]->nb_alloc += 1;
         }
     }
     {
         int i;
         BOOL found;
         HSD_MemoryEntry* entry;
-        if (memory_list[idx] == NULL) {
+        if (lbl_805DE2F8[idx] == NULL) {
             entry = _HSD_MemAlloc(0x14, 4, 1);
             if (entry == NULL) {
                 return NULL;
             }
             memset(entry, 0, 0x14);
             entry->size = (idx + 1) * 32;
-            memory_list[idx] = entry;
+            lbl_805DE2F8[idx] = entry;
 
             found = FALSE;
             for (i = idx - 1; i >= 0; --i) {
-                if (memory_list[i] != NULL) {
+                if (lbl_805DE2F8[i] != NULL) {
                     found = TRUE;
-                    entry->next = memory_list[i]->next;
-                    memory_list[i]->next = entry;
+                    entry->next = lbl_805DE2F8[i]->next;
+                    lbl_805DE2F8[i]->next = entry;
                     break;
                 }
             }
 
             if (found == FALSE) {
-                for (i = idx + 1; i < nb_memory_list; i++) {
-                    if (memory_list[i] != NULL) {
-                        entry->next = memory_list[i];
+                for (i = idx + 1; i < lbl_805DE2FC; i++) {
+                    if (lbl_805DE2F8[i] != NULL) {
+                        entry->next = lbl_805DE2F8[i];
                         break;
                     }
                 }
@@ -137,7 +137,7 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
             }
         }
     }
-    return memory_list[idx];
+    return lbl_805DE2F8[idx];
 }
 
 void* hsdAllocMemPiece(s32 size)
@@ -186,14 +186,14 @@ void* hsdAllocMemPiece(s32 size)
         }
         var_r28 = var_r28->next;
     }
-    temp_r28 = (nb_memory_list - temp_r29) - 2;
+    temp_r28 = (lbl_805DE2FC - temp_r29) - 2;
     if (temp_r28 >= 0) {
         var_r30 = GetMemoryEntry(temp_r28);
         if (var_r30 == NULL) {
             return NULL;
         }
     }
-    temp_r3 = _HSD_MemAlloc(nb_memory_list * 32, 4, 1);
+    temp_r3 = _HSD_MemAlloc(lbl_805DE2FC * 32, 4, 1);
     if (temp_r3 == NULL) {
         return NULL;
     }
@@ -262,9 +262,9 @@ void _hsdClassAmnesia(HSD_ClassInfo* info)
     info->head.nb_exist = 0;
     info->head.nb_peak = 0;
     if (info == &hsdClass) {
-        nb_memory_list = 0;
-        memory_list = 0;
-        lbl_805DE300 = 0;
+        lbl_805DE2FC = 0;
+        lbl_805DE2F8 = 0;
+        lbl_805DE300[0] = 0;
     }
 }
 
@@ -437,7 +437,7 @@ void hsdForgetClassLibrary(char* name)
         return;
     }
     if (strcmp(name, hsdClass.head.library_name) == 0) {
-        lbl_805DE300 = 0;
+        lbl_805DE300[0] = 0;
         ForgetClassLibraryReal(&hsdClass);
     } else {
         ForgetClassLibraryChild(name, &hsdClass);
@@ -447,8 +447,8 @@ void hsdForgetClassLibrary(char* name)
 HSD_ClassInfo* HSD_HashSearch();
 HSD_ClassInfo* hsdSearchClassInfo(char* arg0)
 {
-    if (lbl_805DE300 != 0) {
-        return HSD_HashSearch(lbl_805DE300, arg0, 0);
+    if (lbl_805DE300[0] != 0) {
+        return HSD_HashSearch(lbl_805DE300[0], arg0, 0);
     }
     return NULL;
 }
@@ -461,9 +461,9 @@ char unused5[] = "info_hash";
 void DumpClassStat(HSD_ClassInfo* info, s32 indent)
 {
     OSReport_PrintSpaces(indent);
-    _OSReport("<class %s>\n", info->head.class_name);
+    OSReport("<class %s>\n", info->head.class_name);
     OSReport_PrintSpaces(indent);
-    _OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
+    OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
         info->head.info_size, info->head.obj_size, info->head.nb_exist, info->head.nb_peak);
 }
 

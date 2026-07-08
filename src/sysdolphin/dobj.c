@@ -185,7 +185,7 @@ int DObjLoad(HSD_DObj* dobj, HSD_DObjDesc* desc)
                 HSD_DObjModifyFlags(dobj, 4, 0xE);
                 break;
             default:
-                _OSReport("mobj has unexpected blending flags (0x%x).", dobj->mobj->rendermode);
+                OSReport("mobj has unexpected blending flags (0x%x).", dobj->mobj->rendermode);
                 HSD_Panic(__FILE__, 319, "");
         }
     }

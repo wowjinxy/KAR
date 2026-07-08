@@ -38,7 +38,6 @@
     ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
 
 void __assert(const char*, unsigned long, const char*);
-void _OSReport(const char*, ...);
 extern void OSReport(const char *, ...);
 
 struct _HSD_ClassInfo* hsdSearchClassInfo(char*);
