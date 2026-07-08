@@ -9,7 +9,8 @@ extern f32 sqrtf(f32);
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 tanf(f32);
-extern f64 atan2(f64, f64);
+extern f64 fn_803BD3C8(f64, f64);
+extern f32 lbl_805DC8B8;
 extern f32 HSD_Randf(void);
 extern HSD_JObj* HSD_JObjAlloc(void);
 extern void HSD_JObjUnref(HSD_JObj* jobj);
@@ -842,9 +843,9 @@ u8* kar_particle__near_8042bc10(u8* pc, u16* out)
 }
 
 void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
-                                  HSD_Generator* gen)
+                                  HSD_Particle* pp)
 {
-    HSD_JObj* jobj = gen->jobj;
+    HSD_Generator* gen = pp->gen;
     f32 dx, dy, dz;
     f32 azimuth1, azimuth2;
     f32 sin1, cos1, sin2, cos2;
@@ -853,12 +854,12 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
     f32 sinR, cosR;
     f32 sinAngle, cosAngle;
 
-    dz = jobj->mtx[2][3] + vz;
-    dx = jobj->mtx[0][3] + vx;
-    dy = jobj->mtx[1][3] + vy;
+    dz = gen->vel.z + vz;
+    dx = gen->vel.x + vx;
+    dy = gen->vel.y + vy;
 
-    if (__fabsf(dz) >= 1.1754944e-38F) {
-        azimuth1 = (f32) atan2(dy, dz);
+    if (__fabsf(dz) >= lbl_805DC8B8) {
+        azimuth1 = (f32) fn_803BD3C8(dy, dz);
     } else if (dy < 0.0F) {
         azimuth1 = -1.5707964F;
     } else {
@@ -870,8 +871,8 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
 
     dy = dy * sin1 + dz * cos1;
 
-    if (__fabsf(dy) >= 1.1754944e-38F) {
-        azimuth2 = (f32) atan2(dx, dy);
+    if (__fabsf(dy) >= lbl_805DC8B8) {
+        azimuth2 = (f32) fn_803BD3C8(dx, dy);
     } else if (dx < 0.0F) {
         azimuth2 = -1.5707964F;
     } else {
@@ -881,11 +882,8 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
     sin2 = kar_particle__near_8042c338(azimuth2);
     cos2 = kar_particle__near_8042bedc(azimuth2);
 
-    speed = gen->vel.z * gen->vel.z + gen->vel.x * gen->vel.x +
-            gen->vel.y * gen->vel.y;
-    if (speed > 0.0F) {
-        speed = sqrtf(speed);
-    }
+    speed = particle_sqrtf(pp->vel.x * pp->vel.x + pp->vel.y * pp->vel.y +
+                           pp->vel.z * pp->vel.z);
 
     randAngle = (f32) (3.141592653589793 * HSD_Randf() * 2.0);
     sinAngle = speed * kar_particle__near_8042c338(angle);
@@ -893,10 +891,10 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
     cosR = sinAngle * kar_particle__near_8042c338(randAngle);
     cosAngle = speed * kar_particle__near_8042bedc(angle);
 
-    gen->vel.x = sinR * cos2 + cosAngle * sin2;
-    gen->vel.y =
+    pp->vel.x = sinR * cos2 + cosAngle * sin2;
+    pp->vel.y =
         cos2 * (cosAngle * sin1) + (sin2 * (-sinR * sin1) + cosR * cos1);
-    gen->vel.z =
+    pp->vel.z =
         cos2 * (cosAngle * cos1) + (sin2 * (-sinR * cos1) - cosR * sin1);
 }
 
@@ -1002,8 +1000,8 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
     vx = pp->vel.x;
     vy = pp->vel.y;
 
-    if (__fabsf(vz) >= 1.1754944e-38F) {
-        azimuth1 = (f32) atan2(vy, vz);
+    if (__fabsf(vz) >= lbl_805DC8B8) {
+        azimuth1 = (f32) fn_803BD3C8(vy, vz);
     } else if (vy < 0.0F) {
         azimuth1 = -1.5707964F;
     } else {
@@ -1015,8 +1013,8 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
 
     vy = vy * sin1 + vz * cos1;
 
-    if (__fabsf(vy) >= 1.1754944e-38F) {
-        azimuth2 = (f32) atan2(vx, vy);
+    if (__fabsf(vy) >= lbl_805DC8B8) {
+        azimuth2 = (f32) fn_803BD3C8(vx, vy);
     } else if (vx < 0.0F) {
         azimuth2 = -1.5707964F;
     } else {
@@ -1026,11 +1024,8 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
     sin2 = kar_particle__near_8042c338(azimuth2);
     cos2 = kar_particle__near_8042bedc(azimuth2);
 
-    speed = pp->vel.z * pp->vel.z + pp->vel.x * pp->vel.x +
-            pp->vel.y * pp->vel.y;
-    if (speed > 0.0F) {
-        speed = sqrtf(speed);
-    }
+    speed = particle_sqrtf(pp->vel.y * pp->vel.y + pp->vel.x * pp->vel.x +
+                           pp->vel.z * pp->vel.z);
 
     randAngle = (f32) (3.141592653589793 * HSD_Randf() * 2.0);
     sinAngle = speed * kar_particle__near_8042c338(angle);
@@ -1700,8 +1695,7 @@ void psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev)
                 pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
                 angle = *(f32*) &v;
                 if (pp->gen != NULL) {
-                    kar_particle__near_8042bc40(angle, vx, vy, vz,
-                                                 (HSD_Generator*) pp);
+                    kar_particle__near_8042bc40(angle, vx, vy, vz, pp);
                 }
                 break;
             }
