@@ -17,6 +17,10 @@ extern HSD_Particle* _psListGetFirst(s32 linkNo);
 extern void _psListDelete(HSD_Particle* pp, HSD_Particle* prev);
 extern void psRemoveParticleAppSRT(HSD_Particle* pp);
 extern s32 kar_psdisp__near_80437ddc(HSD_Particle* pp, HSD_psAppSRT* srt);
+extern s32 kar_psdisp__near_80437e18(HSD_Generator* gen, HSD_psAppSRT* srt);
+extern s32 kar_psdisp__near_80437e54(HSD_Particle* pp, HSD_psAppSRT* srt);
+extern s32 kar_psdisp__near_80437ec0(HSD_Generator* gen, HSD_psAppSRT* srt);
+extern HSD_Generator* kar_generator__near_8043294c(s32 linkNo, s32 bank, s32 idx);
 extern HSD_Particle* kar_psdisp__near_80438084(int arg);
 extern void kar_psdisp__near_80438190(void);
 extern HSD_Particle* kar_psdisp__near_80438238(HSD_Particle** head,
@@ -32,7 +36,6 @@ extern HSD_ObjAllocData hsdParticle_alloc_data;
 extern u16 numActiveParticles;
 extern int (*psCallback[])(HSD_Particle*);
 
-/* HSD_JObj.flags bit 0x2000000: dirty-tracking suppressed */
 #define JOBJ_FLAG_NO_AUTODIRTY 0x2000000
 
 extern char kar_srcfile_jobj_h_805dcdb8[7]; /* "jobj.h" */
@@ -102,12 +105,6 @@ static inline void particle_JObjSetMtxDirty(HSD_JObj* jobj)
     }
 }
 
-/*
- * particle.c owns six 64-entry per-bank data arrays, laid out contiguously
- * in .bss: ref, texGroupCount, texGroupArray, formGroupArray, cmdListCount,
- * cmdListArray. lbl_8058C208 is 0x200 bytes (ref + texGroupCount packed
- * together); the rest are 0x100 bytes each.
- */
 extern void* lbl_8058C208[128];
 extern void* lbl_8058C408[64];
 extern void* lbl_8058C508[64];
@@ -122,9 +119,11 @@ extern void* lbl_8058C808[256];
 #define BANK_CMDCOUNT(b) (((u32*) lbl_8058C608)[b])
 #define BANK_CMDARRAY(b) (lbl_8058C708[b])
 
-extern u16 lbl_805DE358; /* peak/active particle counter */
+extern u16 lbl_805DE358;
 extern u16 lbl_805DE360;
 extern u16 lbl_805DE366;
+extern void (*lbl_805DE36C)(HSD_Generator* gen, HSD_Generator* gchild,
+                             s32 bank, s32 idx);
 
 f32 kar_particle__near_8042bedc(f32 x);
 f32 kar_particle__near_8042c338(f32 x);
@@ -135,6 +134,8 @@ void kar_particle__near_80430044(HSD_JObj* jobj);
 s32 kar_particle__near_804300b4(f32 delta, u8 old);
 void kar_particle__near_8043010c(Mtx mtx, Vec* scale, Vec* rotate,
                                   Vec* translate, Vec* arg4);
+HSD_JObj* kar_particle__near_80430190(HSD_JObj** slot);
+void kar_particle__near_8043012c(HSD_Generator* gen, HSD_JObj* jobj);
 
 void kar_particle__8042a734(s32 bank, s32* cmdBank, s32* texBank, void* ref,
                              s32* formBank)
@@ -532,7 +533,7 @@ HSD_Particle* psGenerateParticle0(HSD_Particle** head, int linkNo, int bank,
 
     pp->callback = NULL;
     if (flgInterpret != 0) {
-        psInterpretParticle0(pp, 0);
+        psInterpretParticle0(pp, NULL);
     }
     return pp;
 }
@@ -1091,22 +1092,16 @@ s32 kar_particle__near_8042cba4(f32 force, f32 range, HSD_JObj* jobj,
     return 0;
 }
 
-/* -------------------------------------------------------------------- */
-/* psInterpretParticle0 - per-particle bytecode interpreter/tick.       */
-/* -------------------------------------------------------------------- */
-
-void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
+void psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev)
 {
-    HSD_Particle* prev = prevIsSet ? pp : NULL;
     u8* pc;
     u32 operand;
     u8 opcode;
     u8 cls;
     HSD_Particle* child;
-    HSD_PSCmdList* cl;
-    HSD_PSTexGroup* tg;
 
     if (pp->kind & 0x800) {
+        kar_particle__near_80430190((HSD_JObj**) pp);
         return;
     }
 
@@ -1119,7 +1114,10 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
         pp->primColRemain--;
         if (pp->primColRemain == 0) {
             pp->primColCount = 0;
-            pp->primCol = pp->primColTarget;
+            pp->primCol.r = pp->primColTarget.r;
+            pp->primCol.g = pp->primColTarget.g;
+            pp->primCol.b = pp->primColTarget.b;
+            pp->primCol.a = pp->primColTarget.a;
         }
     }
 
@@ -1127,7 +1125,10 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
         pp->envColRemain--;
         if (pp->envColRemain == 0) {
             pp->envColCount = 0;
-            pp->envCol = pp->envColTarget;
+            pp->envCol.r = pp->envColTarget.r;
+            pp->envCol.g = pp->envColTarget.g;
+            pp->envCol.b = pp->envColTarget.b;
+            pp->envCol.a = pp->envColTarget.a;
         }
     }
 
@@ -1159,8 +1160,23 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
     }
 
     if (pp->rotateCount != 0) {
-        pp->rotate += (pp->rotateTarget - pp->rotate) / (f32) pp->rotateCount;
-        pp->rotateCount--;
+        if (pp->spreadRate != 0.0F) {
+            pp->rotate += pp->rotateTarget;
+            if (pp->rotateTarget >= 0.0F) {
+                pp->rotateTarget += pp->spreadRate;
+            } else {
+                pp->rotateTarget -= pp->spreadRate;
+            }
+            pp->rotateCount--;
+            if (pp->rotateCount == 0) {
+                pp->spreadRate = 0.0F;
+                pp->rotateTarget = 0.0F;
+            }
+        } else {
+            pp->rotate +=
+                (pp->rotateTarget - pp->rotate) / (f32) pp->rotateCount;
+            pp->rotateCount--;
+        }
     }
 
     if (pp->cmdWait == 0) {
@@ -1216,18 +1232,17 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
 
             switch (cls) {
             case 0x80: {
-                u32 v;
                 if (opcode & 1) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->pos.x = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->pos.x);
                 }
                 if (opcode & 2) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->pos.y = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->pos.y);
                 }
                 if (opcode & 4) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->pos.z = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->pos.z);
                 }
                 break;
             }
@@ -1250,18 +1265,17 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
             }
 
             case 0x90: {
-                u32 v;
                 if (opcode & 1) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->vel.x = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->vel.x);
                 }
                 if (opcode & 2) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->vel.y = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->vel.y);
                 }
                 if (opcode & 4) {
-                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                    pp->vel.z = *(f32*) &v;
+                    pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                            (u32*) &pp->vel.z);
                 }
                 break;
             }
@@ -1286,8 +1300,8 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
             case 0xA0: {
                 u32 v;
                 pc = kar_particle__near_8042bc10(pc, &pp->sizeCount);
-                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                pp->sizeTarget = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8(
+                    (u32*) pc, (u32*) &pp->sizeTarget);
                 if (pp->sizeCount == 0) {
                     pp->size = pp->sizeTarget;
                 }
@@ -1299,9 +1313,8 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 break;
 
             case 0xA2: {
-                u32 v;
-                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                pp->grav = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                        (u32*) &pp->grav);
                 if (pp->grav == 0.0F) {
                     pp->kind &= ~1;
                 } else {
@@ -1311,9 +1324,8 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
             }
 
             case 0xA3: {
-                u32 v;
-                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                pp->fric = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc,
+                                                        (u32*) &pp->fric);
                 if (pp->fric == 1.0F) {
                     pp->kind &= ~2;
                 } else {
@@ -1323,44 +1335,301 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
             }
 
             case 0xA4: {
-                s32 linkNo = pp->linkNo;
-                s32 bank = pp->bank;
-                s32 idx;
-                s32 palflag;
-
-                idx = (pc[0] << 8) + pc[1];
+                s32 idx = (pc[0] << 8) + pc[1];
                 pc += 2;
 
-                if (linkNo >= 8 || bank >= 65 ||
-                    idx >= (s32) BANK_CMDCOUNT(bank))
-                {
-                    child = NULL;
-                } else {
-                    cl = ((HSD_PSCmdList**) BANK_CMDARRAY(bank))[idx];
-                    if (cl == NULL) {
-                        child = NULL;
-                    } else {
-                        tg = ((HSD_PSTexGroup**) BANK_TEXARRAY(bank))
-                                 [cl->texGroup];
-                        palflag = (tg != NULL) ? tg->palflag : 0;
-                        child = psGenerateParticle0(
-                            NULL, linkNo, bank, cl->kind, cl->texGroup,
-                            cl->cmdList, cl->life, palflag, 0.0F, 0.0F, 0.0F,
-                            cl->vx, cl->vy, cl->vz, cl->size, cl->grav,
-                            cl->fric, NULL, 0);
-                    }
-                }
+                child = psGenerateParticleID0((HSD_Particle**) pp,
+                                               pp->linkNo, pp->bank, idx, 0);
                 if (child != NULL) {
                     child->idnum = pp->idnum;
                     child->gen = pp->gen;
                     if (pp->gen != NULL) {
                         pp->gen->numChild++;
                     }
-                    kar_psdisp__near_80437ddc(child, pp->appsrt);
+                    if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                        kar_psdisp__near_80437e54(child, pp->appsrt);
+                    } else {
+                        kar_psdisp__near_80437ddc(child, pp->appsrt);
+                    }
                     child->pos.x = pp->pos.x;
                     child->pos.y = pp->pos.y;
                     child->pos.z = pp->pos.z;
-                    psInterpretParticle0(child, 1);
+                    psInterpretParticle0(child, pp);
+                }
+                break;
+            }
+
+            case 0xF1: {
+                s32 bank = pp->bank;
+                s32 idx = (pc[0] << 8) + pc[1];
+                pc += 2;
+                if (BANK_REF(bank) != NULL) {
+                    idx = ((u32*) BANK_REF(bank))[idx];
+                }
+
+                child = psGenerateParticleID0((HSD_Particle**) pp,
+                                               pp->linkNo, bank, idx, 0);
+                if (child != NULL) {
+                    child->idnum = pp->idnum;
+                    child->gen = pp->gen;
+                    if (pp->gen != NULL) {
+                        pp->gen->numChild++;
+                    }
+                    if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                        kar_psdisp__near_80437e54(child, pp->appsrt);
+                    } else {
+                        kar_psdisp__near_80437ddc(child, pp->appsrt);
+                    }
+                    child->pos.x = pp->pos.x;
+                    child->pos.y = pp->pos.y;
+                    child->pos.z = pp->pos.z;
+                    psInterpretParticle0(child, pp);
+                }
+                break;
+            }
+
+            case 0xA5: {
+                HSD_Generator* gchild;
+                s32 idx = (pc[0] << 8) + pc[1];
+                pc += 2;
+                gchild = kar_generator__near_8043294c(pp->linkNo, pp->bank,
+                                                       idx);
+                if (gchild != NULL) {
+                    gchild->idnum = pp->idnum;
+                    if (pp->gen != NULL) {
+                        kar_particle__near_8043012c(gchild, pp->gen->jobj);
+                    }
+                    gchild->type |= 0x100;
+                    if (pp->gen != NULL) {
+                        gchild->type |= (u16) (pp->gen->type & 0x3E00);
+                        if (gchild->kind & (1 << 17)) {
+                            gchild->type &= ~0x200;
+                        }
+                    }
+                    if (pp->appsrt != NULL) {
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437ec0(gchild, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437e18(gchild, pp->appsrt);
+                        }
+                    }
+                    if (pp->appsrt != NULL) {
+                        if (gchild->appsrt != NULL) {
+                            gchild->pos.x = pp->pos.x;
+                            gchild->pos.y = pp->pos.y;
+                            gchild->pos.z = pp->pos.z;
+                            if (gchild->appsrt != pp->appsrt) {
+                                gchild->appsrt->translate =
+                                    pp->appsrt->translate;
+                            }
+                        }
+                    } else if (gchild->appsrt != NULL) {
+                        gchild->appsrt->translate.x = pp->pos.x;
+                        gchild->appsrt->translate.y = pp->pos.y;
+                        gchild->appsrt->translate.z = pp->pos.z;
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    } else {
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    }
+                    if (gchild->appsrt != pp->appsrt) {
+                        if (pp->appsrt == NULL) {
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x -= gchild->appsrt->translate.x;
+                                gchild->pos.y -= gchild->appsrt->translate.y;
+                                gchild->pos.z -= gchild->appsrt->translate.z;
+                            }
+                        } else {
+                            kar_particle__near_8042ba68(pp->appsrt->gp);
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x += pp->appsrt->translate.x -
+                                                  gchild->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y -
+                                                  gchild->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z -
+                                                  gchild->appsrt->translate.z;
+                            } else {
+                                gchild->pos.x += pp->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z;
+                            }
+                        }
+                    }
+                    if (lbl_805DE36C != NULL) {
+                        lbl_805DE36C(pp->gen, gchild, pp->bank, idx);
+                    }
+                }
+                break;
+            }
+
+            case 0xEF: {
+                HSD_Generator* gchild;
+                s32 idx = (pc[0] << 8) + pc[1];
+                u8 flags = pc[2];
+                pc += 3;
+                gchild = kar_generator__near_8043294c(pp->linkNo, pp->bank,
+                                                       idx);
+                if (gchild != NULL) {
+                    gchild->idnum = pp->idnum;
+                    if (pp->gen != NULL) {
+                        kar_particle__near_8043012c(gchild, pp->gen->jobj);
+                    }
+                    gchild->type |= 0x100;
+                    if (pp->gen != NULL) {
+                        gchild->type |= (u16) (pp->gen->type & 0x3E00);
+                        if (gchild->kind & (1 << 17)) {
+                            gchild->type &= ~0x200;
+                        }
+                    }
+                    gchild->kind &= 0xF1FFFFFF;
+                    gchild->kind |= (flags & 7) << 25;
+                    if (pp->appsrt != NULL) {
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437ec0(gchild, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437e18(gchild, pp->appsrt);
+                        }
+                    }
+                    if (pp->appsrt != NULL) {
+                        if (gchild->appsrt != NULL) {
+                            gchild->pos.x = pp->pos.x;
+                            gchild->pos.y = pp->pos.y;
+                            gchild->pos.z = pp->pos.z;
+                            if (gchild->appsrt != pp->appsrt) {
+                                gchild->appsrt->translate =
+                                    pp->appsrt->translate;
+                            }
+                        }
+                    } else if (gchild->appsrt != NULL) {
+                        gchild->appsrt->translate.x = pp->pos.x;
+                        gchild->appsrt->translate.y = pp->pos.y;
+                        gchild->appsrt->translate.z = pp->pos.z;
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    } else {
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    }
+                    if (gchild->appsrt != pp->appsrt) {
+                        if (pp->appsrt == NULL) {
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x -= gchild->appsrt->translate.x;
+                                gchild->pos.y -= gchild->appsrt->translate.y;
+                                gchild->pos.z -= gchild->appsrt->translate.z;
+                            }
+                        } else {
+                            kar_particle__near_8042ba68(pp->appsrt->gp);
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x += pp->appsrt->translate.x -
+                                                  gchild->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y -
+                                                  gchild->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z -
+                                                  gchild->appsrt->translate.z;
+                            } else {
+                                gchild->pos.x += pp->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z;
+                            }
+                        }
+                    }
+                    if (lbl_805DE36C != NULL) {
+                        lbl_805DE36C(pp->gen, gchild, pp->bank, idx);
+                    }
+                }
+                break;
+            }
+
+            case 0xF0: {
+                HSD_Generator* gchild;
+                s32 idx = (pc[0] << 8) + pc[1];
+                u8 flags = pc[2];
+                pc += 3;
+                if (BANK_REF(pp->bank) != NULL) {
+                    idx = ((u32*) BANK_REF(pp->bank))[idx];
+                }
+                gchild = kar_generator__near_8043294c(pp->linkNo, pp->bank,
+                                                       idx);
+                if (gchild != NULL) {
+                    gchild->idnum = pp->idnum;
+                    if (pp->gen != NULL) {
+                        kar_particle__near_8043012c(gchild, pp->gen->jobj);
+                    }
+                    gchild->type |= 0x100;
+                    if (pp->gen != NULL) {
+                        gchild->type |= (u16) (pp->gen->type & 0x3E00);
+                        if (gchild->kind & (1 << 17)) {
+                            gchild->type &= ~0x200;
+                        }
+                    }
+                    gchild->kind &= 0xF1FFFFFF;
+                    gchild->kind |= (flags & 7) << 25;
+                    if (pp->appsrt != NULL) {
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437ec0(gchild, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437e18(gchild, pp->appsrt);
+                        }
+                    }
+                    if (pp->appsrt != NULL) {
+                        if (gchild->appsrt != NULL) {
+                            gchild->pos.x = pp->pos.x;
+                            gchild->pos.y = pp->pos.y;
+                            gchild->pos.z = pp->pos.z;
+                            if (gchild->appsrt != pp->appsrt) {
+                                gchild->appsrt->translate =
+                                    pp->appsrt->translate;
+                            }
+                        }
+                    } else if (gchild->appsrt != NULL) {
+                        gchild->appsrt->translate.x = pp->pos.x;
+                        gchild->appsrt->translate.y = pp->pos.y;
+                        gchild->appsrt->translate.z = pp->pos.z;
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    } else {
+                        gchild->pos.x = pp->pos.x;
+                        gchild->pos.y = pp->pos.y;
+                        gchild->pos.z = pp->pos.z;
+                    }
+                    if (gchild->appsrt != pp->appsrt) {
+                        if (pp->appsrt == NULL) {
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x -= gchild->appsrt->translate.x;
+                                gchild->pos.y -= gchild->appsrt->translate.y;
+                                gchild->pos.z -= gchild->appsrt->translate.z;
+                            }
+                        } else {
+                            kar_particle__near_8042ba68(pp->appsrt->gp);
+                            if (gchild->appsrt != NULL) {
+                                kar_particle__near_8042ba68(gchild);
+                                gchild->pos.x += pp->appsrt->translate.x -
+                                                  gchild->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y -
+                                                  gchild->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z -
+                                                  gchild->appsrt->translate.z;
+                            } else {
+                                gchild->pos.x += pp->appsrt->translate.x;
+                                gchild->pos.y += pp->appsrt->translate.y;
+                                gchild->pos.z += pp->appsrt->translate.z;
+                            }
+                        }
+                    }
+                    if (lbl_805DE36C != NULL) {
+                        lbl_805DE36C(pp->gen, gchild, pp->bank, idx);
+                    }
                 }
                 break;
             }
@@ -1405,36 +1674,65 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 break;
             }
 
+            case 0xF4: {
+                u32 v;
+                f32 vx, vy, vz, angle;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                vx = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                vy = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                vz = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                angle = *(f32*) &v;
+                if (pp->gen != NULL) {
+                    kar_particle__near_8042bc40(angle, vx, vy, vz,
+                                                 (HSD_Generator*) pp);
+                }
+                break;
+            }
+
+            case 0xF5: {
+                if (pp->gen != NULL && pp->gen->appsrt != NULL) {
+                    u16 type = pp->gen->type;
+                    pp->gen->type = type | 0x2000;
+                    if (!(type & 0x2000)) {
+                        *((u8*) pp->gen->appsrt + 0x7e) = 0;
+                        kar_particle__near_8042ba68(pp->gen);
+                    }
+                }
+                break;
+            }
+
+            case 0xF6: {
+                if (pp->gen != NULL && pp->gen->appsrt != NULL) {
+                    u16 type = pp->gen->type;
+                    pp->gen->type = type | 0x1000;
+                    if (!(type & 0x1000)) {
+                        kar_particle__near_8042ba68(pp->gen);
+                    }
+                }
+                break;
+            }
+
+            case 0xF7:
+                pp->kind |= 0x10000000;
+                break;
+
             case 0xAA: {
                 s32 baseIdx = (pc[0] << 8) + pc[1];
                 s32 randomRange = (pc[2] << 8) + pc[3];
                 s32 idx;
-                s32 linkNo, bank, palflag;
+                s32 bank = pp->bank;
                 pc += 4;
 
                 idx = baseIdx + (s32) ((f32) randomRange * HSD_Randf());
-
-                linkNo = pp->linkNo;
-                bank = pp->bank;
-                if (linkNo >= 8 || bank >= 65 ||
-                    idx >= (s32) BANK_CMDCOUNT(bank))
-                {
-                    child = NULL;
-                } else {
-                    cl = ((HSD_PSCmdList**) BANK_CMDARRAY(bank))[idx];
-                    if (cl == NULL) {
-                        child = NULL;
-                    } else {
-                        tg = ((HSD_PSTexGroup**) BANK_TEXARRAY(bank))
-                                 [cl->texGroup];
-                        palflag = (tg != NULL) ? tg->palflag : 0;
-                        child = psGenerateParticle0(
-                            NULL, linkNo, bank, cl->kind, cl->texGroup,
-                            cl->cmdList, cl->life, palflag, 0.0F, 0.0F, 0.0F,
-                            cl->vx, cl->vy, cl->vz, cl->size, cl->grav,
-                            cl->fric, NULL, 0);
-                    }
+                if (BANK_REF(bank) != NULL) {
+                    idx = ((u32*) BANK_REF(bank))[idx];
                 }
+
+                child = psGenerateParticleID0((HSD_Particle**) pp,
+                                               pp->linkNo, bank, idx, 0);
                 if (child != NULL) {
                     child->pos.x = pp->pos.x;
                     child->pos.y = pp->pos.y;
@@ -1445,9 +1743,13 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                         pp->gen->numChild++;
                     }
                     if (pp->appsrt != NULL) {
-                        kar_psdisp__near_80437ddc(child, pp->appsrt);
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437e54(child, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437ddc(child, pp->appsrt);
+                        }
                     }
-                    psInterpretParticle0(child, 1);
+                    psInterpretParticle0(child, pp);
                 }
                 break;
             }
@@ -1465,8 +1767,8 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 u32 v;
                 f32 range;
                 pc = kar_particle__near_8042bc10(pc, &pp->sizeCount);
-                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
-                pp->sizeTarget = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8(
+                    (u32*) pc, (u32*) &pp->sizeTarget);
                 pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
                 range = *(f32*) &v;
                 pp->sizeTarget += range * HSD_Randf();
@@ -1508,9 +1810,14 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 }
                 kar_particle__near_8042ba68(srt->gp);
                 srt = pp->appsrt;
-                kar_particle__near_8043010c(srt->mmtx, &srt->scale,
-                                             (Vec*) &srt->rot, &srt->translate,
-                                             NULL);
+                {
+                    Vec t = srt->translate;
+                    t.x += srt->unk30.x;
+                    t.y += srt->unk30.y;
+                    t.z += srt->unk30.z;
+                    kar_particle__near_8043010c(srt->mmtx, &srt->scale,
+                                                 (Vec*) &srt->rot, &t, NULL);
+                }
                 {
                     f32 x = pp->pos.x, y = pp->pos.y, z = pp->pos.z;
                     pp->pos.x = srt->mmtx[0][1] * y + srt->mmtx[0][0] * x +
@@ -1621,33 +1928,11 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
             }
 
             case 0xB9: {
-                s32 linkNo = pp->linkNo;
-                s32 bank = pp->bank;
-                s32 idx;
-                s32 palflag;
-
-                idx = (pc[0] << 8) + pc[1];
+                s32 idx = (pc[0] << 8) + pc[1];
                 pc += 2;
 
-                if (linkNo >= 8 || bank >= 65 ||
-                    idx >= (s32) BANK_CMDCOUNT(bank))
-                {
-                    child = NULL;
-                } else {
-                    cl = ((HSD_PSCmdList**) BANK_CMDARRAY(bank))[idx];
-                    if (cl == NULL) {
-                        child = NULL;
-                    } else {
-                        tg = ((HSD_PSTexGroup**) BANK_TEXARRAY(bank))
-                                 [cl->texGroup];
-                        palflag = (tg != NULL) ? tg->palflag : 0;
-                        child = psGenerateParticle0(
-                            NULL, linkNo, bank, cl->kind, cl->texGroup,
-                            cl->cmdList, cl->life, palflag, 0.0F, 0.0F, 0.0F,
-                            cl->vx, cl->vy, cl->vz, cl->size, cl->grav,
-                            cl->fric, NULL, 0);
-                    }
-                }
+                child = psGenerateParticleID0((HSD_Particle**) pp,
+                                               pp->linkNo, pp->bank, idx, 0);
                 if (child != NULL) {
                     child->pos.x = pp->pos.x;
                     child->pos.y = pp->pos.y;
@@ -1661,67 +1946,149 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                         pp->gen->numChild++;
                     }
                     if (pp->appsrt != NULL) {
-                        kar_psdisp__near_80437ddc(child, pp->appsrt);
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437e54(child, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437ddc(child, pp->appsrt);
+                        }
                     }
-                    psInterpretParticle0(child, 1);
+                    psInterpretParticle0(child, pp);
                 }
                 break;
             }
 
-            case 0xBA:
-            case 0xBB: {
-                GXColor* target =
-                    (cls == 0xBA) ? &pp->primColTarget : &pp->envColTarget;
-                u16* count =
-                    (cls == 0xBA) ? &pp->primColCount : &pp->envColCount;
-                u16* remain =
-                    (cls == 0xBA) ? &pp->primColRemain : &pp->envColRemain;
-                GXColor* cur = (cls == 0xBA) ? &pp->primCol : &pp->envCol;
+            case 0xF2: {
+                s32 bank = pp->bank;
+                s32 idx = (pc[0] << 8) + pc[1];
+                pc += 2;
+                if (BANK_REF(bank) != NULL) {
+                    idx = ((u32*) BANK_REF(bank))[idx];
+                }
+
+                child = psGenerateParticleID0((HSD_Particle**) pp,
+                                               pp->linkNo, bank, idx, 0);
+                if (child != NULL) {
+                    child->pos.x = pp->pos.x;
+                    child->pos.y = pp->pos.y;
+                    child->pos.z = pp->pos.z;
+                    child->vel.x = pp->vel.x;
+                    child->vel.y = pp->vel.y;
+                    child->vel.z = pp->vel.z;
+                    child->idnum = pp->idnum;
+                    child->gen = pp->gen;
+                    if (pp->gen != NULL) {
+                        pp->gen->numChild++;
+                    }
+                    if (pp->appsrt != NULL) {
+                        if (pp->gen != NULL && (pp->gen->type & 0x2000)) {
+                            kar_psdisp__near_80437e54(child, pp->appsrt);
+                        } else {
+                            kar_psdisp__near_80437ddc(child, pp->appsrt);
+                        }
+                    }
+                    psInterpretParticle0(child, pp);
+                }
+                break;
+            }
+
+            case 0xBA: {
                 s32 step;
                 s8 delta;
                 f32 randv;
 
-                if (*count != 0) {
-                    step = ((s32) *remain << 16) / (s32) *count;
-                    cur->r =
-                        (u8) ((((s32) target->r << 16) +
-                               step * ((s32) cur->r - (s32) target->r)) >>
-                              16);
-                    cur->g =
-                        (u8) ((((s32) target->g << 16) +
-                               step * ((s32) cur->g - (s32) target->g)) >>
-                              16);
-                    cur->b =
-                        (u8) ((((s32) target->b << 16) +
-                               step * ((s32) cur->b - (s32) target->b)) >>
-                              16);
-                    cur->a =
-                        (u8) ((((s32) target->a << 16) +
-                               step * ((s32) cur->a - (s32) target->a)) >>
-                              16);
+                if (pp->primColCount != 0) {
+                    step = ((s32) pp->primColRemain << 16) /
+                           (s32) pp->primColCount;
+                    pp->primCol.r = (u8) ((((s32) pp->primColTarget.r << 16) +
+                                           step * ((s32) pp->primCol.r -
+                                                   (s32) pp->primColTarget.r)) >>
+                                          16);
+                    pp->primCol.g = (u8) ((((s32) pp->primColTarget.g << 16) +
+                                           step * ((s32) pp->primCol.g -
+                                                   (s32) pp->primColTarget.g)) >>
+                                          16);
+                    pp->primCol.b = (u8) ((((s32) pp->primColTarget.b << 16) +
+                                           step * ((s32) pp->primCol.b -
+                                                   (s32) pp->primColTarget.b)) >>
+                                          16);
+                    pp->primCol.a = (u8) ((((s32) pp->primColTarget.a << 16) +
+                                           step * ((s32) pp->primCol.a -
+                                                   (s32) pp->primColTarget.a)) >>
+                                          16);
                 }
 
                 randv = HSD_Randf();
                 delta = (s8) *pc++;
-                target->r = (u8) kar_particle__near_804300b4(
-                    randv * (f32) (delta * 2), target->r);
+                pp->primColTarget.r = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.r);
                 randv = HSD_Randf();
                 delta = (s8) *pc++;
-                target->g = (u8) kar_particle__near_804300b4(
-                    randv * (f32) (delta * 2), target->g);
+                pp->primColTarget.g = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.g);
                 randv = HSD_Randf();
                 delta = (s8) *pc++;
-                target->b = (u8) kar_particle__near_804300b4(
-                    randv * (f32) (delta * 2), target->b);
+                pp->primColTarget.b = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.b);
                 randv = HSD_Randf();
                 delta = (s8) *pc++;
-                target->a = (u8) kar_particle__near_804300b4(
-                    randv * (f32) (delta * 2), target->a);
+                pp->primColTarget.a = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.a);
 
-                if (*count == 0) {
-                    *cur = *target;
+                if (pp->primColCount == 0) {
+                    pp->primCol = pp->primColTarget;
                 } else {
-                    *remain = *count;
+                    pp->primColRemain = pp->primColCount;
+                }
+                break;
+            }
+
+            case 0xBB: {
+                s32 step;
+                s8 delta;
+                f32 randv;
+
+                if (pp->envColCount != 0) {
+                    step = ((s32) pp->envColRemain << 16) /
+                           (s32) pp->envColCount;
+                    pp->envCol.r = (u8) ((((s32) pp->envColTarget.r << 16) +
+                                          step * ((s32) pp->envCol.r -
+                                                  (s32) pp->envColTarget.r)) >>
+                                         16);
+                    pp->envCol.g = (u8) ((((s32) pp->envColTarget.g << 16) +
+                                          step * ((s32) pp->envCol.g -
+                                                  (s32) pp->envColTarget.g)) >>
+                                         16);
+                    pp->envCol.b = (u8) ((((s32) pp->envColTarget.b << 16) +
+                                          step * ((s32) pp->envCol.b -
+                                                  (s32) pp->envColTarget.b)) >>
+                                         16);
+                    pp->envCol.a = (u8) ((((s32) pp->envColTarget.a << 16) +
+                                          step * ((s32) pp->envCol.a -
+                                                  (s32) pp->envColTarget.a)) >>
+                                         16);
+                }
+
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->envColTarget.r = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.r);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->envColTarget.g = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.g);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->envColTarget.b = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.b);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->envColTarget.a = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.a);
+
+                if (pp->envColCount == 0) {
+                    pp->envCol = pp->envColTarget;
+                } else {
+                    pp->envColRemain = pp->envColCount;
                 }
                 break;
             }
@@ -1784,56 +2151,311 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 break;
             }
 
-            case 0xC0:
-            case 0xD0: {
-                GXColor* target =
-                    (cls == 0xC0) ? &pp->primColTarget : &pp->envColTarget;
-                u16* count =
-                    (cls == 0xC0) ? &pp->primColCount : &pp->envColCount;
-                u16* remain =
-                    (cls == 0xC0) ? &pp->primColRemain : &pp->envColRemain;
-                GXColor* cur = (cls == 0xC0) ? &pp->primCol : &pp->envCol;
+            case 0xC0: {
                 s32 step;
-
-                if (*count != 0) {
-                    step = ((s32) *remain << 16) / (s32) *count;
-                    cur->r =
-                        (u8) ((((s32) target->r << 16) +
-                               step * ((s32) cur->r - (s32) target->r)) >>
-                              16);
-                    cur->g =
-                        (u8) ((((s32) target->g << 16) +
-                               step * ((s32) cur->g - (s32) target->g)) >>
-                              16);
-                    cur->b =
-                        (u8) ((((s32) target->b << 16) +
-                               step * ((s32) cur->b - (s32) target->b)) >>
-                              16);
-                    cur->a =
-                        (u8) ((((s32) target->a << 16) +
-                               step * ((s32) cur->a - (s32) target->a)) >>
-                              16);
+                if (pp->primColCount != 0) {
+                    step = ((s32) pp->primColRemain << 16) /
+                           (s32) pp->primColCount;
+                    pp->primCol.r = (u8) ((((s32) pp->primColTarget.r << 16) +
+                                           step * ((s32) pp->primCol.r -
+                                                   (s32) pp->primColTarget.r)) >>
+                                          16);
+                    pp->primCol.g = (u8) ((((s32) pp->primColTarget.g << 16) +
+                                           step * ((s32) pp->primCol.g -
+                                                   (s32) pp->primColTarget.g)) >>
+                                          16);
+                    pp->primCol.b = (u8) ((((s32) pp->primColTarget.b << 16) +
+                                           step * ((s32) pp->primCol.b -
+                                                   (s32) pp->primColTarget.b)) >>
+                                          16);
+                    pp->primCol.a = (u8) ((((s32) pp->primColTarget.a << 16) +
+                                           step * ((s32) pp->primCol.a -
+                                                   (s32) pp->primColTarget.a)) >>
+                                          16);
                 }
-                pc = kar_particle__near_8042bc10(pc, count);
-                *target = *cur;
+                pc = kar_particle__near_8042bc10(pc, &pp->primColCount);
+                pp->primColTarget = pp->primCol;
                 if (opcode & 1) {
-                    target->r = *pc++;
+                    pp->primColTarget.r = *pc++;
                 }
                 if (opcode & 2) {
-                    target->g = *pc++;
+                    pp->primColTarget.g = *pc++;
                 }
                 if (opcode & 4) {
-                    target->b = *pc++;
+                    pp->primColTarget.b = *pc++;
                 }
                 if (opcode & 8) {
-                    target->a = *pc++;
+                    pp->primColTarget.a = *pc++;
                 }
-                if (*count == 0) {
-                    *cur = *target;
-                    *remain = 0;
+                if (pp->primColCount == 0) {
+                    pp->primCol = pp->primColTarget;
+                    pp->primColRemain = 0;
                 } else {
-                    *remain = *count;
+                    pp->primColRemain = pp->primColCount;
                 }
+                break;
+            }
+
+            case 0xD0: {
+                s32 step;
+                if (pp->envColCount != 0) {
+                    step = ((s32) pp->envColRemain << 16) /
+                           (s32) pp->envColCount;
+                    pp->envCol.r = (u8) ((((s32) pp->envColTarget.r << 16) +
+                                          step * ((s32) pp->envCol.r -
+                                                  (s32) pp->envColTarget.r)) >>
+                                         16);
+                    pp->envCol.g = (u8) ((((s32) pp->envColTarget.g << 16) +
+                                          step * ((s32) pp->envCol.g -
+                                                  (s32) pp->envColTarget.g)) >>
+                                         16);
+                    pp->envCol.b = (u8) ((((s32) pp->envColTarget.b << 16) +
+                                          step * ((s32) pp->envCol.b -
+                                                  (s32) pp->envColTarget.b)) >>
+                                         16);
+                    pp->envCol.a = (u8) ((((s32) pp->envColTarget.a << 16) +
+                                          step * ((s32) pp->envCol.a -
+                                                  (s32) pp->envColTarget.a)) >>
+                                         16);
+                }
+                pc = kar_particle__near_8042bc10(pc, &pp->envColCount);
+                pp->envColTarget = pp->envCol;
+                if (opcode & 1) {
+                    pp->envColTarget.r = *pc++;
+                }
+                if (opcode & 2) {
+                    pp->envColTarget.g = *pc++;
+                }
+                if (opcode & 4) {
+                    pp->envColTarget.b = *pc++;
+                }
+                if (opcode & 8) {
+                    pp->envColTarget.a = *pc++;
+                }
+                if (pp->envColCount == 0) {
+                    pp->envCol = pp->envColTarget;
+                    pp->envColRemain = 0;
+                } else {
+                    pp->envColRemain = pp->envColCount;
+                }
+                break;
+            }
+
+            case 0xE0: {
+                s32 step;
+                f32 randv;
+                s8 delta;
+                if (pp->primColCount != 0) {
+                    step = ((s32) pp->primColRemain << 16) /
+                           (s32) pp->primColCount;
+                    pp->primCol.r = (u8) ((((s32) pp->primColTarget.r << 16) +
+                                           step * ((s32) pp->primCol.r -
+                                                   (s32) pp->primColTarget.r)) >>
+                                          16);
+                    pp->primCol.g = (u8) ((((s32) pp->primColTarget.g << 16) +
+                                           step * ((s32) pp->primCol.g -
+                                                   (s32) pp->primColTarget.g)) >>
+                                          16);
+                    pp->primCol.b = (u8) ((((s32) pp->primColTarget.b << 16) +
+                                           step * ((s32) pp->primCol.b -
+                                                   (s32) pp->primColTarget.b)) >>
+                                          16);
+                    pp->primCol.a = (u8) ((((s32) pp->primColTarget.a << 16) +
+                                           step * ((s32) pp->primCol.a -
+                                                   (s32) pp->primColTarget.a)) >>
+                                          16);
+                }
+                if (pp->envColCount != 0) {
+                    step = ((s32) pp->envColRemain << 16) /
+                           (s32) pp->envColCount;
+                    pp->envCol.r = (u8) ((((s32) pp->envColTarget.r << 16) +
+                                          step * ((s32) pp->envCol.r -
+                                                  (s32) pp->envColTarget.r)) >>
+                                         16);
+                    pp->envCol.g = (u8) ((((s32) pp->envColTarget.g << 16) +
+                                          step * ((s32) pp->envCol.g -
+                                                  (s32) pp->envColTarget.g)) >>
+                                         16);
+                    pp->envCol.b = (u8) ((((s32) pp->envColTarget.b << 16) +
+                                          step * ((s32) pp->envCol.b -
+                                                  (s32) pp->envColTarget.b)) >>
+                                         16);
+                    pp->envCol.a = (u8) ((((s32) pp->envColTarget.a << 16) +
+                                          step * ((s32) pp->envCol.a -
+                                                  (s32) pp->envColTarget.a)) >>
+                                         16);
+                }
+
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->primColTarget.r = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.r);
+                pp->envColTarget.r = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.r);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->primColTarget.g = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.g);
+                pp->envColTarget.g = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.g);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->primColTarget.b = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.b);
+                pp->envColTarget.b = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.b);
+                randv = HSD_Randf();
+                delta = (s8) *pc++;
+                pp->primColTarget.a = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->primColTarget.a);
+                pp->envColTarget.a = (u8) kar_particle__near_804300b4(
+                    randv * (f32) (delta * 2), pp->envColTarget.a);
+
+                if (pp->primColCount == 0) {
+                    pp->primCol = pp->primColTarget;
+                }
+                pp->primColRemain = pp->primColCount;
+
+                if (pp->envColCount == 0) {
+                    pp->envCol = pp->envColTarget;
+                }
+                pp->envColRemain = pp->envColCount;
+                break;
+            }
+
+            case 0xE9: {
+                s32 step;
+                s32 timing;
+                u8 flags;
+                f32 randv;
+                s8 delta;
+
+                if (pp->primColCount != 0) {
+                    step = ((s32) pp->primColRemain << 16) /
+                           (s32) pp->primColCount;
+                    pp->primCol.r = (u8) ((((s32) pp->primColTarget.r << 16) +
+                                           step * ((s32) pp->primCol.r -
+                                                   (s32) pp->primColTarget.r)) >>
+                                          16);
+                    pp->primCol.g = (u8) ((((s32) pp->primColTarget.g << 16) +
+                                           step * ((s32) pp->primCol.g -
+                                                   (s32) pp->primColTarget.g)) >>
+                                          16);
+                    pp->primCol.b = (u8) ((((s32) pp->primColTarget.b << 16) +
+                                           step * ((s32) pp->primCol.b -
+                                                   (s32) pp->primColTarget.b)) >>
+                                          16);
+                    pp->primCol.a = (u8) ((((s32) pp->primColTarget.a << 16) +
+                                           step * ((s32) pp->primCol.a -
+                                                   (s32) pp->primColTarget.a)) >>
+                                          16);
+                }
+                if (pp->envColCount != 0) {
+                    step = ((s32) pp->envColRemain << 16) /
+                           (s32) pp->envColCount;
+                    pp->envCol.r = (u8) ((((s32) pp->envColTarget.r << 16) +
+                                          step * ((s32) pp->envCol.r -
+                                                  (s32) pp->envColTarget.r)) >>
+                                         16);
+                    pp->envCol.g = (u8) ((((s32) pp->envColTarget.g << 16) +
+                                          step * ((s32) pp->envCol.g -
+                                                  (s32) pp->envColTarget.g)) >>
+                                         16);
+                    pp->envCol.b = (u8) ((((s32) pp->envColTarget.b << 16) +
+                                          step * ((s32) pp->envCol.b -
+                                                  (s32) pp->envColTarget.b)) >>
+                                         16);
+                    pp->envCol.a = (u8) ((((s32) pp->envColTarget.a << 16) +
+                                          step * ((s32) pp->envCol.a -
+                                                  (s32) pp->envColTarget.a)) >>
+                                         16);
+                }
+
+                timing = *pc++;
+                flags = *pc++;
+
+                if (flags & 1) {
+                    delta = (s8) *pc++;
+                    if (timing != 0) {
+                        s32 randi = (s32) ((f32) (timing + 1) * HSD_Randf());
+                        randv = (f32) randi / (f32) timing;
+                    } else {
+                        randv = HSD_Randf();
+                    }
+                    randv *= (f32) (delta * 2);
+                    if (flags & 0x10) {
+                        pp->primColTarget.r = (u8) kar_particle__near_804300b4(
+                            randv, pp->primColTarget.r);
+                    }
+                    if (flags & 0x20) {
+                        pp->envColTarget.r = (u8) kar_particle__near_804300b4(
+                            randv, pp->envColTarget.r);
+                    }
+                }
+                if (flags & 2) {
+                    delta = (s8) *pc++;
+                    if (timing != 0) {
+                        s32 randi = (s32) ((f32) (timing + 1) * HSD_Randf());
+                        randv = (f32) randi / (f32) timing;
+                    } else {
+                        randv = HSD_Randf();
+                    }
+                    randv *= (f32) (delta * 2);
+                    if (flags & 0x10) {
+                        pp->primColTarget.g = (u8) kar_particle__near_804300b4(
+                            randv, pp->primColTarget.g);
+                    }
+                    if (flags & 0x20) {
+                        pp->envColTarget.g = (u8) kar_particle__near_804300b4(
+                            randv, pp->envColTarget.g);
+                    }
+                }
+                if (flags & 4) {
+                    delta = (s8) *pc++;
+                    if (timing != 0) {
+                        s32 randi = (s32) ((f32) (timing + 1) * HSD_Randf());
+                        randv = (f32) randi / (f32) timing;
+                    } else {
+                        randv = HSD_Randf();
+                    }
+                    randv *= (f32) (delta * 2);
+                    if (flags & 0x10) {
+                        pp->primColTarget.b = (u8) kar_particle__near_804300b4(
+                            randv, pp->primColTarget.b);
+                    }
+                    if (flags & 0x20) {
+                        pp->envColTarget.b = (u8) kar_particle__near_804300b4(
+                            randv, pp->envColTarget.b);
+                    }
+                }
+                if (flags & 8) {
+                    delta = (s8) *pc++;
+                    if (timing != 0) {
+                        s32 randi = (s32) ((f32) (timing + 1) * HSD_Randf());
+                        randv = (f32) randi / (f32) timing;
+                    } else {
+                        randv = HSD_Randf();
+                    }
+                    randv *= (f32) (delta * 2);
+                    if (flags & 0x10) {
+                        pp->primColTarget.a = (u8) kar_particle__near_804300b4(
+                            randv, pp->primColTarget.a);
+                    }
+                    if (flags & 0x20) {
+                        pp->envColTarget.a = (u8) kar_particle__near_804300b4(
+                            randv, pp->envColTarget.a);
+                    }
+                }
+
+                if (pp->primColCount == 0) {
+                    pp->primCol = pp->primColTarget;
+                }
+                pp->primColRemain = pp->primColCount;
+
+                if (pp->envColCount == 0) {
+                    pp->envCol = pp->envColTarget;
+                }
+                pp->envColRemain = pp->envColCount;
                 break;
             }
 
@@ -1935,44 +2557,70 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 break;
             }
 
-            case 0xEA:
-            case 0xEB: {
-                u8* rgb = (cls == 0xEA) ? &pp->matRGB : &pp->ambRGB;
-                u8* a = (cls == 0xEA) ? &pp->matA : &pp->ambA;
-                u8* rgbTarget =
-                    (cls == 0xEA) ? &pp->matRGBTarget : &pp->ambRGBTarget;
-                u8* aTarget =
-                    (cls == 0xEA) ? &pp->matATarget : &pp->ambATarget;
-                u16* count =
-                    (cls == 0xEA) ? &pp->matColCount : &pp->ambColCount;
-                u16* remain =
-                    (cls == 0xEA) ? &pp->matColRemain : &pp->ambColRemain;
+            case 0xEA: {
                 s32 step;
                 u8 flags;
 
-                if (*count != 0) {
-                    step = ((s32) *remain << 16) / (s32) *count;
-                    *rgb = (u8) ((((s32) *rgbTarget << 16) +
-                                  step * ((s32) *rgb - (s32) *rgbTarget)) >>
-                                 16);
-                    *a = (u8) ((((s32) *aTarget << 16) +
-                                step * ((s32) *a - (s32) *aTarget)) >>
-                               16);
+                if (pp->matColCount != 0) {
+                    step = ((s32) pp->matColRemain << 16) /
+                           (s32) pp->matColCount;
+                    pp->matRGB = (u8) ((((s32) pp->matRGBTarget << 16) +
+                                        step * ((s32) pp->matRGB -
+                                                (s32) pp->matRGBTarget)) >>
+                                       16);
+                    pp->matA = (u8) ((((s32) pp->matATarget << 16) +
+                                      step * ((s32) pp->matA -
+                                              (s32) pp->matATarget)) >>
+                                     16);
                 }
-                pc = kar_particle__near_8042bc10(pc, count);
+                pc = kar_particle__near_8042bc10(pc, &pp->matColCount);
                 flags = *pc++;
-                *rgbTarget = *rgb;
+                pp->matRGBTarget = pp->matRGB;
                 if (flags & 1) {
-                    *rgbTarget = *pc++;
+                    pp->matRGBTarget = *pc++;
                 }
                 if (flags & 8) {
-                    *aTarget = *pc++;
+                    pp->matATarget = *pc++;
                 }
-                if (*count == 0) {
-                    *rgb = *rgbTarget;
-                    *remain = 0;
+                if (pp->matColCount == 0) {
+                    pp->matRGB = pp->matRGBTarget;
+                    pp->matColRemain = 0;
                 } else {
-                    *remain = *count;
+                    pp->matColRemain = pp->matColCount;
+                }
+                break;
+            }
+
+            case 0xEB: {
+                s32 step;
+                u8 flags;
+
+                if (pp->ambColCount != 0) {
+                    step = ((s32) pp->ambColRemain << 16) /
+                           (s32) pp->ambColCount;
+                    pp->ambRGB = (u8) ((((s32) pp->ambRGBTarget << 16) +
+                                        step * ((s32) pp->ambRGB -
+                                                (s32) pp->ambRGBTarget)) >>
+                                       16);
+                    pp->ambA = (u8) ((((s32) pp->ambATarget << 16) +
+                                      step * ((s32) pp->ambA -
+                                              (s32) pp->ambATarget)) >>
+                                     16);
+                }
+                pc = kar_particle__near_8042bc10(pc, &pp->ambColCount);
+                flags = *pc++;
+                pp->ambRGBTarget = pp->ambRGB;
+                if (flags & 1) {
+                    pp->ambRGBTarget = *pc++;
+                }
+                if (flags & 8) {
+                    pp->ambATarget = *pc++;
+                }
+                if (pp->ambColCount == 0) {
+                    pp->ambRGB = pp->ambRGBTarget;
+                    pp->ambColRemain = 0;
+                } else {
+                    pp->ambColRemain = pp->ambColCount;
                 }
                 break;
             }
@@ -1995,6 +2643,30 @@ void psInterpretParticle0(HSD_Particle* pp, int prevIsSet)
                 }
                 pp->rotateTarget += result;
                 pp->rotate += result;
+                break;
+            }
+
+            case 0xF3: {
+                u8 mode = *pc++;
+                u32 v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                pp->rotateTarget = *(f32*) &v;
+                pc = (u8*) kar_particle__near_8042bbd8((u32*) pc, &v);
+                pp->spreadRate = *(f32*) &v;
+                pc = kar_particle__near_8042bc10(pc, &pp->rotateCount);
+                if (pp->rotateCount != 0) {
+                    if (mode == 0) {
+                        pp->rotateTarget = pp->spreadRate * 0.5 +
+                                            pp->rotateTarget;
+                    } else {
+                        pp->rotateTarget = pp->rotateTarget * -1.0F;
+                        pp->rotateTarget =
+                            pp->rotateTarget - pp->spreadRate * 0.5;
+                    }
+                } else {
+                    pp->rotateTarget = 0.0F;
+                    pp->spreadRate = 0.0F;
+                }
                 break;
             }
 

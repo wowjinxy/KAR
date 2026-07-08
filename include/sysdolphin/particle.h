@@ -77,28 +77,19 @@ struct HSD_psAppSRT {
     HSD_psAppSRT* next;   // 0x00
     HSD_Generator* gp;    // 0x04
     Vec translate;        // 0x08
-    Quaternion rot;       // 0x14
+    Vec rot;              // 0x14
+    u32 unk20;            // 0x20
     Vec scale;            // 0x24
-    u8 status;            // 0x30
-    u8 frameNum;          // 0x31
-    u16 usedCount;        // 0x32
-    Mtx mmtx;             // 0x34
-    f32 ssx;              // 0x64
-    f32 ssy;              // 0x68
-    f32 x6C;              // 0x6C
-    f32 x70;              // 0x70
-    f32 x74;              // 0x74
-    f32 x78;              // 0x78
-    f32 x7C;              // 0x7C
-    f32 x80;              // 0x80
-    f32 x84;              // 0x84
-    f32 x88;              // 0x88
-    f32 x8C;              // 0x8C
-    f32 x90;              // 0x90
-    f32 x94;              // 0x94
-    void (*freefunc)(HSD_psAppSRT* appsrt); // 0x9C
-    u16 idnum;                              // 0xA0
-    s8 xA2;                                 // 0xA2
+    Vec unk30;            // 0x30
+    u8 status;            // 0x3C
+    u8 frameNum;          // 0x3D
+    u16 usedCount;        // 0x3E
+    Mtx mmtx;             // 0x40
+    f32 ssx;              // 0x70
+    f32 ssy;              // 0x74
+    void (*freefunc)(HSD_psAppSRT* appsrt); // 0x78
+    u16 idnum;                              // 0x7C
+    s8 xA2;                                 // 0x7E
 };
 
 /* size: 0xC */
@@ -244,6 +235,6 @@ HSD_Particle* psGenerateParticle(int linkNo, int bank, u32 kind, u16 texGroup,
 void psKillParticle(void);
 void psDeletePntJObjwithParticle(HSD_Particle* pp);
 void psKillGeneratorChild(HSD_Generator* gp);
-void psInterpretParticle0(HSD_Particle* pp, int startCmdPtr);
+void psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev);
 
 #endif
