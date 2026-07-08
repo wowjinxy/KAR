@@ -254,6 +254,7 @@ cflags_doldecomp_src = [
     "-O4,p",
     "-nodefaults",
     "-enum int",
+    "-fp_contract on",
     "-I-",
     "-i include",
     f"-i build/{config.version}/include",
