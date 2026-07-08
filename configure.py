@@ -424,6 +424,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "robj.c",
     "rumble.c",
     "shadow.c",
+    "sislib.c",
     "spline.c",
     "tev.c",
     "texpdag.c",
