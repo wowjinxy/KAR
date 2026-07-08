@@ -8,6 +8,10 @@ char kar_srcfile_texp_c_805dcd70[] = "texp.c";
     ((cond) ? ((void) 0) : __assert(kar_srcfile_texp_c_805dcd70, line, #cond))
 #define TEXP_ASSERT_S(line, cond, str) \
     ((cond) ? ((void) 0) : __assert(kar_srcfile_texp_c_805dcd70, line, str))
+#define TEXPDAG_ASSERT(line, cond) \
+    ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
+#define TEXPDAG_ASSERT_S(line, cond, str) \
+    ((cond) ? ((void) 0) : __assert(__FILE__, line, str))
 
 extern char lbl_805DCD78[5];    /* "texp" */
 extern char lbl_805DCD80[2];    /* "0" */
@@ -169,6 +173,7 @@ struct HSD_TExpRes {
 };
 
 extern u32 lbl_805028E8[];
+extern char lbl_805DCD98[8]; /* "l < num" */
 
 int HSD_TExpMakeDag(HSD_TExp* root, struct HSD_TExpDag* list);
 void HSD_TExpSchedule(int num, struct HSD_TExpDag* list, HSD_TExp** result,
@@ -1104,13 +1109,41 @@ void TExp2TevDesc(HSD_TExp* texp, HSD_TExpTevDesc* desc, int* init_cprev,
         tevdesc->coord = HSD_TE_UNDEF;
         tevdesc->map = HSD_TE_UNDEF;
     }
-    tevdesc->color = tev->chan == HSD_TE_UNDEF ? HSD_TE_UNDEF : tev->chan;
-    tevdesc->u.tevconf.ras_swap =
-        tev->ras_swap == HSD_TE_UNDEF ? 0 : tev->ras_swap;
-    tevdesc->u.tevconf.tex_swap =
-        tev->tex_swap == HSD_TE_UNDEF ? 0 : tev->tex_swap;
-    tevdesc->u.tevconf.kcsel = tev->kcsel == HSD_TE_UNDEF ? 0 : tev->kcsel;
-    tevdesc->u.tevconf.kasel = tev->kasel == HSD_TE_UNDEF ? 0 : tev->kasel;
+    {
+        u32 v = tev->chan;
+        if (v == HSD_TE_UNDEF) {
+            v = HSD_TE_UNDEF;
+        }
+        tevdesc->color = v;
+    }
+    {
+        u32 v = tev->ras_swap;
+        if (v == HSD_TE_UNDEF) {
+            v = 0;
+        }
+        tevdesc->u.tevconf.ras_swap = v;
+    }
+    {
+        u32 v = tev->tex_swap;
+        if (v == HSD_TE_UNDEF) {
+            v = 0;
+        }
+        tevdesc->u.tevconf.tex_swap = v;
+    }
+    {
+        u32 v = tev->kcsel;
+        if (v == HSD_TE_UNDEF) {
+            v = 0;
+        }
+        tevdesc->u.tevconf.kcsel = v;
+    }
+    {
+        u32 v = tev->kasel;
+        if (v == HSD_TE_UNDEF) {
+            v = 0;
+        }
+        tevdesc->u.tevconf.kasel = v;
+    }
 
     if ((tev->c_op == HSD_TE_UNDEF) ||
         (tev->c_ref == 0 && tev->a_op != 8 && tev->a_op != 9 &&
@@ -1133,23 +1166,53 @@ void TExp2TevDesc(HSD_TExp* texp, HSD_TExpTevDesc* desc, int* init_cprev,
         tevdesc->u.tevconf.clr_out_reg = 0;
     } else {
         tevdesc->u.tevconf.clr_op = tev->c_op;
-        tevdesc->u.tevconf.clr_a =
-            tev->c_in[0].arg == HSD_TE_UNDEF ? GX_CC_ZERO : tev->c_in[0].arg;
-        tevdesc->u.tevconf.clr_b =
-            tev->c_in[1].arg == HSD_TE_UNDEF ? GX_CC_ZERO : tev->c_in[1].arg;
-        tevdesc->u.tevconf.clr_c =
-            tev->c_in[2].arg == HSD_TE_UNDEF ? GX_CC_ZERO : tev->c_in[2].arg;
-        tevdesc->u.tevconf.clr_d =
-            tev->c_in[3].arg == HSD_TE_UNDEF ? GX_CC_ZERO : tev->c_in[3].arg;
-        tevdesc->u.tevconf.clr_scale =
-            tev->c_scale == HSD_TE_UNDEF ? 0 : tev->c_scale;
-        tevdesc->u.tevconf.clr_bias =
-            tev->c_bias == HSD_TE_UNDEF ? 0 : tev->c_bias;
+        {
+            u32 v = tev->c_in[0].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CC_ZERO;
+            }
+            tevdesc->u.tevconf.clr_a = v;
+        }
+        {
+            u32 v = tev->c_in[1].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CC_ZERO;
+            }
+            tevdesc->u.tevconf.clr_b = v;
+        }
+        {
+            u32 v = tev->c_in[2].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CC_ZERO;
+            }
+            tevdesc->u.tevconf.clr_c = v;
+        }
+        {
+            u32 v = tev->c_in[3].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CC_ZERO;
+            }
+            tevdesc->u.tevconf.clr_d = v;
+        }
+        {
+            u32 v = tev->c_scale;
+            if (v == HSD_TE_UNDEF) {
+                v = 0;
+            }
+            tevdesc->u.tevconf.clr_scale = v;
+        }
+        {
+            u32 v = tev->c_bias;
+            if (v == HSD_TE_UNDEF) {
+                v = 0;
+            }
+            tevdesc->u.tevconf.clr_bias = v;
+        }
         tevdesc->u.tevconf.clr_clamp = tev->c_clamp != 0 ? GX_TRUE : GX_FALSE;
 
         TEXP_ASSERT(1363, tev->c_dst != HSD_TE_UNDEF);
         tevdesc->u.tevconf.clr_out_reg = dst[tev->c_dst];
-        if (tevdesc->u.tevconf.clr_out_reg == 0) {
+        if ((s32) tevdesc->u.tevconf.clr_out_reg == 0) {
             *init_cprev = 0;
         }
     }
@@ -1171,23 +1234,53 @@ void TExp2TevDesc(HSD_TExp* texp, HSD_TExpTevDesc* desc, int* init_cprev,
         tevdesc->u.tevconf.alpha_out_reg = 0;
     } else {
         tevdesc->u.tevconf.alpha_op = tev->a_op;
-        tevdesc->u.tevconf.alpha_a =
-            tev->a_in[0].arg == HSD_TE_UNDEF ? GX_CA_ZERO : tev->a_in[0].arg;
-        tevdesc->u.tevconf.alpha_b =
-            tev->a_in[1].arg == HSD_TE_UNDEF ? GX_CA_ZERO : tev->a_in[1].arg;
-        tevdesc->u.tevconf.alpha_c =
-            tev->a_in[2].arg == HSD_TE_UNDEF ? GX_CA_ZERO : tev->a_in[2].arg;
-        tevdesc->u.tevconf.alpha_d =
-            tev->a_in[3].arg == HSD_TE_UNDEF ? GX_CA_ZERO : tev->a_in[3].arg;
-        tevdesc->u.tevconf.alpha_scale =
-            tev->a_scale == HSD_TE_UNDEF ? 0 : tev->a_scale;
-        tevdesc->u.tevconf.alpha_bias =
-            tev->a_bias == HSD_TE_UNDEF ? 0 : tev->a_bias;
+        {
+            u32 v = tev->a_in[0].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CA_ZERO;
+            }
+            tevdesc->u.tevconf.alpha_a = v;
+        }
+        {
+            u32 v = tev->a_in[1].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CA_ZERO;
+            }
+            tevdesc->u.tevconf.alpha_b = v;
+        }
+        {
+            u32 v = tev->a_in[2].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CA_ZERO;
+            }
+            tevdesc->u.tevconf.alpha_c = v;
+        }
+        {
+            u32 v = tev->a_in[3].arg;
+            if (v == HSD_TE_UNDEF) {
+                v = GX_CA_ZERO;
+            }
+            tevdesc->u.tevconf.alpha_d = v;
+        }
+        {
+            u32 v = tev->a_scale;
+            if (v == HSD_TE_UNDEF) {
+                v = 0;
+            }
+            tevdesc->u.tevconf.alpha_scale = v;
+        }
+        {
+            u32 v = tev->a_bias;
+            if (v == HSD_TE_UNDEF) {
+                v = 0;
+            }
+            tevdesc->u.tevconf.alpha_bias = v;
+        }
         tevdesc->u.tevconf.alpha_clamp = tev->a_clamp != 0 ? GX_TRUE : GX_FALSE;
 
         TEXP_ASSERT(1399, tev->a_dst != HSD_TE_UNDEF);
         tevdesc->u.tevconf.alpha_out_reg = dst[tev->a_dst];
-        if (tevdesc->u.tevconf.alpha_out_reg == 0) {
+        if ((s32) tevdesc->u.tevconf.alpha_out_reg == 0) {
             *init_aprev = 0;
         }
     }
@@ -1557,14 +1650,14 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
     int last;
     int idx;
 
-    TEXP_ASSERT(238, HSD_TExpGetType(root) == HSD_TE_TEV);
+    TEXPDAG_ASSERT(238, HSD_TExpGetType(root) == HSD_TE_TEV);
 
     base = &sp94[0];
     num = 0;
     base[num++] = root;
     for (j = 0; j < num; j++) {
         HSD_TExp* tmp;
-        TEXP_ASSERT(246, j < HSD_TEXP_MAX_NUM);
+        TEXPDAG_ASSERT(246, j<HSD_TEXP_MAX_NUM);
         tmp = sp94[j];
         for (i = 0; i < 4; i++) {
             if (tmp->tev.c_in[i].type == HSD_TE_TEV) {
@@ -1647,7 +1740,7 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
                     }
                     q++;
                 }
-                TEXP_ASSERT(325, l < num);
+                TEXPDAG_ASSERT_S(325, l < num, lbl_805DCD98);
             }
         }
 
@@ -1675,7 +1768,7 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
                     }
                     r2++;
                 }
-                TEXP_ASSERT(347, l < num);
+                TEXPDAG_ASSERT_S(347, l < num, lbl_805DCD98);
             }
         }
     }
@@ -1683,50 +1776,8 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
 }
 #pragma pop
 
-static inline void make_dependancy_mtx(int num, HSD_TExpDag* list, u32* dep_mtx)
-{
-    HSD_TExpDag* dag;
-    int i, j;
-
-    for (i = 0; i < num; i++) {
-        dep_mtx[i] = 0;
-        dag = &list[i];
-        for (j = 0; j < dag->nb_dep; j++) {
-            dep_mtx[i] |= 1 << dag->depend[j]->idx;
-        }
-    }
-}
-
-static inline void make_full_dependancy_mtx(int num, u32* dep, u32* full)
-{
-    int i, j, k;
-    bool changed;
-    u32 bits;
-    u32 flag;
-    u32 old;
-
-    for (i = 0; i < num; i++) {
-        full[i] = dep[i];
-    }
-    do {
-        changed = 0;
-        for (j = 0; j < num; j++) {
-            flag = 1 << j;
-            old = full[j];
-            bits = old;
-            for (k = 0; k < num; k++) {
-                if ((flag & full[k]) != 0) {
-                    u32 old = full[k];
-                    full[k] |= bits;
-                    if (old != full[k]) {
-                        changed = 1;
-                    }
-                }
-            }
-        }
-    } while (changed != 0);
-}
-
+#pragma push
+#pragma dont_inline on
 void HSD_TExpSchedule(int num, HSD_TExpDag* list, HSD_TExp** result,
                       HSD_TExpRes* resource)
 {
@@ -1739,13 +1790,46 @@ void HSD_TExpSchedule(int num, HSD_TExpDag* list, HSD_TExp** result,
     u32 order[32];
     u32 min_order[32];
 
-    int i, j;
+    HSD_TExpDag* dag;
+    int i, j, k;
     int min;
+    bool changed;
+    u32 bits;
+    u32 flag;
+    u32 old;
 
     min = 5;
     memset(min_order, 0, sizeof(min_order));
-    make_dependancy_mtx(num, list, dep_mtx);
-    make_full_dependancy_mtx(num, dep_mtx, full_dep_matrix);
+
+    for (i = 0; i < num; i++) {
+        dep_mtx[i] = 0;
+        dag = &list[i];
+        for (j = 0; j < dag->nb_dep; j++) {
+            dep_mtx[i] |= 1 << dag->depend[j]->idx;
+        }
+    }
+
+    for (i = 0; i < num; i++) {
+        full_dep_matrix[i] = dep_mtx[i];
+    }
+    do {
+        changed = 0;
+        for (j = 0; j < num; j++) {
+            flag = 1 << j;
+            old = full_dep_matrix[j];
+            bits = old;
+            for (k = 0; k < num; k++) {
+                if ((flag & full_dep_matrix[k]) != 0) {
+                    u32 old = full_dep_matrix[k];
+                    full_dep_matrix[k] |= bits;
+                    if (old != full_dep_matrix[k]) {
+                        changed = 1;
+                    }
+                }
+            }
+        }
+    } while (changed != 0);
+
     order_dag(num, dep_mtx, full_dep_matrix, list, 0, 0, 0, 0, (int*) order,
               &min, (int*) min_order);
 
@@ -1780,6 +1864,7 @@ void HSD_TExpSchedule(int num, HSD_TExpDag* list, HSD_TExp** result,
         }
     }
 }
+#pragma pop
 
 static HSD_TEArg lbl_zero_arg = { 0x00, 0x07, 0xFF };
 
@@ -1813,9 +1898,16 @@ int SimplifySrc(HSD_TExp* arg0)
                         src->tev.c_bias == 0 && src->tev.c_scale == 0)
                     {
                         switch (src->tev.c_in[3].type) {
+                        case HSD_TE_IMM:
+                            arg0->tev.c_in[i] = src->tev.c_in[3];
+                            HSD_TExpRef(arg0->tev.c_in[i].exp,
+                                        arg0->tev.c_in[i].sel);
+                            HSD_TExpUnref(src, sel);
+                            result = 1;
+                            break;
                         case HSD_TE_TEV:
-                            if (src->tev.c_in[3].exp->tev.c_clamp != 0 ||
-                                src->tev.c_clamp == 0)
+                            if (i != 3 || src->tev.c_clamp == 0 ||
+                                src->tev.c_range != 1)
                             {
                                 arg0->tev.c_in[i] = src->tev.c_in[3];
                                 HSD_TExpRef(arg0->tev.c_in[i].exp,
@@ -1845,12 +1937,12 @@ int SimplifySrc(HSD_TExp* arg0)
                                  arg0->tev.chan == src->tev.chan) &&
                                 (arg0->tev.ras_swap == 0xFF ||
                                  src->tev.ras_swap == 0xFF ||
-                                 arg0->tev.ras_swap == src->tev.tex_swap))
+                                 arg0->tev.ras_swap == src->tev.ras_swap))
                             {
                                 arg0->tev.c_in[i] = src->tev.c_in[3];
                                 arg0->tev.chan = src->tev.chan;
-                                if (arg0->tev.tex_swap == 0xFF) {
-                                    arg0->tev.tex_swap = src->tev.tex_swap;
+                                if (arg0->tev.ras_swap == 0xFF) {
+                                    arg0->tev.ras_swap = src->tev.ras_swap;
                                 }
                                 HSD_TExpUnref(src, sel);
                                 result = 1;
@@ -1891,12 +1983,23 @@ int SimplifySrc(HSD_TExp* arg0)
                     src->tev.a_scale == 0)
                 {
                     switch (src->tev.a_in[3].type) {
-                    case HSD_TE_TEV:
+                    case HSD_TE_IMM:
                         arg0->tev.a_in[i] = src->tev.a_in[3];
                         HSD_TExpRef(arg0->tev.a_in[i].exp,
                                     arg0->tev.a_in[i].sel);
                         HSD_TExpUnref(src, sel);
                         result = 1;
+                        break;
+                    case HSD_TE_TEV:
+                        if (i != 3 || src->tev.a_clamp == 0 ||
+                            src->tev.a_range != 1)
+                        {
+                            arg0->tev.a_in[i] = src->tev.a_in[3];
+                            HSD_TExpRef(arg0->tev.a_in[i].exp,
+                                        arg0->tev.a_in[i].sel);
+                            HSD_TExpUnref(src, sel);
+                            result = 1;
+                        }
                         break;
                     case HSD_TE_TEX:
                         if (arg0->tev.tex == NULL ||
@@ -2632,30 +2735,31 @@ void CalcTevRange(HSD_TExp* texp)
     HSD_TETev* tev = &texp->tev;
     s32 range;
 
-    if (tev->c_in[3].sel == HSD_TE_0) {
-        range = 0;
-    } else if (HSD_TExpGetType(tev->c_in[3].exp) == HSD_TE_TEV) {
-        if (tev->c_in[3].sel == HSD_TE_RGB) {
-            if (tev->c_in[3].exp->tev.c_clamp == 1) {
-                range = 0x100;
-            } else if (tev->c_in[3].exp->tev.c_range == 1) {
-                tev->c_range = 1;
-                goto alpha;
+    range = 0;
+    if (tev->c_in[3].sel != HSD_TE_0) {
+        if (HSD_TExpGetType(tev->c_in[3].exp) == HSD_TE_TEV) {
+            if (tev->c_in[3].sel == HSD_TE_RGB) {
+                if (tev->c_in[3].exp->tev.c_clamp == 1) {
+                    range = 0x100;
+                } else if (tev->c_in[3].exp->tev.c_range == 1) {
+                    tev->c_range = 1;
+                    goto alpha;
+                } else {
+                    range = 0x100;
+                }
             } else {
-                range = 0x100;
+                if (tev->c_in[3].exp->tev.a_clamp == 1) {
+                    range = 0x100;
+                } else if (tev->c_in[3].exp->tev.a_range == 1) {
+                    tev->c_range = 1;
+                    goto alpha;
+                } else {
+                    range = 0x100;
+                }
             }
         } else {
-            if (tev->c_in[3].exp->tev.a_clamp == 1) {
-                range = 0x100;
-            } else if (tev->c_in[3].exp->tev.a_range == 1) {
-                tev->c_range = 1;
-                goto alpha;
-            } else {
-                range = 0x100;
-            }
+            range = 0x100;
         }
-    } else {
-        range = 0x100;
     }
 
     {
@@ -2672,19 +2776,21 @@ void CalcTevRange(HSD_TExp* texp)
         }
     }
 
-    if (tev->c_bias == GX_TB_SUBHALF) {
+    switch (tev->c_bias) {
+    case GX_TB_ADDHALF:
+        range += 0x80;
+        break;
+    case GX_TB_SUBHALF:
         tev->c_range = 1;
         goto alpha;
-    } else if (tev->c_bias == GX_TB_ADDHALF) {
-        range += 0x80;
     }
 
     switch (tev->c_scale) {
-    case GX_CS_SCALE_4:
-        range <<= 2;
-        break;
     case GX_CS_SCALE_2:
         range <<= 1;
+        break;
+    case GX_CS_SCALE_4:
+        range <<= 2;
         break;
     case GX_CS_DIVIDE_2:
         range /= 2;
@@ -2693,19 +2799,20 @@ void CalcTevRange(HSD_TExp* texp)
     tev->c_range = (range > 0x100);
 
 alpha:
-    if (tev->a_in[3].sel == HSD_TE_0) {
-        range = 0;
-    } else if (HSD_TExpGetType(tev->a_in[3].exp) == HSD_TE_TEV) {
-        if (tev->a_in[3].exp->tev.a_clamp == 1) {
-            range = 0x100;
-        } else if (tev->a_in[3].exp->tev.a_range == 1) {
-            tev->a_range = 1;
-            return;
+    range = 0;
+    if (tev->a_in[3].sel != HSD_TE_0) {
+        if (HSD_TExpGetType(tev->a_in[3].exp) == HSD_TE_TEV) {
+            if (tev->a_in[3].exp->tev.a_clamp == 1) {
+                range = 0x100;
+            } else if (tev->a_in[3].exp->tev.a_range == 1) {
+                tev->a_range = 1;
+                return;
+            } else {
+                range = 0x100;
+            }
         } else {
             range = 0x100;
         }
-    } else {
-        range = 0x100;
     }
 
     {
@@ -2722,19 +2829,21 @@ alpha:
         }
     }
 
-    if (tev->a_bias == GX_TB_SUBHALF) {
+    switch (tev->a_bias) {
+    case GX_TB_ADDHALF:
+        range += 0x80;
+        break;
+    case GX_TB_SUBHALF:
         tev->a_range = 1;
         return;
-    } else if (tev->a_bias == GX_TB_ADDHALF) {
-        range += 0x80;
     }
 
     switch (tev->a_scale) {
-    case GX_CS_SCALE_4:
-        range <<= 2;
-        break;
     case GX_CS_SCALE_2:
         range <<= 1;
+        break;
+    case GX_CS_SCALE_4:
+        range <<= 2;
         break;
     case GX_CS_DIVIDE_2:
         range /= 2;
