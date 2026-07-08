@@ -17,7 +17,10 @@ extern char lbl_805DCD24[5]; /* "rect" */
 
 extern const f32 lbl_805E5DC0; /* 0.0F */
 
-#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert(__FILE__, line, str))
+char kar_src_shadow_80504528[] = "shadow.c";
+
+#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert(kar_src_shadow_80504528, line, str))
+#define ASSERT_NAMED(line, cond) ((cond) ? ((void) 0) : __assert(kar_src_shadow_80504528, line, #cond))
 
 void HSD_ShadowInit(HSD_Shadow* shadow)
 {
@@ -35,8 +38,8 @@ void HSD_ShadowSetSize(HSD_Shadow* shadow, u16 width, u16 height)
     HSD_ImageDesc* imgdesc;
 
     ASSERT_STR(0x115, shadow, lbl_805DCD18);
-    assert_line(0x116, width > 0);
-    assert_line(0x117, height > 0);
+    ASSERT_NAMED(0x116, width > 0);
+    ASSERT_NAMED(0x117, height > 0);
 
     imgdesc = shadow->texture->imagedesc;
     if (imgdesc->img_ptr == NULL || imgdesc->width != width || imgdesc->height != height) {
@@ -44,7 +47,7 @@ void HSD_ShadowSetSize(HSD_Shadow* shadow, u16 width, u16 height)
             HSD_Free(imgdesc->img_ptr);
         }
         size = kar_shadow__803cd5b0(width, height, 0, 0, 0);
-        assert_line(0x122, size > 0);
+        ASSERT_NAMED(0x122, size > 0);
 
         imgdesc->img_ptr = HSD_Alloc(size);
         imgdesc->width = width;
@@ -152,9 +155,9 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
     HSD_SList* var_r26;
 
     ASSERT_STR(0x159, shadow, lbl_805DCD18);
-    assert_line(0x15A, shadow->camera);
-    assert_line(0x15B, shadow->texture);
-    assert_line(0x15C, shadow->texture->imagedesc);
+    ASSERT_NAMED(0x15A, shadow->camera);
+    ASSERT_NAMED(0x15B, shadow->texture);
+    ASSERT_NAMED(0x15C, shadow->texture->imagedesc);
 
     camera = shadow->camera;
     imgdesc = shadow->texture->imagedesc;
@@ -356,12 +359,12 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
     case PROJ_PERSPECTIVE: {
         f32 width, height;
 
-        if (__fabs(top) > __fabs(bottom)) {
+        if (__fabs(bottom) < __fabs(top)) {
             width = __fabs(top);
         } else {
             width = __fabs(bottom);
         }
-        if (__fabs(left) > __fabs(right)) {
+        if (__fabs(right) < __fabs(left)) {
             height = __fabs(left);
         } else {
             height = __fabs(right);
@@ -370,6 +373,10 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
         HSD_CObjSetFov(camera, fn_803BD3C8(width, distance) * lbl_805E5DD8);
     } break;
 
+    case PROJ_ORTHO:
+        HSD_CObjSetOrtho(camera, top, bottom, left, right);
+        break;
+
     case PROJ_FRUSTRUM: {
         f32 scale = HSD_CObjGetNear(camera) / distance;
         if (scale < lbl_805DC8C0[0]) {
@@ -377,10 +384,6 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
         }
         HSD_CObjSetFrustum(camera, scale * top, scale * bottom, scale * left, scale * right);
     } break;
-
-    case PROJ_ORTHO:
-        HSD_CObjSetOrtho(camera, top, bottom, left, right);
-        break;
 
     default:
         ASSERT_STR(0x2FF, 0, lbl_805DCD20);
@@ -440,10 +443,7 @@ void HSD_ViewingRectInit(HSD_ViewingRect* rect, Vec* position, Vec* interest, Ve
 s32 HSD_ViewingRectCheck(HSD_ViewingRect* rect)
 {
     ASSERT_STR(0x33C, rect, lbl_805DCD24);
-    if (rect->invalid) {
-        return 0;
-    }
-    return rect->top > rect->bottom && rect->right > rect->left;
+    return !rect->invalid && rect->top > rect->bottom && rect->right > rect->left;
 }
 
 void HSD_ViewingRectAddRect(HSD_ViewingRect* rect, Vec* position, f32 top, f32 bottom, f32 left, f32 right)
@@ -452,7 +452,7 @@ void HSD_ViewingRectAddRect(HSD_ViewingRect* rect, Vec* position, f32 top, f32 b
     Vec o2p, e2p;
 
     ASSERT_STR(0x362, rect, lbl_805DCD24);
-    assert_line(0x363, position);
+    ASSERT_NAMED(0x363, position);
 
     if (rect->invalid) {
         return;
