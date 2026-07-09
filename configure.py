@@ -742,6 +742,7 @@ for obj in kar_objects:
         obj.options["progress_category"] = "sdk"
 
 dolphin_matched = {"mtxvec", "ppcarch", "db"}
+dolphin_schedule_off = {"exi"}
 
 config.libs = [
     {
@@ -781,7 +782,7 @@ config.libs = [
                     f"dolphin/{unit}.c",
                     source=f"Dolphin/{unit}.c",
                     mw_version=DOLPHIN_SDK_COMPILER_VERSION,
-                    cflags=cflags_dolphin_sdk,
+                    cflags=cflags_dolphin_sdk + ["-schedule off"] if unit in dolphin_schedule_off else cflags_dolphin_sdk,
                 )
                 for unit in [
                     "db", "dsp", "dvd", "gx", "mtx", "mtxvec", "mtx44", "vec", "os",
