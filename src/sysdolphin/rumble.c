@@ -134,7 +134,7 @@ void HSD_PadRumblePauseAll(void)
 {
     int i;
     for (i = 0; i < 4; i++) {
-        HSD_PadRumblePause(i, 1);
+        HSD_PadRumblePause((u8) i, 1);
     }
 }
 
@@ -142,7 +142,7 @@ void HSD_PadRumbleActiveAll(void)
 {
     int i;
     for (i = 0; i < 4; i++) {
-        HSD_PadRumblePause(i, 0);
+        HSD_PadRumblePause((u8) i, 0);
     }
 }
 
