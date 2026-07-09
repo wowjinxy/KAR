@@ -6,13 +6,13 @@ typedef struct DBInterface
     u32 exceptionMask;
 } DBInterface;
 
-extern DBInterface* __DBInterface;
-extern u32 DBVerbose;
+u32 DBVerbose;
+DBInterface* __DBInterface;
 
 extern void OSReport(const char*, ...);
 extern void OSDumpContext(void*);
 extern void PPCHalt(void);
-extern char lbl_804F92F0[];
+char lbl_804F92F0[] = "DBExceptionDestination\n";
 
 asm void __DBExceptionDestinationAux(void);
 asm void __DBExceptionDestination(void);

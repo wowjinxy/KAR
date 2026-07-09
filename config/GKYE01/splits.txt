@@ -1141,42 +1141,58 @@ metrotrk.c:
 	.bss        start:0x80569E88 end:0x8056BE00
 	.sbss       start:0x805DDD00 end:0x805DDD18
 
-dolphin_sdk.c:
-	.data       start:0x804F92F0 end:0x804FBC78
-	.bss        start:0x8056BE00 end:0x8056D900
-	.sdata      start:0x805DC8D8 end:0x805DC9A0
-	.sbss       start:0x805DDD18 end:0x805DDF28
-	.sdata2     start:0x805E5770 end:0x805E5940
-
 dolphin/ppcarch.c:
 	.text       start:0x803C331C end:0x803C3430
 
 dolphin/db.c:
 	.text       start:0x803C3430 end:0x803C3538
+	.data       start:0x804F92F0 end:0x804F9308
+	.sbss       start:0x805DDD18 end:0x805DDD20
 
 dolphin/dsp.c:
 	.text       start:0x803C3538 end:0x803C4600
+	.data       start:0x804F9308 end:0x804F94C8
+	.bss        start:0x8056BE00 end:0x8056CBA8
+	.sbss       start:0x805DDD20 end:0x805DDD64
 
 dolphin/dvd.c:
 	.text       start:0x803C4600 end:0x803C856C
+	.data       start:0x804F94C8 end:0x804F98AC
+	.bss        start:0x8056CBA8 end:0x8056CD48
+	.sdata      start:0x805DC8D8 end:0x805DC908
+	.sbss       start:0x805DDD64 end:0x805DDE08
 
 dolphin/gx.c:
 	.text       start:0x803C856C end:0x803D13FC
+	.data       start:0x804F98AC end:0x804FA3F0
+	.bss        start:0x8056CD48 end:0x8056D560
+	.sdata      start:0x805DC908 end:0x805DC960
+	.sbss       start:0x805DDE08 end:0x805DDE68
+	.sdata2     start:0x805E5770 end:0x805E58B0
 
 dolphin/mtx.c:
 	.text       start:0x803D13FC end:0x803D1DEC
+	.sdata      start:0x805DC960 end:0x805DC968
+	.sdata2     start:0x805E58B0 end:0x805E58D0
 
 dolphin/mtxvec.c:
 	.text       start:0x803D1DEC end:0x803D1E94
 
 dolphin/mtx44.c:
 	.text       start:0x803D1E94 end:0x803D20BC
+	.sdata2     start:0x805E58D0 end:0x805E58E8
 
 dolphin/vec.c:
 	.text       start:0x803D20BC end:0x803D2348
+	.sdata2     start:0x805E58E8 end:0x805E58F8
 
 dolphin/os.c:
 	.text       start:0x803D2348 end:0x803D96B4
+	.data       start:0x804FA3F0 end:0x804FBC78
+	.bss        start:0x8056D560 end:0x8056D900
+	.sdata      start:0x805DC968 end:0x805DC9A0
+	.sbss       start:0x805DDE68 end:0x805DDF28
+	.sdata2     start:0x805E58F8 end:0x805E5940
 
 OSThread.c:
 	.text       start:0x803D96B4 end:0x803DB46C
@@ -1185,56 +1201,86 @@ OSThread.c:
 	.sdata      start:0x805DC9A0 end:0x805DC9A8
 	.sbss       start:0x805DDF28 end:0x805DDF38
 
-dolphin_sdk2.c:
-	.rodata     start:0x8048C448 end:0x8048C458
-	.data       start:0x804FC488 end:0x80501D10
-	.bss        start:0x8056E350 end:0x80589278
-	.sdata      start:0x805DC9A8 end:0x805DCA38
-	.sbss       start:0x805DDF38 end:0x805DE270
-	.sdata2     start:0x805E5940 end:0x805E59C8
-
-hsd_runtime.c:
-	.rodata     start:0x8048C458 end:0x8048C4A8
-	.sdata2     start:0x805E59C8 end:0x805E5A08
-
 dolphin/ostime.c:
 	.text       start:0x803DB46C end:0x803DB994
+	.data       start:0x804FC488 end:0x804FC530
 
 dolphin/init.c:
 	.text       start:0x803DB994 end:0x803DBA28
 
 dolphin/pad.c:
 	.text       start:0x803DBA28 end:0x803DD75C
+	.rodata     start:0x8048C448 end:0x8048C458
+	.data       start:0x804FC530 end:0x804FC540
+	.bss        start:0x8056E350 end:0x8056E3A0
+	.sdata      start:0x805DC9A8 end:0x805DC9C8
+	.sbss       start:0x805DDF38 end:0x805DDF68
 
 dolphin/vi.c:
 	.text       start:0x803DD75C end:0x803DF654
+	.data       start:0x804FC540 end:0x804FCA30
+	.bss        start:0x8056E3A0 end:0x8056E4E8
+	.sdata      start:0x805DC9C8 end:0x805DC9D8
+	.sbss       start:0x805DDF68 end:0x805DDFC0
 
 dolphin/ai.c:
 	.text       start:0x803DF654 end:0x803DFF7C
+	.sdata      start:0x805DC9D8 end:0x805DC9E0
+	.sbss       start:0x805DDFC0 end:0x805DE004
 
 dolphin/ar.c:
 	.text       start:0x803DFF7C end:0x803E1A8C
+	.sdata      start:0x805DC9E0 end:0x805DC9E8
+	.sbss       start:0x805DE004 end:0x805DE020
 
 dolphin/arq.c:
 	.text       start:0x803E1A8C end:0x803E1E28
+	.sdata      start:0x805DC9E8 end:0x805DC9F0
+	.sbss       start:0x805DE020 end:0x805DE048
 
 dolphin/card.c:
 	.text       start:0x803E1E28 end:0x803E876C
+	.data       start:0x804FCA30 end:0x804FCBE0
+	.bss        start:0x8056E4E8 end:0x8056E728
+	.sdata      start:0x805DC9F0 end:0x805DCA08
+	.sbss       start:0x805DE048 end:0x805DE050
 
 dolphin/si.c:
 	.text       start:0x803E876C end:0x803E9F64
+	.data       start:0x804FCBE0 end:0x804FCEE8
+	.bss        start:0x8056E728 end:0x8056E928
+	.sdata      start:0x805DCA08 end:0x805DCA10
+	.sbss       start:0x805DE050 end:0x805DE068
 
 dolphin/exi.c:
 	.text       start:0x803E9F64 end:0x803EC02C
+	.bss        start:0x8056E928 end:0x8056E9E8
+	.sdata      start:0x805DCA10 end:0x805DCA18
+	.sbss       start:0x805DE068 end:0x805DE080
 
 dolphin/ax.c:
 	.text       start:0x803EC02C end:0x803F03FC
+	.data       start:0x804FCEE8 end:0x80500950
+	.bss        start:0x8056E9E8 end:0x80587A60
+	.sdata      start:0x805DCA18 end:0x805DCA30
+	.sbss       start:0x805DE080 end:0x805DE148
+	.sdata2     start:0x805E5940 end:0x805E59B0
 
 dolphin/mix.c:
 	.text       start:0x803F03FC end:0x803F3920
+	.data       start:0x80500950 end:0x80501D10
+	.bss        start:0x80587A60 end:0x80589278
+	.sbss       start:0x805DE148 end:0x805DE158
+	.sdata2     start:0x805E59B0 end:0x805E59C8
+
+hsd_runtime.c:
+	.rodata     start:0x8048C458 end:0x8048C4A8
+	.sdata2     start:0x805E59C8 end:0x805E5A08
 
 metrotrk_bridge.c:
 	.text       start:0x803F3920 end:0x803F43D8
+	.sdata      start:0x805DCA30 end:0x805DCA38
+	.sbss       start:0x805DE158 end:0x805DE270
 
 dobj.c:
 	.text       start:0x803F43D8 end:0x803F4B7C
