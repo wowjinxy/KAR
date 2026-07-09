@@ -783,7 +783,7 @@ config.libs = [
                 for unit in [
                     "db", "dsp", "dvd", "gx", "mtx", "mtxvec", "mtx44", "vec", "os",
                     "ostime", "init", "pad", "vi", "ai", "ar", "arq", "card", "si",
-                    "exi", "ax", "mix",
+                    "exi", "ax", "mix", "ppcarch",
                 ]
             ],
             Object(NonMatching, "metrotrk_bridge.c"),

@@ -1135,7 +1135,7 @@ runtime_libc.c:
 	.sdata2     start:0x805E5168 end:0x805E5770
 
 metrotrk.c:
-	.text       start:0x803BD630 end:0x803C3430
+	.text       start:0x803BD630 end:0x803C331C
 	.rodata     start:0x8048BC00 end:0x8048C448
 	.data       start:0x804F91B0 end:0x804F92F0
 	.bss        start:0x80569E88 end:0x8056BE00
@@ -1147,6 +1147,9 @@ dolphin_sdk.c:
 	.sdata      start:0x805DC8D8 end:0x805DC9A0
 	.sbss       start:0x805DDD18 end:0x805DDF28
 	.sdata2     start:0x805E5770 end:0x805E5940
+
+dolphin/ppcarch.c:
+	.text       start:0x803C331C end:0x803C3430
 
 dolphin/db.c:
 	.text       start:0x803C3430 end:0x803C3538
