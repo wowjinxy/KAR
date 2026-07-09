@@ -228,6 +228,9 @@ void HSD_TExpRef(HSD_TExp* texp, u8 sel)
     }
 }
 
+#pragma push
+#pragma inline_recursion on
+#pragma inline_max_size(768)
 void HSD_TExpUnref(HSD_TExp* texp, u8 sel)
 {
     s32 i;
@@ -259,6 +262,7 @@ void HSD_TExpUnref(HSD_TExp* texp, u8 sel)
         return;
     }
 }
+#pragma pop
 
 HSD_TExp* HSD_TExpFreeList(HSD_TExp* texp_list, HSD_TExpType type, s32 all)
 {
