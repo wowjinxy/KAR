@@ -8,7 +8,7 @@ extern const f32 lbl_805E58D4; // 2.0F
 extern const f32 lbl_805E58D8; // 0.0F
 extern const f32 lbl_805E58DC; // -1.0F
 extern const f32 lbl_805E58E0; // 0.5F
-extern const f32 lbl_805E58E4; // (PI / 180)
+extern const f32 lbl_805E58E4; // PI / 180
 
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
 {
@@ -98,6 +98,13 @@ void C_MTXOrtho(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
     m[3][2] = lbl_805E58D8;
     m[3][3] = lbl_805E58D0;
 }
+
+const f32 lbl_805E58D0 = 1.0F;
+const f32 lbl_805E58D4 = 2.0F;
+const f32 lbl_805E58D8 = 0.0F;
+const f32 lbl_805E58DC = -1.0F;
+const f32 lbl_805E58E0 = 0.5F;
+const f32 lbl_805E58E4 = 0.017453292F; // PI / 180
 
 asm void PSVECAdd(Vec* a, Vec* b, Vec* c)
 {
