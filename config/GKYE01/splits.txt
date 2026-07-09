@@ -1142,12 +1142,38 @@ metrotrk.c:
 	.sbss       start:0x805DDD00 end:0x805DDD18
 
 dolphin_sdk.c:
-	.text       start:0x803C3430 end:0x803D96B4
 	.data       start:0x804F92F0 end:0x804FBC78
 	.bss        start:0x8056BE00 end:0x8056D900
 	.sdata      start:0x805DC8D8 end:0x805DC9A0
 	.sbss       start:0x805DDD18 end:0x805DDF28
 	.sdata2     start:0x805E5770 end:0x805E5940
+
+dolphin/db.c:
+	.text       start:0x803C3430 end:0x803C3538
+
+dolphin/dsp.c:
+	.text       start:0x803C3538 end:0x803C4600
+
+dolphin/dvd.c:
+	.text       start:0x803C4600 end:0x803C856C
+
+dolphin/gx.c:
+	.text       start:0x803C856C end:0x803D13FC
+
+dolphin/mtx.c:
+	.text       start:0x803D13FC end:0x803D1DEC
+
+dolphin/mtxvec.c:
+	.text       start:0x803D1DEC end:0x803D1E94
+
+dolphin/mtx44.c:
+	.text       start:0x803D1E94 end:0x803D20BC
+
+dolphin/vec.c:
+	.text       start:0x803D20BC end:0x803D2348
+
+dolphin/os.c:
+	.text       start:0x803D2348 end:0x803D96B4
 
 OSThread.c:
 	.text       start:0x803D96B4 end:0x803DB46C
@@ -1157,7 +1183,6 @@ OSThread.c:
 	.sbss       start:0x805DDF28 end:0x805DDF38
 
 dolphin_sdk2.c:
-	.text       start:0x803DB46C end:0x803F3920
 	.rodata     start:0x8048C448 end:0x8048C458
 	.data       start:0x804FC488 end:0x80501D10
 	.bss        start:0x8056E350 end:0x80589278
@@ -1168,6 +1193,42 @@ dolphin_sdk2.c:
 hsd_runtime.c:
 	.rodata     start:0x8048C458 end:0x8048C4A8
 	.sdata2     start:0x805E59C8 end:0x805E5A08
+
+dolphin/ostime.c:
+	.text       start:0x803DB46C end:0x803DB994
+
+dolphin/init.c:
+	.text       start:0x803DB994 end:0x803DBA28
+
+dolphin/pad.c:
+	.text       start:0x803DBA28 end:0x803DD75C
+
+dolphin/vi.c:
+	.text       start:0x803DD75C end:0x803DF654
+
+dolphin/ai.c:
+	.text       start:0x803DF654 end:0x803DFF7C
+
+dolphin/ar.c:
+	.text       start:0x803DFF7C end:0x803E1A8C
+
+dolphin/arq.c:
+	.text       start:0x803E1A8C end:0x803E1E28
+
+dolphin/card.c:
+	.text       start:0x803E1E28 end:0x803E876C
+
+dolphin/si.c:
+	.text       start:0x803E876C end:0x803E9F64
+
+dolphin/exi.c:
+	.text       start:0x803E9F64 end:0x803EC02C
+
+dolphin/ax.c:
+	.text       start:0x803EC02C end:0x803F03FC
+
+dolphin/mix.c:
+	.text       start:0x803F03FC end:0x803F3920
 
 metrotrk_bridge.c:
 	.text       start:0x803F3920 end:0x803F43D8

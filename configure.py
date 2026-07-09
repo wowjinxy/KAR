@@ -773,6 +773,19 @@ config.libs = [
                 mw_version=DOLPHIN_SDK_COMPILER_VERSION,
                 cflags=cflags_dolphin_sdk,
             ),
+            *[
+                Object(
+                    NonMatching,
+                    f"dolphin/{unit}.c",
+                    mw_version=DOLPHIN_SDK_COMPILER_VERSION,
+                    cflags=cflags_dolphin_sdk,
+                )
+                for unit in [
+                    "db", "dsp", "dvd", "gx", "mtx", "mtxvec", "mtx44", "vec", "os",
+                    "ostime", "init", "pad", "vi", "ai", "ar", "arq", "card", "si",
+                    "exi", "ax", "mix",
+                ]
+            ],
             Object(NonMatching, "metrotrk_bridge.c"),
             Object(NonMatching, "hsd_runtime.c"),
         ],
