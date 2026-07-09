@@ -777,6 +777,7 @@ config.libs = [
                 Object(
                     NonMatching,
                     f"dolphin/{unit}.c",
+                    source=f"Dolphin/{unit}.c",
                     mw_version=DOLPHIN_SDK_COMPILER_VERSION,
                     cflags=cflags_dolphin_sdk,
                 )
