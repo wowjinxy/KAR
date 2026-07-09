@@ -932,6 +932,7 @@ s32 fn_803EB940(s32 chan, u32 dev, u32* type)
 #pragma dont_inline off
 
 #pragma dont_inline on
+#pragma scheduling on
 BOOL ProbeBarnacle(s32 chan, u32 dev, u32* revision)
 {
     int err;
@@ -977,9 +978,10 @@ BOOL ProbeBarnacle(s32 chan, u32 dev, u32* revision)
 
     return FALSE;
 }
+#pragma scheduling reset
 #pragma dont_inline off
 
-#pragma dont_inline on
+#pragma scheduling on
 void __OSEnableBarnacle(s32 chan, u32 dev)
 {
     u32 id;
@@ -1023,9 +1025,10 @@ void __OSEnableBarnacle(s32 chan, u32 dev)
         }
     }
 }
+#pragma scheduling reset
 #pragma dont_inline off
 
-#pragma dont_inline on
+#pragma scheduling on
 int InitializeUART(void)
 {
     if (lbl_805DE07C == 0xA5FF005A)
@@ -1044,6 +1047,7 @@ int InitializeUART(void)
     lbl_805DE078 = 0xA5FF005A;
     return 0;
 }
+#pragma scheduling reset
 #pragma dont_inline off
 
 static inline int QueueLength(void)
@@ -1064,8 +1068,10 @@ static inline int QueueLength(void)
     return 0x10 - (cmd >> 0x18);
 }
 
+#pragma scheduling on
 int WriteUARTN(void* buf, u32 len)
 {
+    BOOL enabled;
     u32 cmd;
     s32 xLen;
     int qLen;
@@ -1078,9 +1084,11 @@ int WriteUARTN(void* buf, u32 len)
         return 2;
     }
 
+    enabled = OSDisableInterrupts();
     locked = EXILock(lbl_805DE070, lbl_805DE074, 0);
     if (locked == 0)
     {
+        OSRestoreInterrupts(enabled);
         return 0;
     }
     else
@@ -1139,5 +1147,7 @@ int WriteUARTN(void* buf, u32 len)
     }
 
     EXIUnlock(lbl_805DE070);
+    OSRestoreInterrupts(enabled);
     return error;
 }
+#pragma scheduling reset
