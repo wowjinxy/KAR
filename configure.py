@@ -741,6 +741,8 @@ for obj in kar_objects:
         obj.options["cflags"] = cflags_dolphin_sdk
         obj.options["progress_category"] = "sdk"
 
+dolphin_matched = {"mtxvec"}
+
 config.libs = [
     {
         "lib": "KAR",
@@ -775,7 +777,7 @@ config.libs = [
             ),
             *[
                 Object(
-                    NonMatching,
+                    Matching if unit in dolphin_matched else NonMatching,
                     f"dolphin/{unit}.c",
                     source=f"Dolphin/{unit}.c",
                     mw_version=DOLPHIN_SDK_COMPILER_VERSION,
