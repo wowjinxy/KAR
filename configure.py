@@ -741,7 +741,7 @@ for obj in kar_objects:
         obj.options["cflags"] = cflags_dolphin_sdk
         obj.options["progress_category"] = "sdk"
 
-dolphin_matched = {"mtxvec"}
+dolphin_matched = {"mtxvec", "ppcarch"}
 
 config.libs = [
     {

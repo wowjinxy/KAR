@@ -42,11 +42,29 @@ asm void PPCMtl2cr(u32 l2cr)
     blr
 }
 
+asm void PPCMtdec(u32 dec)
+{
+    nofralloc
+    mtdec r3
+    blr
+}
+
 asm void kar_diagnostic__near_803c3354(void)
 {
     nofralloc
     sc
     blr
+}
+
+asm void PPCHalt(void)
+{
+    nofralloc
+    sync
+_halt:
+    nop
+    li r3, 0
+    nop
+    b _halt
 }
 
 asm void PPCMtmmcr0(u32 mmcr0)
