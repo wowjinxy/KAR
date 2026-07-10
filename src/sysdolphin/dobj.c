@@ -2,10 +2,15 @@
 
 extern HSD_ClassInfo hsdClass;
 
-static HSD_DObj* current_dobj;
-static HSD_DObjInfo* default_class;
+extern HSD_DObj* lbl_805DE174;
+extern HSD_DObjInfo* lbl_805DE170;
+#define current_dobj lbl_805DE174
+#define default_class lbl_805DE170
+
+extern void kar_object__80405968(HSD_PObj*, HSD_PObjDesc*);
 
 void DObjInfoInit(void);
+void _HSD_StateInvalidateTevRegister();
 
 HSD_DObjInfo hsdDObj = { DObjInfoInit };
 
@@ -37,7 +42,7 @@ void HSD_DObjClearFlags(HSD_DObj* dobj, u32 flags)
     }
 }
 
-void HSD_DObjRemoveAnimByFlags(HSD_DObj* dobj, u32 flags)
+static inline void HSD_DObjRemoveAnimByFlags(HSD_DObj* dobj, u32 flags)
 {
     if (dobj == NULL)
         return;
@@ -62,20 +67,12 @@ void HSD_DObjRemoveAnimAllByFlags(HSD_DObj* dobj, u32 flags)
     }
 }
 
-void HSD_DObjAddAnim(HSD_DObj* dobj, HSD_MatAnim* mat_anim, HSD_ShapeAnimDObj* sh_anim)
+static inline void HSD_DObjAddAnim(HSD_DObj* dobj, HSD_MatAnim* mat_anim, HSD_ShapeAnimDObj* sh_anim)
 {
-    HSD_ShapeAnim* shapeanim;
-
     if (dobj == NULL)
         return;
 
-    if (sh_anim != NULL) {
-        shapeanim = sh_anim->shapeanim;
-    } else{
-        shapeanim = NULL;
-    }
-
-    HSD_PObjRemoveAnimAll(dobj->pobj, shapeanim);
+    HSD_PObjAddAnimAll(dobj->pobj, sh_anim != NULL ? sh_anim->shapeanim : NULL);
     HSD_MObjAddAnim(dobj->mobj, mat_anim);
 }
 
@@ -93,7 +90,7 @@ void HSD_DObjAddAnimAll(HSD_DObj* dobj, HSD_MatAnim* matanim, HSD_ShapeAnimDObj*
     }
 }
 
-void HSD_DObjReqAnimByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
+static inline void HSD_DObjReqAnimByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
 {
     if (dobj == NULL)
         return;
@@ -114,8 +111,6 @@ void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
     }
 }
 
-// Not quite matching when copied from melee (SSBM).
-// Seems that HSD_ClassInfo was altered.
 extern void HSD_MObjAnim();
 extern void HSD_PObjAnimAll();
 #pragma push
@@ -160,7 +155,7 @@ HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
 HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* desc);
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* desc);
 
-void HSD_DObjModifyFlags(HSD_DObj* dobj, u32 flags, u32 mask)
+static inline void HSD_DObjModifyFlags(HSD_DObj* dobj, u32 flags, u32 mask)
 {
     if (dobj == NULL)
         return;
@@ -186,7 +181,7 @@ int DObjLoad(HSD_DObj* dobj, HSD_DObjDesc* desc)
                 HSD_DObjModifyFlags(dobj, 4, 0xE);
                 break;
             default:
-                _OSReport("mobj has unexpected blending flags (0x%x).", dobj->mobj->rendermode);
+                OSReport("mobj has unexpected blending flags (0x%x).", dobj->mobj->rendermode);
                 HSD_Panic(__FILE__, 319, "");
         }
     }
@@ -220,7 +215,7 @@ HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc)
     return dobj;
 }
 
-void hsdDelete(void* object)
+static inline void hsdDelete(void* object)
 {
     if (object == NULL)
         return;
@@ -229,7 +224,7 @@ void hsdDelete(void* object)
     HSD_CLASS_METHOD(object)->destroy((HSD_Class*) object);
 }
 
-void HSD_DObjRemove(HSD_DObj* dobj)
+static inline void HSD_DObjRemove(HSD_DObj* dobj)
 {
     hsdDelete(dobj);
 }
@@ -251,11 +246,11 @@ HSD_DObj* HSD_DObjAlloc(void)
     return dobj;
 }
 
-void HSD_DObjResolveRefs(HSD_DObj* dobj, HSD_DObjDesc* desc)
+static inline void HSD_DObjResolveRefs(HSD_DObj* dobj, HSD_DObjDesc* desc)
 {
     if (dobj == NULL || desc == NULL)
        return;
-    HSD_PObjResolveRefsAll(dobj->pobj, desc->pobjdesc);
+    kar_object__80405968(dobj->pobj, desc->pobjdesc);
 }
 
 void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc)
@@ -269,7 +264,7 @@ void HSD_DObjDisp(HSD_DObj* dobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
 {
     HSD_PObj* p;
 
-    HSD_MObjSetCurrent(dobj->mobj);
+    _HSD_StateInvalidateTevRegister(dobj->mobj);
     if ((rendermode & 0x4000000) == 0) {
         HSD_MOBJ_METHOD(dobj->mobj)->setup(dobj->mobj, rendermode);
     }
@@ -279,7 +274,7 @@ void HSD_DObjDisp(HSD_DObj* dobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
     if ((rendermode & 0x4000000) == 0) {
         HSD_MOBJ_METHOD(dobj->mobj)->unset(dobj->mobj, rendermode);
     }
-    HSD_MObjSetCurrent(NULL);
+    _HSD_StateInvalidateTevRegister(NULL);
 }
 
 void DObjRelease(HSD_Class* o)

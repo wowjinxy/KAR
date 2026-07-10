@@ -1,16 +1,28 @@
 #include <sysdolphin/cobj.h>
 
 #include <dolphin/gx/gxtypes.h>
+#include <sysdolphin/objalloc.h>
 
 #define DegToRad(x) ((x) * 0.017453292F)
 #define COBJ_MTX_DIRTY 0x40000000
 #define COBJ_INV_DIRTY 0x80000000
 
-extern HSD_ClassInfo objInfo;
+extern HSD_ClassInfo hsdObj;
 extern GXRenderModeObj lbl_80589A80;
 extern s32 lbl_805DCB00;
 extern s32 lbl_805DCB04;
-extern f32 lbl_805DC8B8;
+extern f32 lbl_805DC8B8[]; /* epsilon */
+extern HSD_ObjAllocData hsdFObj_alloc_data;
+
+char kar_srcfile_cobj_c_805dcb08[] = "cobj.c";
+char lbl_805DCB10[] = "cobj";
+char lbl_805DCB18[] = "0";
+
+extern void HSD_Panic(const char* file, s32 line, const char* msg);
+
+#define ASSERT_COBJ(line)                                                    \
+    ((cobj) ? ((void) 0)                                                     \
+            : __assert(kar_srcfile_cobj_c_805dcb08, line, lbl_805DCB10))
 
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
@@ -57,8 +69,8 @@ extern void C_MTXFrustum(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                        f32 near, f32 far);
 extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSMTXRotAxisRad(Mtx mtx, Vec* axis, f32 rad);
-extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
+extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
+extern void fn_803D1E40(Mtx mtx, Vec* src, Vec* dst);
 extern void fn_803D1578(Mtx src, Mtx dst);
 extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
 extern void PSVECNormalize(Vec* src, Vec* dst);
@@ -66,65 +78,56 @@ extern f32 PSVECMag(Vec* vec);
 extern f32 PSVECDotProduct(Vec* a, Vec* b);
 extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern f64 tan(f64 x);
-extern f64 atan2(f64 y, f64 x);
-extern f64 sqrt(f64 x);
+extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
+extern f64 __frsqrte(f64 x);
+extern f64 __fnmsub(f64 a, f64 c, f64 b);
+extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 
-static HSD_CObjInfo* default_class;
-static HSD_CObj* current;
+static inline f32 cobj_sqrtf(f32 x)
+{
+    volatile f32 y;
 
-static int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc);
-static int CObjInit(HSD_Class* obj);
-static void CObjRelease(HSD_Class* obj);
-static void CObjAmnesia(HSD_ClassInfo* info);
-static void CObjInfoInit(void);
-static void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val);
+    if (x > 0.0F) {
+        f64 guess = __frsqrte((f64) x);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        guess = 0.5 * guess * __fnmsub(x, guess * guess, 3.0);
+        y = (f32) (x * guess);
+        return y;
+    }
+    return x;
+}
+
+static HSD_CObjInfo* lbl_805DE228; /* default_class */
+static HSD_CObj* lbl_805DE22C;     /* current */
+
+int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc);
+int CObjInit(HSD_Class* obj);
+void CObjRelease(HSD_Class* obj);
+void CObjAmnesia(HSD_ClassInfo* info);
+void CObjInfoInit(void);
+void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val);
+s32 vec_normalize_check(Vec* src, Vec* dst);
+extern Vec lbl_80503410; /* default up vector */
 
 HSD_CObjInfo hsdCObj = { CObjInfoInit };
 
-static Vec lbl_805033C0 = { 0.0F, 0.0F, 0.0F };
-static Vec lbl_805033CC = { 0.0F, 1.0F, 0.0F };
-static Vec lbl_805033D8 = { 0.0F, 1.0F, 0.0F };
+static char lbl_dead_805300XX_ref_width[] = "ref_width > 0";
+static char lbl_dead_805300XX_ref_height[] = "ref_height > 0";
 
-static f32 cobj_abs(f32 val)
-{
-    if (val < 0.0F) {
-        return -val;
-    }
-    return val;
-}
-
-static BOOL vec_is_zero(Vec* vec)
-{
-    if (cobj_abs(vec->x) > lbl_805DC8B8) {
-        return FALSE;
-    }
-    if (cobj_abs(vec->y) > lbl_805DC8B8) {
-        return FALSE;
-    }
-    if (cobj_abs(vec->z) > lbl_805DC8B8) {
-        return FALSE;
-    }
-    return TRUE;
-}
-
-s32 vec_normalize_check(Vec* src, Vec* dst)
-{
-    if (src == NULL || dst == NULL || vec_is_zero(src)) {
-        return -1;
-    }
-    PSVECNormalize(src, dst);
-    return 0;
-}
+#define vec_is_zero(vec)                                                    \
+    (__fabs((vec)->x) <= lbl_805DC8B8[0] && __fabs((vec)->y) <= lbl_805DC8B8[0] && \
+     __fabs((vec)->z) <= lbl_805DC8B8[0])
 
 void HSD_CObjSetViewportScale(HSD_CObj* cobj, s32 color_update,
                               s32 alpha_update, s32 tex_enable)
 {
-    f32 z;
     f32 scale;
-    f32 top;
-    f32 bottom;
+    f32 z;
     f32 left;
     f32 right;
+    f32 top;
+    f32 bottom;
 
     if (cobj == NULL ||
         (color_update == 0 && alpha_update == 0 && tex_enable == 0)) {
@@ -134,26 +137,23 @@ void HSD_CObjSetViewportScale(HSD_CObj* cobj, s32 color_update,
     z = 0.5 * (HSD_CObjGetNear(cobj) + HSD_CObjGetFar(cobj));
     switch (HSD_CObjGetProjectionType(cobj)) {
     case PROJ_PERSPECTIVE:
-        top = z * tan(DegToRad(0.5F * cobj->projection_param.perspective.fov));
-        bottom = -top;
+        top = z * tan(0.5F * DegToRad(cobj->projection_param.perspective.fov));
         right = top * cobj->projection_param.perspective.aspect;
+        bottom = -top;
         left = -right;
         break;
     case PROJ_FRUSTRUM:
         scale = z / HSD_CObjGetNear(cobj);
+        right = scale * cobj->projection_param.frustrum.right;
+        left = scale * cobj->projection_param.frustrum.left;
         top = scale * cobj->projection_param.frustrum.top;
         bottom = scale * cobj->projection_param.frustrum.bottom;
-        left = scale * cobj->projection_param.frustrum.left;
-        right = scale * cobj->projection_param.frustrum.right;
         break;
     case PROJ_ORTHO:
+        right = cobj->projection_param.ortho.right;
+        left = cobj->projection_param.ortho.left;
         top = cobj->projection_param.ortho.top;
         bottom = cobj->projection_param.ortho.bottom;
-        left = cobj->projection_param.ortho.left;
-        right = cobj->projection_param.ortho.right;
-        break;
-    default:
-        top = bottom = left = right = 0.0F;
         break;
     }
 
@@ -174,7 +174,7 @@ void HSD_CObjAddAnim(HSD_CObj* cobj, HSD_CameraAnim* anim)
     }
 }
 
-static void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
+void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
 {
     HSD_CObj* cobj = obj;
     Vec vec;
@@ -200,7 +200,15 @@ static void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
         HSD_CObjSetEyePosition(cobj, &vec);
         break;
     case 5:
+        HSD_CObjGetInterest(cobj, &vec);
+        vec.x = val->fv;
+        HSD_CObjSetInterest(cobj, &vec);
+        break;
     case 6:
+        HSD_CObjGetInterest(cobj, &vec);
+        vec.x = val->fv;
+        HSD_CObjSetInterest(cobj, &vec);
+        break;
     case 7:
         HSD_CObjGetInterest(cobj, &vec);
         vec.x = val->fv;
@@ -224,7 +232,7 @@ static void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
 void HSD_CObjAnim(HSD_CObj* cobj)
 {
     if (cobj != NULL) {
-        HSD_AObjInterpretAnim(cobj->aobj, cobj, CObjUpdateFunc);
+        HSD_AObjInterpretAnim(cobj->aobj, cobj, HSD_COBJ_METHOD(cobj)->update);
         HSD_WObjInterpretAnim(cobj->eye_position);
         HSD_WObjInterpretAnim(cobj->interest);
     }
@@ -232,14 +240,18 @@ void HSD_CObjAnim(HSD_CObj* cobj)
 
 void HSD_CObjReqAnim(HSD_CObj* cobj, f32 frame)
 {
-    if (cobj != NULL) {
-        HSD_AObjReqAnim(cobj->aobj, frame);
-        HSD_WObjReqAnim(cobj->eye_position, frame);
-        HSD_WObjReqAnim(cobj->interest, frame);
+    if (cobj == NULL) {
+        return;
     }
+    if (cobj == NULL) {
+        return;
+    }
+    HSD_AObjReqAnim(cobj->aobj, frame);
+    HSD_WObjReqAnim(cobj->eye_position, frame);
+    HSD_WObjReqAnim(cobj->interest, frame);
 }
 
-static s32 makeProjectionMtx(HSD_CObj* cobj, Mtx mtx)
+static inline s32 makeProjectionMtx(HSD_CObj* cobj, Mtx mtx)
 {
     switch (cobj->projection_type) {
     case PROJ_PERSPECTIVE:
@@ -264,55 +276,171 @@ static s32 makeProjectionMtx(HSD_CObj* cobj, Mtx mtx)
     return 0;
 }
 
-static BOOL setupTopHalfCamera(HSD_CObj* cobj)
+BOOL setupTopHalfCamera(HSD_CObj* cobj)
 {
     Mtx mtx;
-    f32 height;
+    s32 projection_type;
+    f32 h_scale;
+    f32 rad;
+    f32 t;
+    f32 w;
+    f32 b;
+    f32 top;
     f32 bottom;
+    f32 left;
+    f32 right;
+    f32 width;
+    f32 height;
 
     if (cobj->viewport_top >= lbl_80589A80.efbHeight) {
         return FALSE;
     }
 
+    left = cobj->viewport_left;
+    right = cobj->viewport_right;
+    top = cobj->viewport_top;
     bottom = cobj->viewport_bottom;
-    if (bottom > lbl_80589A80.efbHeight) {
-        bottom = lbl_80589A80.efbHeight;
+    bottom = bottom < lbl_80589A80.efbHeight ? bottom : lbl_80589A80.efbHeight;
+    width = right - left;
+    height = bottom - top;
+    GXSetScissor(left, top, width, height);
+
+    top = cobj->viewport_top;
+    bottom = cobj->viewport_bottom;
+    left = cobj->viewport_left;
+    right = cobj->viewport_right;
+    height = (bottom < lbl_80589A80.efbHeight ? bottom : lbl_80589A80.efbHeight) -
+             top;
+    h_scale = height / (bottom - top);
+    width = right - left;
+
+    GXSetViewport(left, top, width, height, 0.0F, 1.0F);
+
+    switch (cobj->projection_type) {
+    case PROJ_PERSPECTIVE:
+        rad = DegToRad(0.5 * cobj->projection_param.perspective.fov);
+        t = cobj->near * (f32) tan(rad);
+        w = t * cobj->projection_param.perspective.aspect;
+        b = t * (1.0F - 2.0F * h_scale);
+        C_MTXFrustum(mtx, t, b, -w, w, cobj->near, cobj->far);
+        projection_type = 0;
+        break;
+    case PROJ_FRUSTRUM:
+        C_MTXFrustum(mtx, cobj->projection_param.frustrum.top,
+                     cobj->projection_param.frustrum.top -
+                         h_scale * (cobj->projection_param.frustrum.top -
+                                    cobj->projection_param.frustrum.bottom),
+                     cobj->projection_param.frustrum.left,
+                     cobj->projection_param.frustrum.right, cobj->near,
+                     cobj->far);
+        projection_type = 0;
+        break;
+    case PROJ_ORTHO:
+        C_MTXOrtho(mtx, cobj->projection_param.ortho.top,
+                   cobj->projection_param.ortho.top -
+                       h_scale * (cobj->projection_param.ortho.top -
+                                  cobj->projection_param.ortho.bottom),
+                   cobj->projection_param.ortho.left,
+                   cobj->projection_param.ortho.right, cobj->near, cobj->far);
+        projection_type = 1;
+        break;
     }
-    height = bottom - cobj->viewport_top;
-    GXSetScissor(cobj->viewport_left, cobj->viewport_top,
-                 cobj->viewport_right - cobj->viewport_left, height);
-    GXSetViewport(cobj->viewport_left, cobj->viewport_top,
-                  cobj->viewport_right - cobj->viewport_left, height, 0.0F,
-                  1.0F);
-    GXSetProjection(mtx, makeProjectionMtx(cobj, mtx));
+    GXSetProjection(mtx, projection_type);
     return TRUE;
 }
 
-static BOOL setupBottomHalfCamera(HSD_CObj* cobj)
+BOOL setupBottomHalfCamera(HSD_CObj* cobj)
 {
     Mtx mtx;
+    s32 projection_type;
     u32 screen_top;
+    f32 h_scale;
+    f32 rad;
+    f32 t;
+    f32 w;
+    f32 top_frustum;
     f32 top;
     f32 bottom;
+    f32 left;
+    f32 right;
+    f32 width;
+    f32 height;
+    f32 h;
 
     screen_top = lbl_80589A80.efbHeight - 8;
     if (cobj->viewport_bottom < screen_top) {
         return FALSE;
     }
 
+    top = cobj->scissor_top;
+    left = cobj->scissor_left;
+    right = cobj->scissor_right;
+    top = (top > screen_top ? top : screen_top) - screen_top;
+    bottom = cobj->scissor_bottom - screen_top;
+    width = right - left;
+    height = bottom - top;
+    GXSetScissor(left, top, width, height);
+
     top = cobj->viewport_top;
-    if (top < screen_top) {
-        top = screen_top;
-    }
+    left = cobj->viewport_left;
+    right = cobj->viewport_right;
+    top = top > screen_top ? top : screen_top;
     bottom = cobj->viewport_bottom;
-    GXSetScissor(cobj->scissor_left, top - screen_top,
-                 cobj->scissor_right - cobj->scissor_left,
-                 bottom - screen_top - (top - screen_top));
-    GXSetViewport(cobj->viewport_left, top - screen_top,
-                  cobj->viewport_right - cobj->viewport_left, bottom - top,
-                  0.0F, 1.0F);
-    GXSetProjection(mtx, makeProjectionMtx(cobj, mtx));
+    width = right - left;
+    height = bottom - cobj->viewport_top;
+
+    top = top - screen_top;
+    h = (bottom - screen_top) - top;
+    h_scale = h / height;
+    GXSetViewport(left, top, width, h, 0.0F, 1.0F);
+
+    switch (cobj->projection_type) {
+    case PROJ_PERSPECTIVE:
+        rad = DegToRad(0.5 * cobj->projection_param.perspective.fov);
+        t = cobj->near * (f32) tan(rad);
+        w = t * cobj->projection_param.perspective.aspect;
+        top_frustum = t * __fmadds(2.0F, h_scale, -1.0F);
+        C_MTXFrustum(mtx, top_frustum, -t, -w, w, cobj->near, cobj->far);
+        projection_type = 0;
+        break;
+    case PROJ_FRUSTRUM:
+        projection_type = 0;
+        C_MTXFrustum(mtx,
+                     __fmadds(h_scale,
+                              cobj->projection_param.frustrum.top -
+                                  cobj->projection_param.frustrum.bottom,
+                              cobj->projection_param.frustrum.bottom),
+                     cobj->projection_param.frustrum.bottom,
+                     cobj->projection_param.frustrum.left,
+                     cobj->projection_param.frustrum.right, cobj->near,
+                     cobj->far);
+        break;
+    case PROJ_ORTHO:
+        projection_type = 1;
+        C_MTXOrtho(mtx,
+                   __fmadds(h_scale,
+                            cobj->projection_param.ortho.top -
+                                cobj->projection_param.ortho.bottom,
+                            cobj->projection_param.ortho.bottom),
+                   cobj->projection_param.ortho.bottom,
+                   cobj->projection_param.ortho.left,
+                   cobj->projection_param.ortho.right, cobj->near, cobj->far);
+        break;
+    }
+    GXSetProjection(mtx, projection_type);
     return TRUE;
+}
+
+static inline s32 vec_normalize_check_inline(Vec* src, Vec* dst)
+{
+    if (src == NULL || dst == NULL) {
+        return -1;
+    }
+    if (vec_is_zero(src)) {
+        return -1;
+    }
+    PSVECNormalize(src, dst);
+    return 0;
 }
 
 void HSD_CObjSetupViewingMtx(HSD_CObj* cobj)
@@ -331,9 +459,7 @@ void HSD_CObjSetupViewingMtx(HSD_CObj* cobj)
         HSD_CObjGetInterest(cobj, &interest);
         C_MTXLookAt(cobj->view_mtx, &eye, &up, &interest);
         PSVECSubtract(&interest, &eye, &cobj->eye_vector);
-        if (!vec_is_zero(&cobj->eye_vector)) {
-            PSVECNormalize(&cobj->eye_vector, &cobj->eye_vector);
-        }
+        vec_normalize_check_inline(&cobj->eye_vector, &cobj->eye_vector);
         cobj->eye_position->flags &= ~2;
         cobj->interest->flags &= ~2;
         HSD_CObjClearFlags(cobj, COBJ_MTX_DIRTY);
@@ -341,14 +467,19 @@ void HSD_CObjSetupViewingMtx(HSD_CObj* cobj)
     }
 }
 
+static char lbl_80503380[] = "unkown type of render pass.\n";
+
+char lbl_805033A0[] = "cobj->eyepos";
+char lbl_805033B0[] = "cobj->interest";
+
 BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
 {
     Mtx mtx;
     s32 projection_type;
     s32 pass;
     BOOL result;
-    f32 x_scale;
-    f32 y_scale;
+    f64 x_scale;
+    f64 y_scale;
     f32 left;
     f32 top;
     f32 width;
@@ -360,13 +491,13 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
 
     pass = HSD_GetCurrentRenderPass();
     _HSD_ZListClear();
-    current = cobj;
+    lbl_805DE22C = cobj;
     result = TRUE;
 
     switch (pass) {
     case 0:
-        x_scale = (f32) lbl_80589A80.fbWidth / (f32) lbl_805DCB00;
-        y_scale = (f32) lbl_80589A80.efbHeight / (f32) lbl_805DCB04;
+        x_scale = lbl_80589A80.fbWidth / (f64) lbl_805DCB00;
+        y_scale = lbl_80589A80.efbHeight / (f64) lbl_805DCB04;
         left = cobj->viewport_left * x_scale;
         top = cobj->viewport_top * y_scale;
         width = cobj->viewport_right * x_scale - left;
@@ -386,6 +517,12 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
         GXSetProjection(mtx, projection_type);
         break;
     case 1:
+        result = setupTopHalfCamera(cobj);
+        break;
+    case 2:
+        result = setupBottomHalfCamera(cobj);
+        break;
+    case 3:
         GXSetViewport(cobj->viewport_left, cobj->viewport_top,
                       cobj->viewport_right - cobj->viewport_left,
                       cobj->viewport_bottom - cobj->viewport_top, 0.0F, 1.0F);
@@ -395,16 +532,9 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
         projection_type = makeProjectionMtx(cobj, mtx);
         GXSetProjection(mtx, projection_type);
         break;
-    case 2:
-        result = setupTopHalfCamera(cobj);
-        break;
-    case 3:
-        result = setupBottomHalfCamera(cobj);
-        break;
     default:
-        __assert(__FILE__, 0x26F, "0");
-        result = FALSE;
-        break;
+        HSD_Panic(kar_srcfile_cobj_c_805dcb08, 0x29C, lbl_80503380);
+        return FALSE;
     }
 
     if (result) {
@@ -421,37 +551,37 @@ void HSD_CObjEndCurrent(void)
 
 HSD_WObj* HSD_CObjGetInterestWObj(HSD_CObj* cobj)
 {
-    assert_line(0x2C1, cobj);
+    ASSERT_COBJ(0x2C1);
     return cobj->interest;
 }
 
 HSD_WObj* HSD_CObjGetEyePositionWObj(HSD_CObj* cobj)
 {
-    assert_line(0x2D9, cobj);
+    ASSERT_COBJ(0x2D9);
     return cobj->eye_position;
 }
 
 void HSD_CObjGetInterest(HSD_CObj* cobj, Vec* interest)
 {
-    assert_line(0x2F1, cobj);
+    ASSERT_COBJ(0x2F1);
     HSD_WObjGetPosition(HSD_CObjGetInterestWObj(cobj), interest);
 }
 
 void HSD_CObjSetInterest(HSD_CObj* cobj, Vec* interest)
 {
-    assert_line(0x2FD, cobj);
+    ASSERT_COBJ(0x2FD);
     HSD_WObjSetPosition(HSD_CObjGetInterestWObj(cobj), interest);
 }
 
 void HSD_CObjGetEyePosition(HSD_CObj* cobj, Vec* position)
 {
-    assert_line(0x309, cobj);
+    ASSERT_COBJ(0x309);
     HSD_WObjGetPosition(HSD_CObjGetEyePositionWObj(cobj), position);
 }
 
 void HSD_CObjSetEyePosition(HSD_CObj* cobj, Vec* position)
 {
-    assert_line(0x315, cobj);
+    ASSERT_COBJ(0x315);
     HSD_WObjSetPosition(HSD_CObjGetEyePositionWObj(cobj), position);
 }
 
@@ -471,7 +601,7 @@ s32 HSD_CObjGetEyeVector(HSD_CObj* cobj, Vec* eye)
     HSD_CObjGetEyePosition(cobj, &pos);
     HSD_CObjGetInterest(cobj, &interest);
     PSVECSubtract(&interest, &pos, eye);
-    return vec_normalize_check(eye, eye) == 0;
+    return vec_normalize_check_inline(eye, eye) == 0;
 }
 
 f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
@@ -483,13 +613,22 @@ f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
     if (cobj == NULL) {
         return 0.0F;
     }
+    if (cobj->eye_position == NULL) {
+        __assert(kar_srcfile_cobj_c_805dcb08, 0x352, lbl_805033A0);
+    }
+    if (cobj->interest == NULL) {
+        __assert(kar_srcfile_cobj_c_805dcb08, 0x353, lbl_805033B0);
+    }
     HSD_CObjGetEyePosition(cobj, &pos);
     HSD_CObjGetInterest(cobj, &interest);
     PSVECSubtract(&interest, &pos, &eye);
     return PSVECMag(&eye);
 }
 
-static f32 upvec2roll(HSD_CObj* cobj, Vec* up)
+static Vec lbl_805033C0 = { 0.0F, 0.0F, 0.0F };
+static Vec lbl_805033CC = { 0.0F, 1.0F, 0.0F };
+
+f32 upvec2roll(HSD_CObj* cobj, Vec* up)
 {
     Vec eye;
     Vec v;
@@ -499,22 +638,22 @@ static f32 upvec2roll(HSD_CObj* cobj, Vec* up)
     if (!HSD_CObjGetEyeVector(cobj, &eye)) {
         return 0.0F;
     }
-    dot = 1.0F - cobj_abs(PSVECDotProduct(up, &eye));
-    if (dot < lbl_805DC8B8) {
+    dot = 1.0F - __fabs(PSVECDotProduct(up, &eye));
+    if (dot < lbl_805DC8B8[0]) {
         return 0.0F;
     }
     C_MTXLookAt(mtx, &lbl_805033C0, &lbl_805033CC, &eye);
-    PSMTXMultVecSR(mtx, up, &v);
+    fn_803D1E40(mtx, up, &v);
     if (v.y == 0.0F) {
         if (-v.x >= 0.0F) {
             return 1.5707964F;
         }
         return -1.5707964F;
     }
-    return atan2(-v.x, v.y);
+    return fn_803BD3C8(-v.x, v.y);
 }
 
-static s32 roll2upvec(HSD_CObj* cobj, Vec* up, f32 roll)
+s32 roll2upvec(HSD_CObj* cobj, Vec* up, f32 roll)
 {
     Vec eye;
     Vec v0;
@@ -524,32 +663,35 @@ static s32 roll2upvec(HSD_CObj* cobj, Vec* up, f32 roll)
     if (!HSD_CObjGetEyeVector(cobj, &eye)) {
         return FALSE;
     }
-    if (1.0 - cobj_abs(eye.y) < 0.0001) {
-        v0.x = sqrt(eye.y * eye.y + eye.z * eye.z);
+    if (1.0 - __fabs(eye.y) < 0.0001) {
+        v0.x = cobj_sqrtf(eye.y * eye.y + eye.z * eye.z);
         v0.y = eye.y * (-eye.x / v0.x);
         v0.z = eye.z * (-eye.x / v0.x);
     } else {
-        v0.y = sqrt(eye.x * eye.x + eye.z * eye.z);
+        v0.y = cobj_sqrtf(eye.x * eye.x + eye.z * eye.z);
         v0.x = eye.x * (-eye.y / v0.y);
         v0.z = eye.z * (-eye.y / v0.y);
     }
-    PSMTXRotAxisRad(mtx, &eye, -roll);
-    PSMTXMultVecSR(mtx, &v0, &v1);
+    kar_grcoll__near_803d1908(mtx, &eye, -roll);
+    fn_803D1E40(mtx, &v0, &v1);
     PSVECNormalize(&v1, up);
     return TRUE;
 }
 
+#pragma push
+#pragma dont_inline on
 s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* up)
 {
-    if (cobj != NULL && up != NULL) {
-        if (cobj->flags & 1) {
-            *up = cobj->u.up;
-            return TRUE;
-        }
-        return roll2upvec(cobj, up, cobj->u.roll);
+    if (cobj == NULL || up == NULL) {
+        return FALSE;
     }
-    return FALSE;
+    if (cobj->flags & 1) {
+        *up = cobj->u.up;
+        return TRUE;
+    }
+    return roll2upvec(cobj, up, cobj->u.roll);
 }
+#pragma pop
 
 void HSD_CObjSetUpVector(HSD_CObj* cobj, Vec* up)
 {
@@ -559,9 +701,9 @@ void HSD_CObjSetUpVector(HSD_CObj* cobj, Vec* up)
         return;
     }
     if (cobj->flags & 1) {
-        if (vec_normalize_check(up, &normalized) != 0) {
-            OSReport("up vector is zero\n");
-            __assert(__FILE__, 0x3E3, "0");
+        if (vec_normalize_check_inline(up, &normalized) != 0) {
+            OSReport("illegal up vector.");
+            __assert(kar_srcfile_cobj_c_805dcb08, 0x3E3, lbl_805DCB18);
         }
         if (cobj->u.up.x != normalized.x || cobj->u.up.y != normalized.y ||
             cobj->u.up.z != normalized.z) {
@@ -572,6 +714,9 @@ void HSD_CObjSetUpVector(HSD_CObj* cobj, Vec* up)
         HSD_CObjSetRoll(cobj, upvec2roll(cobj, up));
     }
 }
+
+static char lbl_dead_805300XX_hsdIsDescendantOf[] =
+    "hsdIsDescendantOf(info, &hsdCObj)";
 
 s32 HSD_CObjGetLeftVector(HSD_CObj* cobj, Vec* left)
 {
@@ -584,7 +729,7 @@ s32 HSD_CObjGetLeftVector(HSD_CObj* cobj, Vec* left)
     if (HSD_CObjGetEyeVector(cobj, &eye) &&
         HSD_CObjGetUpVector(cobj, &up)) {
         PSVECCrossProduct(&up, &eye, left);
-        return vec_normalize_check(left, left) == 0;
+        return vec_normalize_check_inline(left, left) == 0;
     }
     return FALSE;
 }
@@ -596,16 +741,9 @@ void HSD_CObjSetMtxDirty(HSD_CObj* cobj)
 
 BOOL HSD_CObjMtxIsDirty(HSD_CObj* cobj)
 {
-    if (cobj->flags & COBJ_MTX_DIRTY) {
-        return TRUE;
-    }
-    if (cobj->eye_position != NULL && (cobj->eye_position->flags & 2)) {
-        return TRUE;
-    }
-    if (cobj->interest != NULL && (cobj->interest->flags & 2)) {
-        return TRUE;
-    }
-    return FALSE;
+    return (cobj->flags & COBJ_MTX_DIRTY) ||
+           (cobj->eye_position != NULL && (cobj->eye_position->flags & 2)) ||
+           (cobj->interest != NULL && (cobj->interest->flags & 2));
 }
 
 void HSD_CObjGetViewingMtx(HSD_CObj* cobj, Mtx mtx)
@@ -625,11 +763,14 @@ MtxPtr HSD_CObjGetInvViewingMtxPtrDirect(HSD_CObj* cobj)
     return cobj->proj_mtx;
 }
 
+#pragma push
+#pragma dont_inline on
 MtxPtr HSD_CObjGetViewingMtxPtr(HSD_CObj* cobj)
 {
     HSD_CObjSetupViewingMtx(cobj);
     return cobj->view_mtx;
 }
+#pragma pop
 
 void HSD_CObjSetRoll(HSD_CObj* cobj, f32 roll)
 {
@@ -650,6 +791,18 @@ void HSD_CObjSetRoll(HSD_CObj* cobj, f32 roll)
     }
 }
 
+s32 vec_normalize_check(Vec* src, Vec* dst)
+{
+    if (src == NULL || dst == NULL) {
+        return -1;
+    }
+    if (vec_is_zero(src)) {
+        return -1;
+    }
+    PSVECNormalize(src, dst);
+    return 0;
+}
+
 f32 HSD_CObjGetFov(HSD_CObj* cobj)
 {
     if (cobj == NULL || cobj->projection_type != PROJ_PERSPECTIVE) {
@@ -660,9 +813,10 @@ f32 HSD_CObjGetFov(HSD_CObj* cobj)
 
 void HSD_CObjSetFov(HSD_CObj* cobj, f32 fov)
 {
-    if (cobj != NULL && cobj->projection_type == PROJ_PERSPECTIVE) {
-        cobj->projection_param.perspective.fov = fov;
+    if (cobj == NULL || cobj->projection_type != PROJ_PERSPECTIVE) {
+        return;
     }
+    cobj->projection_param.perspective.fov = fov;
 }
 
 f32 HSD_CObjGetAspect(HSD_CObj* cobj)
@@ -675,9 +829,10 @@ f32 HSD_CObjGetAspect(HSD_CObj* cobj)
 
 void HSD_CObjSetAspect(HSD_CObj* cobj, f32 aspect)
 {
-    if (cobj != NULL && cobj->projection_type == PROJ_PERSPECTIVE) {
-        cobj->projection_param.perspective.aspect = aspect;
+    if (cobj == NULL || cobj->projection_type != PROJ_PERSPECTIVE) {
+        return;
     }
+    cobj->projection_param.perspective.aspect = aspect;
 }
 
 f32 HSD_CObjGetNear(HSD_CObj* cobj)
@@ -835,28 +990,29 @@ void HSD_CObjClearFlags(HSD_CObj* cobj, u32 flags)
 
 HSD_CObj* HSD_CObjGetCurrent(void)
 {
-    return current;
+    return lbl_805DE22C;
 }
 
 HSD_CObj* HSD_CObjAlloc(void)
 {
     HSD_CObj* cobj;
 
-    cobj = hsdNew((HSD_ClassInfo*) (default_class != NULL ? default_class
+    cobj = hsdNew((HSD_ClassInfo*) (lbl_805DE228 != NULL ? lbl_805DE228
                                                            : &hsdCObj));
-    assert_line(0x850, cobj);
+    ASSERT_COBJ(0x7A3);
     return cobj;
 }
 
-static void CObjResetFlags(HSD_CObj* cobj, u32 flags)
+static inline void CObjResetFlags(HSD_CObj* cobj, u32 flags)
 {
-    if (cobj != NULL) {
-        cobj->flags = (cobj->flags & (COBJ_MTX_DIRTY | COBJ_INV_DIRTY)) |
-                      flags;
+    if (cobj == NULL) {
+        return;
     }
+    cobj->flags = (cobj->flags & (COBJ_MTX_DIRTY | COBJ_INV_DIRTY)) |
+                  (flags & ~(COBJ_MTX_DIRTY | COBJ_INV_DIRTY));
 }
 
-static int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
+int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
 {
     cobj->flags = desc->flags;
     CObjResetFlags(cobj, desc->flags);
@@ -870,7 +1026,7 @@ static int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
         if (desc->vector != NULL) {
             HSD_CObjSetUpVector(cobj, desc->vector);
         } else {
-            HSD_CObjSetUpVector(cobj, &lbl_805033D8);
+            HSD_CObjSetUpVector(cobj, &lbl_80503410);
         }
     } else {
         HSD_CObjSetRoll(cobj, desc->roll);
@@ -878,12 +1034,16 @@ static int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
 
     switch (desc->projection_type) {
     case PROJ_PERSPECTIVE:
-        HSD_CObjSetProjectionType(cobj, PROJ_PERSPECTIVE);
-        cobj->projection_param.perspective.fov =
-            desc->projection_param.perspective.fov;
-        cobj->projection_param.perspective.aspect =
-            desc->projection_param.perspective.aspect;
+    {
+        f32 fov = desc->projection_param.perspective.fov;
+        f32 aspect = desc->projection_param.perspective.aspect;
+        if (cobj != NULL) {
+            cobj->projection_type = PROJ_PERSPECTIVE;
+            cobj->projection_param.perspective.fov = fov;
+            cobj->projection_param.perspective.aspect = aspect;
+        }
         break;
+    }
     case PROJ_FRUSTRUM:
         HSD_CObjSetFrustum(cobj, desc->projection_param.frustrum.top,
                            desc->projection_param.frustrum.bottom,
@@ -897,7 +1057,7 @@ static int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
                          desc->projection_param.ortho.right);
         break;
     default:
-        assert_line(0x7D0, 0);
+        __assert(kar_srcfile_cobj_c_805dcb08, 0x7D1, lbl_805DCB18);
         break;
     }
     return 0;
@@ -908,21 +1068,21 @@ HSD_CObj* HSD_CObjLoadDesc(HSD_CObjDesc* desc)
     HSD_ClassInfo* info;
     HSD_CObj* cobj;
 
-    if (desc == NULL) {
-        return NULL;
+    if (desc != NULL) {
+        if (desc->class_name == NULL ||
+            (info = hsdSearchClassInfo(desc->class_name)) == NULL) {
+            cobj = HSD_CObjAlloc();
+        } else {
+            cobj = hsdNew(info);
+            ASSERT_COBJ(0x7F8);
+        }
+        HSD_COBJ_METHOD(cobj)->load(cobj, desc);
+        return cobj;
     }
-    if (desc->class_name == NULL ||
-        (info = hsdSearchClassInfo(desc->class_name)) == NULL) {
-        cobj = HSD_CObjAlloc();
-    } else {
-        cobj = hsdNew(info);
-        assert_line(0x7F7, cobj);
-    }
-    HSD_COBJ_METHOD(cobj)->load(cobj, desc);
-    return cobj;
+    return NULL;
 }
 
-static int CObjInit(HSD_Class* obj)
+int CObjInit(HSD_Class* obj)
 {
     HSD_CObj* cobj;
     s32 result;
@@ -933,55 +1093,77 @@ static int CObjInit(HSD_Class* obj)
     }
 
     cobj = (HSD_CObj*) obj;
-    HSD_CObjSetMtxDirty(cobj);
+    if (cobj != NULL) {
+        HSD_CObjSetMtxDirty(cobj);
+    }
     cobj->eye_position = HSD_WObjAlloc();
     cobj->interest = HSD_WObjAlloc();
     return 0;
 }
 
-static void ref_DEC_destroy(HSD_Obj* obj)
+static inline bool ref_DEC(void* o)
 {
-    if (obj != NULL) {
-        obj->ref_count--;
-        if (obj->ref_count == 0) {
-            HSD_CLASS_METHOD(obj)->release((HSD_Class*) obj);
-            HSD_CLASS_METHOD(obj)->destroy((HSD_Class*) obj);
-        }
+    bool ret;
+    if ((ret = (HSD_OBJ(o)->ref_count == HSD_OBJ_NOREF))) {
+        return ret;
     }
+    return HSD_OBJ(o)->ref_count-- == 0;
 }
 
-static void CObjRelease(HSD_Class* obj)
+void CObjRelease(HSD_Class* obj)
 {
     HSD_CObj* cobj;
+    HSD_WObj* eye_position;
+    HSD_WObj* interest;
 
     cobj = (HSD_CObj*) obj;
     HSD_AObjRemove(cobj->aobj);
-    ref_DEC_destroy((HSD_Obj*) HSD_CObjGetEyePositionWObj(cobj));
-    ref_DEC_destroy((HSD_Obj*) HSD_CObjGetInterestWObj(cobj));
+    eye_position = HSD_CObjGetEyePositionWObj(cobj);
+    if (eye_position != NULL) {
+        if (ref_DEC(eye_position) && eye_position != NULL) {
+            HSD_CLASS_METHOD(eye_position)->release((HSD_Class*) eye_position);
+            HSD_CLASS_METHOD(eye_position)->destroy((HSD_Class*) eye_position);
+        }
+    }
+    interest = HSD_CObjGetInterestWObj(cobj);
+    if (interest != NULL) {
+        if (ref_DEC(interest) && interest != NULL) {
+            HSD_CLASS_METHOD(interest)->release((HSD_Class*) interest);
+            HSD_CLASS_METHOD(interest)->destroy((HSD_Class*) interest);
+        }
+    }
     if (cobj->proj_mtx != NULL) {
         HSD_MtxFree(cobj->proj_mtx);
     }
     HSD_OBJECT_PARENT_INFO(&hsdCObj)->release(obj);
 }
 
-static void CObjAmnesia(HSD_ClassInfo* info)
+void CObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(default_class)) {
-        default_class = NULL;
+    if (info == HSD_CLASS_INFO(lbl_805DE228)) {
+        lbl_805DE228 = NULL;
     }
     if (info == HSD_CLASS_INFO(&hsdCObj)) {
-        current = NULL;
+        lbl_805DE22C = NULL;
     }
     HSD_OBJECT_PARENT_INFO(&hsdCObj)->amnesia(info);
 }
 
-static void CObjInfoInit(void)
+Vec lbl_80503410 = { 0.0F, 1.0F, 0.0F };
+
+void CObjInfoInit(void)
 {
-    hsdInitClassInfo(HSD_CLASS_INFO(&hsdCObj), &objInfo,
+    hsdInitClassInfo(HSD_CLASS_INFO(&hsdCObj), &hsdObj,
                      "sysdolphin_base_library", "hsd_cobj",
                      sizeof(HSD_CObjInfo), sizeof(HSD_CObj));
     HSD_CLASS_INFO(&hsdCObj)->init = CObjInit;
     HSD_CLASS_INFO(&hsdCObj)->release = CObjRelease;
     HSD_CLASS_INFO(&hsdCObj)->amnesia = CObjAmnesia;
     hsdCObj.load = CObjLoad;
+    hsdCObj.update = CObjUpdateFunc;
+}
+
+HSD_ObjAllocData* fn_80403594(void)
+{
+    return &hsdFObj_alloc_data;
 }

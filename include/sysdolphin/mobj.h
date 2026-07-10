@@ -150,9 +150,7 @@ typedef struct _HSD_MObjInfo {
 
 extern HSD_MObjInfo hsdMObj;
 
-void HSD_MObjSetCurrent(HSD_MObj* mobj);
-void HSD_MObjSetFlags(HSD_MObj* mobj, u32 flags);
-void HSD_MObjClearFlags(HSD_MObj* mobj, u32 flags);
+void HSD_MObjSetCurrent(HSD_MObj* mobj, u32 flags);
 void HSD_MObjRemoveAnimByFlags(HSD_MObj* mobj, u32 flags);
 void HSD_MObjAddAnim(HSD_MObj* mobj, HSD_MatAnim* matanim);
 void HSD_MObjReqAnimByFlags(HSD_MObj* mobj, f32 startframe, u32 flags);
@@ -163,7 +161,11 @@ void MObjUpdateFunc(void* obj, u32 type, FObjData* val);
 void HSD_MObjAnim(HSD_MObj* mobj);
 
 int MObjLoad(HSD_MObj* mobj, HSD_MObjDesc* desc);
+
+void kar_fl_indirectload__803f9fa4(HSD_MObjInfo* info);
+
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc);
+HSD_MObjInfo* HSD_MObjGetDefaultClass(void);
 
 HSD_MObj* HSD_MObjAlloc();
 HSD_Material* HSD_MaterialAlloc();

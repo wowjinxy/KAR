@@ -2,13 +2,18 @@
 #define _pobj_h_
 
 #include <dolphin/types.h>
+#include <dolphin/gx/gxtypes.h>
+#include <dolphin/mtx/mtxtypes.h>
 
 #include <sysdolphin/object.h>
 
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/fobj.h>
+#include <sysdolphin/jobj.h>
+#include <sysdolphin/tobj.h>
+#include <sysdolphin/displayfunc.h>
 
-#define HSD_A_S_W0 8
+#define HSD_A_S_W0 2
 #define HSD_DEFAULT_MAX_SHAPE_VERTICES 2000
 #define HSD_DEFAULT_MAX_SHAPE_NORMALS 2000
 
@@ -16,6 +21,8 @@
 #define POBJ_SKIN (0 << 12)
 #define POBJ_SHAPEANIM (1 << 12)
 #define POBJ_ENVELOPE (2 << 12)
+
+#define POBJ_HIDE (1 << 11)
 
 #define pobj_type(o) (o->flags & 0x3000)
 
@@ -28,6 +35,40 @@
 #define GX_NOP 0
 #define GX_VAT_MASK 0x7
 #define GX_OPCODE_MASK 0xF8
+
+#define GX_DIRECT 1
+#define GX_INDEX8 2
+#define GX_INDEX16 3
+
+#define GX_U8 0
+#define GX_S8 1
+#define GX_U16 2
+#define GX_S16 3
+#define GX_F32 4
+
+#define GX_POS_XYZ 1
+#define GX_NRM_XYZ 0
+
+#define GX_RGB565 0
+#define GX_RGB8 1
+#define GX_RGBX8 2
+#define GX_RGBA4 3
+#define GX_RGBA6 4
+#define GX_RGBA8 5
+
+#define GX_VTXFMT0 0
+
+#define GX_PNMTX0 0
+#define GX_PNMTX1 3
+
+#define GX_MTX3x4 0
+
+#define GX_CULL_NONE 0
+#define GX_CULL_FRONT 1
+#define GX_CULL_BACK 2
+
+#define HSD_MTX_RIGID 1
+#define HSD_MTX_ENVELOPE 2
 
 typedef enum _PObjSetupFlag {
     SETUP_NORMAL = 1,
@@ -75,10 +116,10 @@ typedef struct _HSD_PObjDesc {
 } HSD_PObjDesc;
 
 typedef struct _HSD_VtxDescList {
-    u32 attr;
-    u32 attr_type;
-    u32 comp_cnt;
-    u32 comp_type;
+    s32 attr;
+    s32 attr_type;
+    s32 comp_cnt;
+    s32 comp_type;
     u8 frac;
     u16 stride;
     void* vertex;
@@ -98,10 +139,10 @@ typedef struct _HSD_EnvelopeDesc {
 typedef struct _HSD_ShapeSet {
     u16 flags;
     u16 nb_shape;
-    u32 nb_vertex_index;
+    s32 nb_vertex_index;
     struct _HSD_VtxDescList* vertex_desc;
     u8** vertex_idx_list;
-    u32 nb_normal_index;
+    s32 nb_normal_index;
     struct _HSD_VtxDescList* normal_desc;
     u8** normal_idx_list;
     union {
@@ -113,10 +154,10 @@ typedef struct _HSD_ShapeSet {
 typedef struct _HSD_ShapeSetDesc {
     u16 flags;
     u16 nb_shape;
-    u32 nb_vertex_index;
+    s32 nb_vertex_index;
     struct _HSD_VtxDescList* vertex_desc;
     u8** vertex_idx_list;
-    u32 nb_normal_index;
+    s32 nb_normal_index;
     struct _HSD_VtxDescList* normal_desc;
     u8** normal_idx_list;
 } HSD_ShapeSetDesc;
@@ -137,15 +178,27 @@ typedef struct _HSD_PObjInfo {
     void (*disp)(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode);
     void (*setup_mtx)(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode);
     s32 (*load)(HSD_PObj* pobj, HSD_PObjDesc* desc);
-    void (*update)(void* obj, u32 type, FObjData* val);
+    HSD_ObjUpdateFunc update;
 } HSD_PObjInfo;
 
 #define HSD_POBJ(o) ((HSD_PObj*)(o))
 #define HSD_POBJ_INFO(i) ((HSD_PObjInfo*)(i))
 #define HSD_POBJ_METHOD(o) HSD_POBJ_INFO(HSD_CLASS_METHOD(o))
 
-u32 HSD_PObjGetFlags(HSD_PObj* pobj);
+extern HSD_PObjInfo hsdPObj;
+
 void HSD_PObjRemoveAnimAllByFlags(HSD_PObj* pobj, u32 flags);
+void HSD_PObjAddAnimAll(HSD_PObj* pobj, HSD_ShapeAnim* shapeanim);
 void HSD_PObjReqAnimAllByFlags(HSD_PObj* pobj, f32 startframe, u32 flags);
+void HSD_PObjAnimAll(HSD_PObj* pobj);
+HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* pobjdesc);
+void HSD_PObjRemoveAll(HSD_PObj* pobj);
+void HSD_PObjSetCurrent(HSD_PObjInfo* info);
+HSD_PObjInfo* HSD_PObjGetCurrent(void);
+HSD_PObj* HSD_PObjAlloc(void);
+void kar_object__80405968(HSD_PObj* pobj, HSD_PObjDesc* pdesc);
+void HSD_ClearVtxDesc(void);
+void HSD_PObjClearMtxMark(void* obj, u32 mark);
+void HSD_PObjDisp(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode);
 
 #endif

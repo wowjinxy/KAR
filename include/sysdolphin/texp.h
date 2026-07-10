@@ -3,6 +3,9 @@
 
 #include <dolphin/types.h>
 
+#define HSD_TEXP_TEX ((union _HSD_TExp*) -1)
+#define HSD_TEXP_ZERO ((union _HSD_TExp*) 0)
+
 typedef enum _HSD_TEInput {
     HSD_TE_END = 0,
     HSD_TE_RGB = 1,
@@ -53,7 +56,7 @@ typedef struct _HSD_TevConf {
     u32 clr_d;
     u32 clr_scale;
     u32 clr_bias;
-    u32 clr_clamp;
+    u8 clr_clamp;  /* GXBool */
     u32 clr_out_reg;
     u32 alpha_op;
     u32 alpha_a;
@@ -62,7 +65,7 @@ typedef struct _HSD_TevConf {
     u32 alpha_d;
     u32 alpha_scale;
     u32 alpha_bias;
-    u32 alpha_clamp;
+    u8 alpha_clamp;  /* GXBool */
     u32 alpha_out_reg;
     u32 mode;
     u32 ras_swap;
@@ -100,8 +103,8 @@ typedef struct _HSD_TECnst {
     HSD_TExpType type;
     union _HSD_TExp* next;
     void* val;
-    HSD_TEInput comp;
-    HSD_TEType ctype;
+    u8 comp;  /* HSD_TEInput */
+    u8 ctype; /* HSD_TEType */
     u8 reg;
     u8 idx;
     u8 ref;
@@ -131,6 +134,7 @@ typedef struct _HSD_TETev {
     u8 a_clamp;
     u8 a_bias;
     u8 a_scale;
+    u8 a_range;
     u8 tex_swap;
     u8 ras_swap;
     u8 kcsel;

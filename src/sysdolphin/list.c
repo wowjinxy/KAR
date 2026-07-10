@@ -1,30 +1,38 @@
 #include <sysdolphin/list.h>
 
-static HSD_ObjAllocData slist_alloc_data;
-static HSD_ObjAllocData dlist_alloc_data;
+extern HSD_ObjAllocData hsdSList_alloc_data; // slist_alloc_data
+extern HSD_ObjAllocData lbl_8058BE54;        // dlist_alloc_data
+
+extern char kar_src_list_805dccf0[7]; // "list.c"
+extern char lbl_805DCCF8[5];          // "list"
+extern char lbl_805DCD00[5];          // "next"
+extern char lbl_805DCD08[5];          // "prev"
+
+#define assert_line_named(line, cond, condstr)                                 \
+    ((cond) ? ((void) 0) : __assert(kar_src_list_805dccf0, line, condstr))
 
 void HSD_ListInitAllocData()
 {
-    HSD_ObjAllocInit(&slist_alloc_data, sizeof(HSD_SList), 4);
-    HSD_ObjAllocInit(&dlist_alloc_data, sizeof(HSD_DList), 4);
+    HSD_ObjAllocInit(&hsdSList_alloc_data, sizeof(HSD_SList), 4);
+    HSD_ObjAllocInit(&lbl_8058BE54, sizeof(HSD_DList), 4);
 }
 
-HSD_ObjAllocData* HSD_SListGetAllocData()
+HSD_ObjAllocData* fn_8041BC54()
 {
-    return &slist_alloc_data;
+    return &hsdSList_alloc_data;
 }
 
-HSD_ObjAllocData* HSD_DListGetAllocData()
+HSD_ObjAllocData* fn_8041BC60()
 {
-    return &dlist_alloc_data;
+    return &lbl_8058BE54;
 }
 
 HSD_SList *HSD_SListAlloc()
 {
     HSD_SList *list;
 
-    list = HSD_ObjAlloc(&slist_alloc_data);
-    assert_line(76, list);
+    list = HSD_ObjAlloc(&hsdSList_alloc_data);
+    assert_line_named(76, list, lbl_805DCCF8);
 
     memset(list, 0, sizeof(HSD_SList));
     return list;
@@ -46,7 +54,7 @@ void HSD_SListPrepend(HSD_SList* list, void* data)
 
 HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 {
-    assert_line(179, next);
+    assert_line_named(179, next, lbl_805DCD00);
     if (list != NULL) {
         next->next = list->next;
         list->next = next;
@@ -58,7 +66,7 @@ HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 
 HSD_SList *HSD_SListPrependList(HSD_SList *list, HSD_SList *prev)
 {
-    assert_line(202, prev);
+    assert_line_named(202, prev, lbl_805DCD08);
     prev->next = list;
     return prev;
 }
@@ -69,7 +77,7 @@ HSD_SList *HSD_SListRemove(HSD_SList *list)
 
     if (list != NULL) {
         next = list->next;
-        HSD_ObjFree(&slist_alloc_data, list);
+        HSD_ObjFree(&hsdSList_alloc_data, list);
         return next;
     }
 

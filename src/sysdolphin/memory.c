@@ -32,10 +32,10 @@ HSD_MemCallbackData lbl_8058BE80;
 u8 lbl_8058BE98[0x30];
 u8 hsd_saved_context[0x2C8];
 
-const f32 lbl_805E5DB8 = 0.5F;
-const f32 lbl_805E5DBC = -0.5F;
-const f32 lbl_805E5DC0 = 0.0F;
-const f32 lbl_805E5DC4 = 256.0F;
+extern const f32 lbl_805E5DB8;
+extern const f32 lbl_805E5DBC;
+extern const f32 lbl_805E5DC0;
+extern const f32 lbl_805E5DC4;
 
 #define SHADOW_ALLOC_DATA ((HSD_ObjAllocData*) lbl_8058BE98)
 
@@ -113,10 +113,19 @@ HSD_Shadow* HSD_ShadowAlloc(void)
     shadow->texture->imagedesc->format = 0;
     shadow->texture->imagedesc->width = 0x100;
     shadow->texture->imagedesc->height = 0x100;
-    HSD_CObjSetViewportfx4(shadow->camera, lbl_805E5DC0, lbl_805E5DC4, lbl_805E5DC0, lbl_805E5DC4);
+    {
+        f32 lo = lbl_805E5DC0;
+        f32 hi = lbl_805E5DC4;
+        HSD_CObjSetViewportfx4(shadow->camera, lo, hi, lo, hi);
+    }
     HSD_CObjSetScissorx4(shadow->camera, 0, 0x100, 0, 0x100);
     return shadow;
 }
+
+__declspec(section ".sdata2") const f32 lbl_805E5DB8 = 0.5F;
+__declspec(section ".sdata2") const f32 lbl_805E5DBC = -0.5F;
+__declspec(section ".sdata2") const f32 lbl_805E5DC0 = 0.0F;
+__declspec(section ".sdata2") const f32 lbl_805E5DC4 = 256.0F;
 
 static inline BOOL decref(HSD_Obj* obj)
 {

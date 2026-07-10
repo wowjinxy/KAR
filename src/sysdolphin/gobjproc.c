@@ -1,7 +1,7 @@
 #include <sysdolphin/gobj.h>
 
 typedef s32 (*HSD_DebugExceptionCallback)(s32, s32, void*, void*);
-typedef void (*HSD_DebugConsoleCallback)(void*);
+typedef void (*HSD_DebugConsoleCallback)(void*, ...);
 typedef void (*HSD_DebugUserCallback)(s32, u32);
 
 typedef struct _HSD_StackFrame {
@@ -16,8 +16,8 @@ extern void* OSGetStackPointer(void);
 
 extern u8 __files[];
 extern u8 hsd_saved_context[];
-extern char lbl_805DCDA8[];
-extern char lbl_805DCDB0[];
+extern char lbl_805DCDA8[8];
+extern char lbl_805DCDB0[6];
 
 extern HSD_DebugExceptionCallback lbl_805DE308;
 extern s32 lbl_805DE30C;
@@ -149,7 +149,7 @@ void HSD_GObjProcLink_Internal(HSD_GObjProc* proc)
 {
     HSD_GObj* gobj = proc->gobj;
     HSD_GObjProc* dst_proc;
-    s32 s_link = proc->s_link;
+    u8 s_link = proc->s_link;
     s32 p_link = gobj->p_link;
     s32 index = p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1);
 
@@ -207,11 +207,12 @@ void HSD_GObjProcUnlink_Internal(HSD_GObjProc* proc)
     HSD_GObj* gobj = proc->gobj;
     s32 p_link = gobj->p_link;
     s32 s_link = proc->s_link;
-    s32 index = p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1);
+    s32 index;
 
     if (hsdGObj_deferred_action_flags.b0 && proc == hsdGObjProc_next) {
         hsdGObjProc_next = proc->next;
     }
+    index = p_link + s_link * (hsdGObj_p_link_max.p_link_max + 1);
     if (proc == hsdGObjProc_link_heads[index]) {
         if (proc->prev != NULL && proc->prev->gobj->p_link == p_link) {
             hsdGObjProc_link_heads[index] = proc->prev;

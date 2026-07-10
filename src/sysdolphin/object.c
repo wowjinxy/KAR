@@ -1,13 +1,13 @@
 #include <sysdolphin/object.h>
 
+extern HSD_ClassInfo hsdObj;
 extern HSD_ClassInfo hsdClass;
-static void ObjInfoInit(void);
+extern char hsdObj_library_string[];
+extern char lbl_805DCD10[8];
 
-HSD_ClassInfo objInfo = { ObjInfoInit };
-
-static void ObjInfoInit(void)
+void ObjInfoInit(void)
 {
-    hsdInitClassInfo(&objInfo, &hsdClass,
-        "sysdolphin_base_library", "hsd_obj",
+    hsdInitClassInfo(&hsdObj, &hsdClass,
+        hsdObj_library_string, lbl_805DCD10,
         sizeof(HSD_ObjInfo), sizeof(HSD_Obj));
 }
