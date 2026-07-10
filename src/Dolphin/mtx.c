@@ -463,6 +463,7 @@ asm void fn_803D19D4(Mtx m, Quaternion* q)
 extern void PSVECNormalize(Vec* src, Vec* unit);
 extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* result);
 
+#pragma fp_contract off
 void C_MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target)
 {
     Vec vLook;
@@ -482,19 +483,21 @@ void C_MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target)
     m[0][0] = vRight.x;
     m[0][1] = vRight.y;
     m[0][2] = vRight.z;
-    m[0][3] = -(camPos->x * vRight.x + camPos->y * vRight.y + camPos->z * vRight.z);
+    m[0][3] = -((camPos->z * vRight.z) + ((camPos->x * vRight.x) + (camPos->y * vRight.y)));
 
     m[1][0] = vUp.x;
     m[1][1] = vUp.y;
     m[1][2] = vUp.z;
-    m[1][3] = -(camPos->x * vUp.x + camPos->y * vUp.y + camPos->z * vUp.z);
+    m[1][3] = -((camPos->z * vUp.z) + ((camPos->x * vUp.x) + (camPos->y * vUp.y)));
 
     m[2][0] = vLook.x;
     m[2][1] = vLook.y;
     m[2][2] = vLook.z;
-    m[2][3] = -(camPos->x * vLook.x + camPos->y * vLook.y + camPos->z * vLook.z);
+    m[2][3] = -((camPos->z * vLook.z) + ((camPos->x * vLook.x) + (camPos->y * vLook.y)));
 }
+#pragma fp_contract reset
 
+#pragma fp_contract off
 void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS,
                         f32 scaleT, f32 transS, f32 transT)
 {
@@ -517,7 +520,9 @@ void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS,
     m[2][2] = lbl_805E58C4;
     m[2][3] = lbl_805E58B4;
 }
+#pragma fp_contract reset
 
+#pragma fp_contract off
 void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT)
 {
@@ -544,7 +549,9 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,
     m[2][2] = lbl_805E58C4;
     m[2][3] = lbl_805E58B4;
 }
+#pragma fp_contract reset
 
+#pragma fp_contract off
 void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                       f32 transS, f32 transT)
 {
@@ -567,3 +574,4 @@ void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
     m[2][2] = lbl_805E58B4;
     m[2][3] = lbl_805E58B0;
 }
+#pragma fp_contract reset
