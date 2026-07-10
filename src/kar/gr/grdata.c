@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/grspline.h>
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -57,7 +58,7 @@ struct GroundData {
     u8 pad_10[0x04];
     GroundDataExtra* extra;
     u8 pad_18[0x04];
-    void* spline_sets;
+    GroundSplineSets* spline_sets;
     u8 pad_20[0x28];
     CourseSplineAll* course_spline;
 };
@@ -92,7 +93,6 @@ s32 fn_80262574(s32 arg0);
 void kar_grcity1_patch_asset_material_anim_params(GroundData* data);
 void kar_grnullpos_scale_setup_position_data(void* data, f32 scale);
 void kar_lbspline__near_8006e664(void* spline, f32 scale);
-void kar_grspline_scale_all_spline_sets(void* spline_sets, f32 scale);
 void kar_lbkdcoll__near_80072c90(s32 arg0, char* archive_name, s32 arg2, s32 arg3, s32 arg4,
                                  s32 arg5, s32 arg6, s32 arg7, s32 arg8);
 void kar_efdata__near_802358c4(s32 kind);
@@ -140,7 +140,7 @@ void kar_grdata__800ce7a0(s32 kind)
             GroundModelParam* model_param = data->model_param;
             NullPosAll* nullpos_all;
             CourseSplineAll* course_spline;
-            void* spline_sets;
+            GroundSplineSets* spline_sets;
 
             data->initialized = TRUE;
 
