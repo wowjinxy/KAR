@@ -591,6 +591,236 @@ int __OSUnlockSram(int commit);
 static void ClearArena(void);
 static void InquiryCallback(s32, DVDCommandBlock* block);
 static void OSExceptionInit(void);
+
+Cell* fn_803D3560(Cell* list, Cell* cell) {
+    Cell* prev;
+    Cell* next;
+
+    for (next = list, prev = NULL; next != 0; prev = next, next = next->next) {
+        if (cell <= next) {
+            break;
+        }
+    }
+
+    cell->next = next;
+    cell->prev = prev;
+    if (next) {
+        next->prev = cell;
+        if ((u8*)cell + cell->size == (u8*)next) {
+            cell->size += next->size;
+            next = next->next;
+            cell->next = next;
+            if (next) {
+                next->prev = cell;
+            }
+        }
+    }
+    if (prev) {
+        prev->next = cell;
+        if ((u8*)prev + prev->size == (u8*)cell) {
+            prev->size += cell->size;
+            prev->next = next;
+            if (next) {
+                next->prev = prev;
+            }
+        }
+        return list;
+    }
+    return cell;
+}
+
+extern volatile int lbl_805DC978;
+
+static HeapDesc* lbl_805DDEB0;
+static int lbl_805DDEB4;
+static void* lbl_805DDEB8;
+static void* lbl_805DDEBC;
+
+static inline Cell* DLExtract(Cell* list, Cell* cell) {
+    if (cell->next) {
+        cell->next->prev = cell->prev;
+    }
+    if (cell->prev == NULL) {
+        return cell->next;
+    }
+    cell->prev->next = cell->next;
+    return list;
+}
+
+static inline Cell* DLAddFront(Cell* list, Cell* cell) {
+    cell->next = list;
+    cell->prev = 0;
+    if (list) {
+        list->prev = cell;
+    }
+    return cell;
+}
+
+void* OSAllocFromHeap(int heap, u32 size) {
+    HeapDesc* hd;
+    Cell* cell;
+    Cell* newCell;
+    s32 leftoverSize;
+
+    hd = &lbl_805DDEB0[heap];
+    size += 0x20;
+    size = (size + 0x1F) & 0xFFFFFFE0;
+
+    for (cell = hd->free; cell != NULL; cell = cell->next) {
+        if ((signed)size <= (signed)cell->size) {
+            break;
+        }
+    }
+
+    if (cell == NULL) {
+        return NULL;
+    }
+
+    leftoverSize = cell->size - size;
+    if (leftoverSize < 0x40U) {
+        hd->free = DLExtract(hd->free, cell);
+    } else {
+        cell->size = size;
+        newCell = (void*)((u8*)cell + size);
+        newCell->size = leftoverSize;
+        newCell->prev = cell->prev;
+        newCell->next = cell->next;
+        if (newCell->next != NULL) {
+            newCell->next->prev = newCell;
+        }
+        if (newCell->prev != NULL) {
+            newCell->prev->next = newCell;
+        } else {
+            hd->free = newCell;
+        }
+    }
+
+    hd->allocated = DLAddFront(hd->allocated, cell);
+    return (u8*)cell + 0x20;
+}
+
+void OSFreeToHeap(int heap, void* ptr) {
+    HeapDesc* hd;
+    Cell* cell;
+
+    cell = (void*)((u32)ptr - 0x20);
+    hd = &lbl_805DDEB0[heap];
+    hd->allocated = DLExtract(hd->allocated, cell);
+    hd->free = fn_803D3560(hd->free, cell);
+}
+
+int OSSetCurrentHeap(int heap) {
+    int prev;
+
+    prev = lbl_805DC978;
+    lbl_805DC978 = heap;
+    return prev;
+}
+
+void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps) {
+    u32 arraySize;
+    int i;
+    HeapDesc* hd;
+
+    arraySize = maxHeaps * sizeof(HeapDesc);
+    lbl_805DDEB0 = arenaStart;
+    lbl_805DDEB4 = maxHeaps;
+
+    for (i = 0; i < lbl_805DDEB4; i++) {
+        hd = &lbl_805DDEB0[i];
+        hd->size = -1;
+        hd->free = hd->allocated = 0;
+    }
+    lbl_805DC978 = -1;
+    arenaStart = (void*)((u32)((char*)lbl_805DDEB0 + arraySize));
+    arenaStart = (void*)(((u32)arenaStart + 0x1F) & 0xFFFFFFE0);
+    lbl_805DDEB8 = arenaStart;
+    lbl_805DDEBC = (void*)((u32)arenaEnd & 0xFFFFFFE0);
+    return arenaStart;
+}
+
+int OSCreateHeap(void* start, void* end) {
+    int heap;
+    HeapDesc* hd;
+    Cell* cell;
+
+    start = (void*)(((u32)start + 0x1FU) & ~((32) - 1));
+    end = (void*)(((u32)end) & ~((32) - 1));
+
+    for (heap = 0; heap < lbl_805DDEB4; heap++) {
+        hd = &lbl_805DDEB0[heap];
+        if (hd->size < 0) {
+            hd->size = (u32)end - (u32)start;
+            cell = start;
+            cell->prev = 0;
+            cell->next = 0;
+            cell->size = hd->size;
+            hd->free = cell;
+            hd->allocated = 0;
+            return heap;
+        }
+    }
+    return -1;
+}
+
+void OSDestroyHeap(int heap) {
+    lbl_805DDEB0[heap].size = -1;
+}
+
+#define ASSERTREPORT(line, text, cond) \
+    if (!(cond)) { \
+        OSReport("OSCheckHeap: Failed " text " in %d", line); \
+        return -1; \
+    }
+
+#define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
+#define ALIGNMENT 32
+#define InRange(cell, arenaStart, arenaEnd) \
+    ((u32)arenaStart <= (u32)cell) && ((u32)cell < (u32)arenaEnd)
+#define HEADERSIZE 32u
+#define MINOBJSIZE 64u
+
+s32 kar_diag__803d3884(int heap) {
+    HeapDesc* hd;
+    Cell* cell;
+    s32 total = 0;
+    s32 free = 0;
+
+    ASSERTREPORT(893, "HeapArray", lbl_805DDEB0);
+    ASSERTREPORT(894, "0 <= heap && heap < NumHeaps", 0 <= heap && heap < lbl_805DDEB4);
+    hd = &lbl_805DDEB0[heap];
+    ASSERTREPORT(897, "0 <= hd->size", 0 <= hd->size);
+
+    ASSERTREPORT(899, "hd->allocated == NULL || hd->allocated->prev == NULL", hd->allocated == NULL || hd->allocated->prev == NULL);
+
+    for (cell = hd->allocated; cell; cell = cell->next) {
+        ASSERTREPORT(902, "InRange(cell, ArenaStart, ArenaEnd)", InRange(cell, lbl_805DDEB8, lbl_805DDEBC));
+        ASSERTREPORT(903, "OFFSET(cell, ALIGNMENT) == 0", OFFSET(cell, ALIGNMENT) == 0);
+        ASSERTREPORT(904, "cell->next == NULL || cell->next->prev == cell", cell->next == NULL || cell->next->prev == cell);
+        ASSERTREPORT(905, "MINOBJSIZE <= cell->size", MINOBJSIZE <= cell->size);
+        ASSERTREPORT(906, "OFFSET(cell->size, ALIGNMENT) == 0", OFFSET(cell->size, ALIGNMENT) == 0);
+        total += cell->size;
+        ASSERTREPORT(909, "0 < total && total <= hd->size", 0 < total && total <= hd->size);
+    }
+
+    ASSERTREPORT(917, "hd->free == NULL || hd->free->prev == NULL", hd->free == NULL || hd->free->prev == NULL);
+
+    for (cell = hd->free; cell; cell = cell->next) {
+        ASSERTREPORT(920, "InRange(cell, ArenaStart, ArenaEnd)", InRange(cell, lbl_805DDEB8, lbl_805DDEBC));
+        ASSERTREPORT(921, "OFFSET(cell, ALIGNMENT) == 0", OFFSET(cell, ALIGNMENT) == 0);
+        ASSERTREPORT(922, "cell->next == NULL || cell->next->prev == cell", cell->next == NULL || cell->next->prev == cell);
+        ASSERTREPORT(923, "MINOBJSIZE <= cell->size", MINOBJSIZE <= cell->size);
+        ASSERTREPORT(924, "OFFSET(cell->size, ALIGNMENT) == 0", OFFSET(cell->size, ALIGNMENT) == 0);
+        ASSERTREPORT(925, "cell->next == NULL || (char*) cell + cell->size < (char*) cell->next", cell->next == NULL || (char*)cell + cell->size < (char*)cell->next);
+        total += cell->size;
+        free = (cell->size + free);
+        free -= HEADERSIZE;
+        ASSERTREPORT(929, "0 < total && total <= hd->size", 0 < total && total <= hd->size);
+    }
+    ASSERTREPORT(936, "total == hd->size", total == hd->size);
+    return free;
+}
+
 static asm void __OSDBIntegrator(void);
 static asm void OSExceptionVector(void);
 
@@ -712,7 +942,7 @@ u32 OSGetConsoleType(void) {
     return BootInfo->consoleType;
 }
 
-static void DisableWriteGatherPipe(void) {
+static inline void DisableWriteGatherPipe(void) {
     u32 hid2;
 
     hid2 = PPCMfhid2();
@@ -1120,7 +1350,7 @@ static asm void DecrementerExceptionHandler(register __OSException exception, re
 
 static OSAlarmQueue AlarmQueue;
 
-static void SetTimer(OSAlarm* alarm) {
+static inline void SetTimer(OSAlarm* alarm) {
     OSTime delta = alarm->fire - __OSGetSystemTime();
 
     if (delta < 0) {
@@ -1310,234 +1540,7 @@ static asm void DecrementerExceptionHandler(register __OSException exception, re
     b DecrementerExceptionCallback
 }
 
-Cell* fn_803D3560(Cell* list, Cell* cell) {
-    Cell* prev;
-    Cell* next;
-
-    for (next = list, prev = NULL; next != 0; prev = next, next = next->next) {
-        if (cell <= next) {
-            break;
-        }
-    }
-
-    cell->next = next;
-    cell->prev = prev;
-    if (next) {
-        next->prev = cell;
-        if ((u8*)cell + cell->size == (u8*)next) {
-            cell->size += next->size;
-            next = next->next;
-            cell->next = next;
-            if (next) {
-                next->prev = cell;
-            }
-        }
-    }
-    if (prev) {
-        prev->next = cell;
-        if ((u8*)prev + prev->size == (u8*)cell) {
-            prev->size += cell->size;
-            prev->next = next;
-            if (next) {
-                next->prev = prev;
-            }
-        }
-        return list;
-    }
-    return cell;
-}
-
 volatile int lbl_805DC978 = -1;
-
-static HeapDesc* lbl_805DDEB0;
-static int lbl_805DDEB4;
-static void* lbl_805DDEB8;
-static void* lbl_805DDEBC;
-
-static Cell* DLExtract(Cell* list, Cell* cell) {
-    if (cell->next) {
-        cell->next->prev = cell->prev;
-    }
-    if (cell->prev == NULL) {
-        return cell->next;
-    }
-    cell->prev->next = cell->next;
-    return list;
-}
-
-static Cell* DLAddFront(Cell* list, Cell* cell) {
-    cell->next = list;
-    cell->prev = 0;
-    if (list) {
-        list->prev = cell;
-    }
-    return cell;
-}
-
-void* OSAllocFromHeap(int heap, u32 size) {
-    HeapDesc* hd;
-    Cell* cell;
-    Cell* newCell;
-    s32 leftoverSize;
-
-    hd = &lbl_805DDEB0[heap];
-    size += 0x20;
-    size = (size + 0x1F) & 0xFFFFFFE0;
-
-    for (cell = hd->free; cell != NULL; cell = cell->next) {
-        if ((signed)size <= (signed)cell->size) {
-            break;
-        }
-    }
-
-    if (cell == NULL) {
-        return NULL;
-    }
-
-    leftoverSize = cell->size - size;
-    if (leftoverSize < 0x40U) {
-        hd->free = DLExtract(hd->free, cell);
-    } else {
-        cell->size = size;
-        newCell = (void*)((u8*)cell + size);
-        newCell->size = leftoverSize;
-        newCell->prev = cell->prev;
-        newCell->next = cell->next;
-        if (newCell->next != NULL) {
-            newCell->next->prev = newCell;
-        }
-        if (newCell->prev != NULL) {
-            newCell->prev->next = newCell;
-        } else {
-            hd->free = newCell;
-        }
-    }
-
-    hd->allocated = DLAddFront(hd->allocated, cell);
-    return (u8*)cell + 0x20;
-}
-
-void OSFreeToHeap(int heap, void* ptr) {
-    HeapDesc* hd;
-    Cell* cell;
-
-    cell = (void*)((u32)ptr - 0x20);
-    hd = &lbl_805DDEB0[heap];
-    hd->allocated = DLExtract(hd->allocated, cell);
-    hd->free = fn_803D3560(hd->free, cell);
-}
-
-int OSSetCurrentHeap(int heap) {
-    int prev;
-
-    prev = lbl_805DC978;
-    lbl_805DC978 = heap;
-    return prev;
-}
-
-void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps) {
-    u32 arraySize;
-    int i;
-    HeapDesc* hd;
-
-    arraySize = maxHeaps * sizeof(HeapDesc);
-    lbl_805DDEB0 = arenaStart;
-    lbl_805DDEB4 = maxHeaps;
-
-    for (i = 0; i < lbl_805DDEB4; i++) {
-        hd = &lbl_805DDEB0[i];
-        hd->size = -1;
-        hd->free = hd->allocated = 0;
-    }
-    lbl_805DC978 = -1;
-    arenaStart = (void*)((u32)((char*)lbl_805DDEB0 + arraySize));
-    arenaStart = (void*)(((u32)arenaStart + 0x1F) & 0xFFFFFFE0);
-    lbl_805DDEB8 = arenaStart;
-    lbl_805DDEBC = (void*)((u32)arenaEnd & 0xFFFFFFE0);
-    return arenaStart;
-}
-
-int OSCreateHeap(void* start, void* end) {
-    int heap;
-    HeapDesc* hd;
-    Cell* cell;
-
-    start = (void*)(((u32)start + 0x1FU) & ~((32) - 1));
-    end = (void*)(((u32)end) & ~((32) - 1));
-
-    for (heap = 0; heap < lbl_805DDEB4; heap++) {
-        hd = &lbl_805DDEB0[heap];
-        if (hd->size < 0) {
-            hd->size = (u32)end - (u32)start;
-            cell = start;
-            cell->prev = 0;
-            cell->next = 0;
-            cell->size = hd->size;
-            hd->free = cell;
-            hd->allocated = 0;
-            return heap;
-        }
-    }
-    return -1;
-}
-
-void OSDestroyHeap(int heap) {
-    lbl_805DDEB0[heap].size = -1;
-}
-
-#define ASSERTREPORT(line, cond) \
-    if (!(cond)) { \
-        OSReport("OSCheckHeap: Failed " #cond " in %d", line); \
-        return -1; \
-    }
-
-#define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
-#define ALIGNMENT 32
-#define InRange(cell, arenaStart, arenaEnd) \
-    ((u32)arenaStart <= (u32)cell) && ((u32)cell < (u32)arenaEnd)
-#define HEADERSIZE 32u
-#define MINOBJSIZE 64u
-
-s32 kar_diag__803d3884(int heap) {
-    HeapDesc* hd;
-    Cell* cell;
-    s32 total = 0;
-    s32 free = 0;
-
-    ASSERTREPORT(893, lbl_805DDEB0);
-    ASSERTREPORT(894, 0 <= heap && heap < lbl_805DDEB4);
-    hd = &lbl_805DDEB0[heap];
-    ASSERTREPORT(897, 0 <= hd->size);
-
-    ASSERTREPORT(899, hd->allocated == NULL || hd->allocated->prev == NULL);
-
-    for (cell = hd->allocated; cell; cell = cell->next) {
-        ASSERTREPORT(902, InRange(cell, lbl_805DDEB8, lbl_805DDEBC));
-        ASSERTREPORT(903, OFFSET(cell, ALIGNMENT) == 0);
-        ASSERTREPORT(904, cell->next == NULL || cell->next->prev == cell);
-        ASSERTREPORT(905, MINOBJSIZE <= cell->size);
-        ASSERTREPORT(906, OFFSET(cell->size, ALIGNMENT) == 0);
-        total += cell->size;
-        ASSERTREPORT(909, 0 < total && total <= hd->size);
-    }
-
-    ASSERTREPORT(917, hd->free == NULL || hd->free->prev == NULL);
-
-    for (cell = hd->free; cell; cell = cell->next) {
-        ASSERTREPORT(920, InRange(cell, lbl_805DDEB8, lbl_805DDEBC));
-        ASSERTREPORT(921, OFFSET(cell, ALIGNMENT) == 0);
-        ASSERTREPORT(922, cell->next == NULL || cell->next->prev == cell);
-        ASSERTREPORT(923, MINOBJSIZE <= cell->size);
-        ASSERTREPORT(924, OFFSET(cell->size, ALIGNMENT) == 0);
-        ASSERTREPORT(925, cell->next == NULL || (char*)cell + cell->size < (char*)cell->next);
-        total += cell->size;
-        free = (cell->size + free);
-        free -= HEADERSIZE;
-        ASSERTREPORT(929, 0 < total && total <= hd->size);
-    }
-    ASSERTREPORT(936, total == hd->size);
-    return free;
-}
 
 #define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 #define TRUNC(n, a) (((u32)(n)) & ~((a) - 1))
@@ -2779,11 +2782,11 @@ static u16 HankakuToCode[]
         0x29A, 0x29B, 0x29C, 0x29D, 0x29E, 0x29F, 0x2A0, 0x2A1,
         0x2A2, 0x2A3, 0x2A4, 0x2A5, 0x2A6, 0x2A7, 0x2A8, 0x2A9 };
 
-static BOOL IsSjisTrailByte(u8 c) {
+static inline BOOL IsSjisTrailByte(u8 c) {
     return (0x40 <= c && c <= 0xFC) && (c != 0x7F);
 }
 
-static int fn_803D6044(u16 code) {
+int fn_803D6044(u16 code) {
     if (code >= 0x20 && code <= 0xDF) {
         return HankakuToCode[code - 0x20];
     }
@@ -2807,7 +2810,7 @@ static int fn_803D6044(u16 code) {
     return 0;
 }
 
-static void fn_803D61E0(u8* s, u8* d) {
+void fn_803D61E0(u8* s, u8* d) {
     int i;
     int j;
     int k;
@@ -2917,7 +2920,7 @@ char* fn_803D676C(const char* string, void* image, s32 pos, s32 stride, s32* wid
     return (char*)string;
 }
 
-static void fn_803D6A70(OSFontHeader* font, u8* src, u8* dst) {
+void fn_803D6A70(OSFontHeader* font, u8* src, u8* dst) {
     int i;
     u8* colorIndex = &font->c0;
 
@@ -2938,7 +2941,7 @@ static void fn_803D6A70(OSFontHeader* font, u8* src, u8* dst) {
     DCStoreRange(dst, font->sheetFullSize);
 }
 
-static u32 GetFontSize(u8* buf) {
+static inline u32 GetFontSize(u8* buf) {
     if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
         return *(u32*)(buf + 0x4);
     }
@@ -2946,7 +2949,7 @@ static u32 GetFontSize(u8* buf) {
     return 0;
 }
 
-static void fn_803D63AC(void* buf, int length, int offset) {
+void fn_803D63AC(void* buf, int length, int offset) {
     int len;
     while (length > 0) {
         len = (length <= 0x100) ? length : 0x100;
@@ -2960,7 +2963,7 @@ static void fn_803D63AC(void* buf, int length, int offset) {
     }
 }
 
-static u32 ReadFont(void* img, u16 encode, void* fontData) {
+static inline u32 ReadFont(void* img, u16 encode, void* fontData) {
     u32 size;
 
     if (encode == OS_FONT_ENCODE_SJIS) {
@@ -2978,12 +2981,33 @@ static u32 ReadFont(void* img, u16 encode, void* fontData) {
     return size;
 }
 
+#define __VIRegs ((volatile u16*)0xCC002000)
+#define VI_DTV_STAT 55
+
+#define VI_NTSC 0
+#define VI_PAL 1
+#define VI_MPAL 2
+#define VI_DEBUG 3
+#define VI_DEBUG_PAL 4
+#define VI_EURGB60 5
+
 u16 OSGetFontEncode(void) {
-    if (FontEncode != 0xFFFF) {
+    if (FontEncode <= 1) {
         return FontEncode;
     }
 
-    FontEncode = OS_FONT_ENCODE_ANSI;
+    switch (*(int*)OSPhysicalToCached(0xCC)) {
+    case VI_NTSC:
+        FontEncode = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
+        break;
+    case VI_PAL:
+    case VI_MPAL:
+    case VI_DEBUG:
+    case VI_DEBUG_PAL:
+    case VI_EURGB60:
+    default:
+        FontEncode = OS_FONT_ENCODE_ANSI;
+    }
 
     return FontEncode;
 }
@@ -3792,7 +3816,7 @@ void __OSUnlockAllMutex(OSThread* thread) {
     }
 }
 
-static int IsMember(OSMutexQueue* queue, OSMutex* mutex) {
+static inline int IsMember(OSMutexQueue* queue, OSMutex* mutex) {
     OSMutex* member = queue->head;
 
     while (member) {
@@ -4215,7 +4239,7 @@ int WriteSram(void* buffer, u32 offset, u32 size) {
     return !err;
 }
 
-static int ReadSram(void* buffer) {
+static inline int ReadSram(void* buffer) {
     int err;
     u32 cmd;
 
@@ -4244,7 +4268,7 @@ void __OSInitSram(void) {
     Scb_8056D900.offset = SRAM_SIZE;
 }
 
-static void* LockSram(u32 offset) {
+static inline void* LockSram(u32 offset) {
     BOOL enabled;
 
     enabled = OSDisableInterrupts();
