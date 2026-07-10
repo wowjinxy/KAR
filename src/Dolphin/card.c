@@ -474,6 +474,7 @@ void __CARDUnlockedHandler(s32 chan, OSContext* context) {
     }
 }
 
+#pragma dont_inline on
 s32 __CARDEnableInterrupt(s32 chan, BOOL enable) {
     BOOL err;
     u32 cmd;
@@ -489,6 +490,7 @@ s32 __CARDEnableInterrupt(s32 chan, BOOL enable) {
     err |= !EXIDeselect(chan);
     return err ? CARD_RESULT_NOCARD : CARD_RESULT_READY;
 }
+#pragma dont_inline off
 
 #pragma dont_inline on
 s32 __CARDReadStatus(s32 chan, u8* status) {
@@ -562,11 +564,6 @@ static inline void SetupTimeoutAlarm(CARDControl* card) {
     case 0xF3:
         break;
     case 0xF4:
-        if (card->pageSize > 0x80) {
-            OSSetAlarm(&card->alarm, OSSecondsToTicks((OSTime)2) * (card->cBlock / 0x40),
-                       TimeoutHandler);
-            break;
-        }
     case 0xF1:
         OSSetAlarm(&card->alarm, OSSecondsToTicks((OSTime)2) * (card->sectorSize / 0x2000),
                    TimeoutHandler);
@@ -605,7 +602,7 @@ s32 Retry(s32 chan) {
         return CARD_RESULT_READY;
     }
 
-    if (!EXIDma(chan, card->buffer, (s32)((card->cmd[0] == 0x52) ? 512 : card->pageSize), card->mode,
+    if (!EXIDma(chan, card->buffer, (s32)((card->cmd[0] == 0x52) ? 512 : CARD_PAGE_SIZE), card->mode,
                 __CARDTxHandler))
     {
         EXIDeselect(chan);
@@ -742,13 +739,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
 
     card = &__CARDBlock[chan];
     card->cmd[0] = 0xF2;
-
-    if (card->pageSize > 0x80) {
-        card->cmd[1] = AD1(card->addr) | 0x80;
-    } else {
-        card->cmd[1] = AD1(card->addr);
-    }
-
+    card->cmd[1] = AD1(card->addr);
     card->cmd[2] = AD2(card->addr);
     card->cmd[3] = AD3(card->addr);
     card->cmd[4] = BA(card->addr);
@@ -761,7 +752,7 @@ s32 __CARDWritePage(s32 chan, CARDCallback callback) {
         result = CARD_RESULT_READY;
     } else if (result >= 0) {
         if (!EXIImmEx(chan, card->cmd, card->cmdlen, EXI_WRITE) ||
-            !EXIDma(chan, card->buffer, card->pageSize, card->mode, __CARDTxHandler))
+            !EXIDma(chan, card->buffer, CARD_PAGE_SIZE, card->mode, __CARDTxHandler))
         {
             card->exiCallback = 0;
             EXIDeselect(chan);
@@ -782,14 +773,6 @@ s32 __CARDEraseSector(s32 chan, u32 addr, CARDCallback callback) {
     s32 result;
 
     card = &__CARDBlock[chan];
-
-    if (card->pageSize > 0x80) {
-        if (callback) {
-            callback(chan, 0);
-        }
-        return 0;
-    }
-
     card->cmd[0] = 0xF1;
     card->cmd[1] = AD1(addr);
     card->cmd[2] = AD2(addr);
@@ -848,9 +831,11 @@ void CARDInit(void) {
     OSRegisterResetFunction(&ResetFunctionInfo);
 }
 
+#pragma dont_inline on
 u16 __CARDGetFontEncode(void) {
     return __CARDEncode;
 }
+#pragma dont_inline off
 
 void __CARDSetDiskID(const DVDDiskID* id) {
     __CARDBlock[0].diskID = id ? id : &__CARDDiskNone;
@@ -915,6 +900,20 @@ s32 CARDGetResultCode(s32 chan) {
 }
 #pragma dont_inline off
 
+static inline s32 __CARDPutControlBlockInline(CARDControl* card, s32 result) {
+    BOOL enabled;
+
+    enabled = OSDisableInterrupts();
+    if (card->attached) {
+        card->result = result;
+    } else if (card->result == CARD_RESULT_BUSY) {
+        card->result = result;
+    }
+
+    OSRestoreInterrupts(enabled);
+    return result;
+}
+
 s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed) {
     CARDControl* card;
     s32 result;
@@ -931,7 +930,7 @@ s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed) {
     fat = __CARDGetFatBlock(card);
     dir = __CARDGetDirBlock(card);
     if (fat == 0 || dir == 0) {
-        return __CARDPutControlBlock(card, CARD_RESULT_BROKEN);
+        return __CARDPutControlBlockInline(card, CARD_RESULT_BROKEN);
     }
 
     if (byteNotUsed) {
@@ -948,7 +947,7 @@ s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed) {
         }
     }
 
-    return __CARDPutControlBlock(card, CARD_RESULT_READY);
+    return __CARDPutControlBlockInline(card, CARD_RESULT_READY);
 }
 
 #pragma dont_inline on
@@ -959,9 +958,16 @@ s32 __CARDSync(s32 chan) {
 
     block = &__CARDBlock[chan];
     enabled = OSDisableInterrupts();
-    while ((result = CARDGetResultCode(chan)) == CARD_RESULT_BUSY) {
-        OSSleepThread(&block->threadQueue);
-    }
+    goto test;
+loop:
+    OSSleepThread(&block->threadQueue);
+test:
+    if (chan < 0 || chan >= 2)
+        result = CARD_RESULT_FATAL_ERROR;
+    else
+        result = block->result;
+    if (result == CARD_RESULT_BUSY)
+        goto loop;
 
     OSRestoreInterrupts(enabled);
     return result;
@@ -1000,7 +1006,7 @@ static u8 CardData[352] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-static u32 next = 1;
+static volatile u32 next = 1;
 
 static inline u32 exnor_1st(u32 data, u32 rshift) {
     u32 wk;
@@ -1408,9 +1414,9 @@ void fn_803E44AC(s32 chan, s32 result) {
 
     card = &__CARDBlock[chan];
     if (result >= 0) {
-        card->xferred += card->pageSize;
-        card->addr += card->pageSize;
-        card->buffer = (u8*)card->buffer + card->pageSize;
+        card->xferred += CARD_PAGE_SIZE;
+        card->addr += CARD_PAGE_SIZE;
+        card->buffer = (u8*)card->buffer + CARD_PAGE_SIZE;
 
         if (--card->repeat > 0) {
             result = __CARDWritePage(chan, fn_803E44AC);
@@ -1440,16 +1446,18 @@ s32 __CARDWrite(s32 chan, u32 addr, s32 length, void* dst, CARDCallback callback
         return CARD_RESULT_NOCARD;
     }
     card->xferCallback = callback;
-    card->repeat = (length / card->pageSize);
+    card->repeat = (length / CARD_PAGE_SIZE);
     card->addr = addr;
     card->buffer = dst;
     return __CARDWritePage(chan, fn_803E44AC);
 }
 #pragma dont_inline off
 
+#pragma dont_inline on
 void* fn_803E45EC(CARDControl* card) {
     return card->currentFat;
 }
+#pragma dont_inline off
 
 void fn_803E45F4(s32 chan, s32 result) {
     CARDControl* card;
@@ -1482,6 +1490,10 @@ void fn_803E45F4(s32 chan, s32 result) {
     }
 }
 
+static inline void* fn_803E45ECInline(CARDControl* card) {
+    return card->currentFat;
+}
+
 void fn_803E46C8(s32 chan, s32 result) {
     CARDControl* card = &__CARDBlock[chan];
     CARDCallback callback;
@@ -1491,7 +1503,7 @@ void fn_803E46C8(s32 chan, s32 result) {
     if (result < 0)
         goto error;
 
-    fat = fn_803E45EC(card);
+    fat = fn_803E45ECInline(card);
     addr = ((u32)fat - (u32)card->workArea) / CARD_SYSTEM_BLOCK_SIZE * card->sectorSize;
     result = __CARDWrite(chan, addr, CARD_SYSTEM_BLOCK_SIZE, fat, fn_803E45F4);
     if (result < 0)
@@ -1629,6 +1641,10 @@ void fn_803E49F8(s32 chan, s32 result) {
     }
 }
 
+static inline CARDDir* kar_diagnostic__803e49f0Inline(CARDControl* card) {
+    return card->currentDir;
+}
+
 void fn_803E4AC8(s32 chan, s32 result) {
     CARDControl* card = &__CARDBlock[chan];
     CARDCallback callback;
@@ -1636,7 +1652,7 @@ void fn_803E4AC8(s32 chan, s32 result) {
     u32 addr;
 
     if (result >= 0) {
-        dir = kar_diagnostic__803e49f0(card);
+        dir = kar_diagnostic__803e49f0Inline(card);
         addr = ((u32)dir - (u32)card->workArea) / 0x2000 * card->sectorSize;
         result = __CARDWrite(chan, addr, 0x2000, dir, fn_803E49F8);
         if (result >= 0)
@@ -1665,8 +1681,8 @@ s32 __CARDUpdateDir(s32 chan, CARDCallback callback) {
         return CARD_RESULT_NOCARD;
 
     dir = card->currentDir;
+    ++CARDGetDirCheck(dir)->checkCode;
     check = CARDGetDirCheck(dir);
-    ++check->checkCode;
     __CARDCheckSum(dir, 0x2000 - sizeof(u32), &check->checkSum, &check->checkSumInv);
     DCStoreRange(dir, 0x2000);
 
@@ -1696,6 +1712,24 @@ void __CARDCheckSum(void* ptr, int length, u16* checksum, u16* checksumInv) {
 }
 #pragma dont_inline off
 
+static inline void __CARDCheckSumInline(void* ptr, int length, u16* checksum, u16* checksumInv) {
+    u16* p;
+    int i;
+
+    length /= sizeof(u16);
+    *checksum = *checksumInv = 0;
+    for (i = 0, p = ptr; i < length; i++, p++) {
+        *checksum += *p;
+        *checksumInv += ~*p;
+    }
+
+    if (*checksum == 0xFFFF)
+        *checksum = 0;
+
+    if (*checksumInv == 0xFFFF)
+        *checksumInv = 0;
+}
+
 s32 kar_diagnostic__near_803e4e04(CARDControl* card) {
     CARDID* id;
     u16 checksum;
@@ -1709,7 +1743,7 @@ s32 kar_diagnostic__near_803e4e04(CARDControl* card) {
     if (id->deviceID != 0 || id->size != card->size)
         return CARD_RESULT_BROKEN;
 
-    __CARDCheckSum(id, sizeof(CARDID) - sizeof(u32), &checksum, &checksumInv);
+    __CARDCheckSumInline(id, sizeof(CARDID) - sizeof(u32), &checksum, &checksumInv);
     if (id->checkSum != checksum || id->checkSumInv != checksumInv)
         return CARD_RESULT_BROKEN;
 
@@ -1745,7 +1779,7 @@ s32 kar_diagnostic__near_803e5088(CARDControl* card, int* pcurrent) {
     for (i = 0; i < 2; i++) {
         dir[i] = (CARDDir*)((u8*)card->workArea + (1 + i) * CARD_SYSTEM_BLOCK_SIZE);
         check[i] = CARDGetDirCheck(dir[i]);
-        __CARDCheckSum(dir[i], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32), &checkSum, &checkSumInv);
+        __CARDCheckSumInline(dir[i], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32), &checkSum, &checkSumInv);
         if (check[i]->checkSum != checkSum || check[i]->checkSumInv != checkSumInv) {
             ++errors;
             current = i;
@@ -1787,7 +1821,7 @@ s32 kar_diagnostic__near_803e52c8(CARDControl* card, int* pcurrent) {
     for (i = 0; i < 2; i++) {
         fatp = fat[i] = (u16*)((u8*)card->workArea + (3 + i) * CARD_SYSTEM_BLOCK_SIZE);
 
-        __CARDCheckSum(&fatp[CARD_FAT_CHECKCODE], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32), &checkSum, &checkSumInv);
+        __CARDCheckSumInline(&fatp[CARD_FAT_CHECKCODE], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32), &checkSum, &checkSumInv);
         if (fatp[0] != checkSum || fatp[CARD_FAT_CHECKSUMINV] != checkSumInv) {
             ++errors;
             current = i;
@@ -1953,7 +1987,7 @@ s32 CARDCheckExAsync(s32 chan, s32* xferBytes, CARDCallback callback) {
     }
 
     if (updateOrphan) {
-        __CARDCheckSum(&card->currentFat[CARD_FAT_CHECKCODE], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32),
+        __CARDCheckSumInline(&card->currentFat[CARD_FAT_CHECKCODE], CARD_SYSTEM_BLOCK_SIZE - sizeof(u32),
                        &card->currentFat[0],
                        &card->currentFat[CARD_FAT_CHECKSUMINV]);
     }
@@ -1983,14 +2017,18 @@ s32 CARDCheckExAsync(s32 chan, s32* xferBytes, CARDCallback callback) {
     return CARD_RESULT_READY;
 }
 
-s32 CARDCheck(s32 chan) {
-    s32 xferBytes;
-    s32 result = CARDCheckExAsync(chan, &xferBytes, __CARDSyncCallback);
+static inline s32 CARDCheckExInline(s32 chan, s32* xferBytes) {
+    s32 result = CARDCheckExAsync(chan, xferBytes, __CARDSyncCallback);
     if (result < 0 || xferBytes == 0) {
         return result;
     }
 
     return __CARDSync(chan);
+}
+
+s32 CARDCheck(s32 chan) {
+    s32 xferBytes;
+    return CARDCheckExInline(chan, &xferBytes);
 }
 
 static u32 SectorSizeTable[8] = {
@@ -2125,8 +2163,6 @@ s32 kar_diagnostic__near_803e5e04(s32 chan) {
 
         card->latency = LatencyTable[(id & 0x00000700) >> 8];
 
-        card->pageSize = 128;
-
         result = __CARDClearStatus(chan);
         if (result < 0)
             goto error;
@@ -2236,18 +2272,7 @@ void __CARDMountCallback(s32 chan, s32 result) {
         break;
     case CARD_RESULT_IOERROR:
     case CARD_RESULT_NOCARD:
-        {
-            BOOL enabled2 = OSDisableInterrupts();
-            if (card->attached) {
-                EXISetExiCallback(chan, 0);
-                EXIDetach(chan);
-                OSCancelAlarm(&card->alarm);
-                card->attached = FALSE;
-                card->result = result;
-                card->mountStep = 0;
-            }
-            OSRestoreInterrupts(enabled2);
-        }
+        fn_803E6534(chan, result);
         break;
     }
 
@@ -2339,22 +2364,12 @@ void fn_803E6534(s32 chan, s32 result) {
 s32 CARDUnmount(s32 chan) {
     CARDControl* card;
     s32 result;
-    BOOL enabled;
 
     result = __CARDGetControlBlock(chan, &card);
     if (result < 0)
         return result;
 
-    enabled = OSDisableInterrupts();
-    if (card->attached) {
-        EXISetExiCallback(chan, 0);
-        EXIDetach(chan);
-        OSCancelAlarm(&card->alarm);
-        card->attached = FALSE;
-        card->result = CARD_RESULT_NOCARD;
-        card->mountStep = 0;
-    }
-    OSRestoreInterrupts(enabled);
+    fn_803E6534(chan, CARD_RESULT_NOCARD);
     return CARD_RESULT_READY;
 }
 
@@ -2494,16 +2509,32 @@ BOOL __CARDCompareFileName(CARDDir* ent, const char* fileName) {
 }
 #pragma dont_inline off
 
+static inline BOOL __CARDCompareFileNameInline(CARDDir* ent, const char* fileName) {
+    char* entName = (char*)ent->fileName;
+    char c1;
+    char c2;
+    int n = CARD_FILENAME_MAX;
+
+    while (--n >= 0) {
+        if ((c1 = *entName++) != (c2 = *fileName++))
+            return FALSE;
+        else if (c2 == '\0')
+            return TRUE;
+    }
+
+    if (*fileName == '\0')
+        return TRUE;
+    return FALSE;
+}
+
 #pragma dont_inline on
 s32 __CARDAccess(CARDControl* card, CARDDir* ent) {
-    const DVDDiskID* diskID = card->diskID;
-
     if (ent->gameName[0] == 0xFF)
         return CARD_RESULT_NOFILE;
 
-    if (diskID == &__CARDDiskNone
-     || (memcmp(ent->gameName, diskID->gameName, sizeof(ent->gameName)) == 0
-      && memcmp(ent->company, diskID->company, sizeof(ent->company)) == 0))
+    if (card->diskID == &__CARDDiskNone
+     || (memcmp(ent->gameName, card->diskID->gameName, sizeof(ent->gameName)) == 0
+      && memcmp(ent->company, card->diskID->company, sizeof(ent->company)) == 0))
         return CARD_RESULT_READY;
 
     return CARD_RESULT_NOPERM;
@@ -2522,7 +2553,6 @@ s32 __CARDIsPublic(CARDDir* ent) {
 }
 #pragma dont_inline off
 
-#pragma dont_inline on
 s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
     CARDDir* dir;
     CARDDir* ent;
@@ -2534,24 +2564,20 @@ s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
 
     dir = kar_diagnostic__803e49f0(card);
     for (fileNo = 0; fileNo < CARD_MAX_FILE; fileNo++) {
-        const DVDDiskID* diskID;
         ent = &dir[fileNo];
 
         if (ent->gameName[0] == 0xFF)
             result = CARD_RESULT_NOFILE;
-        else {
-            diskID = card->diskID;
-            if (diskID == &__CARDDiskNone
-             || (memcmp(ent->gameName, diskID->gameName, sizeof(ent->gameName)) == 0
-              && memcmp(ent->company, diskID->company, sizeof(ent->company)) == 0))
-                result = CARD_RESULT_READY;
-            else
-                result = CARD_RESULT_NOPERM;
-        }
+        else if (card->diskID == &__CARDDiskNone
+         || (memcmp(ent->gameName, card->diskID->gameName, sizeof(ent->gameName)) == 0
+          && memcmp(ent->company, card->diskID->company, sizeof(ent->company)) == 0))
+            result = CARD_RESULT_READY;
+        else
+            result = CARD_RESULT_NOPERM;
 
         if (result < 0)
             continue;
-        if (__CARDCompareFileName(ent, fileName)) {
+        if (__CARDCompareFileNameInline(ent, fileName)) {
             *pfileNo = fileNo;
             return CARD_RESULT_READY;
         }
@@ -2559,7 +2585,6 @@ s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
 
     return CARD_RESULT_NOFILE;
 }
-#pragma dont_inline off
 
 s32 CARDOpen(s32 chan, const char* fileName, CARDFileInfo* fileInfo) {
     CARDControl* card;
@@ -3050,7 +3075,7 @@ s32 CARDDelete(s32 chan, const char* fileName) {
     return __CARDSync(chan);
 }
 
-s32 kar_diagnostic__near_803e8048(CARDDir* ent, CARDStat* stat) {
+void kar_diagnostic__near_803e8048(CARDDir* ent, CARDStat* stat) {
     u32 offset;
     BOOL iconTlut;
     int i;
@@ -3106,7 +3131,6 @@ s32 kar_diagnostic__near_803e8048(CARDDir* ent, CARDStat* stat) {
         stat->offsetIconTlut = 0xffffffff;
     }
     stat->offsetData = offset;
-    return 0;
 }
 
 s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStat* stat) {
