@@ -774,6 +774,9 @@ for obj in kar_objects:
         obj.options["cflags"] = cflags_dolphin_sdk
         obj.options["progress_category"] = "sdk"
 
+dolphin_matched = {"mtxvec", "ppcarch", "db"}
+dolphin_schedule_off = {"exi"}
+
 config.libs = [
     {
         "lib": "KAR",
@@ -806,6 +809,20 @@ config.libs = [
                 mw_version=DOLPHIN_SDK_COMPILER_VERSION,
                 cflags=cflags_dolphin_sdk,
             ),
+            *[
+                Object(
+                    Matching if unit in dolphin_matched else NonMatching,
+                    f"dolphin/{unit}.c",
+                    source=f"Dolphin/{unit}.c",
+                    mw_version=DOLPHIN_SDK_COMPILER_VERSION,
+                    cflags=cflags_dolphin_sdk + ["-schedule off"] if unit in dolphin_schedule_off else cflags_dolphin_sdk,
+                )
+                for unit in [
+                    "db", "dsp", "dvd", "gx", "mtx", "mtxvec", "mtx44", "vec", "os",
+                    "ostime", "init", "pad", "vi", "ai", "ar", "arq", "card", "si",
+                    "exi", "ax", "mix", "ppcarch",
+                ]
+            ],
             Object(NonMatching, "metrotrk_bridge.c"),
             Object(NonMatching, "hsd_runtime.c"),
         ],
