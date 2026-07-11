@@ -2,6 +2,7 @@
 #include <dolphin/types.h>
 #include <kar/gm/gmglobal.h>
 #include <kar/gm/gmlanmenu.h>
+#include <kar/lb/lbkdcoll.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
@@ -107,7 +108,6 @@ void HSD_VISetConfigure(void* configure);
 void fn_801390E0(void);
 void fn_80139188(void);
 void fn_801391C8(void);
-void kar_lbkdcoll__near_80072aa0(void);
 void kar_lbfile_wait_for_group6_loads(void);
 void kar_pltrick__near_8023295c(void);
 void fn_801391F0(void);

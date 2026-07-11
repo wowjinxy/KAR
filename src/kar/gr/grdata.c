@@ -4,6 +4,7 @@
 #include <kar/gr/gryaku.h>
 #include <kar/gr/grspline.h>
 #include <kar/lb/lbarchive.h>
+#include <kar/lb/lbkdcoll.h>
 
 #if defined(VERSION_GKYJ01)
 #define lbl_805DF5C8 lbl_805D9FF0
@@ -24,7 +25,6 @@
 #define kar_grcity1_patch_asset_material_anim_params fn_8010E28C
 #define kar_grnullpos_scale_setup_position_data fn_800E4854
 #define kar_lbspline__near_8006e664 fn_8006DD78
-#define kar_lbkdcoll__near_80072c90 fn_800723A4
 #define kar_efdata__near_802358c4 fn_80231850
 #define kar_grgravity_calc_nearest_nullpos_gravity fn_800E5660
 #elif defined(VERSION_GKYP01)
@@ -46,7 +46,6 @@
 #define kar_grcity1_patch_asset_material_anim_params fn_80110F20
 #define kar_grnullpos_scale_setup_position_data fn_800E7184
 #define kar_lbspline__near_8006e664 fn_8006EFA4
-#define kar_lbkdcoll__near_80072c90 fn_800735D0
 #define kar_efdata__near_802358c4 fn_802365A0
 #define kar_grgravity_calc_nearest_nullpos_gravity fn_800E7F90
 #endif
@@ -139,8 +138,6 @@ s32 fn_80262574(s32 arg0);
 void kar_grcity1_patch_asset_material_anim_params(GroundData* data);
 void kar_grnullpos_scale_setup_position_data(void* data, f32 scale);
 void kar_lbspline__near_8006e664(void* spline, f32 scale);
-void kar_lbkdcoll__near_80072c90(s32 arg0, char* archive_name, s32 arg2, s32 arg3, s32 arg4,
-                                 s32 arg5, s32 arg6, s32 arg7, s32 arg8);
 void kar_efdata__near_802358c4(s32 kind);
 f32 kar_grgravity_calc_nearest_nullpos_gravity(Ground* ground, Vec* pos, Vec* out);
 f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos, Vec* out);

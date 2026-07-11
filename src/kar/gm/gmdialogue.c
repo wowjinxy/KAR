@@ -10,6 +10,7 @@
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbkdcoll.h>
 #include <kar/shadow.h>
 #include <kar/vc/vcgenerator.h>
 
@@ -25,7 +26,6 @@ char lbl_805D51B8[] = "0";
 
 void* kar_gmmain__near_80006c14(void);
 void kar_gmviconfigure__near_8004f5e0(s32 arg0);
-void kar_lbkdcoll__near_800726f0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
 void fn_80018A04(void);
 void fn_8000A444(s32 arg0);

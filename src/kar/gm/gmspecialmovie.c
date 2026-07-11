@@ -8,6 +8,7 @@
 #include <kar/lb/lbarchive.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbkdcoll.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/gobj_kinds.h>
 
@@ -97,9 +98,6 @@ void HSD_GObjObjectLink(GObj* gobj, u8 kind, void* object);
 void GObj_SetCamera(GObj* gobj, GObj* camera);
 void GObj_SetupGXLinkMax(GObj* gobj, void (*callback)(GObj*, GObj*),
                          s32 priority);
-void kar_lbkdcoll__near_80076f8c(s32 arg0, s32 arg1, s32 arg2, s32 arg3,
-                                 s32 arg4, f32 arg5, f32 arg6, f32 arg7,
-                                 f32 arg8);
 s32 fn_8027C830(void);
 void kar_en_assets__asset_8027c838(void);
 MovieWork* fn_8027E574(void);
