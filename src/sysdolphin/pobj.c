@@ -5,6 +5,7 @@
 
 #include <sysdolphin/id.h>
 #include <sysdolphin/gobjproc.h>
+#include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/tev.h>
@@ -17,8 +18,6 @@ extern BOOL hsdIsDescendantOf(void* info, void* base);
 
 extern void memset(void*, int, int);
 extern void memcpy(void*, const void*, int);
-
-extern void _HSD_NeedCacheInvalidate(u32 flags);
 
 extern HSD_JObj* HSD_JObjGetCurrent(void);
 extern void HSD_JObjUnrefThis(HSD_JObj* jobj);

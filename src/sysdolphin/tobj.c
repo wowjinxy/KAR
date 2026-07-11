@@ -5,6 +5,7 @@
 
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 
@@ -122,8 +123,6 @@ extern void HSD_Panic(char* file, s32 line, char* msg);
 extern void* hsdAllocMemPiece(u32 size);
 extern void memcpy(void* dst, const void* src, u32 size);
 extern void memset(void* ptr, s32 value, u32 size);
-
-extern void _HSD_NeedCacheInvalidate(u32 flags);
 
 extern HSD_LObj* HSD_LObjGetCurrentByType(u16 flags);
 extern void HSD_LObjGetLightVector(HSD_LObj* lobj, Vec* v);

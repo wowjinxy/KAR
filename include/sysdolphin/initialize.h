@@ -43,6 +43,7 @@ void HSD_ClearHeap(void);
 HSD_RenderPass HSD_GetCurrentRenderPass(void);
 void HSD_StartRender(HSD_RenderPass pass);
 void HSD_EndRender(void);
+void _HSD_NeedCacheInvalidate(u32 flags);
 void HSD_ObjInit(void);
 void HSD_ObjDumpStat(void);
 bool HSD_SetInitParameter(HSD_InitParam param, ...);
