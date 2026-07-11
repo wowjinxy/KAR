@@ -25,8 +25,6 @@ typedef struct OSCalendarTime
     int usec;
 } OSCalendarTime;
 
-extern void* OSGetStackPointer(void);
-
 extern const int DaysToMonth365[12];
 extern const int DaysToMonth366[12];
 

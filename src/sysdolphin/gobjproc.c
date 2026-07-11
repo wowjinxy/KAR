@@ -13,7 +13,6 @@ typedef struct _HSD_StackFrame {
 } HSD_StackFrame;
 
 extern void OSFillFPUContext(void*);
-extern void* OSGetStackPointer(void);
 
 extern u8 __files[];
 extern u8 hsd_saved_context[];

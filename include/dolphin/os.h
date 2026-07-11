@@ -166,6 +166,7 @@ void DCFlushRange(void* addr, u32 nBytes);
 void DCFlushRangeNoSync(void* addr, u32 nBytes);
 void DCInvalidateRange(void* addr, u32 nBytes);
 u32 OSGetPhysicalMemSize(void);
+void* OSGetStackPointer(void);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
 #endif  // __OS_H__
