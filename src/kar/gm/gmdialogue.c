@@ -4,6 +4,7 @@
 #include <kar/gm/gmdialogue.h>
 #include <kar/gm/gmdialoguestatus.h>
 #include <kar/gm/gmmain.h>
+#include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/shadow.h>
 
@@ -94,7 +95,6 @@ void kar_pltrick__near_80232500(void* arg0);
 void kar_lbaudio__near_8005e5d0(void);
 void kar_lbaudio__near_8005e788(void);
 void kar_mnclearchecker_create_progressive_text_windows(void);
-s8 kar_gmracenormal__8000aea8(void);
 void fn_80138F44(void);
 void kar_osthread__near_803d9724(s32 arg0);
 void* memset(void* dst, int val, unsigned long n);

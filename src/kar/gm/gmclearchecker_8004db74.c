@@ -4,6 +4,7 @@
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004db74.h"
 #include "kar/gm/gmmain.h"
+#include "kar/gm/gmracenormal.h"
 #include "kar/shadow.h"
 
 typedef struct {
@@ -15,7 +16,6 @@ typedef struct {
 extern HSD_PadCopyStatus_s HSD_PadCopyStatus;
 
 extern GmMainData *kar_gmmain__near_80006c14(void);
-extern s8 kar_gmracenormal__8000aea8(void);
 extern s32 kar_plclearcheckerlib__near_8022c858(s32 arg0);
 extern f32 fn_80281A0C(void);
 extern s8 fn_8000C228(s8);

@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/types.h>
 #include <kar/gm/gmmain.h>
+#include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
 
 typedef struct GObj GObj;
@@ -80,7 +81,6 @@ void* kar_gmmain__near_80006c14(void);
 void kar_gmglobal__near_800088c8(s32 arg0);
 void kar_gmlanmenu__800082a0(s32 arg0);
 void kar_gmlanmenu__80008220(void);
-s8 kar_gmracenormal__8000aea8(void);
 void kar_movie_assets__8000a498(s32 arg0);
 void kar_lbarchive__near_80059cfc(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));

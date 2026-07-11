@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
 
 typedef struct GmLanWork GmLanWork;
@@ -156,7 +157,6 @@ void kar_gmlanmenu__near_80052ca4(HSD_DObj* dobj, HSD_MObj* current);
 void fn_8013927C(void);
 void fn_80139314(void);
 SBoardRecord* fn_8004161C(void);
-s8 kar_gmracenormal__8000aea8(void);
 s32 kar_gmracenormal__8000ae50(void);
 s8 fn_8000C228(s8 index);
 void kar_mnbestrapbg_set_sboard_bg_subtitle_pair_visible(s32 visible);

@@ -4,6 +4,7 @@
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004a648.h"
 #include "kar/gm/gmmain.h"
+#include "kar/gm/gmracenormal.h"
 #include "kar/shadow.h"
 
 extern GmMainData *kar_gmmain__near_80006c14(void);
@@ -13,7 +14,6 @@ extern void kar_mnclearchecker_create_screen_and_sis_resources(u8 arg0,
                                                                u8 arg1);
 extern s8 fn_8000AECC(void);
 extern void fn_8000BC10(void);
-extern s8 kar_gmracenormal__8000aea8(void);
 extern s8 fn_8000AAC4(void);
 extern s8 fn_8000A97C(void);
 extern s8 kar_gmracenormal__8000af5c(void);

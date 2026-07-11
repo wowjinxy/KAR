@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmracenormal.h>
 #include <kar/shadow.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjuserdata.h>
@@ -110,7 +111,6 @@ s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
 f32 kar_gmracenormal__8000a370(s32 arg0);
 s32 kar_gmracenormal__8000ae50(void);
-s32 kar_gmracenormal__8000aea8(void);
 s32 kar_gmracenormal__8000af5c(void);
 s32 kar_gmracenormal__8000af94(void);
 s32 kar_gmracenormal__8003d5f0(void);
