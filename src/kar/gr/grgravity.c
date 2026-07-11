@@ -3,13 +3,13 @@
 #include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/lb/lbvector.h>
+#include <sysdolphin/spline.h>
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
 typedef struct GravityParams GravityParams;
 typedef struct GravitySplineSet GravitySplineSet;
 typedef struct SplineList SplineList;
-typedef struct HSD_Spline HSD_Spline;
 
 #if defined(VERSION_GKYJ01)
 #define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x65
@@ -83,7 +83,6 @@ extern const f32 lbl_805DF72C;
 
 void* memcpy(void* dst, const void* src, unsigned long n);
 f32 kar_lbcolanim__near_8006bac8(HSD_Spline* spline, Vec* pos, s32 arg2);
-void splArcLengthPoint(Vec* out, HSD_Spline* spline, f32 param);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))

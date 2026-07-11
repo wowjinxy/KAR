@@ -12,9 +12,8 @@
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/robj.h>
+#include <sysdolphin/spline.h>
 #include <sysdolphin/id.h>
-
-void splArcLengthPoint(Vec* out, HSD_Spline* spline, f32 param);
 
 void HSD_RObjRemoveAnimAllByFlags(HSD_RObj* robj, u32 flags);
 void HSD_RObjReqAnimAllByFlags(HSD_RObj* robj, f32 frame, u32 flags);
