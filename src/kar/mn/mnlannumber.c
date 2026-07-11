@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/lb/lbarchive.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
 #include <kar/mn/mnmenu.h>
@@ -42,7 +43,6 @@ typedef struct LanNumberPanel {
 void fn_801389D8(HSD_JObj* jobj, void* arg1, f32 arg2, f32 arg3);
 void* fn_8013909C(void);
 HSD_JObj* kar_lbairride__near_80055af0(HSD_GObj* gobj, s32 id);
-void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3, ...);
 void kar_lbvector_project_world_to_screen(void* cobj, Vec* world, Vec* screen, s32 arg3);
 
 #define PROJECT_BOX_TO_SCREEN(out, member)                                      \
