@@ -87,8 +87,6 @@ char kar_gryakubreakfan_assert_remove_effect_count[] =
 
 void kar_gryakubreakfloor_configure_kind30_breakfan_fgm(HSD_GObj* gobj);
 void kar_gryakubreakfloor_update_kind30_breakfan_effects_then_destroy(HSD_GObj* gobj);
-void fn_801C7628(void* event, Vec* out);
-void fn_80191B4C(void* event, Vec* out);
 void kar_collision_object_begin_disable(void* collision_object);
 u64 kar_gryakueffect_request_by_entry_mode(HSD_GObj* gobj, void* effect_entry,
                                            s32 effect_resource, s32 arg3, s32 arg4,

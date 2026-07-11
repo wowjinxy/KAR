@@ -131,8 +131,6 @@ void* lbl_804A5F40[4] = { NULL, NULL, NULL, NULL };
 void* lbl_804A5F50[5] = { lbl_804A5F40, NULL, NULL, NULL, NULL };
 
 void kar_grcoll__near_800d78b4(void* collision_root, s32 index, Vec* out);
-void fn_80191B4C(void* event, Vec* out);
-void fn_801C7628(void* event, Vec* out);
 void kar_gryakuaudio_configure_fgm_track_from_joint(HSD_GObj* gobj,
                                                     s32 joint_name, s32 arg2);
 void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
