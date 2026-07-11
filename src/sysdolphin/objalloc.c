@@ -5,7 +5,6 @@ extern void* _HSD_MemAlloc(u32 size, u32 align, u32 flags);
 extern u32 _HSD_MemGetRemain(void);
 extern s32 HSD_GetNbBits(u32 value);
 
-extern objheap HSD_ObjHeap;
 extern char ObjAllocAssertData[5];
 HSD_ObjAllocData* HSD_ObjAllocDataList[2];
 char ObjAllocAssertStrings[0x38] =

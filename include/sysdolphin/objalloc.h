@@ -11,6 +11,8 @@ typedef struct _objheap {
     u32 remain;
 } objheap;
 
+extern objheap HSD_ObjHeap;
+
 typedef struct _HSD_ObjAllocLink {
     struct _HSD_ObjAllocLink* next;
 } HSD_ObjAllocLink;

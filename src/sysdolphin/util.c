@@ -1,7 +1,5 @@
 #include <sysdolphin/util.h>
 
-extern objheap HSD_ObjHeap;
-
 void HSD_MulColor(GXColor* arg0, GXColor* arg1, GXColor* dest)
 {
     dest->r = (arg0->r * arg1->r) / 255U;
