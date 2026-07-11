@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/si.h"
 
 typedef s64 OSTime;
 typedef struct OSContext OSContext;
@@ -10,9 +11,6 @@ typedef struct OSAlarm
 } OSAlarm;
 
 typedef void (*OSAlarmHandler)(OSAlarm* alarm, OSContext* context);
-typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
-typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
-typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
 
 extern OSTime __OSGetSystemTime(void);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
@@ -127,11 +125,6 @@ void fn_803E96CC(OSAlarm* alarm, OSContext* context);
 static void GetTypeCallback(s32 chan, u32 status, OSContext* context);
 BOOL SIEnablePollingInterrupt(BOOL enable);
 BOOL SIGetResponseRaw(s32 chan);
-u32 SIGetStatus(s32 chan);
-BOOL SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback,
-                OSTime retryDelay);
-s32 SIGetType(s32 chan);
-void SISetSamplingRate(u32 rate);
 
 BOOL SIBusy(void)
 {

@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/si.h"
 
 typedef s64 OSTime;
 
@@ -21,10 +22,6 @@ typedef struct OSContext {
     /* 0x1C8 */ f64 psf[32];
 } OSContext;
 
-typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
-typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
-typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
-
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
 extern OSTime OSGetTime(void);
@@ -40,23 +37,6 @@ struct OSResetFunctionInfo {
     OSResetFunctionInfo* prev;
 };
 extern void OSRegisterResetFunction(OSResetFunctionInfo* info);
-
-extern BOOL SIBusy(void);
-extern BOOL SIIsChanBusy(s32 chan);
-extern u32 SIGetStatus(s32 chan);
-extern void SISetCommand(s32 chan, u32 cmd);
-extern u32 SIEnablePolling(u32 mask);
-extern u32 SIDisablePolling(u32 mask);
-extern BOOL SIGetResponse(s32 chan, u32* buf);
-extern BOOL SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback,
-                        OSTime retryDelay);
-extern s32 SIGetType(s32 chan);
-extern s32 SIGetTypeAsync(s32 chan, SIGetTypeCallback callback);
-extern void SISetSamplingRate(u32 rate);
-extern void SIRefreshSamplingRate(void);
-extern BOOL SIRegisterPollingHandler(__OSInterruptHandler handler);
-extern BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler);
-extern void SITransferCommands(void);
 
 extern char __PADVersion[];
 extern u32 __PADFixBits;
