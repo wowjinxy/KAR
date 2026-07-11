@@ -9,6 +9,7 @@
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/list.h>
+#include <sysdolphin/lobj.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/objalloc.h>
@@ -45,7 +46,6 @@ extern void GXInitLightDir(GXLightObj*, f32, f32, f32);
 extern void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
 extern void GXInitLightColor(GXLightObj*, GXColor);
 extern void GXLoadLightObjImm(GXLightObj*, s32);
-extern s32 HSD_Index2LightID(s32);
 extern void GXSetPixelFmt(s32 pix_fmt, s32 z_fmt);
 extern void GXSetFieldMode(u8 field_rendering, u8 half_aspect_ratio);
 

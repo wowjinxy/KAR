@@ -31,7 +31,6 @@ extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 
-extern BOOL HSD_CObjSetCurrent(HSD_CObj* cobj);
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
                                      void (*render_cb)(HSD_GObj*, s32),
                                      u8 priority);

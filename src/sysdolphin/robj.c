@@ -28,7 +28,6 @@ extern char RObjAssertRPJObj[11];  // "rp->u.jobj"
 extern void memset(void*, int, int);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void HSD_JObjMakeMatrix(HSD_JObj* jobj);
 
 static inline void robj_JObjSetupMatrix(HSD_JObj* jobj)
 {

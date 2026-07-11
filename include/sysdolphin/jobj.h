@@ -159,6 +159,8 @@ void HSD_JObjUnref(HSD_JObj* jobj);
 void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
 void HSD_JObjReqAnimAllByFlags(HSD_JObj* jobj, s32 flags, f32 frame);
 void HSD_JObjAnimAll(HSD_JObj* jobj);
+void HSD_JObjMakeMatrix(HSD_JObj* jobj);
+void HSD_JObjUnrefThis(HSD_JObj* jobj);
 void HSD_JObjDispAll(HSD_JObj* jobj, Mtx vmtx, u32 flags, u32 rendermode);
 void RecalcParentTrspBits(HSD_JObj* jobj);
 

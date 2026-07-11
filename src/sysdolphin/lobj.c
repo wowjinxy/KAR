@@ -65,8 +65,6 @@ extern f32 LObjFloatBigScale; /* 1048576.0 */
 void LObjInfoInit(void);
 HSD_LObjInfo hsdLObj = { LObjInfoInit };
 
-s32 HSD_LightID2Index(GXLightID);
-s32 HSD_Index2LightID(s32);
 HSD_WObj* HSD_LObjGetPositionWObj(HSD_LObj*);
 HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj*);
 void HSD_LObjDeleteCurrent(HSD_LObj*);

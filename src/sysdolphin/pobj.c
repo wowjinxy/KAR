@@ -22,8 +22,6 @@ extern BOOL hsdIsDescendantOf(void* info, void* base);
 extern void memset(void*, int, int);
 extern void memcpy(void*, const void*, int);
 
-extern void HSD_JObjUnrefThis(HSD_JObj* jobj);
-
 extern void GXSetArray(u32 attr, void* base_ptr, u8 stride);
 extern void GXCallDisplayList(void* list, u32 nbytes);
 
