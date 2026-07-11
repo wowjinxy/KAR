@@ -6,8 +6,11 @@
 
 void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 void GXClearVtxDesc(void);
+void GXGetProjectionv(f32* ptr);
+void GXGetViewportv(f32* vp);
 void GXInvalidateTexAll(void);
 void GXInvalidateVtxCache(void);
+void GXInitFogAdjTable(void* table, u16 width, Mtx44Ptr projmtx);
 void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 void GXPixModeSync(void);
@@ -23,6 +26,8 @@ void GXSetCullMode(u32 mode);
 void GXSetCurrentMtx(u32 id);
 void GXSetDither(u32 enable);
 void GXSetDstAlpha(u32 enable, u8 value);
+void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color);
+void GXSetFogRangeAdj(u32 enable, u16 center, void* table);
 void GXSetLineWidth(u8 width, u32 tex_offsets);
 void GXSetNumChans(u8 n);
 void GXSetNumTevStages(u8 n);

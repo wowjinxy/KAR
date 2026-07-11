@@ -1,5 +1,6 @@
 #include <sysdolphin/fog.h>
 
+#include <dolphin/gx/gx.h>
 #include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/gobjproc.h>
@@ -24,13 +25,6 @@ extern f32 FogHalf;          // 0.5F
 extern f32 FogNegOne;        // -1.0F
 extern f32 FogFloatOne;      // 1.0F
 extern f32 FogColorScale;    // 255.0F
-
-extern void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz,
-                    GXColor color);
-extern void GXSetFogRangeAdj(u32 enable, u16 center, void* table);
-extern void GXGetViewportv(f32* vp);
-extern void GXGetProjectionv(f32* ptr);
-extern void GXInitFogAdjTable(void* table, u16 width, Mtx44Ptr projmtx);
 
 typedef struct {
     u16 r[10];
