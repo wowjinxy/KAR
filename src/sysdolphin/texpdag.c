@@ -28,8 +28,6 @@ extern void* hsdAllocMemPiece(u32 size);
 extern void hsdFreeMemPiece(void* ptr, s32 size);
 extern void memset(void* ptr, s32 value, u32 size);
 
-extern void GXSetTevKColor(u32 id, GXColor color);
-
 #define GX_TEV_SWAP0 0
 #define GX_TEV_SWAP1 1
 #define GX_TEV_SWAP2 2

@@ -88,19 +88,9 @@ extern void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 shininess);
 extern void HSD_MulColor(GXColor* a, GXColor* b, GXColor* out);
 extern void memcpy(void* dst, const void* src, u32 size);
 
-extern void GXSetLineWidth(u8 width, u32 tex_offsets);
-extern void GXSetPointSize(u8 size, u32 tex_offsets);
-extern void GXSetDstAlpha(u32 enable, u8 value);
-extern void GXSetDither(u32 enable);
 extern void GXSetChanCtrl(u32 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);
-extern void GXSetChanAmbColor(u32 chan, GXColor color);
-extern void GXSetChanMatColor(u32 chan, GXColor color);
 extern void GXSetNumTexGens(u8 n);
-extern void GXSetTevSwapMode(u8 stage, u32 ras_swap, u32 tex_swap);
-extern void GXSetTevKColorSel(u8 stage, u32 sel);
-extern void GXSetTevKAlphaSel(u8 stage, u32 sel);
-extern void GXSetTevColorS10(u32 reg, GXColorS10 color);
 
 void HSD_SetupChannelMode(u32 rendermode)
 {
