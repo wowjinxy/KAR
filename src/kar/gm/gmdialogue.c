@@ -11,6 +11,7 @@
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/shadow.h>
+#include <kar/vc/vcgenerator.h>
 
 char kar_src_gmdialogue_80496f38[] = "gmdialogue.c";
 char lbl_80497118[] =
@@ -42,7 +43,6 @@ void kar_lbaudio__near_80061734(void);
 void kar_lbkdcoll__near_800726f0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
 s32 kar_gmracenormal__800092fc(void);
-s32 kar_vcgenerator__8000af38(void);
 void fn_80018A04(void);
 void fn_8000A444(s32 arg0);
 s32 fn_8000A4EC(s32 arg0);
