@@ -90,11 +90,14 @@ typedef struct _HSD_RObjAnimJoint {
 
 void HSD_RObjInitAllocData(void);
 void HSD_RObjSetFlags(HSD_RObj* robj, u32 flags);
+HSD_RObj* HSD_RObjAlloc(void);
+HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype);
 void HSD_RObjAnimAll(HSD_RObj* robj);
 void HSD_RObjRemoveAnimAllByFlags(HSD_RObj* robj, u32 flags);
 void HSD_RObjReqAnimAllByFlags(HSD_RObj* robj, f32 startframe, u32 flags);
 void HSD_RObjReqAnimAll(HSD_RObj* robj, f32 startframe);
 void HSD_RObjAddAnimAll(HSD_RObj* robj, HSD_RObjAnimJoint* anim);
+void HSD_RObjRemove(HSD_RObj* robj);
 void HSD_RObjRemoveAll(HSD_RObj* robj);
 HSD_RObj* HSD_RObjLoadDesc(HSD_RObjDesc*);
 void HSD_RObjResolveRefsAll(HSD_RObj* robj, HSD_RObjDesc* desc);
