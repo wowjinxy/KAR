@@ -5,6 +5,7 @@
 #include "kar/gm/gmclearchecker_8004a648.h"
 #include "kar/gm/gmmain.h"
 #include "kar/gm/gmracenormal.h"
+#include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
 
 extern GmMainData *kar_gmmain__near_80006c14(void);
@@ -41,7 +42,6 @@ extern void kar_gmlanmenu__8000bba0(void);
 extern void fn_80138D74(void);
 extern void fn_80138E00(void);
 extern f32 fn_80009568(int);
-extern u32 kar_plclearcheckerlib__8022fccc(int, int);
 extern s8 fn_8000916C(void);
 extern int fn_8000A0F8(void);
 extern int kar_plclearchecker_get_state_u32_82c(int);
