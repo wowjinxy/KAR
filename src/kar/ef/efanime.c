@@ -1,10 +1,5 @@
 #include "functions.h"
 #include <dolphin/types.h>
-#include <kar/ef/efanime.h>
-#include <kar/ef/efcallback.h>
-#include <kar/ef/efcontrol.h>
-#include <kar/ef/efdata.h>
-#include <kar/ef/efrequest2.h>
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjuserdata.h>
@@ -46,6 +41,12 @@
 #define ExPPC_UnwindStack fn_803B06F8
 #endif
 
+#include <kar/ef/efanime.h>
+#include <kar/ef/efcallback.h>
+#include <kar/ef/efcontrol.h>
+#include <kar/ef/efdata.h>
+#include <kar/ef/efrequest2.h>
+
 #define EFFECT_OBJECT_ACTIVE(effect) \
     ((effect) != NULL && (effect)->active)
 
@@ -59,16 +60,6 @@ char lbl_805D7318[8] = "aobj";
 
 const f32 lbl_805E2B20[2] = { 0.0f, 0.0f };
 
-extern char lbl_8055DA08[];
-
-void kar_efcontrol__near_8023f514(HSD_GObj* gobj);
-void kar_efcontrol__near_8023f4e4(void);
-void kar_efcontrol__near_8023f8f8(HSD_JObj* jobj, void* joint_anim,
-                                  void* mat_anim, void* shape_anim,
-                                  s32 flags);
-void kar_efdata__near_802369e0(void* data);
-void kar_efdata__near_802369f0(void);
-HSD_JObj* kar_efrequest2__8023cc20(void* request);
 void kar_lbairride__near_800550f4(HSD_JObj* jobj, u32 flags);
 s32 ExPPC_UnwindStack(void* unwind);
 

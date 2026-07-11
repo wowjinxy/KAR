@@ -1,9 +1,5 @@
 #include "functions.h"
 #include <dolphin/types.h>
-#include <kar/ef/efcallback.h>
-#include <kar/ef/effect.h>
-#include <kar/ef/particle.h>
-#include <kar/ef/pltrick.h>
 #include <sysdolphin/gobj.h>
 
 #if defined(VERSION_GKYJ01)
@@ -34,18 +30,13 @@
 #define kar_effect__near_80234a04 fn_802356E0
 #endif
 
+#include <kar/ef/efcallback.h>
+#include <kar/ef/effect.h>
+#include <kar/ef/particle.h>
+#include <kar/ef/pltrick.h>
+
 extern char lbl_8055D7A0[];
 extern char lbl_804B510C[];
-
-EffectEntry* kar_effect__near_80234a04(void* handle, EffectEntry** prev);
-EffectEntry* kar_effect__near_802344dc(void* owner, void* particle, s32 arg2,
-                                       s32 arg3);
-EffectEntry* kar_effect_find_entry_by_owner_key(void* owner, void* key,
-                                                EffectEntry** prev);
-void kar_effect__802341ec(EffectEntry* entry, EffectEntry* prev);
-void kar_effect__near_802349b0(EffectEntry* entry);
-void kar_pltrick__near_802341c0(EffectEntry* dst, EffectEntry* src);
-s32 kar_pltrick__near_80233ecc(void* obj);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))
