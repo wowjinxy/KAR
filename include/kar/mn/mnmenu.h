@@ -4,10 +4,20 @@
 #include <dolphin/types.h>
 #include <sysdolphin/gobj.h>
 
+#if defined(VERSION_GKYJ01)
+#define kar_menu_gobj_userdata_hide fn_801355F0
+#define kar_menu_gobj_userdata_show fn_80135608
+#elif defined(VERSION_GKYP01)
+#define kar_menu_gobj_userdata_hide fn_8013A6C4
+#define kar_menu_gobj_userdata_show fn_8013A6DC
+#endif
+
 struct MenuContext;
 
 struct MenuContext* fn_801311E0(void);
 void* fn_801388A8(void* arg0);
 void* kar_diag__80138a00(HSD_GObj* gobj, s32 arg1);
+void kar_menu_gobj_userdata_hide(HSD_GObj* gobj);
+void kar_menu_gobj_userdata_show(HSD_GObj* gobj);
 
 #endif

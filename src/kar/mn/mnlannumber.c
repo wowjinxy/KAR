@@ -10,8 +10,6 @@
 #define fn_8013909C fn_80135BB8
 #define kar_lbairride__near_80055af0 fn_80055218
 #define kar_lbvector_project_world_to_screen fn_80063BD4
-#define kar_menu_gobj_userdata_hide fn_801355F0
-#define kar_menu_gobj_userdata_show fn_80135608
 #define kar_mnlandialogue_project_box0_origin_to_screen fn_80180408
 #define kar_mnlandialogue_project_box0_right_edge_to_screen fn_801804BC
 #define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80180570
@@ -20,8 +18,6 @@
 #define fn_8013909C fn_8013ACB0
 #define kar_lbairride__near_80055af0 fn_80056190
 #define kar_lbvector_project_world_to_screen fn_80064DEC
-#define kar_menu_gobj_userdata_hide fn_8013A6C4
-#define kar_menu_gobj_userdata_show fn_8013A6DC
 #define kar_mnlandialogue_project_box0_origin_to_screen fn_80184A54
 #define kar_mnlandialogue_project_box0_right_edge_to_screen fn_80184B08
 #define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80184BBC
@@ -48,8 +44,6 @@ void* fn_8013909C(void);
 HSD_JObj* kar_lbairride__near_80055af0(HSD_GObj* gobj, s32 id);
 void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3, ...);
 void kar_lbvector_project_world_to_screen(void* cobj, Vec* world, Vec* screen, s32 arg3);
-void kar_menu_gobj_userdata_hide(HSD_GObj* gobj);
-void kar_menu_gobj_userdata_show(HSD_GObj* gobj);
 
 #define PROJECT_BOX_TO_SCREEN(out, member)                                      \
     do {                                                                        \
