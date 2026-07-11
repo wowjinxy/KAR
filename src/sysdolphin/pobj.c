@@ -1,4 +1,6 @@
 #include <global.h>
+
+#include <dolphin/gx/gx.h>
 #include <dolphin/mtx/mtx.h>
 #include <kar/math.h>
 #include <sysdolphin/pobj.h>
@@ -22,14 +24,8 @@ extern void memcpy(void*, const void*, int);
 extern HSD_JObj* HSD_JObjGetCurrent(void);
 extern void HSD_JObjUnrefThis(HSD_JObj* jobj);
 
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(u32 attr, u32 type);
-extern void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
 extern void GXSetArray(u32 attr, void* base_ptr, u8 stride);
-extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 extern void GXCallDisplayList(void* list, u32 nbytes);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);

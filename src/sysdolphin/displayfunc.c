@@ -55,12 +55,6 @@ extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
 extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
-extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetVtxDesc(u32 attr, u32 type);
-extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 
 extern u8 JObjSPtclColor[4];
 extern HSD_ObjAllocData HSD_ZListAllocData;

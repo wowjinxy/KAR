@@ -75,20 +75,14 @@ extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 near, f3
 extern void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
 extern void GXSetProjection(Mtx mtx, s32 projection_type);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 pt_texmtx);
-extern void GXClearVtxDesc(void);
 extern void GXSetNumTexGens(u32 n);
-extern void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
-extern void GXSetVtxDesc(u32 attr, u32 type);
 extern void GXSetTevColorIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
 extern void GXSetTevColorOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
 extern void GXSetTevAlphaIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
 extern void GXSetTevAlphaOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
 extern void GXSetTevColor(u32 id, GXColor color);
-extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 
 static inline void GXPosition3f32(f32 x, f32 y, f32 z)
 {
