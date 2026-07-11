@@ -1,6 +1,7 @@
 #include "dolphin/types.h"
 #include "dolphin/mtx/mtx.h"
 #include "dolphin/mtx/vec.h"
+#include "kar/gr/grcoll.h"
 
 extern const f32 mtx_one;        // 1.0F
 extern const f32 mtx_zero;       // 0.0F

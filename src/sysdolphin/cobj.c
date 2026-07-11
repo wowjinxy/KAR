@@ -3,6 +3,7 @@
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/gr/grcoll.h>
 #include <kar/math.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
@@ -64,7 +65,6 @@ extern void C_MTXFrustum(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                          f32 near, f32 far);
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                        f32 near, f32 far);
-extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 
 static inline f32 cobj_sqrtf(f32 x)
 {

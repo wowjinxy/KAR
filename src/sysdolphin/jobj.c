@@ -1,6 +1,7 @@
 #include <global.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/gr/grcoll.h>
 #include <kar/math.h>
 #include <sysdolphin/jobj.h>
 
@@ -39,8 +40,6 @@ void HSD_JObjDisp(HSD_JObj* jobj, MtxPtr vmtx, u32 flags, u32 rendermode);
 
 MtxPtr HSD_CObjGetViewingMtxPtrDirect(HSD_CObj* cobj);
 HSD_CObj* HSD_CObjGetCurrent(void);
-
-extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 
