@@ -1,5 +1,5 @@
 #include "dolphin/types.h"
-#include "dolphin/mtx/mtxtypes.h"
+#include "dolphin/mtx/mtx.h"
 #include "dolphin/mtx/vec.h"
 
 extern const f32 mtx_one;        // 1.0F
@@ -10,10 +10,6 @@ extern const f32 mtx_two;        // 2.0F
 extern const f32 mtx_neg_one;    // -1.0F
 extern const f32 mtx_deg_to_rad; // (PI / 180)
 extern const f32 mtx_pair_zero_one;
-
-extern f32 mtx_tanf(f32 x);
-extern f32 mtx_sinf(f32 x);
-extern f32 mtx_cosf(f32 x);
 
 asm void PSMTXIdentity(Mtx m)
 {

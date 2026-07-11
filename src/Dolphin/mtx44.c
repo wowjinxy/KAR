@@ -1,7 +1,5 @@
 #include "dolphin/types.h"
-#include "dolphin/mtx/mtxtypes.h"
-
-extern f32 mtx_tanf(f32 x);
+#include "dolphin/mtx/mtx.h"
 
 extern const f32 mtx44_one;
 extern const f32 mtx44_two;
