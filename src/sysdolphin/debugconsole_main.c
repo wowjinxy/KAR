@@ -3,6 +3,7 @@
 #include <stdarg.h>
 
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/os.h>
 
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/cobj.h>
@@ -29,8 +30,6 @@ extern BOOL DBIsDebuggerPresent(void);
 extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
-
-extern void OSPanic(const char*, s32, const char*, ...);
 
 extern void VIConfigure(GXRenderModeObj* rmode);
 extern void VISetBlack(BOOL black);

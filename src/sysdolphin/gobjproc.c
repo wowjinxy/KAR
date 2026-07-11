@@ -1,4 +1,5 @@
 #include <functions.h>
+#include <dolphin/os.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjproc.h>
 
@@ -12,7 +13,6 @@ typedef struct _HSD_StackFrame {
 } HSD_StackFrame;
 
 extern void OSFillFPUContext(void*);
-extern void OSPanic(const char*, s32, const char*, ...);
 extern void* OSGetStackPointer(void);
 
 extern u8 __files[];

@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <dolphin/os.h>
 #include <kar/math.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
@@ -10,7 +11,6 @@ extern f32 sqrtf(f32);
 extern f32 tanf(f32);
 extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_Randf(void);
-extern void OSPanic(const char*, s32, const char*, ...);
 
 extern HSD_Particle* _psListGetFirst(s32 linkNo);
 extern void _psListDelete(HSD_Particle* pp, HSD_Particle* prev);

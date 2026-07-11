@@ -159,6 +159,7 @@ BOOL OSRestoreInterrupts(BOOL level);
 //void OSPanic ( char* file, int line, char* msg, ... );
 //void OSReport( char* msg, ... );
 //
+void OSPanic(const char* file, s32 line, const char* msg, ...);
 void OSRegisterVersion(char* version);
 u32 __OSUnmaskInterrupts(u32 mask);
 void DCFlushRange(void* addr, u32 nBytes);
