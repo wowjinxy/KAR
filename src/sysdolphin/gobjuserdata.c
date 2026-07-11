@@ -21,7 +21,6 @@ extern void HSD_LObjSetupInit(HSD_CObj* cobj);
 extern void HSD_LObjRemoveAll(void* obj);
 extern void HSD_JObjDispAll(HSD_JObj* jobj, void* arg1, u32 flags, u32 rendermode);
 extern s32 HSD_CObjSetCurrent(void* cobj);
-extern void HSD_CObjEndCurrent(void);
 extern void RecalcParentTrspBits(void* obj);
 
 char GObjUserDataSourceFile[0x10] = "gobjuserdata.c";

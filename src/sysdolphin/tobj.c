@@ -129,8 +129,6 @@ extern HSD_LObj* HSD_LObjGetCurrentByType(u16 flags);
 extern void HSD_LObjGetLightVector(HSD_LObj* lobj, Vec* v);
 extern u32 HSD_LObjGetLightMaskDiffuse(void);
 
-extern MtxPtr HSD_CObjGetInvViewingMtxPtrDirect(HSD_CObj* cobj);
-
 extern void kar_grcoll__803d1978(Mtx m, f32 x, f32 y, f32 z); /* PSMTXTrans */
 
 extern void GXSetTexCoordGen2(u32 dst_coord, u32 func, u32 src_param, u32 mtx,
