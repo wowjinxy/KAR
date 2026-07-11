@@ -11,6 +11,7 @@
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/random.h>
+#include <sysdolphin/robj_alloc.h>
 #include <sysdolphin/shadow.h>
 #include <sysdolphin/tev_state.h>
 #include <sysdolphin/video.h>
@@ -63,10 +64,6 @@ extern void _HSD_AObjForgetMemory(void);
 extern void _HSD_DispForgetMemory(void);
 extern void _HSD_RObjForgetMemory(void);
 
-extern HSD_ObjAllocData* HSD_RObjGetAllocData(void);
-extern HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
-
-extern void HSD_RObjInitAllocData(void);
 extern void HSD_ZListInitAllocData(void);
 
 char InitializeSourceFile[] = "initialize.c";

@@ -7,6 +7,7 @@
 
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/robj_alloc.h>
 
 #define TYPE_MASK 0x70000000
 #define REFTYPE_EXP 0x0
@@ -88,7 +89,6 @@ typedef struct _HSD_RObjAnimJoint {
 } HSD_RObjAnimJoint;
 
 
-void HSD_RObjInitAllocData(void);
 void HSD_RObjSetFlags(HSD_RObj* robj, u32 flags);
 HSD_RObj* HSD_RObjAlloc(void);
 HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype);
