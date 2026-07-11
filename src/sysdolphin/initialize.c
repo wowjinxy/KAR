@@ -1,6 +1,6 @@
 #include <global.h>
 
-#include <dolphin/gx/gxtypes.h>
+#include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
@@ -40,8 +40,6 @@ extern s32 HSD_Index2LightID(s32);
 extern void HSD_StateInvalidate(s32 mask);
 extern void GXSetPixelFmt(s32 pix_fmt, s32 z_fmt);
 extern void GXSetFieldMode(u8 field_rendering, u8 half_aspect_ratio);
-extern void GXInvalidateVtxCache(void);
-extern void GXInvalidateTexAll(void);
 
 extern volatile OSHeapHandle HSD_CurrentHeap;
 extern GXRenderModeObj* HSD_RenderMode;

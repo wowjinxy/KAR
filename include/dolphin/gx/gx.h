@@ -6,6 +6,8 @@
 
 void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 void GXClearVtxDesc(void);
+void GXInvalidateTexAll(void);
+void GXInvalidateVtxCache(void);
 void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 void GXPixModeSync(void);
