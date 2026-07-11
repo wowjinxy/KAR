@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <kar/gr/granim.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 typedef struct Ground Ground;
@@ -22,10 +23,6 @@ struct GroundIndiviParam {
 };
 
 void kar_gryakudownforcezone_create_stage_linked_kind17_yaku(Ground* ground, s32 link);
-void kar_gryakucatchzone_create_stage_linked_kind18_yaku(Ground* ground, s32 link);
-void kar_gryakugondola_create_stage_linked_kind46_carrier_yaku(Ground* ground, s32 link);
-void kar_gryakugondola_create_stage_linked_kind47_ground_audio_yaku(Ground* ground, s32 link);
-void kar_gryakuanimfloor_create_stage_linked_kind55_reactive_floor(Ground* ground, s32 link);
 
 void kar_grsky2_init_loop_anim(HSD_GObj* gobj);
 void kar_grsky2_create_stage_downforce_gondola_yaku(Ground* ground);

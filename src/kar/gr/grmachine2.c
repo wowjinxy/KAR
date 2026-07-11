@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <kar/gr/granim.h>
 #include <kar/gr/graudio.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GRMACHINE2_FGM_COUNTER_NUM 10
@@ -49,14 +50,6 @@ struct GroundIndiviParam {
 
 void kar_gryakudownforcezone_create_stage_linked_kind17_yaku(Ground* ground,
                                                              s32 link);
-void kar_gryakugondola_create_stage_linked_kind48_route_yaku(Ground* ground,
-                                                             s32 link);
-void kar_gryakuanimfloor_create_stage_linked_kind55_reactive_floor(Ground* ground,
-                                                                   s32 link);
-void kar_gryakubreakcommon_create_stage_linked_kind56_delayed_collision(Ground* ground,
-                                                                        s32 link);
-void kar_gryakubreakfloor_create_stage_linked_kind30_breakfan(Ground* ground,
-                                                              s32 link);
 
 void kar_grmachine2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj);
 void kar_grmachine2_create_stage_mechanism_yaku_objects(Ground* ground);
