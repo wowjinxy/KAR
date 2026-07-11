@@ -21,6 +21,7 @@
 #define kar_lbaudio__near_800616c8 fn_80060DF0
 #define kar_lbaudio__near_80061734 fn_80060E5C
 #define kar_lbaudio__near_8006176c fn_80060E94
+#define kar_lbaudio__near_80062874 fn_80061F9C
 #elif defined(VERSION_GKYP01)
 #define kar_lbaudio__near_8005a440 fn_8005AD50
 #define kar_lbaudio__near_8005a474 fn_8005AD84
@@ -39,6 +40,7 @@
 #define kar_lbaudio__near_800616c8 fn_80061FD8
 #define kar_lbaudio__near_80061734 fn_80062044
 #define kar_lbaudio__near_8006176c fn_8006207C
+#define kar_lbaudio__near_80062874 fn_80063184
 #endif
 
 void kar_lbaudio__near_8005a440(void);
@@ -58,5 +60,6 @@ void kar_lbaudio__near_80061658(void);
 void kar_lbaudio__near_800616c8(void);
 void kar_lbaudio__near_80061734(void);
 void kar_lbaudio__near_8006176c(u32 sound_id);
+void kar_lbaudio__near_80062874(u64 arg0);
 
 #endif

@@ -5,6 +5,7 @@
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdiag.h>
 #include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbaudio.h>
 #include <kar/shadow.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjuserdata.h>
@@ -144,7 +145,6 @@ void fn_8022BA5C(s32 arg0);
 void fn_8022B768(s32 arg0);
 u64 fn_803AE0F0(f32 arg0);
 f32 fn_803AE03C(u64 arg0);
-void kar_lbaudio__near_80062874(u64 arg0);
 HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
