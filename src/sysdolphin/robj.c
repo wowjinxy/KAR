@@ -588,7 +588,6 @@ void HSD_RObjResolveRefsAll(HSD_RObj* robj, HSD_RObjDesc* desc)
 
 void expLoadDesc(HSD_Exp* exp, HSD_ExpDesc* desc);
 void bcexpLoadDesc(HSD_Exp* exp, HSD_ByteCodeExpDesc* desc);
-HSD_RObj* HSD_RObjAlloc(void);
 
 extern char RObjUnexpectedTypeMessage[26]; // "unexpected type of robj.\n"
 
