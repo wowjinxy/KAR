@@ -51,12 +51,6 @@ struct GroundIndiviParam {
     void* bitCounterIdAll;
 };
 
-void kar_grcommon__800db5d4(Ground* ground, void* bitCounterIdAll, s32 id);
-void kar_gryakucatchzone_create_stage_linked_kind19_yaku(Ground* ground, s32 link);
-void kar_gryakubreakhouse_create_stage_linked_kind54_animfloor(Ground* ground, s32 link);
-void kar_gryakubreakhpcoll_create_stage_linked_kind61_timed_anim_audio_cycle(Ground* ground,
-                                                                             s32 link);
-
 void kar_grheat2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj);
 void kar_grheat2_create_stage_yaku_objects(Ground* ground);
 void kar_grheat2_update_individual_fgm_timers(HSD_GObj* gobj);

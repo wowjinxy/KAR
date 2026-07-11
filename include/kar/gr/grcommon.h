@@ -5,6 +5,7 @@
 
 struct Ground;
 
+void kar_grcommon__800db5d4(struct Ground* ground, void* bitCounterIdAll, s32 id);
 void kar_grcommon__800db654(struct Ground* ground, void* bitCounterIdAll, s32 id);
 
 #endif

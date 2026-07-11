@@ -53,29 +53,6 @@ typedef struct GrIce1CallbackTable {
 
 void kar_grswitch__800e85a8(Ground* ground, GrSwitchCallback* callbacks,
                             s32 func_num);
-void kar_gryakupushoutwall_create_stage_linked_kind49_wall(Ground* ground,
-                                                           s32 link);
-void kar_gryakupushoutwall_create_stage_linked_kind50_switch_controller(
-    Ground* ground, s32 link);
-void kar_gryakupushoutwall_create_stage_linked_kind51_lightzone_controller(
-    Ground* ground, s32 link);
-void kar_gryakucatchzone_create_stage_linked_kind19_yaku(Ground* ground,
-                                                         s32 link);
-void kar_gryakubreakhouse_create_stage_linked_kind54_animfloor(Ground* ground,
-                                                               s32 link);
-void kar_gryakubreakcommon_create_stage_linked_kind57_lasergate(Ground* ground,
-                                                                s32 link);
-void kar_gryakubreakcommon_create_stage_linked_kind58_lasergate_ctrl(
-    Ground* ground, s32 link);
-void kar_gryakulasergate_create_stage_linked_kind32_breakfloor(Ground* ground,
-                                                               s32 link);
-void kar_gryakubreakcoral_create_stage_linked_kind31_breakicicle(Ground* ground,
-                                                                 s32 link);
-void kar_gryakupillar_create_stage_linked_kind39_ice_pillar(Ground* ground,
-                                                            s32 link);
-void kar_gryakupushoutwall_trigger_kind50_target_wall_pushes(void* target);
-void kar_gryakulighttunnel_trigger_kind52_pillar_entry_motion(void* target);
-void kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(void* target);
 
 void kar_grice1_init_switch_group_and_individual_fgm_ids(HSD_GObj* gobj);
 void kar_grice1_create_stage_ice_yaku_objects(Ground* ground);
