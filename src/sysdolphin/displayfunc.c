@@ -34,7 +34,6 @@ typedef struct _HSD_ZList {
 
 extern void HSD_Panic(char* file, s32 line, char* msg);
 extern void HSD_LObjSetupSpecularInit(Mtx pmtx);
-extern void HSD_JObjSetCurrent(HSD_JObj* jobj);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
