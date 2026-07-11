@@ -5,6 +5,7 @@
 #include <kar/gm/gmdialoguestatus.h>
 #include <kar/gm/gmmain.h>
 #include <kar/lb/lbhvqm.h>
+#include <kar/shadow.h>
 
 char kar_src_gmdialogue_80496f38[] = "gmdialogue.c";
 char lbl_80497118[] =
@@ -92,7 +93,6 @@ void kar_pltrick__near_802322d8(void* arg0);
 void kar_pltrick__near_80232500(void* arg0);
 void kar_lbaudio__near_8005e5d0(void);
 void kar_lbaudio__near_8005e788(void);
-s32 kar_shadow__near_8007b650(void);
 void kar_mnclearchecker_create_progressive_text_windows(void);
 s8 kar_gmracenormal__8000aea8(void);
 void fn_80138F44(void);

@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/shadow.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjuserdata.h>
 #include <sysdolphin/objalloc.h>
@@ -116,8 +117,6 @@ s32 kar_gmracenormal__8003d5f0(void);
 s32 kar_gmracenormal__8003f6cc(void);
 s32 fn_800095F8(s32 arg0);
 s32 fn_80262060(s32 arg0);
-s32 kar_shadow__near_8007b650(void);
-u8 kar_shadow__near_8007b990(void);
 void kar_grcommon_get_startpos_vectors_by_index(s32 index, Vec* pos, Vec* dir,
                                                 Vec* scale);
 void kar_plclearchecker_set_template_vec_008(s32 arg0, Vec* arg1);

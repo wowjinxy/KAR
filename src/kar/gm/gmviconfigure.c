@@ -4,6 +4,7 @@
 #include <kar/lb/lbhvqm.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
+#include <kar/shadow.h>
 
 
 u8 lbl_80497AE8[] = {
@@ -102,7 +103,6 @@ u64 lbl_80537430[8];
 char lbl_805D51D8[] = "0";
 
 void HSD_VISetConfigure(void* configure);
-s32 kar_shadow__near_8007b650(void);
 void kar_gmglobal__near_800088c8(s32 arg0);
 void fn_801390E0(void);
 void fn_80139188(void);

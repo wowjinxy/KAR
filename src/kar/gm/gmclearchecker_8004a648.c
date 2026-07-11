@@ -4,8 +4,8 @@
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004a648.h"
 #include "kar/gm/gmmain.h"
+#include "kar/shadow.h"
 
-extern s32 kar_shadow__near_8007b650(void);
 extern GmMainData *kar_gmmain__near_80006c14(void);
 extern void kar_lbaudio__near_8006176c(u32 sound_id);
 extern u8 kar_mnclearchecker_get_main_state_or_assert_operating(void);
