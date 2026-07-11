@@ -9,6 +9,7 @@
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
+#include <sysdolphin/tev_state.h>
 
 extern f32 TObjFloatZero; /* 0.0F */
 extern f32 TObjFloatOne; /* 1.0F */
@@ -134,7 +135,6 @@ extern void kar_grcoll__803d1978(Mtx m, f32 x, f32 y, f32 z); /* PSMTXTrans */
 extern void GXSetTexCoordGen2(u32 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 postmtx);
 
-extern u32 HSD_StateAssignTev(void);
 extern void HSD_SetupTevStage(HSD_TevDesc* tevdesc);
 extern void HSD_StateAssignTexGen(u32 coord);
 

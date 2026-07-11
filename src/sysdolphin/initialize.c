@@ -11,6 +11,7 @@
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/random.h>
 #include <sysdolphin/shadow.h>
+#include <sysdolphin/tev_state.h>
 #include <sysdolphin/video.h>
 
 #include <stdarg.h>
@@ -41,7 +42,6 @@ extern void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
 extern void GXInitLightColor(GXLightObj*, GXColor);
 extern void GXLoadLightObjImm(GXLightObj*, s32);
 extern s32 HSD_Index2LightID(s32);
-extern void HSD_StateInvalidate(s32 mask);
 extern void GXSetPixelFmt(s32 pix_fmt, s32 z_fmt);
 extern void GXSetFieldMode(u8 field_rendering, u8 half_aspect_ratio);
 
@@ -65,13 +65,9 @@ extern void _HSD_RObjForgetMemory(void);
 extern HSD_ObjAllocData* HSD_AObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
-extern HSD_ObjAllocData* HSD_RenderGetAllocData(void);
-extern HSD_ObjAllocData* HSD_ChanGetAllocData(void);
-extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
 
 extern void HSD_AObjInitAllocData(void);
 extern void HSD_RObjInitAllocData(void);
-extern void HSD_RenderInitAllocData(void);
 extern void HSD_ZListInitAllocData(void);
 
 char InitializeSourceFile[] = "initialize.c";
