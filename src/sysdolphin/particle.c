@@ -5,12 +5,12 @@
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
+#include <sysdolphin/random.h>
 
 extern void memset(void*, int, int);
 extern f32 sqrtf(f32);
 extern f32 tanf(f32);
 extern f32 HSD_FloatMin[]; /* epsilon */
-extern f32 HSD_Randf(void);
 
 extern HSD_Particle* _psListGetFirst(s32 linkNo);
 extern void _psListDelete(HSD_Particle* pp, HSD_Particle* prev);
