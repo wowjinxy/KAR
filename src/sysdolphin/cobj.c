@@ -33,19 +33,6 @@ extern void _HSD_ZListDisp(void);
 extern s32 HSD_GetCurrentRenderPass(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void HSD_AObjRemove(HSD_AObj* aobj);
-extern HSD_AObj* HSD_AObjLoadDesc(HSD_AObjDesc* desc);
-extern void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj,
-                                  HSD_ObjUpdateFunc update_func);
-extern void HSD_AObjReqAnim(HSD_AObj* aobj, f32 frame);
-extern void HSD_WObjInterpretAnim(HSD_WObj* wobj);
-extern void HSD_WObjRemoveAnim(HSD_WObj* wobj);
-extern void HSD_WObjAddAnim(HSD_WObj* wobj, HSD_WObjAnim* anim);
-extern void HSD_WObjReqAnim(HSD_WObj* wobj, f32 frame);
-extern void HSD_WObjInit(HSD_WObj* wobj, HSD_WObjDesc* desc);
-extern HSD_WObj* HSD_WObjAlloc(void);
-extern void HSD_WObjGetPosition(HSD_WObj* wobj, Vec* pos);
-extern void HSD_WObjSetPosition(HSD_WObj* wobj, Vec* pos);
 extern void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top,
                                                      f32 bottom,
                                                      s32 alpha_update,
