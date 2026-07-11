@@ -39,7 +39,6 @@ void kar_gm_assets__asset_8000fc70(void);
 void kar_lbaudio__near_8005a474(void);
 void kar_lbaudio__near_80061620(void);
 void kar_lbaudio__near_80061734(void);
-void kar_lbaudio__near_8006176c(s32 arg0);
 void kar_lbkdcoll__near_800726f0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
 s32 kar_gmracenormal__800092fc(void);

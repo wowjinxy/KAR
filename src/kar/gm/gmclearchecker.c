@@ -3,13 +3,13 @@
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmglobal.h"
 #include "kar/gr/greventgenerator.h"
+#include "kar/lb/lbaudio.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
 
 #if defined(VERSION_GKYJ01)
 #define kar_gmglobal__800076a0 fn_80007620
 #define kar_gmmain__near_80005ce0 fn_80005C60
-#define kar_lbaudio__near_8006176c fn_80060E94
 #define GMCC_TYPE0_REWARD_07 0x2E
 #define GMCC_TYPE0_REWARD_21 0x25
 #define GMCC_TYPE0_REWARD_38 0x34
@@ -18,7 +18,6 @@
 #elif defined(VERSION_GKYP01)
 #define kar_gmglobal__800076a0 fn_8000784C
 #define kar_gmmain__near_80005ce0 fn_80005DE8
-#define kar_lbaudio__near_8006176c fn_8006207C
 #define GMCC_TYPE0_REWARD_07 0x2F
 #define GMCC_TYPE0_REWARD_21 0x1B
 #define GMCC_TYPE0_REWARD_38 0x33
@@ -39,7 +38,6 @@ GmGlobalSaveData *fn_8000784C(int);
 #endif
 
 extern u32 kar_gmmain__near_80005ce0(void);
-extern void kar_lbaudio__near_8006176c(u32 sound_id);
 extern int HSD_Randi(int);
 
 #define GMCC_TYPE_COUNT 3
