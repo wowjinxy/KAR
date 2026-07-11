@@ -8,8 +8,6 @@ extern HSD_DObjInfo* DObjDefaultClass;
 #define current_dobj DObjCurrent
 #define default_class DObjDefaultClass
 
-extern void HSD_PObjResolveRefsAll(HSD_PObj*, HSD_PObjDesc*);
-
 void DObjInfoInit(void);
 void _HSD_StateInvalidateTevRegister();
 

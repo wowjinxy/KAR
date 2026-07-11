@@ -1,5 +1,6 @@
 #include <global.h>
 #include <dolphin/gx/gx.h>
+#include <sysdolphin/class.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/texp.h>
 #include <sysdolphin/tev.h>
@@ -25,7 +26,6 @@ extern char TExpAssertCnstType[0x19]; /* "texp->cnst.ctype == type" */
 extern char TExpAssertTevType[];   /* "HSD_TExpGetType(texp) == HSD_TE_TEV" */
 
 extern void* hsdAllocMemPiece(u32 size);
-extern void hsdFreeMemPiece(void* ptr, s32 size);
 extern void memset(void* ptr, s32 value, u32 size);
 
 #define GX_TEV_SWAP0 0
