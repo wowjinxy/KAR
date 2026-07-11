@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/lb/lbhvqm.h>
 
 typedef struct GmLanWork GmLanWork;
 typedef struct HSD_AObj HSD_AObj;
@@ -184,7 +185,6 @@ void kar_mnbestrapsicon_update_sboard_kicon_digit_panels_by_mask(u8 line,
                                                                  s32 digit1);
 void kar_mnbestrapsicon_create_record_value_text_for_line_side(
     u8 line, s32 side, s32 format, s32 value, f32 scale);
-void kar_lbhvqm__near_80078990(void);
 void _HSD_StateInvalidateTexCoordGen(HSD_MObj* mobj);
 HSD_DObj* HSD_JObjGetDObj(HSD_JObj* jobj);
 u32 HSD_AObjGetFlags(HSD_AObj* aobj);

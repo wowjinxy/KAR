@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/lb/lbhvqm.h>
 
 typedef struct GObj GObj;
 typedef struct MovieWork MovieWork;
@@ -83,16 +84,6 @@ s8 kar_gmracenormal__8000aea8(void);
 void kar_movie_assets__8000a498(s32 arg0);
 void kar_lbarchive__near_80059cfc(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));
-void kar_lbhvqm_init_movie_system(void);
-void* kar_lbhvqm_open_movie(char* path, s32 arg1, s32 arg2, s32 arg3,
-                            void (*arg4)(void), void (*arg5)(void));
-void kar_lbhvqm__near_80077ed4(void* movie);
-void kar_lbhvqm__near_80077a5c(void);
-s32 kar_lbhvqm__near_80077f14(void* movie);
-void kar_lbhvqm__near_80078028(void* movie, s32* arg1, s32* arg2, s32* arg3);
-void kar_lbhvqm__near_800780d0(void* movie);
-void kar_lbhvqm__near_80078284(void* movie);
-void kar_lbhvqm__near_8007859c(void);
 void fn_80078604(void);
 void fn_80078620(void);
 s32 GObj_GetFlagFromArray(GObj* gobj);

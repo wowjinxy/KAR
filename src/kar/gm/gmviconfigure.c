@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/types.h>
 #include <kar/gm/gmlanmenu.h>
+#include <kar/lb/lbhvqm.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
 
@@ -109,7 +110,6 @@ void fn_801391C8(void);
 void kar_lbkdcoll__near_80072aa0(void);
 void kar_lbfile_wait_for_group6_loads(void);
 void kar_pltrick__near_8023295c(void);
-s32 kar_lbhvqm__near_80078d24(void);
 void fn_801391F0(void);
 extern void shadowRendering(void);
 

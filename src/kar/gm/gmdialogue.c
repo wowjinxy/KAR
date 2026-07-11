@@ -3,6 +3,7 @@
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdialogue.h>
 #include <kar/gm/gmdialoguestatus.h>
+#include <kar/lb/lbhvqm.h>
 
 char kar_src_gmdialogue_80496f38[] = "gmdialogue.c";
 char lbl_80497118[] =
@@ -92,25 +93,6 @@ void kar_pltrick__near_80232500(void* arg0);
 void kar_lbaudio__near_8005e5d0(void);
 void kar_lbaudio__near_8005e788(void);
 s32 kar_shadow__near_8007b650(void);
-void kar_lbhvqm__near_80078720(void);
-void kar_lbhvqm__near_8007875c(void);
-void kar_lbhvqm__near_80078990(void);
-void kar_lbhvqm__near_80078c3c(void);
-void kar_lbhvqm__near_80078c7c(void);
-s32 kar_lbhvqm__near_8007863c(void);
-s32 kar_lbhvqm__near_8007865c(void);
-s32 kar_lbhvqm__near_800786d4(void* arg0);
-void kar_lbhvqm__near_800786f8(void);
-s32 kar_lbhvqm__near_80079108(void);
-void kar_lbhvqm__near_80078cb0(s32 arg0);
-s32 kar_lbhvqm__near_80078cc0(void);
-void kar_lbhvqm__near_80078cd0(s32 arg0);
-s32 kar_lbhvqm__near_80078ce0(void* arg0);
-s32 kar_lbhvqm__near_80078e30(void);
-void kar_lbhvqm__near_80078e40(s32 arg0);
-s32 kar_lbhvqm__near_80078e4c(void);
-void kar_lbhvqm__near_80078e5c(void);
-s32 kar_lbhvqm__near_8007901c(void);
 void kar_mnclearchecker_create_progressive_text_windows(void);
 s8 kar_gmracenormal__8000aea8(void);
 void fn_80138F44(void);
