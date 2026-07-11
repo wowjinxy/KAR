@@ -2,6 +2,7 @@
 
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
@@ -39,10 +40,7 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void PSMTXInverse(MtxPtr src, Mtx dst);
 extern void memset(void* ptr, s32 value, u32 size);
-extern f32 PSVECMag(Vec* vec);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void HSD_ClearVtxDesc(void);
 extern void HSD_StateInitTev(void);
 extern void HSD_SetupRenderMode(u32 rendermode);

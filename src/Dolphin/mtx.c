@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/mtx/mtxtypes.h"
+#include "dolphin/mtx/vec.h"
 
 extern const f32 mtx_one;        // 1.0F
 extern const f32 mtx_zero;       // 0.0F
@@ -459,9 +460,6 @@ asm void PSMTXQuat(Mtx m, Quaternion* q)
     psq_st f11, 0x20(r3), 0, 0
     blr
 }
-
-extern void PSVECNormalize(Vec* src, Vec* unit);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* result);
 
 void C_MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target)
 {

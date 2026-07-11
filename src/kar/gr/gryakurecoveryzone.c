@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/gr/graudio.h>
 #include <kar/gr/gryaku.h>
@@ -171,7 +172,6 @@ void kar_gryakuanim_apply_zone_enabled_state(Yaku* yaku, s32 state);
 s32 kar_gryakulib_get_yaku_data_checked(HSD_GObj* gobj);
 s32 kar_gryakulib_get_yaku_state_or_none(HSD_GObj* gobj);
 void kar_gryakulib_get_model_root_position(HSD_GObj* gobj, Vec* out);
-f32 PSVECDistance(Vec* a, Vec* b);
 f32 kar_gryakurecoveryzone_update_recovery_progress(HSD_GObj* gobj, void* arg,
                                                     f32 delta);
 

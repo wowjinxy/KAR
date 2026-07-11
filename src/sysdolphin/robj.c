@@ -1,4 +1,5 @@
 #include <sysdolphin/robj.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/util.h>
@@ -26,10 +27,6 @@ extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info);
 
 extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern f32 PSVECMag(Vec* vec);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
 extern void HSD_MtxGetScale(Mtx mtx, Vec* out);

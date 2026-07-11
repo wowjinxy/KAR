@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/memory.h>
 
@@ -42,7 +43,6 @@ struct HSD_Particle {
 };
 
 extern void HSD_MtxGetScale(Mtx mtx, Vec* scale);
-extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void memset(void*, int, int);
 
 extern HSD_SList* HSD_SListRemove(HSD_SList* list);

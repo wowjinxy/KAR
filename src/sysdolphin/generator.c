@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/object.h>
@@ -10,8 +11,6 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 extern void PSMTXMultVec(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXIdentity(Mtx dest); /* PSMTXIdentity */
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate,
                        Vec* scl);
 extern void HSD_MtxGetScale(Mtx mtx, Vec* out);

@@ -1,5 +1,6 @@
 #include <sysdolphin/shadow.h>
 
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
@@ -390,11 +391,6 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
     }
 }
 
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern f32 PSVECMag(Vec* vec);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 void HSD_VecGetOrthogonal(Vec*, Vec*);
 

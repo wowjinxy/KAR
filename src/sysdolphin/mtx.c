@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/mtx.h>
 
 extern HSD_ObjAllocData HSD_VecAllocData; /* Vec alloc data */
@@ -42,13 +43,7 @@ extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 extern void PSMTXScale(Mtx m, f32 xs, f32 ys, f32 zs); /* PSMTXScale */
 extern void PSMTXQuat(Mtx m, Quaternion* q);          /* PSMTXQuat */
 
-extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern f32 PSVECMag(Vec* v);
-extern f32 PSVECSquareMag(Vec* v);
 
 extern f64 kar_asin(f64 x);      /* asin */
 extern f64 kar_atan2(f64 y, f64 x); /* atan2 */

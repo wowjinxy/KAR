@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/lobj.h>
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/aobj.h>
@@ -28,9 +29,6 @@ void GXInitLightDistAttn(GXLightObj*, f32, f32, s32);
 void GXInitLightSpot(GXLightObj*, f32, s32);
 void GXLoadLightObjImm(GXLightObj*, GXLightID);
 
-void PSVECNormalize(Vec*, Vec*);
-void PSVECSubtract(Vec*, Vec*, Vec*);
-void PSVECAdd(Vec*, Vec*, Vec*);
 void PSMTXMultVec(Mtx, Vec*, Vec*);
 void MTXMultVec(Mtx, Vec*, Vec*);
 void PSMTXMultVecSR(Mtx, Vec*, Vec*);

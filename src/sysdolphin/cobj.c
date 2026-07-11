@@ -1,6 +1,7 @@
 #include <sysdolphin/cobj.h>
 
 #include <dolphin/gx/gxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/objalloc.h>
 
 #define DegToRad(x) ((x) * 0.017453292F)
@@ -71,11 +72,6 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXInverse(Mtx src, Mtx dst);
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern f32 PSVECMag(Vec* vec);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern f64 tan(f64 x);
 extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
 extern f64 __frsqrte(f64 x);

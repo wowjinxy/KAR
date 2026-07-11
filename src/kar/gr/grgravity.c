@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 
 typedef struct Ground Ground;
@@ -82,7 +83,6 @@ extern const f32 lbl_805DF72C;
 void* memcpy(void* dst, const void* src, unsigned long n);
 f32 kar_lbcolanim__near_8006bac8(HSD_Spline* spline, Vec* pos, s32 arg2);
 void splArcLengthPoint(Vec* out, HSD_Spline* spline, f32 param);
-f32 PSVECDistance(Vec* a, Vec* b);
 void kar_lbvector_normalize_with_axis_fallback(Vec* dst, Vec* src);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))

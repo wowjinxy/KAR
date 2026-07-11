@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/gr/graudio.h>
 #include <kar/gr/gryaku.h>
@@ -132,7 +133,6 @@ void* kar_grcoll__800d79c0(void* collision_root, void* jobj, s32 arg2);
 void kar_lbvector_normalize_with_axis_fallback(Vec* dst, Vec* src);
 void fn_80191B4C(void* event, Vec* out);
 void fn_801C7628(void* event, Vec* out);
-f32 PSVECMag(Vec* vec);
 void kar_gryakuaudio_configure_fgm_track_from_joint(HSD_GObj* gobj,
                                                     s32 joint_name, s32 arg2);
 void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
