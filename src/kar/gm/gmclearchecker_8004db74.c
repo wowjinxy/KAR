@@ -6,6 +6,7 @@
 #include "kar/gm/gmlanmenu.h"
 #include "kar/gm/gmmain.h"
 #include "kar/gm/gmracenormal.h"
+#include "kar/gr/greventgenerator.h"
 #include "kar/lb/lbaudio.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
@@ -41,7 +42,6 @@ extern u32 kar_plclearcheckerlib__8022faac(int);
 extern u32 kar_plclearcheckerlib__8022ebdc(int);
 extern u32 kar_plclearcheckerlib__8022ec34(int);
 extern u32 kar_plclearcheckerlib__8022f898(int, int);
-extern u32 kar_greventgenerator_get_kind_use_count(int);
 extern u16 kar_plclearcheckerlib__8022f3a4(int, int);
 extern u32 kar_plclearcheckerlib__8022f19c(int);
 extern int HSD_Randi(int);

@@ -2,6 +2,7 @@
 #include <dolphin/types.h>
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmglobal.h"
+#include "kar/gr/greventgenerator.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
 
@@ -39,7 +40,6 @@ GmGlobalSaveData *fn_8000784C(int);
 
 extern u32 kar_gmmain__near_80005ce0(void);
 extern void kar_lbaudio__near_8006176c(u32 sound_id);
-extern u32 kar_greventgenerator_get_kind_use_count(int);
 extern int HSD_Randi(int);
 
 #define GMCC_TYPE_COUNT 3
