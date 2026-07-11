@@ -33,6 +33,16 @@ typedef enum _HSD_RenderPass {
 typedef void (*HSD_VIRetraceCallback)(u32);
 typedef void (*HSD_VIGXDrawDoneCallback)(int);
 
+void VIInit(void);
+void VIConfigure(GXRenderModeObj* rmode);
+void VISetBlack(bool black);
+void VIFlush(void);
+void VISetNextFrameBuffer(void* fb);
+void VIWaitForRetrace(void);
+void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
+void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
+u32 VIGetTvFormat(void);
+
 HSD_VIRetraceCallback HSD_VISetUserPreRetraceCallback(HSD_VIRetraceCallback cb);
 HSD_VIRetraceCallback HSD_VISetUserPostRetraceCallback(HSD_VIRetraceCallback cb);
 HSD_VIGXDrawDoneCallback HSD_VISetUserGXDrawDoneCallback(HSD_VIGXDrawDoneCallback cb);

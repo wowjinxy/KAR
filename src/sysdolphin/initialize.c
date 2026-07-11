@@ -20,9 +20,7 @@ typedef struct _HSD_MemCallbacks {
 
 extern void DVDInit(void);
 extern void* GXInit(void* fifo, u32 size);
-extern void VIWaitForRetrace(void);
 extern void HSD_IDSetup(void);
-extern void HSD_VIInit(HSD_VIStatus* status, void* xfb0, void* xfb1, void* xfb2);
 
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);

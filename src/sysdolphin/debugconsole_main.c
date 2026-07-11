@@ -31,13 +31,6 @@ extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 
-extern void VIConfigure(GXRenderModeObj* rmode);
-extern void VISetBlack(BOOL black);
-extern void VIFlush(void);
-extern void VISetNextFrameBuffer(void* fb);
-extern void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
-extern void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
-
 extern BOOL HSD_CObjSetCurrent(HSD_CObj* cobj);
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
                                      void (*render_cb)(HSD_GObj*, s32),

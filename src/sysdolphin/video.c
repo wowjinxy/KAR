@@ -94,16 +94,6 @@ extern char HSD_VIXFBWaitDoneAssertMsg[0x2B];
 extern u32 OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(u32 level);
 
-extern void VIInit(void);
-extern void VIConfigure(GXRenderModeObj* rmode);
-extern void VISetBlack(bool black);
-extern void VIFlush(void);
-extern void VISetNextFrameBuffer(void* fb);
-extern void VIWaitForRetrace(void);
-extern void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
-extern void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
-extern u32 VIGetTvFormat(void);
-
 extern void GXSetCopyFilter(u32 aa, const u8 sample_pattern[12][2], u32 vf,
                             const u8 vfilter[7]);
 extern void GXSetDispCopyGamma(u32 gamma);
