@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/shadow.h>
 #include <sysdolphin/gobj.h>
@@ -104,7 +105,6 @@ extern const f32 lbl_805DE7A8;
 void* memset(void* dst, int val, unsigned long n);
 void* kar_gmmain__near_80006c14(void);
 void kar_gmautodemo__near_80011024(HSD_GObj* gobj);
-void* kar_gmautodemo__near_8000fcb0(void);
 void ClearChecker_MarkUnlockSfxPlayedThisFrame(void);
 s32 kar_diag__8000acb0(void);
 s32 fn_8000AD48(void);

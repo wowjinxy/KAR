@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdialogue.h>
 #include <kar/gm/gmdialoguestatus.h>
@@ -30,7 +31,6 @@ void kar_gmglobal__near_80007f6c(s32 arg0, s32 arg1);
 s32 kar_gmglobal__near_80008038(s32 arg0);
 void kar_gmglobal__near_800080c0(s32 arg0, s32 arg1);
 void kar_gmautodemo__near_8000cd10(s32 arg0);
-void* kar_gmautodemo__near_8000fcb0(void);
 u64 kar_gmautodemo__near_8000ecf0(s32 arg0);
 u64 kar_gmautodemo__near_8000ed10(s32 arg0);
 void kar_gm_assets__asset_8000fc70(void);
