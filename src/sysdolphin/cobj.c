@@ -6,6 +6,7 @@
 #include <kar/gr/grcoll.h>
 #include <kar/math.h>
 #include <sysdolphin/class_new.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
 
@@ -16,7 +17,6 @@
 extern GXRenderModeObj CObjRenderMode;
 extern s32 CObjRefWidth;
 extern s32 CObjRefHeight;
-extern f32 HSD_FloatMin[]; /* epsilon */
 extern HSD_ObjAllocData hsdFObj_alloc_data;
 
 char kar_srcfile_cobj_c[] = "cobj.c";
