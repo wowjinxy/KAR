@@ -3,7 +3,14 @@
 
 #include <dolphin/types.h>
 
+#if defined(VERSION_GKYJ01)
+#define kar_lbarchive__near_80059cfc fn_80059424
+#elif defined(VERSION_GKYP01)
+#define kar_lbarchive__near_80059cfc fn_8005A60C
+#endif
+
 void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3,
                                   ...);
+void kar_lbarchive__near_80059cfc(void);
 
 #endif

@@ -5,6 +5,7 @@
 #include <kar/gm/gmmain.h>
 #include <kar/gm/gmmovieassets.h>
 #include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbarchive.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/lb/lbvector.h>
@@ -83,7 +84,6 @@ const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
 extern u8 HSD_PadCopyStatus[];
 void* kar_gmmain__near_80006c14(void);
-void kar_lbarchive__near_80059cfc(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));
 void fn_80078604(void);
 void fn_80078620(void);
