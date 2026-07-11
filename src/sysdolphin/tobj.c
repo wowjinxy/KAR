@@ -3,6 +3,7 @@
 
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/memory.h>
 
 extern f32 TObjFloatZero; /* 0.0F */
 extern f32 TObjFloatOne; /* 1.0F */
@@ -121,8 +122,6 @@ extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
                              s32 info_size, s32 class_size);
 extern void HSD_Panic(char* file, s32 line, char* msg);
 
-extern void* HSD_Alloc(u32 size);
-extern void HSD_Free(void* ptr);
 extern void* hsdAllocMemPiece(u32 size);
 extern void memcpy(void* dst, const void* src, u32 size);
 extern void memset(void* ptr, s32 value, u32 size);

@@ -1,6 +1,7 @@
 #include <global.h>
 
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/memory.h>
 
 typedef struct HSD_psAppSRT HSD_psAppSRT;
 
@@ -40,8 +41,6 @@ struct HSD_Particle {
     HSD_Particle* next; //0x00
 };
 
-extern void* HSD_Alloc(u32 size);
-extern void HSD_Free(void* ptr);
 extern void HSD_MtxGetScale(Mtx mtx, Vec* scale);
 extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void memset(void*, int, int);

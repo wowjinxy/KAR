@@ -1,5 +1,6 @@
 #include <sysdolphin/robj.h>
 #include <sysdolphin/id.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/util.h>
 #include <sysdolphin/mtx.h>
 
@@ -693,7 +694,6 @@ extern f32* RObjArgBuffer;
 extern u32 RObjArgBufferSize;
 
 extern f32 HSD_ByteCodeEval(u8* bytecode, f32* argv, s32 nb_args);
-extern void* HSD_Alloc(u32 size);
 extern char RObjEmptyString[4];             // ""
 extern char RObjArgBufferReportFormat[164]; // OSReport format string
 

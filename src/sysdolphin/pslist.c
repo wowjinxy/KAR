@@ -3,6 +3,7 @@
 #include <dolphin/mtx/mtxtypes.h>
 
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/pslist.h>
 
 #define PS_NUM_LINK 32
@@ -139,7 +140,6 @@ typedef struct PSListEntry {
     s32 priority;
 } PSListEntry;
 
-extern void* HSD_Alloc(u32 size);
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
 extern HSD_SList* HSD_SListPrepend(HSD_SList* node, void* data);
 

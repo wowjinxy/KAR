@@ -1,6 +1,7 @@
 #include <global.h>
 
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
 
@@ -17,7 +18,6 @@ extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
 extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
 extern s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* out);
 extern void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
-extern void* HSD_Alloc(u32 size);
 extern void memset(void*, int, int);
 extern f64 tan(f64 x);
 extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
