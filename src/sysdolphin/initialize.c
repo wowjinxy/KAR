@@ -15,6 +15,7 @@
 #include <sysdolphin/shadow.h>
 #include <sysdolphin/tev_state.h>
 #include <sysdolphin/video.h>
+#include <sysdolphin/zlist.h>
 
 #include <stdarg.h>
 
@@ -63,8 +64,6 @@ extern const u32 HSD_DefaultClearColor[2];
 extern void _HSD_AObjForgetMemory(void);
 extern void _HSD_DispForgetMemory(void);
 extern void _HSD_RObjForgetMemory(void);
-
-extern void HSD_ZListInitAllocData(void);
 
 char InitializeSourceFile[] = "initialize.c";
 char ObjAllocHeaderSourceFile[] = "objalloc.h";

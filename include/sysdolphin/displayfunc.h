@@ -6,8 +6,8 @@
 #include <sysdolphin/objalloc.h>
 
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/zlist.h>
 
-void HSD_ZListInitAllocData(void);
 void HSD_StateInitDirect(u32 vtxfmt, u32 rendermode);
 void HSD_SetZSortMode(s32 mode, s32 sort);
 void HSD_JObjDisp(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rendermode);
