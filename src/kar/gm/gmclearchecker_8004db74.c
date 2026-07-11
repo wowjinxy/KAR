@@ -10,6 +10,7 @@
 #include "kar/lb/lbaudio.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
+#include <sysdolphin/random.h>
 
 typedef struct {
   /* 0x0 */ u32 _0;
@@ -44,7 +45,6 @@ extern u32 kar_plclearcheckerlib__8022ec34(int);
 extern u32 kar_plclearcheckerlib__8022f898(int, int);
 extern u16 kar_plclearcheckerlib__8022f3a4(int, int);
 extern u32 kar_plclearcheckerlib__8022f19c(int);
-extern int HSD_Randi(int);
 extern int kar_plclearcheckerlib__8022f9bc(int);
 extern int kar_plclearcheckerlib__8022f514(int);
 extern int kar_plclearcheckerlib__8022f4c0(int);

@@ -6,6 +6,7 @@
 #include "kar/lb/lbaudio.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
+#include <sysdolphin/random.h>
 
 #if defined(VERSION_GKYJ01)
 #define kar_gmglobal__800076a0 fn_80007620
@@ -38,7 +39,6 @@ GmGlobalSaveData *fn_8000784C(int);
 #endif
 
 extern u32 kar_gmmain__near_80005ce0(void);
-extern int HSD_Randi(int);
 
 #define GMCC_TYPE_COUNT 3
 #define GMCC_NUMBER_COUNT 0x78
