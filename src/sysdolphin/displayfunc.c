@@ -1,6 +1,6 @@
 #include <global.h>
 
-#include <dolphin/gx/gxtypes.h>
+#include <dolphin/gx/gx.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/mtx/vec.h>
@@ -51,15 +51,11 @@ extern void GXLoadTexObj(GXTexObj* obj, u32 mapid);
 extern void GXSetNumTexGens(u32 n);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx, u32 normalize,
                               u32 post_mtx);
-extern void GXSetNumTevStages(u8 n);
-extern void GXSetTevOrder(u8 stage, u32 coord, u32 map, u32 color);
 extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
-extern void GXSetCullMode(u32 mode);
 extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
 extern void GXSetZCompLoc(u32 before_tex);
 extern void GXSetZMode(u32 enable, u32 func, u32 update_enable);
-extern void GXSetBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
 extern void GXSetColorUpdate(u32 update_enable);
 extern void GXSetAlphaUpdate(u32 update_enable);
 extern void GXSetNumChans(u8 n);

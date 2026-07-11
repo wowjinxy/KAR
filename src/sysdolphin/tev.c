@@ -1,4 +1,6 @@
 #include <global.h>
+
+#include <dolphin/gx/gx.h>
 #include <sysdolphin/tev.h>
 
 #include <sysdolphin/lobj.h>
@@ -87,8 +89,6 @@ extern void HSD_MulColor(GXColor* a, GXColor* b, GXColor* out);
 extern void memcpy(void* dst, const void* src, u32 size);
 
 extern void GXSetLineWidth(u8 width, u32 tex_offsets);
-extern void GXSetCullMode(u32 mode);
-extern void GXSetBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
 extern void GXSetZMode(u32 enable, u32 func, u32 update);
 extern void GXSetPointSize(u8 size, u32 tex_offsets);
 extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
@@ -103,8 +103,6 @@ extern void GXSetChanCtrl(u32 chan, u32 enable, u32 amb_src, u32 mat_src, u32 li
 extern void GXSetChanAmbColor(u32 chan, GXColor color);
 extern void GXSetChanMatColor(u32 chan, GXColor color);
 extern void GXSetNumTexGens(u8 n);
-extern void GXSetNumTevStages(u8 n);
-extern void GXSetTevOrder(u8 stage, u32 coord, u32 map, u32 color);
 extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetTevSwapMode(u8 stage, u32 ras_swap, u32 tex_swap);
 extern void GXSetTevKColorSel(u8 stage, u32 sel);
