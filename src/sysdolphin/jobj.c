@@ -10,6 +10,7 @@
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/mobj.h>
+#include <sysdolphin/mtx_transform.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/robj.h>
 #include <sysdolphin/spline.h>
@@ -24,12 +25,6 @@ void HSD_JObjMakePositionMtx(HSD_JObj* jobj, MtxPtr mtx, MtxPtr rmtx);
 void HSD_JObjDisp(HSD_JObj* jobj, MtxPtr vmtx, u32 flags, u32 rendermode);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-
-extern void HSD_MtxSRTQuat(Mtx mtx, Vec* scale, Quaternion* rotate, Vec* translate, Vec* scl);
-extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate, Vec* scl);
-extern void HSD_MtxGetTranslate(Mtx mtx, Vec* out);
-extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
-extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
 
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);

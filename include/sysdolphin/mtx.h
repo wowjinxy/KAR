@@ -3,19 +3,14 @@
 
 #include <global.h>
 #include <dolphin/mtx/mtxtypes.h>
+#include <sysdolphin/mtx_transform.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/vec_alloc.h>
 
 void HSD_MtxInverse(Mtx src, Mtx dest);
 BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
-void HSD_MtxGetRotation(Mtx m, Vec* vec);
 void HSD_MtxGetRotationMtx(Mtx v0, Mtx dest, char axis0, char axis1);
-void HSD_MtxGetTranslate(Mtx mat, Vec* vec);
-void HSD_MtxGetScale(Mtx arg0, Vec* arg1);
 void HSD_MkRotationMtx(Mtx arg0, Vec* arg1);
-void HSD_MtxSRT(Mtx m, Vec* vec1, Vec* vec2, Vec* vec3, Vec* vec4);
-void HSD_MtxSRTQuat(Mtx arg0, Vec* arg1, Quaternion* arg2, Vec* arg3,
-                     Vec* arg4);
 void HSD_MtxScaledAdd(Mtx arg0, Mtx arg1, Mtx arg2, f32 arg3);
 void HSD_VecGetOrthogonal(Vec* v, Vec* out);
 void* HSD_MtxAlloc(void);
