@@ -63,8 +63,6 @@ extern HSD_ZList* HSD_ZListAll;
 extern HSD_ZList* HSD_ZListOpaque;
 extern HSD_ZList* HSD_ZListTranslucent;
 
-char DisplayFuncSourceFile[] = "displayfunc.c";
-char DisplayFuncUnknownBillboardMsg[] = "unkown type of billboard.\n";
 u32 DisplayFuncWhiteTexImage[32] = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -79,16 +77,12 @@ u32 DisplayFuncWhiteTexImage[32] = {
 HSD_ZList** HSD_ZListAllTail = &HSD_ZListAll;
 HSD_ZList** HSD_ZListOpaqueTail = &HSD_ZListOpaque;
 HSD_ZList** HSD_ZListTranslucentTail = &HSD_ZListTranslucent;
-char DisplayFuncJObjString[] = "jobj";
-char DisplayFuncXString[] = "x";
-char JObjHeaderSourceFile[] = "jobj.h";
 s32 HSD_CurrentHeap = -1;
 GXRenderModeObj* HSD_RenderMode = &HSD_DefaultRenderModeObj;
 s32 HSD_ZBufferFormat = 2;
 s32 HSD_FIFOSize = 0x40000;
 s32 HSD_XFBMaxNum = 2;
 s32 HSD_ClearColor = 0;
-char HSD_AssertAddrString[] = "addr";
 
 s32 HSD_ZSortMode;
 s32 HSD_ZSortCompare;
@@ -364,7 +358,7 @@ static inline BOOL displayfunc_jobj_mtx_is_dirty(HSD_JObj* jobj)
     BOOL result;
 
     if (jobj == NULL) {
-        __assert(JObjHeaderSourceFile, 0x25D, DisplayFuncJObjString);
+        __assert("jobj.h", 0x25D, "jobj");
     }
     result = FALSE;
     if (!(jobj->flags & 0x800000) && (jobj->flags & MTX_DIRTY)) {
@@ -393,11 +387,11 @@ void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx)
             break;
         case 0x800:
             mkRBillBoardMtx(jobj, sp8, pmtx);
-            break;
-        default:
-            HSD_Panic(DisplayFuncSourceFile, 0x16E, DisplayFuncUnknownBillboardMsg);
-            break;
-        }
+        break;
+    default:
+        HSD_Panic("displayfunc.c", 0x16E, "unkown type of billboard.\n");
+        break;
+    }
     } else {
         PSMTXConcat(vmtx, jobj->mtx, pmtx);
     }
@@ -407,7 +401,7 @@ void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx)
 static inline HSD_JObj* displayfunc_find_skeleton(HSD_JObj* jobj)
 {
     if (jobj == NULL) {
-        __assert(DisplayFuncSourceFile, 0x182, DisplayFuncJObjString);
+        __assert("displayfunc.c", 0x182, "jobj");
     }
     for (; jobj != NULL; jobj = jobj->parent) {
         if (jobj->flags & 3) {
@@ -427,7 +421,7 @@ MtxPtr _HSD_mkEnvelopeModelNodeMtx(HSD_JObj* jobj, Mtx dst)
     }
     x = displayfunc_find_skeleton(jobj);
     if (x == NULL) {
-        __assert(DisplayFuncSourceFile, 0x1D2, DisplayFuncXString);
+        __assert("displayfunc.c", 0x1D2, "x");
     }
 
     if (x == jobj) {

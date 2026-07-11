@@ -26,11 +26,6 @@ typedef union YakuKind41FlagByte YakuKind41FlagByte;
 #define kar_gryakulib_get_yaku_data_checked fn_800F6870
 #define kar_gryakulib_get_yaku_state_or_none fn_800F68C4
 #define kar_gryakulib_get_model_root_position fn_800F68E4
-#define GRRECOVERY_NEAREST_INIT_DIST lbl_805D7304
-#define GRRECOVERY_STATE_ZERO lbl_805DA2FC
-#define GRRECOVERY_ENABLED_END lbl_805DA300
-#define GRRECOVERY_KIND41_ZERO lbl_805DA30C
-#define GRRECOVERY_KIND41_END lbl_805DA310
 #define GRRECOVERY_GROUND_ASSERT_MSG lbl_805D0CB0
 #elif defined(VERSION_GKYP01)
 #define kar_grcoll__near_800d7ad0 fn_800D922C
@@ -38,20 +33,16 @@ typedef union YakuKind41FlagByte YakuKind41FlagByte;
 #define kar_gryakulib_get_yaku_data_checked fn_800F91C0
 #define kar_gryakulib_get_yaku_state_or_none fn_800F9214
 #define kar_gryakulib_get_model_root_position fn_800F9234
-#define GRRECOVERY_NEAREST_INIT_DIST lbl_805CF26C
-#define GRRECOVERY_STATE_ZERO lbl_805D233C
-#define GRRECOVERY_ENABLED_END lbl_805D2340
-#define GRRECOVERY_KIND41_ZERO lbl_805D234C
-#define GRRECOVERY_KIND41_END lbl_805D2350
 #define GRRECOVERY_GROUND_ASSERT_MSG lbl_805C8C20
 #else
-#define GRRECOVERY_NEAREST_INIT_DIST lbl_805DC8BC
-#define GRRECOVERY_STATE_ZERO lbl_805DF8D4
-#define GRRECOVERY_ENABLED_END lbl_805DF8D8
-#define GRRECOVERY_KIND41_ZERO lbl_805DF8E4
-#define GRRECOVERY_KIND41_END lbl_805DF8E8
 #define GRRECOVERY_GROUND_ASSERT_MSG lbl_805D6248
 #endif
+
+#define GRRECOVERY_NEAREST_INIT_DIST 3.4028235E38F
+#define GRRECOVERY_STATE_ZERO 0.0F
+#define GRRECOVERY_ENABLED_END 1.0F
+#define GRRECOVERY_KIND41_ZERO 0.0F
+#define GRRECOVERY_KIND41_END 1.0F
 
 struct Ground {
     u8 pad_0[0x54];
@@ -139,11 +130,6 @@ union YakuKind41FlagByte {
 #define YAKU_FLAGS_13C(yaku) (*(u8*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_13C_BITS(yaku) (*(YakuFlagByte*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_144_BITS(yaku) (*(YakuKind41FlagByte*) ((u8*) (yaku) + 0x144))
-extern const f32 GRRECOVERY_NEAREST_INIT_DIST[];
-extern const f32 GRRECOVERY_STATE_ZERO;
-extern const f32 GRRECOVERY_ENABLED_END;
-extern const f32 GRRECOVERY_KIND41_ZERO;
-extern const f32 GRRECOVERY_KIND41_END;
 extern char kar_src_gryakurecoveryzone_c[];
 extern char kar_gryakurecoveryzone_assert_kind_recoveryzone[];
 extern char kar_src_ground_h_804a6170[];
@@ -260,7 +246,7 @@ void kar_gryakurecoveryzone_enter_enabled_state_sequence(HSD_GObj* gobj)
 s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* out)
 {
     Vec zone_pos;
-    f32 nearest_dist = GRRECOVERY_NEAREST_INIT_DIST[0];
+    f32 nearest_dist = GRRECOVERY_NEAREST_INIT_DIST;
     f32 dist;
     HSD_GObj* gobj;
     s32 found;
@@ -283,7 +269,7 @@ s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* o
         }
     }
 
-    if (nearest_dist < GRRECOVERY_NEAREST_INIT_DIST[0]) {
+    if (nearest_dist < GRRECOVERY_NEAREST_INIT_DIST) {
         found = 1;
     } else {
         found = 0;

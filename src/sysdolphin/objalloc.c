@@ -3,10 +3,7 @@
 
 extern s32 HSD_GetNbBits(u32 value);
 
-extern char ObjAllocAssertData[5];
 HSD_ObjAllocData* HSD_ObjAllocDataList[2];
-char ObjAllocAssertStrings[0x38] =
-    "objalloc.c\0\0align <= 32\0HSD_GetNbBits(align) == 1";
 
 s32 HSD_ObjAllocAddFree(HSD_ObjAllocData* data, u32 num)
 {
@@ -19,7 +16,7 @@ s32 HSD_ObjAllocAddFree(HSD_ObjAllocData* data, u32 num)
     u32 remain;
 
     if (data == NULL) {
-        __assert(ObjAllocAssertStrings, 0xEE, ObjAllocAssertData);
+        __assert("objalloc.c", 0xEE, "data");
     }
 
     size = data->size;
@@ -131,12 +128,10 @@ void HSD_ObjAllocInit(HSD_ObjAllocData* data, u32 size, u32 align)
 {
     HSD_ObjAllocData** cur;
     HSD_ObjAllocData* entry;
-    char* assert_base;
     u32 aligned_size;
 
-    assert_base = (char*) &HSD_ObjHeap;
     if (data == NULL) {
-        __assert(assert_base + 0x10, 0x182, ObjAllocAssertData);
+        __assert("objalloc.c", 0x182, "data");
     }
 
     if (data != NULL) {
@@ -158,10 +153,10 @@ void HSD_ObjAllocInit(HSD_ObjAllocData* data, u32 size, u32 align)
     data->heap_limit_num = -1;
 
     if (align > 0x20) {
-        __assert(assert_base + 0x10, 0x18D, assert_base + 0x1C);
+        __assert("objalloc.c", 0x18D, "align <= 32");
     }
     if (HSD_GetNbBits(align) != 1) {
-        __assert(assert_base + 0x10, 0x18E, assert_base + 0x28);
+        __assert("objalloc.c", 0x18E, "HSD_GetNbBits(align) == 1");
     }
 
     data->align = align;

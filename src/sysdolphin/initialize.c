@@ -43,14 +43,9 @@ extern const u32 HSD_DefaultClearColor[2];
 
 extern void _HSD_AObjForgetMemory(void);
 
-char InitializeSourceFile[] = "initialize.c";
-char ObjAllocHeaderSourceFile[] = "objalloc.h";
-char HSD_NoXfbMemoryMsg[] = "No memory space remains for XFB.\n";
-char HSD_NoFifoMemoryMsg[] = "no space remains for gx fifo.\n";
-
 #undef assert_line
 #define assert_line(line, cond) \
-    ((cond) ? (void) 0 : __assert(InitializeSourceFile, line, #cond))
+    ((cond) ? (void) 0 : __assert("initialize.c", line, #cond))
 
 u32 HSD_HeapLo;
 u32 HSD_HeapHi;
@@ -68,23 +63,17 @@ s32 HSD_CurrentRenderPass;
 s32 HSD_PixelFormat;
 
 #define assert_line_objalloc(line, cond) \
-    ((cond) ? (void) 0 : __assert(ObjAllocHeaderSourceFile, line, "data"))
-
-char HSD_InvalidMemCallbacksMsg[] = "!iparam_memory_callbacks";
-extern char HSD_AssertAddrString[5]; /* "addr" */
+    ((cond) ? (void) 0 : __assert("objalloc.h", line, "data"))
 
 #define assert_line_memcb(line) \
     ((HSD_HasCustomMemCallbacks == 0) ? (void) 0 \
-                                      : __assert(InitializeSourceFile, \
-                                                  line, HSD_InvalidMemCallbacksMsg))
+                                      : __assert("initialize.c", line, \
+                                                 "!iparam_memory_callbacks"))
 #define assert_line_addr(line, cond) \
-    ((cond) ? (void) 0 : __assert(InitializeSourceFile, line, HSD_AssertAddrString))
-
-char HSD_BaseLibraryName[] = "sysdolphin_base_library";
-char HSD_InvalidPixFmtMsg[] = "pix_fmt != GX_PF_RGB565_Z16";
+    ((cond) ? (void) 0 : __assert("initialize.c", line, "addr"))
 
 #define assert_line_pixfmt(line, cond) \
-    ((cond) ? (void) 0 : __assert(InitializeSourceFile, line, HSD_InvalidPixFmtMsg))
+    ((cond) ? (void) 0 : __assert("initialize.c", line, "pix_fmt != GX_PF_RGB565_Z16"))
 
 void* _HSD_MemAllocDefaultCB(u32 size, u32 align, u32 flags);
 void _HSD_MemFreeDefaultCB(void* ptr);
@@ -151,7 +140,7 @@ void** HSD_AllocateXFB(s32 nbuffer, GXRenderModeObj* rmode)
 
     for (i = 0; i < nbuffer; i++) {
         if ((HSD_XFBs[i] = OSAllocFromArenaLo(fb_size, 0x20)) == NULL) {
-            HSD_Panic(InitializeSourceFile, 0xF4, HSD_NoXfbMemoryMsg);
+            HSD_Panic("initialize.c", 0xF4, "No memory space remains for XFB.\n");
         }
     }
     for (i = nbuffer; i < HSD_VI_XFB_MAX; i++) {
@@ -164,7 +153,7 @@ void* HSD_AllocateFIFO(u32 size)
 {
     void* fifo = OSAllocFromArenaLo(size, 0x20);
     if (fifo == NULL) {
-        HSD_Panic(InitializeSourceFile, 0x107, HSD_NoFifoMemoryMsg);
+        HSD_Panic("initialize.c", 0x107, "no space remains for gx fifo.\n");
     }
     return fifo;
 }
@@ -349,7 +338,7 @@ void HSD_ClearHeap(void)
     };
     s32 i;
 
-    hsdForgetClassLibrary(HSD_BaseLibraryName);
+    hsdForgetClassLibrary("sysdolphin_base_library");
     for (i = 0; cb_table[i] != NULL; i++) {
         cb_table[i]();
     }

@@ -29,12 +29,11 @@ void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
     }
 }
 
-char ClassReportSpaceString[] = " ";
 void OSReport_PrintSpaces(s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {
-        OSReport(ClassReportSpaceString);
+        OSReport(" ");
     }
 }
 
@@ -265,14 +264,12 @@ void _hsdClassAmnesia(HSD_ClassInfo* info)
     }
 }
 
-char hsdClass_library_string[] = "sysdolphin_base_library";
-
 void _hsdClassRelease(HSD_Class* c);
 
 void _hsdClassInfoInit(void)
 {
     hsdClass.head.flags = 1;
-    hsdClass.head.library_name = hsdClass_library_string;
+    hsdClass.head.library_name = "sysdolphin_base_library";
     hsdClass.head.class_name = "hsd_class";
     hsdClass.head.obj_size = 4;
     hsdClass.head.info_size = 0x3C;
@@ -426,7 +423,7 @@ void ForgetClassLibraryChild(char* name, HSD_ClassInfo* class_info)
 void hsdForgetClassLibrary(char* name)
 {
     if (name == NULL) {
-        name = hsdClass_library_string;
+        name = "sysdolphin_base_library";
     }
     if (!(hsdClass.head.flags & 1)) {
         return;

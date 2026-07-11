@@ -91,38 +91,34 @@ struct CollisionReport {
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB
-#define GRYAKUDOWNFORCEZONE_ZERO lbl_805DA2D0
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805DA2D4
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805DA2D8
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805DA2E0
 
-extern const f32 lbl_805DA2D0;
 const f32 lbl_805DA2D4 = 0.00001f;
 const f32 lbl_805DA2D8[2] = { -0.00001f, 0.0f };
 const f32 lbl_805DA2E0[2] = { 0.0f, 0.0f };
 #elif defined(VERSION_GKYP01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xB3
-#define GRYAKUDOWNFORCEZONE_ZERO lbl_805D2310
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805D2314
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805D2318
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805D2320
 
-extern const f32 lbl_805D2310;
 const f32 lbl_805D2314 = 0.00001f;
 const f32 lbl_805D2318[2] = { -0.00001f, 0.0f };
 const f32 lbl_805D2320[2] = { 0.0f, 0.0f };
 #else
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB
-#define GRYAKUDOWNFORCEZONE_ZERO lbl_805DF8A8
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805DF8AC
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805DF8B0
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805DF8B8
 
-extern const f32 lbl_805DF8A8;
 const f32 lbl_805DF8AC = 0.00001f;
 const f32 lbl_805DF8B0[2] = { -0.00001f, 0.0f };
 const f32 lbl_805DF8B8[2] = { 0.0f, 0.0f };
 #endif
+
+#define GRYAKUDOWNFORCEZONE_ZERO 0.0F
 
 char kar_src_gryakudownforcezone_c[0x18] = "gryakudownforcezone.c";
 char kar_gryakudownforcezone_assert_kind_downforcezone[0x2C] =

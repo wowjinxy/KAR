@@ -22,13 +22,9 @@ extern GXRenderModeObj CObjRenderMode;
 extern s32 CObjRefWidth;
 extern s32 CObjRefHeight;
 
-char kar_srcfile_cobj_c[] = "cobj.c";
-char CObjAssertCObj[] = "cobj";
-char CObjAssertZero[] = "0";
-
 #define ASSERT_COBJ(line)                                                    \
     ((cobj) ? ((void) 0)                                                     \
-            : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
+            : __assert("cobj.c", line, "cobj"))
 
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
@@ -423,11 +419,6 @@ void HSD_CObjSetupViewingMtx(HSD_CObj* cobj)
     }
 }
 
-static char CObjUnknownRenderPass[] = "unkown type of render pass.\n";
-
-char CObjAssertEyePos[] = "cobj->eyepos";
-char CObjAssertInterest[] = "cobj->interest";
-
 BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
 {
     Mtx mtx;
@@ -489,7 +480,7 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
         GXSetProjection(mtx, projection_type);
         break;
     default:
-        HSD_Panic(kar_srcfile_cobj_c, 0x29C, CObjUnknownRenderPass);
+        HSD_Panic("cobj.c", 0x29C, "unkown type of render pass.\n");
         return FALSE;
     }
 
@@ -570,10 +561,10 @@ f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
         return 0.0F;
     }
     if (cobj->eye_position == NULL) {
-        __assert(kar_srcfile_cobj_c, 0x352, CObjAssertEyePos);
+        __assert("cobj.c", 0x352, "cobj->eyepos");
     }
     if (cobj->interest == NULL) {
-        __assert(kar_srcfile_cobj_c, 0x353, CObjAssertInterest);
+        __assert("cobj.c", 0x353, "cobj->interest");
     }
     HSD_CObjGetEyePosition(cobj, &pos);
     HSD_CObjGetInterest(cobj, &interest);
@@ -659,7 +650,7 @@ void HSD_CObjSetUpVector(HSD_CObj* cobj, Vec* up)
     if (cobj->flags & 1) {
         if (vec_normalize_check_inline(up, &normalized) != 0) {
             OSReport("illegal up vector.");
-            __assert(kar_srcfile_cobj_c, 0x3E3, CObjAssertZero);
+            __assert("cobj.c", 0x3E3, "0");
         }
         if (cobj->u.up.x != normalized.x || cobj->u.up.y != normalized.y ||
             cobj->u.up.z != normalized.z) {
@@ -1013,7 +1004,7 @@ int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
                          desc->projection_param.ortho.right);
         break;
     default:
-        __assert(kar_srcfile_cobj_c, 0x7D1, CObjAssertZero);
+        __assert("cobj.c", 0x7D1, "0");
         break;
     }
     return 0;

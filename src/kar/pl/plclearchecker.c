@@ -8,24 +8,10 @@
 #define plclearchecker_player_template_table lbl_805554C8
 #define lbl_805DD898 lbl_805D82F0
 #define kar_clobject__near_8018e21c fn_8018AB18
-#define fn_80192468 fn_8018ED38
-#define fn_80191BF8 fn_8018E4C8
-#define fn_80191C18 fn_8018E4E8
-#define fn_801C552C fn_801C1C34
-#define fn_801C7648 fn_801C3D10
-#define fn_801C7EF4 fn_801C45B4
-#define fn_801C863C fn_801C4CFC
 #elif defined(VERSION_GKYP01)
 #define plclearchecker_player_template_table lbl_8054D360
 #define lbl_805DD898 lbl_805D02E0
 #define kar_clobject__near_8018e21c fn_8018EF84
-#define fn_80192468 fn_801931D0
-#define fn_80191BF8 fn_80192960
-#define fn_80191C18 fn_80192980
-#define fn_801C552C fn_801C6208
-#define fn_801C7648 fn_801C8324
-#define fn_801C7EF4 fn_801C8BD0
-#define fn_801C863C fn_801C9318
 #endif
 
 typedef struct PlClearCheckerTemplate PlClearCheckerTemplate;

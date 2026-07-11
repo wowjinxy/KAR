@@ -109,18 +109,9 @@ typedef struct _GXTexObj {
     u8 pad[0x20];
 } GXTexObj;
 
-char kar_srcfile_tobj_c[] = "tobj.c";
-char TObjAssertTObj[] = "tobj";
-char TObjAssertCObj[] = "cobj";
-char TObjAssertZero[] = "0";
-char TObjAssertTlut[] = "tlut";
-char TObjAssertEmpty[] = "";
-char TObjAssertNew[] = "new";
-char TObjAssertTev[] = "tev";
-char TObjAssertIDesc[] = "idesc";
 
 #define TOBJ_ASSERT(line, cond, str) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_tobj_c, line, str))
+    ((cond) ? ((void) 0) : __assert("tobj.c", line, str))
 
 extern void* hsdAllocMemPiece(u32 size);
 extern void memcpy(void* dst, const void* src, u32 size);
@@ -468,7 +459,7 @@ HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
             tobj = HSD_TObjAlloc();
         } else {
             tobj = hsdNew(info);
-            TOBJ_ASSERT(0x22C, tobj, TObjAssertTObj);
+            TOBJ_ASSERT(0x22C, tobj, "tobj");
         }
         HSD_TOBJ_METHOD(tobj)->load(tobj, td);
         return tobj;
@@ -536,7 +527,7 @@ u32 HSD_TexMapID2PTTexMtx(u32 id)
     case GX_TEXMAP7:
         return GX_PTTEXMTX7;
     default:
-        HSD_Panic(kar_srcfile_tobj_c, 0x297, "unexpected texmap id.\n");
+        HSD_Panic("tobj.c", 0x297, "unexpected texmap id.\n");
     }
     return 0;
 }
@@ -612,7 +603,7 @@ void TObjSetupMtx(HSD_TObj* tobj)
             Mtx mtx;
 
             cobj = HSD_CObjGetCurrent();
-            TOBJ_ASSERT(0x301, cobj, TObjAssertCObj);
+            TOBJ_ASSERT(0x301, cobj, "cobj");
             HSD_LObjGetLightVector(lobj, &ldir);
             PSMTXMultVecSR(cobj->view_mtx, &ldir, &ldir);
             ldir.z += TObjFloatNegOne;
@@ -1008,7 +999,7 @@ void MakeColorGenTExp(u32 lightmap, HSD_TObj* tobj, HSD_TExp** c, HSD_TExp** a,
                 exp[i] = tmp;
                 break;
             default:
-                TOBJ_ASSERT(0x500, 0, TObjAssertZero);
+                TOBJ_ASSERT(0x500, 0, "0");
                 break;
             }
         }
@@ -1075,7 +1066,7 @@ void MakeColorGenTExp(u32 lightmap, HSD_TObj* tobj, HSD_TExp** c, HSD_TExp** a,
                 exp[i] = tmp;
                 break;
             default:
-                TOBJ_ASSERT(0x549, 0, TObjAssertZero);
+                TOBJ_ASSERT(0x549, 0, "0");
                 break;
             }
         }
@@ -1157,7 +1148,7 @@ void TObjMakeTExp(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done,
                         HSD_TEXP_ZERO, HSD_TE_RGB, *c);
         break;
     default:
-        TOBJ_ASSERT(0x5B5, 0, TObjAssertZero);
+        TOBJ_ASSERT(0x5B5, 0, "0");
     }
     *c = e0;
 
@@ -1210,7 +1201,7 @@ void TObjMakeTExp(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done,
                             HSD_TE_0, HSD_TEXP_ZERO, HSD_TE_A, *a);
             break;
         default:
-            TOBJ_ASSERT(0x5EF, 0, TObjAssertZero);
+            TOBJ_ASSERT(0x5EF, 0, "0");
         }
         *a = e0;
     }
@@ -1356,7 +1347,7 @@ void HSD_TObjSetup(HSD_TObj* tobj)
                 tlut = tobj->tlut;
             }
 
-            TOBJ_ASSERT(0x694, tlut, TObjAssertTlut);
+            TOBJ_ASSERT(0x694, tlut, "tlut");
 
             for (i = 0; i < nb_tluts; i++) {
                 if (!DifferentTluts(tluts[i], tlut)) {
@@ -1402,7 +1393,7 @@ void HSD_TObjSetup(HSD_TObj* tobj)
             break;
 
         default:
-            TOBJ_ASSERT(0x6D0, 0, TObjAssertZero);
+            TOBJ_ASSERT(0x6D0, 0, "0");
         }
 
         if (!imagedesc->mipmap) {
@@ -1436,7 +1427,7 @@ u32 HSD_TGTex2Index(u32 tgtex)
     case GX_TG_TEX0 + 7:
         return 7;
     default:
-        TOBJ_ASSERT(0x6FE, 0, TObjAssertZero);
+        TOBJ_ASSERT(0x6FE, 0, "0");
     }
     return GX_TG_TEX0;
 }
@@ -1460,7 +1451,7 @@ u32 HSD_TexCoordID2TexGenSrc(u32 coord)
         return GX_TG_TEXCOORD0 + 6;
     case GX_TEXCOORD0 + 7:
     default:
-        TOBJ_ASSERT(0x723, 0, TObjAssertZero);
+        TOBJ_ASSERT(0x723, 0, "0");
     }
     return GX_TG_TEXCOORD0;
 }
@@ -1485,7 +1476,7 @@ u32 HSD_TexCoord2Index(u32 coord_id)
     case GX_TEXCOORD0 + 7:
         return 7;
     default:
-        TOBJ_ASSERT(0x749, 0, TObjAssertZero);
+        TOBJ_ASSERT(0x749, 0, "0");
     }
     return GX_TEXCOORD0;
 }
@@ -1516,7 +1507,7 @@ u32 HSD_TexMtx2Index(u32 texmtx)
     case GX_IDENTITY:
         return 10;
     default:
-        HSD_Panic(kar_srcfile_tobj_c, 0x790,
+        HSD_Panic("tobj.c", 0x790,
                  "specified texmtx id desn't exist.\n");
     }
     return (u32) -1;
@@ -1549,7 +1540,7 @@ u32 HSD_Index2TexMtx(u32 index)
         return GX_IDENTITY;
     default:
         OSReport("texmtx index exceed hardware limit (%d).\n", index);
-        HSD_Panic(kar_srcfile_tobj_c, 0x7b0, TObjAssertEmpty);
+        HSD_Panic("tobj.c", 0x7b0, "");
     }
     return GX_IDENTITY;
 }
@@ -1574,7 +1565,7 @@ u32 HSD_Index2TexMap(u32 index)
     case 7:
         return GX_TEXMAP7;
     default:
-        TOBJ_ASSERT(0x7F0, 0, TObjAssertZero);
+        TOBJ_ASSERT(0x7F0, 0, "0");
     }
     return GX_TEXMAP0;
 }
@@ -1621,7 +1612,7 @@ HSD_TObj* HSD_TObjAlloc(void)
 {
     HSD_TObj* new = hsdNew((HSD_ClassInfo*) (TObjDefaultClass ? TObjDefaultClass
                                                             : &hsdTObj.info));
-    TOBJ_ASSERT(0x855, new, TObjAssertNew);
+    TOBJ_ASSERT(0x855, new, "new");
     return new;
 }
 
@@ -1635,7 +1626,7 @@ void HSD_TObjRemove(HSD_TObj* tobj)
 HSD_Tlut* HSD_TlutAlloc(void)
 {
     HSD_Tlut* tlut = hsdAllocMemPiece(sizeof(HSD_Tlut));
-    TOBJ_ASSERT(0x872, tlut, TObjAssertTlut);
+    TOBJ_ASSERT(0x872, tlut, "tlut");
     memset(tlut, 0, sizeof(HSD_Tlut));
     return tlut;
 }
@@ -1650,7 +1641,7 @@ void HSD_TlutRemove(HSD_Tlut* tlut)
 HSD_TObjTev* HSD_TObjTevAlloc(void)
 {
     HSD_TObjTev* tev = hsdAllocMemPiece(sizeof(HSD_TObjTev));
-    TOBJ_ASSERT(0x89D, tev, TObjAssertTev);
+    TOBJ_ASSERT(0x89D, tev, "tev");
     memset(tev, 0, sizeof(HSD_TObjTev));
     return tev;
 }
@@ -1658,7 +1649,7 @@ HSD_TObjTev* HSD_TObjTevAlloc(void)
 HSD_ImageDesc* HSD_ImageDescAlloc(void)
 {
     HSD_ImageDesc* idesc = hsdAllocMemPiece(sizeof(HSD_ImageDesc));
-    TOBJ_ASSERT(0x8C8, idesc, TObjAssertIDesc);
+    TOBJ_ASSERT(0x8C8, idesc, "idesc");
     memset(idesc, 0, sizeof(HSD_ImageDesc));
     return idesc;
 }

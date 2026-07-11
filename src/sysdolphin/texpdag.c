@@ -6,12 +6,10 @@
 #include <sysdolphin/tev.h>
 #include <sysdolphin/tobj.h>
 
-char TExpSourceFile[] = "texp.c";
-
 #define TEXP_ASSERT(line, cond) \
-    ((cond) ? ((void) 0) : __assert(TExpSourceFile, line, #cond))
+    ((cond) ? ((void) 0) : __assert("texp.c", line, #cond))
 #define TEXP_ASSERT_S(line, cond, str) \
-    ((cond) ? ((void) 0) : __assert(TExpSourceFile, line, str))
+    ((cond) ? ((void) 0) : __assert("texp.c", line, str))
 #define TEXPDAG_ASSERT(line, cond) \
     ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
 #define TEXPDAG_ASSERT_S(line, cond, str) \
@@ -516,7 +514,7 @@ void HSD_TExpColorInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
         if (tev->kcsel == HSD_TE_UNDEF) {
             tev->kcsel = ksel;
         } else if (tev->kcsel == ksel) {
-            HSD_Panic(TExpSourceFile, 505,
+            HSD_Panic("texp.c", 505,
                       "tev can't select multiple konst input.\n");
         }
         tev->c_in[idx].type = HSD_TE_KONST;

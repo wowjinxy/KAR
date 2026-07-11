@@ -4,9 +4,6 @@
 void HSD_GObjProcUnlink_Internal(HSD_GObjProc* proc);
 void HSD_GObjProcLink_Internal(HSD_GObjProc* proc);
 
-char GObjPLinkSourceFile[] = "gobjplink.c";
-char GObjPLinkMaxAssert[] = "p_link <= HSD_GObjLibInitData.p_link_max";
-
 static inline void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
 {
     s32 link = gobj->p_link;
@@ -68,7 +65,7 @@ HSD_GObj* HSD_GObjCreate_Internal(s32 where, u16 classifier, u8 p_link, u8 prior
     HSD_GObj* gobj;
 
     if (!(p_link <= hsdGObj_p_link_max.p_link_max)) {
-        __assert(GObjPLinkSourceFile, 0xA8, GObjPLinkMaxAssert);
+        __assert("gobjplink.c", 0xA8, "p_link <= HSD_GObjLibInitData.p_link_max");
     }
 
     gobj = HSD_ObjAlloc(&hsdGObj_alloc_data);
@@ -143,7 +140,7 @@ void HSD_GObjPLinkChange_Internal(s32 where, HSD_GObj* gobj, u8 p_link, u8 prior
     HSD_GObjProc* proc_list;
 
     if (!(p_link <= hsdGObj_p_link_max.p_link_max)) {
-        __assert(GObjPLinkSourceFile, 0x19F, GObjPLinkMaxAssert);
+        __assert("gobjplink.c", 0x19F, "p_link <= HSD_GObjLibInitData.p_link_max");
     }
 
     if (!hsdGObj_deferred_action_flags.b0 && gobj == hsdGObj_current) {

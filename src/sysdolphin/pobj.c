@@ -51,15 +51,13 @@ HSD_PObjInfo hsdPObj = { PObjInfoInit };
 #define vertex_buffer_size PObjVertexBufferSize
 #define normal_buffer_size PObjNormalBufferSize
 
-char kar_srcfile_pobj_c[] = "pobj.c";
-char PObjAssertPObj[] = "pobj";
 
 extern char JObjAssertMtx[8];
 
 #define ASSERT_POBJ(line, cond) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_pobj_c, line, #cond))
+    ((cond) ? ((void) 0) : __assert("pobj.c", line, #cond))
 #define ASSERT_POBJ_MSG(line, cond, msg) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_pobj_c, line, msg))
+    ((cond) ? ((void) 0) : __assert("pobj.c", line, msg))
 
 #define GX_WGPIPE ((volatile u8*) 0xCC008000)
 
@@ -298,7 +296,7 @@ HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* pobjdesc)
             pobj = HSD_PObjAlloc();
         } else {
             pobj = hsdNew(info);
-            ASSERT_POBJ_MSG(0x24A, pobj, PObjAssertPObj);
+            ASSERT_POBJ_MSG(0x24A, pobj, "pobj");
         }
         HSD_POBJ_METHOD(pobj)->load(pobj, pobjdesc);
         return pobj;
@@ -321,12 +319,11 @@ void HSD_PObjRemoveAll(HSD_PObj* pobj)
     }
 }
 
-char PObjAssertDescendant[] = "hsdIsDescendantOf(info, &hsdPObj)";
 
 void HSD_PObjSetCurrent(HSD_PObjInfo* info)
 {
     if (info != NULL) {
-        ASSERT_POBJ_MSG(0x28E, hsdIsDescendantOf(info, &hsdPObj), PObjAssertDescendant);
+        ASSERT_POBJ_MSG(0x28E, hsdIsDescendantOf(info, &hsdPObj), "hsdIsDescendantOf(info, &hsdPObj)");
     }
     PObjCurrentInfo = info;
 }
@@ -339,7 +336,7 @@ HSD_PObjInfo* HSD_PObjGetCurrent(void)
 HSD_PObj* HSD_PObjAlloc(void)
 {
     HSD_PObj* pobj = hsdNew((HSD_ClassInfo*) HSD_PObjGetCurrent());
-    ASSERT_POBJ_MSG(0x2AC, pobj, PObjAssertPObj);
+    ASSERT_POBJ_MSG(0x2AC, pobj, "pobj");
     return pobj;
 }
 
@@ -407,8 +404,6 @@ void HSD_ClearVtxDesc(void)
     PObjPrevVtxDesc = 0;
 }
 
-char PObjAssertVertexXYZ[] = "shape_set->vertex_desc->comp_cnt == GX_POS_XYZ";
-char PObjUnexpectedVertexType[] = "unexpected vertex type.\n";
 
 void get_shape_vertex_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
                                  f32 dst[3])
@@ -425,7 +420,7 @@ void get_shape_vertex_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
     }
 
     ASSERT_POBJ_MSG(0x43D, shape_set->vertex_desc->comp_cnt == GX_POS_XYZ,
-                    PObjAssertVertexXYZ);
+                    "shape_set->vertex_desc->comp_cnt == GX_POS_XYZ");
     src_base = ((u8*) shape_set->vertex_desc->vertex) + idx * shape_set->vertex_desc->stride;
 
     if (shape_set->vertex_desc->comp_type == GX_F32) {
@@ -462,13 +457,11 @@ void get_shape_vertex_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
         } break;
 
         default:
-            HSD_Panic(kar_srcfile_pobj_c, 0x468, PObjUnexpectedVertexType);
+            HSD_Panic("pobj.c", 0x468, "unexpected vertex type.\n");
         }
     }
 }
 
-char PObjAssertNormalXYZ[] = "shape_set->normal_desc->comp_cnt == GX_NRM_XYZ";
-char PObjUnexpectedNormalType[] = "unexpected normal type.";
 
 void get_shape_normal_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
                                  f32 dst[3])
@@ -485,7 +478,7 @@ void get_shape_normal_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
     }
 
     ASSERT_POBJ_MSG(0x47C, shape_set->normal_desc->comp_cnt == GX_NRM_XYZ,
-                    PObjAssertNormalXYZ);
+                    "shape_set->normal_desc->comp_cnt == GX_NRM_XYZ");
     src_base = ((u8*) shape_set->normal_desc->vertex) + idx * shape_set->normal_desc->stride;
 
     if (shape_set->normal_desc->comp_type == GX_F32) {
@@ -518,7 +511,7 @@ void get_shape_normal_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx,
             dst[2] = (f32) src[2] / decimal_point;
         } break;
         default:
-            HSD_Panic(kar_srcfile_pobj_c, 0x4A7, PObjUnexpectedNormalType);
+            HSD_Panic("pobj.c", 0x4A7, "unexpected normal type.");
         }
     }
 }
@@ -539,7 +532,7 @@ void get_shape_nbt_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx, f32*
     }
 
     ASSERT_POBJ_MSG(0x4BD, shape_set->normal_desc->comp_cnt == GX_NRM_XYZ,
-                    PObjAssertNormalXYZ);
+                    "shape_set->normal_desc->comp_cnt == GX_NRM_XYZ");
 
     src_base = ((u8*) shape_set->normal_desc->vertex) + idx * shape_set->normal_desc->stride;
 
@@ -569,12 +562,11 @@ void get_shape_nbt_xyz(HSD_ShapeSet* shape_set, s32 shape_id, s32 arrayidx, f32*
             }
             break;
         default:
-            HSD_Panic(kar_srcfile_pobj_c, 0x4DC, PObjUnexpectedNormalType);
+            HSD_Panic("pobj.c", 0x4DC, "unexpected normal type.");
         }
     }
 }
 
-char PObjUnsupportedAttr[] = "attr(%d) is not supported by sysdolphin\n";
 
 void interpretShapeAnimDisplayList(HSD_PObj* pobj, f32 (*vertex)[3], f32 (*normal)[3])
 {
@@ -681,7 +673,7 @@ void interpretShapeAnimDisplayList(HSD_PObj* pobj, f32 (*vertex)[3], f32 (*norma
                         if (desc->attr_type == GX_INDEX16) {
                             idx = (idx << 8) | dl[m++];
                         }
-                        OSReport(PObjUnsupportedAttr, desc->attr);
+                        OSReport("attr(%d) is not supported by sysdolphin\n", desc->attr);
                         break;
                     }
                 }
@@ -1035,7 +1027,6 @@ void PObjSetupMtx(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
     }
 }
 
-char PObjAssertShapeSet[] = "pobj->u.shape_set";
 
 void HSD_PObjDisp(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
 {
@@ -1105,7 +1096,7 @@ void HSD_PObjDisp(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode)
         }
         PObjPrevVtxDesc = 0;
 
-        ASSERT_POBJ_MSG(0x77D, pobj->u.shape_set, PObjAssertShapeSet);
+        ASSERT_POBJ_MSG(0x77D, pobj->u.shape_set, "pobj->u.shape_set");
         drawShapeAnim(pobj);
     } else {
         HSD_VtxDescList* desc;

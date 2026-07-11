@@ -60,26 +60,14 @@ struct BreakFanParam {
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
-#define GRYAKUBREAKFAN_PATH_START lbl_805DA490
-#define GRYAKUBREAKFAN_PATH_END lbl_805DA494
-
-extern const f32 lbl_805DA490;
-extern const f32 lbl_805DA494;
 #elif defined(VERSION_GKYP01)
 #define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA9
-#define GRYAKUBREAKFAN_PATH_START lbl_805D24D0
-#define GRYAKUBREAKFAN_PATH_END lbl_805D24D4
-
-extern const f32 lbl_805D24D0;
-extern const f32 lbl_805D24D4;
 #else
 #define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
-#define GRYAKUBREAKFAN_PATH_START lbl_805DFA68
-#define GRYAKUBREAKFAN_PATH_END lbl_805DFA6C
-
-extern const f32 lbl_805DFA68;
-extern const f32 lbl_805DFA6C;
 #endif
+
+#define GRYAKUBREAKFAN_PATH_START 0.0F
+#define GRYAKUBREAKFAN_PATH_END 1.0F
 
 char kar_src_gryakubreakfan_c[] = "gryakubreakfan.c";
 char kar_gryakubreakfan_assert_remove_effect_count[] =

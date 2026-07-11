@@ -20,12 +20,8 @@ extern char ShadowAssertShadow[7]; /* "shadow" */
 extern char ShadowAssertZero[2]; /* "0" */
 extern char ShadowAssertRect[5]; /* "rect" */
 
-extern const f32 ShadowZero; /* 0.0F */
-
-char ShadowSourceFile[] = "shadow.c";
-
-#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert(ShadowSourceFile, line, str))
-#define ASSERT_NAMED(line, cond) ((cond) ? ((void) 0) : __assert(ShadowSourceFile, line, #cond))
+#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert("shadow.c", line, str))
+#define ASSERT_NAMED(line, cond) ((cond) ? ((void) 0) : __assert("shadow.c", line, #cond))
 
 void HSD_ShadowInit(HSD_Shadow* shadow)
 {
@@ -57,7 +53,7 @@ void HSD_ShadowSetSize(HSD_Shadow* shadow, u16 width, u16 height)
         imgdesc->img_ptr = HSD_Alloc(size);
         imgdesc->width = width;
         imgdesc->height = height;
-        HSD_CObjSetViewportfx4(shadow->camera, ShadowZero, width, ShadowZero, height);
+        HSD_CObjSetViewportfx4(shadow->camera, 0.0F, width, 0.0F, height);
         HSD_CObjSetScissorx4(shadow->camera, 0, width, 0, height);
     }
 }
@@ -172,9 +168,9 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
         channel.mat_color.g = 0xFF;
         channel.mat_color.b = 0xFF;
         HSD_SetupChannelAll(&channel);
-        C_MTXOrtho(&sp8, ShadowOne, ShadowZero, ShadowZero, ShadowOne, ShadowNegOne, ShadowOne);
+        C_MTXOrtho(&sp8, ShadowOne, 0.0F, 0.0F, ShadowOne, ShadowNegOne, ShadowOne);
         GXSetProjection(&sp8, 1);
-        GXSetViewport(ShadowZero, ShadowZero, imgdesc->width, imgdesc->height, ShadowZero, ShadowOne);
+        GXSetViewport(0.0F, 0.0F, imgdesc->width, imgdesc->height, 0.0F, ShadowOne);
         GXSetScissor(0, 0, imgdesc->width, imgdesc->height);
         GXLoadPosMtxImm(&HSD_IdentityMtx, 0);
         GXSetCurrentMtx(0, HSD_PerfCurrentStat.unkC++, &HSD_PerfCurrentStat);
@@ -454,7 +450,7 @@ void HSD_ViewingRectAddRect(HSD_ViewingRect* rect, Vec* position, f32 top, f32 b
     if (rect->perspective) {
         f32 scale;
 
-        if (dot <= ShadowZero) {
+        if (dot <= 0.0F) {
             return;
         }
         scale = rect->distance / dot;

@@ -50,21 +50,10 @@ struct LbHeapReportData {
 extern LbHeapConfig kar_lbmemory_heap_config[];
 
 char kar_src_lbheap_80497f60[] = "lbheap.c";
-char kar_lbheap_assert_status_create[] = "p->status == LbHeapStatus_Create";
-char kar_lbheap_name_hsd[] = "     Hsd";
-char kar_lbheap_name_aram[] = "    ARAM";
-char kar_lbheap_name_init[] = "    Init";
-char kar_lbheap_name_stay[] = "    Stay";
-char kar_lbheap_name_allm[] = "    AllM";
-char kar_lbheap_name_net[] = "     Net";
-char kar_lbheap_name_alla[] = "    AllA";
-char kar_lbheap_name_stay2d[] = "  Stay2d";
-char kar_lbheap_name_all2d[] = "   All2d";
 LbHeapReportData kar_lbheap_report_data = {
     "     Dat",
-    { kar_lbheap_name_hsd, kar_lbheap_name_aram, kar_lbheap_name_init,
-      kar_lbheap_name_stay, kar_lbheap_name_allm, kar_lbheap_name_net,
-      kar_lbheap_name_alla, kar_lbheap_name_stay2d, kar_lbheap_name_all2d,
+    { "     Hsd", "    ARAM", "    Init", "    Stay", "    AllM",
+      "     Net", "    AllA", "  Stay2d", "   All2d",
       (char*) &kar_lbheap_report_data },
     "[lbHeap] -- Report --\n",
     " %5d KB + ",
@@ -77,7 +66,6 @@ LbHeapReportData kar_lbheap_report_data = {
     "[LbHeap] heap_kind %d is not exist!\n",
 };
 LbHeapState lbheap_state;
-char kar_lbheap_report_name_fmt[] = "%s :";
 
 u32 OSDisableInterrupts(void);
 void OSRestoreInterrupts(u32 level);
@@ -100,7 +88,7 @@ void kar_lbheap__80058920(s32 kind, void* ptr)
 
     if (p->status != 0) {
         __assert(kar_src_lbheap_80497f60, 0x16A,
-                 kar_lbheap_assert_status_create);
+                 "p->status == LbHeapStatus_Create");
     }
 
     if (p->type == 0) {
@@ -148,7 +136,7 @@ void kar_lbheap__near_80058a80(void)
     heap = (u8*) &lbheap_state;
     names = (char**) (data_base + 0x138);
     for (i = 0; i < 10; i++) {
-        OSReport(kar_lbheap_report_name_fmt, *names);
+        OSReport("%s :", *names);
         p = (LbHeapEntry*) (heap + 0x10);
         if (*(s32*) (heap + 0x28) == 0) {
             s32 free_size;

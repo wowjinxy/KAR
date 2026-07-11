@@ -7,9 +7,6 @@ extern const f32 mtx_one;        // 1.0F
 extern const f32 mtx_zero;       // 0.0F
 extern const f32 mtx_half;       // 0.5F
 extern const f32 mtx_three;      // 3.0F
-extern const f32 mtx_two;        // 2.0F
-extern const f32 mtx_neg_one;    // -1.0F
-extern const f32 mtx_deg_to_rad; // (PI / 180)
 extern const f32 mtx_pair_zero_one;
 
 asm void PSMTXIdentity(Mtx m)
@@ -495,22 +492,22 @@ void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS,
 {
     f32 tmp;
 
-    tmp = mtx_one / (r - l);
-    m[0][0] = scaleS * (mtx_two * n * tmp);
-    m[0][1] = mtx_zero;
+    tmp = 1.0F / (r - l);
+    m[0][0] = scaleS * (2.0F * n * tmp);
+    m[0][1] = 0.0F;
     m[0][2] = scaleS * ((r + l) * tmp) - transS;
-    m[0][3] = mtx_zero;
+    m[0][3] = 0.0F;
 
-    tmp = mtx_one / (t - b);
-    m[1][0] = mtx_zero;
-    m[1][1] = scaleT * (mtx_two * n * tmp);
+    tmp = 1.0F / (t - b);
+    m[1][0] = 0.0F;
+    m[1][1] = scaleT * (2.0F * n * tmp);
     m[1][2] = scaleT * ((t + b) * tmp) - transT;
-    m[1][3] = mtx_zero;
+    m[1][3] = 0.0F;
 
-    m[2][0] = mtx_zero;
-    m[2][1] = mtx_zero;
-    m[2][2] = mtx_neg_one;
-    m[2][3] = mtx_zero;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = -1.0F;
+    m[2][3] = 0.0F;
 }
 
 void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,
@@ -519,25 +516,25 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,
     f32 angle;
     f32 cot;
 
-    angle = mtx_half * fovY;
-    angle = mtx_deg_to_rad * angle;
+    angle = 0.5F * fovY;
+    angle = 0.017453292F * angle;
 
-    cot = mtx_one / mtx_tanf(angle);
+    cot = 1.0F / mtx_tanf(angle);
 
     m[0][0] = scaleS * (cot / aspect);
-    m[0][1] = mtx_zero;
+    m[0][1] = 0.0F;
     m[0][2] = -transS;
-    m[0][3] = mtx_zero;
+    m[0][3] = 0.0F;
 
-    m[1][0] = mtx_zero;
+    m[1][0] = 0.0F;
     m[1][1] = cot * scaleT;
     m[1][2] = -transT;
-    m[1][3] = mtx_zero;
+    m[1][3] = 0.0F;
 
-    m[2][0] = mtx_zero;
-    m[2][1] = mtx_zero;
-    m[2][2] = mtx_neg_one;
-    m[2][3] = mtx_zero;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = -1.0F;
+    m[2][3] = 0.0F;
 }
 
 void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
@@ -545,20 +542,20 @@ void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
 {
     f32 tmp;
 
-    tmp = mtx_one / (r - l);
-    m[0][0] = (mtx_two * tmp) * scaleS;
-    m[0][1] = mtx_zero;
-    m[0][2] = mtx_zero;
+    tmp = 1.0F / (r - l);
+    m[0][0] = (2.0F * tmp) * scaleS;
+    m[0][1] = 0.0F;
+    m[0][2] = 0.0F;
     m[0][3] = transS + scaleS * (tmp * -(r + l));
 
-    tmp = mtx_one / (t - b);
-    m[1][0] = mtx_zero;
-    m[1][1] = (mtx_two * tmp) * scaleT;
-    m[1][2] = mtx_zero;
+    tmp = 1.0F / (t - b);
+    m[1][0] = 0.0F;
+    m[1][1] = (2.0F * tmp) * scaleT;
+    m[1][2] = 0.0F;
     m[1][3] = transT + scaleT * (tmp * -(t + b));
 
-    m[2][0] = mtx_zero;
-    m[2][1] = mtx_zero;
-    m[2][2] = mtx_zero;
-    m[2][3] = mtx_one;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = 0.0F;
+    m[2][3] = 1.0F;
 }

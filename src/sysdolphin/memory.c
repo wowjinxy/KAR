@@ -12,9 +12,6 @@ typedef struct _HSD_MemCallbackData {
     u32 unused;
 } HSD_MemCallbackData;
 
-char MemorySourceFile[] = "memory.c";
-char MemoryAssertCallbackSize[] = "size == sizeof(__mem_cb)";
-
 HSD_MemCallbackData HSD_MemCallbackState;
 u8 HSD_ShadowAllocData[0x30];
 u8 hsd_saved_context[0x2C8];
@@ -29,7 +26,7 @@ extern const f32 ShadowTextureSize;
 void _HSD_MemSetCallbacks(HSD_MemCallbacks* callbacks, u32 size)
 {
     if (size != sizeof(HSD_MemCallbacks)) {
-        __assert(MemorySourceFile, 0x14, MemoryAssertCallbackSize);
+        __assert("memory.c", 0x14, "size == sizeof(__mem_cb)");
     }
     HSD_MemCallbackState.callbacks = *callbacks;
 }

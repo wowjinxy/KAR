@@ -51,25 +51,6 @@ struct Ground {
     s32 point_strike_panel_num;
 };
 
-char kar_src_grpointstrike_804a5648[] = "grpointstrike.c";
-char kar_grpointstrike_assert_panel_max[] =
-    "gp->ls.pointStrike.panel_num < Gr_PointStrikePanel_Max";
-char kar_grpointstrike_assert_panel_joint_num[] =
-    "panel_num == panel_data->joint_num";
-char kar_grpointstrike_assert_stadium_kind[0x3C] =
-    "stadium_data && stadium_data->kind == GrSDK_PointStrike";
-
-#if defined(VERSION_GKYJ01)
-#define GRPOINTSTRIKE_ASSERT_KIND lbl_805D0C20
-char lbl_805D0C20[] = "0";
-#elif defined(VERSION_GKYP01)
-#define GRPOINTSTRIKE_ASSERT_KIND lbl_805C8B90
-char lbl_805C8B90[] = "0";
-#else
-#define GRPOINTSTRIKE_ASSERT_KIND lbl_805D6190
-char lbl_805D6190[] = "0";
-#endif
-
 void kar_grparts__near_800db1a8(s32* list, s32 count);
 s32 kar_grcommon__800db234(s32* list, s32 index, s32 count);
 void* kar_gryakubreakhpcoll_create_effect_indexed_kind62_collision_trigger(
@@ -98,8 +79,8 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
     }
 
     if (!has_point_strike) {
-        __assert(kar_src_grpointstrike_804a5648, 0x4C,
-                 kar_grpointstrike_assert_stadium_kind);
+        __assert("grpointstrike.c", 0x4C,
+                 "stadium_data && stadium_data->kind == GrSDK_PointStrike");
     }
 
     ground->point_strike_panel_num = panel_num = 0;
@@ -130,16 +111,15 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
                         ground->model, entry->effect_index, joint, entry->param);
                 break;
             default:
-                __assert(kar_src_grpointstrike_804a5648, 0x20,
-                         GRPOINTSTRIKE_ASSERT_KIND);
+                __assert("grpointstrike.c", 0x20, "0");
                 panel = NULL;
                 break;
             }
 
             panel_num++;
             if (ground->point_strike_panel_num >= GR_POINT_STRIKE_PANEL_MAX) {
-                __assert(kar_src_grpointstrike_804a5648, 0x3B,
-                         kar_grpointstrike_assert_panel_max);
+                __assert("grpointstrike.c", 0x3B,
+                         "gp->ls.pointStrike.panel_num < Gr_PointStrikePanel_Max");
             }
             ground->point_strike_panels[ground->point_strike_panel_num++] = panel;
             i++;
@@ -150,8 +130,7 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
     }
 
     if (panel_num != panel_data->stadium_joint_num) {
-        __assert(kar_src_grpointstrike_804a5648, 0x40,
-                 kar_grpointstrike_assert_panel_joint_num);
+        __assert("grpointstrike.c", 0x40, "panel_num == panel_data->joint_num");
     }
 
     panel_num = 0;
@@ -180,16 +159,15 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
                         ground->model, entry->effect_index, joint, entry->param);
                 break;
             default:
-                __assert(kar_src_grpointstrike_804a5648, 0x20,
-                         GRPOINTSTRIKE_ASSERT_KIND);
+                __assert("grpointstrike.c", 0x20, "0");
                 panel = NULL;
                 break;
             }
 
             panel_num++;
             if (ground->point_strike_panel_num >= GR_POINT_STRIKE_PANEL_MAX) {
-                __assert(kar_src_grpointstrike_804a5648, 0x3B,
-                         kar_grpointstrike_assert_panel_max);
+                __assert("grpointstrike.c", 0x3B,
+                         "gp->ls.pointStrike.panel_num < Gr_PointStrikePanel_Max");
             }
             ground->point_strike_panels[ground->point_strike_panel_num++] = panel;
             i++;
@@ -200,7 +178,6 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
     }
 
     if (panel_num != panel_data->airride_joint_num) {
-        __assert(kar_src_grpointstrike_804a5648, 0x40,
-                 kar_grpointstrike_assert_panel_joint_num);
+        __assert("grpointstrike.c", 0x40, "panel_num == panel_data->joint_num");
     }
 }

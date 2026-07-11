@@ -19,9 +19,6 @@
 #define kar_course_dat_model_resource_table lbl_8049DD9C
 #define kar_asset_grcity1event_804a329c lbl_8049E03C
 #define lbl_804A32F4 lbl_8049E094
-#define fn_80261CE8 fn_8025DA3C
-#define fn_80261ECC fn_8025DC20
-#define fn_80262574 fn_8025E2C8
 #define kar_grcity1_patch_asset_material_anim_params fn_8010E28C
 #define kar_grnullpos_scale_setup_position_data fn_800E4854
 #define kar_lbspline__near_8006e664 fn_8006DD78
@@ -40,9 +37,6 @@
 #define kar_course_dat_model_resource_table lbl_804A849C
 #define kar_asset_grcity1event_804a329c lbl_804A873C
 #define lbl_804A32F4 lbl_804A8794
-#define fn_80261CE8 fn_802629A4
-#define fn_80261ECC fn_80262B88
-#define fn_80262574 fn_80263230
 #define kar_grcity1_patch_asset_material_anim_params fn_80110F20
 #define kar_grnullpos_scale_setup_position_data fn_800E7184
 #define kar_lbspline__near_8006e664 fn_8006EFA4

@@ -13,23 +13,18 @@ typedef struct SplineList SplineList;
 
 #if defined(VERSION_GKYJ01)
 #define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x65
-#define GRGRAVITY_INIT_DIST lbl_805D7304
-#define GRGRAVITY_ZERO lbl_805DA150
-#define GRGRAVITY_NO_PARAM lbl_805DA154
 #define GRGRAVITY_ONE_ZERO lbl_805DA158
 #elif defined(VERSION_GKYP01)
 #define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x73
-#define GRGRAVITY_INIT_DIST lbl_805CF26C
-#define GRGRAVITY_ZERO lbl_805D2190
-#define GRGRAVITY_NO_PARAM lbl_805D2194
 #define GRGRAVITY_ONE_ZERO lbl_805D2198
 #else
 #define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x65
-#define GRGRAVITY_INIT_DIST lbl_805DC8BC
-#define GRGRAVITY_ZERO lbl_805DF728
-#define GRGRAVITY_NO_PARAM lbl_805DF72C
 #define GRGRAVITY_ONE_ZERO lbl_805DF730
 #endif
+
+#define GRGRAVITY_INIT_DIST 3.4028235E38F
+#define GRGRAVITY_ZERO 0.0F
+#define GRGRAVITY_NO_PARAM -1.0F
 
 struct Ground {
     u8 pad_0[0x08];
@@ -63,22 +58,10 @@ char lbl_804A4A6C[] = "tmpParam != -1.0F";
 
 #if defined(VERSION_GKYJ01)
 const f32 lbl_805DA158[2] = { 1.0f, 0.0f };
-
-extern const f32 lbl_805D7304[];
-extern const f32 lbl_805DA150;
-extern const f32 lbl_805DA154;
 #elif defined(VERSION_GKYP01)
 const f32 lbl_805D2198[2] = { 1.0f, 0.0f };
-
-extern const f32 lbl_805CF26C[];
-extern const f32 lbl_805D2190;
-extern const f32 lbl_805D2194;
 #else
 const f32 lbl_805DF730[2] = { 1.0f, 0.0f };
-
-extern const f32 lbl_805DC8BC[];
-extern const f32 lbl_805DF728;
-extern const f32 lbl_805DF72C;
 #endif
 
 void* memcpy(void* dst, const void* src, unsigned long n);
@@ -110,7 +93,7 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
         spline_offset = 0;
         gravity_params = data->gravity_params;
         param_offset = spline_offset;
-        nearest_dist = GRGRAVITY_INIT_DIST[0];
+        nearest_dist = GRGRAVITY_INIT_DIST;
         best_index = -1;
         no_param = GRGRAVITY_NO_PARAM;
         i = 0;

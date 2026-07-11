@@ -23,11 +23,6 @@ extern HSD_DebugUserCallback HSDDebugUserCallback;
 
 void HSD_SaveContext(void* arg0);
 
-char HSDAssertFailedFormat[0x18] = "assertion \"%s\" failed";
-char HSDPanicReportFormat[0x18] = "%s in %s on line %d.\n";
-char GObjProcSourceFile[0xC] = "gobjproc.c";
-char GObjProcPriorityAssert[0x2C] = "pri <= HSD_GObjLibInitData.gproc_pri_max";
-
 #pragma push
 asm void HSD_SaveContext(void* arg0)
 {
@@ -86,7 +81,7 @@ s32 HSD_DebugExceptionCallbackThunk(s32 arg0, s32 exception, void* context, void
 #pragma dont_inline on
 void __assert(const char* file, unsigned long line, const char* assertion)
 {
-    OSReport(HSDAssertFailedFormat, assertion);
+    OSReport("assertion \"%s\" failed", assertion);
     HSD_Panic(file, line, HSDAssertPanicMessage);
 }
 
@@ -94,7 +89,7 @@ void HSD_Panic(const char* file, s32 line, const char* msg)
 {
     if (HSDDebugConsoleCallback != NULL) {
         HSD_SaveContext((void*) file);
-        OSReport(HSDPanicReportFormat, msg, file, line);
+        OSReport("%s in %s on line %d.\n", msg, file, line);
         HSDDebugConsoleCallback(hsd_saved_context);
     }
     OSPanic(file, line, msg);
@@ -233,10 +228,10 @@ HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj, void (*callback)(HSD_GObj*), u8
     proc = HSD_ObjAlloc(&hsdGObjProc_alloc_data);
 
     if (proc == NULL) {
-        __assert(GObjProcSourceFile, 0x1F, GObjProcAssertProc);
+        __assert("gobjproc.c", 0x1F, GObjProcAssertProc);
     }
     if (priority > hsdGObj_p_link_max.gproc_pri_max) {
-        __assert(GObjProcSourceFile, 0xD8, GObjProcPriorityAssert);
+        __assert("gobjproc.c", 0xD8, "pri <= HSD_GObjLibInitData.gproc_pri_max");
     }
 
     proc->s_link = priority;

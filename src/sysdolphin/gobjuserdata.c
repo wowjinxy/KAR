@@ -17,12 +17,6 @@ typedef struct _GObjDefaultInitData {
     u32 unused;
 } GObjDefaultInitData;
 
-char GObjUserDataSourceFile[0x10] = "gobjuserdata.c";
-char GObjUserDataKindNoneAssert[0x30] = "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE";
-char GObjUserDataRemoveFuncAssert[0x20] = "gobj->user_data_remove_func";
-
-u32 hsdGObj_gxlink_render_masks[] = { 1, 4, 2, 0 };
-
 u8 hsdGObj_default_object_kind;
 u8 hsdGObj_lobj_kind;
 u8 hsdGObj_jobj_kind;
@@ -45,33 +39,10 @@ GObjFunc* hsdGObj_obj_remove_funcs;
 void HSD_GObjDefaultObjectRemove(HSD_Obj* obj);
 void HSD_GObjDefaultObjectRemoveAlt(HSD_Obj* obj);
 
-GObjFunc gobj_default_obj_remove_funcs[] = {
-    HSD_GObjDefaultObjectRemove,
-    (GObjFunc) HSD_LObjRemoveAll,
-    (GObjFunc) RecalcParentTrspBits,
-    HSD_GObjDefaultObjectRemoveAlt,
-};
-
-GObjFuncs gobj_default_func_node = {
-    NULL,
-    4,
-    gobj_default_obj_remove_funcs,
-    0,
-};
-
-GObjDefaultInitData gobj_default_init_data = {
-    0x3F,
-    0x3F,
-    2,
-    0,
-    NULL,
-    NULL,
-};
-
 void HSD_GObjUserDataLink(HSD_GObj* gobj, u8 kind, void (*remove_func)(void*), void* data)
 {
     if (gobj->user_data_kind != HSD_GOBJ_USER_DATA_NONE) {
-        __assert(GObjUserDataSourceFile, 40, GObjUserDataKindNoneAssert);
+        __assert("gobjuserdata.c", 40, "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE");
     }
     gobj->user_data_kind = kind;
     gobj->user_data = data;
@@ -98,12 +69,37 @@ void HSD_GObjUserDataRemove(HSD_GObj* gobj)
         return;
 
     if (gobj->user_data_remove_func == NULL) {
-        __assert(GObjUserDataSourceFile, 99, GObjUserDataRemoveFuncAssert);
+        __assert("gobjuserdata.c", 99, "gobj->user_data_remove_func\0\0\0\0");
     }
     (*gobj->user_data_remove_func)(gobj->user_data);
     gobj->user_data_kind = HSD_GOBJ_USER_DATA_NONE;
     gobj->user_data = NULL;
 }
+
+u32 hsdGObj_gxlink_render_masks[] = { 1, 4, 2, 0 };
+
+GObjFunc gobj_default_obj_remove_funcs[] = {
+    HSD_GObjDefaultObjectRemove,
+    (GObjFunc) HSD_LObjRemoveAll,
+    (GObjFunc) RecalcParentTrspBits,
+    HSD_GObjDefaultObjectRemoveAlt,
+};
+
+GObjFuncs gobj_default_func_node = {
+    NULL,
+    4,
+    gobj_default_obj_remove_funcs,
+    0,
+};
+
+GObjDefaultInitData gobj_default_init_data = {
+    0x3F,
+    0x3F,
+    2,
+    0,
+    NULL,
+    NULL,
+};
 
 static inline void GObj_SetPauseFlagAll(HSD_GObjProc* proc, u8 value)
 {
