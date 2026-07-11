@@ -14,6 +14,7 @@
 #include <sysdolphin/robj.h>
 #include <sysdolphin/spline.h>
 #include <sysdolphin/id.h>
+#include <sysdolphin/vec_alloc.h>
 
 void HSD_RObjUpdateAll(HSD_RObj* robj, HSD_JObj* jobj, HSD_ObjUpdateFunc update);
 BOOL HSD_RObjGetGlobalPosition(HSD_RObj* robj, u32 type, Vec* out);
@@ -30,8 +31,6 @@ extern void HSD_MtxGetTranslate(Mtx mtx, Vec* out);
 extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
 extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
 
-extern Vec* HSD_VecAlloc(void);
-extern void HSD_VecFree(Vec* vec);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 

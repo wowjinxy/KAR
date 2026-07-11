@@ -4,6 +4,7 @@
 #include <global.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <sysdolphin/objalloc.h>
+#include <sysdolphin/vec_alloc.h>
 
 void HSD_MtxInverse(Mtx src, Mtx dest);
 BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
@@ -17,8 +18,6 @@ void HSD_MtxSRTQuat(Mtx arg0, Vec* arg1, Quaternion* arg2, Vec* arg3,
                      Vec* arg4);
 void HSD_MtxScaledAdd(Mtx arg0, Mtx arg1, Mtx arg2, f32 arg3);
 void HSD_VecGetOrthogonal(Vec* v, Vec* out);
-Vec* HSD_VecAlloc(void);
-void HSD_VecFree(Vec* arg0);
 void* HSD_MtxAlloc(void);
 void HSD_MtxFree(void* arg0);
 HSD_ObjAllocData* HSD_VecGetAllocData(void);
