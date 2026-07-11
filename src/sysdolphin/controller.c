@@ -126,9 +126,6 @@ extern void PADReset(u32 mask);
 extern void PADRecalibrate(u32 mask);
 extern void PADInit(void);
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b); /* = b - a*c */
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c + b */
-
 extern f32 ControllerFloatHalf; /* 0.5F */
 extern f64 ControllerDoubleUnsignedBias; /* 4503599627370496.0 */
 extern f32 ControllerFloatZero; /* 0.0F */

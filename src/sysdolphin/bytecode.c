@@ -19,9 +19,6 @@ extern f64 kar_exp(f64 x);
 extern f64 kar_fmod(f64 x, f64 y); /* fmod */
 extern f64 kar_pow(f64 x, f64 y);
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fnmsubs(f32 a, f32 c, f32 b);
-
 f32 kar_math_bytecode_sinf_approx(f32 x);
 f32 kar_math_bytecode_cosf_approx(f32 x);
 

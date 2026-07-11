@@ -70,8 +70,6 @@ extern void C_MTXFrustum(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                        f32 near, f32 far);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 
 static inline f32 cobj_sqrtf(f32 x)
 {

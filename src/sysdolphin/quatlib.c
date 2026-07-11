@@ -23,11 +23,6 @@ extern f64 QuatOneDouble; /* 1.0 */
 extern f32 QuatTwo; /* 2.0F */
 extern f32 HSD_FloatMin[]; /* FLT_MIN */
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fnmsubs(f32 a, f32 c, f32 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
-extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */
-
 f32 kar_math_quat_sinf_approx(f32 x);
 f32 kar_math_quat_cosf_approx(f32 x);
 

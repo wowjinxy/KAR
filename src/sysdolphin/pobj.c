@@ -1,5 +1,6 @@
 #include <global.h>
 #include <dolphin/mtx/mtx.h>
+#include <kar/math.h>
 #include <sysdolphin/pobj.h>
 
 #include <sysdolphin/id.h>
@@ -42,8 +43,6 @@ extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 extern BOOL _HSD_MemCheckOwn(void* ptr);
 extern void HSD_PerfCountEnvelopeBlending(s32 n);
 extern void HSD_StateSetCullMode(s32 mode);
-
-extern f32 __fmadds(f32 a, f32 c, f32 b);
 
 extern HSD_PObjInfo* PObjCurrentInfo;
 extern f32 (*PObjVertexBuffer)[3];

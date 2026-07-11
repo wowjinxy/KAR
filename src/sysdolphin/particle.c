@@ -7,7 +7,6 @@
 
 extern void memset(void*, int, int);
 extern f32 sqrtf(f32);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 tanf(f32);
 extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_Randf(void);

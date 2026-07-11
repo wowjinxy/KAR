@@ -16,11 +16,6 @@ extern f32 SplineFloatOneEighth; /* 0.125F */
 extern f32 SplineFloatHalf;      /* 0.5F */
 extern f32 SplineFloatEps;       /* 0.00001F */
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
-extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */
-extern f32 __fnmsubs(f32 a, f32 c, f32 b); /* = b-a*c */
-
 #define ABS(x) ((x) < SplineFloatZero ? -(x) : (x))
 
 f32 splGetHelmite(f32 fterm, f32 time, f32 p0, f32 p1, f32 d0, f32 d1)

@@ -91,9 +91,6 @@ void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
 #define M_PI 3.14159265358979323846
 #endif
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmsubs(f32 a, f32 c, f32 b);
-
 static inline f32 jobj_sqrtf(f32 x)
 {
     volatile f32 y;

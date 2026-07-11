@@ -53,8 +53,6 @@ void HSD_RvalueRemoveAll(HSD_Rvalue* rvalue);
 void HSD_RvalueResolveRefsAll(HSD_Rvalue* rvalue, HSD_RvalueList* list);
 void HSD_RObjFree(HSD_RObj* robj);
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-
 extern f64 RObjHalf;             // 0.5
 extern f32 RObjOne;              // 1.0f
 extern f32 RObjFloatEpsilon;     // 1.00000001335e-10f

@@ -41,11 +41,6 @@ extern f32 HSD_FloatEpsilon[]; /* FLT_EPSILON */
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fnmsubs(f32 a, f32 c, f32 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
-extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */
-
 f32 kar_math_mtx_cosf_approx(f32 x);
 f32 kar_math_mtx_sinf_approx(f32 x);
 

@@ -139,9 +139,6 @@ void HSD_StateInitDirect(u32 vtxfmt, u32 rendermode)
     GXSetCurrentMtx(0);
 }
 
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b);
-
 static inline f32 displayfunc_sqrtf(f32 x)
 {
     volatile f32 y;
