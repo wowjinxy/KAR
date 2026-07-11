@@ -25,10 +25,6 @@ extern f32 FogFloatOne;      // 1.0F
 extern f32 FogColorScale;    // 255.0F
 
 extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
-                             HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
 
 extern void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz,
                     GXColor color);

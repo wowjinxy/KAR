@@ -13,10 +13,6 @@ extern HSD_ClassInfo hsdClass;
 
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void* hsdAllocMemPiece(s32 size);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
-extern struct _HSD_ClassInfo* hsdSearchClassInfo(char* class_name);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 
 extern void memset(void*, int, int);

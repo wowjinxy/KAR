@@ -117,10 +117,6 @@ char TObjAssertIDesc[] = "idesc";
     ((cond) ? ((void) 0) : __assert(kar_srcfile_tobj_c, line, str))
 
 extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
-                             HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
 extern void HSD_Panic(char* file, s32 line, char* msg);
 
 extern void* hsdAllocMemPiece(u32 size);

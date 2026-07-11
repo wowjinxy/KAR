@@ -26,7 +26,6 @@ extern char RObjAssertRPJObj[11];  // "rp->u.jobj"
     ((cond) ? ((void) 0) : __assert(RObjJObjHeaderFile, line, RObjAssertJObj))
 
 extern void memset(void*, int, int);
-extern BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void HSD_JObjMakeMatrix(HSD_JObj* jobj);

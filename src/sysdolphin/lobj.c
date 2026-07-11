@@ -34,7 +34,6 @@ void GXLoadLightObjImm(GXLightObj*, GXLightID);
 void MTXMultVec(Mtx, Vec*, Vec*);
 
 void* hsdNew(HSD_ClassInfo*);
-void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
 BOOL hsdIsDescendantOf(HSD_ClassInfo*, HSD_ClassInfo*);
 
 extern HSD_LObjInfo* LObjDefaultClass; /* default_class */
@@ -1074,8 +1073,6 @@ int LObjLoad(HSD_LObj* lobj, HSD_LightDesc* ldesc)
     }
     return 0;
 }
-
-HSD_ClassInfo* hsdSearchClassInfo(char*);
 
 HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* ldesc)
 {

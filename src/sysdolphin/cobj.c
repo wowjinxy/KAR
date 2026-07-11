@@ -26,10 +26,6 @@ char CObjAssertZero[] = "0";
             : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
 
 extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
-                             HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
 extern void _HSD_ZListClear(void);
 extern void _HSD_ZListSort(void);
 extern void _HSD_ZListDisp(void);
