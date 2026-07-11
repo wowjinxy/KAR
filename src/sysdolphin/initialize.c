@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <dolphin/dvd.h>
 #include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
 #include <sysdolphin/class.h>
@@ -26,17 +27,6 @@
 #define OSRoundDown32B(x) (((u32) (x)) & ~(32 - 1))
 #define OSRoundUp32B(x)   (((u32) (x) + 32 - 1) & ~(32 - 1))
 
-extern void DVDInit(void);
-
-extern void* OSGetArenaLo(void);
-extern void* OSGetArenaHi(void);
-extern void OSSetArenaLo(void* newLo);
-extern void* OSAllocFromArenaLo(u32 size, u32 align);
-extern OSHeapHandle OSCreateHeap(void* lo, void* hi);
-extern void OSDestroyHeap(OSHeapHandle heap);
-extern void OSSetCurrentHeap(OSHeapHandle heap);
-extern void* OSAllocFromHeap(OSHeapHandle heap, u32 size);
-extern void OSFreeToHeap(OSHeapHandle heap, void* ptr);
 extern s32 kar_diag__803d3884(OSHeapHandle heap);
 
 extern volatile OSHeapHandle HSD_CurrentHeap;
