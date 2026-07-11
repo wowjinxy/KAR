@@ -1,7 +1,6 @@
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/memory.h>
 
-extern void __assert(const char*, unsigned long, const char*);
 extern s32 HSD_GetNbBits(u32 value);
 
 extern char ObjAllocAssertData[5];
