@@ -12,8 +12,6 @@ typedef struct _HSD_StackFrame {
     u32 ret_addr;
 } HSD_StackFrame;
 
-extern void OSFillFPUContext(void*);
-
 extern u8 __files[];
 extern u8 hsd_saved_context[];
 extern char HSDAssertPanicMessage[8];

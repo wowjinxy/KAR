@@ -4,6 +4,7 @@
 #include "dolphin/types.h"
 
 typedef s32 OSHeapHandle;
+typedef void (*OSErrorHandler)(s32 error, void* context, ...);
 
 //void*   OSGetArenaHi( void );
 //void*   OSGetArenaLo( void );
@@ -76,6 +77,8 @@ void OSDestroyHeap(OSHeapHandle heap);
 void OSSetCurrentHeap(OSHeapHandle heap);
 void* OSAllocFromHeap(OSHeapHandle heap, u32 size);
 void OSFreeToHeap(OSHeapHandle heap, void* ptr);
+void OSFillFPUContext(void* context);
+OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 //
 //void* OSPhysicalToCached    ( u32   paddr  );
 //void* OSPhysicalToUncached  ( u32   paddr  );

@@ -108,8 +108,6 @@ void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
     }
 }
 
-extern void HSD_MObjAnim();
-extern void HSD_PObjAnimAll();
 #pragma push
 asm void HSD_DObjAnimAll(HSD_DObj* dobj)
 {

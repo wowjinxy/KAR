@@ -17,7 +17,6 @@ typedef struct {
 } OSThread;
 
 typedef void (*HSD_DebugConsoleCallback)(void* context, ...);
-typedef void (*OSErrorHandler)(s32 error, void* context, ...);
 
 extern void OSLoadContext(OSContext* context);
 extern void __OSSetExceptionHandler(s32 exception,
@@ -29,7 +28,6 @@ extern void OSResumeThread(OSThread* thread);
 
 extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
-extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
                                      void (*render_cb)(HSD_GObj*, s32),
