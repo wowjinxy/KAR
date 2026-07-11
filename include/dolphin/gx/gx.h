@@ -18,7 +18,9 @@ void GXInitLightAttn(GXLightObj* light, f32 a0, f32 a1, f32 a2, f32 k0,
 void GXInitLightColor(GXLightObj* light, GXColor color);
 void GXInitLightDir(GXLightObj* light, f32 x, f32 y, f32 z);
 void GXInitLightPos(GXLightObj* light, f32 x, f32 y, f32 z);
+void GXCallDisplayList(void* list, u32 nbytes);
 void GXLoadLightObjImm(GXLightObj* light, s32 light_id);
+void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 void GXPixModeSync(void);
@@ -48,6 +50,7 @@ void GXSetFieldMode(u8 field_rendering, u8 half_aspect_ratio);
 void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color);
 void GXSetFogRangeAdj(u32 enable, u16 center, void* table);
 void GXSetLineWidth(u8 width, u32 tex_offsets);
+void GXSetArray(u32 attr, void* base_ptr, u8 stride);
 void GXSetNumChans(u8 n);
 void GXSetNumTevStages(u8 n);
 void GXSetPixelFmt(s32 pix_fmt, s32 z_fmt);

@@ -20,11 +20,7 @@ extern BOOL hsdIsDescendantOf(void* info, void* base);
 extern void memset(void*, int, int);
 extern void memcpy(void*, const void*, int);
 
-extern void GXSetArray(u32 attr, void* base_ptr, u8 stride);
-extern void GXCallDisplayList(void* list, u32 nbytes);
-
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
-extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 
 extern HSD_PObjInfo* PObjCurrentInfo;
 extern f32 (*PObjVertexBuffer)[3];
