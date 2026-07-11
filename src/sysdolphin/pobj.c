@@ -15,8 +15,6 @@
 #include <sysdolphin/perf.h>
 #include <sysdolphin/tev.h>
 
-extern HSD_ClassInfo hsdClass;
-
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 
 extern void memset(void*, int, int);

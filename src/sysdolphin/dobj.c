@@ -1,8 +1,6 @@
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/gobjproc.h>
 
-extern HSD_ClassInfo hsdClass;
-
 extern HSD_DObj* DObjCurrent;
 extern HSD_DObjInfo* DObjDefaultClass;
 #define current_dobj DObjCurrent

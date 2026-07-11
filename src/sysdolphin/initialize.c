@@ -2,6 +2,7 @@
 
 #include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
+#include <sysdolphin/class.h>
 #include <sysdolphin/aobj_alloc.h>
 #include <sysdolphin/displayfunc_alloc.h>
 #include <sysdolphin/fobj.h>
@@ -37,8 +38,6 @@ extern void OSSetCurrentHeap(OSHeapHandle heap);
 extern void* OSAllocFromHeap(OSHeapHandle heap, u32 size);
 extern void OSFreeToHeap(OSHeapHandle heap, void* ptr);
 extern s32 kar_diag__803d3884(OSHeapHandle heap);
-
-extern void hsdForgetClassLibrary(char* name);
 
 extern volatile OSHeapHandle HSD_CurrentHeap;
 extern GXRenderModeObj* HSD_RenderMode;

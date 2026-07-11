@@ -1104,8 +1104,6 @@ static char unused2[] = "cannot allocate tobj for toon.";
 static char unused3[] = "tobj_toon";
 #pragma pop
 
-extern HSD_ClassInfo hsdClass;
-
 void MObjInfoInit(void)
 {
     hsdInitClassInfo(HSD_CLASS_INFO(&hsdMObj), HSD_CLASS_INFO(&hsdClass),

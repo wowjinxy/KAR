@@ -1,6 +1,5 @@
 #include <sysdolphin/class.h>
 
-extern void _hsdClassInfoInit();
 HSD_ClassInfo hsdClass = { _hsdClassInfoInit };
 
 void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
