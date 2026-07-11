@@ -77,7 +77,6 @@ extern void fn_80281AD4(void);
 extern void fn_80281BB4(void);
 extern void fn_802823FC(int);
 extern void kar_lbaudio__near_8005ab84(void);
-extern void kar_lbaudio__near_8005e1a8(int);
 extern void kar_lbaudio__near_8005a5b0(void);
 extern void kar_lbvector__near_8006595c(void);
 extern int fn_802819CC(void);
