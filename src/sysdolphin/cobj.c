@@ -32,9 +32,6 @@ char CObjAssertZero[] = "0";
 
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height,
-                                f32 near_z, f32 far_z, u32 field);
-extern u32 VIGetNextField(void);
 extern void C_MTXPerspective(Mtx mtx, f32 fov, f32 aspect, f32 near,
                              f32 far);
 extern void C_MTXFrustum(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,

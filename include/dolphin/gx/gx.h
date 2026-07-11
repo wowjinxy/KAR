@@ -45,6 +45,8 @@ void GXSetTevOp(u8 stage, u32 mode);
 void GXSetTevOrder(u8 stage, u32 coord, u32 map, u32 color);
 void GXSetTevSwapMode(u8 stage, u32 ras_swap, u32 tex_swap);
 void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 near_z, f32 far_z);
+void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 near_z,
+                         f32 far_z, u32 field);
 void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
 void GXSetVtxDesc(u32 attr, u32 type);
 void GXSetZCompLoc(u32 before_tex);

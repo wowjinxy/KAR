@@ -41,6 +41,7 @@ void VISetNextFrameBuffer(void* fb);
 void VIWaitForRetrace(void);
 void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
 void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
+u32 VIGetNextField(void);
 u32 VIGetTvFormat(void);
 
 HSD_VIRetraceCallback HSD_VISetUserPreRetraceCallback(HSD_VIRetraceCallback cb);
