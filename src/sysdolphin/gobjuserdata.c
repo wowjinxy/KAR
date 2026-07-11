@@ -3,6 +3,7 @@
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj.h>
+#include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/object.h>
 
@@ -17,7 +18,6 @@ typedef struct _GObjDefaultInitData {
 } GObjDefaultInitData;
 
 extern void HSD_LObjSetCurrentAll(void* obj);
-extern void HSD_LObjSetupInit(HSD_CObj* cobj);
 extern void HSD_LObjRemoveAll(void* obj);
 extern void HSD_JObjDispAll(HSD_JObj* jobj, void* arg1, u32 flags, u32 rendermode);
 extern s32 HSD_CObjSetCurrent(void* cobj);

@@ -9,6 +9,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/tev.h>
 #include <sysdolphin/video.h>
@@ -34,7 +35,6 @@ typedef struct _HSD_ZList {
 } HSD_ZList;
 
 extern void HSD_Panic(char* file, s32 line, char* msg);
-extern void HSD_LObjSetupSpecularInit(Mtx pmtx);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);

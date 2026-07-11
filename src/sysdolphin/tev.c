@@ -4,6 +4,7 @@
 #include <sysdolphin/tev.h>
 
 #include <sysdolphin/lobj.h>
+#include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/util.h>
 
 HSD_ObjAllocData hsd_rd_alloc_data;
@@ -83,9 +84,6 @@ extern f32 TevFloatZero; /* 0.0F */
 extern f32 TevFloatOne; /* 1.0F */
 extern f32 TevFloat255; /* 255.0F */
 
-extern HSD_LObj* HSD_LObjGetActiveByIndex(s32 idx);
-extern HSD_LObj* HSD_LObjGetActiveByID(u32 id);
-extern void HSD_LObjSetup(HSD_LObj* lobj, GXColor* color, f32 shininess);
 extern void memcpy(void* dst, const void* src, u32 size);
 
 extern void GXSetChanCtrl(u32 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,

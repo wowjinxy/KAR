@@ -8,6 +8,7 @@
 
 #include <sysdolphin/object.h>
 #include <sysdolphin/fobj.h>
+#include <sysdolphin/lobj_setup.h>
 
 #define HSD_A_L_LITC_R 9
 #define HSD_A_L_LITC_G 10
