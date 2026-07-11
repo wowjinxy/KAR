@@ -1,5 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <kar/gr/grcommon.h>
+#include <kar/gr/grnullpos.h>
 #include <sysdolphin/memory.h>
 
 typedef struct GlobalDeadConfig GlobalDeadConfig;
@@ -46,11 +48,6 @@ static const f32 lbl_805DF794 = -1.0f;
 #else
 #define GRGLOBALDEAD_ASSERT_COUNT_LINE 0x59
 #endif
-
-s32 kar_grnullpos_get_global_dead_pos_count(void);
-void kar_grnullpos_get_global_dead_pos(s32 index, Vec* pos, Vec* dir, Vec* scale);
-void kar_grcommon__800ceeb8(Vec* pos, s32 pos_id, GlobalDeadEntry* out);
-f32 kar_grcommon__near_800d066c(s32 a, s32 b, f32 c, f32 d);
 
 void kar_grglobaldead_init(Ground* ground)
 {
