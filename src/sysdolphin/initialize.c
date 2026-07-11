@@ -3,6 +3,7 @@
 #include <dolphin/dvd.h>
 #include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
+#include <kar/lb/lbheap.h>
 #include <sysdolphin/class.h>
 #include <sysdolphin/aobj_alloc.h>
 #include <sysdolphin/displayfunc_alloc.h>
@@ -26,8 +27,6 @@
 
 #define OSRoundDown32B(x) (((u32) (x)) & ~(32 - 1))
 #define OSRoundUp32B(x)   (((u32) (x) + 32 - 1) & ~(32 - 1))
-
-extern s32 kar_diag__803d3884(OSHeapHandle heap);
 
 extern volatile OSHeapHandle HSD_CurrentHeap;
 extern GXRenderModeObj* HSD_RenderMode;

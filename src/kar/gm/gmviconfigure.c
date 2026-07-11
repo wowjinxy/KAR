@@ -111,7 +111,6 @@ void kar_lbkdcoll__near_80072aa0(void);
 void kar_lbfile_wait_for_group6_loads(void);
 void kar_pltrick__near_8023295c(void);
 void fn_801391F0(void);
-extern void shadowRendering(void);
 
 void kar_gmclearchecker__near_8004f5b0(void) { shadowRendering(); }
 

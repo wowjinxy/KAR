@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/lb/lbheap.h>
 #include <sysdolphin/memory.h>
 
 typedef struct LbHeapConfig LbHeapConfig;
@@ -83,7 +84,6 @@ void OSRestoreInterrupts(u32 level);
 s32 HSD_GetHeap(void);
 void HSD_SetHeap(s32 heap);
 void HSD_GetNextArena(void** start, void** end);
-s32 kar_diag__803d3884(s32 heap);
 void* kar_lbmemory_free_to_heap(void* heap, void* ptr);
 s32 kar_lbmemory__near_80057924(void* heap);
 void* kar_lbmemory__near_80057d14(void* heap, u32 size, void* ptr);

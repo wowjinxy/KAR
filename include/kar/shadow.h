@@ -11,5 +11,6 @@
 
 s32 kar_shadow__near_8007b650(void);
 u8 kar_shadow__near_8007b990(void);
+void shadowRendering(void);
 
 #endif
