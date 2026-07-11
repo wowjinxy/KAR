@@ -71,7 +71,6 @@ typedef struct _GXTexObj {
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height,
                          u32 format, u32 wrap_s, u32 wrap_t, u8 mipmap);
 extern void GXLoadTexObj(GXTexObj* obj, u32 id);
-extern void GXSetZMode(u32 enable, u32 func, u32 update);
 extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 near, f32 far);
 extern void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
@@ -80,14 +79,10 @@ extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 pt_texmtx);
-extern void GXSetNumChans(u8 n);
 extern void GXClearVtxDesc(void);
 extern void GXSetNumTexGens(u32 n);
 extern void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
 extern void GXSetVtxDesc(u32 attr, u32 type);
-extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
-extern void GXSetColorUpdate(u32 enable);
-extern void GXSetAlphaUpdate(u32 enable);
 extern void GXSetTevColorIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
 extern void GXSetTevColorOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
 extern void GXSetTevAlphaIn(u8 stage, u32 a, u32 b, u32 c, u32 d);

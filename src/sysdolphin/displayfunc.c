@@ -53,12 +53,6 @@ extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx, u
                               u32 post_mtx);
 extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
-extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
-extern void GXSetZCompLoc(u32 before_tex);
-extern void GXSetZMode(u32 enable, u32 func, u32 update_enable);
-extern void GXSetColorUpdate(u32 update_enable);
-extern void GXSetAlphaUpdate(u32 update_enable);
-extern void GXSetNumChans(u8 n);
 extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);
 extern void GXClearVtxDesc(void);

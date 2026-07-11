@@ -89,15 +89,9 @@ extern void HSD_MulColor(GXColor* a, GXColor* b, GXColor* out);
 extern void memcpy(void* dst, const void* src, u32 size);
 
 extern void GXSetLineWidth(u8 width, u32 tex_offsets);
-extern void GXSetZMode(u32 enable, u32 func, u32 update);
 extern void GXSetPointSize(u8 size, u32 tex_offsets);
-extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
-extern void GXSetColorUpdate(u32 enable);
-extern void GXSetAlphaUpdate(u32 enable);
 extern void GXSetDstAlpha(u32 enable, u8 value);
-extern void GXSetZCompLoc(u32 before_tex);
 extern void GXSetDither(u32 enable);
-extern void GXSetNumChans(u8 n);
 extern void GXSetChanCtrl(u32 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);
 extern void GXSetChanAmbColor(u32 chan, GXColor color);
