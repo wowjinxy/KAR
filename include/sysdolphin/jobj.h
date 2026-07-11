@@ -145,9 +145,6 @@ void HSD_JObjSetFlags(HSD_JObj* jobj, u32 flags);
 void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
 void HSD_JObjSetFlagsAll(HSD_JObj* jobj, u32 flags);
 void HSD_JObjClearFlagsAll(HSD_JObj* jobj, u32 flags);
-void HSD_JObjAddAnimAll(HSD_JObj* jobj, HSD_AnimJoint* animjoint,
-                        struct _HSD_MatAnimJoint* matanim,
-                        struct _HSD_ShapeAnimDObj* shapeanim);
 void HSD_JObjCheckDepend(HSD_JObj* jobj);
 void HSD_JObjPrependRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);
 void HSD_JObjDeleteRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);

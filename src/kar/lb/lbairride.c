@@ -45,6 +45,10 @@ extern s32 lbl_80497CE8[8];
 extern s32 lbl_80497D08[8];
 extern HSD_Joint lbl_80497D28;
 
+extern void HSD_JObjAddAnimAll(HSD_JObj* jobj, HSD_AnimJoint* animjoint,
+                               HSD_MatAnimJoint* matanim,
+                               HSD_ShapeAnimDObj* shapeanim);
+
 HSD_Joint* kar_lbairride__near_80055da0(void);
 
 #define HSD_LObjSetNextInline(lobj, next_lobj)                                \
