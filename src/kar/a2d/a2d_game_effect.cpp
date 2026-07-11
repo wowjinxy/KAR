@@ -311,7 +311,7 @@ void psInterpretParticles(s32);
 void kar_generator__near_804324ec(s32);
 void kar_generator__near_80433154(s32);
 void kar_a2d_wipeeffect__near_8037e48c(void *);
-void kar_a2d_effect_slideblur__near_803805b4(void *);
+void EffectSlideBlurMgr_UpdateAllObjects(void *);
 }
 
 extern "C" s32 lbl_805DDB00;
@@ -745,7 +745,7 @@ extern "C" void GameEffect_UpdateAllEffects(GameEffect *arg0) {
     }
 
     kar_a2d_wipeeffect__near_8037e48c(arg0->unk60);
-    kar_a2d_effect_slideblur__near_803805b4(arg0->unk68);
+    EffectSlideBlurMgr_UpdateAllObjects(arg0->unk68);
 }
 
 extern "C" void kar_a2d_game_effect__near_8037ad0c(void *arg0) {
