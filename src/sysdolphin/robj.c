@@ -927,8 +927,6 @@ void HSD_RObjSetConstraintObj(HSD_RObj* robj, void* o)
     }
 }
 
-extern BOOL _HSD_MemCheckOwn(void* ptr);
-
 void _HSD_RObjForgetMemory(void)
 {
     if (_HSD_MemCheckOwn(RObjArgBuffer)) {

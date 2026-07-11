@@ -1,10 +1,9 @@
 #include <global.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/random.h>
 
 extern u32 HSD_RandDefaultSeed;
 extern u32* HSD_RandSeedPtr;
-
-extern s32 _HSD_MemCheckOwn(void* ptr);
 
 s32 HSD_Rand(void)
 {

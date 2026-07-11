@@ -40,7 +40,6 @@ extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
 extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 
-extern BOOL _HSD_MemCheckOwn(void* ptr);
 extern void HSD_PerfCountEnvelopeBlending(s32 n);
 
 extern HSD_PObjInfo* PObjCurrentInfo;

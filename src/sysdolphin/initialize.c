@@ -3,6 +3,7 @@
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/os.h>
 #include <sysdolphin/initialize.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/video.h>
 
@@ -10,14 +11,6 @@
 
 #define OSRoundDown32B(x) (((u32) (x)) & ~(32 - 1))
 #define OSRoundUp32B(x)   (((u32) (x) + 32 - 1) & ~(32 - 1))
-
-typedef struct _HSD_MemCallbacks {
-    void* (*alloc)(u32 size, u32 align, u32 flags);
-    void (*free)(void* ptr);
-    void (*clear)(void);
-    u32 (*get_remain)(void);
-    s32 (*check_own)(void* ptr);
-} HSD_MemCallbacks;
 
 extern void DVDInit(void);
 extern void* GXInit(void* fifo, u32 size);
@@ -36,9 +29,6 @@ extern s32 kar_diag__803d3884(OSHeapHandle heap);
 
 extern void HSD_Panic(char* file, s32 line, char* msg);
 extern void hsdForgetClassLibrary(char* name);
-extern void _HSD_MemSetCallbacks(HSD_MemCallbacks* callbacks, u32 size);
-extern void _HSD_MemClear(void);
-extern u32 _HSD_MemGetRemain(void);
 
 extern void GXInitLightPos(GXLightObj*, f32, f32, f32);
 extern void GXInitLightDir(GXLightObj*, f32, f32, f32);

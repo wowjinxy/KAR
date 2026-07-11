@@ -1,18 +1,11 @@
 #include <dolphin/types.h>
 
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/memory.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/shadow.h>
 #include <sysdolphin/tobj.h>
-
-typedef struct _HSD_MemCallbacks {
-    void* (*alloc)(u32 size, u32 align, u32 flags);
-    void (*free)(void* ptr);
-    void (*clear)(void);
-    u32 (*get_remain)(void);
-    s32 (*check_own)(void* ptr);
-} HSD_MemCallbacks;
 
 typedef struct _HSD_MemCallbackData {
     HSD_MemCallbacks callbacks;
