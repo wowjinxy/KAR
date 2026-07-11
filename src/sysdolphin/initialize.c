@@ -2,9 +2,11 @@
 
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/os.h>
+#include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/objalloc.h>
+#include <sysdolphin/random.h>
 #include <sysdolphin/video.h>
 
 #include <stdarg.h>
@@ -14,7 +16,6 @@
 
 extern void DVDInit(void);
 extern void* GXInit(void* fifo, u32 size);
-extern void HSD_IDSetup(void);
 
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
@@ -57,14 +58,10 @@ extern const u32 HSD_DefaultClearColor[2];
 
 extern void _HSD_AObjForgetMemory(void);
 extern void _HSD_DispForgetMemory(void);
-extern void _HSD_IDForgetMemory(void);
-extern void _HSD_ObjAllocForgetMemory(void);
-extern void _HSD_RandForgetMemory(void);
 extern void _HSD_RObjForgetMemory(void);
 
 extern HSD_ObjAllocData* HSD_AObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_FObjGetAllocData(void); /* HSD_FObjGetAllocData */
-extern HSD_ObjAllocData* HSD_IDGetAllocData(void);
 extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_DListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_VecGetAllocData(void);
@@ -79,7 +76,6 @@ extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
 extern void HSD_ListInitAllocData(void);
 extern void HSD_AObjInitAllocData(void);
 extern void HSD_FObjInitAllocData(void);
-extern void HSD_IDInitAllocData(void);
 extern void HSD_VecInitAllocData(void);
 extern void HSD_MtxInitAllocData(void);
 extern void HSD_RObjInitAllocData(void);
