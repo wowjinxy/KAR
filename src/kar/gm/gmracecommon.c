@@ -110,7 +110,6 @@ s32 kar_diag__8000acb0(void);
 s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
 f32 kar_gmracenormal__8000a370(s32 arg0);
-s32 kar_gmracenormal__8000ae50(void);
 s32 kar_gmracenormal__8000af5c(void);
 s32 kar_gmracenormal__8000af94(void);
 s32 kar_gmracenormal__8003d5f0(void);

@@ -44,7 +44,6 @@ void kar_lbaudio__near_80061734(void);
 void kar_lbaudio__near_8006176c(s32 arg0);
 void kar_lbkdcoll__near_800726f0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
-s32 kar_gmracenormal__8000ae50(void);
 s32 kar_gmracenormal__800092fc(void);
 s32 kar_vcgenerator__8000af38(void);
 void fn_80018A04(void);
