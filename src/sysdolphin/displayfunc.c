@@ -9,6 +9,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/float_epsilon.h>
+#include <sysdolphin/identity_mtx.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/pobj.h>
@@ -57,7 +58,6 @@ extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 lig
 extern u8 JObjSPtclColor[4];
 extern HSD_ObjAllocData HSD_ZListAllocData;
 extern GXRenderModeObj HSD_DefaultRenderModeObj;
-extern Mtx HSD_IdentityMtx;
 
 void _HSD_ZListClear(void);
 
