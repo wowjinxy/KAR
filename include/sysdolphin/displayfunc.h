@@ -17,5 +17,8 @@ void HSD_JObjDispSub(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask,
                      u32 rendermode);
 void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx);
 MtxPtr _HSD_mkEnvelopeModelNodeMtx(HSD_JObj* jobj, Mtx dst);
+void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top, f32 bottom,
+                                              s32 alpha_update, f32 left,
+                                              s32 tex_enable, f32 right, f32 z);
 
 #endif

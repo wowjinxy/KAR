@@ -7,6 +7,7 @@
 #include <kar/math.h>
 #include <sysdolphin/class_new.h>
 #include <sysdolphin/constants.h>
+#include <sysdolphin/displayfunc.h>
 #include <sysdolphin/fobj_alloc.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
@@ -31,12 +32,6 @@ char CObjAssertZero[] = "0";
 extern s32 HSD_GetCurrentRenderPass(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top,
-                                                     f32 bottom,
-                                                     s32 alpha_update,
-                                                     f32 left,
-                                                     s32 tex_enable,
-                                                     f32 right, f32 z);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height,
                                 f32 near_z, f32 far_z, u32 field);
 extern u32 VIGetNextField(void);

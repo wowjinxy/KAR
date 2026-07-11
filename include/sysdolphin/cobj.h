@@ -201,6 +201,7 @@ void HSD_CObjSetFrustum(HSD_CObj* cobj, f32 top, f32 bottom, f32 left, f32 right
 void HSD_CObjSetOrtho(HSD_CObj* cobj, f32 top, f32 bottom, f32 left, f32 right);
 void HSD_CObjSetFlags(HSD_CObj* cobj, u32 flags);
 void HSD_CObjClearFlags(HSD_CObj* cobj, u32 flags);
+BOOL HSD_CObjSetCurrent(HSD_CObj* cobj);
 void HSD_CObjEndCurrent(void);
 HSD_CObj* HSD_CObjGetCurrent(void);
 HSD_CObj* HSD_CObjAlloc(void);

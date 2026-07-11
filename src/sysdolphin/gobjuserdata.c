@@ -17,12 +17,6 @@ typedef struct _GObjDefaultInitData {
     u32 unused;
 } GObjDefaultInitData;
 
-extern void HSD_LObjSetCurrentAll(void* obj);
-extern void HSD_LObjRemoveAll(void* obj);
-extern void HSD_JObjDispAll(HSD_JObj* jobj, void* arg1, u32 flags, u32 rendermode);
-extern s32 HSD_CObjSetCurrent(void* cobj);
-extern void RecalcParentTrspBits(void* obj);
-
 char GObjUserDataSourceFile[0x10] = "gobjuserdata.c";
 char GObjUserDataKindNoneAssert[0x30] = "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE";
 char GObjUserDataRemoveFuncAssert[0x20] = "gobj->user_data_remove_func";

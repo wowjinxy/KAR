@@ -160,5 +160,7 @@ s32 HSD_LObjGetLightMaskSpecular(void);
 s32 HSD_LObjGetNbActive(void);
 HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* desc);
 void HSD_LObjAddAnimAll(HSD_LObj* lobj, HSD_LightAnim* anim);
+void HSD_LObjSetCurrentAll(HSD_LObj* lobj);
+void HSD_LObjRemoveAll(HSD_LObj* lobj);
 
 #endif
