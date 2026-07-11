@@ -10,6 +10,7 @@
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
+#include <sysdolphin/perf.h>
 #include <sysdolphin/tev.h>
 
 extern HSD_ClassInfo hsdClass;
@@ -28,8 +29,6 @@ extern void GXCallDisplayList(void* list, u32 nbytes);
 
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
 extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
-
-extern void HSD_PerfCountEnvelopeBlending(s32 n);
 
 extern HSD_PObjInfo* PObjCurrentInfo;
 extern f32 (*PObjVertexBuffer)[3];
