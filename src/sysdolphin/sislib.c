@@ -49,7 +49,6 @@
 #define GX_CA_TEXA 4
 #define GX_CA_A0 1
 
-extern void OSReport(const char*, ...);
 extern void OSPanic(const char*, s32, const char*, ...);
 
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,

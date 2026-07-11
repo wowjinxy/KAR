@@ -19,7 +19,6 @@ extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_in
 extern struct _HSD_ClassInfo* hsdSearchClassInfo(char* class_name);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 
-extern void OSReport(const char*, ...);
 extern void memset(void*, int, int);
 extern void memcpy(void*, const void*, int);
 

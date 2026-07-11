@@ -126,7 +126,6 @@ extern void HSD_Panic(char* file, s32 line, char* msg);
 extern void* hsdAllocMemPiece(u32 size);
 extern void memcpy(void* dst, const void* src, u32 size);
 extern void memset(void* ptr, s32 value, u32 size);
-extern void OSReport(const char* fmt, ...);
 
 extern void _HSD_NeedCacheInvalidate(u32 flags);
 

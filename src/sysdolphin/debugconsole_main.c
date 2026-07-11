@@ -30,7 +30,6 @@ extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 
-extern void OSReport(const char*, ...);
 extern void OSPanic(const char*, s32, const char*, ...);
 
 extern void VIConfigure(GXRenderModeObj* rmode);

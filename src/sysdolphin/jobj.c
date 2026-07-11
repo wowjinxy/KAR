@@ -60,7 +60,6 @@ extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_in
                              char* library_name, char* class_name, s32 info_size,
                              s32 class_size);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
-extern void OSReport(const char*, ...);
 extern void memcpy(void*, const void*, u32);
 
 extern BOOL HSD_JObjMtxIsDirty(HSD_JObj* jobj);
