@@ -1,3 +1,4 @@
+#include <dolphin/mtx/mtx.h>
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/robj.h>

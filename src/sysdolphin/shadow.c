@@ -1,5 +1,6 @@
 #include <sysdolphin/shadow.h>
 
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/mobj.h>
@@ -287,8 +288,6 @@ void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
     }
 }
 
-extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 void C_MTXLightPerspective(Mtx, f32, f32, f32, f32, f32, f32);
 void C_MTXLightFrustum(Mtx, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 void C_MTXLightOrtho(Mtx, f32, f32, f32, f32, f32, f32, f32, f32);

@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/mtx.h>
@@ -37,12 +38,6 @@ extern f64 HSDMtxDoubleNegOne; /* -1.0 */
 
 extern f32 HSD_FloatMin[]; /* FLOAT_MIN */
 extern f32 HSD_FloatEpsilon[]; /* FLT_EPSILON */
-
-extern void PSMTXIdentity(Mtx dest); /* PSMTXIdentity */
-extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXScale(Mtx m, f32 xs, f32 ys, f32 zs); /* PSMTXScale */
-extern void PSMTXQuat(Mtx m, Quaternion* q);          /* PSMTXQuat */
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 

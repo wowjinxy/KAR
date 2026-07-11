@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/mtx/mtx.h>
 #include <sysdolphin/pobj.h>
 
 #include <sysdolphin/id.h>
@@ -34,9 +35,6 @@ extern void GXCallDisplayList(void* list, u32 nbytes);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
-
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXCopy(Mtx src, Mtx dst);
 
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
 extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);

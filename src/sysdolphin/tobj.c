@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/tobj.h>
 
@@ -137,9 +138,6 @@ extern HSD_CObj* HSD_CObjGetCurrent(void);
 extern MtxPtr HSD_CObjGetInvViewingMtxPtrDirect(HSD_CObj* cobj);
 
 extern void kar_grcoll__803d1978(Mtx m, f32 x, f32 y, f32 z); /* PSMTXTrans */
-extern void PSMTXScale(Mtx m, f32 xs, f32 ys, f32 zs);       /* PSMTXScale */
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
 
 extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 extern void GXSetTexCoordGen2(u32 dst_coord, u32 func, u32 src_param, u32 mtx,

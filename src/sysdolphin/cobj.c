@@ -1,6 +1,7 @@
 #include <sysdolphin/cobj.h>
 
 #include <dolphin/gx/gxtypes.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/objalloc.h>
@@ -62,17 +63,13 @@ extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height,
                                 f32 near_z, f32 far_z, u32 field);
 extern void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
 extern u32 VIGetNextField(void);
-extern void C_MTXLookAt(Mtx mtx, Vec* eye, Vec* up, Vec* interest);
 extern void C_MTXPerspective(Mtx mtx, f32 fov, f32 aspect, f32 near,
                              f32 far);
 extern void C_MTXFrustum(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                          f32 near, f32 far);
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                        f32 near, f32 far);
-extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
-extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
-extern void PSMTXInverse(Mtx src, Mtx dst);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 

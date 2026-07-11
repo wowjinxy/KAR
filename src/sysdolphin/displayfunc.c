@@ -1,6 +1,7 @@
 #include <global.h>
 
 #include <dolphin/gx/gxtypes.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
@@ -36,16 +37,12 @@ extern void HSD_JObjSetCurrent(HSD_JObj* jobj);
 extern HSD_CObj* HSD_CObjGetCurrent(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
-extern void PSMTXInverse(MtxPtr src, Mtx dst);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void HSD_ClearVtxDesc(void);
 extern void HSD_StateInitTev(void);
 extern void HSD_SetupRenderMode(u32 rendermode);
-extern void PSMTXScale(Mtx m, f32 xs, f32 ys, f32 zs);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
 extern f32 HSD_FloatEpsilon[];
 extern Vec HSD_UnitZVec;

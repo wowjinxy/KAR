@@ -1,4 +1,5 @@
 #include <sysdolphin/robj.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/id.h>
@@ -27,7 +28,6 @@ extern void memset(void*, int, int);
 extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info);
 
-extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void HSD_JObjMakeMatrix(HSD_JObj* jobj);
 
