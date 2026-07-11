@@ -1,4 +1,5 @@
 #include "dolphin/db.h"
+#include "dolphin/os.h"
 #include "dolphin/ppcarch.h"
 #include "functions.h"
 
@@ -11,7 +12,6 @@ typedef struct DBInterface
 u32 DBVerbose;
 DBInterface* __DBInterface;
 
-extern void OSDumpContext(void*);
 char DBExceptionDestinationString[] = "DBExceptionDestination\n";
 
 asm void __DBExceptionDestinationAux(void);
