@@ -146,7 +146,6 @@ extern char kar_gryakurecoveryzone_assert_kind_recoveryzone[];
 extern char kar_src_ground_h_804a6170[];
 extern char GRRECOVERY_GROUND_ASSERT_MSG;
 
-HSD_GObj* kar_gryaku_create_yaku_from_main_kind(s32 kind);
 void kar_gryakurecoveryzone_enter_enabled_state_sequence(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_init_stage_linked_recoveryzone_yaku(HSD_GObj* gobj,
                                                                 HSD_GObj* ground_gobj);
