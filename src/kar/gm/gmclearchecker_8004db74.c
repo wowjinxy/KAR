@@ -7,6 +7,7 @@
 #include "kar/gm/gmmain.h"
 #include "kar/gm/gmracenormal.h"
 #include "kar/gr/greventgenerator.h"
+#include "kar/lb/lbarealightzone.h"
 #include "kar/lb/lbaudio.h"
 #include "kar/lb/lbvector.h"
 #include "kar/pl/plclearcheckerlib.h"
@@ -68,7 +69,6 @@ extern void fn_80282004(void);
 extern void fn_80281F10(void);
 extern void fn_80281ECC(int);
 extern void kar_pltrick__near_802339e4(void);
-extern void kar_lbarealightzone__near_8007adb8(void);
 extern void fn_80281660(void);
 extern void fn_80281AD4(void);
 extern void fn_80281BB4(void);

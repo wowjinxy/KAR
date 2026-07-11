@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/lb/lbarealightzone.h>
 #include <kar/lb/lbhvqm.h>
 #include <sysdolphin/objalloc.h>
 
