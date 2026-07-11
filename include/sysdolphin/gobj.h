@@ -3,6 +3,7 @@
 
 #include <dolphin/types.h>
 
+#include <sysdolphin/gobj_kinds.h>
 #include <sysdolphin/objalloc.h>
 
 #define HSD_GOBJ_GXLINK_NONE 0xFF
@@ -82,11 +83,6 @@ extern HSD_GObjLibInitDataType hsdGObj_p_link_max;
 extern HSD_ObjAllocData hsdGObj_alloc_data;
 extern HSD_ObjAllocData hsdGObjProc_alloc_data;
 extern HSD_GObjDeferredActionFlags hsdGObj_deferred_action_flags;
-
-extern u8 hsdGObj_default_object_kind;
-extern u8 hsdGObj_lobj_kind;
-extern u8 hsdGObj_jobj_kind;
-extern u8 hsdGObj_default_object_alt_kind;
 
 extern HSD_GObjProc** hsdGObjProc_link_heads;
 extern HSD_GObjProc** hsdGObjProc_priority_heads;

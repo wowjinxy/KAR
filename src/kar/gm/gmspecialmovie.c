@@ -7,6 +7,7 @@
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
+#include <sysdolphin/gobj_kinds.h>
 
 typedef struct GObj GObj;
 typedef struct MovieWork MovieWork;
@@ -80,7 +81,6 @@ const f32 lbl_805DE904 = 640.0f;
 const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
 extern u8 HSD_PadCopyStatus[];
-extern u8 hsdGObj_default_object_kind;
 void* kar_gmmain__near_80006c14(void);
 void kar_lbarchive__near_80059cfc(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));
