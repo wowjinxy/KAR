@@ -5,6 +5,7 @@
 
 #include <sysdolphin/objalloc.h>
 
+#include <sysdolphin/displayfunc_alloc.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/zlist.h>
 

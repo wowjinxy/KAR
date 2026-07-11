@@ -3,6 +3,7 @@
 #include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
 #include <sysdolphin/aobj_alloc.h>
+#include <sysdolphin/displayfunc_alloc.h>
 #include <sysdolphin/fobj.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
@@ -62,8 +63,6 @@ extern HSD_VIStatus CObjRenderMode;
 extern const u32 HSD_DefaultClearColor[2];
 
 extern void _HSD_AObjForgetMemory(void);
-extern void _HSD_DispForgetMemory(void);
-extern void _HSD_RObjForgetMemory(void);
 
 char InitializeSourceFile[] = "initialize.c";
 char ObjAllocHeaderSourceFile[] = "objalloc.h";
