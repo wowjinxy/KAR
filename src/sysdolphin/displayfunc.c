@@ -8,6 +8,7 @@
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/float_epsilon.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/pobj.h>
@@ -41,7 +42,6 @@ extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
-extern f32 HSD_FloatEpsilon[];
 extern Vec HSD_UnitZVec;
 
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 format,

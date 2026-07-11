@@ -4,6 +4,7 @@
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/constants.h>
+#include <sysdolphin/float_epsilon.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
@@ -89,7 +90,6 @@ HSD_Chan channel = {
 };
 
 extern Mtx HSD_IdentityMtx;
-extern f32 HSD_FloatEpsilon[];
 
 extern struct {
     u8 x0_pad[0xC];

@@ -3,6 +3,7 @@
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/constants.h>
+#include <sysdolphin/float_epsilon.h>
 #include <sysdolphin/mtx.h>
 
 extern HSD_ObjAllocData HSD_VecAllocData; /* Vec alloc data */
@@ -36,8 +37,6 @@ extern f64 HSDMtxDoublePiOver4; /* PI/4 */
 extern f32 HSDMtxFloatEps; /* EPSILON (f32) */
 extern f64 HSDMtxDoubleZero; /* 0.0 */
 extern f64 HSDMtxDoubleNegOne; /* -1.0 */
-
-extern f32 HSD_FloatEpsilon[]; /* FLT_EPSILON */
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 
