@@ -5,6 +5,7 @@
 #include <kar/math.h>
 #include <sysdolphin/pobj.h>
 
+#include <sysdolphin/class_alloc.h>
 #include <sysdolphin/class_new.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/gobjproc.h>
@@ -16,7 +17,6 @@
 
 extern HSD_ClassInfo hsdClass;
 
-extern void* hsdAllocMemPiece(s32 size);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 
 extern void memset(void*, int, int);
