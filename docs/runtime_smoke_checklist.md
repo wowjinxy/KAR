@@ -184,6 +184,52 @@ runtime pass: title/menu progression, race start, input, and audio remain
 pending until a manual or automated interaction path drives past the first
 prompt.
 
+## Interactive Race Probe
+
+On July 11, 2026 a temporary PowerShell interaction probe under
+`build/runtime_smoke/run_interaction_probe.ps1` drove the USA exact and shifted
+extracted-disc-context harnesses with keyboard scancodes through the configured
+GameCube pad mapping (`A=X`, `B=Z`, `Start=RETURN`, main stick on arrows).
+Plain virtual-key input and too-early prompts were insufficient; waiting for the
+first prompt and sending scancode key events proved that input reached Dolphin.
+
+`GKYE01` normal and shifted both followed this path:
+
+1. Create a new save file in the isolated Dolphin user folder.
+2. Reach the title screen.
+3. Enter the main mode menu.
+4. Enter Air Ride `Start Game`.
+5. Join player entry as P1 with Warpstar.
+6. Start a race and remain in coherent in-race rendering for roughly 18 seconds.
+
+Normal artifacts:
+
+- `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1.result.txt`
+- `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1-04-A_title.png`
+- `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1-05-A_menu.png`
+- `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1-14-Start_ready.png`
+- `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1-15-A_race_start.png`
+
+Shifted artifacts:
+
+- `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1.result.txt`
+- `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1-04-A_title.png`
+- `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1-05-A_menu.png`
+- `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1-14-Start_ready.png`
+- `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1-15-A_race_start.png`
+
+Audio evidence came from Dolphin's DSP dump. The DTK dump remained silent in
+both runs, but the DSP dump was non-silent:
+
+- Normal DSP WAV: `rms = 3166`, `peak = 32768`.
+- Shifted DSP WAV: `rms = 3220`, `peak = 32768`.
+
+This proves title/menu progression, race start, input delivery, non-silent DSP
+audio, and an 18-second gameplay render sample for `GKYE01` normal and shifted.
+It does not yet satisfy the 60-second gameplay render step. `GKYJ01` and
+`GKYP01` still need the same interaction path, with PAL's video-mode prompt
+handled explicitly before the save/title flow.
+
 ## Smoke Steps
 
 Run these checks for each version and for each layout being tested:
@@ -200,10 +246,10 @@ Run these checks for each version and for each layout being tested:
 
 | Version | Layout | DOL path | Boot | Title/menu | Race start | Input | Audio | Render | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GKYE01` | normal | `build/runtime_smoke/disc_layout_exactname/GKYE01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYE01-normal-fixedlayout-attached.result.txt` and `*-render.png`. |
+| `GKYE01` | normal | `build/runtime_smoke/disc_layout_exactname/GKYE01/sys/main.dol` | D3D race OK | title/menu OK | race OK | scancode GCPad OK | DSP non-silent | gameplay 18s OK | No warning; see `build/runtime_smoke/window_capture/GKYE01-normal-raceprobe1.result.txt`, final capture `GKYE01-normal-raceprobe1-15-A_race_start.png`, DSP `rms=3166`, `peak=32768`. |
 | `GKYJ01` | normal | `build/runtime_smoke/disc_layout_exactname/GKYJ01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYJ01-normal-fixedlayout-attached.result.txt` and `*-render.png`. |
 | `GKYP01` | normal | `build/runtime_smoke/disc_layout_exactname/GKYP01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYP01-normal-fixedlayout-attached.result.txt` and `*-render.png`. |
-| `GKYE01` | shifted | `build/runtime_smoke/disc_layout_shifted/GKYE01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYE01-shifted-fixedlayout.result.txt` and `*-render.png`. |
+| `GKYE01` | shifted | `build/runtime_smoke/disc_layout_shifted/GKYE01/sys/main.dol` | D3D race OK | title/menu OK | race OK | scancode GCPad OK | DSP non-silent | gameplay 18s OK | No warning; see `build/runtime_smoke/window_capture/GKYE01-shifted-raceprobe1.result.txt`, final capture `GKYE01-shifted-raceprobe1-15-A_race_start.png`, DSP `rms=3220`, `peak=32768`. |
 | `GKYJ01` | shifted | `build/runtime_smoke/disc_layout_shifted/GKYJ01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYJ01-shifted-fixedlayout.result.txt` and `*-render.png`. |
 | `GKYP01` | shifted | `build/runtime_smoke/disc_layout_shifted/GKYP01/sys/main.dol` | D3D prompt OK | pending after first prompt | pending | pending | pending | prompt nonblank | No warning; see `build/runtime_smoke/window_capture/GKYP01-shifted-fixedlayout.result.txt` and `*-render.png`. |
 
