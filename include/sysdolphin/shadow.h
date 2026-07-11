@@ -34,6 +34,7 @@ typedef struct _HSD_ViewingRect {
 } HSD_ViewingRect;
 
 void HSD_ShadowInitAllocData(void);
+HSD_ObjAllocData* HSD_ShadowGetAllocData(void);
 HSD_Shadow* HSD_ShadowAlloc(void);
 void HSD_ShadowRemove(HSD_Shadow* shadow);
 void HSD_ShadowInit(HSD_Shadow* shadow);

@@ -9,6 +9,7 @@
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/random.h>
+#include <sysdolphin/shadow.h>
 #include <sysdolphin/video.h>
 
 #include <stdarg.h>
@@ -65,7 +66,6 @@ extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_DListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
-extern HSD_ObjAllocData* HSD_ShadowGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RenderGetAllocData(void);
 extern HSD_ObjAllocData* HSD_ChanGetAllocData(void);
 extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
@@ -74,7 +74,6 @@ extern void HSD_ListInitAllocData(void);
 extern void HSD_AObjInitAllocData(void);
 extern void HSD_RObjInitAllocData(void);
 extern void HSD_RenderInitAllocData(void);
-extern void HSD_ShadowInitAllocData(void);
 extern void HSD_ZListInitAllocData(void);
 
 char InitializeSourceFile[] = "initialize.c";
