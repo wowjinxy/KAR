@@ -944,8 +944,6 @@ void _HSD_RObjForgetMemory(void)
     }
 }
 
-extern HSD_ObjAllocData hsdIDAllocData;
-
 HSD_ObjAllocData* HSD_IDGetAllocData(void)
 {
     return &hsdIDAllocData;

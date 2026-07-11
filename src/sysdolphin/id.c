@@ -2,7 +2,6 @@
 
 #include <dolphin/types.h>
 
-extern HSD_ObjAllocData hsdIDAllocData;
 extern HSD_IDTable HSD_IDDefaultTable;
 
 extern char IDSourceFile[5];  // "id.c"
