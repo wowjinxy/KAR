@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmmain.h>
 #include <kar/lb/lbhvqm.h>
 
 typedef struct GObj GObj;
@@ -76,7 +77,6 @@ const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 extern u8 HSD_PadCopyStatus[];
 extern u8 hsdGObj_default_object_kind;
 void* kar_gmmain__near_80006c14(void);
-void kar_gmmain__near_800064f0(void);
 void kar_gmglobal__near_800088c8(s32 arg0);
 void kar_gmlanmenu__800082a0(s32 arg0);
 void kar_gmlanmenu__80008220(void);
