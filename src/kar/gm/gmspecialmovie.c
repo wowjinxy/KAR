@@ -4,6 +4,7 @@
 #include <kar/gm/gmmain.h>
 #include <kar/gm/gmmovieassets.h>
 #include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
 
 typedef struct GObj GObj;
@@ -98,9 +99,7 @@ void GObj_SetupGXLinkMax(GObj* gobj, void (*callback)(GObj*, GObj*),
 void kar_lbkdcoll__near_80076f8c(s32 arg0, s32 arg1, s32 arg2, s32 arg3,
                                  s32 arg4, f32 arg5, f32 arg6, f32 arg7,
                                  f32 arg8);
-void kar_lbaudio__near_80061658(void);
 void kar_lbaudio__near_800616c8(void);
-void kar_lbaudio__near_8005e5d0(void);
 void kar_lbaudio__near_8005e1a8(s32 arg0);
 void kar_lbaudio__near_8005ab84(void);
 void kar_lbaudio__near_8005a440(void);

@@ -8,6 +8,7 @@
 #include <kar/gm/gmmain.h>
 #include <kar/gm/gmmovieassets.h>
 #include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/shadow.h>
 
@@ -38,7 +39,6 @@ void kar_gm_assets__asset_8000fc70(void);
 void kar_lbaudio__near_8005a474(void);
 void kar_lbaudio__near_8005e1a8(s32 arg0);
 void kar_lbaudio__near_80061620(void);
-void kar_lbaudio__near_80061658(void);
 void kar_lbaudio__near_80061734(void);
 void kar_lbaudio__near_8006176c(s32 arg0);
 void kar_lbkdcoll__near_800726f0(s32 arg0);
@@ -90,7 +90,6 @@ void kar_pltrick__near_802322a0(void* arg0, s32 arg1, s32 arg2);
 void kar_pltrick__near_802322b0(void* arg0, s32 arg1, s32 arg2);
 void kar_pltrick__near_802322d8(void* arg0);
 void kar_pltrick__near_80232500(void* arg0);
-void kar_lbaudio__near_8005e5d0(void);
 void kar_lbaudio__near_8005e788(void);
 void kar_mnclearchecker_create_progressive_text_windows(void);
 void fn_80138F44(void);

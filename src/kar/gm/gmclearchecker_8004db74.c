@@ -6,6 +6,7 @@
 #include "kar/gm/gmlanmenu.h"
 #include "kar/gm/gmmain.h"
 #include "kar/gm/gmracenormal.h"
+#include "kar/lb/lbaudio.h"
 #include "kar/shadow.h"
 
 typedef struct {
@@ -21,7 +22,6 @@ extern s32 kar_plclearcheckerlib__near_8022c858(s32 arg0);
 extern f32 fn_80281A0C(void);
 extern s8 fn_8000C228(s8);
 extern u32 kar_plclearcheckerlib__8022fccc(int, int);
-extern void kar_lbaudio__near_8005e5d0(void);
 extern int fn_80282F70(void);
 extern int fn_80281610(void);
 extern int fn_80282F38(void);
