@@ -2,6 +2,7 @@
 
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/math.h>
 #include <sysdolphin/objalloc.h>
 
 #define DegToRad(x) ((x) * 0.017453292F)
@@ -73,7 +74,6 @@ extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXInverse(Mtx src, Mtx dst);
 extern f64 tan(f64 x);
-extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */

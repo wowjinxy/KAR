@@ -1,5 +1,6 @@
 #include <global.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/math.h>
 #include <sysdolphin/jobj.h>
 
 #include <sysdolphin/aobj.h>
@@ -44,7 +45,6 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSMTXInverse(MtxPtr src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 extern void PSMTXIdentity(Mtx mtx);
-extern f64 kar_acos(f64 x);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 

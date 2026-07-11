@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <kar/math.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
@@ -9,7 +10,6 @@ extern f32 sqrtf(f32);
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 tanf(f32);
-extern f64 kar_atan2(f64, f64);
 extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_Randf(void);
 extern void OSPanic(const char*, s32, const char*, ...);
