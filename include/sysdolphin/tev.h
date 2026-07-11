@@ -7,6 +7,7 @@
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/texp.h>
 #include <sysdolphin/tev_state.h>
+#include <sysdolphin/tev_stage.h>
 
 typedef struct _HSD_Chan {
     struct _HSD_Chan* next;
@@ -53,8 +54,6 @@ void HSD_StateSetNumTexGens(void);
 void HSD_StateInitTev(void);
 s32 HSD_StateGetNumTevStages(void);
 void HSD_StateSetNumTevStages(void);
-void HSD_SetupTevStage(HSD_TevDesc* desc);
-void HSD_SetupTevStageAll(HSD_TevDesc* desc);
 s32 HSD_Channel2Num(s32 chan);
 void HSD_SetTevRegAll(void);
 void _HSD_StateInvalidateColorChannel(void);
