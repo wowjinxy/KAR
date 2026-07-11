@@ -1,5 +1,7 @@
 #include "functions.h"
+#include <kar/lb/lbairride.h>
 #include <kar/lb/lbarchive.h>
+#include <kar/lb/lbvector.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
 #include <kar/mn/mnmenu.h>
@@ -9,16 +11,12 @@
 #if defined(VERSION_GKYJ01)
 #define fn_801389D8 fn_80135518
 #define fn_8013909C fn_80135BB8
-#define kar_lbairride__near_80055af0 fn_80055218
-#define kar_lbvector_project_world_to_screen fn_80063BD4
 #define kar_mnlandialogue_project_box0_origin_to_screen fn_80180408
 #define kar_mnlandialogue_project_box0_right_edge_to_screen fn_801804BC
 #define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80180570
 #elif defined(VERSION_GKYP01)
 #define fn_801389D8 fn_8013A5EC
 #define fn_8013909C fn_8013ACB0
-#define kar_lbairride__near_80055af0 fn_80056190
-#define kar_lbvector_project_world_to_screen fn_80064DEC
 #define kar_mnlandialogue_project_box0_origin_to_screen fn_80184A54
 #define kar_mnlandialogue_project_box0_right_edge_to_screen fn_80184B08
 #define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80184BBC
@@ -42,8 +40,6 @@ typedef struct LanNumberPanel {
 
 void fn_801389D8(HSD_JObj* jobj, void* arg1, f32 arg2, f32 arg3);
 void* fn_8013909C(void);
-HSD_JObj* kar_lbairride__near_80055af0(HSD_GObj* gobj, s32 id);
-void kar_lbvector_project_world_to_screen(void* cobj, Vec* world, Vec* screen, s32 arg3);
 
 #define PROJECT_BOX_TO_SCREEN(out, member)                                      \
     do {                                                                        \
