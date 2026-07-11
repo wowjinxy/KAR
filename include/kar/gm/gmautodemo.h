@@ -4,6 +4,7 @@
 #include <dolphin/types.h>
 #include <sysdolphin/forward.h>
 
+void* kar_gmautodemo__near_8000cdbc(void);
 void kar_gmautodemo__near_8000cd10(s32 arg0);
 u64 kar_gmautodemo__near_8000ecf0(s32 arg0);
 u64 kar_gmautodemo__near_8000ed10(s32 arg0);

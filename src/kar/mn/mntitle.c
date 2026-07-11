@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmlanmenu.h>
 #include <kar/lb/lbarchive.h>
 #include <kar/mn/mnmenu.h>
@@ -36,8 +37,6 @@ char kar_mntitle_bg_scene_models_name[] = "ScMenTitleBg_scene_models";
 char kar_mntitle_fg_scene_models_name[] = "ScMenTitleFg_scene_models";
 
 void** fn_80131284(void);
-void fn_80138B10(HSD_JObj* jobj, s32 arg1, void* arg2, f32 arg3, f32 arg4);
-AutodemoContext* kar_gmautodemo__near_8000cdbc(void);
 
 void kar_mntitle_load_bg_fg_scene_models(void)
 {
