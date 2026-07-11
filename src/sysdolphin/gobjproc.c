@@ -1,4 +1,5 @@
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjproc.h>
 
 typedef s32 (*HSD_DebugExceptionCallback)(s32, s32, void*, void*);
 typedef void (*HSD_DebugConsoleCallback)(void*, ...);
@@ -25,7 +26,6 @@ extern HSD_DebugConsoleCallback HSDDebugConsoleCallback;
 extern HSD_DebugUserCallback HSDDebugUserCallback;
 
 void HSD_SaveContext(void* arg0);
-void HSD_Panic(const char* file, s32 line, const char* msg);
 
 char HSDAssertFailedFormat[0x18] = "assertion \"%s\" failed";
 char HSDPanicReportFormat[0x18] = "%s in %s on line %d.\n";

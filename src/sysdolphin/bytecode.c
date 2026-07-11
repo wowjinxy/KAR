@@ -1,5 +1,6 @@
 #include <global.h>
 #include <kar/math.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/random.h>
 
@@ -12,7 +13,6 @@ typedef union {
 extern HSD_SList* HSD_SListPrepend(HSD_SList* list, void* data);
 
 extern void OSReport(const char*, ...);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 extern f64 kar_log(f64 x);
 extern f64 kar_exp(f64 x);

@@ -1,6 +1,7 @@
 #include <sysdolphin/fog.h>
 
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/gobjproc.h>
 
 extern HSD_Fog* FogCurrent;
 
@@ -23,7 +24,6 @@ extern f32 FogNegOne;        // -1.0F
 extern f32 FogFloatOne;      // 1.0F
 extern f32 FogColorScale;    // 255.0F
 
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
                              HSD_ClassInfo* parent_info,

@@ -4,6 +4,7 @@
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/fog.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/list.h>
@@ -32,7 +33,6 @@ extern HSD_SList* AObjCallbackList;
 
 extern f64 kar_fmod(f32 a, f32 b);
 extern void* memset(void* dst, int val, size_t n);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 void HSD_AObjInitAllocData(void)
 {

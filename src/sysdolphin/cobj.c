@@ -4,6 +4,7 @@
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
 
 #define DegToRad(x) ((x) * 0.017453292F)
@@ -19,8 +20,6 @@ extern HSD_ObjAllocData hsdFObj_alloc_data;
 char kar_srcfile_cobj_c[] = "cobj.c";
 char CObjAssertCObj[] = "cobj";
 char CObjAssertZero[] = "0";
-
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 #define ASSERT_COBJ(line)                                                    \
     ((cobj) ? ((void) 0)                                                     \

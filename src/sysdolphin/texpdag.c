@@ -1,4 +1,5 @@
 #include <global.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/texp.h>
 #include <sysdolphin/tobj.h>
 
@@ -23,7 +24,6 @@ extern char TExpAssertTevType[];   /* "HSD_TExpGetType(texp) == HSD_TE_TEV" */
 
 extern void* hsdAllocMemPiece(u32 size);
 extern void hsdFreeMemPiece(void* ptr, s32 size);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern void memset(void* ptr, s32 value, u32 size);
 
 extern u32 HSD_StateAssignTev(void);

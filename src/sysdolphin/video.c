@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/video.h>
 
 #define HSD_ANTIALIAS_OVERLAP 4
@@ -120,8 +121,6 @@ extern void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void HSD_StateSetColorUpdate(u32 enable);
 extern void HSD_StateSetAlphaUpdate(u32 enable);
 extern void HSD_StateSetZMode(u32 enable, s32 func, u32 update);
-
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 static inline s32 HSD_VISearchXFBByStatus(HSD_VIXFBDrawDispStatus status)
 {

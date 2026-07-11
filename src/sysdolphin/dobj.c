@@ -1,4 +1,5 @@
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/gobjproc.h>
 
 extern HSD_ClassInfo hsdClass;
 

@@ -6,6 +6,7 @@
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/gobjproc.h>
 
 #undef MAX_GXLIGHT
 #define MAX_GXLIGHT 9
@@ -35,7 +36,6 @@ void MTXMultVec(Mtx, Vec*, Vec*);
 void* hsdNew(HSD_ClassInfo*);
 void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
 BOOL hsdIsDescendantOf(HSD_ClassInfo*, HSD_ClassInfo*);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 extern HSD_LObjInfo* LObjDefaultClass; /* default_class */
 extern HSD_SList* LObjCurrentLights; /* current_lights */

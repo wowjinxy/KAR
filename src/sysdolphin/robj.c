@@ -2,6 +2,7 @@
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/util.h>
@@ -25,7 +26,6 @@ extern char RObjAssertRPJObj[11];  // "rp->u.jobj"
     ((cond) ? ((void) 0) : __assert(RObjJObjHeaderFile, line, RObjAssertJObj))
 
 extern void memset(void*, int, int);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info);
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);

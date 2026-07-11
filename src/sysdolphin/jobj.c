@@ -7,6 +7,7 @@
 #include <sysdolphin/aobj.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/robj.h>
@@ -59,7 +60,6 @@ extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_in
                              char* library_name, char* class_name, s32 info_size,
                              s32 class_size);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern void OSReport(const char*, ...);
 extern void memcpy(void*, const void*, u32);
 
