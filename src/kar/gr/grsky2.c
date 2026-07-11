@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gr/granim.h>
 #include <sysdolphin/gobj.h>
 
 typedef struct Ground Ground;
@@ -20,7 +21,6 @@ struct GroundIndiviParam {
     void* loopAnimAll;
 };
 
-void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
 void kar_gryakudownforcezone_create_stage_linked_kind17_yaku(Ground* ground, s32 link);
 void kar_gryakucatchzone_create_stage_linked_kind18_yaku(Ground* ground, s32 link);
 void kar_gryakugondola_create_stage_linked_kind46_carrier_yaku(Ground* ground, s32 link);

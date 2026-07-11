@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gr/granim.h>
 #include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
@@ -48,7 +49,6 @@ struct GroundIndiviParam {
     void* bitCounterIdAll;
 };
 
-void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
 void kar_graudio_configure_individual_fgm_tracks(Ground* ground, IndividualFgmAll* indiviFgmAll);
 void kar_graudio_update_individual_fgm_timers(Ground* ground, IndividualFgmAll* indiviFgmAll,
                                               s32* counters, s32 counter_num);
