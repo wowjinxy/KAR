@@ -12,11 +12,6 @@ typedef union {
 
 extern HSD_SList* HSD_SListPrepend(HSD_SList* list, void* data);
 
-extern f64 kar_log(f64 x);
-extern f64 kar_exp(f64 x);
-extern f64 kar_fmod(f64 x, f64 y); /* fmod */
-extern f64 kar_pow(f64 x, f64 y);
-
 f32 kar_math_bytecode_sinf_approx(f32 x);
 f32 kar_math_bytecode_cosf_approx(f32 x);
 
