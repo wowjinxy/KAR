@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/graudio.h>
 #include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
@@ -140,8 +141,6 @@ void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
 s32 kar_graudio_is_active_fgm_slot_playing(void* entry);
 void kar_graudio_configure_fgm_track_mode(s32 mode, void* track_group,
                                           f32 scale, Vec* pos);
-void kar_graudio_play_fgm_entry_id(void* entry, s32 id);
-
 void kar_gryakudownforcezone_play_contact_fgm_at_report(Yaku* yaku,
                                                         CollisionReport* report);
 void kar_gryakudownforcezone_init_stage_linked_kind17_yaku(HSD_GObj* gobj,

@@ -11,5 +11,6 @@ void kar_graudio_configure_individual_fgm_tracks(struct Ground* ground,
 void kar_graudio_update_individual_fgm_timers(struct Ground* ground,
                                               struct IndividualFgmAll* indiviFgmAll,
                                               s32* counters, s32 counter_num);
+void kar_graudio_play_fgm_entry_id(void* entry, s32 id);
 
 #endif

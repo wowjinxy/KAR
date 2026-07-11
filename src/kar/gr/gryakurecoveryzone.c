@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/graudio.h>
 #include <kar/gr/gryaku.h>
 #include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
@@ -167,7 +168,6 @@ u64 kar_gryakueffect_request_by_entry_mode(HSD_GObj* gobj, void* effect_entry,
                                            s32 effect_resource, s32 arg3, s32 arg4,
                                            Vec* pos, s32 arg6);
 void kar_gryakuanim_apply_zone_enabled_state(Yaku* yaku, s32 state);
-void kar_graudio_play_fgm_entry_id(void* entry, s32 id);
 s32 kar_gryakulib_get_yaku_data_checked(HSD_GObj* gobj);
 s32 kar_gryakulib_get_yaku_state_or_none(HSD_GObj* gobj);
 void kar_gryakulib_get_model_root_position(HSD_GObj* gobj, Vec* out);
