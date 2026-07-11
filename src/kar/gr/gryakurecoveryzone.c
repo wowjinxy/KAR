@@ -3,6 +3,7 @@
 #include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/gr/graudio.h>
+#include <kar/gr/grcoll.h>
 #include <kar/gr/gryaku.h>
 #include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
@@ -160,7 +161,6 @@ void kar_gryakurecoveryzone_start_state1_path_motion(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_start_state2_path_motion(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(HSD_GObj* gobj);
-void* kar_grcoll__800d79c0(void* collision_root, void* jobj, s32 arg2);
 void kar_grcoll__near_800d7ad0(void* collision, s32 enabled);
 void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
                                      s32 joint_index, s32 arg4, f32 start, f32 end,
