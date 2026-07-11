@@ -7,6 +7,7 @@
 #include <kar/math.h>
 #include <sysdolphin/class_new.h>
 #include <sysdolphin/constants.h>
+#include <sysdolphin/fobj_alloc.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
 
@@ -17,7 +18,6 @@
 extern GXRenderModeObj CObjRenderMode;
 extern s32 CObjRefWidth;
 extern s32 CObjRefHeight;
-extern HSD_ObjAllocData hsdFObj_alloc_data;
 
 char kar_srcfile_cobj_c[] = "cobj.c";
 char CObjAssertCObj[] = "cobj";
