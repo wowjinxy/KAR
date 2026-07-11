@@ -100,8 +100,6 @@ typedef struct _GXTexObj {
     u8 pad[0x20];
 } GXTexObj;
 
-extern HSD_ClassInfo hsdObj;
-
 char kar_srcfile_tobj_c[] = "tobj.c";
 char TObjAssertTObj[] = "tobj";
 char TObjAssertCObj[] = "cobj";

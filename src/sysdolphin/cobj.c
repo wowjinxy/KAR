@@ -7,7 +7,6 @@
 #define COBJ_MTX_DIRTY 0x40000000
 #define COBJ_INV_DIRTY 0x80000000
 
-extern HSD_ClassInfo hsdObj;
 extern GXRenderModeObj CObjRenderMode;
 extern s32 CObjRefWidth;
 extern s32 CObjRefHeight;

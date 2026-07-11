@@ -7,8 +7,6 @@ void WObjInfoInit(void);
 HSD_WObjInfo hsdWObj = { WObjInfoInit };
 extern HSD_WObjInfo* WObjCurrentInfo;
 
-extern HSD_ClassInfo hsdObj;
-
 extern char WObjSourceFile[7];     // "wobj.c"
 extern char WObjAssertWObj[5];     // "wobj"
 extern char WObjAssertJP[3];       // "jp"

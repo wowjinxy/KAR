@@ -35,7 +35,6 @@ void PSMTXMultVec(Mtx, Vec*, Vec*);
 void MTXMultVec(Mtx, Vec*, Vec*);
 void PSMTXMultVecSR(Mtx, Vec*, Vec*);
 
-extern HSD_ClassInfo hsdObj;
 void* hsdNew(HSD_ClassInfo*);
 void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
 BOOL hsdIsDescendantOf(HSD_ClassInfo*, HSD_ClassInfo*);

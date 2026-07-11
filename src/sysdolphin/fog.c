@@ -2,7 +2,6 @@
 
 #include <sysdolphin/cobj.h>
 
-extern HSD_ClassInfo hsdObj;
 extern HSD_Fog* FogCurrent;
 
 extern char FogSourceFile[6]; // "fog.c"

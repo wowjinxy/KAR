@@ -63,7 +63,6 @@ extern void HSD_VecFree(Vec* vec);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 
-extern HSD_ClassInfo hsdObj;
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
                              char* library_name, char* class_name, s32 info_size,
