@@ -52,11 +52,9 @@
 extern void OSReport(const char*, ...);
 extern void OSPanic(const char*, s32, const char*, ...);
 
-extern HSD_GObj* HSD_GObjGXLink(HSD_GObj* gobj, void (*render_cb)(HSD_GObj*, s32),
-                                u8 gx_link, u8 priority);
-extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj, void (*render_cb)(HSD_GObj*, s32),
+extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
+                                     void (*render_cb)(HSD_GObj*, s32),
                                      u32 priority);
-extern void GObj_SetCamera(HSD_GObj* gobj);
 
 extern HSD_Archive* kar_lbarchive__800596b4(char* path);
 extern void kar_lbarchive__80059798(HSD_Archive* archive);
