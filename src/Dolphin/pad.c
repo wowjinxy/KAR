@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/ostime.h"
 #include "dolphin/pad.h"
 #include "dolphin/si.h"
 
@@ -25,7 +26,6 @@ typedef struct OSContext {
 
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern OSTime OSGetTime(void);
 extern void* memset(void* dst, int val, size_t n);
 
 typedef struct OSResetFunctionInfo OSResetFunctionInfo;

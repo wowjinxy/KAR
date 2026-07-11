@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef u32 OSTick;

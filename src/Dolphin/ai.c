@@ -1,5 +1,6 @@
 #include "dolphin/ai.h"
 #include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef struct OSContext
@@ -12,7 +13,6 @@ typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern OSTime OSGetTime(void);
 
 extern char __AIVersionString[];
 

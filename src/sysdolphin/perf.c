@@ -1,8 +1,8 @@
 #include <global.h>
+#include <dolphin/ostime.h>
 #include <sysdolphin/perf.h>
 
 void memset(void*, int, int);
-extern s64 OSGetTime(void);
 
 extern HSD_PerfStat HSD_PerfLastStat;
 extern HSD_PerfStat HSD_PerfCurrentStat;

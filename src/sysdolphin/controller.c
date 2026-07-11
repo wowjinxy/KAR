@@ -1,5 +1,6 @@
 #include <global.h>
 
+#include <dolphin/ostime.h>
 #include <dolphin/pad.h>
 #include <kar/math.h>
 #include <sysdolphin/forward.h>
@@ -106,7 +107,6 @@ extern PadLibData HSD_DefaultPadLibData;    /* default_libinfo_data */
 
 extern u32 OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(u32 level);
-extern u32 OSGetTick(void);
 extern bool OSGetResetSwitchState(void);
 extern u32 OSGetResetCode(void);
 extern int PADRead(PADStatus* status);

@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef s16 __OSInterrupt;
@@ -31,7 +32,6 @@ typedef struct EXIControl
     } queue[3];
 } EXIControl;
 
-extern OSTime OSGetTime(void);
 extern void __OSMaskInterrupts(u32 mask);
 extern __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);
 extern __OSInterruptHandler __OSGetInterruptHandler(__OSInterrupt interrupt);

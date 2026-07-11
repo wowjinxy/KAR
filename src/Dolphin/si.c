@@ -1,5 +1,6 @@
 #include "dolphin/types.h"
 #include "dolphin/os.h"
+#include "dolphin/ostime.h"
 #include "dolphin/si.h"
 
 typedef s64 OSTime;
@@ -12,7 +13,6 @@ typedef struct OSAlarm
 
 typedef void (*OSAlarmHandler)(OSAlarm* alarm, OSContext* context);
 
-extern OSTime __OSGetSystemTime(void);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
 extern void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 extern void OSCancelAlarm(OSAlarm* alarm);
