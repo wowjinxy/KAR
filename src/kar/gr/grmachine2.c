@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <kar/gr/granim.h>
+#include <kar/gr/graudio.h>
 #include <sysdolphin/gobj.h>
 
 #define GRMACHINE2_FGM_COUNTER_NUM 10
@@ -46,11 +47,6 @@ struct GroundIndiviParam {
     IndividualFgmAll* indiviFgmAll;
 };
 
-void kar_graudio_configure_individual_fgm_tracks(Ground* ground,
-                                                 IndividualFgmAll* indiviFgmAll);
-void kar_graudio_update_individual_fgm_timers(Ground* ground,
-                                              IndividualFgmAll* indiviFgmAll,
-                                              s32* counters, s32 counter_num);
 void kar_gryakudownforcezone_create_stage_linked_kind17_yaku(Ground* ground,
                                                              s32 link);
 void kar_gryakugondola_create_stage_linked_kind48_route_yaku(Ground* ground,

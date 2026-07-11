@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <kar/gr/granim.h>
+#include <kar/gr/graudio.h>
 #include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
@@ -48,8 +49,6 @@ struct GroundIndiviParam {
     void* bitCounterIdAll;
 };
 
-void kar_graudio_configure_individual_fgm_tracks(Ground* ground, IndividualFgmAll* indiviFgmAll);
-void kar_graudio_update_individual_fgm_timers(Ground* ground, IndividualFgmAll* indiviFgmAll, s32* counters, s32 counter_num);
 void kar_grcommon__800db654(Ground* ground, void* bitCounterIdAll, s32 id);
 void kar_gryakucommon_create_stage_linked_kind16_yaku(Ground* ground, s32 link);
 void kar_gryakubreakcoral_create_stage_linked_kind28_breakcoral(Ground* ground, s32 link);
