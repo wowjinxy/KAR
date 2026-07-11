@@ -13,6 +13,7 @@
 #include <sysdolphin/identity_mtx.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj_setup.h>
+#include <sysdolphin/mtx_inverse.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/tev.h>
 #include <sysdolphin/unit_vec.h>
@@ -40,7 +41,6 @@ typedef struct _HSD_ZList {
 
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);

@@ -11,6 +11,7 @@
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/mobj.h>
+#include <sysdolphin/mtx_inverse.h>
 #include <sysdolphin/mtx_transform.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/robj.h>
