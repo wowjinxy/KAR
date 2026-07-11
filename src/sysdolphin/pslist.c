@@ -1,6 +1,7 @@
 #include <global.h>
 
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/os.h>
 
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/memory.h>
@@ -243,7 +244,6 @@ typedef struct PSFlagDesc {
 
 extern PSFlagDesc lbl_805085FC;
 extern PSFlagDesc lbl_805084B0;
-extern u32 OSGetPhysicalMemSize(void);
 
 void kar_pslist__near_8043c914(void)
 {

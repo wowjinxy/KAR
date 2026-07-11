@@ -1,6 +1,7 @@
 #include <global.h>
 
 #include <dolphin/gx/gxtypes.h>
+#include <dolphin/os.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/video.h>
@@ -26,7 +27,6 @@ extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
 extern void OSSetArenaLo(void* newLo);
 extern void* OSAllocFromArenaLo(u32 size, u32 align);
-extern u32 OSGetPhysicalMemSize(void);
 extern OSHeapHandle OSCreateHeap(void* lo, void* hi);
 extern void OSDestroyHeap(OSHeapHandle heap);
 extern void OSSetCurrentHeap(OSHeapHandle heap);

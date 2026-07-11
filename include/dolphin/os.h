@@ -165,7 +165,7 @@ u32 __OSUnmaskInterrupts(u32 mask);
 void DCFlushRange(void* addr, u32 nBytes);
 void DCFlushRangeNoSync(void* addr, u32 nBytes);
 void DCInvalidateRange(void* addr, u32 nBytes);
-//u32 OSGetPhysicalMemSize(void);
+u32 OSGetPhysicalMemSize(void);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
 #endif  // __OS_H__
