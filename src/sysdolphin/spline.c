@@ -1,4 +1,5 @@
 #include <global.h>
+#include <kar/math.h>
 #include <sysdolphin/spline.h>
 
 extern f32 SplineFloatTwo;       /* 2.0F */
@@ -15,7 +16,6 @@ extern f32 SplineFloatOneEighth; /* 0.125F */
 extern f32 SplineFloatHalf;      /* 0.5F */
 extern f32 SplineFloatEps;       /* 0.00001F */
 
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */

@@ -14,13 +14,11 @@ extern HSD_SList* HSD_SListPrepend(HSD_SList* list, void* data);
 extern void OSReport(const char*, ...);
 extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
-extern f64 tan(f64 x);
 extern f64 kar_log(f64 x);
 extern f64 kar_exp(f64 x);
 extern f64 kar_fmod(f64 x, f64 y); /* fmod */
 extern f64 kar_pow(f64 x, f64 y);
 
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fnmsubs(f32 a, f32 c, f32 b);
 

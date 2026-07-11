@@ -7,5 +7,7 @@ f64 kar_asin(f64 x);
 f64 kar_acos(f64 x);
 f64 kar_atan(f64 x);
 f64 kar_atan2(f64 y, f64 x);
+f64 tan(f64 x);
+f64 __frsqrte(f64 x);
 
 #endif

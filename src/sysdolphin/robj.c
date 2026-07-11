@@ -1,5 +1,6 @@
 #include <sysdolphin/robj.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/math.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/util.h>
@@ -52,7 +53,6 @@ void HSD_RvalueRemoveAll(HSD_Rvalue* rvalue);
 void HSD_RvalueResolveRefsAll(HSD_Rvalue* rvalue, HSD_RvalueList* list);
 void HSD_RObjFree(HSD_RObj* robj);
 
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 
 extern f64 RObjHalf;             // 0.5

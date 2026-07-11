@@ -46,7 +46,6 @@ extern void PSMTXQuat(Mtx m, Quaternion* q);          /* PSMTXQuat */
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fnmsubs(f32 a, f32 c, f32 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */

@@ -126,7 +126,6 @@ extern void PADReset(u32 mask);
 extern void PADRecalibrate(u32 mask);
 extern void PADInit(void);
 
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b); /* = b - a*c */
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c + b */
 

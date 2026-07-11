@@ -3,6 +3,7 @@
 #include <dolphin/gx/gxtypes.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/mtx/vec.h>
+#include <kar/math.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
@@ -140,8 +141,6 @@ void HSD_StateInitDirect(u32 vtxfmt, u32 rendermode)
     GXSetVtxDesc(0xB, 1);
     GXSetCurrentMtx(0);
 }
-
-extern f64 __frsqrte(f64 x);
 
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b);

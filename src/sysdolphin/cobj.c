@@ -73,8 +73,6 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
 extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXInverse(Mtx src, Mtx dst);
-extern f64 tan(f64 x);
-extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 

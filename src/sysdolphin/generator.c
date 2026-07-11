@@ -16,8 +16,6 @@ extern void PSMTXIdentity(Mtx dest); /* PSMTXIdentity */
 extern s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* out);
 extern void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
 extern void memset(void*, int, int);
-extern f64 tan(f64 x);
-
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
 extern HSD_SList* HSD_SListRemove(HSD_SList* node);
 
