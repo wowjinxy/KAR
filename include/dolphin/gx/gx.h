@@ -6,6 +6,7 @@
 
 void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 void GXClearVtxDesc(void);
+void GXCopyDisp(void* dest, u32 clear);
 void GXGetProjectionv(f32* ptr);
 void GXGetViewportv(f32* vp);
 void GXInvalidateTexAll(void);
@@ -21,10 +22,20 @@ void GXSetAlphaUpdate(u32 enable);
 void GXSetBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
 void GXSetChanAmbColor(u32 chan, GXColor color);
 void GXSetChanMatColor(u32 chan, GXColor color);
+void GXSetCopyClear(GXColor clear_clr, u32 clear_z);
+void GXSetCopyClamp(u32 clamp);
+void GXSetCopyFilter(u32 aa, const u8 sample_pattern[12][2], u32 vf,
+                     const u8 vfilter[7]);
 void GXSetColorUpdate(u32 enable);
 void GXSetCullMode(u32 mode);
 void GXSetCurrentMtx(u32 id);
+void GXSetDispCopyDst(u16 wd, u16 ht);
+void GXSetDispCopyGamma(u32 gamma);
+void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht);
+u32 GXSetDispCopyYScale(f32 vscale);
 void GXSetDither(u32 enable);
+void GXSetDrawDone(void);
+void* GXSetDrawDoneCallback(void (*cb)(void));
 void GXSetDstAlpha(u32 enable, u8 value);
 void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color);
 void GXSetFogRangeAdj(u32 enable, u16 center, void* table);
@@ -51,5 +62,6 @@ void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac)
 void GXSetVtxDesc(u32 attr, u32 type);
 void GXSetZCompLoc(u32 before_tex);
 void GXSetZMode(u32 enable, u32 func, u32 update);
+void GXWaitDrawDone(void);
 
 #endif

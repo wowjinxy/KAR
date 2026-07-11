@@ -95,20 +95,6 @@ extern char HSD_VIXFBWaitDoneAssertMsg[0x2B];
 extern u32 OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(u32 level);
 
-extern void GXSetCopyFilter(u32 aa, const u8 sample_pattern[12][2], u32 vf,
-                            const u8 vfilter[7]);
-extern void GXSetDispCopyGamma(u32 gamma);
-extern void GXSetCopyClear(GXColor clear_clr, u32 clear_z);
-extern void GXSetCopyClamp(u32 clamp);
-extern u32 GXSetDispCopyYScale(f32 vscale);
-extern void GXSetDispCopyDst(u16 wd, u16 ht);
-extern void GXCopyDisp(void* dest, u32 clear);
-extern void GXWaitDrawDone(void);
-
-extern void GXSetDrawDone(void);
-extern void* GXSetDrawDoneCallback(void (*cb)(void));
-extern void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht);
-
 static inline s32 HSD_VISearchXFBByStatus(HSD_VIXFBDrawDispStatus status)
 {
     s32 i;
