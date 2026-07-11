@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <kar/gr/granim.h>
 #include <kar/gr/graudio.h>
+#include <kar/gr/grcommon.h>
 #include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
@@ -51,7 +52,6 @@ struct GroundIndiviParam {
 };
 
 void kar_grcommon__800db5d4(Ground* ground, void* bitCounterIdAll, s32 id);
-void kar_grcommon__800db654(Ground* ground, void* bitCounterIdAll, s32 id);
 void kar_gryakucatchzone_create_stage_linked_kind19_yaku(Ground* ground, s32 link);
 void kar_gryakubreakhouse_create_stage_linked_kind54_animfloor(Ground* ground, s32 link);
 void kar_gryakubreakhpcoll_create_stage_linked_kind61_timed_anim_audio_cycle(Ground* ground,
