@@ -78,11 +78,6 @@ extern void GXSetProjection(Mtx mtx, s32 projection_type);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u32 n);
-extern void GXSetTevColorIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
-extern void GXSetTevColorOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
-extern void GXSetTevAlphaIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
-extern void GXSetTevAlphaOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
-extern void GXSetTevColor(u32 id, GXColor color);
 
 static inline void GXPosition3f32(f32 x, f32 y, f32 z)
 {

@@ -51,7 +51,6 @@ extern void GXLoadTexObj(GXTexObj* obj, u32 mapid);
 extern void GXSetNumTexGens(u32 n);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx, u32 normalize,
                               u32 post_mtx);
-extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
 extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);

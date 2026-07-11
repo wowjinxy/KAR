@@ -97,14 +97,9 @@ extern void GXSetChanCtrl(u32 chan, u32 enable, u32 amb_src, u32 mat_src, u32 li
 extern void GXSetChanAmbColor(u32 chan, GXColor color);
 extern void GXSetChanMatColor(u32 chan, GXColor color);
 extern void GXSetNumTexGens(u8 n);
-extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetTevSwapMode(u8 stage, u32 ras_swap, u32 tex_swap);
 extern void GXSetTevKColorSel(u8 stage, u32 sel);
 extern void GXSetTevKAlphaSel(u8 stage, u32 sel);
-extern void GXSetTevColorOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
-extern void GXSetTevColorIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
-extern void GXSetTevAlphaOp(u8 stage, u32 op, u32 bias, u32 scale, u32 clamp, u32 out_reg);
-extern void GXSetTevAlphaIn(u8 stage, u32 a, u32 b, u32 c, u32 d);
 extern void GXSetTevColorS10(u32 reg, GXColorS10 color);
 
 void HSD_SetupChannelMode(u32 rendermode)
