@@ -3,6 +3,7 @@
 #include <dolphin/types.h>
 #include <kar/gr/gryaku.h>
 #include <kar/gr/grspline.h>
+#include <kar/lb/lbarchive.h>
 
 #if defined(VERSION_GKYJ01)
 #define lbl_805DF5C8 lbl_805D9FF0
@@ -17,7 +18,6 @@
 #define kar_course_dat_model_resource_table lbl_8049DD9C
 #define kar_asset_grcity1event_804a329c lbl_8049E03C
 #define lbl_804A32F4 lbl_8049E094
-#define kar_lbarchive__80059a20 fn_80059148
 #define fn_80261CE8 fn_8025DA3C
 #define fn_80261ECC fn_8025DC20
 #define fn_80262574 fn_8025E2C8
@@ -40,7 +40,6 @@
 #define kar_course_dat_model_resource_table lbl_804A849C
 #define kar_asset_grcity1event_804a329c lbl_804A873C
 #define lbl_804A32F4 lbl_804A8794
-#define kar_lbarchive__80059a20 fn_8005A330
 #define fn_80261CE8 fn_802629A4
 #define fn_80261ECC fn_80262B88
 #define fn_80262574 fn_80263230
@@ -134,7 +133,6 @@ extern CourseResource kar_course_dat_model_resource_table[];
 extern char kar_asset_grcity1event_804a329c[];
 extern char lbl_804A32F4[];
 
-void kar_lbarchive__80059a20(s32 arg0, char* archive_name, void* out, char* symbol_name, ...);
 s32 fn_80261CE8(s32 arg0);
 s32 fn_80261ECC(void);
 s32 fn_80262574(s32 arg0);
