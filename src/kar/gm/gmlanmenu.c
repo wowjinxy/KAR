@@ -3,6 +3,7 @@
 #include <dolphin/types.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbvector.h>
 
 typedef struct GmLanWork GmLanWork;
 typedef struct HSD_AObj HSD_AObj;
@@ -188,7 +189,6 @@ void _HSD_StateInvalidateTexCoordGen(HSD_MObj* mobj);
 HSD_DObj* HSD_JObjGetDObj(HSD_JObj* jobj);
 u32 HSD_AObjGetFlags(HSD_AObj* aobj);
 void HSD_MObjSetCurrent(HSD_MObj* mobj, HSD_MObj* current);
-void kar_lbvector_cross_normalize(Vec* a, Vec* b, Vec* out);
 
 void kar_gmlanmenu__near_80051d7c(void)
 {

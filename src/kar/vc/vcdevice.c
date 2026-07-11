@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/lb/lbvector.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 
@@ -130,7 +131,6 @@ extern BOOL fn_801F9EC4(VcDevice* device);
 extern void fn_801FA96C(VcDevice* device);
 extern BOOL kar_mpcoll__801cf1b8(VcDevice* device, f32 value);
 extern void kar_clobject__near_8018d850(void* object);
-extern f32 kar_lbvector_lerp_float_table_sample(void* table, f32 arg1, f32 arg2);
 extern void fn_801E6670(VcDevice* device);
 extern void fn_801E6D24(VcDevice* device);
 extern void fn_801E7154(VcDevice* device);
