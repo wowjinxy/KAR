@@ -1,6 +1,7 @@
 #include <global.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/texp.h>
+#include <sysdolphin/tev.h>
 #include <sysdolphin/tobj.h>
 
 char TExpSourceFile[] = "texp.c";
@@ -26,9 +27,6 @@ extern void* hsdAllocMemPiece(u32 size);
 extern void hsdFreeMemPiece(void* ptr, s32 size);
 extern void memset(void* ptr, s32 value, u32 size);
 
-extern u32 HSD_StateAssignTev(void);
-extern void HSD_SetupTevStage(HSD_TevDesc* tevdesc);
-extern void HSD_StateInvalidate(s32 mask);
 extern void GXPixModeSync(void);
 extern void GXSetTevKColor(u32 id, GXColor color);
 extern void GXSetTevColor(u32 id, GXColor color);

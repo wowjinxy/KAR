@@ -9,6 +9,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/tev.h>
 #include <sysdolphin/video.h>
 
 #define HSD_JOBJ_METHOD(o) ((HSD_JObjInfo*) ((o)->object.parent.class_info))
@@ -41,8 +42,6 @@ extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void HSD_ClearVtxDesc(void);
-extern void HSD_StateInitTev(void);
-extern void HSD_SetupRenderMode(u32 rendermode);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
 extern f32 HSD_FloatEpsilon[];
 extern Vec HSD_UnitZVec;
@@ -73,7 +72,6 @@ extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetVtxDesc(u32 attr, u32 type);
 extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
-extern void HSD_StateInvalidate(s32 mask);
 
 extern u8 JObjSPtclColor[4];
 extern HSD_ObjAllocData HSD_ZListAllocData;

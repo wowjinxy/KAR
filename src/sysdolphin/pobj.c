@@ -7,6 +7,7 @@
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
+#include <sysdolphin/tev.h>
 
 extern HSD_ClassInfo hsdClass;
 
@@ -42,7 +43,6 @@ extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 
 extern BOOL _HSD_MemCheckOwn(void* ptr);
 extern void HSD_PerfCountEnvelopeBlending(s32 n);
-extern void HSD_StateSetCullMode(s32 mode);
 
 extern HSD_PObjInfo* PObjCurrentInfo;
 extern f32 (*PObjVertexBuffer)[3];
