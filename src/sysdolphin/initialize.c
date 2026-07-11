@@ -26,7 +26,6 @@
 #define OSRoundUp32B(x)   (((u32) (x) + 32 - 1) & ~(32 - 1))
 
 extern void DVDInit(void);
-extern void* GXInit(void* fifo, u32 size);
 
 extern void* OSGetArenaLo(void);
 extern void* OSGetArenaHi(void);
@@ -40,14 +39,6 @@ extern void OSFreeToHeap(OSHeapHandle heap, void* ptr);
 extern s32 kar_diag__803d3884(OSHeapHandle heap);
 
 extern void hsdForgetClassLibrary(char* name);
-
-extern void GXInitLightPos(GXLightObj*, f32, f32, f32);
-extern void GXInitLightDir(GXLightObj*, f32, f32, f32);
-extern void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
-extern void GXInitLightColor(GXLightObj*, GXColor);
-extern void GXLoadLightObjImm(GXLightObj*, s32);
-extern void GXSetPixelFmt(s32 pix_fmt, s32 z_fmt);
-extern void GXSetFieldMode(u8 field_rendering, u8 half_aspect_ratio);
 
 extern volatile OSHeapHandle HSD_CurrentHeap;
 extern GXRenderModeObj* HSD_RenderMode;
