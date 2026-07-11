@@ -3,6 +3,7 @@
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdialogue.h>
 #include <kar/gm/gmdialoguestatus.h>
+#include <kar/gm/gmlanmenu.h>
 #include <kar/gm/gmmain.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
@@ -20,8 +21,6 @@ char lbl_805D51B8[] = "0";
 
 void* kar_gmmain__near_80006c14(void);
 void* kar_gmmain__near_80006eec(void);
-void kar_gmlanmenu__80008220(void);
-void kar_gmlanmenu__800082a0(s32 arg0);
 void kar_gmviconfigure__near_8004f5e0(s32 arg0);
 void kar_gmglobal__near_80007640(void);
 void kar_gmglobal__near_80007808(void);

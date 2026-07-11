@@ -3,6 +3,7 @@
 #include "kar/gm/gmglobal.h"
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004db74.h"
+#include "kar/gm/gmlanmenu.h"
 #include "kar/gm/gmmain.h"
 #include "kar/gm/gmracenormal.h"
 #include "kar/shadow.h"
@@ -21,8 +22,6 @@ extern f32 fn_80281A0C(void);
 extern s8 fn_8000C228(s8);
 extern u32 kar_plclearcheckerlib__8022fccc(int, int);
 extern void kar_lbaudio__near_8005e5d0(void);
-extern void kar_gmlanmenu__800082a0(int);
-extern void kar_gmlanmenu__80008220(void);
 extern int fn_80282F70(void);
 extern int fn_80281610(void);
 extern int fn_80282F38(void);
