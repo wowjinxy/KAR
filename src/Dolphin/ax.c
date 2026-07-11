@@ -44,9 +44,6 @@ extern void OSInitThreadQueue(OSThreadQueue* queue);
 extern void OSSleepThread(OSThreadQueue* queue);
 extern void OSWakeupThread(OSThreadQueue* queue);
 extern void* memset(void* dst, int val, size_t n);
-extern void DCFlushRange(void* addr, u32 nBytes);
-extern void DCFlushRangeNoSync(void* addr, u32 nBytes);
-extern void DCInvalidateRange(void* addr, u32 nBytes);
 
 extern void AIInitDMA(u32 startAddr, u32 length);
 extern void AIStartDMA(void);

@@ -24,8 +24,6 @@ typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern void DCFlushRange(void* addr, u32 nBytes);
-extern void DCInvalidateRange(void* addr, u32 nBytes);
 extern void* memset(void* dst, int val, size_t n);
 extern void kar_diagnostic__near_803c3354(void); /* PPCSync */
 

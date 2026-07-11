@@ -161,6 +161,9 @@ BOOL OSRestoreInterrupts(BOOL level);
 //
 void OSRegisterVersion(char* version);
 u32 __OSUnmaskInterrupts(u32 mask);
+void DCFlushRange(void* addr, u32 nBytes);
+void DCFlushRangeNoSync(void* addr, u32 nBytes);
+void DCInvalidateRange(void* addr, u32 nBytes);
 //u32 OSGetPhysicalMemSize(void);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
