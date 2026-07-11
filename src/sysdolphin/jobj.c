@@ -48,15 +48,6 @@ extern void HSD_JObjSetMtxDirty(HSD_JObj* jobj);
 extern void ref_INC(void* o);
 extern void* HSD_IDGetData(u32 id, s32* success);
 
-HSD_JObj* HSD_JObjAlloc(void);
-void HSD_JObjResolveRefsAll(HSD_JObj* jobj, HSD_Joint* joint);
-void HSD_JObjRef(HSD_JObj* jobj);
-void HSD_JObjUnref(HSD_JObj* jobj);
-void HSD_JObjAddChild(HSD_JObj* jobj, HSD_JObj* child);
-HSD_JObj* HSD_JObjGetPrev(HSD_JObj* jobj);
-void HSD_JObjSetFlags(HSD_JObj* jobj, u32 flags);
-void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
-
 #define HSD_JOBJ_INFO(i) ((HSD_JObjInfo*) (i))
 #define HSD_JOBJ_METHOD(o) HSD_JOBJ_INFO(HSD_CLASS_METHOD(o))
 
