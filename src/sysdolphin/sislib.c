@@ -71,10 +71,7 @@ typedef struct _GXTexObj {
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height,
                          u32 format, u32 wrap_s, u32 wrap_t, u8 mipmap);
 extern void GXLoadTexObj(GXTexObj* obj, u32 id);
-extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 near, f32 far);
-extern void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
 extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
-extern void GXSetProjection(Mtx mtx, s32 projection_type);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u32 n);

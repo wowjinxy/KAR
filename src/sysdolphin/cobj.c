@@ -1,6 +1,6 @@
 #include <sysdolphin/cobj.h>
 
-#include <dolphin/gx/gxtypes.h>
+#include <dolphin/gx/gx.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <kar/gr/grcoll.h>
@@ -52,12 +52,8 @@ extern void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top,
                                                      f32 left,
                                                      s32 tex_enable,
                                                      f32 right, f32 z);
-extern void GXSetProjection(Mtx mtx, s32 projection_type);
-extern void GXSetViewport(f32 left, f32 top, f32 width, f32 height,
-                          f32 near_z, f32 far_z);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height,
                                 f32 near_z, f32 far_z, u32 field);
-extern void GXSetScissor(u32 left, u32 top, u32 width, u32 height);
 extern u32 VIGetNextField(void);
 extern void C_MTXPerspective(Mtx mtx, f32 fov, f32 aspect, f32 near,
                              f32 far);

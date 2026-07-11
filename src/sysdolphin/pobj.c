@@ -26,7 +26,6 @@ extern void HSD_JObjUnrefThis(HSD_JObj* jobj);
 
 extern void GXSetArray(u32 attr, void* base_ptr, u8 stride);
 extern void GXCallDisplayList(void* list, u32 nbytes);
-extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 
 extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
 extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
