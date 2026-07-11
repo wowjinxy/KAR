@@ -14,6 +14,7 @@
 #include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/tev.h>
+#include <sysdolphin/unit_vec.h>
 #include <sysdolphin/video.h>
 
 #define HSD_JOBJ_METHOD(o) ((HSD_JObjInfo*) ((o)->object.parent.class_info))
@@ -43,7 +44,6 @@ extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
-extern Vec HSD_UnitZVec;
 
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 format,
                          u32 wrap_s, u32 wrap_t, u32 mipmap);
