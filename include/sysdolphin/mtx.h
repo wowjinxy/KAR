@@ -7,12 +7,12 @@
 #include <sysdolphin/mtx_transform.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/vec_alloc.h>
+#include <sysdolphin/vec_orthogonal.h>
 
 void HSD_MtxInverse(Mtx src, Mtx dest);
 void HSD_MtxGetRotationMtx(Mtx v0, Mtx dest, char axis0, char axis1);
 void HSD_MkRotationMtx(Mtx arg0, Vec* arg1);
 void HSD_MtxScaledAdd(Mtx arg0, Mtx arg1, Mtx arg2, f32 arg3);
-void HSD_VecGetOrthogonal(Vec* v, Vec* out);
 void* HSD_MtxAlloc(void);
 void HSD_MtxFree(void* arg0);
 HSD_ObjAllocData* HSD_VecGetAllocData(void);

@@ -9,6 +9,7 @@
 #include <sysdolphin/list.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
+#include <sysdolphin/vec_orthogonal.h>
 
 void* HSD_Alloc(s32);
 s32 GXGetTexBufferSize(u16, u16, s32, s32, s32);
@@ -388,7 +389,6 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
 }
 
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-void HSD_VecGetOrthogonal(Vec*, Vec*);
 
 f32 ShadowNegFloatMax = -3.4028235E38F; /* -FLT_MAX */
 f32 ShadowFloatMaxPair[2] = { 3.4028235E38F, 0.0F }; /* +FLT_MAX */
