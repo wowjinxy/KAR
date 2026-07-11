@@ -10,6 +10,7 @@
 #include <sysdolphin/fobj_alloc.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
+#include <sysdolphin/zlist.h>
 
 #define DegToRad(x) ((x) * 0.017453292F)
 #define COBJ_MTX_DIRTY 0x40000000
@@ -27,9 +28,6 @@ char CObjAssertZero[] = "0";
     ((cobj) ? ((void) 0)                                                     \
             : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
 
-extern void _HSD_ZListClear(void);
-extern void _HSD_ZListSort(void);
-extern void _HSD_ZListDisp(void);
 extern s32 HSD_GetCurrentRenderPass(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);

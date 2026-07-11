@@ -59,8 +59,6 @@ extern u8 JObjSPtclColor[4];
 extern HSD_ObjAllocData HSD_ZListAllocData;
 extern GXRenderModeObj HSD_DefaultRenderModeObj;
 
-void _HSD_ZListClear(void);
-
 extern HSD_ZList* HSD_ZListAll;
 extern HSD_ZList* HSD_ZListOpaque;
 extern HSD_ZList* HSD_ZListTranslucent;
