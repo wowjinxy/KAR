@@ -5,6 +5,7 @@
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/psinterpret.h>
+#include <sysdolphin/pslist.h>
 
 typedef struct HSD_psAppSRT HSD_psAppSRT;
 
@@ -48,7 +49,6 @@ extern void memset(void*, int, int);
 
 extern HSD_SList* HSD_SListRemove(HSD_SList* list);
 
-extern HSD_Particle* _psListGetFirst(s32 linkNo);
 extern HSD_Particle* psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev);
 extern void psKillParticle(void);
 extern void psKillGeneratorChild(HSD_Generator* gp);

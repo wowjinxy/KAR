@@ -6,6 +6,7 @@
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
 #include <sysdolphin/psinterpret.h>
+#include <sysdolphin/pslist.h>
 #include <sysdolphin/random.h>
 
 extern void memset(void*, int, int);
@@ -13,8 +14,6 @@ extern f32 sqrtf(f32);
 extern f32 tanf(f32);
 extern f32 HSD_FloatMin[]; /* epsilon */
 
-extern HSD_Particle* _psListGetFirst(s32 linkNo);
-extern void _psListDelete(HSD_Particle* pp, HSD_Particle* prev);
 extern void psRemoveParticleAppSRT(HSD_Particle* pp);
 extern s32 kar_psdisp__near_80437ddc(HSD_Particle* pp, HSD_psAppSRT* srt);
 extern s32 kar_psdisp__near_80437e18(HSD_Generator* gen, HSD_psAppSRT* srt);

@@ -5,6 +5,7 @@
 
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/memory.h>
+#include <sysdolphin/particle.h>
 #include <sysdolphin/pslist.h>
 
 #define PS_NUM_LINK 32
