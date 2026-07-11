@@ -107,7 +107,6 @@ extern const f32 lbl_805DE7A8;
 
 void* memset(void* dst, int val, unsigned long n);
 void* kar_gmmain__near_80006c14(void);
-void kar_gmautodemo__near_80011024(HSD_GObj* gobj);
 s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
 f32 kar_gmracenormal__8000a370(s32 arg0);
@@ -145,7 +144,6 @@ void fn_8022BA5C(s32 arg0);
 void fn_8022B768(s32 arg0);
 u64 fn_803AE0F0(f32 arg0);
 f32 fn_803AE03C(u64 arg0);
-HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_S8(base, offset) (*(s8*) ((u8*) (base) + (offset)))
