@@ -6,6 +6,7 @@
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/random.h>
 #include <sysdolphin/video.h>
@@ -62,8 +63,6 @@ extern void _HSD_RObjForgetMemory(void);
 extern HSD_ObjAllocData* HSD_AObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_DListGetAllocData(void);
-extern HSD_ObjAllocData* HSD_VecGetAllocData(void);
-extern HSD_ObjAllocData* HSD_MtxGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_ShadowGetAllocData(void);
@@ -73,8 +72,6 @@ extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
 
 extern void HSD_ListInitAllocData(void);
 extern void HSD_AObjInitAllocData(void);
-extern void HSD_VecInitAllocData(void);
-extern void HSD_MtxInitAllocData(void);
 extern void HSD_RObjInitAllocData(void);
 extern void HSD_RenderInitAllocData(void);
 extern void HSD_ShadowInitAllocData(void);
