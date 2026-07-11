@@ -1,4 +1,4 @@
-#include "dolphin/types.h"
+#include "dolphin/ai.h"
 #include "dolphin/os.h"
 
 typedef s64 OSTime;
@@ -7,8 +7,6 @@ typedef struct OSContext
     u8 pad[0x2C8];
 } OSContext;
 
-typedef void (*AISCallback)(u32 count);
-typedef void (*AIDCallback)(void);
 typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
@@ -30,10 +28,6 @@ extern char __AIVersionString[];
 #define AI_SAMPLERATE_32KHZ 0
 #define AI_SAMPLERATE_48KHZ 1
 
-AIDCallback AIRegisterDMACallback(AIDCallback callback);
-void AIInitDMA(u32 startAddr, u32 length);
-void AIStartDMA(void);
-void AIStopDMA(void);
 void AISetStreamPlayState(u32 state);
 u32 AIGetStreamPlayState(void);
 void AISetDSPSampleRate(u32 rate);
@@ -49,7 +43,6 @@ void __AISHandler(u32 interrupt, OSContext* context);
 void __AIDHandler(u32 interrupt, OSContext* context);
 asm void __AICallbackStackSwitch(register void* cb);
 void __AI_SRC_INIT(void);
-AIDCallback __tmp_aid_callback(AIDCallback callback);
 
 AIDCallback __AR_Callback;
 OSTime lbl_805DDFF8;

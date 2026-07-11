@@ -1,10 +1,7 @@
+#include "dolphin/ai.h"
+#include "dolphin/ar.h"
 #include "dolphin/types.h"
 #include "dolphin/os.h"
-
-extern void ARStartDMA(u32 type, u32 mainmem_addr, u32 aram_addr, u32 length);
-
-typedef void (*ARQDMAHandler)(void);
-extern ARQDMAHandler __tmp_aid_callback(ARQDMAHandler callback);
 
 typedef void (*ARQCallback)(u32 pointerToARQRequest);
 
