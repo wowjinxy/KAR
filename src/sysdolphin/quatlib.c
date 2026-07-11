@@ -1,5 +1,6 @@
 #include <global.h>
 #include <kar/math.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/mtx.h>
 
 extern f32 QuatZero; /* 0.0F */
@@ -21,7 +22,6 @@ extern f64 QuatQuarterPi; /* PI/4 */
 extern f32 QuatSlerpEpsilon; /* 1e-10F */
 extern f64 QuatOneDouble; /* 1.0 */
 extern f32 QuatTwo; /* 2.0F */
-extern f32 HSD_FloatMin[]; /* FLT_MIN */
 
 f32 kar_math_quat_sinf_approx(f32 x);
 f32 kar_math_quat_cosf_approx(f32 x);

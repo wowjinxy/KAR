@@ -2,6 +2,7 @@
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/class_new.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/lobj.h>
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/aobj.h>
@@ -46,7 +47,6 @@ extern s32 LObjLightMaskAlpha;        /* lightmask_alpha */
 
 extern HSD_LObj* LObjActiveLights[MAX_GXLIGHT]; /* active_lights */
 
-extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_FloatEpsilon;   /* epsilon */
 extern Vec LObjZeroVecPosition;  /* zero vector */
 extern Vec LObjZeroVecInterest;  /* zero vector */

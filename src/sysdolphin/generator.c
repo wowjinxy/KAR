@@ -4,6 +4,7 @@
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
@@ -30,7 +31,6 @@ extern u16 lbl_805DCDD0;
 extern u16 lbl_805DE364;
 extern u16 lbl_805DE35E;
 
-extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_FloatEpsilon[];
 extern u32 lbl_8058C608[];
 extern HSD_PSCmdList** lbl_8058C708[];

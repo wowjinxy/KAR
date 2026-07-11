@@ -3,6 +3,7 @@
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
@@ -390,7 +391,6 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 void HSD_VecGetOrthogonal(Vec*, Vec*);
 
-extern f32 HSD_FloatMin[]; /* direction-normalize threshold */
 f32 ShadowNegFloatMax = -3.4028235E38F; /* -FLT_MAX */
 f32 ShadowFloatMaxPair[2] = { 3.4028235E38F, 0.0F }; /* +FLT_MAX */
 

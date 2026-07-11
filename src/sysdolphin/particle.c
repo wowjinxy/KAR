@@ -2,6 +2,7 @@
 
 #include <dolphin/os.h>
 #include <kar/math.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
@@ -12,7 +13,6 @@
 extern void memset(void*, int, int);
 extern f32 sqrtf(f32);
 extern f32 tanf(f32);
-extern f32 HSD_FloatMin[]; /* epsilon */
 
 extern void psRemoveParticleAppSRT(HSD_Particle* pp);
 extern s32 kar_psdisp__near_80437ddc(HSD_Particle* pp, HSD_psAppSRT* srt);
