@@ -9,6 +9,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/pobj.h>
 #include <sysdolphin/tev.h>
 #include <sysdolphin/video.h>
 
@@ -39,7 +40,6 @@ extern void HSD_MtxFree(MtxPtr mtx);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
 extern void memset(void* ptr, s32 value, u32 size);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void HSD_ClearVtxDesc(void);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
 extern f32 HSD_FloatEpsilon[];
 extern Vec HSD_UnitZVec;
