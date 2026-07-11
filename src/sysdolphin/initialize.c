@@ -2,6 +2,7 @@
 
 #include <dolphin/gx/gx.h>
 #include <dolphin/os.h>
+#include <sysdolphin/fobj.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
@@ -59,7 +60,6 @@ extern void _HSD_DispForgetMemory(void);
 extern void _HSD_RObjForgetMemory(void);
 
 extern HSD_ObjAllocData* HSD_AObjGetAllocData(void);
-extern HSD_ObjAllocData* HSD_FObjGetAllocData(void); /* HSD_FObjGetAllocData */
 extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_DListGetAllocData(void);
 extern HSD_ObjAllocData* HSD_VecGetAllocData(void);
@@ -73,7 +73,6 @@ extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
 
 extern void HSD_ListInitAllocData(void);
 extern void HSD_AObjInitAllocData(void);
-extern void HSD_FObjInitAllocData(void);
 extern void HSD_VecInitAllocData(void);
 extern void HSD_MtxInitAllocData(void);
 extern void HSD_RObjInitAllocData(void);

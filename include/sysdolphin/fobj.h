@@ -70,6 +70,7 @@ union HSD_ObjData {
 typedef HSD_ObjData FObjData;
 
 void HSD_FObjInitAllocData(void);
+HSD_ObjAllocData* HSD_FObjGetAllocData(void);
 void HSD_FObjRemove(HSD_FObj* fobj);
 void HSD_FObjRemoveAll(HSD_FObj* fobj);
 void HSD_FObjReqAnimAll(HSD_FObj* fobj, f32 frame);
