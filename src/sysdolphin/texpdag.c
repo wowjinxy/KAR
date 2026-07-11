@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/gx/gx.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/texp.h>
 #include <sysdolphin/tev.h>
@@ -27,7 +28,6 @@ extern void* hsdAllocMemPiece(u32 size);
 extern void hsdFreeMemPiece(void* ptr, s32 size);
 extern void memset(void* ptr, s32 value, u32 size);
 
-extern void GXPixModeSync(void);
 extern void GXSetTevKColor(u32 id, GXColor color);
 extern void GXSetTevColor(u32 id, GXColor color);
 

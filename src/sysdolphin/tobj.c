@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/gx/gx.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/tobj.h>
@@ -169,7 +170,6 @@ extern void GXLoadTexObj(void* texobj, u32 mapid);
 extern void GXSetTexCopySrc(u16 orig_x, u16 orig_y, u16 width, u16 height);
 extern void GXSetTexCopyDst(u16 width, u16 height, u32 format, u32 mipmap);
 extern void GXCopyTex(void* dest, u8 clear);
-extern void GXPixModeSync(void);
 extern void GXInvalidateTexAll(void);
 extern void HSD_StateSetZMode(u32 enable, u32 func, u32 update_enable);
 

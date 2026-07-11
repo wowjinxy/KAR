@@ -1,4 +1,5 @@
 #include <global.h>
+#include <dolphin/gx/gx.h>
 
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/tev.h>
@@ -102,7 +103,6 @@ extern void GXSetCopyClamp(u32 clamp);
 extern u32 GXSetDispCopyYScale(f32 vscale);
 extern void GXSetDispCopyDst(u16 wd, u16 ht);
 extern void GXCopyDisp(void* dest, u32 clear);
-extern void GXPixModeSync(void);
 extern void GXWaitDrawDone(void);
 
 extern void GXSetDrawDone(void);
