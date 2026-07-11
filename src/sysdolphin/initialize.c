@@ -5,6 +5,7 @@
 #include <sysdolphin/aobj_alloc.h>
 #include <sysdolphin/displayfunc_alloc.h>
 #include <sysdolphin/fobj.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/id.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/list.h>
@@ -37,7 +38,6 @@ extern void* OSAllocFromHeap(OSHeapHandle heap, u32 size);
 extern void OSFreeToHeap(OSHeapHandle heap, void* ptr);
 extern s32 kar_diag__803d3884(OSHeapHandle heap);
 
-extern void HSD_Panic(char* file, s32 line, char* msg);
 extern void hsdForgetClassLibrary(char* name);
 
 extern void GXInitLightPos(GXLightObj*, f32, f32, f32);

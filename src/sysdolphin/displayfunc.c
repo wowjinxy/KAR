@@ -9,6 +9,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/float_epsilon.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/identity_mtx.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj_setup.h>
@@ -37,7 +38,6 @@ typedef struct _HSD_ZList {
     struct _HSD_ZList* next_all;
 } HSD_ZList;
 
-extern void HSD_Panic(char* file, s32 line, char* msg);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
