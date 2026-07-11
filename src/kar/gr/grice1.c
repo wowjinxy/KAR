@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GRICE1_FGM_COUNTER_NUM 10
@@ -48,8 +49,6 @@ typedef struct GrIce1CallbackTable {
     char file[0x0C];
     char assert_indivi_fgm_count[0x44];
 } GrIce1CallbackTable;
-
-extern Ground* kar_gryaku_current_ground;
 
 void kar_grswitch__800e85a8(Ground* ground, GrSwitchCallback* callbacks,
                             s32 func_num);

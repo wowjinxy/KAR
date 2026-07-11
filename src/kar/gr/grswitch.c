@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GR_SWITCH_ZONE_COUNT 8
@@ -55,8 +56,6 @@ struct Ground {
     u8 pad_07C[0x194];
     GrSwitchAll switch_all;
 };
-
-extern Ground* kar_gryaku_current_ground;
 
 void kar_graudio_play_map_fgm_for_rider(Ground* ground, s32 rider_index,
                                         s32 fgm_id, s32 arg3, s32 arg4);

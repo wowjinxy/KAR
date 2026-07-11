@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 typedef struct Ground Ground;
@@ -83,8 +84,6 @@ struct CollisionReport {
 #define YAKU_FGM_TRACK(yaku, index) (*(void**) ((u8*) (yaku) + 0x140 + (index) * 0x14))
 #define REPORT_FACE_COUNT(report) (*(s32*) ((u8*) (report) + 0x31C))
 #define LOAD_F32(sym) (*(volatile const f32*) &(sym))
-
-extern Ground* kar_gryaku_current_ground;
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB

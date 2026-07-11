@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/gryaku.h>
 #include <kar/gr/grspline.h>
 
 #if defined(VERSION_GKYJ01)
@@ -127,7 +128,6 @@ const f32 lbl_805DF5DC = 0.0f;
 const f32 lbl_805DF5E0 = 1.0f;
 const f32 lbl_805DF5E4 = 0.025f;
 
-extern Ground* kar_gryaku_current_ground;
 extern GroundData* lbl_80557638[];
 extern u8 lbl_804A2408[];
 extern CourseResource kar_course_dat_model_resource_table[];

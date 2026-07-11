@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GRHEAT2_FGM_COUNTER_NUM 10
@@ -46,8 +47,6 @@ struct GroundIndiviParam {
     IndividualFgmAll* indiviFgmAll;
     void* bitCounterIdAll;
 };
-
-extern Ground* kar_gryaku_current_ground;
 
 void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
 void kar_graudio_configure_individual_fgm_tracks(Ground* ground, IndividualFgmAll* indiviFgmAll);

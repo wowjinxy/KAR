@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/gryaku.h>
 #include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/memory.h>
@@ -135,7 +136,6 @@ union YakuKind41FlagByte {
 #define YAKU_FLAGS_13C(yaku) (*(u8*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_13C_BITS(yaku) (*(YakuFlagByte*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_144_BITS(yaku) (*(YakuKind41FlagByte*) ((u8*) (yaku) + 0x144))
-extern Ground* kar_gryaku_current_ground;
 extern const f32 GRRECOVERY_NEAREST_INIT_DIST[];
 extern const f32 GRRECOVERY_STATE_ZERO;
 extern const f32 GRRECOVERY_ENABLED_END;

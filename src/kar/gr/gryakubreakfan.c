@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/memory.h>
@@ -56,8 +57,6 @@ struct BreakFanParam {
 
 #define YAKU_EFFECT_ALLOC(yaku) (*(void**) ((u8*) (yaku) + 0x130))
 #define FGM_ENTRY_COUNT(entry) (*(s32*) ((u8*) (entry) + 0x04))
-
-extern Ground* kar_gryaku_current_ground;
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
