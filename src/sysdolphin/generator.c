@@ -8,6 +8,7 @@
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
+#include <sysdolphin/psinterpret.h>
 #include <sysdolphin/random.h>
 
 extern s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* out);
@@ -16,7 +17,6 @@ extern void memset(void*, int, int);
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
 extern HSD_SList* HSD_SListRemove(HSD_SList* node);
 
-extern void kar_psinterpret__near_8043070c(HSD_Generator* gen);
 extern void kar_psdisp__near_80437cd8(HSD_Generator* gp, s32 status);
 extern s32 kar_psdisp__near_80437fcc(HSD_Generator* gp);
 

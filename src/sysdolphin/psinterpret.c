@@ -4,6 +4,7 @@
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
+#include <sysdolphin/psinterpret.h>
 
 typedef struct HSD_psAppSRT HSD_psAppSRT;
 
@@ -53,7 +54,6 @@ extern void psKillParticle(void);
 extern void psKillGeneratorChild(HSD_Generator* gp);
 extern void kar_generator__near_80433154(s32 count);
 extern s32 kar_psdisp__near_80437fcc(HSD_Generator* gp);
-extern void kar_psinterpret__near_8043051c(void);
 
 extern u16 lbl_805DCDD0;
 

@@ -5,6 +5,7 @@
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
+#include <sysdolphin/psinterpret.h>
 #include <sysdolphin/random.h>
 
 extern void memset(void*, int, int);
@@ -25,10 +26,6 @@ extern void kar_psdisp__near_80438190(void);
 extern HSD_Particle* kar_psdisp__near_80438238(HSD_Particle** head,
                                                s32 linkNo, s32 bank, u32 kind,
                                                u16 texGroup);
-extern u16 kar_psinterpret__near_80430270(void);
-extern void kar_psinterpret__near_8043051c(void);
-extern void kar_psinterpret__near_80430394(s16 linkNo);
-
 extern HSD_Particle* hsd_804D0908[0x20];
 extern void hsd_8039D048(HSD_Particle* pp);
 extern HSD_ObjAllocData hsdParticle_alloc_data;
