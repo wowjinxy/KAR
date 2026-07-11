@@ -41,7 +41,9 @@ void HSD_VICopyEFB2XFBPtr(HSD_VIStatus* vi, void* buffer, HSD_RenderPass rpass);
 void HSD_VICopyXFBAsync(HSD_RenderPass rpass);
 void HSD_VIDrawDoneXFB(s32 idx);
 void HSD_VIWaitXFBFlush(void);
+#ifndef VERSION_GKYP01
 void HSD_VIWaitXFBFlushNoYield(void);
+#endif
 s32 HSD_VIGetXFBLastDrawDone(void);
 void HSD_VISetConfigure(GXRenderModeObj* rmode);
 void HSD_VISetBlack(bool black);

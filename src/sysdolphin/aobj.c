@@ -26,11 +26,11 @@ typedef union HSD_AObjAllocData {
 HSD_AObjAllocData hsdAObj_alloc_data;
 #define AOBJ_ALLOC_DATA (&hsdAObj_alloc_data.data)
 
-extern s32 lbl_805DE200;
-extern s32 lbl_805DE1FC;
-extern HSD_SList* lbl_805DE1F8;
+extern s32 AObjEndedCount;
+extern s32 AObjActiveCount;
+extern HSD_SList* AObjCallbackList;
 
-extern f64 kar_axdriver__near_803bd408(f32 a, f32 b);
+extern f64 kar_fmod(f32 a, f32 b);
 extern void* memset(void* dst, int val, size_t n);
 extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern void HSD_JObjUnref(HSD_JObj* jobj);
@@ -80,16 +80,16 @@ void HSD_AObjSetFObj(HSD_AObj* aobj, HSD_FObj* fobj)
 
 void HSD_AObjInitEndCallBack(void)
 {
-    lbl_805DE200 = 0;
-    lbl_805DE1FC = 0;
+    AObjEndedCount = 0;
+    AObjActiveCount = 0;
 }
 
 void HSD_AObjInvokeCallBacks(void)
 {
     HSD_SList* list;
 
-    if (lbl_805DE200 != 0 && lbl_805DE1FC == 0) {
-        list = lbl_805DE1F8;
+    if (AObjEndedCount != 0 && AObjActiveCount == 0) {
+        list = AObjCallbackList;
         while (list) {
             void (*func)(void) = list->data;
             (*func)();
@@ -150,7 +150,7 @@ void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj,
             y = aobj->end_frame - aobj->rewind_frame;
             x = aobj->curr_frame - aobj->rewind_frame;
             aobj->curr_frame =
-                kar_axdriver__near_803bd408(x, y) + aobj->rewind_frame;
+                kar_fmod(x, y) + aobj->rewind_frame;
             HSD_FObjReqAnimAll(aobj->fobj, aobj->curr_frame);
         } else {
             aobj->curr_frame = aobj->end_frame;
@@ -175,9 +175,9 @@ void HSD_AObjInterpretAnim(HSD_AObj* aobj, void* obj,
     }
 
     if (aobj->flags & AOBJ_NO_ANIM) {
-        lbl_805DE200 += 1;
+        AObjEndedCount += 1;
     } else {
-        lbl_805DE1FC += 1;
+        AObjActiveCount += 1;
     }
 }
 
@@ -552,5 +552,5 @@ void HSD_AObjSetCurrentFrame(HSD_AObj* aobj, f32 frame)
 
 void _HSD_AObjForgetMemory(void* low, void* high)
 {
-    lbl_805DE1F8 = NULL;
+    AObjCallbackList = NULL;
 }

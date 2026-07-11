@@ -5,10 +5,10 @@ extern void* _HSD_MemAlloc(u32 size, u32 align, u32 flags);
 extern u32 _HSD_MemGetRemain(void);
 extern s32 HSD_GetNbBits(u32 value);
 
-extern objheap lbl_80504018;
-extern char lbl_805DCC50[5];
-HSD_ObjAllocData* lbl_805DE2D0[2];
-char kar_src_objalloc_80504028[0x38] =
+extern objheap HSD_ObjHeap;
+extern char ObjAllocAssertData[5];
+HSD_ObjAllocData* HSD_ObjAllocDataList[2];
+char ObjAllocAssertStrings[0x38] =
     "objalloc.c\0\0align <= 32\0HSD_GetNbBits(align) == 1";
 
 s32 HSD_ObjAllocAddFree(HSD_ObjAllocData* data, u32 num)
@@ -22,16 +22,16 @@ s32 HSD_ObjAllocAddFree(HSD_ObjAllocData* data, u32 num)
     u32 remain;
 
     if (data == NULL) {
-        __assert(kar_src_objalloc_80504028, 0xEE, lbl_805DCC50);
+        __assert(ObjAllocAssertStrings, 0xEE, ObjAllocAssertData);
     }
 
     size = data->size;
     total_size = size * num;
-    if (lbl_80504018.top != 0) {
+    if (HSD_ObjHeap.top != 0) {
         u32 mask = data->align - 1;
 
-        heap_end = (u8*) lbl_80504018.top + lbl_80504018.size;
-        obj = (u8*) ((lbl_80504018.curr + mask) & ~mask);
+        heap_end = (u8*) HSD_ObjHeap.top + HSD_ObjHeap.size;
+        obj = (u8*) ((HSD_ObjHeap.curr + mask) & ~mask);
         if (obj > heap_end) {
             return 0;
         }
@@ -47,8 +47,8 @@ s32 HSD_ObjAllocAddFree(HSD_ObjAllocData* data, u32 num)
         }
 
         end = obj + total_size;
-        lbl_80504018.curr = (u32) end;
-        lbl_80504018.remain = heap_end - end;
+        HSD_ObjHeap.curr = (u32) end;
+        HSD_ObjHeap.remain = heap_end - end;
     } else {
         obj = _HSD_MemAlloc(total_size, data->align, 1);
         if (obj == NULL) {
@@ -78,8 +78,8 @@ void* HSD_ObjAlloc(HSD_ObjAllocData* data)
 
     if (data->heap_limit_flag) {
         if (data->heap_limit_num == -1) {
-            if (lbl_80504018.top != 0) {
-                remain = lbl_80504018.remain;
+            if (HSD_ObjHeap.top != 0) {
+                remain = HSD_ObjHeap.remain;
             } else {
                 remain = _HSD_MemGetRemain();
             }
@@ -88,8 +88,8 @@ void* HSD_ObjAlloc(HSD_ObjAllocData* data)
                 data->heap_limit_num = data->used + data->free;
             }
         } else {
-            if (lbl_80504018.top != 0) {
-                remain = lbl_80504018.remain;
+            if (HSD_ObjHeap.top != 0) {
+                remain = HSD_ObjHeap.remain;
             } else {
                 remain = _HSD_MemGetRemain();
             }
@@ -137,13 +137,13 @@ void HSD_ObjAllocInit(HSD_ObjAllocData* data, u32 size, u32 align)
     char* assert_base;
     u32 aligned_size;
 
-    assert_base = (char*) &lbl_80504018;
+    assert_base = (char*) &HSD_ObjHeap;
     if (data == NULL) {
-        __assert(assert_base + 0x10, 0x182, lbl_805DCC50);
+        __assert(assert_base + 0x10, 0x182, ObjAllocAssertData);
     }
 
     if (data != NULL) {
-        cur = &lbl_805DE2D0[0];
+        cur = &HSD_ObjAllocDataList[0];
         while ((entry = *cur) != NULL) {
             if (entry == data) {
                 *cur = entry->next;
@@ -152,7 +152,7 @@ void HSD_ObjAllocInit(HSD_ObjAllocData* data, u32 size, u32 align)
             }
         }
     } else {
-        lbl_805DE2D0[0] = NULL;
+        HSD_ObjAllocDataList[0] = NULL;
     }
 
     memset(data, 0, sizeof(HSD_ObjAllocData));
@@ -170,11 +170,11 @@ void HSD_ObjAllocInit(HSD_ObjAllocData* data, u32 size, u32 align)
     data->align = align;
     aligned_size = (size + (data->align - 1)) & ~(data->align - 1);
     data->size = aligned_size;
-    data->next = lbl_805DE2D0[0];
-    lbl_805DE2D0[0] = data;
+    data->next = HSD_ObjAllocDataList[0];
+    HSD_ObjAllocDataList[0] = data;
 }
 
 void _HSD_ObjAllocForgetMemory(void)
 {
-    lbl_805DE2D0[0] = NULL;
+    HSD_ObjAllocDataList[0] = NULL;
 }

@@ -59,7 +59,7 @@ GXColor HSD_FogGetColor(HSD_Fog*);
 HSD_FogAdj* HSD_FogAdjLoadDesc(HSD_FogAdjDesc*);
 void HSD_FogAdjInit(HSD_FogAdj*, HSD_FogAdjDesc*);
 u32 HSD_FogAdjGetFlags(HSD_FogAdj*);
-void fn_8041B620(HSD_Fog*, u32, HSD_ObjData*);
+void FogUpdateFunc(HSD_Fog*, u32, HSD_ObjData*);
 void HSD_FogAddAnim(HSD_Fog*, struct _HSD_AObjDesc*);
 void HSD_FogReqAnim(HSD_Fog*, f32);
 void HSD_FogReqAnimByFlags(HSD_Fog*, u32, f32);

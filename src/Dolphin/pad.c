@@ -58,10 +58,10 @@ extern void SISetSamplingRate(u32 rate);
 extern void SIRefreshSamplingRate(void);
 extern BOOL SIRegisterPollingHandler(__OSInterruptHandler handler);
 extern BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler);
-extern void fn_803E93B0(void); /* SITransferCommands */
+extern void SITransferCommands(void);
 
-extern char lbl_804FC4E8[]; /* __PADVersion */
-extern u32 lbl_805DE058; /* __PADFixBits */
+extern char __PADVersion[];
+extern u32 __PADFixBits;
 
 extern vu16 __OSWirelessPadFixMode : 0x800030E0;
 extern vu8 __gUnknown800030E3 : 0x800030E3;
@@ -254,7 +254,7 @@ static u32 lbl_8056E350[4]; /* Type */
 static PADStatus lbl_8056E360[4]; /* Origin */
 static u32 lbl_8056E390[4]; /* CmdProbeDevice */
 
-char* lbl_805DC9A8 = lbl_804FC4E8; /* __PADVersion */
+char* lbl_805DC9A8 = __PADVersion; /* __PADVersion */
 s32 lbl_805DC9AC = 0x20; /* ResettingChan */
 u32 lbl_805DC9B0 = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT; /* XPatchBits */
 u32 lbl_805DC9B4 = 0x300; /* AnalogMode */
@@ -534,7 +534,7 @@ BOOL PADInit(void) {
 
     lbl_805DDF40 = TRUE;
 
-    if (lbl_805DE058 != 0) {
+    if (__PADFixBits != 0) {
         OSTime time = OSGetTime();
         __OSWirelessPadFixMode =
             (u16)((((time)&0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff)) &
@@ -646,7 +646,7 @@ void PADControlMotor(s32 chan, u32 command) {
             command = PAD_MOTOR_STOP;
         }
         SISetCommand(chan, (0x40 << 16) | lbl_805DC9B4 | (command & (0x00000001 | 0x00000002)));
-        fn_803E93B0();
+        SITransferCommands();
     }
 
     OSRestoreInterrupts(enabled);

@@ -72,7 +72,7 @@ const f32 lbl_805DE900 = 0.0f;
 const f32 lbl_805DE904 = 640.0f;
 const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
-extern u8 lbl_8058B634[];
+extern u8 HSD_PadCopyStatus[];
 extern u8 hsdGObj_default_object_kind;
 void* kar_gmmain__near_80006c14(void);
 void kar_gmmain__near_800064f0(void);
@@ -127,7 +127,7 @@ void fn_8027F610(void);
 void kar_pltrick__near_80233a74(void);
 void kar_lbvector__near_8006595c(void);
 
-#define PLAYER_INPUT(i) (*(u32*) (lbl_8058B634 + ((u8) (i) * 0x44) + 8))
+#define PLAYER_INPUT(i) (*(u32*) (HSD_PadCopyStatus + ((u8) (i) * 0x44) + 8))
 #define LOAD_F32(sym) (*(const f32*) &(sym))
 #define CAMERA_GOBJ() (lbl_805DD57C)
 #define MOVIE_GOBJ() (lbl_805DD580[0])

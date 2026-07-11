@@ -3,6 +3,14 @@
 
 #define GRHEAT2_FGM_COUNTER_NUM 10
 
+#ifdef VERSION_GKYP01
+#define GRHEAT2_ASSERT_LOOP_ANIM_LINE 46
+#define GRHEAT2_ASSERT_FGM_COUNT_LINE 52
+#else
+#define GRHEAT2_ASSERT_LOOP_ANIM_LINE 42
+#define GRHEAT2_ASSERT_FGM_COUNT_LINE 48
+#endif
+
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
 typedef struct GroundIndiviParam GroundIndiviParam;
@@ -39,7 +47,7 @@ struct GroundIndiviParam {
     void* bitCounterIdAll;
 };
 
-extern Ground* lbl_805DD6CC;
+extern Ground* kar_gryaku_current_ground;
 
 void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
 void kar_graudio_configure_individual_fgm_tracks(Ground* ground, IndividualFgmAll* indiviFgmAll);
@@ -74,13 +82,14 @@ void kar_grheat2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj)
     }
 
     if (!hasLoopAnim) {
-        __assert("grheat2.c", 42, "indiviParam && indiviParam->loopAnimAll");
+        __assert("grheat2.c", GRHEAT2_ASSERT_LOOP_ANIM_LINE,
+                 "indiviParam && indiviParam->loopAnimAll");
     }
 
     kar_granim__800dbe48(ground, indiviParam->loopAnimAll);
 
     if (indiviParam->indiviFgmAll->indiviFgmNum > GRHEAT2_FGM_COUNTER_NUM) {
-        __assert("grheat2.c", 48,
+        __assert("grheat2.c", GRHEAT2_ASSERT_FGM_COUNT_LINE,
                  "indiviParam->indiviFgmAll->indiviFgmNum <= GrHeat2_FgmCounterNum");
     }
 
@@ -110,12 +119,12 @@ void kar_grheat2_update_individual_fgm_timers(HSD_GObj* gobj)
 
 void kar_grheat2_start_bit_counter_id0_duration500(void)
 {
-    Ground* ground = lbl_805DD6CC;
+    Ground* ground = kar_gryaku_current_ground;
     kar_grcommon__800db5d4(ground, ground->data->indiviParam->bitCounterIdAll, 0);
 }
 
 void kar_grheat2_start_bit_counter_id1_duration100(void)
 {
-    Ground* ground = lbl_805DD6CC;
+    Ground* ground = kar_gryaku_current_ground;
     kar_grcommon__800db654(ground, ground->data->indiviParam->bitCounterIdAll, 1);
 }

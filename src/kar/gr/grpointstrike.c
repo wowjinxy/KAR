@@ -59,7 +59,16 @@ char kar_grpointstrike_assert_panel_joint_num[] =
 char kar_grpointstrike_assert_stadium_kind[0x3C] =
     "stadium_data && stadium_data->kind == GrSDK_PointStrike";
 
+#if defined(VERSION_GKYJ01)
+#define GRPOINTSTRIKE_ASSERT_KIND lbl_805D0C20
+char lbl_805D0C20[] = "0";
+#elif defined(VERSION_GKYP01)
+#define GRPOINTSTRIKE_ASSERT_KIND lbl_805C8B90
+char lbl_805C8B90[] = "0";
+#else
+#define GRPOINTSTRIKE_ASSERT_KIND lbl_805D6190
 char lbl_805D6190[] = "0";
+#endif
 
 void kar_grparts__near_800db1a8(s32* list, s32 count);
 s32 kar_grcommon__800db234(s32* list, s32 index, s32 count);
@@ -121,7 +130,8 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
                         ground->model, entry->effect_index, joint, entry->param);
                 break;
             default:
-                __assert(kar_src_grpointstrike_804a5648, 0x20, lbl_805D6190);
+                __assert(kar_src_grpointstrike_804a5648, 0x20,
+                         GRPOINTSTRIKE_ASSERT_KIND);
                 panel = NULL;
                 break;
             }
@@ -170,7 +180,8 @@ void kar_grpointstrike_init_panel_handles(Ground* ground)
                         ground->model, entry->effect_index, joint, entry->param);
                 break;
             default:
-                __assert(kar_src_grpointstrike_804a5648, 0x20, lbl_805D6190);
+                __assert(kar_src_grpointstrike_804a5648, 0x20,
+                         GRPOINTSTRIKE_ASSERT_KIND);
                 panel = NULL;
                 break;
             }

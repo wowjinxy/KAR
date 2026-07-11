@@ -1,21 +1,21 @@
 #include <global.h>
 #include <sysdolphin/random.h>
 
-extern u32 lbl_805DCD30;
-extern u32* lbl_805DCD38;
+extern u32 HSD_RandDefaultSeed;
+extern u32* HSD_RandSeedPtr;
 
 extern s32 _HSD_MemCheckOwn(void* ptr);
 
 s32 HSD_Rand(void)
 {
-    *lbl_805DCD38 = *lbl_805DCD38 * 214013 + 2531011;
-    return *lbl_805DCD38 >> 0x10;
+    *HSD_RandSeedPtr = *HSD_RandSeedPtr * 214013 + 2531011;
+    return *HSD_RandSeedPtr >> 0x10;
 }
 
 f32 HSD_Randf(void)
 {
-    *lbl_805DCD38 = *lbl_805DCD38 * 214013 + 2531011;
-    return (f32) (*lbl_805DCD38 >> 0x10) / (1 << 16);
+    *HSD_RandSeedPtr = *HSD_RandSeedPtr * 214013 + 2531011;
+    return (f32) (*HSD_RandSeedPtr >> 0x10) / (1 << 16);
 }
 
 s32 HSD_Randi(s32 max_val)
@@ -23,9 +23,9 @@ s32 HSD_Randi(s32 max_val)
     return max_val * HSD_Rand() / (1 << 16);
 }
 
-void fn_8041E6A4(void)
+void _HSD_RandForgetMemory(void)
 {
-    if (_HSD_MemCheckOwn(lbl_805DCD38)) {
-        lbl_805DCD38 = &lbl_805DCD30;
+    if (_HSD_MemCheckOwn(HSD_RandSeedPtr)) {
+        HSD_RandSeedPtr = &HSD_RandDefaultSeed;
     }
 }

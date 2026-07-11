@@ -577,7 +577,7 @@ void fn_803EC698(u32* p)
     *p = (u32)&lbl_8056EB00[lbl_805DE0AC][320];
 }
 
-void fn_803EC6B8(u32* p)
+void AXAuxGetBuffer17(u32* p)
 {
     *p = (u32)&lbl_80570180[lbl_805DE0AC][320];
 }
@@ -1591,7 +1591,7 @@ static const u16 lbl_804FEA00[3984] = {
     0x02DF, 0x27FE, 0x03C0, 0x8000, 0x029C, 0x0F89, 0x02DF, 0x0000
 };
 
-u16 lbl_805DCA20 = sizeof(lbl_804FEA00);
+u16 __AXDspCodeSize = sizeof(lbl_804FEA00);
 
 u32 fn_803EC9B4(void)
 {
@@ -1673,7 +1673,7 @@ void salBuildCommandList(void* sbuffer, void* buffer)
             fn_803EC698(&data);
             __AXWriteToCommandList(data >> 0x10);
             __AXWriteToCommandList((u16)data);
-            fn_803EC6B8(&data);
+            AXAuxGetBuffer17(&data);
             __AXWriteToCommandList(data >> 0x10);
             __AXWriteToCommandList((u16)data);
             lbl_805DE0C8 += 0xDED;
@@ -1871,7 +1871,7 @@ void fn_803ED334(void)
 void salInitDsp(void)
 {
     lbl_80571E00.task.iram_mmem_addr = (u16*)lbl_804FEA00;
-    lbl_80571E00.task.iram_length = lbl_805DCA20;
+    lbl_80571E00.task.iram_length = __AXDspCodeSize;
     lbl_80571E00.task.iram_addr = 0;
     lbl_80571E00.task.dram_mmem_addr = lbl_80571E00.dram;
     lbl_80571E00.task.dram_length = 0x2000;
@@ -1931,11 +1931,11 @@ void fn_803ED76C(void (*callback)(void))
     lbl_805DE0E8 = callback;
 }
 
-AXSPB lbl_80576620;
+AXSPB __AXSpb;
 
 u32 fn_803ED774(void)
 {
-    return (u32)&lbl_80576620;
+    return (u32)&__AXSpb;
 }
 
 static s32 lbl_805DE100;
@@ -1976,16 +1976,16 @@ static inline void __AXDepopFade(s32* hostSum, s32* dspVolume, s16* dspDelta)
 
 void fn_803ED780(void)
 {
-    __AXDepopFade(&lbl_805DE100, (void*)&lbl_80576620.dpopLHi, &lbl_80576620.dpopLDelta);
-    __AXDepopFade(&lbl_805DE104, (void*)&lbl_80576620.dpopRHi, &lbl_80576620.dpopRDelta);
-    __AXDepopFade(&lbl_805DE108, (void*)&lbl_80576620.dpopSHi, &lbl_80576620.dpopSDelta);
-    __AXDepopFade(&lbl_805DE10C, (void*)&lbl_80576620.dpopALHi, &lbl_80576620.dpopALDelta);
-    __AXDepopFade(&lbl_805DE110, (void*)&lbl_80576620.dpopARHi, &lbl_80576620.dpopARDelta);
-    __AXDepopFade(&lbl_805DE114, (void*)&lbl_80576620.dpopASHi, &lbl_80576620.dpopASDelta);
-    __AXDepopFade(&lbl_805DE118, (void*)&lbl_80576620.dpopBLHi, &lbl_80576620.dpopBLDelta);
-    __AXDepopFade(&lbl_805DE11C, (void*)&lbl_80576620.dpopBRHi, &lbl_80576620.dpopBRDelta);
-    __AXDepopFade(&lbl_805DE120, (void*)&lbl_80576620.dpopBSHi, &lbl_80576620.dpopBSDelta);
-    DCFlushRange(&lbl_80576620, sizeof(lbl_80576620));
+    __AXDepopFade(&lbl_805DE100, (void*)&__AXSpb.dpopLHi, &__AXSpb.dpopLDelta);
+    __AXDepopFade(&lbl_805DE104, (void*)&__AXSpb.dpopRHi, &__AXSpb.dpopRDelta);
+    __AXDepopFade(&lbl_805DE108, (void*)&__AXSpb.dpopSHi, &__AXSpb.dpopSDelta);
+    __AXDepopFade(&lbl_805DE10C, (void*)&__AXSpb.dpopALHi, &__AXSpb.dpopALDelta);
+    __AXDepopFade(&lbl_805DE110, (void*)&__AXSpb.dpopARHi, &__AXSpb.dpopARDelta);
+    __AXDepopFade(&lbl_805DE114, (void*)&__AXSpb.dpopASHi, &__AXSpb.dpopASDelta);
+    __AXDepopFade(&lbl_805DE118, (void*)&__AXSpb.dpopBLHi, &__AXSpb.dpopBLDelta);
+    __AXDepopFade(&lbl_805DE11C, (void*)&__AXSpb.dpopBRHi, &__AXSpb.dpopBRDelta);
+    __AXDepopFade(&lbl_805DE120, (void*)&__AXSpb.dpopBSHi, &__AXSpb.dpopBSDelta);
+    DCFlushRange(&__AXSpb, sizeof(__AXSpb));
 }
 
 void __AXSPBInit(void)
@@ -2099,7 +2099,7 @@ void fn_803EEC80(void)
 {
 }
 
-void fn_803EECCC(void)
+void AXHwStub55(void)
 {
 }
 
@@ -2115,7 +2115,7 @@ void fn_803EEE7C(void)
 {
 }
 
-void fn_803EEED0(void)
+void AXHwStub59(void)
 {
 }
 

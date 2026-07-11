@@ -56,7 +56,7 @@ struct Ground {
     GrSwitchAll switch_all;
 };
 
-extern Ground* lbl_805DD6CC;
+extern Ground* kar_gryaku_current_ground;
 
 void kar_graudio_play_map_fgm_for_rider(Ground* ground, s32 rider_index,
                                         s32 fgm_id, s32 arg3, s32 arg4);
@@ -77,7 +77,7 @@ void kar_grswitch__800e85a8(Ground* ground, GrSwitchCallback* callbacks,
     s32 object_offset;
     s32 object_index;
 
-    global_ground = lbl_805DD6CC;
+    global_ground = kar_gryaku_current_ground;
     assert_base = kar_src_grswitch_804a4ee0;
     switch_all = &ground->switch_all;
     object_index = 0;
@@ -135,7 +135,7 @@ void kar_grswitch__800e86dc(HSD_GObj* gobj, s32 object_index)
     s32 valid;
     s32 slot;
 
-    ground = lbl_805DD6CC;
+    ground = kar_gryaku_current_ground;
     map_object = (GroundMapObject*) ((u8*) ground->map_objects +
                                      object_index * sizeof(GroundMapObject));
     switch_all = &ground->switch_all;

@@ -8,7 +8,7 @@ extern f32 HSD_Randf(void);
 extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 extern void PSMTXMultVec(Mtx mtx, Vec* src, Vec* dst);
-extern void kar_fl_indirectload__803d13fc(Mtx dest); /* PSMTXIdentity */
+extern void PSMTXIdentity(Mtx dest); /* PSMTXIdentity */
 extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate,
@@ -21,7 +21,7 @@ extern void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
 extern void* HSD_Alloc(u32 size);
 extern void memset(void*, int, int);
 extern f64 tan(f64 x);
-extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
+extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
 
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
 extern HSD_SList* HSD_SListRemove(HSD_SList* node);
@@ -42,8 +42,8 @@ extern u16 lbl_805DCDD0;
 extern u16 lbl_805DE364;
 extern u16 lbl_805DE35E;
 
-extern f32 lbl_805DC8B8[]; /* epsilon */
-extern f32 lbl_805DC8C0[];
+extern f32 HSD_FloatMin[]; /* epsilon */
+extern f32 HSD_FloatEpsilon[];
 extern u32 lbl_8058C608[];
 extern HSD_PSCmdList** lbl_8058C708[];
 extern void** lbl_8058C408[];
@@ -135,7 +135,7 @@ void kar_generator__804309e8(HSD_Generator* gen)
     speed = generator_sqrtf(gen->vel.x * gen->vel.x + gen->vel.y * gen->vel.y +
                             gen->vel.z * gen->vel.z);
 
-    kar_fl_indirectload__803d13fc(mtx);
+    PSMTXIdentity(mtx);
 
     if ((gen->type & 0x100) && gen->jobj != NULL && (gen->type & 0x400) &&
         !(gen->kind & 0x30000)) {
@@ -657,9 +657,9 @@ HSD_Generator* kar_generator__near_8043294c(int linkNo, int bank, int kind,
     if (gen->kind & 0x100) {
         if (gen->random >= 0.0F) {
             f32 v = 1.0F + gen->random;
-            gen->count = (v <= lbl_805DC8C0[0]) ? 0.0F : 1.0F;
+            gen->count = (v <= HSD_FloatEpsilon[0]) ? 0.0F : 1.0F;
         } else {
-            gen->count = 1.0F - lbl_805DC8C0[0];
+            gen->count = 1.0F - HSD_FloatEpsilon[0];
         }
     } else {
         if (gen->random >= 0.0F) {
@@ -753,17 +753,17 @@ HSD_Generator* kar_generator__near_8043294c(int linkNo, int bank, int kind,
 
         gen->aux.sphere.speed = speed;
 
-        if (__fabsf(horiz) < lbl_805DC8B8[0]) {
+        if (__fabsf(horiz) < HSD_FloatMin[0]) {
             lat = (gen->vel.y >= 0.0F) ? 1.5707963F : -1.5707963F;
         } else {
-            lat = (f32) fn_803BD3C8(gen->vel.y, horiz);
+            lat = (f32) kar_atan2(gen->vel.y, horiz);
         }
         gen->aux.sphere.latMid = lat;
 
-        if (__fabsf(gen->vel.x) < lbl_805DC8B8[0]) {
+        if (__fabsf(gen->vel.x) < HSD_FloatMin[0]) {
             lon = (gen->vel.x >= 0.0F) ? 1.5707963F : -1.5707963F;
         } else {
-            lon = (f32) fn_803BD3C8(gen->vel.z, gen->vel.x);
+            lon = (f32) kar_atan2(gen->vel.z, gen->vel.x);
         }
         gen->aux.sphere.lonMid = lon;
 

@@ -40,10 +40,10 @@ extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 extern void PSMTXMultVec(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXCopy(Mtx src, Mtx dst);
 
-extern void fn_803D1578(MtxPtr src, Mtx dst);
+extern void PSMTXInverse(MtxPtr src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
-extern void kar_fl_indirectload__803d13fc(Mtx mtx);
-extern f64 fn_803BD388(f64 x);
+extern void PSMTXIdentity(Mtx mtx);
+extern f64 kar_acos(f64 x);
 
 extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
 extern void PSVECAdd(Vec* a, Vec* b, Vec* dst);
@@ -123,21 +123,21 @@ static inline f32 jobj_sqrtf(f32 x)
 void JObjInfoInit(void);
 HSD_JObjInfo hsdJObj = { JObjInfoInit };
 
-extern HSD_ClassInfo* lbl_805DE250;
-extern HSD_SList* lbl_805DE254;
-extern void (*lbl_805DE258)(int, int, int, HSD_JObj*);
-extern void (*lbl_805DE25C)(s32);
-extern void (*lbl_805DE260)(HSD_JObj*, s32);
-extern HSD_JObj* lbl_805DE264;
-extern void (*lbl_805DE268)(int, int, int, HSD_JObj*);
+extern HSD_ClassInfo* JObjDefaultClass;
+extern HSD_SList* JObjUfcCallbacks;
+extern void (*JObjDPtclCallback)(int, int, int, HSD_JObj*);
+extern void (*JObjJSoundCallback)(s32);
+extern void (*JObjPtclTargetCallback)(HSD_JObj*, s32);
+extern HSD_JObj* JObjCurrent;
+extern void (*JObjJSoundPtclCallback)(int, int, int, HSD_JObj*);
 
-#define default_class lbl_805DE250
-#define ufc_callbacks lbl_805DE254
-#define dptcl_callback lbl_805DE258
-#define jsound_callback lbl_805DE25C
-#define ptcltgt_callback lbl_805DE260
-#define current_jobj lbl_805DE264
-#define jsound_ptcl_callback lbl_805DE268
+#define default_class JObjDefaultClass
+#define ufc_callbacks JObjUfcCallbacks
+#define dptcl_callback JObjDPtclCallback
+#define jsound_callback JObjJSoundCallback
+#define ptcltgt_callback JObjPtclTargetCallback
+#define current_jobj JObjCurrent
+#define jsound_ptcl_callback JObjJSoundPtclCallback
 
 #ifndef BUGFIX
 #pragma push
@@ -772,7 +772,7 @@ void setupInstanceMtx(MtxPtr vmtx, HSD_JObj* jobj, Mtx mtx)
 
     HSD_JObjSetupMatrix(jobj);
     HSD_JObjSetupMatrix(jobj->child);
-    fn_803D1578(jobj->child->mtx, mtx);
+    PSMTXInverse(jobj->child->mtx, mtx);
     PSMTXConcat(jobj->mtx, mtx, mtx);
     if (vmtx != NULL) {
         PSMTXConcat(vmtx, mtx, mtx);
@@ -881,7 +881,7 @@ s32 JObjLoad(HSD_JObj* jobj, HSD_Joint* joint, HSD_JObj* jobj_2)
     jobj->rotate.z = joint->rotation.z;
     jobj->scale = joint->scale;
     jobj->translate = joint->position;
-    kar_fl_indirectload__803d13fc(jobj->mtx);
+    PSMTXIdentity(jobj->mtx);
     jobj->scl = NULL;
 
     if (joint->mtx != NULL) {
@@ -1566,7 +1566,7 @@ void resolveIKJoint2(HSD_JObj* jobj)
         } else if (x_scale <= -1.0F) {
             angle = M_PI;
         } else {
-            angle = fn_803BD388(x_scale);
+            angle = kar_acos(x_scale);
         }
         if (flip == 0) {
             angle = -angle;

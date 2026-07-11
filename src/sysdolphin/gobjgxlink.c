@@ -1,8 +1,8 @@
 #include <sysdolphin/gobj.h>
 
-char kar_src_gobjgxlink_80504e10[0x10] = "gobjgxlink.c";
-char lbl_80504E20[0x2C] = "gx_link <= HSD_GObjLibInitData.gx_link_max";
-char lbl_80504E4C[0x26] = "gobj->gx_link != HSD_GOBJ_GXLINK_NONE";
+char GObjGXLinkSourceFile[0x10] = "gobjgxlink.c";
+char GObjGXLinkMaxAssert[0x2C] = "gx_link <= HSD_GObjLibInitData.gx_link_max";
+char GObjGXLinkNoneAssert[0x26] = "gobj->gx_link != HSD_GOBJ_GXLINK_NONE";
 
 static inline void gx_link_after(HSD_GObj* gobj, HSD_GObj* position)
 {
@@ -100,7 +100,7 @@ HSD_GObj* HSD_GObjGXLink(HSD_GObj* gobj, void (*render_cb)(HSD_GObj*, s32), u8 g
                          u8 priority)
 {
     if (!(gx_link <= hsdGObj_p_link_max.gx_link_max)) {
-        __assert(kar_src_gobjgxlink_80504e10, 0xA7, lbl_80504E20);
+        __assert(GObjGXLinkSourceFile, 0xA7, GObjGXLinkMaxAssert);
     }
     return HSD_GObjGXLink_Internal(0, gobj, render_cb, gx_link, priority, NULL);
 }
@@ -114,7 +114,7 @@ HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj, void (*render_cb)(HSD_GObj*, s32),
 void HSD_GObjGXLinkRemove(HSD_GObj* gobj)
 {
     if (gobj->gx_link == HSD_GOBJ_GXLINK_NONE) {
-        __assert(kar_src_gobjgxlink_80504e10, 0x19F, lbl_80504E4C);
+        __assert(GObjGXLinkSourceFile, 0x19F, GObjGXLinkNoneAssert);
     }
 
     gx_unlink(gobj);
@@ -125,7 +125,7 @@ void HSD_GObjGXLinkChange_Internal(s32 where, HSD_GObj* gobj, u8 gx_link, u8 pri
                                    HSD_GObj* position)
 {
     if (gobj->gx_link == HSD_GOBJ_GXLINK_NONE) {
-        __assert(kar_src_gobjgxlink_80504e10, 0x19F, lbl_80504E4C);
+        __assert(GObjGXLinkSourceFile, 0x19F, GObjGXLinkNoneAssert);
     }
 
     gx_unlink(gobj);
@@ -153,7 +153,7 @@ void HSD_GObjGXLinkChange_Internal(s32 where, HSD_GObj* gobj, u8 gx_link, u8 pri
 void HSD_GObjGXLinkChange(HSD_GObj* gobj, u8 gx_link, u8 priority)
 {
     if (!(gx_link <= hsdGObj_p_link_max.gx_link_max)) {
-        __assert(kar_src_gobjgxlink_80504e10, 0x1F7, lbl_80504E20);
+        __assert(GObjGXLinkSourceFile, 0x1F7, GObjGXLinkMaxAssert);
     }
     HSD_GObjGXLinkChange_Internal(0, gobj, gx_link, priority, NULL);
 }

@@ -1,19 +1,19 @@
 #include <global.h>
 #include <sysdolphin/spline.h>
 
-extern f32 lbl_805E5BE0; /* 2.0F */
-extern f32 lbl_805E5BE4; /* 3.0F */
-extern f32 lbl_805E5BE8; /* 1.0F */
-extern f32 lbl_805E5BEC; /* 1.0F / 6.0F */
-extern f32 lbl_805E5BF0; /* 4.0F */
-extern f32 lbl_805E5BF4; /* 6.0F */
-extern f32 lbl_805E5BF8; /* 0.0F */
-extern f32 lbl_805E5C08; /* -0.001F */
-extern f64 lbl_805E5C10; /* 0.5 */
-extern f64 lbl_805E5C18; /* 3.0 */
-extern f32 lbl_805E5C20; /* 0.125F */
-extern f32 lbl_805E5C24; /* 0.5F */
-extern f32 lbl_805E5C28; /* 0.00001F */
+extern f32 SplineFloatTwo;       /* 2.0F */
+extern f32 SplineFloatThree;     /* 3.0F */
+extern f32 SplineFloatOne;       /* 1.0F */
+extern f32 SplineFloatOneSixth;  /* 1.0F / 6.0F */
+extern f32 SplineFloatFour;      /* 4.0F */
+extern f32 SplineFloatSix;       /* 6.0F */
+extern f32 SplineFloatZero;      /* 0.0F */
+extern f32 SplineFloatNegEps;    /* -0.001F */
+extern f64 SplineDoubleHalf;     /* 0.5 */
+extern f64 SplineDoubleThree;    /* 3.0 */
+extern f32 SplineFloatOneEighth; /* 0.125F */
+extern f32 SplineFloatHalf;      /* 0.5F */
+extern f32 SplineFloatEps;       /* 0.00001F */
 
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
@@ -21,7 +21,7 @@ extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
 extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */
 extern f32 __fnmsubs(f32 a, f32 c, f32 b); /* = b-a*c */
 
-#define ABS(x) ((x) < lbl_805E5BF8 ? -(x) : (x))
+#define ABS(x) ((x) < SplineFloatZero ? -(x) : (x))
 
 f32 splGetHelmite(f32 fterm, f32 time, f32 p0, f32 p1, f32 d0, f32 d1)
 {
@@ -37,11 +37,11 @@ f32 splGetHelmite(f32 fterm, f32 time, f32 p0, f32 p1, f32 d0, f32 d1)
     t2 = fterm * fterm;
     t2_T = _1_T2 * fterm;
     t3_T2 = t2 * (_1_T2 * time);
-    _2t3_T3 = lbl_805E5BE0 * t3_T2 * fterm;
-    _3t2_T2 = lbl_805E5BE4 * _1_T2 * t2;
+    _2t3_T3 = SplineFloatTwo * t3_T2 * fterm;
+    _3t2_T2 = SplineFloatThree * _1_T2 * t2;
 
     result = p1 * (-_2t3_T3 + _3t2_T2);
-    result = __fmadds(p0, lbl_805E5BE8 + (_2t3_T3 - _3t2_T2), result);
+    result = __fmadds(p0, SplineFloatOne + (_2t3_T3 - _3t2_T2), result);
     result = __fmadds(d0, time + ((t3_T2 - t2_T) - t2_T), result);
     result = __fmadds(d1, t3_T2 - t2_T, result);
     return result;
@@ -51,11 +51,11 @@ void splGetCardinalPoint(Vec* p, Vec* cp, f32 u)
 {
     f32 u2 = u * u;
     f32 u3 = u2 * u;
-    f32 k1_6 = lbl_805E5BEC;
-    f32 u_1 = lbl_805E5BE8 - u;
+    f32 k1_6 = SplineFloatOneSixth;
+    f32 u_1 = SplineFloatOne - u;
     f32 b0 = k1_6 * u_1 * u_1 * u_1;
-    f32 b1 = k1_6 * (lbl_805E5BF0 + __fmsubs(lbl_805E5BE4, u3, lbl_805E5BF4 * u2));
-    f32 b2 = k1_6 * __fmadds(lbl_805E5BE4, -u3 + u2 + u, lbl_805E5BE8);
+    f32 b1 = k1_6 * (SplineFloatFour + __fmsubs(SplineFloatThree, u3, SplineFloatSix * u2));
+    f32 b2 = k1_6 * __fmadds(SplineFloatThree, -u3 + u2 + u, SplineFloatOne);
     f32 b3 = k1_6 * u3;
     f32 result;
 
@@ -80,12 +80,12 @@ void splGetCardinalPoint(Vec* p, Vec* cp, f32 u)
 
 static inline void spl_GetBezierPoint(Vec* p, Vec* cp, f32 u)
 {
-    f32 u_1 = lbl_805E5BE8 - u;
+    f32 u_1 = SplineFloatOne - u;
     f32 u2 = u * u;
     f32 u_12 = u_1 * u_1;
     f32 bez0 = u_12 * u_1;
-    f32 bez1 = lbl_805E5BE4 * u * u_12;
-    f32 bez2 = lbl_805E5BE4 * u2 * u_1;
+    f32 bez1 = SplineFloatThree * u * u_12;
+    f32 bez2 = SplineFloatThree * u2 * u_1;
     f32 bez3 = u2 * u;
     f32 result;
 
@@ -112,12 +112,12 @@ static inline void spl_GetCardinalBlend(Vec* p, Vec* cp, f32 tension, f32 u)
 {
     f32 u2 = u * u;
     f32 u3 = u2 * u;
-    f32 car0 = tension * (__fmadds(lbl_805E5BE0, u2, -u3) - u);
-    f32 car1 = lbl_805E5BE8 +
-               __fmadds(lbl_805E5BE0 - tension, u3, (tension - lbl_805E5BE4) * u2);
+    f32 car0 = tension * (__fmadds(SplineFloatTwo, u2, -u3) - u);
+    f32 car1 = SplineFloatOne +
+               __fmadds(SplineFloatTwo - tension, u3, (tension - SplineFloatThree) * u2);
     f32 car2 = __fmadds(tension, u,
-                         __fmadds(tension - lbl_805E5BE0, u3,
-                                  __fnmsubs(lbl_805E5BE0, tension, lbl_805E5BE4) * u2));
+                         __fmadds(tension - SplineFloatTwo, u3,
+                                  __fnmsubs(SplineFloatTwo, tension, SplineFloatThree) * u2));
     f32 car3 = tension * (u3 - u2);
     f32 result;
 
@@ -145,11 +145,11 @@ void splGetSplinePoint(Vec* p, HSD_Spline* spline, f32 u)
     Vec* cp;
     s16 idx;
 
-    if (u < lbl_805E5BF8 || u > lbl_805E5BE8) {
+    if (u < SplineFloatZero || u > SplineFloatOne) {
         return;
     }
 
-    if (u < lbl_805E5BE8) {
+    if (u < SplineFloatOne) {
         f32 t = (u * (spline->numcv - 1));
         idx = t;
         t = t - (f32) idx;
@@ -185,7 +185,7 @@ void splGetSplinePoint(Vec* p, HSD_Spline* spline, f32 u)
             return;
         case 2:
             cp = &spline->cv[idx] - 1;
-            splGetCardinalPoint(p, cp, lbl_805E5BE8);
+            splGetCardinalPoint(p, cp, SplineFloatOne);
             return;
         case 3:
             cp = &spline->cv[idx];
@@ -206,16 +206,16 @@ static inline f32 spl_ArcLengthPolySqrt(const f32 coeffs[5], f32 t)
     result = __fmadds(coeffs[3], t, result);
     result = coeffs[4] + result;
 
-    if (result < lbl_805E5BF8 && result > lbl_805E5C08) {
-        result = lbl_805E5BF8;
+    if (result < SplineFloatZero && result > SplineFloatNegEps) {
+        result = SplineFloatZero;
     }
 
-    if (result > lbl_805E5BF8) {
+    if (result > SplineFloatZero) {
         volatile f32 y;
         f64 guess = __frsqrte((f64) result);
-        guess = lbl_805E5C10 * guess * __fnmsub(result, guess * guess, lbl_805E5C18);
-        guess = lbl_805E5C10 * guess * __fnmsub(result, guess * guess, lbl_805E5C18);
-        guess = lbl_805E5C10 * guess * __fnmsub(result, guess * guess, lbl_805E5C18);
+        guess = SplineDoubleHalf * guess * __fnmsub(result, guess * guess, SplineDoubleThree);
+        guess = SplineDoubleHalf * guess * __fnmsub(result, guess * guess, SplineDoubleThree);
+        guess = SplineDoubleHalf * guess * __fnmsub(result, guess * guess, SplineDoubleThree);
         y = (f32) (result * guess);
         return y;
     }
@@ -224,30 +224,30 @@ static inline f32 spl_ArcLengthPolySqrt(const f32 coeffs[5], f32 t)
 
 f32 splArcLength(const f32 coeffs[5], f32 start, f32 end)
 {
-    f32 dx = (end - start) * lbl_805E5C20;
+    f32 dx = (end - start) * SplineFloatOneEighth;
     f32 t = start + dx;
-    f32 sum = lbl_805E5BF8;
+    f32 sum = SplineFloatZero;
     s32 i;
 
     for (i = 2; i <= 8; i++) {
         if (!(i & 1)) {
-            sum += lbl_805E5BF0 * spl_ArcLengthPolySqrt(coeffs, t);
+            sum += SplineFloatFour * spl_ArcLengthPolySqrt(coeffs, t);
         } else {
-            sum += lbl_805E5BE0 * spl_ArcLengthPolySqrt(coeffs, t);
+            sum += SplineFloatTwo * spl_ArcLengthPolySqrt(coeffs, t);
         }
         t += dx;
     }
 
     return (dx * (sum + spl_ArcLengthPolySqrt(coeffs, start) +
                   spl_ArcLengthPolySqrt(coeffs, end))) /
-           lbl_805E5BE4;
+           SplineFloatThree;
 }
 
 f32 splArcLengthGetParameter(HSD_Spline* spl, f32 arg1)
 {
     s32 idx = 0;
-    f32 start = lbl_805E5BF8;
-    f32 end = lbl_805E5BE8;
+    f32 start = SplineFloatZero;
+    f32 end = SplineFloatOne;
     f32 result;
 
     if (arg1 <= start) {
@@ -270,9 +270,9 @@ f32 splArcLengthGetParameter(HSD_Spline* spl, f32 arg1)
     case 1:
     case 2:
     case 3: {
-        f32 epsilon = lbl_805E5C28;
-        f32 half = lbl_805E5C24;
-        f32 zero = lbl_805E5BF8;
+        f32 epsilon = SplineFloatEps;
+        f32 half = SplineFloatHalf;
+        f32 zero = SplineFloatZero;
         f32 var_f22 = spl->totalLength * (arg1 - spl->segLength[idx]);
 
         while ((start - end < zero ? -(start - end) : (start - end)) >= epsilon) {
@@ -291,7 +291,7 @@ f32 splArcLengthGetParameter(HSD_Spline* spl, f32 arg1)
     } break;
     }
 
-    return (result + idx) / (spl->numcv - lbl_805E5BE8);
+    return (result + idx) / (spl->numcv - SplineFloatOne);
 }
 
 void splArcLengthPoint(Vec* vec, HSD_Spline* spline, f32 param)

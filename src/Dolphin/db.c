@@ -12,7 +12,7 @@ DBInterface* __DBInterface;
 extern void OSReport(const char*, ...);
 extern void OSDumpContext(void*);
 extern void PPCHalt(void);
-char lbl_804F92F0[] = "DBExceptionDestination\n";
+char DBExceptionDestinationString[] = "DBExceptionDestination\n";
 
 asm void __DBExceptionDestinationAux(void);
 asm void __DBExceptionDestination(void);
@@ -35,9 +35,9 @@ asm void __DBExceptionDestinationAux(void)
 {
     nofralloc
     mflr r0
-    lis r3, lbl_804F92F0@ha
+    lis r3, DBExceptionDestinationString@ha
     stw r0, 0x4(r1)
-    addi r3, r3, lbl_804F92F0@l
+    addi r3, r3, DBExceptionDestinationString@l
     crclr 6
     stwu r1, -0x18(r1)
     stw r31, 0x14(r1)

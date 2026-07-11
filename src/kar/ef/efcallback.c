@@ -6,8 +6,46 @@
 #include <kar/ef/pltrick.h>
 #include <sysdolphin/gobj.h>
 
+#if defined(VERSION_GKYJ01)
+#define lbl_804B4E08 lbl_804AFB50
+#define kar_src_efcallback_804b4e14 lbl_804AFB5C
+#define lbl_804B510C lbl_804AFE54
+#define lbl_8055D7A0 lbl_80558278
+#define lbl_805D7270 lbl_805D1CB0
+#define kar_pltrick__near_80233ecc fn_8022FE58
+#define kar_pltrick__near_802341c0 fn_8023014C
+#define kar_effect__802341ec fn_80230178
+#define kar_effect_find_entry_by_owner_key fn_80230284
+#define kar_effect__near_802344dc fn_80230468
+#define kar_effect__near_802349b0 fn_8023093C
+#define kar_effect__near_80234a04 fn_80230990
+#elif defined(VERSION_GKYP01)
+#define lbl_804B4E08 lbl_804BA5F8
+#define kar_src_efcallback_804b4e14 lbl_804BA604
+#define lbl_804B510C lbl_804BA8FC
+#define lbl_8055D7A0 lbl_80550110
+#define lbl_805D7270 lbl_805C9C58
+#define kar_pltrick__near_80233ecc fn_80234BA8
+#define kar_pltrick__near_802341c0 fn_80234E9C
+#define kar_effect__802341ec fn_80234EC8
+#define kar_effect_find_entry_by_owner_key fn_80234FD4
+#define kar_effect__near_802344dc fn_802351B8
+#define kar_effect__near_802349b0 fn_8023568C
+#define kar_effect__near_80234a04 fn_802356E0
+#endif
+
 extern char lbl_8055D7A0[];
 extern char lbl_804B510C[];
+
+EffectEntry* kar_effect__near_80234a04(void* handle, EffectEntry** prev);
+EffectEntry* kar_effect__near_802344dc(void* owner, void* particle, s32 arg2,
+                                       s32 arg3);
+EffectEntry* kar_effect_find_entry_by_owner_key(void* owner, void* key,
+                                                EffectEntry** prev);
+void kar_effect__802341ec(EffectEntry* entry, EffectEntry* prev);
+void kar_effect__near_802349b0(EffectEntry* entry);
+void kar_pltrick__near_802341c0(EffectEntry* dst, EffectEntry* src);
+s32 kar_pltrick__near_80233ecc(void* obj);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))

@@ -41,6 +41,12 @@ struct GroundData {
 static const f32 lbl_805DF790 = 3.4028234663852886e38f;
 static const f32 lbl_805DF794 = -1.0f;
 
+#if defined(VERSION_GKYP01)
+#define GRGLOBALDEAD_ASSERT_COUNT_LINE 0x5D
+#else
+#define GRGLOBALDEAD_ASSERT_COUNT_LINE 0x59
+#endif
+
 s32 kar_grnullpos_get_global_dead_pos_count(void);
 void kar_grnullpos_get_global_dead_pos(s32 index, Vec* pos, Vec* dir, Vec* scale);
 void kar_grcommon__800ceeb8(Vec* pos, s32 pos_id, GlobalDeadEntry* out);
@@ -109,7 +115,7 @@ s32 kar_grglobaldead_find_nearest_index(Ground* ground, GlobalDeadQuery* query)
     best_index = -1;
 
     if (count == 0) {
-        __assert("grglobaldead.c", 0x59, "num");
+        __assert("grglobaldead.c", GRGLOBALDEAD_ASSERT_COUNT_LINE, "num");
     }
 
     no_hit = lbl_805DF794;

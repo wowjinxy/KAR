@@ -143,7 +143,7 @@ typedef struct GmDialogueEntry {
     s32 field_8;
 } GmDialogueEntry;
 
-extern GmDialogueInput lbl_8058B634[];
+extern GmDialogueInput HSD_PadCopyStatus[];
 
 #define REPORT_STATUS_ERROR(status, fmt)                                      \
     do {                                                                      \
@@ -378,7 +378,7 @@ void kar_gmdialogue__near_800462c8(void)
         } else {
             for (i = 0; i < 4; i++, player++) {
                 if (player->field_0 == 0 &&
-                    (lbl_8058B634[(u8) i].buttons & 0x1360) != 0) {
+                    (HSD_PadCopyStatus[(u8) i].buttons & 0x1360) != 0) {
                     kar_lbaudio__near_80061658();
                     if (*(s32*) &gm[0x340] > 0) {
                         *(s32*) &gm[0x340] = 0;
@@ -445,7 +445,7 @@ void kar_gmdialogue__near_80046df0(void)
     count = 0;
     offset = 0;
 
-    if (lbl_805DD630 >= 3 && (lbl_8058B634[0].raw_buttons & 0x28) == 0x28) {
+    if (lbl_805DD630 >= 3 && (HSD_PadCopyStatus[0].raw_buttons & 0x28) == 0x28) {
         for (i = 0; i < 0x18; i++) {
             if ((s8) kar_gmglobal__near_80007ee4((s8) i) == 0) {
                 kar_gmglobal__near_80007f6c((s8) i, 1);

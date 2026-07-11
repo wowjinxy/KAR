@@ -40,6 +40,12 @@ struct GrPartJoint {
 
 static const f32 lbl_805DF820[2] = { 1.0f, 0.0f };
 
+#if defined(VERSION_GKYP01)
+#define GRYAKUAUDIO_ASSERT_JOINT_LINE 0xBA
+#else
+#define GRYAKUAUDIO_ASSERT_JOINT_LINE 0xB6
+#endif
+
 void PSMTXCopy(Mtx src, Mtx dst);
 void HSD_MtxGetScale(Mtx mtx, Vec* scale);
 void kar_graudio_configure_fgm_track_mode(s32 mode, void* track_group, f32 scale, Vec* pos);
@@ -61,7 +67,8 @@ void kar_gryakuaudio_configure_fgm_track_from_joint(Yaku* yaku, s32 joint_name,
         Vec pos;
 
         if (joint_name == -1) {
-            __assert("gryakuaudio.c", 182, "jointName != Gr_Parts_None");
+            __assert("gryakuaudio.c", GRYAKUAUDIO_ASSERT_JOINT_LINE,
+                     "jointName != Gr_Parts_None");
         }
 
         if (use_yaku_anchor) {

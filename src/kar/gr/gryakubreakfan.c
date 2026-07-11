@@ -57,9 +57,30 @@ struct BreakFanParam {
 #define YAKU_EFFECT_ALLOC(yaku) (*(void**) ((u8*) (yaku) + 0x130))
 #define FGM_ENTRY_COUNT(entry) (*(s32*) ((u8*) (entry) + 0x04))
 
-extern Ground* lbl_805DD6CC;
+extern Ground* kar_gryaku_current_ground;
+
+#if defined(VERSION_GKYJ01)
+#define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
+#define GRYAKUBREAKFAN_PATH_START lbl_805DA490
+#define GRYAKUBREAKFAN_PATH_END lbl_805DA494
+
+extern const f32 lbl_805DA490;
+extern const f32 lbl_805DA494;
+#elif defined(VERSION_GKYP01)
+#define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA9
+#define GRYAKUBREAKFAN_PATH_START lbl_805D24D0
+#define GRYAKUBREAKFAN_PATH_END lbl_805D24D4
+
+extern const f32 lbl_805D24D0;
+extern const f32 lbl_805D24D4;
+#else
+#define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
+#define GRYAKUBREAKFAN_PATH_START lbl_805DFA68
+#define GRYAKUBREAKFAN_PATH_END lbl_805DFA6C
+
 extern const f32 lbl_805DFA68;
 extern const f32 lbl_805DFA6C;
+#endif
 
 char kar_src_gryakubreakfan_c[] = "gryakubreakfan.c";
 char kar_gryakubreakfan_assert_remove_effect_count[] =
@@ -124,7 +145,7 @@ void kar_gryakubreakfan_trigger_kind30_break_effects_from_event(HSD_GObj* gobj,
         }
 
         yaku = gobj->user_data;
-        ground = lbl_805DD6CC;
+        ground = kar_gryaku_current_ground;
         param = yaku->param_link->param;
         if (param->hide_joint != 0) {
             HSD_JObjSetFlagsAll(ground->jobjs[param->joint_index].jobj, 0x10);
@@ -133,7 +154,7 @@ void kar_gryakubreakfan_trigger_kind30_break_effects_from_event(HSD_GObj* gobj,
         kar_collision_object_begin_disable(yaku->collision_object);
 
         if (param->remove_effect_count > 3) {
-            __assert(kar_src_gryakubreakfan_c, 0xA1,
+            __assert(kar_src_gryakubreakfan_c, GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE,
                      kar_gryakubreakfan_assert_remove_effect_count);
         }
 
@@ -154,9 +175,9 @@ void kar_gryakubreakfan_trigger_kind30_break_effects_from_event(HSD_GObj* gobj,
             kar_graudio_play_fgm_entry_id(&yaku->break_fgm_entry, 0);
         }
 
-        start = lbl_805DFA68;
+        start = GRYAKUBREAKFAN_PATH_START;
         kar_gryaku_set_path_node_motion(yaku, 1, param->path_nodes, param->joint_index, 0, start,
-                                        lbl_805DFA6C, start);
+                                        GRYAKUBREAKFAN_PATH_END, start);
     }
 }
 

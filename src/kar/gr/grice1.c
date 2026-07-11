@@ -2,6 +2,11 @@
 #include <sysdolphin/gobj.h>
 
 #define GRICE1_FGM_COUNTER_NUM 10
+#ifdef VERSION_GKYP01
+#define GRICE1_ASSERT_FGM_COUNT_LINE 64
+#else
+#define GRICE1_ASSERT_FGM_COUNT_LINE 60
+#endif
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -44,7 +49,7 @@ typedef struct GrIce1CallbackTable {
     char assert_indivi_fgm_count[0x44];
 } GrIce1CallbackTable;
 
-extern Ground* lbl_805DD6CC;
+extern Ground* kar_gryaku_current_ground;
 
 void kar_grswitch__800e85a8(Ground* ground, GrSwitchCallback* callbacks,
                             s32 func_num);
@@ -116,7 +121,8 @@ void kar_grice1_init_switch_group_and_individual_fgm_ids(HSD_GObj* gobj)
                            3);
 
     if (indiviParam->indiviFgmAll->indiviFgmNum > GRICE1_FGM_COUNTER_NUM) {
-        __assert(table->file, 0x3C, table->assert_indivi_fgm_count);
+        __assert(table->file, GRICE1_ASSERT_FGM_COUNT_LINE,
+                 table->assert_indivi_fgm_count);
     }
 
     for (i = 0; i < indiviParam->indiviFgmAll->indiviFgmNum; i++) {
@@ -189,7 +195,7 @@ void kar_grice1_update_individual_fgm_timers(HSD_GObj* gobj)
 void kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index(HSD_GObj* gobj,
                                                                   s32 stage_index)
 {
-    void* target = GET_PTR(lbl_805DD6CC, 0x218 + stage_index * 0x48);
+    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
 
     if (target != NULL) {
         kar_gryakupushoutwall_trigger_kind50_target_wall_pushes(target);
@@ -199,7 +205,7 @@ void kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index(HSD_GObj* gobj
 void kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    void* target = GET_PTR(lbl_805DD6CC, 0x218 + stage_index * 0x48);
+    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
 
     if (target != NULL) {
         kar_gryakulighttunnel_trigger_kind52_pillar_entry_motion(target);
@@ -209,7 +215,7 @@ void kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index(
 void kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    void* target = GET_PTR(lbl_805DD6CC, 0x218 + stage_index * 0x48);
+    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
 
     if (target != NULL) {
         kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(target);

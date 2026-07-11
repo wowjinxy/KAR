@@ -107,13 +107,13 @@ struct PadLibData {
     u8 unk5C[8];         //0x5C
 };
 
-extern PadLibData lbl_8058B080;
-extern HSD_PadStatus lbl_8058B0E4[20];
-extern HSD_PadStatus lbl_8058B634[20];
+extern PadLibData HSD_PadState;
+extern HSD_PadStatus HSD_PadMasterStatus[20];
+extern HSD_PadStatus HSD_PadCopyStatus[20];
 
-extern const u32 lbl_8048C538[4]; /* pad_bit */
-extern HSD_PadStatus lbl_80503F08; /* default_status_data */
-extern PadLibData lbl_80503F4C;    /* default_libinfo_data */
+extern const u32 HSD_PadBit[4]; /* pad_bit */
+extern HSD_PadStatus HSD_DefaultPadStatus; /* default_status_data */
+extern PadLibData HSD_DefaultPadLibData;    /* default_libinfo_data */
 
 extern u32 OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(u32 level);
@@ -125,23 +125,23 @@ extern void PADReset(u32 mask);
 extern void PADRecalibrate(u32 mask);
 extern void PADInit(void);
 
-extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
+extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b); /* = b - a*c */
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c + b */
 
-extern f32 lbl_805E5B80; /* 0.5F */
-extern f64 lbl_805E5B88; /* 4503599627370496.0 */
-extern f32 lbl_805E5B90; /* 0.0F */
-extern f64 lbl_805E5B98; /* 0.5 */
-extern f64 lbl_805E5BA0; /* 3.0 */
-extern f32 lbl_805E5BA8; /* 1.000000013351432e-10F */
-extern f32 lbl_805E5BB8; /* 1.5707963267948966F */
-extern f32 lbl_805E5BBC; /* -1.5707963267948966F */
-extern f64 lbl_805E5BC0; /* -2.356194490192345 */
-extern f64 lbl_805E5BC8; /* -0.7853981633974483 */
-extern f64 lbl_805E5BD0; /* 0.7853981633974483 */
-extern f64 lbl_805E5BD8; /* 2.356194490192345 */
+extern f32 ControllerFloatHalf; /* 0.5F */
+extern f64 ControllerDoubleUnsignedBias; /* 4503599627370496.0 */
+extern f32 ControllerFloatZero; /* 0.0F */
+extern f64 ControllerDoubleHalf; /* 0.5 */
+extern f64 ControllerDoubleThree; /* 3.0 */
+extern f32 ControllerFloatEpsilon; /* 1.000000013351432e-10F */
+extern f32 ControllerFloatPiOver2; /* 1.5707963267948966F */
+extern f32 ControllerFloatNegPiOver2; /* -1.5707963267948966F */
+extern f64 ControllerDoubleNeg3PiOver4; /* -2.356194490192345 */
+extern f64 ControllerDoubleNegPiOver4; /* -0.7853981633974483 */
+extern f64 ControllerDoublePiOver4; /* 0.7853981633974483 */
+extern f64 ControllerDouble3PiOver4; /* 2.356194490192345 */
 
 #define OS_BUS_CLOCK (*(u32*) 0x800000F8)
 
@@ -156,18 +156,18 @@ static inline f64 u32_to_f64(u32 v)
     } u;
     u.w.hi = 0x43300000;
     u.w.lo = v;
-    return u.d - lbl_805E5B88;
+    return u.d - ControllerDoubleUnsignedBias;
 }
 
 static inline f32 controller_sqrtf(f32 x)
 {
     volatile f32 y;
 
-    if (x > lbl_805E5B90) {
+    if (x > ControllerFloatZero) {
         f64 guess = __frsqrte((f64) x);
-        guess = lbl_805E5B98 * guess * __fnmsub(x, guess * guess, lbl_805E5BA0);
-        guess = lbl_805E5B98 * guess * __fnmsub(x, guess * guess, lbl_805E5BA0);
-        guess = lbl_805E5B98 * guess * __fnmsub(x, guess * guess, lbl_805E5BA0);
+        guess = ControllerDoubleHalf * guess * __fnmsub(x, guess * guess, ControllerDoubleThree);
+        guess = ControllerDoubleHalf * guess * __fnmsub(x, guess * guess, ControllerDoubleThree);
+        guess = ControllerDoubleHalf * guess * __fnmsub(x, guess * guess, ControllerDoubleThree);
         y = (f32) (x * guess);
         return y;
     }
@@ -180,7 +180,7 @@ u8 HSD_PadGetRawQueueCount(void)
     u8 count;
     u32 intr;
 
-    p = &lbl_8058B080;
+    p = &HSD_PadState;
     intr = OSDisableInterrupts();
     count = p->qcount;
     OSRestoreInterrupts(intr);
@@ -188,13 +188,13 @@ u8 HSD_PadGetRawQueueCount(void)
     return count;
 }
 
-u8 kar_initialize_get_secondary_raw_pad_queue_count(void)
+u8 HSD_PadGetMappedRawQueueCount(void)
 {
     PadLibData* p;
     u8 count;
     u32 intr;
 
-    p = &lbl_8058B080;
+    p = &HSD_PadState;
     intr = OSDisableInterrupts();
     count = p->qcount2;
     OSRestoreInterrupts(intr);
@@ -204,14 +204,14 @@ u8 kar_initialize_get_secondary_raw_pad_queue_count(void)
 
 s32 HSD_PadGetResetSwitch(void)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     return p->reset_switch != 0;
 }
 
-void kar_initialize_read_pad_status_and_latch_soft_reset(HSD_PadData* now)
+void HSD_PadReadStatus(HSD_PadData* now)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     int i;
 
     now->connect_mask = PADRead(now->stat);
@@ -226,7 +226,7 @@ void kar_initialize_read_pad_status_and_latch_soft_reset(HSD_PadData* now)
             case 1: {
                 u32 elapsed = OSGetTick() - p->reset_timer[i].tick;
                 if (u32_to_f64(elapsed) >=
-                    lbl_805E5B80 * u32_to_f64(OS_BUS_CLOCK / 4)) {
+                    ControllerFloatHalf * u32_to_f64(OS_BUS_CLOCK / 4)) {
                     p->reset_switch = 1;
                     p->reset_timer[i].state = 2;
                 }
@@ -239,12 +239,12 @@ void kar_initialize_read_pad_status_and_latch_soft_reset(HSD_PadData* now)
     }
 }
 
-void kar_initialize_push_raw_pad_queue_statuses(int count, PadLibData* p,
+void HSD_PadPushRawQueue(int count, PadLibData* p,
                                                  HSD_PadData* queue,
                                                  HSD_PadData* now,
                                                  bool err_check)
 {
-    PadLibData* base = &lbl_8058B080;
+    PadLibData* base = &HSD_PadState;
     HSD_PadData* qwrite;
     int i, c;
 
@@ -300,29 +300,29 @@ void kar_initialize_push_raw_pad_queue_statuses(int count, PadLibData* p,
     p->qwrite = (p->qwrite + 1) % p->qnum;
 }
 
-void kar_initialize_push_primary_raw_pad_queue(HSD_PadData* now, bool err_check)
+void HSD_PadPushPrimaryRawQueue(HSD_PadData* now, bool err_check)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
-    kar_initialize_push_raw_pad_queue_statuses(1, p, p->queue, now, err_check);
+    HSD_PadPushRawQueue(1, p, p->queue, now, err_check);
 }
 
-void kar_initialize_push_secondary_raw_pad_queue(HSD_PadData* now, bool err_check)
+void HSD_PadPushMappedRawQueue(HSD_PadData* now, bool err_check)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
-    kar_initialize_push_raw_pad_queue_statuses(4, (PadLibData*) &p->qnum2,
+    HSD_PadPushRawQueue(4, (PadLibData*) &p->qnum2,
                                                 p->queue2, now, err_check);
 }
 
-void kar_initialize_reset_raw_pad_error_channels(HSD_PadData* now)
+void HSD_PadResetRawErrorChannels(HSD_PadData* now)
 {
     u32 mask = 0;
     int i;
 
     for (i = 0; i < 4; i++) {
         if (now->stat[i].err == -1) {
-            mask |= lbl_8048C538[i];
+            mask |= HSD_PadBit[i];
         }
     }
     if (mask != 0) {
@@ -330,9 +330,9 @@ void kar_initialize_reset_raw_pad_error_channels(HSD_PadData* now)
     }
 }
 
-void kar_initialize_poll_reset_switch_latch(void)
+void HSD_PadPollResetSwitch(void)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     if (OSGetResetSwitchState()) {
         p->reset_switch_status = 1;
@@ -353,7 +353,7 @@ void HSD_PadFlushQueue(HSD_FlushType ftype)
     u32 intr;
     int c;
 
-    p = &lbl_8058B080;
+    p = &HSD_PadState;
     queue = p->queue;
     intr = OSDisableInterrupts();
     switch (ftype) {
@@ -381,7 +381,7 @@ void HSD_PadFlushQueue(HSD_FlushType ftype)
     OSRestoreInterrupts(intr);
 }
 
-void kar_initialize_flush_secondary_pad_queue(HSD_FlushType ftype)
+void HSD_PadFlushMappedQueue(HSD_FlushType ftype)
 {
     PadLibData* p;
     HSD_PadData* queue2;
@@ -390,7 +390,7 @@ void kar_initialize_flush_secondary_pad_queue(HSD_FlushType ftype)
     u32 intr;
     int i, c;
 
-    p = &lbl_8058B080;
+    p = &HSD_PadState;
     queue2 = p->queue2;
     intr = OSDisableInterrupts();
     switch (ftype) {
@@ -452,7 +452,7 @@ static inline void HSD_PadClampCheck3(s8* x, s8* y, u8 shift, s8 min, s8 max)
         r = controller_sqrtf((f32) *x * (f32) *x + (f32) *y * (f32) *y);
     }
 
-    if (shift == 1 && r > lbl_805E5BA8) {
+    if (shift == 1 && r > ControllerFloatEpsilon) {
         *x = (s8) ((f32) *x - (((f32) *x * (f32) min) / r));
         *y = (s8) ((f32) *y - (((f32) *y * (f32) min) / r));
     }
@@ -460,7 +460,7 @@ static inline void HSD_PadClampCheck3(s8* x, s8* y, u8 shift, s8 min, s8 max)
 
 void HSD_PadClamp(HSD_PadStatus* mp)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     switch (p->clamp_stickType) {
     case 0:
@@ -485,44 +485,44 @@ void HSD_PadClamp(HSD_PadStatus* mp)
 static inline void HSD_PadADConvertCheck1(HSD_PadStatus* mp, s8 x, s8 y, u32 up,
                                     u32 down, u32 left, u32 right)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     f32 r;
     f32 a;
     f32 ha;
 
     r = controller_sqrtf(__fmadds((f32) x, (f32) x, (f32) y * (f32) y));
 
-    if (lbl_805E5B90 == (f32) x) {
-        a = (f32) y >= lbl_805E5B90 ? lbl_805E5BB8 : lbl_805E5BBC;
+    if (ControllerFloatZero == (f32) x) {
+        a = (f32) y >= ControllerFloatZero ? ControllerFloatPiOver2 : ControllerFloatNegPiOver2;
     } else {
-        a = (f32) fn_803BD3C8(y, x);
+        a = (f32) kar_atan2(y, x);
     }
 
-    ha = lbl_805E5B80 * p->adc_angle;
+    ha = ControllerFloatHalf * p->adc_angle;
     if (r < p->adc_th) {
         return;
     }
 
-    if (a < lbl_805E5BC0 + ha) {
+    if (a < ControllerDoubleNeg3PiOver4 + ha) {
         mp->button |= left;
     }
-    if (a >= lbl_805E5BC0 - ha && a <= lbl_805E5BC8 + ha) {
+    if (a >= ControllerDoubleNeg3PiOver4 - ha && a <= ControllerDoubleNegPiOver4 + ha) {
         mp->button |= down;
     }
-    if (a > lbl_805E5BC8 - ha && a < lbl_805E5BD0 + ha) {
+    if (a > ControllerDoubleNegPiOver4 - ha && a < ControllerDoublePiOver4 + ha) {
         mp->button |= right;
     }
-    if (a >= lbl_805E5BD0 - ha && a <= lbl_805E5BD8 + ha) {
+    if (a >= ControllerDoublePiOver4 - ha && a <= ControllerDouble3PiOver4 + ha) {
         mp->button |= up;
     }
-    if (a > lbl_805E5BD8 - ha) {
+    if (a > ControllerDouble3PiOver4 - ha) {
         mp->button |= left;
     }
 }
 
 void HSD_PadADConvert(HSD_PadStatus* mp)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     switch (p->adc_type) {
     case 0:
@@ -538,7 +538,7 @@ void HSD_PadADConvert(HSD_PadStatus* mp)
 
 static inline void HSD_PadScale(HSD_PadStatus* mp)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     mp->nml_stickX = (f32) mp->stickX / (f32) p->scale_stick;
     mp->nml_stickY = (f32) mp->stickY / (f32) p->scale_stick;
@@ -552,7 +552,7 @@ static inline void HSD_PadScale(HSD_PadStatus* mp)
 
 static inline void HSD_PadCrossDir(HSD_PadStatus* mp)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
     switch (p->cross_dir) {
     case 0:
@@ -590,11 +590,11 @@ static inline void HSD_PadCrossDir(HSD_PadStatus* mp)
     }
 }
 
-void kar_initialize_renew_pad_master_statuses_from_queue(int count, PadLibData* p,
+void HSD_PadRenewMasterStatusFromQueue(int count, PadLibData* p,
                                                           HSD_PadData* queue,
                                                           HSD_PadStatus* mp)
 {
-    PadLibData* base = &lbl_8058B080;
+    PadLibData* base = &HSD_PadState;
     HSD_PadData* qread;
     int i, c;
     u32 intr;
@@ -610,7 +610,7 @@ void kar_initialize_renew_pad_master_statuses_from_queue(int count, PadLibData* 
 
             for (c = 0; c < 4; c++, mp++) {
                 mp->last_button = mp->button;
-                mp->reset_hit = (mask & lbl_8048C538[c]) != 0;
+                mp->reset_hit = (mask & HSD_PadBit[c]) != 0;
                 mp->unk42 = -1;
                 mp->err = qread->stat[c].err;
                 if (mp->err == 0) {
@@ -671,40 +671,40 @@ void kar_initialize_renew_pad_master_statuses_from_queue(int count, PadLibData* 
 
 void HSD_PadRenewMasterStatus(void)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
 
-    kar_initialize_renew_pad_master_statuses_from_queue(1, p, p->queue,
-                                                          &lbl_8058B0E4[0]);
+    HSD_PadRenewMasterStatusFromQueue(1, p, p->queue,
+                                                          &HSD_PadMasterStatus[0]);
 }
 
-void kar_initialize_renew_mapped_pad_master_statuses(void)
+void HSD_PadRenewMappedMasterStatus(void)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     int i;
 
-    kar_initialize_renew_pad_master_statuses_from_queue(
-        4, (PadLibData*) &p->qnum2, p->queue2, &lbl_8058B0E4[4]);
+    HSD_PadRenewMasterStatusFromQueue(
+        4, (PadLibData*) &p->qnum2, p->queue2, &HSD_PadMasterStatus[4]);
 
     for (i = 0; i < 4; i++) {
         s8 valid = p->port[i].valid;
         HSD_PadStatus tmp;
 
         if (valid == -1) {
-            tmp = lbl_80503F08;
+            tmp = HSD_DefaultPadStatus;
         } else {
             s8 chan = p->port[i].chan;
-            tmp = lbl_8058B0E4[(valid + 1) * 4 + chan];
-            lbl_8058B0E4[(valid + 1) * 4 + chan].unk42 = i;
+            tmp = HSD_PadMasterStatus[(valid + 1) * 4 + chan];
+            HSD_PadMasterStatus[(valid + 1) * 4 + chan].unk42 = i;
         }
 
-        lbl_8058B0E4[i] = tmp;
+        HSD_PadMasterStatus[i] = tmp;
     }
 }
 
-void kar_initialize_copy_pad_statuses_with_repeat(int count, HSD_PadStatus* mp,
+void HSD_PadCopyStatusWithRepeat(int count, HSD_PadStatus* mp,
                                                    HSD_PadStatus* cp)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     int i, c;
 
     for (i = 0; i < count; i++) {
@@ -771,25 +771,25 @@ void kar_initialize_copy_pad_statuses_with_repeat(int count, HSD_PadStatus* mp,
 
 void HSD_PadRenewCopyStatus(void)
 {
-    kar_initialize_copy_pad_statuses_with_repeat(1, &lbl_8058B0E4[0],
-                                                  &lbl_8058B634[0]);
+    HSD_PadCopyStatusWithRepeat(1, &HSD_PadMasterStatus[0],
+                                                  &HSD_PadCopyStatus[0]);
 }
 
-void kar_initialize_renew_mapped_pad_copy_statuses(void)
+void HSD_PadRenewMappedCopyStatus(void)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     HSD_PadStatus* mp = (HSD_PadStatus*) ((u8*) p + 0x64);
     HSD_PadStatus* cp = (HSD_PadStatus*) ((u8*) p + 0x5B4);
     HSD_PadStatus tmp;
     int i;
 
-    kar_initialize_copy_pad_statuses_with_repeat(4, mp + 4, cp + 4);
+    HSD_PadCopyStatusWithRepeat(4, mp + 4, cp + 4);
 
     for (i = 0; i < 4; i++) {
         s8 valid = p->port[i].valid;
 
         if (valid == -1) {
-            tmp = lbl_80503F08;
+            tmp = HSD_DefaultPadStatus;
         } else {
             s8 chan = p->port[i].chan;
             tmp = mp[(valid + 1) * 4 + chan];
@@ -800,46 +800,46 @@ void kar_initialize_renew_mapped_pad_copy_statuses(void)
     }
 }
 
-void kar_initialize_clear_pad_master_statuses(void)
+void HSD_PadClearMasterStatus(void)
 {
-    HSD_PadStatus* dst = lbl_8058B0E4;
+    HSD_PadStatus* dst = HSD_PadMasterStatus;
     int i;
 
     for (i = 0; i < 4; i++, dst++) {
-        *dst = lbl_80503F08;
+        *dst = HSD_DefaultPadStatus;
     }
 }
 
-void kar_initialize_clear_secondary_pad_master_statuses(void)
+void HSD_PadClearMappedMasterStatus(void)
 {
-    HSD_PadStatus* dst = &lbl_8058B0E4[4];
+    HSD_PadStatus* dst = &HSD_PadMasterStatus[4];
     int g, i;
 
     for (g = 0; g < 4; g++) {
         for (i = 0; i < 4; i++, dst++) {
-            *dst = lbl_80503F08;
+            *dst = HSD_DefaultPadStatus;
         }
     }
 }
 
-void kar_initialize_clear_pad_copy_statuses(void)
+void HSD_PadClearCopyStatus(void)
 {
-    HSD_PadStatus* dst = lbl_8058B634;
+    HSD_PadStatus* dst = HSD_PadCopyStatus;
     int i;
 
     for (i = 0; i < 4; i++, dst++) {
-        *dst = lbl_80503F08;
+        *dst = HSD_DefaultPadStatus;
     }
 }
 
-void kar_initialize_clear_secondary_pad_copy_statuses(void)
+void HSD_PadClearMappedCopyStatus(void)
 {
-    HSD_PadStatus* dst = &lbl_8058B634[4];
+    HSD_PadStatus* dst = &HSD_PadCopyStatus[4];
     int g, i;
 
     for (g = 0; g < 4; g++) {
         for (i = 0; i < 4; i++, dst++) {
-            *dst = lbl_80503F08;
+            *dst = HSD_DefaultPadStatus;
         }
     }
 }
@@ -850,7 +850,7 @@ void HSD_PadReset(void)
     u32 intr;
     int i;
 
-    p = &lbl_8058B080;
+    p = &HSD_PadState;
     intr = OSDisableInterrupts();
 
     HSD_PadRumbleRemoveAll();
@@ -860,7 +860,7 @@ void HSD_PadReset(void)
     }
 
     HSD_PadFlushQueue(HSD_PAD_FLUSH_QUEUE_THROWAWAY);
-    kar_initialize_flush_secondary_pad_queue(HSD_PAD_FLUSH_QUEUE_THROWAWAY);
+    HSD_PadFlushMappedQueue(HSD_PAD_FLUSH_QUEUE_THROWAWAY);
 
     PADRecalibrate(0xF0000000);
 
@@ -880,10 +880,10 @@ void HSD_PadReset(void)
 void HSD_PadInit(u8 qnum, HSD_PadData* queue, HSD_PadData* queue2, u16 nb_list,
                  HSD_PadRumbleListData* listdatap)
 {
-    PadLibData* p = &lbl_8058B080;
+    PadLibData* p = &HSD_PadState;
     int i;
 
-    *p = lbl_80503F4C;
+    *p = HSD_DefaultPadLibData;
     p->qnum = qnum;
     p->queue = queue;
     p->qnum2 = qnum;
@@ -899,32 +899,32 @@ void HSD_PadInit(u8 qnum, HSD_PadData* queue, HSD_PadData* queue2, u16 nb_list,
     HSD_PadRumbleInit(nb_list, listdatap);
 
     {
-        HSD_PadStatus* dst = lbl_8058B0E4;
+        HSD_PadStatus* dst = HSD_PadMasterStatus;
         for (i = 0; i < 4; i++, dst++) {
-            *dst = lbl_80503F08;
+            *dst = HSD_DefaultPadStatus;
         }
     }
     {
-        HSD_PadStatus* dst = &lbl_8058B0E4[4];
+        HSD_PadStatus* dst = &HSD_PadMasterStatus[4];
         int g;
         for (g = 0; g < 4; g++) {
             for (i = 0; i < 4; i++, dst++) {
-                *dst = lbl_80503F08;
+                *dst = HSD_DefaultPadStatus;
             }
         }
     }
     {
-        HSD_PadStatus* dst = lbl_8058B634;
+        HSD_PadStatus* dst = HSD_PadCopyStatus;
         for (i = 0; i < 4; i++, dst++) {
-            *dst = lbl_80503F08;
+            *dst = HSD_DefaultPadStatus;
         }
     }
     {
-        HSD_PadStatus* dst = &lbl_8058B634[4];
+        HSD_PadStatus* dst = &HSD_PadCopyStatus[4];
         int g;
         for (g = 0; g < 4; g++) {
             for (i = 0; i < 4; i++, dst++) {
-                *dst = lbl_80503F08;
+                *dst = HSD_DefaultPadStatus;
             }
         }
     }

@@ -30,22 +30,20 @@ void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
     }
 }
 
-char lbl_805DCD58[] = " ";
+char ClassReportSpaceString[] = " ";
 void OSReport_PrintSpaces(s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {
-        OSReport(lbl_805DCD58);
+        OSReport(ClassReportSpaceString);
     }
 }
 
 void* _HSD_MemAlloc();                     /* extern */
 
-u32 lbl_805DE300[2];
-s32 lbl_805DE2FC;
-HSD_MemoryEntry** lbl_805DE2F8;
-
-extern char lbl_805048B0[0xC];
+u32 ClassInfoHash[2];
+s32 ClassMemoryEntryCount;
+HSD_MemoryEntry** ClassMemoryEntries;
 
 #define OSRoundDown32B(x) (((u32)(x)) & ~(32 - 1))
 #define OSRoundUp32B(x)   (((u32)(x) + 32 - 1) & ~(32 - 1))
@@ -63,25 +61,25 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
 {
     assert_line(174, idx >= 0);
 
-    if (idx >= lbl_805DE2FC) {
-        if (lbl_805DE2FC == 0) {
+    if (idx >= ClassMemoryEntryCount) {
+        if (ClassMemoryEntryCount == 0) {
             s32 new_nb;
             for (new_nb = 32; idx >= new_nb;) {
                 new_nb *= 2;
             }
-            lbl_805DE2F8 = _HSD_MemAlloc(new_nb * 4, 4, 1);
-            if (lbl_805DE2F8 == NULL) {
+            ClassMemoryEntries = _HSD_MemAlloc(new_nb * 4, 4, 1);
+            if (ClassMemoryEntries == NULL) {
                 return NULL;
             }
-            memset(lbl_805DE2F8, 0, new_nb * 4);
-            lbl_805DE2FC = new_nb;
+            memset(ClassMemoryEntries, 0, new_nb * 4);
+            ClassMemoryEntryCount = new_nb;
         } else {
             s32 new_nb;
             HSD_FreeList* old_list;
             HSD_MemoryEntry** new_list;
             s32 old_nb;
 
-            new_nb = lbl_805DE2FC * 2;
+            new_nb = ClassMemoryEntryCount * 2;
             while (idx >= new_nb) {
                 new_nb *= 2;
             }
@@ -91,45 +89,45 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
                 return NULL;
             }
 
-            memcpy(new_list, lbl_805DE2F8, 4 * lbl_805DE2FC);
-            memset(&new_list[lbl_805DE2FC], 0, (new_nb - lbl_805DE2FC) * 4);
+            memcpy(new_list, ClassMemoryEntries, 4 * ClassMemoryEntryCount);
+            memset(&new_list[ClassMemoryEntryCount], 0, (new_nb - ClassMemoryEntryCount) * 4);
 
-            old_list = (HSD_FreeList*) lbl_805DE2F8;
-            old_nb = OSRoundDown32B(lbl_805DE2FC * 4);
-            lbl_805DE2F8 = new_list;
-            lbl_805DE2FC = new_nb;
+            old_list = (HSD_FreeList*) ClassMemoryEntries;
+            old_nb = OSRoundDown32B(ClassMemoryEntryCount * 4);
+            ClassMemoryEntries = new_list;
+            ClassMemoryEntryCount = new_nb;
 
             hsdFreeMemPiece(old_list, old_nb);
-            lbl_805DE2F8[OSRoundUp32B(old_nb)/32 - 1]->nb_alloc += 1;
+            ClassMemoryEntries[OSRoundUp32B(old_nb)/32 - 1]->nb_alloc += 1;
         }
     }
     {
         int i;
         BOOL found;
         HSD_MemoryEntry* entry;
-        if (lbl_805DE2F8[idx] == NULL) {
+        if (ClassMemoryEntries[idx] == NULL) {
             entry = _HSD_MemAlloc(0x14, 4, 1);
             if (entry == NULL) {
                 return NULL;
             }
             memset(entry, 0, 0x14);
             entry->size = (idx + 1) * 32;
-            lbl_805DE2F8[idx] = entry;
+            ClassMemoryEntries[idx] = entry;
 
             found = FALSE;
             for (i = idx - 1; i >= 0; --i) {
-                if (lbl_805DE2F8[i] != NULL) {
+                if (ClassMemoryEntries[i] != NULL) {
                     found = TRUE;
-                    entry->next = lbl_805DE2F8[i]->next;
-                    lbl_805DE2F8[i]->next = entry;
+                    entry->next = ClassMemoryEntries[i]->next;
+                    ClassMemoryEntries[i]->next = entry;
                     break;
                 }
             }
 
             if (found == FALSE) {
-                for (i = idx + 1; i < lbl_805DE2FC; i++) {
-                    if (lbl_805DE2F8[i] != NULL) {
-                        entry->next = lbl_805DE2F8[i];
+                for (i = idx + 1; i < ClassMemoryEntryCount; i++) {
+                    if (ClassMemoryEntries[i] != NULL) {
+                        entry->next = ClassMemoryEntries[i];
                         break;
                     }
                 }
@@ -137,7 +135,7 @@ HSD_MemoryEntry* GetMemoryEntry(s32 idx)
             }
         }
     }
-    return lbl_805DE2F8[idx];
+    return ClassMemoryEntries[idx];
 }
 
 void* hsdAllocMemPiece(s32 size)
@@ -186,14 +184,14 @@ void* hsdAllocMemPiece(s32 size)
         }
         var_r28 = var_r28->next;
     }
-    temp_r28 = (lbl_805DE2FC - temp_r29) - 2;
+    temp_r28 = (ClassMemoryEntryCount - temp_r29) - 2;
     if (temp_r28 >= 0) {
         var_r30 = GetMemoryEntry(temp_r28);
         if (var_r30 == NULL) {
             return NULL;
         }
     }
-    temp_r3 = _HSD_MemAlloc(lbl_805DE2FC * 32, 4, 1);
+    temp_r3 = _HSD_MemAlloc(ClassMemoryEntryCount * 32, 4, 1);
     if (temp_r3 == NULL) {
         return NULL;
     }
@@ -262,20 +260,20 @@ void _hsdClassAmnesia(HSD_ClassInfo* info)
     info->head.nb_exist = 0;
     info->head.nb_peak = 0;
     if (info == &hsdClass) {
-        lbl_805DE2FC = 0;
-        lbl_805DE2F8 = 0;
-        lbl_805DE300[0] = 0;
+        ClassMemoryEntryCount = 0;
+        ClassMemoryEntries = 0;
+        ClassInfoHash[0] = 0;
     }
 }
 
-char lbl_805048BC[] = "sysdolphin_base_library";
+char hsdClass_library_string[] = "sysdolphin_base_library";
 
 void _hsdClassRelease(HSD_Class* c);
 
 void _hsdClassInfoInit(void)
 {
     hsdClass.head.flags = 1;
-    hsdClass.head.library_name = lbl_805048BC;
+    hsdClass.head.library_name = hsdClass_library_string;
     hsdClass.head.class_name = "hsd_class";
     hsdClass.head.obj_size = 4;
     hsdClass.head.info_size = 0x3C;
@@ -314,8 +312,6 @@ void* hsdNew(HSD_ClassInfo* info)
     }
     return cls;
 }
-
-extern char lbl_805DCD5C[4];
 
 BOOL hsdChangeClass(HSD_Class* object, HSD_ClassInfo* class_info)
 {
@@ -431,13 +427,13 @@ void ForgetClassLibraryChild(char* name, HSD_ClassInfo* class_info)
 void hsdForgetClassLibrary(char* name)
 {
     if (name == NULL) {
-        name = lbl_805048BC;
+        name = hsdClass_library_string;
     }
     if (!(hsdClass.head.flags & 1)) {
         return;
     }
     if (strcmp(name, hsdClass.head.library_name) == 0) {
-        lbl_805DE300[0] = 0;
+        ClassInfoHash[0] = 0;
         ForgetClassLibraryReal(&hsdClass);
     } else {
         ForgetClassLibraryChild(name, &hsdClass);
@@ -447,8 +443,8 @@ void hsdForgetClassLibrary(char* name)
 HSD_ClassInfo* HSD_HashSearch();
 HSD_ClassInfo* hsdSearchClassInfo(char* arg0)
 {
-    if (lbl_805DE300[0] != 0) {
-        return HSD_HashSearch(lbl_805DE300[0], arg0, 0);
+    if (ClassInfoHash[0] != 0) {
+        return HSD_HashSearch(ClassInfoHash[0], arg0, 0);
     }
     return NULL;
 }

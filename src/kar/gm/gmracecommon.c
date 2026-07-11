@@ -96,7 +96,7 @@ const f64 lbl_805DE8F8 = 4503601774854144.0;
 
 extern RaceUserData* lbl_805DD570;
 extern char kar_linkfile_gmdata_dat_80496028[];
-extern u8 lbl_8058B080[];
+extern u8 HSD_PadState[];
 extern const f32 lbl_805DE7A8;
 
 void* memset(void* dst, int val, unsigned long n);
@@ -509,11 +509,11 @@ void kar_gmracecommon__near_800135ec(s32 player)
 
     if (kar_shadow__near_8007b650() != 0) {
         s32 shadow_offset = player_index * 2;
-        s32 shadow_player = (s8) lbl_8058B080[shadow_offset + 0x12];
+        s32 shadow_player = (s8) HSD_PadState[shadow_offset + 0x12];
 
         if (shadow_player == (u8) kar_shadow__near_8007b990()) {
             s32 source_slot =
-                (s8) lbl_8058B080[shadow_offset + 0x13] * sizeof(RaceSlot);
+                (s8) HSD_PadState[shadow_offset + 0x13] * sizeof(RaceSlot);
             kar_plclearcheckerlib__near_8022cc10(player_index,
                                                  GET_S8(slots, source_slot + 5));
         } else {

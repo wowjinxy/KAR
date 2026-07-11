@@ -8,21 +8,21 @@
 #define COBJ_INV_DIRTY 0x80000000
 
 extern HSD_ClassInfo hsdObj;
-extern GXRenderModeObj lbl_80589A80;
-extern s32 lbl_805DCB00;
-extern s32 lbl_805DCB04;
-extern f32 lbl_805DC8B8[]; /* epsilon */
+extern GXRenderModeObj CObjRenderMode;
+extern s32 CObjRefWidth;
+extern s32 CObjRefHeight;
+extern f32 HSD_FloatMin[]; /* epsilon */
 extern HSD_ObjAllocData hsdFObj_alloc_data;
 
-char kar_srcfile_cobj_c_805dcb08[] = "cobj.c";
-char lbl_805DCB10[] = "cobj";
-char lbl_805DCB18[] = "0";
+char kar_srcfile_cobj_c[] = "cobj.c";
+char CObjAssertCObj[] = "cobj";
+char CObjAssertZero[] = "0";
 
 extern void HSD_Panic(const char* file, s32 line, const char* msg);
 
 #define ASSERT_COBJ(line)                                                    \
     ((cobj) ? ((void) 0)                                                     \
-            : __assert(kar_srcfile_cobj_c_805dcb08, line, lbl_805DCB10))
+            : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
 
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
@@ -70,15 +70,15 @@ extern void C_MTXOrtho(Mtx mtx, f32 top, f32 bottom, f32 left, f32 right,
                        f32 near, f32 far);
 extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
-extern void fn_803D1E40(Mtx mtx, Vec* src, Vec* dst);
-extern void fn_803D1578(Mtx src, Mtx dst);
+extern void PSMTXMultVecSR(Mtx mtx, Vec* src, Vec* dst);
+extern void PSMTXInverse(Mtx src, Mtx dst);
 extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
 extern void PSVECNormalize(Vec* src, Vec* dst);
 extern f32 PSVECMag(Vec* vec);
 extern f32 PSVECDotProduct(Vec* a, Vec* b);
 extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern f64 tan(f64 x);
-extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
+extern f64 kar_atan2(f64 y, f64 x); /* atan2 */
 extern f64 __frsqrte(f64 x);
 extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
@@ -98,8 +98,8 @@ static inline f32 cobj_sqrtf(f32 x)
     return x;
 }
 
-static HSD_CObjInfo* lbl_805DE228; /* default_class */
-static HSD_CObj* lbl_805DE22C;     /* current */
+static HSD_CObjInfo* CObjDefaultClass; /* default_class */
+static HSD_CObj* CObjCurrent;     /* current */
 
 int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc);
 int CObjInit(HSD_Class* obj);
@@ -108,7 +108,7 @@ void CObjAmnesia(HSD_ClassInfo* info);
 void CObjInfoInit(void);
 void CObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val);
 s32 vec_normalize_check(Vec* src, Vec* dst);
-extern Vec lbl_80503410; /* default up vector */
+extern Vec CObjDefaultUpVector; /* default up vector */
 
 HSD_CObjInfo hsdCObj = { CObjInfoInit };
 
@@ -116,8 +116,8 @@ static char lbl_dead_805300XX_ref_width[] = "ref_width > 0";
 static char lbl_dead_805300XX_ref_height[] = "ref_height > 0";
 
 #define vec_is_zero(vec)                                                    \
-    (__fabs((vec)->x) <= lbl_805DC8B8[0] && __fabs((vec)->y) <= lbl_805DC8B8[0] && \
-     __fabs((vec)->z) <= lbl_805DC8B8[0])
+    (__fabs((vec)->x) <= HSD_FloatMin[0] && __fabs((vec)->y) <= HSD_FloatMin[0] && \
+     __fabs((vec)->z) <= HSD_FloatMin[0])
 
 void HSD_CObjSetViewportScale(HSD_CObj* cobj, s32 color_update,
                               s32 alpha_update, s32 tex_enable)
@@ -292,7 +292,7 @@ BOOL setupTopHalfCamera(HSD_CObj* cobj)
     f32 width;
     f32 height;
 
-    if (cobj->viewport_top >= lbl_80589A80.efbHeight) {
+    if (cobj->viewport_top >= CObjRenderMode.efbHeight) {
         return FALSE;
     }
 
@@ -300,7 +300,7 @@ BOOL setupTopHalfCamera(HSD_CObj* cobj)
     right = cobj->viewport_right;
     top = cobj->viewport_top;
     bottom = cobj->viewport_bottom;
-    bottom = bottom < lbl_80589A80.efbHeight ? bottom : lbl_80589A80.efbHeight;
+    bottom = bottom < CObjRenderMode.efbHeight ? bottom : CObjRenderMode.efbHeight;
     width = right - left;
     height = bottom - top;
     GXSetScissor(left, top, width, height);
@@ -309,7 +309,7 @@ BOOL setupTopHalfCamera(HSD_CObj* cobj)
     bottom = cobj->viewport_bottom;
     left = cobj->viewport_left;
     right = cobj->viewport_right;
-    height = (bottom < lbl_80589A80.efbHeight ? bottom : lbl_80589A80.efbHeight) -
+    height = (bottom < CObjRenderMode.efbHeight ? bottom : CObjRenderMode.efbHeight) -
              top;
     h_scale = height / (bottom - top);
     width = right - left;
@@ -367,7 +367,7 @@ BOOL setupBottomHalfCamera(HSD_CObj* cobj)
     f32 height;
     f32 h;
 
-    screen_top = lbl_80589A80.efbHeight - 8;
+    screen_top = CObjRenderMode.efbHeight - 8;
     if (cobj->viewport_bottom < screen_top) {
         return FALSE;
     }
@@ -467,10 +467,10 @@ void HSD_CObjSetupViewingMtx(HSD_CObj* cobj)
     }
 }
 
-static char lbl_80503380[] = "unkown type of render pass.\n";
+static char CObjUnknownRenderPass[] = "unkown type of render pass.\n";
 
-char lbl_805033A0[] = "cobj->eyepos";
-char lbl_805033B0[] = "cobj->interest";
+char CObjAssertEyePos[] = "cobj->eyepos";
+char CObjAssertInterest[] = "cobj->interest";
 
 BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
 {
@@ -491,18 +491,18 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
 
     pass = HSD_GetCurrentRenderPass();
     _HSD_ZListClear();
-    lbl_805DE22C = cobj;
+    CObjCurrent = cobj;
     result = TRUE;
 
     switch (pass) {
     case 0:
-        x_scale = lbl_80589A80.fbWidth / (f64) lbl_805DCB00;
-        y_scale = lbl_80589A80.efbHeight / (f64) lbl_805DCB04;
+        x_scale = CObjRenderMode.fbWidth / (f64) CObjRefWidth;
+        y_scale = CObjRenderMode.efbHeight / (f64) CObjRefHeight;
         left = cobj->viewport_left * x_scale;
         top = cobj->viewport_top * y_scale;
         width = cobj->viewport_right * x_scale - left;
         height = cobj->viewport_bottom * y_scale - top;
-        if (lbl_80589A80.field_rendering) {
+        if (CObjRenderMode.field_rendering) {
             GXSetViewportJitter(left, top, width, height, 0.0F, 1.0F,
                                 VIGetNextField());
         } else {
@@ -533,7 +533,7 @@ BOOL HSD_CObjSetCurrent(HSD_CObj* cobj)
         GXSetProjection(mtx, projection_type);
         break;
     default:
-        HSD_Panic(kar_srcfile_cobj_c_805dcb08, 0x29C, lbl_80503380);
+        HSD_Panic(kar_srcfile_cobj_c, 0x29C, CObjUnknownRenderPass);
         return FALSE;
     }
 
@@ -614,10 +614,10 @@ f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
         return 0.0F;
     }
     if (cobj->eye_position == NULL) {
-        __assert(kar_srcfile_cobj_c_805dcb08, 0x352, lbl_805033A0);
+        __assert(kar_srcfile_cobj_c, 0x352, CObjAssertEyePos);
     }
     if (cobj->interest == NULL) {
-        __assert(kar_srcfile_cobj_c_805dcb08, 0x353, lbl_805033B0);
+        __assert(kar_srcfile_cobj_c, 0x353, CObjAssertInterest);
     }
     HSD_CObjGetEyePosition(cobj, &pos);
     HSD_CObjGetInterest(cobj, &interest);
@@ -625,8 +625,8 @@ f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
     return PSVECMag(&eye);
 }
 
-static Vec lbl_805033C0 = { 0.0F, 0.0F, 0.0F };
-static Vec lbl_805033CC = { 0.0F, 1.0F, 0.0F };
+static Vec CObjZeroVector = { 0.0F, 0.0F, 0.0F };
+static Vec CObjUnitYVector = { 0.0F, 1.0F, 0.0F };
 
 f32 upvec2roll(HSD_CObj* cobj, Vec* up)
 {
@@ -639,18 +639,18 @@ f32 upvec2roll(HSD_CObj* cobj, Vec* up)
         return 0.0F;
     }
     dot = 1.0F - __fabs(PSVECDotProduct(up, &eye));
-    if (dot < lbl_805DC8B8[0]) {
+    if (dot < HSD_FloatMin[0]) {
         return 0.0F;
     }
-    C_MTXLookAt(mtx, &lbl_805033C0, &lbl_805033CC, &eye);
-    fn_803D1E40(mtx, up, &v);
+    C_MTXLookAt(mtx, &CObjZeroVector, &CObjUnitYVector, &eye);
+    PSMTXMultVecSR(mtx, up, &v);
     if (v.y == 0.0F) {
         if (-v.x >= 0.0F) {
             return 1.5707964F;
         }
         return -1.5707964F;
     }
-    return fn_803BD3C8(-v.x, v.y);
+    return kar_atan2(-v.x, v.y);
 }
 
 s32 roll2upvec(HSD_CObj* cobj, Vec* up, f32 roll)
@@ -673,7 +673,7 @@ s32 roll2upvec(HSD_CObj* cobj, Vec* up, f32 roll)
         v0.z = eye.z * (-eye.y / v0.y);
     }
     kar_grcoll__near_803d1908(mtx, &eye, -roll);
-    fn_803D1E40(mtx, &v0, &v1);
+    PSMTXMultVecSR(mtx, &v0, &v1);
     PSVECNormalize(&v1, up);
     return TRUE;
 }
@@ -703,7 +703,7 @@ void HSD_CObjSetUpVector(HSD_CObj* cobj, Vec* up)
     if (cobj->flags & 1) {
         if (vec_normalize_check_inline(up, &normalized) != 0) {
             OSReport("illegal up vector.");
-            __assert(kar_srcfile_cobj_c_805dcb08, 0x3E3, lbl_805DCB18);
+            __assert(kar_srcfile_cobj_c, 0x3E3, CObjAssertZero);
         }
         if (cobj->u.up.x != normalized.x || cobj->u.up.y != normalized.y ||
             cobj->u.up.z != normalized.z) {
@@ -757,7 +757,7 @@ MtxPtr HSD_CObjGetInvViewingMtxPtrDirect(HSD_CObj* cobj)
         if (cobj->proj_mtx == NULL) {
             cobj->proj_mtx = HSD_MtxAlloc();
         }
-        fn_803D1578(cobj->view_mtx, cobj->proj_mtx);
+        PSMTXInverse(cobj->view_mtx, cobj->proj_mtx);
         HSD_CObjClearFlags(cobj, COBJ_INV_DIRTY);
     }
     return cobj->proj_mtx;
@@ -990,14 +990,14 @@ void HSD_CObjClearFlags(HSD_CObj* cobj, u32 flags)
 
 HSD_CObj* HSD_CObjGetCurrent(void)
 {
-    return lbl_805DE22C;
+    return CObjCurrent;
 }
 
 HSD_CObj* HSD_CObjAlloc(void)
 {
     HSD_CObj* cobj;
 
-    cobj = hsdNew((HSD_ClassInfo*) (lbl_805DE228 != NULL ? lbl_805DE228
+    cobj = hsdNew((HSD_ClassInfo*) (CObjDefaultClass != NULL ? CObjDefaultClass
                                                            : &hsdCObj));
     ASSERT_COBJ(0x7A3);
     return cobj;
@@ -1026,7 +1026,7 @@ int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
         if (desc->vector != NULL) {
             HSD_CObjSetUpVector(cobj, desc->vector);
         } else {
-            HSD_CObjSetUpVector(cobj, &lbl_80503410);
+            HSD_CObjSetUpVector(cobj, &CObjDefaultUpVector);
         }
     } else {
         HSD_CObjSetRoll(cobj, desc->roll);
@@ -1057,7 +1057,7 @@ int CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
                          desc->projection_param.ortho.right);
         break;
     default:
-        __assert(kar_srcfile_cobj_c_805dcb08, 0x7D1, lbl_805DCB18);
+        __assert(kar_srcfile_cobj_c, 0x7D1, CObjAssertZero);
         break;
     }
     return 0;
@@ -1140,16 +1140,16 @@ void CObjRelease(HSD_Class* obj)
 
 void CObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(lbl_805DE228)) {
-        lbl_805DE228 = NULL;
+    if (info == HSD_CLASS_INFO(CObjDefaultClass)) {
+        CObjDefaultClass = NULL;
     }
     if (info == HSD_CLASS_INFO(&hsdCObj)) {
-        lbl_805DE22C = NULL;
+        CObjCurrent = NULL;
     }
     HSD_OBJECT_PARENT_INFO(&hsdCObj)->amnesia(info);
 }
 
-Vec lbl_80503410 = { 0.0F, 1.0F, 0.0F };
+Vec CObjDefaultUpVector = { 0.0F, 1.0F, 0.0F };
 
 void CObjInfoInit(void)
 {
@@ -1163,7 +1163,7 @@ void CObjInfoInit(void)
     hsdCObj.update = CObjUpdateFunc;
 }
 
-HSD_ObjAllocData* fn_80403594(void)
+HSD_ObjAllocData* HSD_FObjGetAllocData(void)
 {
     return &hsdFObj_alloc_data;
 }

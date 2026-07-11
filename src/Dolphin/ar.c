@@ -48,18 +48,18 @@ volatile u16 __DSPRegs[] : 0xcc005000;
 #define OSRoundUp32B(x) (((u32)(x) + 32 - 1) & ~(32 - 1))
 #define OSPhysicalToUncached(paddr) ((void*)((u32)(paddr) + 0xC0000000))
 
-extern char lbl_804FC958[]; /* "<< Dolphin SDK - AR ... >>" */
-extern void (*lbl_805DE000)(void); /* __AR_Callback */
+extern char __ARVersionString[]; /* "<< Dolphin SDK - AR ... >>" */
+extern void (*__AR_Callback)(void);
 
-char* lbl_805DC9E0[2] = { lbl_804FC958 }; /* __ARVersion */
+char* __ARVersion[2] = { __ARVersionString };
 
-BOOL lbl_805DE01C; /* __AR_init_flag */
-u32* lbl_805DE018; /* __AR_BlockLength */
-u32 lbl_805DE014; /* __AR_FreeBlocks */
-u32 lbl_805DE010; /* __AR_StackPointer */
-u32 lbl_805DE00C; /* __AR_ExpansionSize */
-u32 lbl_805DE008; /* __AR_InternalSize */
-u32 lbl_805DE004; /* __AR_Size */
+BOOL __AR_init_flag;
+u32* __AR_BlockLength;
+u32 __AR_FreeBlocks;
+u32 __AR_StackPointer;
+u32 __AR_ExpansionSize;
+u32 __AR_InternalSize;
+u32 __AR_Size;
 
 void __ARHandler(u32 exception, OSContext* context);
 void __ARChecksize(void);
@@ -86,11 +86,11 @@ u32 ARAlloc(u32 length)
 
     old = OSDisableInterrupts();
 
-    tmp = lbl_805DE010;
-    lbl_805DE010 += length;
-    *lbl_805DE018 = length;
-    lbl_805DE018 += 1;
-    lbl_805DE014 -= 1;
+    tmp = __AR_StackPointer;
+    __AR_StackPointer += length;
+    *__AR_BlockLength = length;
+    __AR_BlockLength += 1;
+    __AR_FreeBlocks -= 1;
     OSRestoreInterrupts(old);
     return tmp;
 }
@@ -100,14 +100,14 @@ u32 ARFree(u32* length)
     BOOL old;
 
     old = OSDisableInterrupts();
-    lbl_805DE018 -= 1;
+    __AR_BlockLength -= 1;
     if (length) {
-        *length = *lbl_805DE018;
+        *length = *__AR_BlockLength;
     }
-    lbl_805DE010 -= *lbl_805DE018;
-    lbl_805DE014 += 1;
+    __AR_StackPointer -= *__AR_BlockLength;
+    __AR_FreeBlocks += 1;
     OSRestoreInterrupts(old);
-    return lbl_805DE010;
+    return __AR_StackPointer;
 }
 
 u32 ARInit(u32* stack_index_addr, u32 num_entries)
@@ -115,37 +115,37 @@ u32 ARInit(u32* stack_index_addr, u32 num_entries)
     BOOL old;
     u16 refresh;
 
-    if (lbl_805DE01C == TRUE) {
+    if (__AR_init_flag == TRUE) {
         return 0x4000;
     }
 
-    OSRegisterVersion(lbl_805DC9E0[0]);
+    OSRegisterVersion(__ARVersion[0]);
 
     old = OSDisableInterrupts();
-    lbl_805DE000 = NULL;
+    __AR_Callback = NULL;
     __OSSetInterruptHandler(6, __ARHandler);
     __OSUnmaskInterrupts(0x02000000);
-    lbl_805DE010 = 0x4000;
-    lbl_805DE014 = num_entries;
-    lbl_805DE018 = stack_index_addr;
+    __AR_StackPointer = 0x4000;
+    __AR_FreeBlocks = num_entries;
+    __AR_BlockLength = stack_index_addr;
     refresh = __DSPRegs[DSP_ARAM_REFRESH] & 0xFF;
 
     __DSPRegs[DSP_ARAM_REFRESH] = (u16)((__DSPRegs[DSP_ARAM_REFRESH] & ~0xFF) | (refresh & 0xFF));
 
     __ARChecksize();
-    lbl_805DE01C = TRUE;
+    __AR_init_flag = TRUE;
     OSRestoreInterrupts(old);
-    return lbl_805DE010;
+    return __AR_StackPointer;
 }
 
 void ARReset(void)
 {
-    lbl_805DE01C = FALSE;
+    __AR_init_flag = FALSE;
 }
 
 u32 ARGet_BaseAddressOrSizeOrInternalSize(void)
 {
-    return lbl_805DE004;
+    return __AR_Size;
 }
 
 void __ARHandler(u32 exception, OSContext* context)
@@ -158,8 +158,8 @@ void __ARHandler(u32 exception, OSContext* context)
     __DSPRegs[DSP_CONTROL_STATUS] = (tmp);
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(&exceptionContext);
-    if (lbl_805DE000) {
-        lbl_805DE000();
+    if (__AR_Callback) {
+        __AR_Callback();
     }
     OSClearContext(&exceptionContext);
     OSSetCurrentContext(context);
@@ -240,7 +240,7 @@ void __ARChecksize(void)
         ;
 
     ARAM_mode = 3;
-    ARAM_size = lbl_805DE008 = 0x1000000;
+    ARAM_size = __AR_InternalSize = 0x1000000;
     __DSPRegs[DSP_ARAM_SIZE] = ((__DSPRegs[DSP_ARAM_SIZE] & 0xFFFFFFC0) | 3) | 0x20;
 
     test_data = (u32*)(OSRoundUp32B((u32)(test_data_pad)));
@@ -261,7 +261,7 @@ void __ARChecksize(void)
     DCFlushRange((void*)test_data, 0x20);
     DCFlushRange((void*)dummy_data, 0x20);
 
-    lbl_805DE00C = 0;
+    __AR_ExpansionSize = 0;
 
     DCInvalidateRange((void*)save1, 0x20);
     __ARReadDMA((u32)save1, ARAM_size + 0, 0x20);
@@ -306,7 +306,7 @@ void __ARChecksize(void)
 
             ARAM_mode |= 0 << 1;
             ARAM_size += 0x0200000;
-            lbl_805DE00C = 0x0200000;
+            __AR_ExpansionSize = 0x0200000;
         } else {
             __ARWriteDMA((u32)dummy_data, ARAM_size + 0x1000000, 0x20);
             __ARWriteDMA((u32)test_data, ARAM_size + 0x0000000, 0x20);
@@ -323,7 +323,7 @@ void __ARChecksize(void)
 
                 ARAM_mode |= 4 << 1;
                 ARAM_size += 0x0400000;
-                lbl_805DE00C = 0x0400000;
+                __AR_ExpansionSize = 0x0400000;
             } else {
                 __ARWriteDMA((u32)dummy_data, ARAM_size + 0x0000200, 0x20);
                 __ARWriteDMA((u32)test_data, ARAM_size + 0x0000000, 0x20);
@@ -341,7 +341,7 @@ void __ARChecksize(void)
 
                     ARAM_mode |= 8 << 1;
                     ARAM_size += 0x0800000;
-                    lbl_805DE00C = 0x0800000;
+                    __AR_ExpansionSize = 0x0800000;
                 } else {
                     __ARWriteDMA((u32)dummy_data, ARAM_size + 0x0400000, 0x20);
 
@@ -361,7 +361,7 @@ void __ARChecksize(void)
 
                         ARAM_mode |= 12 << 1;
                         ARAM_size += 0x1000000;
-                        lbl_805DE00C = 0x1000000;
+                        __AR_ExpansionSize = 0x1000000;
                     } else {
                         __ARWriteDMA((u32)save1, ARAM_size + 0x0000000, 0x20);
                         __ARWriteDMA((u32)save2, ARAM_size + 0x0200000, 0x20);
@@ -371,7 +371,7 @@ void __ARChecksize(void)
 
                         ARAM_mode |= 16 << 1;
                         ARAM_size += 0x2000000;
-                        lbl_805DE00C = 0x2000000;
+                        __AR_ExpansionSize = 0x2000000;
                     }
                 }
             }
@@ -381,5 +381,5 @@ void __ARChecksize(void)
     }
 
     *(u32*)OSPhysicalToUncached(0x00D0) = ARAM_size;
-    lbl_805DE004 = ARAM_size;
+    __AR_Size = ARAM_size;
 }

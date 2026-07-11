@@ -25,9 +25,9 @@ extern s32 HSD_CObjSetCurrent(void* cobj);
 extern void HSD_CObjEndCurrent(void);
 extern void RecalcParentTrspBits(void* obj);
 
-char kar_src_gobjuserdata_80504eb0[0x10] = "gobjuserdata.c";
-char lbl_80504EC0[0x30] = "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE";
-char lbl_80504EF0[0x20] = "gobj->user_data_remove_func";
+char GObjUserDataSourceFile[0x10] = "gobjuserdata.c";
+char GObjUserDataKindNoneAssert[0x30] = "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE";
+char GObjUserDataRemoveFuncAssert[0x20] = "gobj->user_data_remove_func";
 
 u32 hsdGObj_gxlink_render_masks[] = { 1, 4, 2, 0 };
 
@@ -79,7 +79,7 @@ GObjDefaultInitData gobj_default_init_data = {
 void HSD_GObjUserDataLink(HSD_GObj* gobj, u8 kind, void (*remove_func)(void*), void* data)
 {
     if (gobj->user_data_kind != HSD_GOBJ_USER_DATA_NONE) {
-        __assert(kar_src_gobjuserdata_80504eb0, 40, lbl_80504EC0);
+        __assert(GObjUserDataSourceFile, 40, GObjUserDataKindNoneAssert);
     }
     gobj->user_data_kind = kind;
     gobj->user_data = data;
@@ -106,7 +106,7 @@ void HSD_GObjUserDataRemove(HSD_GObj* gobj)
         return;
 
     if (gobj->user_data_remove_func == NULL) {
-        __assert(kar_src_gobjuserdata_80504eb0, 99, lbl_80504EF0);
+        __assert(GObjUserDataSourceFile, 99, GObjUserDataRemoveFuncAssert);
     }
     (*gobj->user_data_remove_func)(gobj->user_data);
     gobj->user_data_kind = HSD_GOBJ_USER_DATA_NONE;

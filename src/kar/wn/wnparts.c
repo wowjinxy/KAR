@@ -26,11 +26,37 @@ struct WnParts {
     f32 timer;
 };
 
+#if defined(VERSION_GKYJ01)
+#define WNPARTS_TIMER_MAX 999.0f
+#define lbl_804B4450 lbl_804AF198
+#define lbl_804B446C lbl_804AF1B4
+#define lbl_804B4478 lbl_804AF1C0
+#define lbl_805D71C0 lbl_805D1C00
+#define lbl_805E2858 lbl_805DD0F0
+#define kar_efdata__near_80236358 fn_802322E4
+#define kar_efdata__near_8023641c fn_802323A8
+#define kar_efdata__near_802364e0 fn_8023246C
+#define kar_efdata__near_80236778 fn_80232704
+#elif defined(VERSION_GKYP01)
+#define WNPARTS_TIMER_MAX 9999.0f
+#define lbl_804B4450 lbl_804B9C40
+#define lbl_804B446C lbl_804B9C5C
+#define lbl_804B4478 lbl_804B9C68
+#define lbl_805D71C0 lbl_805C9BA8
+#define lbl_805E2858 lbl_805D52F0
+#define kar_efdata__near_80236358 fn_80237034
+#define kar_efdata__near_8023641c fn_802370F8
+#define kar_efdata__near_802364e0 fn_802371BC
+#define kar_efdata__near_80236778 fn_80237454
+#else
+#define WNPARTS_TIMER_MAX 9999.0f
+#endif
+
 char lbl_804B4450[] = "weapon parts num over! %d\n";
 char lbl_804B446C[] = "wnparts.c";
 char lbl_804B4478[] = "weapon parts num not match! %d\n";
 char lbl_805D71C0[] = "0";
-const f32 lbl_805E2858[2] = { 9999.0f, 0.0f };
+const f32 lbl_805E2858[2] = { WNPARTS_TIMER_MAX, 0.0f };
 
 void* kar_efdata__near_802364e0(void);
 void kar_efdata__near_8023641c(void* effect);

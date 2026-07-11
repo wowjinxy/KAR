@@ -7,22 +7,20 @@
 #define LOBJ_FLOAT_2C(lobj) (*(f32*) ((u8*) (lobj) + 0x2C))
 
 char kar_src_lblight_80497e00[] = "lblight.c";
-char lbl_805D5238[] = "0";
-
-u32 kar_lblight__803fdacc(HSD_LObj* lobj);
+char kar_lblight_assert_zero[] = "0";
 
 HSD_LObj* kar_lblight__80057514(HSD_LObj* lobj)
 {
     while (lobj != NULL) {
         if ((HSD_LObjGetType(lobj) == LOBJ_AMBIENT) &&
-            ((kar_lblight__803fdacc(lobj) & 0x20) == 0)) {
+            ((HSD_LObjGetFlags(lobj) & 0x20) == 0)) {
             return lobj;
         }
 
         lobj = LOBJ_NEXT(lobj);
     }
 
-    __assert(kar_src_lblight_80497e00, 0x2E, lbl_805D5238);
+    __assert(kar_src_lblight_80497e00, 0x2E, kar_lblight_assert_zero);
     return NULL;
 }
 
@@ -30,14 +28,14 @@ HSD_LObj* kar_lblight__80057598(HSD_LObj* lobj)
 {
     while (lobj != NULL) {
         if (((u32) HSD_LObjGetType(lobj) == LOBJ_INFINITE) &&
-            ((kar_lblight__803fdacc(lobj) & 0x20) == 0)) {
+            ((HSD_LObjGetFlags(lobj) & 0x20) == 0)) {
             return lobj;
         }
 
         lobj = LOBJ_NEXT(lobj);
     }
 
-    __assert(kar_src_lblight_80497e00, 0x3C, lbl_805D5238);
+    __assert(kar_src_lblight_80497e00, 0x3C, kar_lblight_assert_zero);
     return NULL;
 }
 
@@ -53,8 +51,8 @@ void kar_lblight__80057620(HSD_LObj* lobj, f32 scale)
         vec.z *= scale;
         HSD_LObjSetPosition(lobj, &vec);
 
-        if ((kar_lblight__803fdacc(lobj) & 0x40) != 0) {
-            __assert(kar_src_lblight_80497e00, 0x59, lbl_805D5238);
+        if ((HSD_LObjGetFlags(lobj) & 0x40) != 0) {
+            __assert(kar_src_lblight_80497e00, 0x59, kar_lblight_assert_zero);
         } else {
             LOBJ_FLOAT_2C(lobj) *= scale;
         }
@@ -72,8 +70,8 @@ void kar_lblight__80057620(HSD_LObj* lobj, f32 scale)
         vec.z *= scale;
         HSD_LObjSetInterest(lobj, &vec);
 
-        if ((kar_lblight__803fdacc(lobj) & 0x40) != 0) {
-            __assert(kar_src_lblight_80497e00, 0x6D, lbl_805D5238);
+        if ((HSD_LObjGetFlags(lobj) & 0x40) != 0) {
+            __assert(kar_src_lblight_80497e00, 0x6D, kar_lblight_assert_zero);
         } else {
             LOBJ_FLOAT_2C(lobj) *= scale;
         }
@@ -82,7 +80,7 @@ void kar_lblight__80057620(HSD_LObj* lobj, f32 scale)
     case LOBJ_INFINITE:
         break;
     default:
-        __assert(kar_src_lblight_80497e00, 0x75, lbl_805D5238);
+        __assert(kar_src_lblight_80497e00, 0x75, kar_lblight_assert_zero);
         break;
     }
 }

@@ -467,7 +467,7 @@ void SISetCommand(s32 chan, u32 cmd)
     SI_CHANNELS[chan].outBuf = cmd;
 }
 
-void fn_803E93B0(void)
+void SITransferCommands(void)
 {
     SISR = 0x80000000;
 }

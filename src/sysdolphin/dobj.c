@@ -2,12 +2,12 @@
 
 extern HSD_ClassInfo hsdClass;
 
-extern HSD_DObj* lbl_805DE174;
-extern HSD_DObjInfo* lbl_805DE170;
-#define current_dobj lbl_805DE174
-#define default_class lbl_805DE170
+extern HSD_DObj* DObjCurrent;
+extern HSD_DObjInfo* DObjDefaultClass;
+#define current_dobj DObjCurrent
+#define default_class DObjDefaultClass
 
-extern void kar_object__80405968(HSD_PObj*, HSD_PObjDesc*);
+extern void HSD_PObjResolveRefsAll(HSD_PObj*, HSD_PObjDesc*);
 
 void DObjInfoInit(void);
 void _HSD_StateInvalidateTevRegister();
@@ -250,7 +250,7 @@ static inline void HSD_DObjResolveRefs(HSD_DObj* dobj, HSD_DObjDesc* desc)
 {
     if (dobj == NULL || desc == NULL)
        return;
-    kar_object__80405968(dobj->pobj, desc->pobjdesc);
+    HSD_PObjResolveRefsAll(dobj->pobj, desc->pobjdesc);
 }
 
 void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc)

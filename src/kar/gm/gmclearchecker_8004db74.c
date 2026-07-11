@@ -8,9 +8,9 @@ typedef struct {
   /* 0x0 */ u32 _0;
   /* 0x4 */ u32 _4;
   /* 0x8 */ u32 _8;
-} lbl_8058B634_s;
+} HSD_PadCopyStatus_s;
 
-extern lbl_8058B634_s lbl_8058B634;
+extern HSD_PadCopyStatus_s HSD_PadCopyStatus;
 
 extern s32 kar_shadow__near_8007b650(void);
 extern void kar_gmmain__near_800064f0(void);
@@ -931,7 +931,7 @@ void kar_gmclearchecker__near_8004f454(void) {
 
   kar_gmclearchecker__near_8004f454_inline();
   if (fn_80282F70() == 0) {
-    if (lbl_8058B634._8 & 0x1000) {
+    if (HSD_PadCopyStatus._8 & 0x1000) {
       fn_80282EC8(60);
     }
     if (fn_80281610() != 0) {
