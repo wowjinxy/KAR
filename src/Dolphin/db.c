@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/ppcarch.h"
 
 typedef struct DBInterface
 {
@@ -11,7 +12,6 @@ DBInterface* __DBInterface;
 
 extern void OSReport(const char*, ...);
 extern void OSDumpContext(void*);
-extern void PPCHalt(void);
 char DBExceptionDestinationString[] = "DBExceptionDestination\n";
 
 asm void __DBExceptionDestinationAux(void);
