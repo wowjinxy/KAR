@@ -6,6 +6,7 @@
 #include <kar/gm/gmdialoguestatus.h>
 #include <kar/gm/gmlanmenu.h>
 #include <kar/gm/gmmain.h>
+#include <kar/gm/gmmovieassets.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/shadow.h>
@@ -34,7 +35,6 @@ void kar_gmautodemo__near_8000cd10(s32 arg0);
 u64 kar_gmautodemo__near_8000ecf0(s32 arg0);
 u64 kar_gmautodemo__near_8000ed10(s32 arg0);
 void kar_gm_assets__asset_8000fc70(void);
-void kar_movie_assets__8000a498(s32 arg0);
 void kar_lbaudio__near_8005a474(void);
 void kar_lbaudio__near_8005e1a8(s32 arg0);
 void kar_lbaudio__near_80061620(void);
