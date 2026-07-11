@@ -11,5 +11,6 @@
 
 u32 kar_gmmain__near_80005ce0(void);
 void kar_gmmain__near_800064f0(void);
+void* kar_gmmain__near_80006eec(void);
 
 #endif // !__GMMAIN_H_
