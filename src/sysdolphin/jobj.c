@@ -6,6 +6,7 @@
 #include <sysdolphin/jobj.h>
 
 #include <sysdolphin/aobj.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/gobjproc.h>
@@ -29,7 +30,6 @@ extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 
-extern void* hsdNew(HSD_ClassInfo* info);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 extern void memcpy(void*, const void*, u32);
 

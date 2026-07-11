@@ -1,4 +1,5 @@
 #include <sysdolphin/mobj.h>
+#include <sysdolphin/class_new.h>
 
 void* hsdAllocMemPiece();
 
@@ -167,7 +168,6 @@ HSD_MObjInfo* HSD_MObjGetDefaultClass(void)
     return MObjDefaultClass ? MObjDefaultClass : &hsdMObj;
 }
 
-void* hsdNew(HSD_ClassInfo* info);
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc)
 {
     if (mobjdesc) {

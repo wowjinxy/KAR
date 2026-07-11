@@ -5,6 +5,7 @@
 #include <sysdolphin/tobj.h>
 
 #include <sysdolphin/aobj.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/initialize.h>
 #include <sysdolphin/memory.h>
@@ -120,7 +121,6 @@ char TObjAssertIDesc[] = "idesc";
 #define TOBJ_ASSERT(line, cond, str) \
     ((cond) ? ((void) 0) : __assert(kar_srcfile_tobj_c, line, str))
 
-extern void* hsdNew(HSD_ClassInfo* info);
 extern void HSD_Panic(char* file, s32 line, char* msg);
 
 extern void* hsdAllocMemPiece(u32 size);

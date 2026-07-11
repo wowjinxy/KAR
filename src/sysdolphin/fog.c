@@ -1,5 +1,6 @@
 #include <sysdolphin/fog.h>
 
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/gobjproc.h>
 
@@ -23,8 +24,6 @@ extern f32 FogHalf;          // 0.5F
 extern f32 FogNegOne;        // -1.0F
 extern f32 FogFloatOne;      // 1.0F
 extern f32 FogColorScale;    // 255.0F
-
-extern void* hsdNew(HSD_ClassInfo* info);
 
 extern void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz,
                     GXColor color);

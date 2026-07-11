@@ -5,6 +5,7 @@
 #include <dolphin/mtx/vec.h>
 #include <kar/gr/grcoll.h>
 #include <kar/math.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/gobjproc.h>
 #include <sysdolphin/objalloc.h>
 
@@ -26,7 +27,6 @@ char CObjAssertZero[] = "0";
     ((cobj) ? ((void) 0)                                                     \
             : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
 
-extern void* hsdNew(HSD_ClassInfo* info);
 extern void _HSD_ZListClear(void);
 extern void _HSD_ZListSort(void);
 extern void _HSD_ZListDisp(void);

@@ -1,6 +1,7 @@
 #include <global.h>
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/lobj.h>
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/aobj.h>
@@ -33,7 +34,6 @@ void GXLoadLightObjImm(GXLightObj*, GXLightID);
 
 void MTXMultVec(Mtx, Vec*, Vec*);
 
-void* hsdNew(HSD_ClassInfo*);
 BOOL hsdIsDescendantOf(HSD_ClassInfo*, HSD_ClassInfo*);
 
 extern HSD_LObjInfo* LObjDefaultClass; /* default_class */
