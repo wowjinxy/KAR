@@ -8,20 +8,6 @@
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 
-#if defined(VERSION_GKYJ01)
-#define fn_801389D8 fn_80135518
-#define fn_8013909C fn_80135BB8
-#define kar_mnlandialogue_project_box0_origin_to_screen fn_80180408
-#define kar_mnlandialogue_project_box0_right_edge_to_screen fn_801804BC
-#define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80180570
-#elif defined(VERSION_GKYP01)
-#define fn_801389D8 fn_8013A5EC
-#define fn_8013909C fn_8013ACB0
-#define kar_mnlandialogue_project_box0_origin_to_screen fn_80184A54
-#define kar_mnlandialogue_project_box0_right_edge_to_screen fn_80184B08
-#define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80184BBC
-#endif
-
 typedef struct MenuContext {
     u8 pad_0[0x8];
     HSD_GObj* camera_gobj;
@@ -37,9 +23,6 @@ typedef struct LanNumberPanel {
     HSD_JObj* box_bottom_edge;
     HSD_JObj* detail;
 } LanNumberPanel;
-
-void fn_801389D8(HSD_JObj* jobj, void* arg1, f32 arg2, f32 arg3);
-void* fn_8013909C(void);
 
 #define PROJECT_BOX_TO_SCREEN(out, member)                                      \
     do {                                                                        \
