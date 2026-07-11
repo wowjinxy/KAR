@@ -15,22 +15,8 @@
 #include <sysdolphin/spline.h>
 #include <sysdolphin/id.h>
 
-void HSD_RObjRemoveAnimAllByFlags(HSD_RObj* robj, u32 flags);
-void HSD_RObjReqAnimAllByFlags(HSD_RObj* robj, f32 frame, u32 flags);
-void HSD_RObjAddAnimAll(HSD_RObj* robj, HSD_RObjAnimJoint* anim);
-void HSD_RObjAnimAll(HSD_RObj* robj);
-HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype);
 void HSD_RObjUpdateAll(HSD_RObj* robj, HSD_JObj* jobj, HSD_ObjUpdateFunc update);
 BOOL HSD_RObjGetGlobalPosition(HSD_RObj* robj, u32 type, Vec* out);
-void HSD_RObjResolveRefsAll(HSD_RObj* robj, HSD_RObjDesc* desc);
-void HSD_RObjRemoveAll(HSD_RObj* robj);
-
-void HSD_DObjRemoveAnimAllByFlags(HSD_DObj* dobj, u32 flags);
-void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags);
-void HSD_DObjAddAnimAll(HSD_DObj* dobj, HSD_MatAnim* matanim, HSD_ShapeAnimDObj* shapeanimdobj);
-void HSD_DObjAnimAll(HSD_DObj* dobj);
-void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc);
-void HSD_DObjRemoveAll(HSD_DObj* dobj);
 
 void HSD_JObjDispSub(HSD_JObj* jobj, MtxPtr vmtx, MtxPtr pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
 void HSD_JObjMakePositionMtx(HSD_JObj* jobj, MtxPtr mtx, MtxPtr rmtx);

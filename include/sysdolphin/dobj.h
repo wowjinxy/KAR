@@ -48,5 +48,11 @@ void HSD_DObjSetFlags(HSD_DObj* dobj, u32 flags);
 
 HSD_DObj* HSD_DObjAlloc(void);
 HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
+void HSD_DObjAnimAll(HSD_DObj* dobj);
+void HSD_DObjAddAnimAll(HSD_DObj* dobj, HSD_MatAnim* matanim, HSD_ShapeAnimDObj* shapeanimdobj);
+void HSD_DObjRemoveAll(HSD_DObj* dobj);
+void HSD_DObjRemoveAnimAllByFlags(HSD_DObj* dobj, u32 flags);
+void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags);
+void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc);
 
 #endif
