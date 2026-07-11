@@ -17,7 +17,6 @@ typedef struct _GObjDefaultInitData {
 } GObjDefaultInitData;
 
 extern void HSD_LObjSetCurrentAll(void* obj);
-extern HSD_CObj* HSD_CObjGetCurrent(void);
 extern void HSD_LObjSetupInit(HSD_CObj* cobj);
 extern void HSD_LObjRemoveAll(void* obj);
 extern void HSD_JObjDispAll(HSD_JObj* jobj, void* arg1, u32 flags, u32 rendermode);
