@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/mtx.h>
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -47,7 +48,6 @@ static const f32 lbl_805DF820[2] = { 1.0f, 0.0f };
 #endif
 
 void PSMTXCopy(Mtx src, Mtx dst);
-void HSD_MtxGetScale(Mtx mtx, Vec* scale);
 void kar_graudio_configure_fgm_track_mode(s32 mode, void* track_group, f32 scale, Vec* pos);
 void kar_gryakulib_get_anchor_world_translate(Yaku* yaku, s32 joint_name, Vec* out);
 void kar_grcommon__near_800d4bf4(s32 joint_name, Vec* out);

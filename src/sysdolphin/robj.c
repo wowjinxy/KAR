@@ -28,8 +28,6 @@ extern BOOL hsdObjIsDescendantOf(HSD_Class* cls, HSD_ClassInfo* class_info);
 
 extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
-extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
 extern void HSD_JObjMakeMatrix(HSD_JObj* jobj);
 
 static inline void robj_JObjSetupMatrix(HSD_JObj* jobj)

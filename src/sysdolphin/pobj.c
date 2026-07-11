@@ -3,6 +3,7 @@
 
 #include <sysdolphin/id.h>
 #include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
 
 extern HSD_ClassInfo hsdClass;
 
@@ -41,7 +42,6 @@ extern u32 kar_grcoll__803d1670(Mtx src, Mtx xpose);
 extern void GXLoadNrmMtxImm(Mtx mtx, u32 id);
 
 extern BOOL _HSD_MemCheckOwn(void* ptr);
-extern void HSD_MtxScaledAdd(Mtx src, Mtx dst, Mtx result, f32 ratio);
 extern void HSD_PerfCountEnvelopeBlending(s32 n);
 extern void HSD_StateSetCullMode(s32 mode);
 

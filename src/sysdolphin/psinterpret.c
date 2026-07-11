@@ -3,6 +3,7 @@
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
 
 typedef struct HSD_psAppSRT HSD_psAppSRT;
 
@@ -42,7 +43,6 @@ struct HSD_Particle {
     HSD_Particle* next; //0x00
 };
 
-extern void HSD_MtxGetScale(Mtx mtx, Vec* scale);
 extern void memset(void*, int, int);
 
 extern HSD_SList* HSD_SListRemove(HSD_SList* list);

@@ -4,6 +4,7 @@
 #include <kar/math.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
 
@@ -12,10 +13,6 @@ extern void PSMTXCopy(Mtx src, Mtx dst);
 extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 extern void PSMTXMultVec(Mtx mtx, Vec* src, Vec* dst);
 extern void PSMTXIdentity(Mtx dest); /* PSMTXIdentity */
-extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate,
-                       Vec* scl);
-extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
-extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
 extern s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* out);
 extern void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
 extern void memset(void*, int, int);
