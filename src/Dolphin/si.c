@@ -17,8 +17,6 @@ extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler)
 extern void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 extern void OSCancelAlarm(OSAlarm* alarm);
 extern void OSReport(char* fmt, ...);
-extern u16 OSGetWirelessID(s32 chan);
-extern void OSSetWirelessID(s32 chan, u16 id);
 extern u32 VIGetCurrentLine(void);
 extern s32 VIGetTvFormat(void);
 

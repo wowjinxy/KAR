@@ -168,6 +168,8 @@ void DCInvalidateRange(void* addr, u32 nBytes);
 void OSDumpContext(void* context);
 u32 OSGetPhysicalMemSize(void);
 void* OSGetStackPointer(void);
+u16 OSGetWirelessID(s32 chan);
+void OSSetWirelessID(s32 chan, u16 id);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
 #endif  // __OS_H__

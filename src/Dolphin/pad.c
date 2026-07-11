@@ -26,7 +26,6 @@ typedef struct OSContext {
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
 extern OSTime OSGetTime(void);
-extern void OSSetWirelessID(s32 chan, u16 id);
 extern void* memset(void* dst, int val, size_t n);
 
 typedef struct OSResetFunctionInfo OSResetFunctionInfo;
