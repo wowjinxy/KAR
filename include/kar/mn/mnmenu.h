@@ -20,6 +20,7 @@
 struct MenuContext;
 
 struct MenuContext* fn_801311E0(void);
+void** fn_80131284(void);
 void* fn_801388A8(void* arg0);
 void fn_801389D8(HSD_JObj* jobj, void* arg1, f32 arg2, f32 arg3);
 void* kar_diag__80138a00(HSD_GObj* gobj, s32 arg1);

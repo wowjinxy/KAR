@@ -36,8 +36,6 @@ extern const f32 lbl_805E0D0C;
 char kar_mntitle_bg_scene_models_name[] = "ScMenTitleBg_scene_models";
 char kar_mntitle_fg_scene_models_name[] = "ScMenTitleFg_scene_models";
 
-void** fn_80131284(void);
-
 void kar_mntitle_load_bg_fg_scene_models(void)
 {
     TitleSceneModels* scene_models =
