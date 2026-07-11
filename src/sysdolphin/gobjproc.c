@@ -4,7 +4,6 @@
 #include <sysdolphin/gobjproc.h>
 
 typedef s32 (*HSD_DebugExceptionCallback)(s32, s32, void*, void*);
-typedef void (*HSD_DebugConsoleCallback)(void*, ...);
 typedef void (*HSD_DebugUserCallback)(s32, u32);
 
 typedef struct _HSD_StackFrame {

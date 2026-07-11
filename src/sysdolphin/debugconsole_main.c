@@ -7,6 +7,7 @@
 #include <dolphin/os.h>
 
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/video.h>
 
@@ -16,8 +17,6 @@ typedef struct {
     u8 pad[0x2FC];
 } OSThread;
 
-typedef void (*HSD_DebugConsoleCallback)(void* context, ...);
-
 extern void OSLoadContext(OSContext* context);
 extern void __OSSetExceptionHandler(s32 exception,
                                     void (*handler)(s32, OSContext*));
@@ -25,9 +24,6 @@ extern OSThread* OSCreateThread(OSThread* thread, void* (*func)(void*),
                                 void* param, void* stack, u32 stack_size,
                                 s32 priority, u16 attr);
 extern void OSResumeThread(OSThread* thread);
-
-extern HSD_DebugConsoleCallback
-HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
                                      void (*render_cb)(HSD_GObj*, s32),

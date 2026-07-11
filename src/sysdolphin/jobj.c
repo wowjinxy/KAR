@@ -34,12 +34,6 @@ extern void HSD_MtxFree(MtxPtr mtx);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
 extern void memcpy(void*, const void*, u32);
 
-extern BOOL HSD_JObjMtxIsDirty(HSD_JObj* jobj);
-extern void HSD_JObjSetupMatrix(HSD_JObj* jobj);
-extern void HSD_JObjSetMtxDirty(HSD_JObj* jobj);
-extern void ref_INC(void* o);
-extern void* HSD_IDGetData(u32 id, s32* success);
-
 #define HSD_JOBJ_INFO(i) ((HSD_JObjInfo*) (i))
 #define HSD_JOBJ_METHOD(o) HSD_JOBJ_INFO(HSD_CLASS_METHOD(o))
 
