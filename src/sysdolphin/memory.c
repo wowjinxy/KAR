@@ -12,12 +12,6 @@ typedef struct _HSD_MemCallbackData {
     u32 unused;
 } HSD_MemCallbackData;
 
-extern void HSD_CObjSetViewportfx4(HSD_CObj* cobj, f32 left, f32 right, f32 top, f32 bottom);
-extern void HSD_CObjSetScissorx4(HSD_CObj* cobj, s32 left, u16 right, s32 top, u16 bottom);
-extern HSD_CObj* HSD_CObjAlloc(void);
-extern void HSD_ImageDescRemove(HSD_ImageDesc* idesc);
-extern void HSD_TObjRemove(HSD_TObj* tobj);
-
 char MemorySourceFile[] = "memory.c";
 char MemoryAssertCallbackSize[] = "size == sizeof(__mem_cb)";
 

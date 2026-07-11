@@ -22,8 +22,6 @@ void HSD_JObjDispSub(HSD_JObj* jobj, MtxPtr vmtx, MtxPtr pmtx, HSD_TrspMask trsp
 void HSD_JObjMakePositionMtx(HSD_JObj* jobj, MtxPtr mtx, MtxPtr rmtx);
 void HSD_JObjDisp(HSD_JObj* jobj, MtxPtr vmtx, u32 flags, u32 rendermode);
 
-HSD_CObj* HSD_CObjGetCurrent(void);
-
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
 
 extern void HSD_MtxSRTQuat(Mtx mtx, Vec* scale, Quaternion* rotate, Vec* translate, Vec* scl);

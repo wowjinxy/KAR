@@ -6,8 +6,6 @@
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
 
-void HSD_CObjSetScissorx4(struct _HSD_CObj*, s32, u16, s32, u16);        /* extern */
-void HSD_CObjSetViewportfx4(struct _HSD_CObj*, f32, f32, f32, f32);      /* extern */
 void* HSD_Alloc(s32);
 s32 GXGetTexBufferSize(u16, u16, s32, s32, s32);
 
