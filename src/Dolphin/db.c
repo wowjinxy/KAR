@@ -1,4 +1,4 @@
-#include "dolphin/types.h"
+#include "dolphin/db.h"
 #include "dolphin/ppcarch.h"
 #include "functions.h"
 

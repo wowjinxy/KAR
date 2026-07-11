@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 
+#include <dolphin/db.h>
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/os.h>
 
@@ -26,7 +27,6 @@ extern OSThread* OSCreateThread(OSThread* thread, void* (*func)(void*),
                                 s32 priority, u16 attr);
 extern void OSResumeThread(OSThread* thread);
 
-extern BOOL DBIsDebuggerPresent(void);
 extern HSD_DebugConsoleCallback
 HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
 extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
