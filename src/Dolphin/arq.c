@@ -1,8 +1,5 @@
 #include "dolphin/types.h"
-
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
+#include "dolphin/os.h"
 
 extern void ARStartDMA(u32 type, u32 mainmem_addr, u32 aram_addr, u32 length);
 

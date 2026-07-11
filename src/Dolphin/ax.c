@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 typedef struct OSContext
@@ -38,9 +39,6 @@ struct DSPTaskInfo
     /* 0x48 */ OSTime t_task;
 };
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern OSTime OSGetTime(void);
 extern void OSInitThreadQueue(OSThreadQueue* queue);
 extern void OSSleepThread(OSThreadQueue* queue);

@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 typedef s16 __OSInterrupt;
@@ -30,14 +31,10 @@ typedef struct EXIControl
     } queue[3];
 } EXIControl;
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
 extern OSTime OSGetTime(void);
 extern void __OSMaskInterrupts(u32 mask);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);
 extern __OSInterruptHandler __OSGetInterruptHandler(__OSInterrupt interrupt);
-extern void OSRegisterVersion(char* version);
 extern u32 __OSGetDIConfig(void);
 extern u32 OSGetConsoleType(void);
 extern void OSClearContext(OSContext* context);

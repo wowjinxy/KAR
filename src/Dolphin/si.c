@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 typedef struct OSContext OSContext;
@@ -13,14 +14,10 @@ typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
 typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
 extern OSTime __OSGetSystemTime(void);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 extern void OSCancelAlarm(OSAlarm* alarm);
-extern void OSRegisterVersion(char* version);
 extern void OSReport(char* fmt, ...);
 extern u16 OSGetWirelessID(s32 chan);
 extern void OSSetWirelessID(s32 chan, u16 id);

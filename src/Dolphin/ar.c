@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef struct OSContext {
     /* 0x000 */ u32 gpr[32];
@@ -20,11 +21,7 @@ typedef struct OSContext {
 
 typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
 extern void DCFlushRange(void* addr, u32 nBytes);

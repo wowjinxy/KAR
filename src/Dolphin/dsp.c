@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 
@@ -67,11 +68,7 @@ typedef struct DVDCommand
     DVDLowCallback callback;
 } DVDCommand;
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern u32 __OSMaskInterrupts(u32 mask);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);

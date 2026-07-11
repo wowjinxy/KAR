@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 typedef u32 OSTick;
@@ -25,8 +26,6 @@ typedef struct OSCalendarTime
 } OSCalendarTime;
 
 extern void* OSGetStackPointer(void);
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
 
 extern const int DaysToMonth365[12];
 extern const int DaysToMonth366[12];

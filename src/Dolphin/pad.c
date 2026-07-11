@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
 
 typedef s64 OSTime;
 
@@ -24,9 +25,6 @@ typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
 typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
 extern OSTime OSGetTime(void);

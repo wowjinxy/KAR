@@ -63,6 +63,8 @@
 //BOOL    OSDisableInterrupts ( void );
 //BOOL    OSEnableInterrupts  ( void );
 //BOOL    OSRestoreInterrupts ( BOOL level );
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
 //
 //void* OSPhysicalToCached    ( u32   paddr  );
 //void* OSPhysicalToUncached  ( u32   paddr  );
@@ -157,6 +159,8 @@
 //void OSPanic ( char* file, int line, char* msg, ... );
 //void OSReport( char* msg, ... );
 //
+void OSRegisterVersion(char* version);
+u32 __OSUnmaskInterrupts(u32 mask);
 //u32 OSGetPhysicalMemSize(void);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
