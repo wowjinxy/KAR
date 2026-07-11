@@ -71,7 +71,6 @@ extern HSD_ObjAllocData lbl_8055A100;
 extern f32 lbl_805E1CA0;
 
 extern s32 kar_lbaudio_stop_track_handle_chain(s32 handle);
-extern void RecalcParentTrspBits(HSD_JObj* jobj);
 extern void fn_80192720(VcGeneratorField4* arg0, GXColor* color);
 extern f32 fn_80192048(VcGeneratorField4* arg0);
 extern s32 fn_801A8038(void* arg0);

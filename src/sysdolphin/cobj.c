@@ -10,6 +10,7 @@
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/fobj_alloc.h>
 #include <sysdolphin/gobjproc.h>
+#include <sysdolphin/initialize.h>
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/zlist.h>
 
@@ -29,7 +30,6 @@ char CObjAssertZero[] = "0";
     ((cobj) ? ((void) 0)                                                     \
             : __assert(kar_srcfile_cobj_c, line, CObjAssertCObj))
 
-extern s32 HSD_GetCurrentRenderPass(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 extern void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height,
