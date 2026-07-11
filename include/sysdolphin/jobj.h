@@ -140,6 +140,7 @@ void HSD_JObjSetMtxDirtySub(HSD_JObj* jobj);
 
 HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint);
 HSD_JObj* HSD_JObjAlloc(void);
+HSD_JObj* HSD_JObjGetPrev(HSD_JObj* jobj);
 u32 HSD_JObjGetFlags(HSD_JObj* jobj);
 struct _HSD_DObj* HSD_JObjGetDObj(HSD_JObj* jobj);
 void HSD_JObjSetFlags(HSD_JObj* jobj, u32 flags);

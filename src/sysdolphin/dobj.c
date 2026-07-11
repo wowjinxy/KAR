@@ -152,7 +152,6 @@ lbl_803F4648:
 }
 #pragma pop
 
-HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
 HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* desc);
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* desc);
 

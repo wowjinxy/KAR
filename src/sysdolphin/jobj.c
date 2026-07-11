@@ -29,7 +29,6 @@ void HSD_DObjRemoveAnimAllByFlags(HSD_DObj* dobj, u32 flags);
 void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags);
 void HSD_DObjAddAnimAll(HSD_DObj* dobj, HSD_MatAnim* matanim, HSD_ShapeAnimDObj* shapeanimdobj);
 void HSD_DObjAnimAll(HSD_DObj* dobj);
-HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
 void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc);
 void HSD_DObjRemoveAll(HSD_DObj* dobj);
 
@@ -1000,8 +999,6 @@ void HSD_JObjUnrefThis(HSD_JObj* jobj)
         hsdDelete(jobj);
     }
 }
-
-HSD_JObj* HSD_JObjGetPrev(HSD_JObj* jobj);
 
 HSD_JObj* HSD_JObjRemoveAll(HSD_JObj* jobj)
 {
