@@ -3,6 +3,7 @@
 #include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/list.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
 
@@ -260,8 +261,6 @@ void HSD_ShadowAddObject(HSD_Shadow* shadow, HSD_Obj* obj)
         }
     }
 }
-
-HSD_SList* HSD_SListRemove(HSD_SList*);
 
 void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
 {

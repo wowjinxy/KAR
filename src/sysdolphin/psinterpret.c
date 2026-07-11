@@ -2,6 +2,7 @@
 
 #include <dolphin/mtx/vec.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/list.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/psinterpret.h>
@@ -46,8 +47,6 @@ struct HSD_Particle {
 };
 
 extern void memset(void*, int, int);
-
-extern HSD_SList* HSD_SListRemove(HSD_SList* list);
 
 extern HSD_Particle* psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev);
 extern void psKillParticle(void);

@@ -4,6 +4,7 @@
 #include <dolphin/mtx/vec.h>
 #include <kar/math.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/list.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
@@ -13,7 +14,6 @@
 
 extern void memset(void*, int, int);
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
-extern HSD_SList* HSD_SListRemove(HSD_SList* node);
 
 extern void kar_psdisp__near_80437cd8(HSD_Generator* gp, s32 status);
 extern s32 kar_psdisp__near_80437fcc(HSD_Generator* gp);
