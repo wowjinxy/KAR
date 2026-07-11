@@ -7,6 +7,7 @@
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbvector.h>
 #include <sysdolphin/gobj_kinds.h>
 
 typedef struct GObj GObj;
@@ -109,7 +110,6 @@ void kar_en_assets__asset_8027ef6c(void);
 void fn_8027F5B4(void);
 void fn_8027F610(void);
 void kar_pltrick__near_80233a74(void);
-void kar_lbvector__near_8006595c(void);
 
 #define PLAYER_INPUT(i) (*(u32*) (HSD_PadCopyStatus + ((u8) (i) * 0x44) + 8))
 #define LOAD_F32(sym) (*(const f32*) &(sym))

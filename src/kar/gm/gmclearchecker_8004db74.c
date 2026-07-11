@@ -8,6 +8,7 @@
 #include "kar/gm/gmracenormal.h"
 #include "kar/gr/greventgenerator.h"
 #include "kar/lb/lbaudio.h"
+#include "kar/lb/lbvector.h"
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
 #include <sysdolphin/random.h>
@@ -72,7 +73,6 @@ extern void fn_80281660(void);
 extern void fn_80281AD4(void);
 extern void fn_80281BB4(void);
 extern void fn_802823FC(int);
-extern void kar_lbvector__near_8006595c(void);
 extern int fn_802819CC(void);
 extern void fn_8028208C(int);
 extern void fn_80281F4C(int);
