@@ -12,8 +12,6 @@ extern f32 tanf(f32);
 extern f64 kar_atan2(f64, f64);
 extern f32 HSD_FloatMin[]; /* epsilon */
 extern f32 HSD_Randf(void);
-extern HSD_JObj* HSD_JObjAlloc(void);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
 extern void OSPanic(const char*, s32, const char*, ...);
 
 extern HSD_Particle* _psListGetFirst(s32 linkNo);

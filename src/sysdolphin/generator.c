@@ -16,7 +16,6 @@ extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate,
 extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
 extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
 extern s32 HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* out);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
 extern void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
 extern void* HSD_Alloc(u32 size);
 extern void memset(void*, int, int);

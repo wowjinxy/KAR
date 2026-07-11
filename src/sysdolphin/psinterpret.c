@@ -42,7 +42,6 @@ struct HSD_Particle {
 
 extern void* HSD_Alloc(u32 size);
 extern void HSD_Free(void* ptr);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
 extern void HSD_MtxGetScale(Mtx mtx, Vec* scale);
 extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void memset(void*, int, int);

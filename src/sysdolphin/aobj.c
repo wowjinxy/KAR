@@ -33,7 +33,6 @@ extern HSD_SList* AObjCallbackList;
 extern f64 kar_fmod(f32 a, f32 b);
 extern void* memset(void* dst, int val, size_t n);
 extern void HSD_Panic(const char* file, s32 line, const char* msg);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
 
 void HSD_AObjInitAllocData(void)
 {
