@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmglobal.h>
 #include <kar/gm/gmlanmenu.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/mn/mnlandialogue.h>
@@ -103,7 +104,6 @@ u64 lbl_80537430[8];
 char lbl_805D51D8[] = "0";
 
 void HSD_VISetConfigure(void* configure);
-void kar_gmglobal__near_800088c8(s32 arg0);
 void fn_801390E0(void);
 void fn_80139188(void);
 void fn_801391C8(void);
