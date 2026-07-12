@@ -90,7 +90,7 @@ void HSD_PadRumbleRemoveAll(void)
     int i = 0;
 
     do {
-        HSD_PadRumbleRemove(i);
+        HSD_PadRumbleRemove((u8) i);
         i++;
     } while (i < 4);
 }
