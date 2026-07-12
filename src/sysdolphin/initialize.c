@@ -100,7 +100,6 @@ extern void HSD_ShadowInitAllocData(void);
 extern void HSD_ZListInitAllocData(void);
 
 char kar_src_initialize_80503c60[] = "initialize.c";
-char kar_src_objalloc_80503d18[] = "objalloc.h";
 char lbl_80503C70[] = "No memory space remains for XFB.\n";
 char lbl_80503C94[] = "no space remains for gx fifo.\n";
 
@@ -123,6 +122,7 @@ s32 lbl_805DE2C0;
 s32 lbl_805DE2C4;
 s32 lbl_805DE2AC;
 
+extern char kar_src_objalloc_80503d18[];
 #define assert_line_objalloc(line, cond) \
     ((cond) ? (void) 0 : __assert(kar_src_objalloc_80503d18, line, "data"))
 
@@ -136,8 +136,8 @@ extern char lbl_805DCBC8[5]; /* "addr" */
 #define assert_line_addr(line, cond) \
     ((cond) ? (void) 0 : __assert(kar_src_initialize_80503c60, line, lbl_805DCBC8))
 
-char lbl_80503CE4[] = "sysdolphin_base_library";
-char lbl_80503CFC[] = "pix_fmt != GX_PF_RGB565_Z16";
+extern char lbl_80503CE4[];
+extern char lbl_80503CFC[];
 
 #define assert_line_pixfmt(line, cond) \
     ((cond) ? (void) 0 : __assert(kar_src_initialize_80503c60, line, lbl_80503CFC))
@@ -368,7 +368,7 @@ void kar_initialize__80410384(void* lo, void* hi)
 {
     assert_line_memcb(0x1ED);
 
-    if ((lo == NULL) != (hi == NULL)) {
+    if ((lo == NULL && hi != NULL) || (lo != NULL && hi == NULL)) {
         OSReport("missing argument.\n");
     } else {
         lbl_805DE298 = (u32) lo;
@@ -386,6 +386,8 @@ void HSD_GetNextArena(void** lo, void** hi)
         *hi = (void*) lbl_805DE294;
     }
 }
+
+char lbl_80503CE4[] = "sysdolphin_base_library";
 
 void HSD_ClearHeap(void)
 {
@@ -442,6 +444,8 @@ void _HSD_NeedCacheInvalidate(u32 flags)
     lbl_805DE2C0 |= flags;
 }
 
+char lbl_80503CFC[] = "pix_fmt != GX_PF_RGB565_Z16";
+
 void kar_initialize__80410600(s32 pix_fmt, s32 z_fmt)
 {
     assert_line_pixfmt(0x317, pix_fmt != GX_PF_RGB565_Z16);
@@ -462,6 +466,8 @@ void HSD_ObjInit(void)
     HSD_ShadowInitAllocData();
     HSD_ZListInitAllocData();
 }
+
+char kar_src_objalloc_80503d18[] = "objalloc.h";
 
 static inline u32 HSD_ObjAllocGetUsing(HSD_ObjAllocData* data)
 {
