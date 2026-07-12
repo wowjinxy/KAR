@@ -2434,3 +2434,301 @@ void kar_sislib_release_archive_wrapper(HSD_Archive* archive)
 {
     kar_lbarchive__80059798(archive);
 }
+
+extern void kar_diagnostic__803d7e58(void* mutex); /* OSLockMutex */
+extern void kar_diagnostic__803d7f34(void* mutex);  /* OSUnlockMutex */
+
+extern s32 kar_gcpmemcard_calc_save_descriptor_size(void* save_desc);
+extern s32 kar_gcpmemcard_compare_generation8(void);
+
+s32 kar_memcard_mount_card_for_preload(s32 chan);
+s32 kar_memcard_check_card_for_preload(s32 chan);
+s32 kar_memcard_open_current_save_file(void);
+s32 kar_memcard_write_region0_tail_then_linear(s32 arg0);
+s32 kar_memcard_write_linear_region_payload(s32 arg0);
+s32 kar_memcard_write_mirror_region_payload(s32 arg0);
+s32 kar_memcard_write_remapped_region_payload(s32 arg0);
+
+typedef struct MemCardRegionRec {
+    s32 unk0;
+    s32 mode;   //0x04 0=linear, 1=mirror, 2=remapped
+    s32 unk8;
+    s32 count;  //0x0C
+    s32 base_idx; //0x10
+    s32 status; //0x14
+    s32 unk18;
+    s32 dirty;  //0x1C
+    s32 unk20;
+} MemCardRegionRec; //0x24
+
+typedef struct MemCardSaveDesc {
+    u8 pad[0x24];
+    s32 region_count; //0x24
+    s32 unk28;
+} MemCardSaveDesc;
+
+typedef struct MemCardMountCtx {
+    u8 pad[0x60];
+    MemCardRegionRec* region_table; //0x60
+    MemCardSaveDesc* save_desc;     //0x64
+} MemCardMountCtx;
+
+s32 lbl_8059A880[0x5D80];
+
+#define MC_BASE ((u8*) lbl_8059A880)
+#define MC_S32(off) (*(s32*) (MC_BASE + (off)))
+#define MC_PTR(off) (*(void**) (MC_BASE + (off)))
+
+s32 kar_sislib__near_80452790(void)
+{
+    return MC_S32(0x598);
+}
+
+void kar_memcard_mount_check_open_file(s32 chan)
+{
+    s32 result = kar_memcard_mount_card_for_preload(chan);
+    if ((result == 0) || (result == 0xA)) {
+        if (kar_memcard_check_card_for_preload(chan) == 0) {
+            kar_memcard_open_current_save_file();
+        }
+    }
+}
+
+void kar_memcard_mount_and_check_card(s32 chan)
+{
+    s32 result = kar_memcard_mount_card_for_preload(chan);
+    if ((result == 0) || (result == 0xA)) {
+        kar_memcard_check_card_for_preload(chan);
+    }
+}
+
+s32 kar_memcard_decode_icon_sector_header(u8* data, s32* arg1, s32* arg2, s32* arg3, s32* arg4,
+                                          s32* arg5)
+{
+    if (arg2 != NULL) {
+        *arg2 = (data[0] << 8) | data[1];
+    }
+    if (arg3 != NULL) {
+        *arg3 = data[2];
+    }
+    if (arg1 != NULL) {
+        *arg1 = data[3];
+    }
+    if (arg4 != NULL) {
+        *arg4 = (data[4] >> 6) & 3;
+    }
+    if (arg5 != NULL) {
+        *arg5 = data[4] & 0x3F;
+        *arg5 = (*arg5 << 8) | data[5];
+        *arg5 = (*arg5 << 8) | data[6];
+    }
+    return 1;
+}
+
+s32 kar_memcard_get_preload_block_size(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x608);
+}
+
+s32 kar_sislib__near_80453398(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x614);
+}
+
+s32 kar_sislib__near_804533c4(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x600);
+}
+
+s32 kar_sislib__near_804533f0(void)
+{
+    s32 val;
+    void* mutex = MC_BASE + 0x5A0;
+
+    kar_diagnostic__803d7e58(mutex);
+    val = MC_S32(0x59C);
+    kar_diagnostic__803d7f34(mutex);
+    return val;
+}
+
+s32 kar_memcard_get_icon_preload_tail_bytes(void* save_desc, s32 divisor)
+{
+    return divisor - ((kar_gcpmemcard_calc_save_descriptor_size(save_desc) % divisor) + 0x20);
+}
+
+#pragma push
+#pragma dont_inline on
+s32 kar_memcard_clamp_icon_preload_length(s32* arg0, void* save_desc, s32 divisor)
+{
+    s32 val = *arg0;
+    s32 tail = kar_memcard_get_icon_preload_tail_bytes(save_desc, divisor);
+    if (val >= tail) {
+        val = tail;
+    }
+    return val;
+}
+#pragma pop
+
+void kar_memcard_refresh_linear_region_state(s32 arg0)
+{
+    u8* base;
+    MemCardMountCtx* ctx;
+    MemCardRegionRec* region_table;
+    MemCardSaveDesc* save_desc;
+    s32 chan;
+    s32 last_field;
+    MemCardRegionRec* rec;
+    s32 base_idx;
+    s32 i;
+    s32 idx;
+
+    base = MC_BASE;
+    ctx = MC_PTR(0x0);
+    chan = MC_S32(0x50C);
+    region_table = ctx->region_table;
+    save_desc = ctx->save_desc;
+    last_field = 0;
+
+    if (arg0 == 0) {
+        s32 region_count = save_desc->region_count;
+        if (*(s32*) (base + 0x9614 + (region_count - 1) * 4) == 0) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+        last_field = *(s32*) (base + 0x7624 + region_count * 4);
+    }
+
+    rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24);
+    base_idx = rec->base_idx;
+    for (i = 0; i < rec->count; i++) {
+        idx = i + base_idx;
+        if (((i > 0) || (arg0 == 0)) && (last_field != *(s32*) (base + 0x7628 + idx * 4))) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+        last_field = *(s32*) (base + 0x7628 + idx * 4);
+        if (*(s32*) (base + 0x9614 + idx * 4) == 0) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+    }
+    rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+    rec->dirty = 0;
+    rec->status = last_field;
+}
+
+static s32 lbl_805E6280 = -1;
+static s32 lbl_805E6284 = -1;
+static s32 lbl_805E6288 = 1;
+static s32 lbl_805E628C = 1;
+
+s32 kar_memcard_resolve_mirror_region_side(s32 arg0)
+{
+    u8* base;
+    s32 status[2];
+    s32 flag[2];
+    MemCardMountCtx* ctx;
+    MemCardRegionRec* rec;
+    s32 side;
+    s32 i;
+    s32 idx;
+
+    base = MC_BASE;
+    ctx = MC_PTR(0x0);
+    rec = (MemCardRegionRec*) ((u8*) ctx->region_table + arg0 * 0x24);
+    status[0] = lbl_805E6280;
+    status[1] = lbl_805E6284;
+    flag[0] = lbl_805E6288;
+    flag[1] = lbl_805E628C;
+
+    for (side = 0; side < 2; side++) {
+        for (i = 0; i < rec->count; i++) {
+            idx = rec->base_idx + side * rec->count + i;
+            if (*(s32*) (base + 0x9614 + idx * 4) == 0) {
+                flag[side] = 0;
+                status[side] = -1;
+                break;
+            }
+            if ((i > 0) && (*(s32*) (base + 0x7628 + idx * 4) != status[side])) {
+                flag[side] = 0;
+                status[side] = -1;
+                break;
+            }
+            status[side] = *(s32*) (base + 0x7628 + idx * 4);
+        }
+    }
+
+    if ((flag[0] != 0) && (flag[1] != 0)) {
+        if (status[0] == status[1]) {
+            return 0;
+        }
+        {
+            s32 gen = kar_gcpmemcard_compare_generation8();
+            s32 t = (-gen) & ~gen;
+            return (t >> 31) + 2;
+        }
+    }
+    if ((flag[0] != 0) && (flag[1] == 0)) {
+        return 1;
+    }
+    if ((flag[0] == 0) && (flag[1] != 0)) {
+        return 2;
+    }
+    return -1;
+}
+
+s32 kar_memcard_write_linear_or_region0(s32 arg0)
+{
+    if (arg0 == 0) {
+        return kar_memcard_write_region0_tail_then_linear(arg0);
+    }
+    return kar_memcard_write_linear_region_payload(arg0);
+}
+
+#pragma push
+#pragma dont_inline on
+s32 kar_memcard_write_region_by_mode(s32 arg0)
+{
+    void* p = MC_PTR(0x0);
+    s32 mode;
+    p = *(void**) ((u8*) p + 0x60);
+    p = (u8*) p + arg0 * 0x24;
+    mode = *(s32*) ((u8*) p + 4);
+
+    if (mode != 1) {
+        goto check2;
+    }
+    return kar_memcard_write_mirror_region_payload(arg0);
+check2:
+    if (mode != 2) {
+        goto check3;
+    }
+    return kar_memcard_write_remapped_region_payload(arg0);
+check3:
+    if (mode == 0) {
+        return kar_memcard_write_linear_or_region0(arg0);
+    }
+    return 0;
+}
+#pragma pop
