@@ -12,8 +12,6 @@ extern HSD_ClassInfo hsdObj;
 extern char kar_srcfile_wobj_c_805dcc98[7]; // "wobj.c"
 extern char lbl_805DCCA4[5];                // "wobj"
 extern char lbl_805DCCA0[3];                // "jp"
-extern char lbl_8050420C[];                 // "wobj->aobj"
-extern char lbl_80504218[];                 // "jp->u.spline"
 extern char kar_srcfile_jobj_h_805dccac[7]; // "jobj.h"
 extern char lbl_805DCCB4[5];                // "jobj"
 #define assert_line_named(line, cond, condstr)                                 \
@@ -88,10 +86,10 @@ void WObjUpdateFunc(void* obj, u32 type, f32* fval)
                 *fval = lbl_805E5D08;
             }
 
-            assert_line_named(152, wobj->aobj, lbl_8050420C);
+            assert_line_named(152, wobj->aobj, "wobj->aobj");
             jp = (HSD_JObj*)wobj->aobj->hsd_obj;
             assert_line_named(154, jp, lbl_805DCCA0);
-            assert_line_named(155, jp->u.spline, lbl_80504218);
+            assert_line_named(155, jp->u.spline, "jp->u.spline");
 
             splArcLengthPoint(&p, jp->u.spline, *fval);
             HSD_WObjSetPosition(wobj, &p);
