@@ -412,16 +412,17 @@ void HSD_VICopyXFBAsync(HSD_RenderPass rpass)
 
 void HSD_VIDrawDoneXFB(s32 idx)
 {
+    HSD_VIXFBDrawDispStatus* status;
     bool intr;
 
     intr = OSDisableInterrupts();
 
-    assert_line_named(0x2D2, _p->xfb[idx].status == HSD_VI_XFB_WAITDONE,
-                      lbl_80503EDC);
+    status = &_p->xfb[idx].status;
+    assert_line_named(0x2D2, *status == HSD_VI_XFB_WAITDONE, lbl_80503EDC);
 
-    _p->xfb[idx].status = HSD_VISearchXFBByStatus(HSD_VI_XFB_NEXT) != -1
-                              ? HSD_VI_XFB_DRAWDONE
-                              : HSD_VI_XFB_NEXT;
+    *status = HSD_VISearchXFBByStatus(HSD_VI_XFB_NEXT) != -1
+                  ? HSD_VI_XFB_DRAWDONE
+                  : HSD_VI_XFB_NEXT;
 
     OSRestoreInterrupts(intr);
 }
