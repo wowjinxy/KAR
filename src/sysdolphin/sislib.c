@@ -171,6 +171,7 @@ static SisCamDesc HSD_SisLib_camera_desc = {
     30.0F, 1.3333F,
 };
 
+s32 lbl_805DE570[2];
 sislib_UnkAlloc3* lbl_805DE56C;
 HSD_Text* lbl_805DE568;
 SisBlock* used_head;
@@ -2448,6 +2449,44 @@ s32 kar_memcard_write_region0_tail_then_linear(s32 arg0);
 s32 kar_memcard_write_linear_region_payload(s32 arg0);
 s32 kar_memcard_write_mirror_region_payload(s32 arg0);
 s32 kar_memcard_write_remapped_region_payload(s32 arg0);
+s32 kar_memcard_resolve_sector2block_region(s32 arg0, s32 arg1, s32* arg2, s32* arg3);
+s32 kar_memcard_close_current_save_file(s32 chan);
+s32 kar_memcard_reprobe_card_status(void);
+
+extern s32 CARDCheck(s32 chan);
+extern s32 CARDUnmount(s32 chan);
+extern s32 CARDOpen(s32 chan, const char* fileName, void* fileInfo);
+extern s32 CARDClose(void* fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, void* stat);
+extern s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed);
+extern s32 CARDGetResultCode(s32 chan);
+extern s32 kar_diagnostic__803e64ec(s32 chan, void* workArea, s32 unused); /* CARDMount */
+extern s32 kar_diagnostic__803e7a88(void* fileInfo, void* buf, s32 length, s32 offset); /* CARDRead */
+extern s32 kar_diagnostic__803e7e04(void* fileInfo, void* buf, s32 length, s32 offset); /* CARDWrite */
+extern s32 kar_diagnostic__803e84e0(s32 chan, s32 fileNo, void* stat); /* CARDSetStatus */
+extern s32 kar_diagnostic__803e6e18(s32 chan); /* CARDFormat */
+
+extern void kar_gcpmemcard_append_logf(const char* fmt, ...);
+extern char kar_debug_romfont_end_gcpmemcard_strings_80531e40[];
+
+s32 lbl_805DD1B0[2] = { 0, 0 };
+
+static inline s32 kar_memcard_translate_card_result(s32 result)
+{
+    s32 code;
+    switch (result) {
+    case -1: code = 0xB; break;
+    case -3: code = 0xE; break;
+    case -2: code = 0xF; break;
+    case -4: code = 0x6; break;
+    case 0: code = 0x0; break;
+    case -5: case -128: code = 0xD; break;
+    case -13: code = 0x9; break;
+    case -6: code = 0xA; break;
+    case -14: case 1: default: code = 0xC; break;
+    }
+    return code;
+}
 
 typedef struct MemCardRegionRec {
     s32 unk0;
@@ -2468,10 +2507,19 @@ typedef struct MemCardSaveDesc {
 } MemCardSaveDesc;
 
 typedef struct MemCardMountCtx {
-    u8 pad[0x60];
+    u8 pad0[0x40];
+    char filename[0x20];           //0x40
     MemCardRegionRec* region_table; //0x60
     MemCardSaveDesc* save_desc;     //0x64
 } MemCardMountCtx;
+
+typedef struct MemCardFileInfo {
+    s32 chan;
+    s32 fileNo;
+    s32 offset;
+    s32 length;
+    u16 iBlock;
+} MemCardFileInfo;
 
 s32 lbl_8059A880[0x5D80];
 
@@ -2698,6 +2746,127 @@ s32 kar_memcard_resolve_mirror_region_side(s32 arg0)
     return -1;
 }
 
+s32 kar_memcard_mount_card_for_preload(s32 chan)
+{
+    s32 result;
+    s32 code;
+
+    lbl_805DD1B0[chan] += 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                lbl_805DD1B0[chan]);
+
+    result = kar_diagnostic__803e64ec(chan, (u8*) lbl_8059A880 + 0xD600, 0);
+    code = kar_memcard_translate_card_result(result);
+
+    if ((result != 0) && (result != -6)) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+s32 kar_memcard_check_card_for_preload(s32 chan)
+{
+    s32 code = kar_memcard_translate_card_result(CARDCheck(chan));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+s32 kar_memcard_open_current_save_file(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    MemCardMountCtx* ctx = *(MemCardMountCtx**) base;
+    s32 code;
+
+    code = kar_memcard_translate_card_result(CARDOpen(chan, ctx->filename, base + 0x518));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+
+    lbl_805DE570[0] += 1;
+    CARDGetStatus(chan, *(s32*) (base + 0x51C), base + 0x52C);
+    if ((*(u32*) (base + 0x564) == 0xFFFFFFFF) || (*(u32*) (base + 0x55C) == 0xFFFFFFFF)) {
+        if (kar_memcard_close_current_save_file(chan) == 0) {
+            lbl_805DD1B0[chan] -= 1;
+            kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                        lbl_805DD1B0[chan]);
+            CARDUnmount(chan);
+        }
+        return 5;
+    }
+    return code;
+}
+
+s32 kar_memcard_reprobe_card_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan_raw = *(s32*) (base + 0x50C);
+    s32 chan_clamped = chan_raw;
+    s32 status;
+    s32 code;
+
+    if ((chan_clamped < 0) || (chan_clamped > 1)) {
+        chan_clamped = 0;
+    }
+    status = *(s32*) (base + chan_clamped * 0x1C + 0x614);
+
+    if (status == 0xE) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return status;
+    }
+
+    lbl_805DD1B0[chan_raw] += 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                lbl_805DD1B0[chan_raw]);
+
+    code = kar_memcard_translate_card_result(kar_diagnostic__803e64ec(chan_raw, base + 0xD600, 0));
+    if (code == 9) {
+        code = 0xA;
+    }
+
+    if ((code != 0) && (code != 0xA)) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return code;
+    }
+
+    code = kar_memcard_translate_card_result(kar_diagnostic__803e6e18(chan_raw));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return code;
+    }
+    lbl_805DD1B0[chan_raw] -= 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                lbl_805DD1B0[chan_raw]);
+    CARDUnmount(chan_raw);
+    return code;
+}
+
 s32 kar_memcard_write_linear_or_region0(s32 arg0)
 {
     if (arg0 == 0) {
@@ -2732,3 +2901,99 @@ check3:
     return 0;
 }
 #pragma pop
+
+s32 kar_memcard_close_current_save_file(s32 chan)
+{
+    s32 result;
+    s32 code;
+
+    lbl_805DE570[0] -= 1;
+    result = CARDClose((u8*) lbl_8059A880 + 0x518);
+    code = kar_memcard_translate_card_result(result);
+
+    if (result != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+extern char lbl_805322B0[];
+
+void kar_memcard_update_card_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    u8* save_desc = *(u8**) (*(u8**) base + 0x64);
+    s32 pos = 0;
+    s32 idx = 0;
+    s32 i;
+    u16 iconFormat;
+    u16 iconSpeed;
+    u8 speed;
+    u8* frame;
+    u32 mask;
+
+    CARDGetStatus(chan, *(s32*) (base + 0x51C), base + 0x52C);
+
+    *(u32*) (base + 0x55C) = 0x40;
+    *(u32*) (base + 0x564) = 0;
+
+    *(u8*) (base + 0x55A) = (*(u8*) (base + 0x55A) & ~3) | save_desc[0];
+    *(u8*) (base + 0x55A) = (*(u8*) (base + 0x55A) & ~4) | save_desc[1];
+
+    for (i = 0; i < 4; i++) {
+        frame = save_desc + idx;
+        mask = ~(3 << pos);
+        iconFormat = (*(u16*) (base + 0x560) & mask) | (frame[2] << pos);
+        *(u16*) (base + 0x560) = iconFormat;
+        speed = frame[0xA];
+        iconSpeed = (*(u16*) (base + 0x562) & mask) | (speed << pos);
+        *(u16*) (base + 0x562) = iconSpeed;
+        if (speed == 0) {
+            break;
+        }
+        idx += 1;
+        pos += 2;
+        frame = save_desc + idx;
+        mask = ~(3 << pos);
+        iconFormat = (iconFormat & mask) | (frame[2] << pos);
+        *(u16*) (base + 0x560) = iconFormat;
+        speed = frame[0xA];
+        iconSpeed = (iconSpeed & mask) | (speed << pos);
+        *(u16*) (base + 0x562) = iconSpeed;
+        if (speed == 0) {
+            break;
+        }
+        pos += 2;
+        idx += 1;
+    }
+
+    kar_gcpmemcard_append_logf(lbl_805322B0);
+    kar_diagnostic__803e84e0(chan, *(s32*) (base + 0x51C), base + 0x52C);
+}
+
+s32 kar_memcard_get_cached_or_reprobe_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    s32 status;
+    s32* p;
+
+    base = base + chan * 0x1C;
+    status = *(s32*) (base + 0x614);
+
+    if (status == 0xA) {
+        goto do_reprobe;
+    }
+    p = (s32*) (base + 0x614);
+    if (status == 0) {
+        return 0x10;
+    }
+    return *p;
+do_reprobe:
+    return kar_memcard_reprobe_card_status();
+}
