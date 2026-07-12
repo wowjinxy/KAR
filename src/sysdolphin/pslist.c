@@ -5,6 +5,8 @@
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/pslist.h>
 
+void memset(void*, int, int);
+
 #define PS_NUM_LINK 32
 
 #define GX_FIFO_U8 (*(volatile u8*) 0xCC008000)
@@ -91,6 +93,129 @@ void kar_pslist__near_80438794(u8* color, f32 x, f32 y, f32 w, f32 h)
 extern f32 lbl_805DCDF0;
 extern f32 lbl_805DCDF4;
 extern u8 lbl_805DCDF8;
+extern f64 lbl_805E6040;
+extern f64 lbl_805E6048;
+extern f64 lbl_805E6050;
+extern f32 lbl_805E6058;
+extern f64 lbl_805E6060;
+extern u8 lbl_805053F8[47][13];
+
+f32 kar_pslist__near_80438898(char c, u8* color, f32 x, f32 y)
+{
+    s32 idx;
+    u8* stroke;
+    s32 n;
+
+    if (c >= '0' && c <= '9') {
+        idx = c - '0';
+    } else if (c >= 'A' && c <= 'Z') {
+        idx = c - 0x37;
+    } else if (c >= 'a' && c <= 'z') {
+        idx = c - 0x57;
+    } else {
+        switch (c) {
+        case '.':
+            GXBegin(0xB8, 0, 1);
+            GX_FIFO_F32 = (f32) (lbl_805E6040 * (f64) lbl_805DCDF0 + x);
+            GX_FIFO_F32 = (f32) (lbl_805E6048 * (f64) lbl_805DCDF4 + y);
+            GX_FIFO_U8 = color[0];
+            GX_FIFO_U8 = color[1];
+            GX_FIFO_U8 = color[2];
+            GX_FIFO_U8 = color[3];
+            return lbl_805DCDF0;
+        case ':': {
+            f32 xs;
+            u8 c0, c1, c2, c3;
+
+            GXBegin(0xB8, 0, 2);
+            c0 = color[0];
+            c1 = color[1];
+            c2 = color[2];
+            c3 = color[3];
+            xs = (f32) (lbl_805E6040 * (f64) lbl_805DCDF0 + x);
+            GX_FIFO_F32 = xs;
+            GX_FIFO_F32 = (f32) (lbl_805E6040 * (f64) lbl_805DCDF4 + y);
+            GX_FIFO_U8 = c0;
+            GX_FIFO_U8 = c1;
+            GX_FIFO_U8 = c2;
+            GX_FIFO_U8 = c3;
+            GX_FIFO_F32 = xs;
+            GX_FIFO_F32 = (f32) (lbl_805E6050 * (f64) lbl_805DCDF4 + y);
+            GX_FIFO_U8 = c0;
+            GX_FIFO_U8 = c1;
+            GX_FIFO_U8 = c2;
+            GX_FIFO_U8 = c3;
+            return lbl_805DCDF0;
+        }
+        case '-':
+            idx = 0x24;
+            break;
+        case '_':
+            idx = 0x25;
+            break;
+        case '~':
+            idx = 0x26;
+            break;
+        case '>':
+            idx = 0x27;
+            break;
+        case '/':
+            idx = 0x28;
+            break;
+        case '(':
+            idx = 0x29;
+            break;
+        case ')':
+            idx = 0x2A;
+            break;
+        case ',':
+            idx = 0x2B;
+            break;
+        case '<':
+            idx = 0x2C;
+            break;
+        case '+':
+            idx = 0x2D;
+            break;
+        case '$':
+            idx = 0x2E;
+            break;
+        default:
+            return lbl_805DCDF0;
+        }
+    }
+
+    stroke = lbl_805053F8[idx];
+    n = 0;
+
+    while (n < 0x29 && stroke[0] != 0xFF) {
+        u8 c0 = color[0];
+        u8 c1 = color[1];
+        u8 c2 = color[2];
+        u8 c3 = color[3];
+        u8 p0 = stroke[0];
+        u8 p1 = stroke[1];
+
+        n += 2;
+        stroke += 2;
+
+        GXBegin(0xA8, 0, 2);
+        GX_FIFO_F32 = lbl_805DCDF0 * (f32) (lbl_805E6058 * (f64) ((s32) (p0 >> 4) ^ 0x80000000) - (f64) lbl_805E6060) + x;
+        GX_FIFO_F32 = lbl_805DCDF4 * (f32) (lbl_805E6058 * (f64) ((p0 & 0xF) ^ 0x80000000) - (f64) lbl_805E6060) + y;
+        GX_FIFO_U8 = c0;
+        GX_FIFO_U8 = c1;
+        GX_FIFO_U8 = c2;
+        GX_FIFO_U8 = c3;
+        GX_FIFO_F32 = lbl_805DCDF0 * (f32) (lbl_805E6058 * (f64) ((p1 >> 4) ^ 0x80000000) - (f64) lbl_805E6060) + x;
+        GX_FIFO_F32 = lbl_805DCDF4 * (f32) (lbl_805E6058 * (f64) ((p1 & 0xF) ^ 0x80000000) - (f64) lbl_805E6060) + y;
+        GX_FIFO_U8 = c0;
+        GX_FIFO_U8 = c1;
+        GX_FIFO_U8 = c2;
+        GX_FIFO_U8 = c3;
+    }
+
+    return lbl_805DCDF0;
+}
 
 void kar_pslist__near_80438c50(f32 lineWidth, f32 pointSize, u8 flag)
 {
@@ -199,16 +324,88 @@ typedef struct PSLogState {
     u8 hi1 : 1; //0x00
     u8 enabled : 1;
     u8 rest : 6;
-    u8 pad01[0x13];
+    u8 pad01[3];
+    u8* buf; //0x04
+    u32 size; //0x08
+    u32 cursor; //0x0C
+    u8 pad10; //0x10
+    u8 col; //0x11
+    u8 pad12[2];
     u32 field14; //0x14
     u32 field18; //0x18
-    u8 pad1c[0x28 - 0x1C];
+    u32 charCount; //0x1C
+    u8 pad20[0x28 - 0x20];
 } PSLogState;
 
 extern PSLogState lbl_8058D198;
 
-extern void kar_pslist__near_8043a010(s32 count, u8* buf);
-extern void HSD_SetDebugExceptionCallback(void (*callback)(s32, u8*));
+extern void HSD_SetDebugExceptionCallback(void (*callback)(u8*, u32));
+extern void OSDisableInterrupts(void);
+extern void OSRestoreInterrupts();
+
+void kar_pslist__near_8043a010(u8* src, u32 count)
+{
+    u8* buf;
+    u32 size;
+    u32 cursor;
+    u8 col;
+    u8* p;
+
+    OSDisableInterrupts();
+
+    p = src;
+    cursor = lbl_8058D198.cursor;
+    buf = lbl_8058D198.buf;
+    size = lbl_8058D198.size;
+    col = lbl_8058D198.col;
+
+    for (; count > 0; count--) {
+        char c = *p;
+
+        if (c == 0xD) {
+        } else if (c < 0xD) {
+            if (c == 0xA) {
+                if (col != 0 || buf[(cursor + size - 1) % size] != 0) {
+                    buf[cursor] = col;
+                    col = 0;
+                    lbl_8058D198.charCount++;
+                    lbl_8058D198.field18++;
+                    cursor = (cursor + 1) % size;
+                }
+            } else {
+                col++;
+                buf[cursor] = c;
+                if (col == 0x36) {
+                    cursor = (cursor + 1) % size;
+                    buf[cursor] = col;
+                    col = 0;
+                    lbl_8058D198.charCount++;
+                    lbl_8058D198.field18++;
+                }
+                lbl_8058D198.charCount++;
+                cursor = (cursor + 1) % size;
+            }
+        } else {
+            col++;
+            buf[cursor] = c;
+            if (col == 0x36) {
+                cursor = (cursor + 1) % size;
+                buf[cursor] = col;
+                col = 0;
+                lbl_8058D198.charCount++;
+                lbl_8058D198.field18++;
+            }
+            lbl_8058D198.charCount++;
+            cursor = (cursor + 1) % size;
+        }
+        p++;
+    }
+
+    lbl_8058D198.cursor = cursor;
+    lbl_8058D198.col = col;
+
+    OSRestoreInterrupts();
+}
 
 s32 kar_pslist__near_8043a15c(s32 enable)
 {
@@ -226,6 +423,17 @@ s32 kar_pslist__near_8043a15c(s32 enable)
     return wasEnabled;
 }
 
+void kar_pslist__near_8043a1cc(u8* buf, u32 size)
+{
+    memset(&lbl_8058D198, 0, 0x24);
+    lbl_8058D198.buf = buf;
+    lbl_8058D198.size = size;
+    memset(buf, 0, size);
+    lbl_8058D198.hi1 = 1;
+    lbl_8058D198.enabled = 1;
+    HSD_SetDebugExceptionCallback(kar_pslist__near_8043a010);
+}
+
 void kar_pslist__near_8043a264(u32* out1, u32* out2)
 {
     if (out1 != NULL) {
@@ -236,6 +444,33 @@ void kar_pslist__near_8043a264(u32* out1, u32* out2)
     }
 }
 
+extern char lbl_80507308[];
+extern void OSReport(const char*, ...);
+extern u32 OSGetPhysicalMemSize(void);
+
+void kar_pslist__near_8043a778(u32* ctx, s32 maxDepth)
+{
+    char* const base = lbl_80507308;
+    u32* frame;
+    s32 depth;
+
+    OSReport(base + 0x8CC);
+    OSReport(base + 0x904);
+
+    frame = (u32*) ctx[1];
+
+    for (depth = 0; frame != NULL && frame != (u32*) 0xFFFFFFFF && depth < maxDepth;
+         frame = (u32*) *frame, depth++) {
+        if ((u32) frame < 0x80000000) {
+            break;
+        }
+        if ((u32) frame + 8 > 0x80000000 + OSGetPhysicalMemSize()) {
+            break;
+        }
+        OSReport(base + 0x924, frame, frame[0], frame[1]);
+    }
+}
+
 typedef struct PSFlagDesc {
     u8 pad00[0x10];
     u32 field10; //0x10
@@ -243,7 +478,6 @@ typedef struct PSFlagDesc {
 
 extern PSFlagDesc lbl_805085FC;
 extern PSFlagDesc lbl_805084B0;
-extern u32 OSGetPhysicalMemSize(void);
 
 void kar_pslist__near_8043c914(void)
 {
