@@ -7,7 +7,8 @@
 
 struct HSD_Particle {
     struct HSD_Particle* next; //0x00
-    u8 pad04[0x19];
+    u32 kind; //0x04
+    u8 pad08[0x15];
     u8 linkNo; //0x1D
 };
 
