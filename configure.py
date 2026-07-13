@@ -699,6 +699,7 @@ kar_objects = [
     Object(NonMatching, "a2d_kirbydisp.cpp"),
     Object(NonMatching, "a2d_refract.cpp"),
     Object(NonMatching, "fl_indirectload.cpp"),
+    Object(NonMatching, "kar_diag.cpp"),
     Object(NonMatching, "OSThread.c"),
     Object(Matching, "dobj.c"),
     Object(NonMatching, "tobj.c"),
@@ -778,7 +779,7 @@ for obj in kar_objects:
         obj.options["cflags"] = cflags_dolphin_sdk
         obj.options["progress_category"] = "sdk"
 
-dolphin_matched = {"mtxvec", "ppcarch", "db"}
+dolphin_matched = {"mtxvec", "ppcarch", "db", "init"}
 dolphin_schedule_off = {"exi"}
 
 config.libs = [

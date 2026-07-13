@@ -6,9 +6,16 @@ void* hsdAllocMemPiece();
 void MObjInfoInit();
 HSD_MObjInfo hsdMObj = { MObjInfoInit };
 
+#if defined(VERSION_GKYE01)
+HSD_TObj* MObjShadowTObjList;   /* tobj_shadows */
+HSD_TObj* MObjToonTObj;         /* tobj_toon */
+u32 TevStateRegisterInvalidateMask;
+HSD_MObjInfo* MObjDefaultClass; /* default_class */
+#else
 extern HSD_MObjInfo* MObjDefaultClass; /* default_class */
-extern HSD_TObj* MObjToonTObj;     /* tobj_toon */
-extern HSD_TObj* MObjShadowTObjList;     /* tobj_shadows */
+extern HSD_TObj* MObjToonTObj;         /* tobj_toon */
+extern HSD_TObj* MObjShadowTObjList;   /* tobj_shadows */
+#endif
 
 void HSD_MObjSetCurrent(HSD_MObj* mobj, u32 flags)
 {

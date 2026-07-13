@@ -27,9 +27,15 @@ typedef union HSD_AObjAllocData {
 HSD_AObjAllocData hsdAObj_alloc_data;
 #define AOBJ_ALLOC_DATA (&hsdAObj_alloc_data.data)
 
+#if defined(VERSION_GKYE01)
+s32 AObjEndedCount;
+s32 AObjActiveCount;
+HSD_SList* AObjCallbackList;
+#else
 extern s32 AObjEndedCount;
 extern s32 AObjActiveCount;
 extern HSD_SList* AObjCallbackList;
+#endif
 
 extern f64 kar_fmod(f32 a, f32 b);
 extern void* memset(void* dst, int val, size_t n);

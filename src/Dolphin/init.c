@@ -12,6 +12,7 @@ void __init_user(void)
 
 #pragma dont_inline on
 #pragma scheduling off
+#pragma peephole off
 static void __init_cpp(void)
 {
     void (**pctor)(void);
@@ -21,6 +22,7 @@ static void __init_cpp(void)
         (*pctor)();
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 

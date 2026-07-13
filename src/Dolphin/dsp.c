@@ -193,6 +193,7 @@ BOOL DSPCheckInit(void)
     return __DSP_init_flag;
 }
 
+#pragma scheduling off
 DSPTaskInfo* DSPAddTask(DSPTaskInfo* task)
 {
     BOOL old;
@@ -209,6 +210,7 @@ DSPTaskInfo* DSPAddTask(DSPTaskInfo* task)
     }
     return task;
 }
+#pragma scheduling reset
 
 DSPTaskInfo* DSPAssertTask(DSPTaskInfo* task)
 {
@@ -606,7 +608,7 @@ static DVDLowCallback Callback_805DDD48;
 static u32 lbl_805DDD44;               /* LastLength */
 static BOOL StopAtNextInt_805DDD40;
 
-void __DVDInitWA(void)
+__declspec(weak) void __DVDInitWA(void)
 {
     NextCommandNumber = 0;
     CommandList_8056CB40[0].command = -1;
@@ -614,7 +616,7 @@ void __DVDInitWA(void)
     OSInitAlarm();
 }
 
-void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context)
+__declspec(weak) void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 {
     DVDLowCallback cb;
     OSContext exceptionContext;
@@ -730,15 +732,14 @@ void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 
 void fn_803C437C(void)
 {
-    s32 n = NextCommandNumber;
+    DVDCommand* cmd = &CommandList_8056CB40[NextCommandNumber];
 
-    if (CommandList_8056CB40[n].command == 1) {
+    if (cmd->command == 1) {
         NextCommandNumber++;
-        fn_803C4470(CommandList_8056CB40[n].address, CommandList_8056CB40[n].length, CommandList_8056CB40[n].offset,
-                    CommandList_8056CB40[n].callback);
-    } else if (CommandList_8056CB40[n].command == 2) {
+        fn_803C4470(cmd->address, cmd->length, cmd->offset, cmd->callback);
+    } else if (cmd->command == 2) {
         NextCommandNumber++;
-        DVDLowSeek(CommandList_8056CB40[n].offset, CommandList_8056CB40[n].callback);
+        DVDLowSeek(cmd->offset, cmd->callback);
     }
 }
 
@@ -790,6 +791,7 @@ void fn_803C4470(void* address, u32 length, u32 offset, DVDLowCallback callback)
 void fn_803C4580(void* addr, u32 length, u32 offset, DVDLowCallback callback)
 {
     u32 newOffset;
+    DVDCommand* cmd = CommandList_8056CB40;
 
     if ((offset & ~0x7FFF) == 0) {
         newOffset = 0;
@@ -797,15 +799,15 @@ void fn_803C4580(void* addr, u32 length, u32 offset, DVDLowCallback callback)
         newOffset = (offset & ~0x7FFF) + WorkAroundSeekLocation;
     }
 
-    CommandList_8056CB40[0].command = 2;
-    CommandList_8056CB40[0].offset = newOffset;
-    CommandList_8056CB40[0].callback = callback;
-    CommandList_8056CB40[1].command = 1;
-    CommandList_8056CB40[1].address = addr;
-    CommandList_8056CB40[1].length = length;
-    CommandList_8056CB40[1].offset = offset;
-    CommandList_8056CB40[1].callback = callback;
-    CommandList_8056CB40[2].command = -1;
+    cmd[0].command = 2;
+    cmd[0].offset = newOffset;
+    cmd[0].callback = callback;
+    cmd[1].command = 1;
+    cmd[1].address = addr;
+    cmd[1].length = length;
+    cmd[1].offset = offset;
+    cmd[1].callback = callback;
+    cmd[2].command = -1;
     NextCommandNumber = 0;
     DVDLowSeek(newOffset, callback);
 }

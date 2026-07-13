@@ -1,8 +1,13 @@
 #include <sysdolphin/dobj.h>
 #include <sysdolphin/gobjproc.h>
 
+#if defined(VERSION_GKYE01)
+HSD_DObj* DObjCurrent;
+HSD_DObjInfo* DObjDefaultClass;
+#else
 extern HSD_DObj* DObjCurrent;
 extern HSD_DObjInfo* DObjDefaultClass;
+#endif
 #define current_dobj DObjCurrent
 #define default_class DObjDefaultClass
 

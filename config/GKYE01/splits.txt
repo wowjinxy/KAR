@@ -1098,12 +1098,15 @@ fl_indirectload.cpp:
 	.sbss       start:0x805DDCB8 end:0x805DDCC0
 	.sdata2     start:0x805E4FB8 end:0x805E4FF8
 
-runtime.c:
-	.init       start:0x80003100 end:0x80005544
-	.text       start:0x8039899C end:0x803AD168
+kar_diag.cpp:
+	.text       start:0x8039899C end:0x803AD0A0
 	.data       start:0x804F57E0 end:0x804F8730
 	.bss        start:0x80569A00 end:0x80569A10
 	.sdata2     start:0x805E4FF8 end:0x805E5168
+
+runtime.c:
+	.init       start:0x80003100 end:0x80005544
+	.text       start:0x803AD0A0 end:0x803AD168
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
 	.text       start:0x803AD168 end:0x803AD1B0
@@ -1280,27 +1283,31 @@ hsd_runtime.c:
 metrotrk_bridge.c:
 	.text       start:0x803F3920 end:0x803F43D8
 	.sdata      start:0x805DCA30 end:0x805DCA38
-	.sbss       start:0x805DE158 end:0x805DE270
+	.sbss       start:0x805DE158 end:0x805DE170
 
 dobj.c:
 	.text       start:0x803F43D8 end:0x803F4B7C
 	.data       start:0x80501D10 end:0x80501E30
 	.sdata      start:0x805DCA38 end:0x805DCA50
+	.sbss       start:0x805DE170 end:0x805DE178
 
 tobj.c:
 	.text       start:0x803F4B7C end:0x803F7D44
 	.data       start:0x80501E30 end:0x80502AC0
 	.sdata      start:0x805DCA50 end:0x805DCA90
+	.sbss       start:0x805DE178 end:0x805DE180
 
 tev.c:
 	.text       start:0x803F7D44 end:0x803F98DC
 	.bss        start:0x80589278 end:0x80589980
 	.sdata      start:0x805DCA90 end:0x805DCAA0
+	.sbss       start:0x805DE180 end:0x805DE1E8
 
 mobj.c:
 	.text       start:0x803F98DC end:0x803FB13C
 	.data       start:0x80502AC0 end:0x80502C30
 	.sdata      start:0x805DCAA0 end:0x805DCAC8
+	.sbss       start:0x805DE1E8 end:0x805DE1F8
 	.sdata2     start:0x805E5A08 end:0x805E5A18
 
 aobj.c:
@@ -1308,18 +1315,21 @@ aobj.c:
 	.data       start:0x80502C30 end:0x80503188
 	.bss        start:0x80589980 end:0x805899B0
 	.sdata      start:0x805DCAC8 end:0x805DCAD8
+	.sbss       start:0x805DE1F8 end:0x805DE208
 	.sdata2     start:0x805E5A18 end:0x805E5A20
 
 lobj.c:
 	.text       start:0x803FDACC end:0x804006D4
 	.data       start:0x80503188 end:0x805032E8
 	.sdata      start:0x805DCAD8 end:0x805DCB08
+	.sbss       start:0x805DE208 end:0x805DE228
 	.sdata2     start:0x805E5A20 end:0x805E5A48
 
 cobj.c:
 	.text       start:0x804006D4 end:0x804035A0
 	.data       start:0x805032E8 end:0x80503488
 	.sdata      start:0x805DCB08 end:0x805DCB20
+	.sbss       start:0x805DE228 end:0x805DE230
 	.sdata2     start:0x805E5A48 end:0x805E5AA0
 
 fobj.c:
@@ -1331,12 +1341,14 @@ pobj.c:
 	.text       start:0x80405334 end:0x80407EE0
 	.data       start:0x80503488 end:0x805037C8
 	.sdata      start:0x805DCB30 end:0x805DCB40
+	.sbss       start:0x805DE230 end:0x805DE250
 	.sdata2     start:0x805E5AC8 end:0x805E5AF8
 
 jobj.c:
 	.text       start:0x80407EE0 end:0x8040E360
 	.data       start:0x805037C8 end:0x80503BA0
 	.sdata      start:0x805DCB40 end:0x805DCB8C
+	.sbss       start:0x805DE250 end:0x805DE270
 	.sdata2     start:0x805E5AF8 end:0x805E5B48
 
 displayfunc.c:

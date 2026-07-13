@@ -75,6 +75,13 @@ typedef enum DSReplyError {
     kDSDebugSecurityError = 0x23
 } DSReplyError;
 
+typedef enum DSStepType {
+    kDSStepIntoCount = 0x00,
+    kDSStepIntoRange = 0x01,
+    kDSStepOverCount = 0x10,
+    kDSStepOverRange = 0x11
+} DSStepType;
+
 typedef unsigned int DSMutex;
 typedef int MessageBufferID;
 
@@ -87,7 +94,7 @@ typedef struct MessageBuffer {
     /* 0x08 */ u32 fLength;
     /* 0x0C */ u32 fPosition;
     /* 0x10 */ u8 fData[kMessageBufferSize];
-} MessageBuffer; // size = 0x890
+} MessageBuffer;
 
 typedef struct TRKMsgBufs {
     /* 0x00 */ MessageBuffer buffers[NUM_BUFFERS];
@@ -108,7 +115,7 @@ typedef struct NubEvent {
     /* 0x00 */ int fType;
     /* 0x04 */ NubEventID fID;
     /* 0x08 */ MessageBufferID fMessageBufferID;
-} NubEvent; // size = 0x0C
+} NubEvent;
 
 typedef struct EventQueue {
     /* 0x00 */ u8 pad[4];
@@ -116,7 +123,7 @@ typedef struct EventQueue {
     /* 0x08 */ int fFirst;
     /* 0x0C */ NubEvent fEventList[2];
     /* 0x24 */ NubEventID fEventID;
-} EventQueue; // size = 0x28
+} EventQueue;
 
 void* TRK_memcpy(void* dst, const void* src, unsigned long n);
 void* fn_80003238(void* dest, int val, size_t count); /* memset */
@@ -292,8 +299,8 @@ extern TRKMsgBufs lbl_80569E90;
 DSError TRKInitializeSerialHandler(void);
 DSError kar_diag__near_803be368(void);
 void TRKGetInput(void);
-void kar_diag__near_803be434(MessageBufferID bufID);
-MessageBufferID TRKTestForPacket(void);
+inline void kar_diag__near_803be434(MessageBufferID bufID);
+MessageBufferID kar_diag__803be4e4(void);
 extern void* gTRKInputPendingPtr;
 
 void usr_put_initialize(void);
@@ -312,6 +319,20 @@ DSError TRKInitializeIntDrivenUART(u32 r3, u32 r4, u32 r5, void* r6);
 DSError TRKInitializeTarget(void);
 
 void TRK_board_display(char* str);
+
+DSError kar_diagnostic__near_803c046c(void);
+void kar_diag__near_803c27b0(u8 value);
+void kar_diag__near_803c27a0(void);
+DSError kar_diag__near_803c27bc(void);
+void kar_diag__near_803c2878(u8 value);
+DSError kar_diagnostic__near_803c2018(void);
+u32 kar_diagnostic__near_803c2144(u32 addr);
+void EnableMetroTRKInterrupts(void);
+void TRKUARTInterruptHandler(void);
+void TRKEXICallBack(short r3, void* ctx);
+void ReserveEXI2Port(void);
+void UnreserveEXI2Port(void);
+void TRKSwapAndGo(void);
 
 typedef struct msgbuf_t {
     /* 0x00 */ u32 msgLength;
@@ -866,11 +887,11 @@ DSError kar_diag__near_803be368(void)
     return kNoError;
 }
 
-void kar_diag__near_803be434(MessageBufferID bufID)
+inline void kar_diag__near_803be434(MessageBufferID bufID)
 {
     NubEvent event;
 
-    fn_803BD74C(&event, kBreakpointEvent);
+    fn_803BD74C(&event, kRequestEvent);
     event.fMessageBufferID = bufID;
     lbl_8056B840.fBufferID = -1;
     kar_diagnostic__803bd764(&event);
@@ -880,7 +901,7 @@ void TRKGetInput(void)
 {
     MessageBufferID bufID;
 
-    bufID = TRKTestForPacket();
+    bufID = kar_diag__803be4e4();
 
     if (bufID != -1) {
         TRKGetBuffer(bufID);
@@ -952,4 +973,1595 @@ DSError TRKDispatchMessage(MessageBuffer* buffer)
 DSError TRKInitializeDispatcher(void)
 {
     return kNoError;
+}
+
+typedef struct RawAckMsg {
+    /* 0x00 */ u32 length;
+    /* 0x04 */ u8 commandId;
+    /* 0x05 */ u8 pad1[3];
+    /* 0x08 */ u8 replyError;
+    /* 0x09 */ u8 pad2[0x40 - 9];
+} RawAckMsg;
+
+extern void* memset(void* dest, int val, unsigned long n);
+extern int memcpy(void* dest, const void* src, unsigned long n);
+extern unsigned long strlen(const char* s);
+extern void OSReport(const char* fmt, ...);
+extern void TEA_HotReset(void);
+
+DSError kar_diagnostic__803c2388(const void* bytes, u32 length);
+
+static inline void TRKSendAck(u8 replyError)
+{
+    RawAckMsg ack;
+
+    memset(&ack, 0, sizeof(ack));
+    ack.length = sizeof(ack);
+    ack.commandId = kDSReplyACK;
+    ack.replyError = replyError;
+    kar_diagnostic__803c2388(&ack, sizeof(ack));
+}
+
+extern u8 lbl_8048BE48[];
+
+DSError kar_diagnostic__near_803be824(MessageBuffer* buf)
+{
+    u8 setting = buf->fData[8];
+    u8 value = buf->fData[0xC];
+
+    if (setting == 1) {
+        fn_803BE624((const char*) lbl_8048BE48 + 0x0);
+
+        if (value != 0) {
+            fn_803BE624((const char*) lbl_8048BE48 + 0x20);
+        } else {
+            fn_803BE624((const char*) lbl_8048BE48 + 0x28);
+        }
+
+        kar_diag__near_803c27b0(value);
+    }
+
+    TRKSendAck(kDSReplyNoError);
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803be8cc(MessageBuffer* buf)
+{
+    DSReplyError reply;
+
+    switch (kar_diagnostic__near_803c046c()) {
+    case kInvalidProcessId:
+        reply = kDSReplyInvalidProcessId;
+        break;
+    case kInvalidThreadId:
+        reply = kDSReplyInvalidThreadId;
+        break;
+    case kOsError:
+        reply = kDSReplyOsError;
+        break;
+    case kNoError:
+        reply = kDSReplyNoError;
+        break;
+    default:
+        reply = kDSReplyError;
+        break;
+    }
+
+    TRKSendAck(reply);
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803c076c(u32 count, bool stepOver);
+DSError kar_diagnostic__near_803c06b4(u32 rangeStart, u32 rangeEnd, bool stepOver);
+u32 kar_diagnostic__near_803c06a4(void);
+
+DSError kar_diagnostic__803be974(MessageBuffer* buf)
+{
+    u8 type;
+    u32 rangeStart;
+    u32 rangeEnd;
+
+    kar_diagnostic__803be12c(buf, 0);
+
+    type = buf->fData[8];
+    rangeStart = *(u32*) (buf->fData + 0x10);
+    rangeEnd = *(u32*) (buf->fData + 0x14);
+
+    if (type == kDSStepIntoCount || type == kDSStepOverCount) {
+        u8 count = buf->fData[0xC];
+
+        if (count < 1) {
+            TRKSendAck(kDSReplyParameterError);
+            return kNoError;
+        }
+    } else if (type == kDSStepIntoRange || type == kDSStepOverRange) {
+        u32 pc = kar_diagnostic__near_803c06a4();
+
+        if (pc < rangeStart || pc > rangeEnd) {
+            TRKSendAck(kDSReplyParameterError);
+            return kNoError;
+        }
+    } else {
+        TRKSendAck(kDSReplyUnsupportedOptionError);
+        return kNoError;
+    }
+
+    if (!TRKTargetStopped()) {
+        TRKSendAck(kDSReplyNotStopped);
+        return kNoError;
+    }
+
+    TRKSendAck(kDSReplyNoError);
+
+    if (type == kDSStepIntoCount || type == kDSStepOverCount) {
+        u8 count = buf->fData[0xC];
+        kar_diagnostic__near_803c076c(count, type == kDSStepOverCount);
+    } else if (type == kDSStepIntoRange || type == kDSStepOverRange) {
+        kar_diagnostic__near_803c06b4(rangeStart, rangeEnd,
+                                      type == kDSStepOverRange);
+    }
+
+    return kNoError;
+}
+
+extern u8 lbl_8048BE7C[];
+
+DSError kar_diagnostic__803beb94(MessageBuffer* buf)
+{
+    MWTRACE(1, (const char*) lbl_8048BE7C);
+
+    if (!TRKTargetStopped()) {
+        TRKSendAck(kDSReplyNotStopped);
+        return kNoError;
+    }
+
+    TRKSendAck(kDSReplyNoError);
+    TRKTargetContinue();
+    return kNoError;
+}
+
+extern u8 lbl_8056B858[];
+extern u8 lbl_8048BE48[];
+
+DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
+                                 MessageBuffer* b, size_t* length, bool read);
+DSError kar_diagnostic__803c0f9c(u32 firstRegister, u32 lastRegister,
+                                 MessageBuffer* b, size_t* length, bool read);
+DSError kar_diagnostic__803c110c(u32 firstRegister, u32 lastRegister,
+                                 MessageBuffer* b, size_t* length, bool read);
+DSError kar_diagnostic__803c0b64(u32 firstRegister, u32 lastRegister,
+                                 MessageBuffer* b, size_t* length, bool read);
+
+static inline DSReplyError kar_diagnostic__near_803c0f9c_reply_map(DSError error)
+{
+    switch (error) {
+    case kUnsupportedError:
+        return kDSReplyUnsupportedOptionError;
+    case kInvalidRegister:
+        return kDSReplyInvalidRegisterRange;
+    case kCWDSException:
+        return kDSReplyCWDSException;
+    case kInvalidProcessId:
+        return kDSReplyInvalidProcessId;
+    case kInvalidThreadId:
+        return kDSReplyInvalidThreadId;
+    case kOsError:
+        return kDSReplyOsError;
+    default:
+        return kDSReplyCWDSError;
+    }
+}
+
+DSError kar_diagnostic__803bec44(MessageBuffer* buf)
+{
+    u8 sp9 = buf->fData[8];
+    u16 firstRegister = *(u16*) (buf->fData + 0xC);
+    u16 lastRegister = *(u16*) (buf->fData + 0x10);
+    DSError error;
+    size_t length;
+
+    kar_diagnostic__803be12c(buf, 0);
+
+    if (firstRegister > lastRegister) {
+        TRKSendAck(kDSReplyInvalidRegisterRange);
+        return kNoError;
+    }
+
+    kar_diagnostic__803be12c(buf, 0x40);
+
+    switch (sp9) {
+    case 2:
+        error = kar_diagnostic__803c0b64(firstRegister, lastRegister, buf,
+                                         &length, 0);
+        break;
+    case 0:
+        error = kar_diagnostic__803c15d8(firstRegister, lastRegister, buf,
+                                         &length, 0);
+        break;
+    case 1:
+        error = kar_diagnostic__803c110c(firstRegister, lastRegister, buf,
+                                         &length, 0);
+        break;
+    case 4:
+        error = kar_diagnostic__803c0f9c(firstRegister, lastRegister, buf,
+                                         &length, 0);
+        break;
+    default:
+        error = kUnsupportedError;
+        break;
+    }
+
+    kar_diagnostic__803be15c(buf, 0);
+
+    if (error == kNoError) {
+        RawAckMsg ack;
+
+        memset(&ack, 0, sizeof(ack));
+        ack.length = 0x40;
+        ack.commandId = kDSReplyACK;
+        kar_diagnostic__803c2388(&ack, sizeof(ack));
+        return kNoError;
+    }
+
+    TRKSendAck(kar_diagnostic__near_803c0f9c_reply_map(error));
+    return kNoError;
+}
+
+DSError kar_diag__803beed4(MessageBuffer* buf)
+{
+    u16 firstRegister = *(u16*) (buf->fData + 0xC);
+    u16 lastRegister = *(u16*) (buf->fData + 0x10);
+    DSError error;
+    size_t length;
+
+    if (firstRegister > lastRegister) {
+        TRKSendAck(kDSReplyInvalidRegisterRange);
+        return kNoError;
+    }
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x98, buf->fLength);
+    kar_diagnostic__803bde98(buf, buf->fData, 0x40);
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x98, buf->fLength);
+
+    error = kar_diagnostic__803c15d8(0, 0x24, buf, &length, 1);
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0xC0, error);
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x98, buf->fLength);
+
+    if (error != kNoError) {
+        TRKSendAck(kar_diagnostic__near_803c0f9c_reply_map(error));
+        return kNoError;
+    }
+
+    error = kar_diagnostic__803bdae8(buf);
+    return error;
+}
+
+typedef enum MemoryAccessOptions {
+    kUserMemory = 0,
+    kDebuggerMemory = 1
+} MemoryAccessOptions;
+
+DSError fn_803C1718(void* data, u32 start, size_t* length,
+                    MemoryAccessOptions accessOptions, bool read);
+
+static inline DSReplyError kar_diagnostic__near_803bf730_reply_map(DSError error)
+{
+    switch (error) {
+    case kCWDSException:
+        return kDSReplyCWDSException;
+    case kInvalidMemory:
+        return kDSReplyInvalidMemoryRange;
+    case kInvalidProcessId:
+        return kDSReplyInvalidProcessId;
+    case kInvalidThreadId:
+        return kDSReplyInvalidThreadId;
+    case kOsError:
+        return kDSReplyOsError;
+    default:
+        return kDSReplyCWDSError;
+    }
+}
+
+DSError kar_diagnostic__803bf1b4(MessageBuffer* buf)
+{
+    u8 sp8 = buf->fData[4];
+    u8 sp9 = buf->fData[8];
+    u16 spA = *(u16*) (buf->fData + 0xC);
+    u32 spC = *(u32*) (buf->fData + 0x10);
+    DSError error;
+    u8 buffer[0x800] __attribute__((aligned(32)));
+    size_t sp10;
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x180, sp8, spC, spA, sp9);
+
+    if (sp9 & 2) {
+        TRKSendAck(kDSReplyUnsupportedOptionError);
+        return kNoError;
+    }
+
+    kar_diagnostic__803be12c(buf, 0x40);
+    error = kar_diagnostic__near_803bdffc(buf, buffer, spA);
+
+    sp10 = spA;
+    error = fn_803C1718(buffer, spC, &sp10, !(sp9 & 8), 0);
+
+    kar_diagnostic__803be15c(buf, 0);
+
+    if (error == kNoError) {
+        spA = sp10;
+        kar_diagnostic__803be088(buf, &spA, sizeof(spA));
+    }
+
+    if (error != kNoError) {
+        TRKSendAck(kar_diagnostic__near_803bf730_reply_map(error));
+        return kNoError;
+    }
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x60);
+    error = kar_diagnostic__803bdae8(buf);
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x80, error);
+    return error;
+}
+
+DSError kar_diagnostic__803bf3a8(MessageBuffer* buf)
+{
+    u8 sp8 = buf->fData[4];
+    u8 sp9 = buf->fData[8];
+    u16 spA = *(u16*) (buf->fData + 0xC);
+    u32 spC = *(u32*) (buf->fData + 0x10);
+    DSError error;
+    u8 buffer[0x800] __attribute__((aligned(32)));
+    size_t sp10;
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x1B0, sp8, spC, spA, sp9);
+
+    if (sp9 & 2) {
+        TRKSendAck(kDSReplyUnsupportedOptionError);
+        return kNoError;
+    }
+
+    sp10 = spA;
+    error = fn_803C1718(buffer, spC, &sp10, !(sp9 & 8), 1);
+
+    kar_diagnostic__803be15c(buf, 0);
+
+    if (error == kNoError) {
+        spA = sp10;
+        kar_diagnostic__803be088(buf, &spA, sizeof(spA));
+        kar_diagnostic__803be088(buf, buffer, spA);
+    }
+
+    if (error != kNoError) {
+        TRKSendAck(kar_diagnostic__near_803bf730_reply_map(error));
+        return kNoError;
+    }
+
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x60);
+    error = kar_diagnostic__803bdae8(buf);
+    MWTRACE(1, (const char*) lbl_8048BE48 + 0x80, error);
+    return error;
+}
+
+DSError kar_diagnostic__near_803bf594(MessageBuffer* buf)
+{
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803bf59c(MessageBuffer* buf)
+{
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803bf5a4(MessageBuffer* buf)
+{
+    TRKSendAck(kDSReplyNoError);
+    kar_diagnostic__near_803c2018();
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803bf5fc(MessageBuffer* buf)
+{
+    TRKSendAck(kDSReplyNoError);
+    TEA_HotReset();
+    return kNoError;
+}
+
+DSError kar_diagnostic__803bf654(MessageBuffer* buf)
+{
+    NubEvent event;
+
+    *(u32*) lbl_8056B858 = 0;
+    TRKSendAck(kDSReplyNoError);
+    fn_803BD74C(&event, kShutdownEvent);
+    kar_diagnostic__803bd764(&event);
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803bf6cc(MessageBuffer* buf)
+{
+    *(u32*) lbl_8056B858 = 1;
+    TRKSendAck(kDSReplyNoError);
+    return kNoError;
+}
+
+DSError kar_diagnostic__803bff28(void* p1)
+{
+    return kNoError;
+}
+
+DSError kar_diagnostic__803bff30(void* p1)
+{
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803bff38(void* p1)
+{
+    return kNoError;
+}
+
+asm void kar_diagnostic__803bffd8(u32 addr, u32 length)
+{
+    nofralloc
+    lis r5, 0xFFFF
+    ori r5, r5, 0xFFF1
+    and r5, r5, r3
+    subf r3, r5, r3
+    add r4, r4, r3
+rept:
+    dcbst 0, r5
+    dcbf 0, r5
+    sync
+    icbi 0, r5
+    addic r5, r5, 0x8
+    subic. r4, r4, 0x8
+    bge rept
+    isync
+    blr
+}
+
+void fn_803C0010(void* dest, int val, size_t count);
+
+
+void fn_803C0010(void* dest, int val, size_t count)
+{
+    u32 v = (u8) val;
+    u32 i;
+    union {
+        u8* cpd;
+        u32* lpd;
+    } dstu;
+
+    dstu.cpd = (u8*) dest - 1;
+
+    if (count >= 32) {
+        i = ~(u32) dstu.cpd & 3;
+
+        if (i) {
+            count -= i;
+
+            do {
+                *++(dstu.cpd) = (u8) v;
+            } while (--i);
+        }
+
+        if (v) {
+            v |= ((v << 24) | (v << 16) | (v << 8));
+        }
+
+        dstu.lpd = (((u32*) (dstu.cpd + 1)) - 1);
+        i = (count >> 5);
+
+        if (i) {
+            do {
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+                *++(dstu.lpd) = v;
+            } while (--i);
+        }
+
+        i = ((count & 31) >> 2);
+
+        if (i) {
+            do {
+                *++(dstu.lpd) = v;
+            } while (--i);
+        }
+
+        dstu.cpd = (((u8*) (dstu.lpd + 1)) - 1);
+        count &= 3;
+    }
+
+    if (count) {
+        do {
+            *++(dstu.cpd) = (u8) v;
+        } while (--count);
+    }
+}
+
+asm u32 kar_diagnostic__near_803c00c8(void)
+{
+    nofralloc
+    mfmsr r3
+    blr
+}
+
+asm void kar_diagnostic__near_803c00d0(u32 val)
+{
+    nofralloc
+    mtmsr r3
+    blr
+}
+
+asm void kar_diagnostic__near_803c00d8(void* dest, const void* src, int n,
+                                       u32 msrA, u32 msrB)
+{
+    nofralloc
+    mfmsr r8
+    li r10, 0
+loop:
+    cmpw r10, r5
+    beq end
+    mtmsr r7
+    sync
+    lbzx r9, r10, r4
+    mtmsr r6
+    sync
+    stbx r9, r10, r3
+    addi r10, r10, 1
+    b loop
+end:
+    mtmsr r8
+    sync
+    blr
+}
+
+void TRKTargetSetInputPendingPtr(void* ptr);
+void TRKTargetSetStopped(bool stopped);
+bool TRKTargetStopped(void);
+extern u8 gTRKState[];
+extern u8 gTRKCPUState[];
+extern u8 gTRKRestoreFlags[];
+extern u8 gTRKExceptionStatus[];
+extern u8 gTRKSaveState[];
+extern u16 TRK_saved_exceptionID;
+void TRKSaveExtended1Block(void);
+void TRKRestoreExtended1Block(void);
+void TRKInterruptHandlerEnableInterrupts(void);
+void TRKExceptionHandler(u16 id);
+
+void TRKTargetSetInputPendingPtr(void* ptr)
+{
+    *(void**) (gTRKState + 0xA0) = ptr;
+}
+
+#pragma dont_inline on
+void TRKTargetSetStopped(bool stopped)
+{
+    *(bool*) (gTRKState + 0x98) = stopped;
+}
+#pragma dont_inline reset
+
+bool TRKTargetStopped(void)
+{
+    return *(bool*) (gTRKState + 0x98);
+}
+
+DSError kar_diagnostic__near_803c046c(void)
+{
+    *(bool*) (gTRKState + 0x98) = true;
+    return kNoError;
+}
+
+void TRKPostInterruptEvent(void);
+void TRKUARTInterruptHandler(void);
+
+asm void TRKInterruptHandler(u16 exceptionID)
+{
+    nofralloc
+    mtsrr0 r2
+    mtsrr1 r4
+    mfsprg r4, 3
+    mfcr r2
+    mtsprg 3, r2
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    lwz r2, 0x8c(r2)
+    ori r2, r2, 0x8002
+    xori r2, r2, 0x8002
+    sync
+    mtmsr r2
+    sync
+    lis r2, TRK_saved_exceptionID@h
+    ori r2, r2, TRK_saved_exceptionID@l
+    sth r3, 0(r2)
+    cmpwi r3, 0x500
+    bne notUART
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    mflr r3
+    stw r3, 0x42c(r2)
+    bl TRKUARTInterruptHandler
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    lwz r3, 0x42c(r2)
+    mtlr r3
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    lwz r2, 0xa0(r2)
+    lbz r2, 0(r2)
+    cmpwi r2, 0
+    beq noOutgoingInput
+    lis r2, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    lbz r2, 0xc(r2)
+    cmpwi r2, 1
+    beq noOutgoingInput
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    li r3, 1
+    stb r3, 0x9c(r2)
+    b notUART
+noOutgoingInput:
+    lis r2, gTRKSaveState@h
+    ori r2, r2, gTRKSaveState@l
+    lwz r3, 0x88(r2)
+    mtcrf 255, r3
+    lwz r3, 0xc(r2)
+    lwz r2, 8(r2)
+    rfi
+notUART:
+    lis r2, TRK_saved_exceptionID@h
+    ori r2, r2, TRK_saved_exceptionID@l
+    lhz r3, 0(r2)
+    lis r2, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    lbz r2, 0xc(r2)
+    cmpwi r2, 0
+    bne TRKExceptionHandler
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    stw r0, 0(r2)
+    stw r1, 4(r2)
+    mfsprg r0, 1
+    stw r0, 8(r2)
+    sth r3, 0x2f8(r2)
+    sth r3, 0x2fa(r2)
+    mfsprg r0, 2
+    stw r0, 0xc(r2)
+    stmw r4, 0x10(r2)
+    mfsrr0 r27
+    mflr r28
+    mfsprg r29, 3
+    mfctr r30
+    mfxer r31
+    stmw r27, 0x80(r2)
+    bl TRKSaveExtended1Block
+    lis r2, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    li r3, 1
+    stb r3, 0xc(r2)
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    lwz r0, 0x8c(r2)
+    sync
+    mtmsr r0
+    sync
+    lwz r0, 0x80(r2)
+    mtlr r0
+    lwz r0, 0x84(r2)
+    mtctr r0
+    lwz r0, 0x88(r2)
+    mtxer r0
+    lwz r0, 0x94(r2)
+    mtdsisr r0
+    lwz r0, 0x90(r2)
+    mtdar r0
+    lmw r3, 0xc(r2)
+    lwz r0, 0(r2)
+    lwz r1, 4(r2)
+    lwz r2, 8(r2)
+    b TRKPostInterruptEvent
+}
+
+asm void TRKExceptionHandler(u16 id)
+{
+    nofralloc
+    addis r2, r0, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    sth r3, 8(r2)
+    mfsrr0 r3
+    stw r3, 0(r2)
+    lhz r3, 8(r2)
+    cmpwi r3, 0x200
+    beq skip_instr
+    cmpwi r3, 0x300
+    beq skip_instr
+    cmpwi r3, 0x400
+    beq skip_instr
+    cmpwi r3, 0x600
+    beq skip_instr
+    cmpwi r3, 0x700
+    beq skip_instr
+    cmpwi r3, 0x800
+    beq skip_instr
+    cmpwi r3, 0x1000
+    beq skip_instr
+    cmpwi r3, 0x1100
+    beq skip_instr
+    cmpwi r3, 0x1200
+    beq skip_instr
+    cmpwi r3, 0x1300
+    beq skip_instr
+    b set
+skip_instr:
+    mfsrr0 r3
+    addi r3, r3, 4
+    mtsrr0 r3
+set:
+    addis r2, r0, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    li r3, 1
+    stb r3, 0xd(r2)
+    mfsprg r3, 3
+    mtcrf 255, r3
+    mfsprg r2, 1
+    mfsprg r3, 2
+    rfi
+}
+
+asm void TRKSwapAndGo(void)
+{
+    nofralloc
+    lis r3, gTRKState@h
+    ori r3, r3, gTRKState@l
+    stmw r0, 0(r3)
+    mfmsr r0
+    stw r0, 0x8c(r3)
+    mflr r0
+    stw r0, 0x80(r3)
+    mfctr r0
+    stw r0, 0x84(r3)
+    mfxer r0
+    stw r0, 0x88(r3)
+    mfdsisr r0
+    stw r0, 0x94(r3)
+    mfdar r0
+    stw r0, 0x90(r3)
+    li r1, -0x7ffe
+    nor r1, r1, r1
+    mfmsr r3
+    and r3, r3, r1
+    mtmsr r3
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    lwz r2, 0xa0(r2)
+    lbz r2, 0(r2)
+    cmpwi r2, 0
+    beq notInputActivated
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    li r3, 1
+    stb r3, 0x9c(r2)
+    b TRKInterruptHandlerEnableInterrupts
+notInputActivated:
+    lis r2, gTRKExceptionStatus@h
+    ori r2, r2, gTRKExceptionStatus@l
+    li r3, 0
+    stb r3, 0xc(r2)
+    bl TRKRestoreExtended1Block
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    lmw r27, 0x80(r2)
+    mtsrr0 r27
+    mtlr r28
+    mtcrf 255, r29
+    mtctr r30
+    mtxer r31
+    lmw r3, 0xc(r2)
+    lwz r0, 0(r2)
+    lwz r1, 4(r2)
+    lwz r2, 8(r2)
+    rfi
+}
+
+asm void TRKInterruptHandlerEnableInterrupts(void)
+{
+    nofralloc
+    lis r2, gTRKState@h
+    ori r2, r2, gTRKState@l
+    lwz r0, 0x8c(r2)
+    sync
+    mtmsr r0
+    sync
+    lwz r0, 0x80(r2)
+    mtlr r0
+    lwz r0, 0x84(r2)
+    mtctr r0
+    lwz r0, 0x88(r2)
+    mtxer r0
+    lwz r0, 0x94(r2)
+    mtdsisr r0
+    lwz r0, 0x90(r2)
+    mtdar r0
+    lmw r3, 0xc(r2)
+    lwz r0, 0(r2)
+    lwz r1, 4(r2)
+    lwz r2, 8(r2)
+    b TRKPostInterruptEvent
+}
+
+asm void TRKSaveExtended1Block(void)
+{
+    nofralloc
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    mfsr r16, 0
+    mfsr r17, 1
+    mfsr r18, 2
+    mfsr r19, 3
+    mfsr r20, 4
+    mfsr r21, 5
+    mfsr r22, 6
+    mfsr r23, 7
+    mfsr r24, 8
+    mfsr r25, 9
+    mfsr r26, 10
+    mfsr r27, 11
+    mfsr r28, 12
+    mfsr r29, 13
+    mfsr r30, 14
+    mfsr r31, 15
+    stmw r16, 0x1a8(r2)
+    mftb r10, 268
+    mftb r11, 269
+    mfspr r12, hid0
+    mfspr r13, hid1
+    mfsrr1 r14
+    mfspr r15, pvr
+    mfibatu r16, 0
+    mfibatl r17, 0
+    mfibatu r18, 1
+    mfibatl r19, 1
+    mfibatu r20, 2
+    mfibatl r21, 2
+    mfibatu r22, 3
+    mfibatl r23, 3
+    mfdbatu r24, 0
+    mfdbatl r25, 0
+    mfdbatu r26, 1
+    mfdbatl r27, 1
+    mfdbatu r28, 2
+    mfdbatl r29, 2
+    mfdbatu r30, 3
+    mfdbatl r31, 3
+    stmw r10, 0x1e8(r2)
+    mfsdr1 r22
+    mfdar r23
+    mfdsisr r24
+    mfsprg r25, 0
+    mfsprg r26, 1
+    mfsprg r27, 2
+    mfsprg r28, 3
+    li r29, 0
+    mfspr r30, iabr
+    mfear r31
+    stmw r22, 0x25c(r2)
+    mfspr r20, 912
+    mfspr r21, 913
+    mfspr r22, 914
+    mfspr r23, 915
+    mfspr r24, 916
+    mfspr r25, 917
+    mfspr r26, 918
+    mfspr r27, 919
+    mfspr r28, 920
+    mfspr r29, 921
+    mfspr r30, 922
+    mfspr r31, 923
+    stmw r20, 0x2fc(r2)
+    b common
+    mfspr r16, 928
+    mfspr r17, 935
+    mfspr r18, 936
+    mfspr r19, 937
+    mfspr r20, 938
+    mfspr r21, 939
+    mfspr r22, 940
+    mfspr r23, 941
+    mfspr r24, 942
+    mfspr r25, 943
+    mfspr r26, 944
+    mfspr r27, 951
+    mfspr r28, 959
+    mfspr r29, 1014
+    mfspr r30, 1015
+    mfspr r31, 1023
+    stmw r16, 0x2b8(r2)
+common:
+    mfspr r19, 1013
+    mfspr r20, 953
+    mfspr r21, 954
+    mfspr r22, 957
+    mfspr r23, 958
+    mfspr r24, 955
+    mfspr r25, 952
+    mfspr r26, 956
+    mfspr r27, 1020
+    mfspr r28, 1021
+    mfspr r29, 1022
+    mfspr r30, 1019
+    mfspr r31, 1017
+    stmw r19, 0x284(r2)
+    blr
+    mfspr r25, 976
+    mfspr r26, 977
+    mfspr r27, 978
+    mfspr r28, 979
+    mfspr r29, 980
+    mfspr r30, 981
+    mfspr r31, 982
+    stmw r25, 0x240(r2)
+    mfdec r31
+    stw r31, 0x278(r2)
+    blr
+}
+
+asm void TRKRestoreExtended1Block(void)
+{
+    nofralloc
+    lis r2, gTRKCPUState@h
+    ori r2, r2, gTRKCPUState@l
+    lis r5, gTRKRestoreFlags@h
+    ori r5, r5, gTRKRestoreFlags@l
+    lbz r3, 0(r5)
+    lbz r6, 1(r5)
+    li r0, 0
+    stb r0, 0(r5)
+    stb r0, 1(r5)
+    cmpwi r3, 0
+    beq noTbrRestore
+    lwz r24, 0x1e8(r2)
+    lwz r25, 0x1ec(r2)
+    mttbl r24
+    mttbu r25
+noTbrRestore:
+    lmw r20, 0x2fc(r2)
+    mtspr 912, r20
+    mtspr 913, r21
+    mtspr 914, r22
+    mtspr 915, r23
+    mtspr 916, r24
+    mtspr 917, r25
+    mtspr 918, r26
+    mtspr 919, r27
+    mtspr 920, r28
+    mtspr 922, r30
+    mtspr 923, r31
+    b common
+    lmw r26, 0x2e0(r2)
+    mtspr 944, r26
+    mtspr 951, r27
+    mtspr 1014, r29
+    mtspr 1015, r30
+    mtspr 1023, r31
+common:
+    lmw r19, 0x284(r2)
+    mtspr 1013, r19
+    mtspr 953, r20
+    mtspr 954, r21
+    mtspr 957, r22
+    mtspr 958, r23
+    mtspr 955, r24
+    mtspr 952, r25
+    mtspr 956, r26
+    mtspr 1020, r27
+    mtspr 1021, r28
+    mtspr 1022, r29
+    mtspr 1019, r30
+    mtspr 1017, r31
+    b noDecRestoreBlock
+    cmpwi r6, 0
+    beq noDecRestore
+    lwz r26, 0x278(r2)
+    mtdec r26
+noDecRestore:
+    lmw r25, 0x240(r2)
+    mtspr 976, r25
+    mtspr 977, r26
+    mtspr 978, r27
+    mtspr 979, r28
+    mtspr 980, r29
+    mtspr 981, r30
+    mtspr 982, r31
+noDecRestoreBlock:
+    lmw r16, 0x1a8(r2)
+    mtsr 0, r16
+    mtsr 1, r17
+    mtsr 2, r18
+    mtsr 3, r19
+    mtsr 4, r20
+    mtsr 5, r21
+    mtsr 6, r22
+    mtsr 7, r23
+    mtsr 8, r24
+    mtsr 9, r25
+    mtsr 10, r26
+    mtsr 11, r27
+    mtsr 12, r28
+    mtsr 13, r29
+    mtsr 14, r30
+    mtsr 15, r31
+    lmw r12, 0x1f0(r2)
+    mtspr hid0, r12
+    mtspr hid1, r13
+    mtsrr1 r14
+    mtspr pvr, r15
+    mtibatu 0, r16
+    mtibatl 0, r17
+    mtibatu 1, r18
+    mtibatl 1, r19
+    mtibatu 2, r20
+    mtibatl 2, r21
+    mtibatu 3, r22
+    mtibatl 3, r23
+    mtdbatu 0, r24
+    mtdbatl 0, r25
+    mtdbatu 1, r26
+    mtdbatl 1, r27
+    mtdbatu 2, r28
+    mtdbatl 2, r29
+    mtdbatu 3, r30
+    mtdbatl 3, r31
+    lmw r22, 0x25c(r2)
+    mtsdr1 r22
+    mtdar r23
+    mtdsisr r24
+    mtsprg 0, r25
+    mtsprg 1, r26
+    mtsprg 2, r27
+    mtsprg 3, r28
+    mtspr iabr, r30
+    mtear r31
+    blr
+}
+
+asm void TRKUARTInterruptHandler(void)
+{
+    nofralloc
+    blr
+}
+
+DSError kar_diag__803be22c(int* bufferIndexPtr, MessageBuffer** destBufPtr);
+void kar_diagnostic__803be19c(int index);
+DSError kar_diagnostic__near_803c089c(MessageBuffer* buf);
+DSError kar_diagnostic__near_803c0818(MessageBuffer* buf);
+DSError kar_diag__803bfb08(MessageBuffer* b, int* bufferId, u32 p1, u32 p2, int p3);
+
+DSError kar_diagnostic__near_803bff40(u8 cmdId)
+{
+    DSError result;
+    int spC;
+    MessageBuffer* buffer;
+    int sp8;
+
+    result = kar_diag__803be22c(&spC, &buffer);
+
+    if (result == kNoError) {
+        if (cmdId == kDSNotifyStopped) {
+            kar_diagnostic__near_803c089c(buffer);
+        } else {
+            kar_diagnostic__near_803c0818(buffer);
+        }
+
+        result = kar_diag__803bfb08(buffer, &sp8, 2, 3, 1);
+
+        if (result == kNoError) {
+            kar_diagnostic__803be19c(sp8);
+        }
+
+        kar_diagnostic__803be19c(spC);
+    }
+
+    return result;
+}
+
+typedef struct GDEVCommTable {
+    /* 0x00 */ void (*initialize_func)(void* ptr, void* callback);
+    /* 0x04 */ void (*initinterrupts_func)(void);
+    /* 0x08 */ void (*shutdown_func)(void);
+    /* 0x0C */ int (*peek_func)(void);
+    /* 0x10 */ int (*read_func)(void* data, u32 limit);
+    /* 0x14 */ int (*write_func)(const void* data, u32 length);
+    /* 0x18 */ void (*open_func)(void);
+    /* 0x1C */ void (*close_func)(void);
+    /* 0x20 */ void (*pre_continue_func)(void);
+    /* 0x24 */ void (*post_stop_func)(void);
+} GDEVCommTable;
+
+extern GDEVCommTable gDBCommTable;
+
+int fn_803C2400(void)
+{
+    return gDBCommTable.peek_func();
+}
+
+DSError fn_803C23C4(void* data, u32 limit)
+{
+    int result = gDBCommTable.read_func(data, limit);
+    return !result ? kNoError : kUARTError;
+}
+
+DSError kar_diagnostic__803c2388(const void* bytes, u32 length)
+{
+    int result = gDBCommTable.write_func(bytes, length);
+    return !result ? kNoError : kUARTError;
+}
+
+#pragma dont_inline on
+void fn_803C2430(void)
+{
+    extern bool TRK_Use_BBA;
+
+    if (!TRK_Use_BBA) {
+        if (gDBCommTable.initinterrupts_func != NULL) {
+            gDBCommTable.initinterrupts_func();
+        }
+    }
+}
+#pragma dont_inline reset
+
+void EnableMetroTRKInterrupts(void)
+{
+    fn_803C2430();
+}
+
+#pragma dont_inline on
+void UnreserveEXI2Port(void)
+{
+    gDBCommTable.pre_continue_func();
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void ReserveEXI2Port(void)
+{
+    gDBCommTable.post_stop_func();
+}
+#pragma dont_inline reset
+
+DSError TRKInitializeIntDrivenUART(u32 r3, u32 r4, u32 r5, void* r6)
+{
+    gDBCommTable.initialize_func(r6, TRKEXICallBack);
+    gDBCommTable.open_func();
+    return kNoError;
+}
+
+void EnableEXI2Interrupts(void);
+extern void OSEnableScheduler(void);
+void TRKLoadContext(void* ctx, u32 val);
+
+void TRKEXICallBack(short r3, void* ctx)
+{
+    OSEnableScheduler();
+    TRKLoadContext(ctx, 0x500);
+}
+
+asm void TRKLoadContext(void* ctx, u32 val)
+{
+    nofralloc
+    lwz r0, 0(r3)
+    lwz r1, 4(r3)
+    lwz r2, 8(r3)
+    lhz r5, 0x1a2(r3)
+    rlwinm. r6, r5, 0, 30, 30
+    beq defaultGprs
+    rlwinm r5, r5, 0, 31, 29
+    sth r5, 0x1a2(r3)
+    lmw r5, 0x14(r3)
+    b afterGprs
+defaultGprs:
+    lmw r13, 0x34(r3)
+afterGprs:
+    mr r31, r3
+    mr r3, r4
+    lwz r4, 0x80(r31)
+    mtcrf 255, r4
+    lwz r4, 0x84(r31)
+    mtlr r4
+    lwz r4, 0x88(r31)
+    mtctr r4
+    lwz r4, 0x8c(r31)
+    mtxer r4
+    mfmsr r4
+    rlwinm r4, r4, 0, 17, 15
+    rlwinm r4, r4, 0, 31, 29
+    mtmsr r4
+    mtsprg 1, r2
+    lwz r4, 0xc(r31)
+    mtsprg 2, r4
+    lwz r4, 0x10(r31)
+    mtsprg 3, r4
+    lwz r2, 0x198(r31)
+    lwz r4, 0x19c(r31)
+    lwz r31, 0x7c(r31)
+    b TRKInterruptHandler
+}
+
+extern u8 _db_stack_addr[];
+int InitMetroTRKCommTable(int hwId);
+void TRK_main(void);
+
+asm void InitMetroTRK(void)
+{
+    nofralloc
+    subi r1, r1, 4
+    stw r3, 0(r1)
+    lis r3, gTRKCPUState@h
+    ori r3, r3, gTRKCPUState@l
+    stmw r0, 0(r3)
+    lwz r4, 0(r1)
+    addi r1, r1, 4
+    stw r1, 4(r3)
+    stw r4, 0xc(r3)
+    mflr r4
+    stw r4, 0x84(r3)
+    stw r4, 0x80(r3)
+    mfcr r4
+    stw r4, 0x88(r3)
+    mfmsr r4
+    ori r3, r4, 0x8000
+    xori r3, r3, 0x8000
+    mtmsr r3
+    mtsrr1 r4
+    bl TRKSaveExtended1Block
+    lis r3, gTRKCPUState@h
+    ori r3, r3, gTRKCPUState@l
+    lmw r0, 0(r3)
+    li r0, 0
+    mtspr iabr, r0
+    mtspr 1013, r0
+    lis r1, _db_stack_addr@h
+    ori r1, r1, _db_stack_addr@l
+    mr r3, r5
+    bl InitMetroTRKCommTable
+    cmpwi r3, 1
+    bne initCommTableSuccess
+    lwz r4, 0x84(r3)
+    mtlr r4
+    lmw r0, 0(r3)
+    blr
+initCommTableSuccess:
+    b TRK_main
+}
+
+extern u8 lbl_8056BDE0[];
+
+DSError TRKInitializeTarget(void)
+{
+    *(bool*) (gTRKState + 0x98) = true;
+    *(u32*) (gTRKCPUState + 0x8c) = kar_diagnostic__near_803c00c8();
+    *(u32*) lbl_8056BDE0 = 0xE0000000;
+    return kNoError;
+}
+
+u32 kar_diagnostic__near_803c2144(u32 addr)
+{
+    if (addr >= *(u32*) lbl_8056BDE0 &&
+        addr < *(u32*) lbl_8056BDE0 + 0x4000 &&
+        (*(u32*) (gTRKCPUState + 0x238) & 3))
+    {
+        return addr;
+    }
+
+    return ((addr & 0x3FFFFFFF) | 0x80000000);
+}
+
+extern u8 gTRKInterruptVectorTable[];
+
+static u32 kar_diagnostic__near_803c2018_isrOffsets[] = {
+    0x100, 0x200, 0x300, 0x400, 0x500, 0x600, 0x700,
+    0x800, 0x900, 0xC00, 0xD00, 0xF00, 0x1300, 0x1400, 0x1700
+};
+
+DSError kar_diagnostic__near_803c2018(void)
+{
+    int i;
+    u32 data;
+
+    data = *(u32*) kar_diagnostic__near_803c2144(0x44);
+
+    for (i = 0; i <= 14; i++) {
+        if ((data & (1 << i)) != 0) {
+            u32 offset = kar_diagnostic__near_803c2018_isrOffsets[i];
+            u32 destPtr = kar_diagnostic__near_803c2144(offset);
+
+            TRK_memcpy((void*) destPtr,
+                      (void*) (gTRKInterruptVectorTable + offset), 0x100);
+            kar_diagnostic__803bffd8(destPtr, 0x100);
+        }
+    }
+
+    return kNoError;
+}
+
+DSError TRKSwapAndGo_decl(void);
+extern u8 gTRKState[];
+
+DSError TRKTargetContinue(void)
+{
+    TRKTargetSetStopped(false);
+    UnreserveEXI2Port();
+    TRKSwapAndGo();
+    ReserveEXI2Port();
+    return kNoError;
+}
+
+typedef struct ExcStatusWords {
+    u32 w0, w4, w8, wC;
+} ExcStatusWords;
+
+DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
+                                 MessageBuffer* b, size_t* length, bool read)
+{
+    DSError error;
+    u32 count;
+    u32* data;
+    ExcStatusWords tempExceptionStatus;
+
+    if (lastRegister > 0x24) {
+        return kInvalidRegister;
+    }
+
+    tempExceptionStatus = *(ExcStatusWords*) gTRKExceptionStatus;
+    *(u8*) (gTRKExceptionStatus + 0xC) = 0;
+
+    data = (u32*) gTRKCPUState + firstRegister;
+    count = (lastRegister - firstRegister) + 1;
+    *length = count * sizeof(u32);
+
+    if (read) {
+        error = kar_diagnostic__803bdd9c(b, data, count);
+    } else {
+        error = kar_diagnostic__803bdb2c(b, data, count);
+    }
+
+    if (*(u8*) (gTRKExceptionStatus + 0xD)) {
+        *length = 0;
+        error = kCWDSException;
+    }
+
+    *(ExcStatusWords*) gTRKExceptionStatus = tempExceptionStatus;
+    return error;
+}
+
+typedef struct TRKStepStatus {
+    /* 0x00 */ bool active;
+    /* 0x04 */ u32 type;
+    /* 0x08 */ u32 count;
+    /* 0x0C */ u32 rangeStart;
+    /* 0x10 */ u32 rangeEnd;
+} TRKStepStatus;
+
+extern TRKStepStatus lbl_804F9274;
+extern u8 lbl_8048C160[];
+
+u32 kar_diagnostic__near_803c06a4(void)
+{
+    return *(u32*) (gTRKCPUState + 0x80);
+}
+
+DSError kar_diagnostic__near_803c076c(u32 count, bool stepOver)
+{
+    if (stepOver) {
+        return kUnsupportedError;
+    }
+
+    lbl_804F9274.count = count;
+    lbl_804F9274.type = kDSStepIntoCount;
+    lbl_804F9274.active = true;
+
+    MWTRACE(1, (const char*) lbl_8048C160, lbl_804F9274.type);
+
+    *(u32*) (gTRKCPUState + 0x1f8) |= 0x400;
+
+    if (lbl_804F9274.type == kDSStepIntoCount ||
+        lbl_804F9274.type == kDSStepOverCount)
+    {
+        lbl_804F9274.count--;
+    }
+
+    TRKTargetSetStopped(false);
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803c06b4(u32 rangeStart, u32 rangeEnd, bool stepOver)
+{
+    if (stepOver) {
+        return kUnsupportedError;
+    }
+
+    lbl_804F9274.rangeStart = rangeStart;
+    lbl_804F9274.rangeEnd = rangeEnd;
+    lbl_804F9274.type = kDSStepIntoRange;
+    lbl_804F9274.active = true;
+
+    MWTRACE(1, (const char*) lbl_8048C160, lbl_804F9274.type);
+
+    *(u32*) (gTRKCPUState + 0x1f8) |= 0x400;
+
+    if (lbl_804F9274.type == kDSStepIntoCount ||
+        lbl_804F9274.type == kDSStepOverCount)
+    {
+        lbl_804F9274.count--;
+    }
+
+    TRKTargetSetStopped(false);
+    return kNoError;
+}
+
+extern u8 PPCHalt[];
+extern u8 EndofProgramInstruction[];
+extern void ICInvalidateRange(void* addr, u32 len);
+extern void DCFlushRange(void* addr, u32 len);
+
+void InitializeProgramEndTrap(void)
+{
+    TRK_memcpy(PPCHalt + 4, EndofProgramInstruction, 4);
+    ICInvalidateRange(PPCHalt + 4, 4);
+    DCFlushRange(PPCHalt + 4, 4);
+}
+
+extern u8 lbl_8048C184[];
+
+void TRK_board_display(char* str)
+{
+    OSReport((const char*) lbl_8048C184, str);
+}
+
+static int TRK_mainError;
+
+#pragma dont_inline on
+void TRK_main(void)
+{
+    MWTRACE(1, "TRK_main\n");
+    TRK_mainError = TRKInitializeNub();
+
+    if (!TRK_mainError) {
+        TRKNubWelcome();
+        TRKNubMainLoop();
+    }
+
+    TRK_mainError = TRKTerminateNub();
+}
+#pragma dont_inline reset
+
+void kar_diagnostic__near_803bf730(u32 val)
+{
+    *(u32*) lbl_8056B858 = val;
+}
+
+u32 kar_diagnostic__near_803bf73c(void)
+{
+    return *(u32*) lbl_8056B858;
+}
+
+void fn_803BE624(const char* msg)
+{
+    u32 saved;
+    bool done = false;
+
+    while (!done) {
+        char c = *msg++;
+
+        if (c == 0) {
+            done = true;
+        } else {
+            saved = kar_diagnostic__near_803bf73c();
+            kar_diagnostic__near_803bf730(0);
+            OSReport("%c", c);
+            kar_diagnostic__near_803bf730(saved);
+        }
+    }
+}
+
+extern u8 lbl_8048BC78[];
+
+MessageBufferID kar_diag__803be4e4(void)
+{
+    int bytesAvailable;
+    int bufferIndex;
+    MessageBuffer* buffer;
+    DSError err;
+    u32 msgLength;
+    u8 header[0x40];
+    u8 body[0x800];
+
+    bytesAvailable = fn_803C2400();
+
+    if (bytesAvailable <= 0) {
+        return -1;
+    }
+
+    err = kar_diag__803be22c(&bufferIndex, &buffer);
+    MWTRACE(4, (const char*) lbl_8048BC78 + 0xD0, err);
+
+    kar_diagnostic__803be12c(buffer, 0);
+    fn_803C23C4(header, 0x40);
+    kar_diagnostic__803bde98(buffer, header, 0x40);
+
+    msgLength = *(u32*) header;
+
+    if ((s32) (msgLength - 0x40) > 0) {
+        DSError readErr;
+
+        MWTRACE(1, (const char*) lbl_8048BC78 + 0xF4);
+        readErr = fn_803C23C4(body, msgLength - 0x40);
+
+        if (readErr == kNoError) {
+            kar_diagnostic__803bde98(buffer, body, msgLength);
+        } else {
+            MWTRACE(8, (const char*) lbl_8048BC78 + 0x110);
+            kar_diagnostic__803be19c(err);
+            bufferIndex = -1;
+        }
+    }
+
+    MWTRACE(1, (const char*) lbl_8048BC78 + 0x16C, bufferIndex);
+    return bufferIndex;
+}
+
+DSError fn_803C16CC(void* data, u32 start);
+
+void TRKPostInterruptEvent(void)
+{
+    NubEvent event;
+    u32 inst;
+    int eventType;
+    u32 exceptionID;
+
+    if (*(bool*) (gTRKState + 0x9C)) {
+        *(bool*) (gTRKState + 0x9C) = false;
+        return;
+    }
+
+    exceptionID = *(u32*) (gTRKCPUState + 0x2F8) & 0xFFFF;
+
+    if (exceptionID == 0xD00 || exceptionID == 0x700) {
+        fn_803C16CC(&inst, *(u32*) (gTRKCPUState + 0x80));
+
+        if (inst == 0x0FE00000) {
+            eventType = kSupportEvent;
+        } else {
+            eventType = kBreakpointEvent;
+        }
+    } else {
+        eventType = kExceptionEvent;
+    }
+
+    fn_803BD74C(&event, eventType);
+    kar_diagnostic__803bd764(&event);
+}
+
+
+DSError TRKTargetInterrupt(NubEvent* event)
+{
+    DSError result = kNoError;
+
+    switch (event->fType) {
+    case kBreakpointEvent:
+    case kExceptionEvent:
+        TRKTargetSetStopped(true);
+        result = kar_diagnostic__near_803bff40(kDSNotifyStopped);
+        break;
+    default:
+        break;
+    }
+
+    return result;
 }
