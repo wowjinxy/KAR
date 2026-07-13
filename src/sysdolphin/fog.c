@@ -48,8 +48,8 @@ typedef struct {
 void FogInfoInit(void);
 void FogAdjInfoInit(void);
 
-HSD_FogInfo lbl_80504270 = { FogInfoInit };
-HSD_FogAdjInfo lbl_805042B0 = { FogAdjInfoInit };
+extern HSD_FogInfo lbl_80504270;
+extern HSD_FogAdjInfo lbl_805042B0;
 
 void kar_fog_set_current_and_apply(HSD_Fog* fog)
 {
@@ -67,11 +67,11 @@ void HSD_FogSet(HSD_Fog* fog)
     HSD_CObj* cobj;
     HSD_FogAdj* fog_adj;
     u32 flags;
+    GXFogAdjTable tbl;
     f32 v[6];
     s32 range;
     s32 width;
     Mtx44Ptr mtx;
-    GXFogAdjTable tbl;
 
     if (fog == NULL) {
         GXSetFog(0, lbl_805E5D10, lbl_805E5D10, lbl_805E5D10, lbl_805E5D10, lbl_805E6380);
@@ -88,62 +88,61 @@ void HSD_FogSet(HSD_Fog* fog)
 
     fog_adj = (fog != NULL) ? fog->fog_adj : NULL;
     flags = HSD_FogAdjGetFlags(fog_adj);
-    if (fog_adj == NULL || (flags & 7) == 0) {
-        GXSetFogRangeAdj(0, 0, NULL);
-        return;
-    }
+    if (fog_adj != NULL && (flags & 7) != 0) {
+        fn_803D09F0(v);
 
-    fn_803D09F0(v);
-
-    if (flags & 1) {
-        s32 center = (fog_adj != NULL) ? fog_adj->center : -1;
-        range = v[0] + v[2] * (center + 320) / lbl_805E5D14;
-    } else {
-        range = v[0] + v[2] * lbl_805E5D18;
-    }
-
-    if (flags & 2) {
-        width = (fog_adj != NULL) ? fog_adj->width : -1;
-    } else {
-        width = (s32) v[2];
-    }
-
-    if (flags & 4) {
-        mtx = (fog_adj != NULL) ? fog_adj->mtx : NULL;
-    } else {
-        Mtx44 local_mtx;
-        struct {
-            f32 x0;
-            f32 v[6];
-        } proj;
-
-        memset(local_mtx, 0, sizeof(Mtx44));
-        fn_803D06DC((f32*) &proj);
-        switch ((s32) proj.x0) {
-        case 0:
-            local_mtx[0][0] = proj.v[0];
-            local_mtx[0][2] = proj.v[1];
-            local_mtx[1][1] = proj.v[2];
-            local_mtx[1][2] = proj.v[3];
-            local_mtx[2][2] = proj.v[4];
-            local_mtx[2][3] = proj.v[5];
-            local_mtx[3][2] = lbl_805E5D1C;
-            break;
-        default:
-            local_mtx[0][0] = proj.v[0];
-            local_mtx[0][3] = proj.v[1];
-            local_mtx[1][1] = proj.v[2];
-            local_mtx[1][3] = proj.v[3];
-            local_mtx[2][2] = proj.v[4];
-            local_mtx[2][3] = proj.v[5];
-            local_mtx[3][3] = lbl_805E5D20;
-            break;
+        if (flags & 1) {
+            s32 center = (fog_adj != NULL) ? fog_adj->center : -1;
+            range = v[0] + v[2] * (center + 320) / lbl_805E5D14;
+        } else {
+            range = v[0] + v[2] * lbl_805E5D18;
         }
-        mtx = local_mtx;
-    }
 
-    fn_803CF558(&tbl, (u16) width, mtx);
-    GXSetFogRangeAdj(1, (u16) range, &tbl);
+        if (flags & 2) {
+            width = (fog_adj != NULL) ? fog_adj->width : -1;
+        } else {
+            width = (s32) v[2];
+        }
+
+        if (flags & 4) {
+            mtx = (fog_adj != NULL) ? fog_adj->mtx : NULL;
+        } else {
+            Mtx44 local_mtx;
+            struct {
+                f32 x0;
+                f32 v[6];
+            } proj;
+
+            mtx = local_mtx;
+            memset(mtx, 0, sizeof(Mtx44));
+            fn_803D06DC((f32*) &proj);
+            switch ((s32) proj.x0) {
+            case 0:
+                mtx[0][0] = proj.v[0];
+                mtx[0][2] = proj.v[1];
+                mtx[1][1] = proj.v[2];
+                mtx[1][2] = proj.v[3];
+                mtx[2][2] = proj.v[4];
+                mtx[2][3] = proj.v[5];
+                mtx[3][2] = lbl_805E5D1C;
+                break;
+            default:
+                mtx[0][0] = proj.v[0];
+                mtx[0][3] = proj.v[1];
+                mtx[1][1] = proj.v[2];
+                mtx[1][3] = proj.v[3];
+                mtx[2][2] = proj.v[4];
+                mtx[2][3] = proj.v[5];
+                mtx[3][3] = lbl_805E5D20;
+                break;
+            }
+        }
+
+        fn_803CF558(&tbl, (u16) width, mtx);
+        GXSetFogRangeAdj(1, (u16) range, &tbl);
+    } else {
+        GXSetFogRangeAdj(0, 0, NULL);
+    }
 }
 
 static inline HSD_Fog* HSD_FogAlloc(void)
