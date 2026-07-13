@@ -696,6 +696,7 @@ kar_objects = [
     Object(NonMatching, "a2d_kirbydisp.cpp"),
     Object(NonMatching, "a2d_refract.cpp"),
     Object(NonMatching, "fl_indirectload.cpp"),
+    Object(NonMatching, "kar_diag.cpp"),
     Object(NonMatching, "OSThread.c"),
     Object(Matching, "dobj.c"),
     Object(NonMatching, "tobj.c"),

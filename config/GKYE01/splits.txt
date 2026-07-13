@@ -1098,12 +1098,15 @@ fl_indirectload.cpp:
 	.sbss       start:0x805DDCB8 end:0x805DDCC0
 	.sdata2     start:0x805E4FB8 end:0x805E4FF8
 
-runtime.c:
-	.init       start:0x80003100 end:0x80005544
-	.text       start:0x8039899C end:0x803AD168
+kar_diag.cpp:
+	.text       start:0x8039899C end:0x803AD0A0
 	.data       start:0x804F57E0 end:0x804F8730
 	.bss        start:0x80569A00 end:0x80569A10
 	.sdata2     start:0x805E4FF8 end:0x805E5168
+
+runtime.c:
+	.init       start:0x80003100 end:0x80005544
+	.text       start:0x803AD0A0 end:0x803AD168
 
 Runtime.PPCEABI.H/global_destructor_chain.c:
 	.text       start:0x803AD168 end:0x803AD1B0
