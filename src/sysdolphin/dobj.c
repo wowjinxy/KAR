@@ -2,8 +2,8 @@
 
 extern HSD_ClassInfo hsdClass;
 
-extern HSD_DObj* lbl_805DE174;
-extern HSD_DObjInfo* lbl_805DE170;
+HSD_DObj* lbl_805DE174;
+HSD_DObjInfo* lbl_805DE170;
 #define current_dobj lbl_805DE174
 #define default_class lbl_805DE170
 

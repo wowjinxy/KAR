@@ -5,9 +5,10 @@ void* hsdAllocMemPiece();
 void MObjInfoInit();
 HSD_MObjInfo hsdMObj = { MObjInfoInit };
 
-extern HSD_MObjInfo* lbl_805DE1E8; /* default_class */
-extern HSD_TObj* lbl_805DE1F0;     /* tobj_toon */
-extern HSD_TObj* lbl_805DE1F4;     /* tobj_shadows */
+HSD_TObj* lbl_805DE1F4;     /* tobj_shadows */
+HSD_TObj* lbl_805DE1F0;     /* tobj_toon */
+u32 lbl_805DE1EC;
+HSD_MObjInfo* lbl_805DE1E8; /* default_class */
 
 void HSD_MObjSetCurrent(HSD_MObj* mobj, u32 flags)
 {

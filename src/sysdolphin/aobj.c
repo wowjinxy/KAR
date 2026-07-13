@@ -26,9 +26,9 @@ typedef union HSD_AObjAllocData {
 HSD_AObjAllocData hsdAObj_alloc_data;
 #define AOBJ_ALLOC_DATA (&hsdAObj_alloc_data.data)
 
-extern s32 lbl_805DE200;
-extern s32 lbl_805DE1FC;
-extern HSD_SList* lbl_805DE1F8;
+s32 lbl_805DE200;
+s32 lbl_805DE1FC;
+HSD_SList* lbl_805DE1F8;
 
 extern f64 kar_axdriver__near_803bd408(f32 a, f32 b);
 extern void* memset(void* dst, int val, size_t n);
