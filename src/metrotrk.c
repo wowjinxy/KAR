@@ -1397,16 +1397,25 @@ DSError kar_diagnostic__near_803bf5fc(MessageBuffer* buf)
     return kNoError;
 }
 
+#pragma dont_inline on
 DSError kar_diagnostic__803bf654(MessageBuffer* buf)
 {
     NubEvent event;
+    RawAckMsg ack;
 
     *(u32*) lbl_8056B858 = 0;
-    TRKSendAck(kDSReplyNoError);
+
+    memset(&ack, 0, sizeof(ack));
+    ack.length = sizeof(ack);
+    ack.commandId = kDSReplyACK;
+    ack.replyError = kDSReplyNoError;
+    kar_diagnostic__803c2388(&ack, sizeof(ack));
+
     fn_803BD74C(&event, kShutdownEvent);
     kar_diagnostic__803bd764(&event);
     return kNoError;
 }
+#pragma dont_inline reset
 
 DSError kar_diagnostic__near_803bf6cc(MessageBuffer* buf)
 {
@@ -2120,6 +2129,7 @@ DSError kar_diagnostic__near_803c089c(MessageBuffer* buf);
 DSError kar_diagnostic__near_803c0818(MessageBuffer* buf);
 DSError kar_diag__803bfb08(MessageBuffer* b, int* bufferId, u32 p1, u32 p2, int p3);
 
+#pragma dont_inline on
 DSError kar_diagnostic__near_803bff40(u8 cmdId)
 {
     DSError result;
@@ -2147,6 +2157,7 @@ DSError kar_diagnostic__near_803bff40(u8 cmdId)
 
     return result;
 }
+#pragma dont_inline reset
 
 typedef struct GDEVCommTable {
     /* 0x00 */ void (*initialize_func)(void* ptr, void* callback);
@@ -2183,9 +2194,9 @@ DSError kar_diagnostic__803c2388(const void* bytes, u32 length)
 #pragma dont_inline on
 void fn_803C2430(void)
 {
-    extern bool TRK_Use_BBA;
+    extern u8 TRK_Use_BBA[];
 
-    if (!TRK_Use_BBA) {
+    if (!TRK_Use_BBA[0]) {
         if (gDBCommTable.initinterrupts_func != NULL) {
             gDBCommTable.initinterrupts_func();
         }
@@ -2217,6 +2228,98 @@ DSError TRKInitializeIntDrivenUART(u32 r3, u32 r4, u32 r5, void* r6)
     gDBCommTable.initialize_func(r6, TRKEXICallBack);
     gDBCommTable.open_func();
     return kNoError;
+}
+
+extern u8 TRK_Use_BBA[];
+extern int AMC_IsStub(void);
+extern int Hu_IsStub(void);
+extern u8 EndofProgramInstruction[];
+
+extern DSError udp_cc_peek(void);
+extern DSError udp_cc_write(const void* data, u32 length);
+extern DSError udp_cc_read(void* data, u32 limit);
+extern DSError udp_cc_close(void);
+extern DSError udp_cc_open(void);
+extern DSError udp_cc_shutdown(void);
+extern DSError udp_cc_initialize(void* ptr, void* callback);
+extern DSError udp_cc_pre_continue(void);
+extern DSError udp_cc_post_stop(void);
+
+DSError ddh_cc_initinterrupts(void);
+DSError ddh_cc_peek(void);
+DSError ddh_cc_post_stop(void);
+DSError ddh_cc_pre_continue(void);
+DSError ddh_cc_write(const void* data, u32 length);
+DSError ddh_cc_read(void* dest, u32 length);
+DSError ddh_cc_close(void);
+DSError ddh_cc_open(void);
+DSError ddh_cc_shutdown(void);
+DSError ddh_cc_initialize(void* ptr, void* callback);
+
+DSError gdev_cc_initinterrupts(void);
+DSError gdev_cc_peek(void);
+DSError gdev_cc_post_stop(void);
+DSError gdev_cc_pre_continue(void);
+DSError gdev_cc_write(const void* data, u32 length);
+DSError gdev_cc_read(void* dest, u32 length);
+DSError gdev_cc_close(void);
+DSError gdev_cc_open(void);
+DSError gdev_cc_shutdown(void);
+DSError gdev_cc_initialize(void* ptr, void* callback);
+
+int InitMetroTRKCommTable(int hwId)
+{
+    const char* fmt = (const char*) EndofProgramInstruction;
+
+    OSReport(fmt + 0x08, hwId);
+    TRK_Use_BBA[0] = FALSE;
+
+    if (hwId == 2) {
+        OSReport(fmt + 0x20);
+        TRK_Use_BBA[0] = TRUE;
+        gDBCommTable.initialize_func = (void (*)(void*, void*)) udp_cc_initialize;
+        gDBCommTable.initinterrupts_func = NULL;
+        gDBCommTable.shutdown_func = (void (*)(void)) udp_cc_shutdown;
+        gDBCommTable.peek_func = (int (*)(void)) udp_cc_peek;
+        gDBCommTable.read_func = (int (*)(void*, u32)) udp_cc_read;
+        gDBCommTable.write_func = (int (*)(const void*, u32)) udp_cc_write;
+        gDBCommTable.open_func = (void (*)(void)) udp_cc_open;
+        gDBCommTable.close_func = (void (*)(void)) udp_cc_close;
+        gDBCommTable.pre_continue_func = (void (*)(void)) udp_cc_pre_continue;
+        gDBCommTable.post_stop_func = (void (*)(void)) udp_cc_post_stop;
+    } else if (hwId == 1) {
+        OSReport(fmt + 0x38);
+        Hu_IsStub();
+        gDBCommTable.initialize_func = (void (*)(void*, void*)) gdev_cc_initialize;
+        gDBCommTable.initinterrupts_func = (void (*)(void)) gdev_cc_initinterrupts;
+        gDBCommTable.shutdown_func = (void (*)(void)) gdev_cc_shutdown;
+        gDBCommTable.peek_func = (int (*)(void)) gdev_cc_peek;
+        gDBCommTable.read_func = (int (*)(void*, u32)) gdev_cc_read;
+        gDBCommTable.write_func = (int (*)(const void*, u32)) gdev_cc_write;
+        gDBCommTable.open_func = (void (*)(void)) gdev_cc_open;
+        gDBCommTable.close_func = (void (*)(void)) gdev_cc_close;
+        gDBCommTable.pre_continue_func = (void (*)(void)) gdev_cc_pre_continue;
+        gDBCommTable.post_stop_func = (void (*)(void)) gdev_cc_post_stop;
+        return hwId;
+    } else if (hwId == 0) {
+        OSReport(fmt + 0x5c);
+        AMC_IsStub();
+        gDBCommTable.initialize_func = (void (*)(void*, void*)) ddh_cc_initialize;
+        gDBCommTable.initinterrupts_func = (void (*)(void)) ddh_cc_initinterrupts;
+        gDBCommTable.shutdown_func = (void (*)(void)) ddh_cc_shutdown;
+        gDBCommTable.peek_func = (int (*)(void)) ddh_cc_peek;
+        gDBCommTable.read_func = (int (*)(void*, u32)) ddh_cc_read;
+        gDBCommTable.write_func = (int (*)(const void*, u32)) ddh_cc_write;
+        gDBCommTable.open_func = (void (*)(void)) ddh_cc_open;
+        gDBCommTable.close_func = (void (*)(void)) ddh_cc_close;
+        gDBCommTable.pre_continue_func = (void (*)(void)) ddh_cc_pre_continue;
+        gDBCommTable.post_stop_func = (void (*)(void)) ddh_cc_post_stop;
+        return hwId;
+    } else {
+        OSReport(fmt + 0x80, hwId);
+        OSReport(fmt + 0xac);
+        OSReport(fmt + 0xdc);
+    }
 }
 
 void EnableEXI2Interrupts(void);
@@ -2323,6 +2426,49 @@ asm void gap_03_803C1F34_text(void)
     blr
 }
 
+__declspec(weak) asm void InitMetroTRK_BBA(void)
+{
+    nofralloc
+    subi r1, r1, 4
+    stw r3, 0(r1)
+    lis r3, gTRKCPUState@h
+    ori r3, r3, gTRKCPUState@l
+    stmw r0, 0(r3)
+    lwz r4, 0(r1)
+    addi r1, r1, 4
+    stw r1, 4(r3)
+    stw r4, 0xc(r3)
+    mflr r4
+    stw r4, 0x84(r3)
+    stw r4, 0x80(r3)
+    mfcr r4
+    stw r4, 0x88(r3)
+    mfmsr r4
+    ori r3, r4, 0x8000
+    mtmsr r3
+    mtsrr1 r4
+    bl TRKSaveExtended1Block
+    lis r3, gTRKCPUState@h
+    ori r3, r3, gTRKCPUState@l
+    lmw r0, 0(r3)
+    li r0, 0
+    mtspr iabr, r0
+    mtspr 1013, r0
+    lis r1, _db_stack_addr@h
+    ori r1, r1, _db_stack_addr@l
+    li r3, 2
+    bl InitMetroTRKCommTable
+    cmpwi r3, 1
+    bne initCommTableSuccess2
+    lwz r4, 0x84(r3)
+    mtlr r4
+    lmw r0, 0(r3)
+    blr
+initCommTableSuccess2:
+    b TRK_main
+    blr
+}
+
 extern u8 lbl_8056BDE0[];
 
 DSError TRKInitializeTarget(void)
@@ -2339,6 +2485,10 @@ u32 kar_diagnostic__near_803c2144(u32 addr)
         addr < *(u32*) lbl_8056BDE0 + 0x4000 &&
         (*(u32*) (gTRKCPUState + 0x238) & 3))
     {
+        return addr;
+    }
+
+    if (addr >= 0x7E000000 && addr <= 0x80000000) {
         return addr;
     }
 
@@ -2700,10 +2850,10 @@ void kar_diagnostic__near_803c2ed0(RingBuffer* ring, void* buffer, u32 size)
 {
     ring->base = buffer;
     ring->capacity = size;
-    ring->readPtr = buffer;
-    ring->writePtr = buffer;
+    ring->readPtr = ring->base;
+    ring->writePtr = ring->base;
     ring->count = 0;
-    ring->free = size;
+    ring->free = ring->capacity;
     kar_diagnostic__near_803c3318(&ring->mutex);
 }
 #pragma dont_inline reset
@@ -2793,6 +2943,51 @@ void kar_diag__near_803c27b0(u8 value)
     lbl_8056BDF8[0] = value;
 }
 
+__declspec(weak) DSError udp_cc_post_stop(void)
+{
+    return kUARTError;
+}
+
+__declspec(weak) DSError udp_cc_pre_continue(void)
+{
+    return kUARTError;
+}
+
+__declspec(weak) DSError udp_cc_peek(void)
+{
+    return kNoError;
+}
+
+__declspec(weak) DSError udp_cc_write(const void* data, u32 length)
+{
+    return kNoError;
+}
+
+__declspec(weak) DSError udp_cc_read(void* data, u32 limit)
+{
+    return kNoError;
+}
+
+__declspec(weak) DSError udp_cc_close(void)
+{
+    return kUARTError;
+}
+
+__declspec(weak) DSError udp_cc_open(void)
+{
+    return kUARTError;
+}
+
+__declspec(weak) DSError udp_cc_shutdown(void)
+{
+    return kUARTError;
+}
+
+__declspec(weak) DSError udp_cc_initialize(void* ptr, void* callback)
+{
+    return kUARTError;
+}
+
 extern RingBuffer lbl_8056C600;
 extern u8 lbl_8056BE00[];
 extern BOOL lbl_805DDD08;
@@ -2841,20 +3036,21 @@ extern u8 lbl_8048C288[];
 
 DSError ddh_cc_write(const void* data, u32 length)
 {
+    const char* fmt = (const char*) lbl_8048C288;
     const u8* ptr = (const u8*) data;
-    u32 remaining = length;
+    s32 remaining = length;
 
     if (!lbl_805DDD08) {
-        MWTRACE(8, (const char*) lbl_8048C288 + 0x00);
+        MWTRACE(8, fmt + 0x00);
         return -0x2711;
     }
 
-    MWTRACE(8, (const char*) lbl_8048C288 + 0x14, data, length);
+    MWTRACE(8, fmt + 0x14, data, length);
 
     while (remaining > 0) {
         int written;
 
-        MWTRACE(1, (const char*) lbl_8048C288 + 0x40, remaining);
+        MWTRACE(1, fmt + 0x40, remaining);
         written = EXI2_WriteN(ptr, remaining);
 
         if (written == 0) {
@@ -2994,20 +3190,21 @@ extern u8 lbl_8048C368[];
 
 DSError gdev_cc_write(const void* data, u32 length)
 {
+    const char* fmt = (const char*) lbl_8048C368;
     const u8* ptr = (const u8*) data;
-    u32 remaining = length;
+    s32 remaining = length;
 
     if (!lbl_805DDD10) {
-        MWTRACE(8, (const char*) lbl_8048C368 + 0x00);
+        MWTRACE(8, fmt + 0x00);
         return -0x2711;
     }
 
-    MWTRACE(8, (const char*) lbl_8048C368 + 0x14, data, length);
+    MWTRACE(8, fmt + 0x14, data, length);
 
     while (remaining > 0) {
         int written;
 
-        MWTRACE(1, (const char*) lbl_8048C368 + 0x40, remaining);
+        MWTRACE(1, fmt + 0x40, remaining);
         written = DBWrite(ptr, remaining);
 
         if (written == 0) {
