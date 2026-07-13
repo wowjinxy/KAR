@@ -3,6 +3,46 @@
 #include <dolphin/types.h>
 #include <sysdolphin/objalloc.h>
 
+#if defined(VERSION_GKYJ01)
+#define kar_src_mpcoll_c lbl_804B03D0
+#define kar_src_mpcoll_h lbl_804B03DC
+#define kar_mpcoll_assert_shape_is_sphere lbl_804B03E8
+#define kar_mpcoll_handle_pool lbl_805586A0
+#define kar_mpcoll_sphere_shape_pool lbl_805586CC
+#define kar_mpcoll_sphere_extra_pool_a lbl_805586F8
+#define kar_mpcoll_sphere_rough_check_pool lbl_80558724
+#define kar_mpcoll_report_pool lbl_80558750
+#define kar_mpcoll_report_detail_pool lbl_8055877C
+#define kar_mpcoll_report_subentry_pool lbl_805587A8
+#define lbl_805D7330 lbl_805D1D70
+#define lbl_805E2B40 lbl_805DD3B0
+#define lbl_805DD8C4 lbl_805D831C
+#define kar_mpcoll_report_free_not_found_fmt lbl_804B03B0
+#define lbl_805E2B38 lbl_805DD3A8
+#define kar_mpcollreport_alloc_contact_lists fn_8023D718
+#define kar_mpcollreport_free_contact_lists fn_8023E95C
+#define kar_mpresponse_build_swept_sphere_aabb_center_extents fn_802467F8
+#elif defined(VERSION_GKYP01)
+#define kar_src_mpcoll_c lbl_804BAE78
+#define kar_src_mpcoll_h lbl_804BAE84
+#define kar_mpcoll_assert_shape_is_sphere lbl_804BAE90
+#define kar_mpcoll_handle_pool lbl_80550538
+#define kar_mpcoll_sphere_shape_pool lbl_80550564
+#define kar_mpcoll_sphere_extra_pool_a lbl_80550590
+#define kar_mpcoll_sphere_rough_check_pool lbl_805505BC
+#define kar_mpcoll_report_pool lbl_805505E8
+#define kar_mpcoll_report_detail_pool lbl_80550614
+#define kar_mpcoll_report_subentry_pool lbl_80550640
+#define lbl_805D7330 lbl_805C9D18
+#define lbl_805E2B40 lbl_805D55D8
+#define lbl_805DD8C4 lbl_805D02FC
+#define kar_mpcoll_report_free_not_found_fmt lbl_804BAE58
+#define lbl_805E2B38 lbl_805D55D0
+#define kar_mpcollreport_alloc_contact_lists fn_80242450
+#define kar_mpcollreport_free_contact_lists fn_80243694
+#define kar_mpresponse_build_swept_sphere_aabb_center_extents fn_8024B684
+#endif
+
 typedef struct MpCollHandle MpCollHandle;
 typedef struct MpCollSphereShape MpCollSphereShape;
 typedef struct MpCollReport MpCollReport;

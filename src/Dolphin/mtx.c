@@ -1,24 +1,19 @@
 #include "dolphin/types.h"
-#include "dolphin/mtx/mtxtypes.h"
+#include "dolphin/mtx/mtx.h"
+#include "dolphin/mtx/vec.h"
+#include "kar/gr/grcoll.h"
 
-extern const f32 lbl_805E58B0; // 1.0F
-extern const f32 lbl_805E58B4; // 0.0F
-extern const f32 lbl_805E58B8; // 0.5F
-extern const f32 lbl_805E58BC; // 3.0F
-extern const f32 lbl_805E58C0; // 2.0F
-extern const f32 lbl_805E58C4; // -1.0F
-extern const f32 lbl_805E58C8; // (PI / 180)
-extern const f32 lbl_805DC960; // {0.0F, 1.0F}
+extern const f32 mtx_one;        // 1.0F
+extern const f32 mtx_zero;       // 0.0F
+extern const f32 mtx_half;       // 0.5F
+extern const f32 mtx_three;      // 3.0F
+extern const f32 mtx_pair_zero_one;
 
-extern f32 fn_803BD518(f32 x);
-extern f32 fn_803BD53C(f32 x);
-extern f32 fn_803BD560(f32 x);
-
-asm void kar_fl_indirectload__803d13fc(Mtx m)
+asm void PSMTXIdentity(Mtx m)
 {
     nofralloc
-    lfs f0, lbl_805E58B4(r0)
-    lfs f1, lbl_805E58B0(r0)
+    lfs f0, mtx_zero(r0)
+    lfs f1, mtx_one(r0)
     psq_st f0, 0x8(r3), 0, 0
     ps_merge01 f2, f0, f1
     psq_st f0, 0x18(r3), 0, 0
@@ -55,10 +50,10 @@ asm void PSMTXConcat(Mtx a, Mtx b, Mtx ab)
     psq_l f0, 0x0(r3), 0, 0
     stfd f14, 0x8(r1)
     psq_l f6, 0x0(r4), 0, 0
-    lis r6, lbl_805DC960@ha
+    lis r6, mtx_pair_zero_one@ha
     psq_l f7, 0x8(r4), 0, 0
     stfd f15, 0x10(r1)
-    addi r6, r6, lbl_805DC960@l
+    addi r6, r6, mtx_pair_zero_one@l
     stfd f31, 0x28(r1)
     psq_l f8, 0x10(r4), 0, 0
     ps_muls0 f12, f6, f0
@@ -108,7 +103,7 @@ asm void PSMTXConcat(Mtx a, Mtx b, Mtx ab)
 asm void fn_803D1528(Mtx src, Mtx xPose)
 {
     nofralloc
-    lfs f0, lbl_805E58B4(r0)
+    lfs f0, mtx_zero(r0)
     psq_l f1, 0x0(r3), 0, 0
     stfs f0, 0x2c(r4)
     psq_l f2, 0x10(r3), 0, 0
@@ -131,7 +126,7 @@ asm void fn_803D1528(Mtx src, Mtx xPose)
 }
 
 /* PSMTXInverse */
-asm BOOL fn_803D1578(Mtx src, Mtx inv)
+asm BOOL PSMTXInverse(Mtx src, Mtx inv)
 {
     nofralloc
     psq_l f0, 0x0(r3), 1, 0
@@ -261,8 +256,8 @@ extern void kar_grcoll__near_803d17a8(Mtx m, char axis, f32 sinA, f32 cosA);
 /* PSMTXRotRad */
 void kar_grcoll__near_803d1738(Mtx m, char axis, f32 rad)
 {
-    f32 sinA = fn_803BD53C(rad);
-    f32 cosA = fn_803BD560(rad);
+    f32 sinA = mtx_sinf(rad);
+    f32 cosA = mtx_cosf(rad);
     kar_grcoll__near_803d17a8(m, axis, sinA, cosA);
 }
 
@@ -272,8 +267,8 @@ asm void kar_grcoll__near_803d17a8(Mtx m, char axis, f32 sinA, f32 cosA)
     nofralloc
     frsp f5, f1
     frsp f4, f2
-    lfs f0, lbl_805E58B4(r0)
-    lfs f1, lbl_805E58B0(r0)
+    lfs f0, mtx_zero(r0)
+    lfs f1, mtx_one(r0)
     ori r0, r4, 0x20
     ps_neg f2, f5
     cmplwi r0, 0x78
@@ -324,8 +319,8 @@ rot_done:
 asm void kar_grcoll__near_803d1858(Mtx m, Vec* axis, f32 sinA, f32 cosA)
 {
     nofralloc
-    lfs f10, lbl_805E58B8(r0)
-    lfs f9, lbl_805E58BC(r0)
+    lfs f10, mtx_half(r0)
+    lfs f9, mtx_three(r0)
     frsp f11, f2
     psq_l f2, 0x0(r4), 0, 0
     frsp f12, f1
@@ -373,8 +368,8 @@ asm void kar_grcoll__near_803d1858(Mtx m, Vec* axis, f32 sinA, f32 cosA)
 /* PSMTXRotAxisRad */
 void kar_grcoll__near_803d1908(Mtx m, Vec* axis, f32 rad)
 {
-    f32 sinA = fn_803BD53C(rad);
-    f32 cosA = fn_803BD560(rad);
+    f32 sinA = mtx_sinf(rad);
+    f32 cosA = mtx_cosf(rad);
     kar_grcoll__near_803d1858(m, axis, sinA, cosA);
 }
 
@@ -382,8 +377,8 @@ void kar_grcoll__near_803d1908(Mtx m, Vec* axis, f32 rad)
 asm void kar_grcoll__803d1978(Mtx m, f32 xT, f32 yT, f32 zT)
 {
     nofralloc
-    lfs f0, lbl_805E58B4(r0)
-    lfs f4, lbl_805E58B0(r0)
+    lfs f0, mtx_zero(r0)
+    lfs f4, mtx_one(r0)
     stfs f1, 0xc(r3)
     stfs f2, 0x1c(r3)
     psq_st f0, 0x4(r3), 0, 0
@@ -398,10 +393,10 @@ asm void kar_grcoll__803d1978(Mtx m, f32 xT, f32 yT, f32 zT)
 }
 
 /* PSMTXScale */
-asm void fn_803D19AC(Mtx m, f32 xS, f32 yS, f32 zS)
+asm void PSMTXScale(Mtx m, f32 xS, f32 yS, f32 zS)
 {
     nofralloc
-    lfs f0, lbl_805E58B4(r0)
+    lfs f0, mtx_zero(r0)
     stfs f1, 0x0(r3)
     psq_st f0, 0x4(r3), 0, 0
     psq_st f0, 0xc(r3), 0, 0
@@ -414,10 +409,10 @@ asm void fn_803D19AC(Mtx m, f32 xS, f32 yS, f32 zS)
 }
 
 /* PSMTXQuat */
-asm void fn_803D19D4(Mtx m, Quaternion* q)
+asm void PSMTXQuat(Mtx m, Quaternion* q)
 {
     nofralloc
-    lfs f1, lbl_805E58B0(r0)
+    lfs f1, mtx_one(r0)
     psq_l f4, 0x0(r4), 0, 0
     psq_l f5, 0x8(r4), 0, 0
     fsubs f0, f1, f1
@@ -460,9 +455,6 @@ asm void fn_803D19D4(Mtx m, Quaternion* q)
     blr
 }
 
-extern void PSVECNormalize(Vec* src, Vec* unit);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* result);
-
 #pragma fp_contract off
 void C_MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target)
 {
@@ -503,22 +495,22 @@ void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS,
 {
     f32 tmp;
 
-    tmp = lbl_805E58B0 / (r - l);
-    m[0][0] = scaleS * (lbl_805E58C0 * n * tmp);
-    m[0][1] = lbl_805E58B4;
+    tmp = 1.0F / (r - l);
+    m[0][0] = scaleS * (2.0F * n * tmp);
+    m[0][1] = 0.0F;
     m[0][2] = scaleS * ((r + l) * tmp) - transS;
-    m[0][3] = lbl_805E58B4;
+    m[0][3] = 0.0F;
 
-    tmp = lbl_805E58B0 / (t - b);
-    m[1][0] = lbl_805E58B4;
-    m[1][1] = scaleT * (lbl_805E58C0 * n * tmp);
+    tmp = 1.0F / (t - b);
+    m[1][0] = 0.0F;
+    m[1][1] = scaleT * (2.0F * n * tmp);
     m[1][2] = scaleT * ((t + b) * tmp) - transT;
-    m[1][3] = lbl_805E58B4;
+    m[1][3] = 0.0F;
 
-    m[2][0] = lbl_805E58B4;
-    m[2][1] = lbl_805E58B4;
-    m[2][2] = lbl_805E58C4;
-    m[2][3] = lbl_805E58B4;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = -1.0F;
+    m[2][3] = 0.0F;
 }
 #pragma fp_contract reset
 
@@ -529,25 +521,25 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,
     f32 angle;
     f32 cot;
 
-    angle = lbl_805E58B8 * fovY;
-    angle = lbl_805E58C8 * angle;
+    angle = 0.5F * fovY;
+    angle = 0.017453292F * angle;
 
-    cot = lbl_805E58B0 / fn_803BD518(angle);
+    cot = 1.0F / mtx_tanf(angle);
 
     m[0][0] = scaleS * (cot / aspect);
-    m[0][1] = lbl_805E58B4;
+    m[0][1] = 0.0F;
     m[0][2] = -transS;
-    m[0][3] = lbl_805E58B4;
+    m[0][3] = 0.0F;
 
-    m[1][0] = lbl_805E58B4;
+    m[1][0] = 0.0F;
     m[1][1] = cot * scaleT;
     m[1][2] = -transT;
-    m[1][3] = lbl_805E58B4;
+    m[1][3] = 0.0F;
 
-    m[2][0] = lbl_805E58B4;
-    m[2][1] = lbl_805E58B4;
-    m[2][2] = lbl_805E58C4;
-    m[2][3] = lbl_805E58B4;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = -1.0F;
+    m[2][3] = 0.0F;
 }
 #pragma fp_contract reset
 
@@ -557,21 +549,21 @@ void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
 {
     f32 tmp;
 
-    tmp = lbl_805E58B0 / (r - l);
-    m[0][0] = (lbl_805E58C0 * tmp) * scaleS;
-    m[0][1] = lbl_805E58B4;
-    m[0][2] = lbl_805E58B4;
+    tmp = 1.0F / (r - l);
+    m[0][0] = (2.0F * tmp) * scaleS;
+    m[0][1] = 0.0F;
+    m[0][2] = 0.0F;
     m[0][3] = transS + scaleS * (tmp * -(r + l));
 
-    tmp = lbl_805E58B0 / (t - b);
-    m[1][0] = lbl_805E58B4;
-    m[1][1] = (lbl_805E58C0 * tmp) * scaleT;
-    m[1][2] = lbl_805E58B4;
+    tmp = 1.0F / (t - b);
+    m[1][0] = 0.0F;
+    m[1][1] = (2.0F * tmp) * scaleT;
+    m[1][2] = 0.0F;
     m[1][3] = transT + scaleT * (tmp * -(t + b));
 
-    m[2][0] = lbl_805E58B4;
-    m[2][1] = lbl_805E58B4;
-    m[2][2] = lbl_805E58B4;
-    m[2][3] = lbl_805E58B0;
+    m[2][0] = 0.0F;
+    m[2][1] = 0.0F;
+    m[2][2] = 0.0F;
+    m[2][3] = 1.0F;
 }
 #pragma fp_contract reset

@@ -1,5 +1,8 @@
 #include "functions.h"
+#include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmlanmenu.h>
+#include <kar/lb/lbarchive.h>
+#include <kar/mn/mnmenu.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
 
@@ -32,15 +35,6 @@ extern const f32 lbl_805E0D0C;
 
 char kar_mntitle_bg_scene_models_name[] = "ScMenTitleBg_scene_models";
 char kar_mntitle_fg_scene_models_name[] = "ScMenTitleFg_scene_models";
-
-MenuContext* fn_801311E0(void);
-void** fn_80131284(void);
-void* fn_801388A8(void* arg0);
-void fn_80138B10(HSD_JObj* jobj, s32 arg1, void* arg2, f32 arg3, f32 arg4);
-void* kar_diag__80138a00(HSD_GObj* gobj, s32 arg1);
-AutodemoContext* kar_gmautodemo__near_8000cdbc(void);
-void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3,
-                                  ...);
 
 void kar_mntitle_load_bg_fg_scene_models(void)
 {

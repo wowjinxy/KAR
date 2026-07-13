@@ -1,7 +1,6 @@
 #include <global.h>
 #include <sysdolphin/fobj.h>
-
-extern HSD_ObjAllocData hsdFObj_alloc_data;
+#include <sysdolphin/fobj_alloc.h>
 
 f32 splGetHelmite(f32, f32, f32, f32, f32, f32);
 void memset(void*, int, int);
@@ -32,7 +31,7 @@ void HSD_FObjRemoveAll(HSD_FObj* fobj)
 static inline u32 HSD_FObjSetState(HSD_FObj* fobj, u32 state)
 {
     if (fobj) {
-        fobj->flags = (state & 0xF) | (fobj->flags & 0xF0);
+        fobj->flags = (fobj->flags & 0xF0) | (state & 0xF);
     }
     return state;
 }

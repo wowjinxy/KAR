@@ -1,13 +1,30 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
+#include <kar/lb/lbvector.h>
+#include <sysdolphin/spline.h>
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
 typedef struct GravityParams GravityParams;
 typedef struct GravitySplineSet GravitySplineSet;
 typedef struct SplineList SplineList;
-typedef struct HSD_Spline HSD_Spline;
+
+#if defined(VERSION_GKYJ01)
+#define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x65
+#define GRGRAVITY_ONE_ZERO lbl_805DA158
+#elif defined(VERSION_GKYP01)
+#define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x73
+#define GRGRAVITY_ONE_ZERO lbl_805D2198
+#else
+#define GRGRAVITY_ASSERT_TMP_PARAM_LINE 0x65
+#define GRGRAVITY_ONE_ZERO lbl_805DF730
+#endif
+
+#define GRGRAVITY_INIT_DIST 3.4028235E38F
+#define GRGRAVITY_ZERO 0.0F
+#define GRGRAVITY_NO_PARAM -1.0F
 
 struct Ground {
     u8 pad_0[0x08];
@@ -38,17 +55,17 @@ struct GravitySplineSet {
 
 char kar_src_grgravity_804a4a60[] = "grgravity.c";
 char lbl_804A4A6C[] = "tmpParam != -1.0F";
-const f32 lbl_805DF730[2] = { 1.0f, 0.0f };
 
-extern const f32 lbl_805DC8BC[];
-extern const f32 lbl_805DF728;
-extern const f32 lbl_805DF72C;
+#if defined(VERSION_GKYJ01)
+const f32 lbl_805DA158[2] = { 1.0f, 0.0f };
+#elif defined(VERSION_GKYP01)
+const f32 lbl_805D2198[2] = { 1.0f, 0.0f };
+#else
+const f32 lbl_805DF730[2] = { 1.0f, 0.0f };
+#endif
 
 void* memcpy(void* dst, const void* src, unsigned long n);
 f32 kar_lbcolanim__near_8006bac8(HSD_Spline* spline, Vec* pos, s32 arg2);
-void splArcLengthPoint(Vec* out, HSD_Spline* spline, f32 param);
-f32 fn_803D22F4(Vec* a, Vec* b);
-void kar_lbvector_normalize_with_axis_fallback(Vec* dst, Vec* src);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
@@ -76,11 +93,11 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
         spline_offset = 0;
         gravity_params = data->gravity_params;
         param_offset = spline_offset;
-        nearest_dist = lbl_805DC8BC[0];
+        nearest_dist = GRGRAVITY_INIT_DIST;
         best_index = -1;
-        no_param = lbl_805DF72C;
+        no_param = GRGRAVITY_NO_PARAM;
         i = 0;
-        zero = lbl_805DF728;
+        zero = GRGRAVITY_ZERO;
         while (i < spline_set->list->count) {
             HSD_Spline* spline =
                 GET_PTR(spline_set->list->splines, spline_offset);
@@ -90,14 +107,16 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
                                                  1);
 
             if (no_param == spline_param) {
-                __assert(kar_src_grgravity_804a4a60, 0x65, lbl_804A4A6C);
+                __assert(kar_src_grgravity_804a4a60,
+                         GRGRAVITY_ASSERT_TMP_PARAM_LINE, lbl_804A4A6C);
             }
 
-            if (spline_param > zero && spline_param < LOAD_F32(lbl_805DF730[0])) {
+            if (spline_param > zero &&
+                spline_param < LOAD_F32(GRGRAVITY_ONE_ZERO[0])) {
                 f32 dist;
 
                 splArcLengthPoint(&spline_pos, spline, spline_param);
-                dist = fn_803D22F4(pos, &spline_pos);
+                dist = PSVECDistance(pos, &spline_pos);
                 if (dist < GET_F32(gravity_params->spline_params, param_offset) &&
                     dist < nearest_dist) {
                     memcpy(&nearest_pos, &spline_pos, sizeof(Vec));
@@ -119,7 +138,7 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
             f32 radius;
 
             selected_params = gravity_params->spline_params + best_index * 3;
-            zero = lbl_805DF728;
+            zero = GRGRAVITY_ZERO;
             out->x = pos->x - nearest_pos.x;
             out->y = pos->y - nearest_pos.y;
             out->z = pos->z - nearest_pos.z;
@@ -131,7 +150,7 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
                       min_gravity;
 
             if (gravity < zero) {
-                f32 neg_one = lbl_805DF72C;
+                f32 neg_one = GRGRAVITY_NO_PARAM;
 
                 gravity = -gravity;
                 out->x *= neg_one;
@@ -144,5 +163,5 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
         }
     }
 
-    return lbl_805DF728;
+    return GRGRAVITY_ZERO;
 }

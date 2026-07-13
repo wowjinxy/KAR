@@ -1,37 +1,30 @@
 #include <global.h>
+#include <dolphin/gx/gx.h>
+#include <sysdolphin/class.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/texp.h>
+#include <sysdolphin/tev.h>
 #include <sysdolphin/tobj.h>
 
-char kar_srcfile_texp_c_805dcd70[] = "texp.c";
-
 #define TEXP_ASSERT(line, cond) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_texp_c_805dcd70, line, #cond))
+    ((cond) ? ((void) 0) : __assert("texp.c", line, #cond))
 #define TEXP_ASSERT_S(line, cond, str) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_texp_c_805dcd70, line, str))
+    ((cond) ? ((void) 0) : __assert("texp.c", line, str))
 #define TEXPDAG_ASSERT(line, cond) \
     ((cond) ? ((void) 0) : __assert(__FILE__, line, #cond))
 #define TEXPDAG_ASSERT_S(line, cond, str) \
     ((cond) ? ((void) 0) : __assert(__FILE__, line, str))
 
-extern char lbl_805DCD78[5];    /* "texp" */
-extern char lbl_805DCD80[2];    /* "0" */
-extern char lbl_805DCD84[5];    /* "desc" */
-extern char lbl_805DCD8C[8];    /* "tevdesc" */
-extern char lbl_80504950[10];   /* "texp_list" */
-extern char lbl_8050495C[0x19]; /* "texp->cnst.ctype == type" */
-extern char lbl_80504978[];     /* "HSD_TExpGetType(texp) == HSD_TE_TEV" */
+extern char TExpAssertTexp[5];     /* "texp" */
+extern char TExpAssertZero[2];     /* "0" */
+extern char TExpAssertDesc[5];     /* "desc" */
+extern char TExpAssertTevDesc[8];  /* "tevdesc" */
+extern char TExpAssertList[10];    /* "texp_list" */
+extern char TExpAssertCnstType[0x19]; /* "texp->cnst.ctype == type" */
+extern char TExpAssertTevType[];   /* "HSD_TExpGetType(texp) == HSD_TE_TEV" */
 
 extern void* hsdAllocMemPiece(u32 size);
-extern void hsdFreeMemPiece(void* ptr, s32 size);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
 extern void memset(void* ptr, s32 value, u32 size);
-
-extern u32 HSD_StateAssignTev(void);
-extern void HSD_SetupTevStage(HSD_TevDesc* tevdesc);
-extern void HSD_StateInvalidate(s32 mask);
-extern void GXPixModeSync(void);
-extern void GXSetTevKColor(u32 id, GXColor color);
-extern void GXSetTevColor(u32 id, GXColor color);
 
 #define GX_TEV_SWAP0 0
 #define GX_TEV_SWAP1 1
@@ -172,8 +165,8 @@ struct HSD_TExpRes {
     u8 a_use[4];
 };
 
-extern u32 lbl_805028E8[];
-extern char lbl_805DCD98[8]; /* "l < num" */
+extern u32 TevIndex2Stage[];
+extern char TExpDagAssertIndexInRange[8]; /* "l < num" */
 
 int HSD_TExpMakeDag(HSD_TExp* root, struct HSD_TExpDag* list);
 void HSD_TExpSchedule(int num, struct HSD_TExpDag* list, HSD_TExp** result,
@@ -301,7 +294,7 @@ HSD_TExp* HSD_TExpFreeList(HSD_TExp* texp_list, HSD_TExpType type, s32 all)
                     *handle = next;
                     continue;
                 default:
-                    TEXP_ASSERT_S(220, 0, lbl_805DCD80);
+                    TEXP_ASSERT_S(220, 0, TExpAssertZero);
                 }
             }
             handle = &(*handle)->tev.next;
@@ -355,7 +348,7 @@ HSD_TExp* HSD_TExpFreeList(HSD_TExp* texp_list, HSD_TExpType type, s32 all)
                     *handle = next;
                     continue;
                 default:
-                    TEXP_ASSERT_S(268, 0, lbl_805DCD80);
+                    TEXP_ASSERT_S(268, 0, TExpAssertZero);
                 }
             }
             handle = &(*handle)->tev.next;
@@ -370,7 +363,7 @@ HSD_TExp* HSD_TExpTev(HSD_TExp** texp_list)
     s32 i;
     HSD_TExp* texp;
 
-    TEXP_ASSERT_S(295, texp_list, lbl_80504950);
+    TEXP_ASSERT_S(295, texp_list, TExpAssertList);
     texp = hsdAllocMemPiece(sizeof(HSD_TETev));
     TEXP_ASSERT(63, texp);
     memset(texp, 0xFF, sizeof(HSD_TETev));
@@ -392,7 +385,7 @@ HSD_TExp* HSD_TExpCnst(void* val, HSD_TEInput comp, HSD_TEType type,
 {
     HSD_TExp* texp;
 
-    TEXP_ASSERT_S(362, texp_list, lbl_80504950);
+    TEXP_ASSERT_S(362, texp_list, TExpAssertList);
 
     texp = *texp_list;
     do {
@@ -400,7 +393,7 @@ HSD_TExp* HSD_TExpCnst(void* val, HSD_TEInput comp, HSD_TEType type,
             if (texp->type == HSD_TE_CNST && texp->cnst.val == val &&
                 texp->cnst.comp == comp)
             {
-                TEXP_ASSERT_S(369, texp->cnst.ctype == type, lbl_8050495C);
+                TEXP_ASSERT_S(369, texp->cnst.ctype == type, TExpAssertCnstType);
                 return texp;
             }
             texp = texp->cnst.next;
@@ -410,7 +403,7 @@ HSD_TExp* HSD_TExpCnst(void* val, HSD_TEInput comp, HSD_TEType type,
             return NULL;
         }
         texp = hsdAllocMemPiece(sizeof(HSD_TECnst));
-        TEXP_ASSERT_S(71, texp, lbl_805DCD78);
+        TEXP_ASSERT_S(71, texp, TExpAssertTexp);
         texp->cnst.type = HSD_TE_CNST;
         texp->cnst.next = (*texp_list);
         *texp_list = texp;
@@ -429,8 +422,8 @@ HSD_TExp* HSD_TExpCnst(void* val, HSD_TEInput comp, HSD_TEType type,
 
 void HSD_TExpColorOp(HSD_TExp* texp, s32 op, u32 bias, u32 scale, u8 clamp)
 {
-    TEXP_ASSERT_S(410, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(411, HSD_TExpGetType(texp) == HSD_TE_TEV, lbl_80504978);
+    TEXP_ASSERT_S(410, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(411, HSD_TExpGetType(texp) == HSD_TE_TEV, TExpAssertTevType);
 
     texp->tev.c_op = op;
     texp->tev.c_clamp = (clamp ? GX_ENABLE : GX_DISABLE);
@@ -445,8 +438,8 @@ void HSD_TExpColorOp(HSD_TExp* texp, s32 op, u32 bias, u32 scale, u8 clamp)
 
 void HSD_TExpAlphaOp(HSD_TExp* texp, s32 op, u32 bias, u32 scale, u8 clamp)
 {
-    TEXP_ASSERT_S(436, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(437, HSD_TExpGetType(texp) == HSD_TE_TEV, lbl_80504978);
+    TEXP_ASSERT_S(436, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(437, HSD_TExpGetType(texp) == HSD_TE_TEV, TExpAssertTevType);
 
     texp->tev.a_op = op;
     texp->tev.a_clamp = (clamp ? GX_ENABLE : GX_DISABLE);
@@ -514,14 +507,14 @@ void HSD_TExpColorInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
             ksel = GX_TEV_KCSEL_7_8;
             break;
         default:
-            TEXP_ASSERT_S(500, 0, lbl_805DCD80);
+            TEXP_ASSERT_S(500, 0, TExpAssertZero);
             break;
         }
 
         if (tev->kcsel == HSD_TE_UNDEF) {
             tev->kcsel = ksel;
         } else if (tev->kcsel == ksel) {
-            HSD_Panic(kar_srcfile_texp_c_805dcd70, 505,
+            HSD_Panic("texp.c", 505,
                       "tev can't select multiple konst input.\n");
         }
         tev->c_in[idx].type = HSD_TE_KONST;
@@ -594,7 +587,7 @@ void HSD_TExpColorInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
                 tev->c_in[idx].arg = GX_CC_TEXA;
                 break;
             default:
-                TEXP_ASSERT_S(559, 0, lbl_805DCD80);
+                TEXP_ASSERT_S(559, 0, TExpAssertZero);
                 break;
             }
             if (tev->tex_swap == HSD_TE_UNDEF) {
@@ -626,7 +619,7 @@ void HSD_TExpColorInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
                 tev->c_in[idx].arg = GX_CC_RASA;
                 break;
             default:
-                TEXP_ASSERT_S(607, 0, lbl_805DCD80);
+                TEXP_ASSERT_S(607, 0, TExpAssertZero);
                 break;
             }
             if (tev->ras_swap == HSD_TE_UNDEF) {
@@ -636,7 +629,7 @@ void HSD_TExpColorInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
             }
         } break;
         default:
-            TEXP_ASSERT_S(630, 0, lbl_805DCD80);
+            TEXP_ASSERT_S(630, 0, TExpAssertZero);
             break;
         }
     }
@@ -650,8 +643,8 @@ void HSD_TExpColorIn(HSD_TExp* texp, HSD_TEInput sel_a, HSD_TExp* exp_a,
 {
     HSD_TETev* tev;
 
-    TEXP_ASSERT_S(693, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(694, HSD_TExpGetType(texp) == HSD_TE_TEV, lbl_80504978);
+    TEXP_ASSERT_S(693, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(694, HSD_TExpGetType(texp) == HSD_TE_TEV, TExpAssertTevType);
 
     tev = &texp->tev;
     HSD_TExpColorInSub(tev, sel_a, exp_a, 0);
@@ -752,7 +745,7 @@ void HSD_TExpAlphaInSub(HSD_TETev* tev, HSD_TEInput sel, HSD_TExp* exp,
             tev->a_in[idx].arg = GX_CA_RASA;
             break;
         default:
-            TEXP_ASSERT_S(792, 0, lbl_805DCD80);
+            TEXP_ASSERT_S(792, 0, TExpAssertZero);
             break;
         }
     }
@@ -766,8 +759,8 @@ void HSD_TExpAlphaIn(HSD_TExp* texp, HSD_TEInput sel_a, HSD_TExp* exp_a,
 {
     HSD_TETev* tev;
 
-    TEXP_ASSERT_S(823, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(824, HSD_TExpGetType(texp) == HSD_TE_TEV, lbl_80504978);
+    TEXP_ASSERT_S(823, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(824, HSD_TExpGetType(texp) == HSD_TE_TEV, TExpAssertTevType);
 
     tev = &texp->tev;
     HSD_TExpAlphaInSub(tev, sel_a, exp_a, 0);
@@ -778,8 +771,8 @@ void HSD_TExpAlphaIn(HSD_TExp* texp, HSD_TEInput sel_a, HSD_TExp* exp_a,
 
 void HSD_TExpOrder(HSD_TExp* texp, HSD_TObj* tex, s32 chan)
 {
-    TEXP_ASSERT_S(839, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(840, HSD_TExpGetType(texp) == HSD_TE_TEV, lbl_80504978);
+    TEXP_ASSERT_S(839, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(840, HSD_TExpGetType(texp) == HSD_TE_TEV, TExpAssertTevType);
 
     texp->tev.tex = tex;
     if (chan == GX_COLOR_NULL) {
@@ -1099,8 +1092,8 @@ void TExp2TevDesc(HSD_TExp* texp, HSD_TExpTevDesc* desc, int* init_cprev,
     HSD_TETev* tev;
     HSD_TevDesc* tevdesc;
 
-    TEXP_ASSERT_S(1298, texp, lbl_805DCD78);
-    TEXP_ASSERT_S(1299, desc, lbl_805DCD84);
+    TEXP_ASSERT_S(1298, texp, TExpAssertTexp);
+    TEXP_ASSERT_S(1299, desc, TExpAssertDesc);
     TEXP_ASSERT(1300, HSD_TExpGetType(texp) == HSD_TE_TEV);
 
     tev = &texp->tev;
@@ -1448,8 +1441,8 @@ int HSD_TExpCompile(HSD_TExp* texp, HSD_TExpTevDesc** tevdesc,
     int init_cprev = 1;
     int init_aprev = 1;
 
-    TEXP_ASSERT_S(1629, tevdesc, lbl_805DCD8C);
-    TEXP_ASSERT_S(1630, texp_list, lbl_80504950);
+    TEXP_ASSERT_S(1629, tevdesc, TExpAssertTevDesc);
+    TEXP_ASSERT_S(1630, texp_list, TExpAssertList);
 
     memset(&res, 0, sizeof(HSD_TExpRes));
 
@@ -1473,7 +1466,7 @@ int HSD_TExpCompile(HSD_TExp* texp, HSD_TExpTevDesc** tevdesc,
     *tevdesc = NULL;
     for (i = 0; i < num; ++i) {
         HSD_TExpTevDesc* tdesc = hsdAllocMemPiece(sizeof(HSD_TExpTevDesc));
-        tdesc->desc.stage = lbl_805028E8[i];
+        tdesc->desc.stage = TevIndex2Stage[i];
         TExp2TevDesc(order[(num - i) - 1], tdesc, &init_cprev, &init_aprev);
         tdesc->desc.next = &(*tevdesc)->desc;
         *tevdesc = tdesc;
@@ -1744,7 +1737,7 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
                     }
                     q++;
                 }
-                TEXPDAG_ASSERT_S(325, l < num, lbl_805DCD98);
+                TEXPDAG_ASSERT_S(325, l < num, TExpDagAssertIndexInRange);
             }
         }
 
@@ -1772,7 +1765,7 @@ int HSD_TExpMakeDag(HSD_TExp* root, HSD_TExpDag* list)
                     }
                     r2++;
                 }
-                TEXPDAG_ASSERT_S(347, l < num, lbl_805DCD98);
+                TEXPDAG_ASSERT_S(347, l < num, TExpDagAssertIndexInRange);
             }
         }
     }

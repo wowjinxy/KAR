@@ -3,17 +3,18 @@
 #include "kar/gm/gmglobal.h"
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004a648.h"
+#include "kar/gm/gmmain.h"
+#include "kar/gm/gmracenormal.h"
+#include "kar/lb/lbaudio.h"
+#include "kar/pl/plclearcheckerlib.h"
+#include "kar/shadow.h"
 
-extern s32 kar_shadow__near_8007b650(void);
-extern void kar_gmmain__near_800064f0(void);
 extern GmMainData *kar_gmmain__near_80006c14(void);
-extern void kar_lbaudio__near_8006176c(u32 sound_id);
 extern u8 kar_mnclearchecker_get_main_state_or_assert_operating(void);
 extern void kar_mnclearchecker_create_screen_and_sis_resources(u8 arg0,
                                                                u8 arg1);
 extern s8 fn_8000AECC(void);
 extern void fn_8000BC10(void);
-extern s8 kar_gmracenormal__8000aea8(void);
 extern s8 fn_8000AAC4(void);
 extern s8 fn_8000A97C(void);
 extern s8 kar_gmracenormal__8000af5c(void);
@@ -29,19 +30,10 @@ extern s8 fn_8000979C(s32 arg0);
 extern s8 fn_800092D8(void);
 extern s32 fn_80261CE8(s32 arg0);
 extern u8 fn_8000A300(void);
-extern s32 kar_gmclearchecker__near_8004acf4(void);
-extern s32 kar_gmclearchecker__near_8004ae50(void);
-extern s32 kar_gmclearchecker__near_8004b1d0(void);
-extern s32 kar_gmclearchecker__near_8004b2b8(void);
-extern s32 kar_gmclearchecker__near_8004b404(void);
-extern s32 kar_gmclearchecker__near_8004b814(void);
-extern s32 kar_gmclearchecker__near_8004b968(void);
-extern s32 kar_gmclearchecker__near_8004bb1c(void);
 extern void kar_gmlanmenu__8000bba0(void);
 extern void fn_80138D74(void);
 extern void fn_80138E00(void);
 extern f32 fn_80009568(int);
-extern u32 kar_plclearcheckerlib__8022fccc(int, int);
 extern s8 fn_8000916C(void);
 extern int fn_8000A0F8(void);
 extern int kar_plclearchecker_get_state_u32_82c(int);

@@ -19,9 +19,9 @@ typedef struct {
     HSD_PadRumbleListData* freelist; // 0x60
 } HSD_PadRumbleGlobals;
 
-extern HSD_PadRumbleGlobals lbl_8058B080;
-extern HSD_RumbleData lbl_8058BB88[4];
-extern HSD_RumbleData lbl_80503FB0;
+extern HSD_PadRumbleGlobals HSD_PadState;
+extern HSD_RumbleData HSD_PadRumbleData[4];
+extern HSD_RumbleData HSD_DefaultRumbleData;
 
 static inline void HSD_PadRumbleFree(HSD_RumbleData* a, HSD_PadRumbleListData* b)
 {
@@ -32,15 +32,15 @@ static inline void HSD_PadRumbleFree(HSD_RumbleData* a, HSD_PadRumbleListData* b
     }
     *r5 = b->next;
     a->nb_list--;
-    b->next = lbl_8058B080.freelist;
-    lbl_8058B080.freelist = b;
+    b->next = HSD_PadState.freelist;
+    HSD_PadState.freelist = b;
 }
 
 void HSD_PadRumbleOn(s8 no)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool intrEnabled = OSDisableInterrupts();
-        HSD_RumbleData* r5 = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* r5 = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
 
         r5->direct_status = 2;
         OSRestoreInterrupts(intrEnabled);
@@ -49,9 +49,9 @@ void HSD_PadRumbleOn(s8 no)
 
 void HSD_PadRumbleOffH(s8 no)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool intrEnabled = OSDisableInterrupts();
-        HSD_RumbleData* r5 = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* r5 = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
 
         r5->direct_status = 1;
         OSRestoreInterrupts(intrEnabled);
@@ -60,9 +60,9 @@ void HSD_PadRumbleOffH(s8 no)
 
 void HSD_PadRumbleOffN(s8 no)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool intrEnabled = OSDisableInterrupts();
-        HSD_RumbleData* r5 = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* r5 = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
 
         r5->direct_status = 0;
         OSRestoreInterrupts(intrEnabled);
@@ -71,9 +71,9 @@ void HSD_PadRumbleOffN(s8 no)
 
 void HSD_PadRumbleRemove(s8 no)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool r29 = OSDisableInterrupts();
-        HSD_RumbleData* r28 = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* r28 = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
         HSD_PadRumbleListData* r4 = r28->listdatap;
 
         while (r4 != NULL) {
@@ -90,16 +90,16 @@ void HSD_PadRumbleRemoveAll(void)
     int i = 0;
 
     do {
-        HSD_PadRumbleRemove(i);
+        HSD_PadRumbleRemove((u8) i);
         i++;
     } while (i < 4);
 }
 
 void HSD_PadRumbleRemoveId(s8 no, int id)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool r3 = OSDisableInterrupts();
-        HSD_RumbleData* r31 = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* r31 = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
         HSD_PadRumbleListData* r7 = r31->listdatap;
 
         while (r7 != NULL) {
@@ -115,9 +115,9 @@ void HSD_PadRumbleRemoveId(s8 no, int id)
 
 static inline void HSD_PadRumblePause(s8 no, int status)
 {
-    if (lbl_8058B080.check == lbl_8058B080.port[no].valid) {
+    if (HSD_PadState.check == HSD_PadState.port[no].valid) {
         bool intrEnabled = OSDisableInterrupts();
-        HSD_RumbleData* data = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* data = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
         HSD_PadRumbleListData* r4 = data->listdatap;
 
         while (r4 != NULL) {
@@ -160,12 +160,12 @@ static inline void HSD_PadRumbleInsertSorted(HSD_PadRumbleListData** r6,
 
 int HSD_PadRumbleAdd(s8 no, int id, int frame, int pri, void* listp)
 {
-    HSD_PadRumbleGlobals* base = &lbl_8058B080;
+    HSD_PadRumbleGlobals* base = &HSD_PadState;
     int result = 0;
 
-    if (base->check == lbl_8058B080.port[no].valid) {
+    if (base->check == HSD_PadState.port[no].valid) {
         bool intrEnabled = OSDisableInterrupts();
-        HSD_RumbleData* data = &lbl_8058BB88[lbl_8058B080.port[no].chan];
+        HSD_RumbleData* data = &HSD_PadRumbleData[HSD_PadState.port[no].chan];
         HSD_PadRumbleListData* freeEntry = base->freelist;
 
         if (freeEntry != NULL && data->nb_list < base->max_list) {
@@ -243,7 +243,7 @@ int HSD_PadRumbleInterpret1(HSD_PadRumbleListData* a, u8* b)
 
 void HSD_PadRumbleInterpret(void)
 {
-    HSD_RumbleData* r30 = lbl_8058BB88;
+    HSD_RumbleData* r30 = HSD_PadRumbleData;
     HSD_PadRumbleListData* r29;
     HSD_PadRumbleListData* r28;
     int i;
@@ -280,15 +280,15 @@ void HSD_PadRumbleInit(u16 a, HSD_PadRumbleListData* b)
 {
     int i;
 
-    lbl_8058B080.max_list = a;
-    lbl_8058B080.freelist = b;
+    HSD_PadState.max_list = a;
+    HSD_PadState.freelist = b;
     if (a != 0) {
         for (i = 0; i < a - 1; i++) {
-            lbl_8058B080.freelist[i].next = &lbl_8058B080.freelist[i + 1];
+            HSD_PadState.freelist[i].next = &HSD_PadState.freelist[i + 1];
         }
-        lbl_8058B080.freelist[i].next = NULL;
+        HSD_PadState.freelist[i].next = NULL;
     }
     for (i = 0; i < 4; i++) {
-        lbl_8058BB88[i] = lbl_80503FB0;
+        HSD_PadRumbleData[i] = HSD_DefaultRumbleData;
     }
 }

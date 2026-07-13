@@ -45,22 +45,9 @@ extern s32 lbl_80497CE8[8];
 extern s32 lbl_80497D08[8];
 extern HSD_Joint lbl_80497D28;
 
-extern void HSD_JObjSetFlags(HSD_JObj* jobj, u32 flags);
-extern void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
 extern void HSD_JObjAddAnimAll(HSD_JObj* jobj, HSD_AnimJoint* animjoint,
                                HSD_MatAnimJoint* matanim,
                                HSD_ShapeAnimDObj* shapeanim);
-extern void HSD_JObjCheckDepend(HSD_JObj* jobj);
-extern void HSD_JObjPrependRObj(HSD_JObj* jobj, HSD_RObj* robj);
-extern void HSD_JObjDeleteRObj(HSD_JObj* jobj, HSD_RObj* robj);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
-extern HSD_RObj* HSD_RObjAlloc(void);
-extern HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype);
-extern void HSD_RObjSetConstraintObj(HSD_RObj* robj, void* obj);
-extern void HSD_RObjRemove(HSD_RObj* robj);
-extern void HSD_RObjAnimAll(HSD_RObj* robj);
-extern HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* desc);
-extern void HSD_LObjAddAnimAll(HSD_LObj* lobj, HSD_LightAnim* anim);
 
 HSD_Joint* kar_lbairride__near_80055da0(void);
 

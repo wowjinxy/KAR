@@ -1,4 +1,8 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
+#include "dolphin/pad.h"
+#include "dolphin/si.h"
 
 typedef s64 OSTime;
 
@@ -20,17 +24,8 @@ typedef struct OSContext {
     /* 0x1C8 */ f64 psf[32];
 } OSContext;
 
-typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
-typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
-typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
-
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern OSTime OSGetTime(void);
-extern void OSSetWirelessID(s32 chan, u16 id);
 extern void* memset(void* dst, int val, size_t n);
 
 typedef struct OSResetFunctionInfo OSResetFunctionInfo;
@@ -43,25 +38,8 @@ struct OSResetFunctionInfo {
 };
 extern void OSRegisterResetFunction(OSResetFunctionInfo* info);
 
-extern BOOL SIBusy(void);
-extern BOOL SIIsChanBusy(s32 chan);
-extern u32 SIGetStatus(s32 chan);
-extern void SISetCommand(s32 chan, u32 cmd);
-extern u32 SIEnablePolling(u32 mask);
-extern u32 SIDisablePolling(u32 mask);
-extern BOOL SIGetResponse(s32 chan, u32* buf);
-extern BOOL SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback,
-                        OSTime retryDelay);
-extern s32 SIGetType(s32 chan);
-extern s32 SIGetTypeAsync(s32 chan, SIGetTypeCallback callback);
-extern void SISetSamplingRate(u32 rate);
-extern void SIRefreshSamplingRate(void);
-extern BOOL SIRegisterPollingHandler(__OSInterruptHandler handler);
-extern BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler);
-extern void fn_803E93B0(void); /* SITransferCommands */
-
-extern char lbl_804FC4E8[]; /* __PADVersion */
-extern u32 lbl_805DE058; /* __PADFixBits */
+extern char __PADVersion[];
+extern u32 __PADFixBits;
 
 extern vu16 __OSWirelessPadFixMode : 0x800030E0;
 extern vu8 __gUnknown800030E3 : 0x800030E3;
@@ -85,50 +63,6 @@ extern vu8 __gUnknown800030E3 : 0x800030E3;
 #define SI_WIRELESS_LITE 0x00040000u
 #define SI_WIRELESS_CONT_MASK 0x00080000u
 #define SI_WIRELESS_CONT 0x00000000u
-
-#define PAD_CHAN0_BIT 0x80000000
-#define PAD_CHAN1_BIT 0x40000000
-#define PAD_CHAN2_BIT 0x20000000
-#define PAD_CHAN3_BIT 0x10000000
-
-#define PAD_SPEC_0 0
-#define PAD_SPEC_1 1
-#define PAD_SPEC_2 2
-#define PAD_SPEC_3 3
-#define PAD_SPEC_4 4
-#define PAD_SPEC_5 5
-
-#define PAD_MOTOR_STOP 0
-#define PAD_MOTOR_RUMBLE 1
-#define PAD_MOTOR_STOP_HARD 2
-
-#define PAD_ERR_NONE 0
-#define PAD_ERR_NO_CONTROLLER (-1)
-#define PAD_ERR_NOT_READY (-2)
-#define PAD_ERR_TRANSFER (-3)
-
-#define PAD_BUTTON_A 0x0100
-#define PAD_BUTTON_B 0x0200
-#define PAD_BUTTON_X 0x0400
-#define PAD_BUTTON_Y 0x0800
-#define PAD_BUTTON_START 0x1000
-#define PAD_TRIGGER_L 0x0040
-#define PAD_TRIGGER_R 0x0020
-
-#define PAD_ALL 0x3FFF
-
-typedef struct PADStatus {
-    /* 0x00 */ u16 button;
-    /* 0x02 */ s8 stickX;
-    /* 0x03 */ s8 stickY;
-    /* 0x04 */ s8 substickX;
-    /* 0x05 */ s8 substickY;
-    /* 0x06 */ u8 triggerLeft;
-    /* 0x07 */ u8 triggerRight;
-    /* 0x08 */ u8 analogA;
-    /* 0x09 */ u8 analogB;
-    /* 0x0A */ s8 err;
-} PADStatus;
 
 typedef struct PADClampRegion {
     u8 minTrigger;
@@ -254,7 +188,7 @@ static u32 lbl_8056E350[4]; /* Type */
 static PADStatus lbl_8056E360[4]; /* Origin */
 static u32 lbl_8056E390[4]; /* CmdProbeDevice */
 
-char* lbl_805DC9A8 = lbl_804FC4E8; /* __PADVersion */
+char* lbl_805DC9A8 = __PADVersion; /* __PADVersion */
 s32 lbl_805DC9AC = 0x20; /* ResettingChan */
 u32 lbl_805DC9B0 = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT; /* XPatchBits */
 u32 lbl_805DC9B4 = 0x300; /* AnalogMode */
@@ -534,7 +468,7 @@ BOOL PADInit(void) {
 
     lbl_805DDF40 = TRUE;
 
-    if (lbl_805DE058 != 0) {
+    if (__PADFixBits != 0) {
         OSTime time = OSGetTime();
         __OSWirelessPadFixMode =
             (u16)((((time)&0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff)) &
@@ -646,7 +580,7 @@ void PADControlMotor(s32 chan, u32 command) {
             command = PAD_MOTOR_STOP;
         }
         SISetCommand(chan, (0x40 << 16) | lbl_805DC9B4 | (command & (0x00000001 | 0x00000002)));
-        fn_803E93B0();
+        SITransferCommands();
     }
 
     OSRestoreInterrupts(enabled);

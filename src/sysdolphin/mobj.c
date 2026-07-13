@@ -1,14 +1,21 @@
 #include <sysdolphin/mobj.h>
+#include <sysdolphin/class_new.h>
 
 void* hsdAllocMemPiece();
 
 void MObjInfoInit();
 HSD_MObjInfo hsdMObj = { MObjInfoInit };
 
-HSD_TObj* lbl_805DE1F4;     /* tobj_shadows */
-HSD_TObj* lbl_805DE1F0;     /* tobj_toon */
-u32 lbl_805DE1EC;
-HSD_MObjInfo* lbl_805DE1E8; /* default_class */
+#if defined(VERSION_GKYE01)
+HSD_TObj* MObjShadowTObjList;   /* tobj_shadows */
+HSD_TObj* MObjToonTObj;         /* tobj_toon */
+u32 TevStateRegisterInvalidateMask;
+HSD_MObjInfo* MObjDefaultClass; /* default_class */
+#else
+extern HSD_MObjInfo* MObjDefaultClass; /* default_class */
+extern HSD_TObj* MObjToonTObj;         /* tobj_toon */
+extern HSD_TObj* MObjShadowTObjList;   /* tobj_shadows */
+#endif
 
 void HSD_MObjSetCurrent(HSD_MObj* mobj, u32 flags)
 {
@@ -152,23 +159,22 @@ int MObjLoad(HSD_MObj *mobj, HSD_MObjDesc *desc)
     return 0;
 }
 
-char lbl_805DCAA0[] = "mobj.c";
+char kar_srcfile_mobj_c[] = "mobj.c";
 
-void kar_fl_indirectload__803f9fa4(HSD_MObjInfo* info)
+void HSD_MObjSetDefaultClass(HSD_MObjInfo* info)
 {
     if (info != NULL) {
         if (!hsdIsDescendantOf(info, &hsdMObj))
-            __assert(lbl_805DCAA0, 0x14E, "hsdIsDescendantOf(info, &hsdMObj)");
+            __assert(kar_srcfile_mobj_c, 0x14E, "hsdIsDescendantOf(info, &hsdMObj)");
     }
-    lbl_805DE1E8 = info;
+    MObjDefaultClass = info;
 }
 
 HSD_MObjInfo* HSD_MObjGetDefaultClass(void)
 {
-    return lbl_805DE1E8 ? lbl_805DE1E8 : &hsdMObj;
+    return MObjDefaultClass ? MObjDefaultClass : &hsdMObj;
 }
 
-void* hsdNew(HSD_ClassInfo* info);
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc)
 {
     if (mobjdesc) {
@@ -180,7 +186,7 @@ HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc)
         } else {
             mobj = hsdNew(info);
             if (mobj == NULL) {
-                __assert(lbl_805DCAA0, 0x175, "mobj");
+                __assert(kar_srcfile_mobj_c, 0x175, "mobj");
             }
         }
 
@@ -193,8 +199,8 @@ HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* mobjdesc)
     }
 }
 
-char lbl_805DCAAD = 0xFF;
-char lbl_805DCAB0[] = "list";
+char MObjTEInputSentinel = 0xFF;
+char MObjAssertList[] = "list";
 void _restgpr_24();
 void _savegpr_24();
 void HSD_TExpOrder();
@@ -218,9 +224,9 @@ asm HSD_TExp* MObjMakeTExp(HSD_MObj*, HSD_TObj*, HSD_TExp**)
 /* 803FA0D4 003F6ED4  3B C0 00 00 */	li r30, 0
 /* 803FA0D8 003F6ED8  3B A0 00 00 */	li r29, 0
 /* 803FA0DC 003F6EDC  40 82 00 14 */	bne lbl_803FA0F0
-/* 803FA0E0 003F6EE0  38 6D F9 C0 */	la r3, lbl_805DCAA0
+/* 803FA0E0 003F6EE0  38 6D F9 C0 */	la r3, kar_srcfile_mobj_c
 /* 803FA0E4 003F6EE4  38 80 01 8B */	li r4, 0x18b
-/* 803FA0E8 003F6EE8  38 AD F9 D0 */	la r5, lbl_805DCAB0
+/* 803FA0E8 003F6EE8  38 AD F9 D0 */	la r5, MObjAssertList
 /* 803FA0EC 003F6EEC  48 02 E3 CD */	bl __assert
 lbl_803FA0F0:
 /* 803FA0F0 003F6EF0  38 00 00 00 */	li r0, 0
@@ -304,7 +310,7 @@ lbl_803FA200:
 /* 803FA208 003F7008  48 00 00 60 */	b lbl_803FA268
 lbl_803FA20C:
 /* 803FA20C 003F700C  7F 66 DB 78 */	mr r6, r27
-/* 803FA210 003F7010  38 6D F9 CD */	la r3, lbl_805DCAAD
+/* 803FA210 003F7010  38 6D F9 CD */	la r3, MObjTEInputSentinel
 /* 803FA214 003F7014  38 80 00 06 */	li r4, 6
 /* 803FA218 003F7018  38 A0 00 00 */	li r5, 0
 /* 803FA21C 003F701C  48 02 7F C5 */	bl HSD_TExpCnst
@@ -895,16 +901,16 @@ void HSD_MObjCompileTev(HSD_MObj* mobj)
         mobj->texp = NULL;
     }
     sp8 = mobj->tobj;
-    if (mobj->rendermode & RENDER_SHADOW && lbl_805DE1F4 != NULL) {
+    if (mobj->rendermode & RENDER_SHADOW && MObjShadowTObjList != NULL) {
         var_r31 = &sp8;
         while (*var_r31 != NULL) {
             var_r31 = &(*var_r31)->next;
         }
-        *var_r31 = lbl_805DE1F4;
+        *var_r31 = MObjShadowTObjList;
     }
-    if (mobj->rendermode & RENDER_TOON && lbl_805DE1F0 != NULL && lbl_805DE1F0->imagedesc != NULL) {
-        lbl_805DE1F0->next = sp8;
-        sp8 = lbl_805DE1F0;
+    if (mobj->rendermode & RENDER_TOON && MObjToonTObj != NULL && MObjToonTObj->imagedesc != NULL) {
+        MObjToonTObj->next = sp8;
+        sp8 = MObjToonTObj;
     }
     HSD_TObjAssignResources(sp8);
     texp = HSD_MOBJ_METHOD(mobj)->make_texp(mobj, sp8, &mobj->texp);
@@ -917,7 +923,7 @@ void HSD_MObjCompileTev(HSD_MObj* mobj)
 void MObjSetupTev(HSD_MObj* mobj, HSD_TObj* tobj, u32 rendermode)
 {
     if (mobj->tevdesc == NULL) {
-        __assert(lbl_805DCAA0, 0x31E, "mobj->tevdesc");
+        __assert(kar_srcfile_mobj_c, 0x31E, "mobj->tevdesc");
     }
     HSD_TExpSetupTev(mobj->tevdesc, mobj->texp);
     HSD_TObjSetupVolatileTev(tobj, rendermode);
@@ -942,16 +948,16 @@ void HSD_MObjSetup(HSD_MObj* mobj, u32 rendermode)
     }
     tail = NULL;
     tobj = mobj->tobj;
-    if (rendermode & RENDER_SHADOW && lbl_805DE1F4 != NULL) {
+    if (rendermode & RENDER_SHADOW && MObjShadowTObjList != NULL) {
         tail = &tobj;
         while (*tail != NULL) {
             tail = &(*tail)->next;
         }
-        *tail = lbl_805DE1F4;
+        *tail = MObjShadowTObjList;
     }
-    if (rendermode & RENDER_TOON && lbl_805DE1F0 != NULL && lbl_805DE1F0->imagedesc != NULL) {
-        lbl_805DE1F0->next = tobj;
-        tobj = lbl_805DE1F0;
+    if (rendermode & RENDER_TOON && MObjToonTObj != NULL && MObjToonTObj->imagedesc != NULL) {
+        MObjToonTObj->next = tobj;
+        tobj = MObjToonTObj;
     }
     HSD_TObjSetup(tobj);
     HSD_TObjSetupTextureCoordGen(tobj);
@@ -997,7 +1003,7 @@ HSD_MObj* HSD_MObjAlloc(void)
 
     temp_r3 = hsdNew((HSD_ClassInfo*) HSD_MObjGetDefaultClass());
     if (temp_r3 == NULL) {
-        __assert(lbl_805DCAA0, 0x44A, "mobj");
+        __assert(kar_srcfile_mobj_c, 0x44A, "mobj");
     }
     return temp_r3;
 }
@@ -1006,7 +1012,7 @@ HSD_Material* HSD_MaterialAlloc(void)
 {
     HSD_Material* mat = hsdAllocMemPiece(sizeof(HSD_Material));
     if (mat == NULL)
-        __assert(lbl_805DCAA0, 0x466, "mat");
+        __assert(kar_srcfile_mobj_c, 0x466, "mat");
     memset(mat, 0, sizeof(HSD_Material));
     mat->alpha = 1.0F;
     return mat;
@@ -1016,20 +1022,20 @@ void HSD_MObjAddShadowTexture(HSD_TObj* tobj)
 {
     HSD_TObj* tp;
     if (tobj == NULL)
-        __assert(lbl_805DCAA0, 0x495, "tobj");
-    for (tp = lbl_805DE1F4; tp != NULL; tp = tp->next) {
+        __assert(kar_srcfile_mobj_c, 0x495, "tobj");
+    for (tp = MObjShadowTObjList; tp != NULL; tp = tp->next) {
         if (tp == tobj)
             return;
     }
-    tobj->next = lbl_805DE1F4;
-    lbl_805DE1F4 = tobj;
+    tobj->next = MObjShadowTObjList;
+    MObjShadowTObjList = tobj;
 }
 
 void HSD_MObjDeleteShadowTexture(HSD_TObj* tobj)
 {
     if (tobj != NULL) {
         HSD_TObj** tp;
-        for (tp = &lbl_805DE1F4; *tp != NULL; tp = &(*tp)->next) {
+        for (tp = &MObjShadowTObjList; *tp != NULL; tp = &(*tp)->next) {
             if (*tp == tobj) {
                 *tp = tobj->next;
                 tobj->next = NULL;
@@ -1037,10 +1043,10 @@ void HSD_MObjDeleteShadowTexture(HSD_TObj* tobj)
             }
         }
     } else {
-        while (lbl_805DE1F4 != NULL) {
-            HSD_TObj* next = lbl_805DE1F4->next;
-            lbl_805DE1F4->next = NULL;
-            lbl_805DE1F4 = next;
+        while (MObjShadowTObjList != NULL) {
+            HSD_TObj* next = MObjShadowTObjList->next;
+            MObjShadowTObjList->next = NULL;
+            MObjShadowTObjList = next;
         }
     }
 }
@@ -1064,12 +1070,12 @@ void MObjRelease(HSD_Class* o)
 
 void MObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(lbl_805DE1E8)) {
-        lbl_805DE1E8 = NULL;
+    if (info == HSD_CLASS_INFO(MObjDefaultClass)) {
+        MObjDefaultClass = NULL;
     }
     if (info == HSD_CLASS_INFO(&hsdMObj)) {
-        lbl_805DE1F0 = NULL;
-        lbl_805DE1F4 = NULL;
+        MObjToonTObj = NULL;
+        MObjShadowTObjList = NULL;
     }
     HSD_PARENT_INFO(&hsdMObj)->amnesia(info);
 }
@@ -1104,8 +1110,6 @@ static u32 unused1[] = {
 static char unused2[] = "cannot allocate tobj for toon.";
 static char unused3[] = "tobj_toon";
 #pragma pop
-
-extern HSD_ClassInfo hsdClass;
 
 void MObjInfoInit(void)
 {

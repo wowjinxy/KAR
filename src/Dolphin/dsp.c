@@ -1,4 +1,6 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 
@@ -67,15 +69,10 @@ typedef struct DVDCommand
     DVDLowCallback callback;
 } DVDCommand;
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern u32 __OSMaskInterrupts(u32 mask);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern OSTime __OSGetSystemTime(void);
 extern void OSCreateAlarm(OSAlarm* alarm);
 extern void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 extern void OSCancelAlarm(OSAlarm* alarm);
@@ -90,12 +87,12 @@ typedef struct DVDBuffer
     u32 offset;
 } DVDBuffer;
 
-extern s32 NextCommandNumber_805DDD84;
-extern u32 WorkAroundSeekLocation_805DDD68;
-extern OSTime lbl_805DDD78; /* LastReadIssued */
-extern BOOL lbl_805DDD80;   /* LastCommandWasRead */
-extern OSTime lbl_805DDD70; /* LastReadFinished */
-extern BOOL lbl_805DC8D0;   /* FirstRead */
+extern s32 NextCommandNumber;
+extern u32 WorkAroundSeekLocation;
+extern OSTime LastReadIssued;
+extern BOOL LastCommandWasRead;
+extern OSTime LastReadFinished;
+extern BOOL FirstRead;
 
 #define __DSPRegs ((volatile u16*)0xCC005000)
 #define __DIRegs ((volatile u32*)0xCC006000)
@@ -103,7 +100,7 @@ extern BOOL lbl_805DC8D0;   /* FirstRead */
 #define OSSecondsToTicks(sec) ((OS_BUS_CLOCK / 4) * (sec))
 #define OSMillisecondsToTicks(msec) ((msec) * ((OS_BUS_CLOCK / 4) / 1000))
 
-extern char* lbl_805DC8C8; /* __DSPVersion */
+extern char* __DSPVersion;
 
 static DSPTaskInfo* lbl_805DDD3C; /* __DSP_curr_task */
 static DSPTaskInfo* lbl_805DDD38; /* __DSP_first_task */
@@ -172,7 +169,7 @@ void DSPInit(void)
         return;
     }
 
-    OSRegisterVersion(lbl_805DC8C8);
+    OSRegisterVersion(__DSPVersion);
 
     old = OSDisableInterrupts();
     __OSSetInterruptHandler(7, __DSPHandler);
@@ -613,7 +610,7 @@ static BOOL StopAtNextInt_805DDD40;
 
 __declspec(weak) void __DVDInitWA(void)
 {
-    NextCommandNumber_805DDD84 = 0;
+    NextCommandNumber = 0;
     CommandList_8056CB40[0].command = -1;
     __DVDLowSetWAType(0, 0);
     OSInitAlarm();
@@ -630,9 +627,9 @@ __declspec(weak) void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* 
     DVDBuffer* prev = (DVDBuffer*)((u8*)CommandList_8056CB40 + 0xb8);
     DVDBuffer* curr = (DVDBuffer*)((u8*)CommandList_8056CB40 + 0xc4);
 
-    if (lbl_805DDD80) {
-        lbl_805DDD70 = __OSGetSystemTime();
-        lbl_805DC8D0 = FALSE;
+    if (LastCommandWasRead) {
+        LastReadFinished = __OSGetSystemTime();
+        FirstRead = FALSE;
         prev->addr = curr->addr;
         prev->length = curr->length;
         prev->offset = curr->offset;
@@ -642,7 +639,7 @@ __declspec(weak) void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* 
         }
     }
 
-    lbl_805DDD80 = FALSE;
+    LastCommandWasRead = FALSE;
     StopAtNextInt_805DDD40 = FALSE;
     reg = __DIRegs[0];
     mask = reg & 0x2a;
@@ -699,21 +696,21 @@ __declspec(weak) void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* 
     }
 
     if (cause & 1) {
-        s32 n = NextCommandNumber_805DDD84;
+        s32 n = NextCommandNumber;
 
         if (CommandList_8056CB40[n].command == 1) {
-            NextCommandNumber_805DDD84++;
+            NextCommandNumber++;
             fn_803C4470(CommandList_8056CB40[n].address, CommandList_8056CB40[n].length,
                         CommandList_8056CB40[n].offset, CommandList_8056CB40[n].callback);
             return;
         } else if (CommandList_8056CB40[n].command == 2) {
-            NextCommandNumber_805DDD84++;
+            NextCommandNumber++;
             DVDLowSeek(CommandList_8056CB40[n].offset, CommandList_8056CB40[n].callback);
             return;
         }
     } else {
         CommandList_8056CB40[0].command = -1;
-        NextCommandNumber_805DDD84 = 0;
+        NextCommandNumber = 0;
     }
 
     OSClearContext(&exceptionContext);
@@ -735,13 +732,13 @@ __declspec(weak) void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext* 
 
 void fn_803C437C(void)
 {
-    DVDCommand* cmd = &CommandList_8056CB40[NextCommandNumber_805DDD84];
+    DVDCommand* cmd = &CommandList_8056CB40[NextCommandNumber];
 
     if (cmd->command == 1) {
-        NextCommandNumber_805DDD84++;
+        NextCommandNumber++;
         fn_803C4470(cmd->address, cmd->length, cmd->offset, cmd->callback);
     } else if (cmd->command == 2) {
-        NextCommandNumber_805DDD84++;
+        NextCommandNumber++;
         DVDLowSeek(cmd->offset, cmd->callback);
     }
 }
@@ -770,8 +767,8 @@ void fn_803C4470(void* address, u32 length, u32 offset, DVDLowCallback callback)
 
     Callback_805DDD48 = callback;
     StopAtNextInt_805DDD40 = FALSE;
-    lbl_805DDD80 = TRUE;
-    lbl_805DDD78 = __OSGetSystemTime();
+    LastCommandWasRead = TRUE;
+    LastReadIssued = __OSGetSystemTime();
 
     __DIRegs[2] = 0xa8000000;
     __DIRegs[3] = offset / 4;
@@ -799,7 +796,7 @@ void fn_803C4580(void* addr, u32 length, u32 offset, DVDLowCallback callback)
     if ((offset & ~0x7FFF) == 0) {
         newOffset = 0;
     } else {
-        newOffset = (offset & ~0x7FFF) + WorkAroundSeekLocation_805DDD68;
+        newOffset = (offset & ~0x7FFF) + WorkAroundSeekLocation;
     }
 
     cmd[0].command = 2;
@@ -811,6 +808,6 @@ void fn_803C4580(void* addr, u32 length, u32 offset, DVDLowCallback callback)
     cmd[1].offset = offset;
     cmd[1].callback = callback;
     cmd[2].command = -1;
-    NextCommandNumber_805DDD84 = 0;
+    NextCommandNumber = 0;
     DVDLowSeek(newOffset, callback);
 }

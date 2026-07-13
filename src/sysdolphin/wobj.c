@@ -1,30 +1,39 @@
+#include <dolphin/mtx/mtx.h>
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/robj.h>
 
 void WObjInfoInit(void);
 
+#if defined(VERSION_GKYE01)
 HSD_WObjInfo hsdWObj = { WObjInfoInit };
-extern HSD_WObjInfo* lbl_805DE2E0;
+char WObjAssertAObj[] = "wobj->aobj";
+char WObjAssertSpline[0x58] =
+    "jp->u.spline\0\0\0\0"
+    "hsdIsDescendantOf(info, &hsdWObj)\0\0\0"
+    "sysdolphin_base_library\0"
+    "had_wobj";
+#else
+extern HSD_WObjInfo hsdWObj;
+extern char WObjAssertAObj[];
+extern char WObjAssertSpline[];
+#endif
+extern HSD_WObjInfo* WObjCurrentInfo;
 
-extern HSD_ClassInfo hsdObj;
-
-extern char kar_srcfile_wobj_c_805dcc98[7]; // "wobj.c"
-extern char lbl_805DCCA4[5];                // "wobj"
-extern char lbl_805DCCA0[3];                // "jp"
-extern char lbl_8050420C[];                 // "wobj->aobj"
-extern char lbl_80504218[];                 // "jp->u.spline"
-extern char kar_srcfile_jobj_h_805dccac[7]; // "jobj.h"
-extern char lbl_805DCCB4[5];                // "jobj"
+extern char WObjSourceFile[7];     // "wobj.c"
+extern char WObjAssertWObj[5];     // "wobj"
+extern char WObjAssertJP[3];       // "jp"
+extern char WObjJObjHeaderFile[7]; // "jobj.h"
+extern char WObjAssertJObj[5];     // "jobj"
 #define assert_line_named(line, cond, condstr)                                 \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_wobj_c_805dcc98, line, condstr))
+    ((cond) ? ((void) 0) : __assert(WObjSourceFile, line, condstr))
 #define assert_line_jobjh(line, cond)                                          \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_jobj_h_805dccac, line, lbl_805DCCB4))
+    ((cond) ? ((void) 0) : __assert(WObjJObjHeaderFile, line, WObjAssertJObj))
 
-extern double lbl_805E5CF0; // 0.0
-extern float lbl_805E5CF8;  // 0.0f
-extern double lbl_805E5D00; // 1.0
-extern float lbl_805E5D08;  // 1.0f
+extern double WObjDoubleZero; // 0.0
+extern float WObjFloatZero;  // 0.0f
+extern double WObjDoubleOne;  // 1.0
+extern float WObjFloatOne;   // 1.0f
 
 static inline void wobj_JObjSetupMatrix(HSD_JObj* jobj)
 {
@@ -81,17 +90,17 @@ void WObjUpdateFunc(void* obj, u32 type, f32* fval)
     if (wobj != NULL) {
         switch (type) {
         case 4:
-            if (*fval < lbl_805E5CF0) {
-                *fval = lbl_805E5CF8;
+            if (*fval < WObjDoubleZero) {
+                *fval = WObjFloatZero;
             }
-            if (lbl_805E5D00 < *fval) {
-                *fval = lbl_805E5D08;
+            if (WObjDoubleOne < *fval) {
+                *fval = WObjFloatOne;
             }
 
-            assert_line_named(152, wobj->aobj, lbl_8050420C);
+            assert_line_named(152, wobj->aobj, WObjAssertAObj);
             jp = (HSD_JObj*)wobj->aobj->hsd_obj;
-            assert_line_named(154, jp, lbl_805DCCA0);
-            assert_line_named(155, jp->u.spline, lbl_80504218);
+            assert_line_named(154, jp, WObjAssertJP);
+            assert_line_named(155, jp->u.spline, WObjAssertSpline);
 
             splArcLengthPoint(&p, jp->u.spline, *fval);
             HSD_WObjSetPosition(wobj, &p);
@@ -160,7 +169,7 @@ HSD_WObj* HSD_WObjLoadDesc(HSD_WObjDesc* desc)
             wobj = HSD_WObjAlloc();
         } else {
             wobj = hsdNew(info);
-            assert_line_named(260, wobj, lbl_805DCCA4);
+            assert_line_named(260, wobj, WObjAssertWObj);
         }
         HSD_WOBJ_METHOD(wobj)->load(wobj, desc);
         return wobj;
@@ -253,8 +262,9 @@ void HSD_WObjGetPosition(HSD_WObj* wobj, Vec* vec)
 
 HSD_WObj* HSD_WObjAlloc(void)
 {
-    HSD_WObj* wobj = hsdNew((HSD_ClassInfo*) (lbl_805DE2E0 ? lbl_805DE2E0 : &hsdWObj));
-    assert_line_named(599, wobj, lbl_805DCCA4);
+    HSD_WObj* wobj =
+        hsdNew((HSD_ClassInfo*) (WObjCurrentInfo ? WObjCurrentInfo : &hsdWObj));
+    assert_line_named(599, wobj, WObjAssertWObj);
     return wobj;
 }
 
@@ -268,24 +278,47 @@ void WObjRelease(HSD_Class* o)
 
 void WObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(lbl_805DE2E0)) {
-        lbl_805DE2E0 = NULL;
+    if (info == HSD_CLASS_INFO(WObjCurrentInfo)) {
+        WObjCurrentInfo = NULL;
     }
     HSD_OBJECT_PARENT_INFO(&hsdWObj)->amnesia(info);
 }
 
 #pragma push
-#pragma force_active on
-static char unused[] = "hsdIsDescendantOf(info, &hsdWObj)";
-#pragma pop
-
-void WObjInfoInit(void)
+asm void WObjInfoInit(void)
 {
-    hsdInitClassInfo(HSD_CLASS_INFO(&hsdWObj), &hsdObj,
-        "sysdolphin_base_library", "had_wobj",
-        sizeof(HSD_WObjInfo), sizeof(HSD_WObj));
-    HSD_CLASS_INFO(&hsdWObj)->release = WObjRelease;
-    HSD_CLASS_INFO(&hsdWObj)->amnesia = WObjAmnesia;
-    hsdWObj.load = &WObjLoad;
-    hsdWObj.update = &WObjUpdateFunc;
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    lis r4, hsdWObj@ha
+    lis r3, hsdObj@ha
+    stw r0, 0x14(r1)
+    li r7, 0x44
+    li r8, 0x20
+    stw r31, 0xc(r1)
+    addi r31, r4, hsdWObj@l
+    addi r4, r3, hsdObj@l
+    addi r3, r31, 0
+    addi r5, r31, 0x84
+    addi r6, r31, 0x9c
+    bl hsdInitClassInfo
+    lis r6, WObjRelease@ha
+    lis r5, WObjAmnesia@ha
+    lis r4, WObjLoad@ha
+    lis r3, WObjUpdateFunc@ha
+    addi r7, r6, WObjRelease@l
+    addi r6, r31, 0
+    addi r5, r5, WObjAmnesia@l
+    addi r4, r4, WObjLoad@l
+    addi r0, r3, WObjUpdateFunc@l
+    stw r7, 0x30(r6)
+    stw r5, 0x38(r6)
+    stw r4, 0x3c(r6)
+    stw r0, 0x40(r6)
+    lwz r31, 0xc(r1)
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }
+#pragma pop

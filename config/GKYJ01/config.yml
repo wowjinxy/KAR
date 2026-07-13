@@ -7,3 +7,31 @@ splits: config/GKYJ01/splits.txt
 # Change this to match the linker version.
 # See config.example.yml for a list.
 mw_comment_version: 10
+extract:
+- symbol: kar_debugconsole_font_i4_8x14
+  binary: kar/debug/debugconsole_font_i4_8x14.bin
+  header_type: none
+- symbol: kar_sislib_romfont_glyphs_i4_32x32
+  binary: kar/hsd/base/sislib_romfont_glyphs_i4_32x32.bin
+  header_type: none
+- symbol: kar_debug_romfont_end_gcpmemcard_strings_80531e40
+  binary: kar/hsd/base/kar_debug_romfont_end_gcpmemcard_strings_80531e40.bin
+  header_type: none
+- symbol: lbl_80531E60
+  binary: kar/hsd/base/lbl_80531E60.bin
+  header_type: none
+- symbol: lbl_80531EB0
+  binary: kar/hsd/base/lbl_80531EB0.bin
+  header_type: none
+- symbol: lbl_805320C4
+  binary: kar/hsd/base/lbl_805320C4.bin
+  header_type: none
+- symbol: lbl_8053210C
+  binary: kar/hsd/base/lbl_8053210C.bin
+  header_type: none
+- symbol: lbl_80532140
+  binary: kar/hsd/base/lbl_80532140.bin
+  header_type: none
+- symbol: lbl_8053216C
+  binary: kar/hsd/base/lbl_8053216C.bin
+  header_type: none

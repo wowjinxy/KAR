@@ -1,92 +1,38 @@
 #include <global.h>
+#include <dolphin/mtx/mtx.h>
+#include <dolphin/mtx/vec.h>
+#include <kar/gr/grcoll.h>
+#include <kar/math.h>
 #include <sysdolphin/jobj.h>
 
 #include <sysdolphin/aobj.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/mobj.h>
+#include <sysdolphin/mtx_inverse.h>
+#include <sysdolphin/mtx_transform.h>
 #include <sysdolphin/pobj.h>
 #include <sysdolphin/robj.h>
+#include <sysdolphin/spline.h>
 #include <sysdolphin/id.h>
+#include <sysdolphin/vec_alloc.h>
 
-void splArcLengthPoint(Vec* out, HSD_Spline* spline, f32 param);
-
-void HSD_RObjRemoveAnimAllByFlags(HSD_RObj* robj, u32 flags);
-void HSD_RObjReqAnimAllByFlags(HSD_RObj* robj, f32 frame, u32 flags);
-void HSD_RObjAddAnimAll(HSD_RObj* robj, HSD_RObjAnimJoint* anim);
-void HSD_RObjAnimAll(HSD_RObj* robj);
-HSD_RObj* HSD_RObjGetByType(HSD_RObj* robj, u32 type, u32 subtype);
 void HSD_RObjUpdateAll(HSD_RObj* robj, HSD_JObj* jobj, HSD_ObjUpdateFunc update);
 BOOL HSD_RObjGetGlobalPosition(HSD_RObj* robj, u32 type, Vec* out);
-void HSD_RObjResolveRefsAll(HSD_RObj* robj, HSD_RObjDesc* desc);
-void HSD_RObjRemoveAll(HSD_RObj* robj);
-
-void HSD_DObjRemoveAnimAllByFlags(HSD_DObj* dobj, u32 flags);
-void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags);
-void HSD_DObjAddAnimAll(HSD_DObj* dobj, HSD_MatAnim* matanim, HSD_ShapeAnimDObj* shapeanimdobj);
-void HSD_DObjAnimAll(HSD_DObj* dobj);
-HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
-void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc);
-void HSD_DObjRemoveAll(HSD_DObj* dobj);
 
 void HSD_JObjDispSub(HSD_JObj* jobj, MtxPtr vmtx, MtxPtr pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
 void HSD_JObjMakePositionMtx(HSD_JObj* jobj, MtxPtr mtx, MtxPtr rmtx);
 void HSD_JObjDisp(HSD_JObj* jobj, MtxPtr vmtx, u32 flags, u32 rendermode);
 
-MtxPtr HSD_CObjGetViewingMtxPtrDirect(HSD_CObj* cobj);
-HSD_CObj* HSD_CObjGetCurrent(void);
-
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXMultVec(Mtx mtx, Vec* src, Vec* dst);
-extern void PSMTXCopy(Mtx src, Mtx dst);
-
-extern void fn_803D1578(MtxPtr src, Mtx dst);
-extern void kar_grcoll__near_803d1908(Mtx mtx, Vec* axis, f32 rad);
-extern void kar_fl_indirectload__803d13fc(Mtx mtx);
-extern f64 fn_803BD388(f64 x);
-
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECAdd(Vec* a, Vec* b, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
 
-extern void HSD_MtxSRTQuat(Mtx mtx, Vec* scale, Quaternion* rotate, Vec* translate, Vec* scl);
-extern void HSD_MtxSRT(Mtx mtx, Vec* scale, Vec* rotate, Vec* translate, Vec* scl);
-extern void HSD_MtxGetTranslate(Mtx mtx, Vec* out);
-extern void HSD_MtxGetRotation(Mtx mtx, Vec* out);
-extern void HSD_MtxGetScale(Mtx mtx, Vec* out);
-
-extern Vec* HSD_VecAlloc(void);
-extern void HSD_VecFree(Vec* vec);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
 
-extern HSD_ClassInfo hsdObj;
-extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_info,
-                             char* library_name, char* class_name, s32 info_size,
-                             s32 class_size);
 extern BOOL hsdIsDescendantOf(void* info, void* base);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
-extern void OSReport(const char*, ...);
 extern void memcpy(void*, const void*, u32);
-
-extern BOOL HSD_JObjMtxIsDirty(HSD_JObj* jobj);
-extern void HSD_JObjSetupMatrix(HSD_JObj* jobj);
-extern void HSD_JObjSetMtxDirty(HSD_JObj* jobj);
-extern void ref_INC(void* o);
-extern void* HSD_IDGetData(u32 id, s32* success);
-
-HSD_JObj* HSD_JObjAlloc(void);
-void HSD_JObjResolveRefsAll(HSD_JObj* jobj, HSD_Joint* joint);
-void HSD_JObjRef(HSD_JObj* jobj);
-void HSD_JObjUnref(HSD_JObj* jobj);
-void HSD_JObjAddChild(HSD_JObj* jobj, HSD_JObj* child);
-HSD_JObj* HSD_JObjGetPrev(HSD_JObj* jobj);
-void HSD_JObjSetFlags(HSD_JObj* jobj, u32 flags);
-void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
 
 #define HSD_JOBJ_INFO(i) ((HSD_JObjInfo*) (i))
 #define HSD_JOBJ_METHOD(o) HSD_JOBJ_INFO(HSD_CLASS_METHOD(o))
@@ -100,10 +46,6 @@ void HSD_JObjClearFlags(HSD_JObj* jobj, u32 flags);
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-
-extern f64 __frsqrte(f64 x);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmsubs(f32 a, f32 c, f32 b);
 
 static inline f32 jobj_sqrtf(f32 x)
 {
@@ -123,21 +65,21 @@ static inline f32 jobj_sqrtf(f32 x)
 void JObjInfoInit(void);
 HSD_JObjInfo hsdJObj = { JObjInfoInit };
 
-extern HSD_ClassInfo* lbl_805DE250;
-extern HSD_SList* lbl_805DE254;
-extern void (*lbl_805DE258)(int, int, int, HSD_JObj*);
-extern void (*lbl_805DE25C)(s32);
-extern void (*lbl_805DE260)(HSD_JObj*, s32);
-extern HSD_JObj* lbl_805DE264;
-extern void (*lbl_805DE268)(int, int, int, HSD_JObj*);
+extern HSD_ClassInfo* JObjDefaultClass;
+extern HSD_SList* JObjUfcCallbacks;
+extern void (*JObjDPtclCallback)(int, int, int, HSD_JObj*);
+extern void (*JObjJSoundCallback)(s32);
+extern void (*JObjPtclTargetCallback)(HSD_JObj*, s32);
+extern HSD_JObj* JObjCurrent;
+extern void (*JObjJSoundPtclCallback)(int, int, int, HSD_JObj*);
 
-#define default_class lbl_805DE250
-#define ufc_callbacks lbl_805DE254
-#define dptcl_callback lbl_805DE258
-#define jsound_callback lbl_805DE25C
-#define ptcltgt_callback lbl_805DE260
-#define current_jobj lbl_805DE264
-#define jsound_ptcl_callback lbl_805DE268
+#define default_class JObjDefaultClass
+#define ufc_callbacks JObjUfcCallbacks
+#define dptcl_callback JObjDPtclCallback
+#define jsound_callback JObjJSoundCallback
+#define ptcltgt_callback JObjPtclTargetCallback
+#define current_jobj JObjCurrent
+#define jsound_ptcl_callback JObjJSoundPtclCallback
 
 #ifndef BUGFIX
 #pragma push
@@ -772,7 +714,7 @@ void setupInstanceMtx(MtxPtr vmtx, HSD_JObj* jobj, Mtx mtx)
 
     HSD_JObjSetupMatrix(jobj);
     HSD_JObjSetupMatrix(jobj->child);
-    fn_803D1578(jobj->child->mtx, mtx);
+    PSMTXInverse(jobj->child->mtx, mtx);
     PSMTXConcat(jobj->mtx, mtx, mtx);
     if (vmtx != NULL) {
         PSMTXConcat(vmtx, mtx, mtx);
@@ -881,7 +823,7 @@ s32 JObjLoad(HSD_JObj* jobj, HSD_Joint* joint, HSD_JObj* jobj_2)
     jobj->rotate.z = joint->rotation.z;
     jobj->scale = joint->scale;
     jobj->translate = joint->position;
-    kar_fl_indirectload__803d13fc(jobj->mtx);
+    PSMTXIdentity(jobj->mtx);
     jobj->scl = NULL;
 
     if (joint->mtx != NULL) {
@@ -1020,8 +962,6 @@ void HSD_JObjUnrefThis(HSD_JObj* jobj)
         hsdDelete(jobj);
     }
 }
-
-HSD_JObj* HSD_JObjGetPrev(HSD_JObj* jobj);
 
 HSD_JObj* HSD_JObjRemoveAll(HSD_JObj* jobj)
 {
@@ -1566,7 +1506,7 @@ void resolveIKJoint2(HSD_JObj* jobj)
         } else if (x_scale <= -1.0F) {
             angle = M_PI;
         } else {
-            angle = fn_803BD388(x_scale);
+            angle = kar_acos(x_scale);
         }
         if (flip == 0) {
             angle = -angle;

@@ -1,7 +1,17 @@
 #include "functions.h"
+#include <kar/gr/granim.h>
+#include <kar/gr/graudio.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GRMACHINE2_FGM_COUNTER_NUM 10
+#ifdef VERSION_GKYP01
+#define GRMACHINE2_ASSERT_LOOP_ANIM_LINE 47
+#define GRMACHINE2_ASSERT_FGM_COUNT_LINE 53
+#else
+#define GRMACHINE2_ASSERT_LOOP_ANIM_LINE 43
+#define GRMACHINE2_ASSERT_FGM_COUNT_LINE 49
+#endif
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -38,27 +48,13 @@ struct GroundIndiviParam {
     IndividualFgmAll* indiviFgmAll;
 };
 
-void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
-void kar_graudio_configure_individual_fgm_tracks(Ground* ground,
-                                                 IndividualFgmAll* indiviFgmAll);
-void kar_graudio_update_individual_fgm_timers(Ground* ground,
-                                              IndividualFgmAll* indiviFgmAll,
-                                              s32* counters, s32 counter_num);
 void kar_gryakudownforcezone_create_stage_linked_kind17_yaku(Ground* ground,
                                                              s32 link);
-void kar_gryakugondola_create_stage_linked_kind48_route_yaku(Ground* ground,
-                                                             s32 link);
-void kar_gryakuanimfloor_create_stage_linked_kind55_reactive_floor(Ground* ground,
-                                                                   s32 link);
-void kar_gryakubreakcommon_create_stage_linked_kind56_delayed_collision(Ground* ground,
-                                                                        s32 link);
-void kar_gryakubreakfloor_create_stage_linked_kind30_breakfan(Ground* ground,
-                                                              s32 link);
 
 void kar_grmachine2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj);
 void kar_grmachine2_create_stage_mechanism_yaku_objects(Ground* ground);
 void kar_grmachine2_update_individual_fgm_timers(HSD_GObj* gobj);
-void fn_8010EC0C(void);
+void kar_grmachine2_empty_callback(void);
 
 GroundCallback kar_grmachine2_callback_table[] = {
     (GroundCallback) kar_grmachine2_init_loop_anim_and_individual_fgm_ids,
@@ -78,13 +74,14 @@ void kar_grmachine2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj)
     }
 
     if (!hasLoopAnim) {
-        __assert("grmachine2.c", 43, "indiviParam && indiviParam->loopAnimAll");
+        __assert("grmachine2.c", GRMACHINE2_ASSERT_LOOP_ANIM_LINE,
+                 "indiviParam && indiviParam->loopAnimAll");
     }
 
     kar_granim__800dbe48(ground, indiviParam->loopAnimAll);
 
     if (indiviParam->indiviFgmAll->indiviFgmNum > GRMACHINE2_FGM_COUNTER_NUM) {
-        __assert("grmachine2.c", 49,
+        __assert("grmachine2.c", GRMACHINE2_ASSERT_FGM_COUNT_LINE,
                  "indiviParam->indiviFgmAll->indiviFgmNum <= GrMachine2_FgmCounterNum");
     }
 
@@ -136,12 +133,12 @@ void kar_grmachine2_update_individual_fgm_timers(HSD_GObj* gobj)
                                              GRMACHINE2_FGM_COUNTER_NUM);
 }
 
-void fn_8010EC0C(void)
+void kar_grmachine2_empty_callback(void)
 {
 }
 
-GroundCallback lbl_804A7720[] = {
-    fn_8010EC0C,
+GroundCallback kar_grmachine2_empty_callback_table[] = {
+    kar_grmachine2_empty_callback,
     NULL,
     NULL,
     NULL,

@@ -1,4 +1,7 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
+#include "dolphin/si.h"
 
 typedef s64 OSTime;
 typedef struct OSContext OSContext;
@@ -9,21 +12,11 @@ typedef struct OSAlarm
 } OSAlarm;
 
 typedef void (*OSAlarmHandler)(OSAlarm* alarm, OSContext* context);
-typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
-typedef void (*SITransferCallback)(s32 chan, u32 status, OSContext* context);
-typedef void (*SIGetTypeCallback)(s32 chan, u32 type);
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern OSTime __OSGetSystemTime(void);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 extern void OSCancelAlarm(OSAlarm* alarm);
-extern void OSRegisterVersion(char* version);
 extern void OSReport(char* fmt, ...);
-extern u16 OSGetWirelessID(s32 chan);
-extern void OSSetWirelessID(s32 chan, u16 id);
 extern u32 VIGetCurrentLine(void);
 extern s32 VIGetTvFormat(void);
 
@@ -123,11 +116,6 @@ void fn_803E96CC(OSAlarm* alarm, OSContext* context);
 static void GetTypeCallback(s32 chan, u32 status, OSContext* context);
 BOOL SIEnablePollingInterrupt(BOOL enable);
 BOOL SIGetResponseRaw(s32 chan);
-u32 SIGetStatus(s32 chan);
-BOOL SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback,
-                OSTime retryDelay);
-s32 SIGetType(s32 chan);
-void SISetSamplingRate(u32 rate);
 
 BOOL SIBusy(void)
 {
@@ -463,7 +451,7 @@ void SISetCommand(s32 chan, u32 cmd)
     __SIRegs[chan * 3] = cmd;
 }
 
-void fn_803E93B0(void)
+void SITransferCommands(void)
 {
     SISR = 0x80000000;
 }

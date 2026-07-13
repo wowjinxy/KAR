@@ -1,65 +1,53 @@
 #include <sysdolphin/fog.h>
 
+#include <dolphin/gx/gx.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/gobjproc.h>
 
-extern HSD_ClassInfo hsdObj;
-extern HSD_Fog* lbl_805DE2E8; // current fog
+extern HSD_Fog* FogCurrent;
 
-extern char kar_srcfile_fog_c_805dccc0[6]; // "fog.c"
-extern char lbl_805DCCC8[4];               // "fog"
-extern char lbl_805DCCD0[4];               // "adj"
-extern char lbl_805DCCD4[8];               // "hsd_fog"
+extern char FogSourceFile[6]; // "fog.c"
+extern char FogAssertFog[4];  // "fog"
+extern char FogAssertAdj[4];  // "adj"
+extern char FogClassName[8];  // "hsd_fog"
 
-extern GXColor lbl_805DCCCC;
-extern GXColor lbl_805E6380;
+extern GXColor FogDefaultColor;
+extern GXColor FogZeroColor;
 
-extern char lbl_805042EC[30]; // "You must specify CObj first.\n"
+extern char FogMissingCObjMessage[30]; // "You must specify CObj first.\n"
 
-extern char lbl_80504364[0x24]; // "sysdolphin_base_library"
+extern char FogClassStringBlock[0x24]; // "sysdolphin_base_library"
 
-extern f32 lbl_805E5D10; // 0.0F
-extern f32 lbl_805E5D14; // 640.0F
-extern f32 lbl_805E5D18; // 0.5F
-extern f32 lbl_805E5D1C; // -1.0F
-extern f32 lbl_805E5D20; // 1.0F
-extern f32 lbl_805E5D30; // 255.0F
-
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
-extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
-                             HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
-
-extern void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz,
-                    GXColor color);
-extern void GXSetFogRangeAdj(u32 enable, u16 center, void* table);
-extern void fn_803D09F0(f32* vp);           // GXGetViewportv
-extern void fn_803D06DC(f32* ptr);          // GXGetProjectionv
-extern void fn_803CF558(void* table, u16 width, Mtx44Ptr projmtx); // GXInitFogAdjTable
+extern f32 FogFloatZero;     // 0.0F
+extern f32 FogViewportWidth; // 640.0F
+extern f32 FogHalf;          // 0.5F
+extern f32 FogNegOne;        // -1.0F
+extern f32 FogFloatOne;      // 1.0F
+extern f32 FogColorScale;    // 255.0F
 
 typedef struct {
     u16 r[10];
 } GXFogAdjTable;
 
 #define assert_line_named(line, cond, condstr)                               \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_fog_c_805dccc0, line, condstr))
+    ((cond) ? ((void) 0) : __assert(FogSourceFile, line, condstr))
 
 void FogInfoInit(void);
 void FogAdjInfoInit(void);
 
-HSD_FogInfo lbl_80504270 = { FogInfoInit };
-HSD_FogAdjInfo lbl_805042B0 = { FogAdjInfoInit };
+HSD_FogInfo hsdFog = { FogInfoInit };
+HSD_FogAdjInfo hsdFogAdj = { FogAdjInfoInit };
 
 void kar_fog_set_current_and_apply(HSD_Fog* fog)
 {
-    lbl_805DE2E8 = fog;
+    FogCurrent = fog;
     HSD_FogSet(fog);
 }
 
 HSD_Fog* kar_fog_get_current(void)
 {
-    return lbl_805DE2E8;
+    return FogCurrent;
 }
 
 void HSD_FogSet(HSD_Fog* fog)
@@ -67,20 +55,21 @@ void HSD_FogSet(HSD_Fog* fog)
     HSD_CObj* cobj;
     HSD_FogAdj* fog_adj;
     u32 flags;
+    GXFogAdjTable tbl;
     f32 v[6];
     s32 range;
     s32 width;
     Mtx44Ptr mtx;
-    GXFogAdjTable tbl;
 
     if (fog == NULL) {
-        GXSetFog(0, lbl_805E5D10, lbl_805E5D10, lbl_805E5D10, lbl_805E5D10, lbl_805E6380);
+        GXSetFog(0, FogFloatZero, FogFloatZero, FogFloatZero, FogFloatZero,
+                 FogZeroColor);
         return;
     }
 
     cobj = HSD_CObjGetCurrent();
     if (cobj == NULL) {
-        HSD_Panic(kar_srcfile_fog_c_805dccc0, 0x8B, lbl_805042EC);
+        HSD_Panic(FogSourceFile, 0x8B, FogMissingCObjMessage);
     }
 
     GXSetFog(fog->type, fog->start, fog->end * fog->end_scale,
@@ -93,13 +82,13 @@ void HSD_FogSet(HSD_Fog* fog)
         return;
     }
 
-    fn_803D09F0(v);
+    GXGetViewportv(v);
 
     if (flags & 1) {
         s32 center = (fog_adj != NULL) ? fog_adj->center : -1;
-        range = v[0] + v[2] * (center + 320) / lbl_805E5D14;
+        range = v[0] + v[2] * (center + 320) / FogViewportWidth;
     } else {
-        range = v[0] + v[2] * lbl_805E5D18;
+        range = v[0] + v[2] * FogHalf;
     }
 
     if (flags & 2) {
@@ -118,7 +107,7 @@ void HSD_FogSet(HSD_Fog* fog)
         } proj;
 
         memset(local_mtx, 0, sizeof(Mtx44));
-        fn_803D06DC((f32*) &proj);
+        GXGetProjectionv((f32*) &proj);
         switch ((s32) proj.x0) {
         case 0:
             local_mtx[0][0] = proj.v[0];
@@ -127,7 +116,7 @@ void HSD_FogSet(HSD_Fog* fog)
             local_mtx[1][2] = proj.v[3];
             local_mtx[2][2] = proj.v[4];
             local_mtx[2][3] = proj.v[5];
-            local_mtx[3][2] = lbl_805E5D1C;
+            local_mtx[3][2] = FogNegOne;
             break;
         default:
             local_mtx[0][0] = proj.v[0];
@@ -136,27 +125,27 @@ void HSD_FogSet(HSD_Fog* fog)
             local_mtx[1][3] = proj.v[3];
             local_mtx[2][2] = proj.v[4];
             local_mtx[2][3] = proj.v[5];
-            local_mtx[3][3] = lbl_805E5D20;
+            local_mtx[3][3] = FogFloatOne;
             break;
         }
         mtx = local_mtx;
     }
 
-    fn_803CF558(&tbl, (u16) width, mtx);
+    GXInitFogAdjTable(&tbl, (u16) width, mtx);
     GXSetFogRangeAdj(1, (u16) range, &tbl);
 }
 
 static inline HSD_Fog* HSD_FogAlloc(void)
 {
-    HSD_Fog* fog = hsdNew(HSD_CLASS_INFO(&lbl_80504270));
-    assert_line_named(0xD4, fog, lbl_805DCCC8);
+    HSD_Fog* fog = hsdNew(HSD_CLASS_INFO(&hsdFog));
+    assert_line_named(0xD4, fog, FogAssertFog);
     return fog;
 }
 
 HSD_Fog* HSD_FogLoadDesc(HSD_FogDesc* desc)
 {
     HSD_Fog* fog = HSD_FogAlloc();
-    assert_line_named(0xE1, fog, lbl_805DCCC8);
+    assert_line_named(0xE1, fog, FogAssertFog);
     HSD_FogInit(fog, desc);
     if (desc->fogadjdesc != NULL) {
         fog->fog_adj = HSD_FogAdjLoadDesc(desc->fogadjdesc);
@@ -174,7 +163,7 @@ void HSD_FogInit(HSD_Fog* fog, HSD_FogDesc* desc)
             fog->color = desc->color;
         } else {
             f32 v[6];
-            fn_803D09F0(v);
+            GXGetViewportv(v);
             fog->type = 2; // GX_FOG_LIN
             fog->start = v[4];
             fog->end = v[5];
@@ -183,7 +172,7 @@ void HSD_FogInit(HSD_Fog* fog, HSD_FogDesc* desc)
             fog->color.b = 0xFF;
             fog->color.a = 0xFF;
         }
-        fog->end_scale = lbl_805E5D20;
+        fog->end_scale = FogFloatOne;
     }
 }
 
@@ -192,20 +181,20 @@ GXColor HSD_FogGetColor(HSD_Fog* fog)
     if (fog != NULL) {
         return fog->color;
     }
-    return lbl_805DCCCC;
+    return FogDefaultColor;
 }
 
 static inline HSD_FogAdj* HSD_FogAdjAlloc(void)
 {
-    HSD_FogAdj* adj = hsdNew(HSD_CLASS_INFO(&lbl_805042B0));
-    assert_line_named(0x12D, adj, lbl_805DCCD0);
+    HSD_FogAdj* adj = hsdNew(HSD_CLASS_INFO(&hsdFogAdj));
+    assert_line_named(0x12D, adj, FogAssertAdj);
     return adj;
 }
 
 HSD_FogAdj* HSD_FogAdjLoadDesc(HSD_FogAdjDesc* desc)
 {
     HSD_FogAdj* adj = HSD_FogAdjAlloc();
-    assert_line_named(0x13D, adj, lbl_805DCCD0);
+    assert_line_named(0x13D, adj, FogAssertAdj);
     HSD_FogAdjInit(adj, desc);
     return adj;
 }
@@ -235,7 +224,7 @@ u32 HSD_FogAdjGetFlags(HSD_FogAdj* fog_adj)
     return 0;
 }
 
-void fn_8041B620(HSD_Fog* fog, u32 type, HSD_ObjData* val)
+void FogUpdateFunc(HSD_Fog* fog, u32 type, HSD_ObjData* val)
 {
     if (fog != NULL) {
         switch (type) {
@@ -247,50 +236,50 @@ void fn_8041B620(HSD_Fog* fog, u32 type, HSD_ObjData* val)
             break;
         case 5: {
             f32 v;
-            if (val->fv <= lbl_805E5D10) {
-                v = lbl_805E5D10;
-            } else if (val->fv >= lbl_805E5D20) {
-                v = lbl_805E5D20;
+            if (val->fv <= FogFloatZero) {
+                v = FogFloatZero;
+            } else if (val->fv >= FogFloatOne) {
+                v = FogFloatOne;
             } else {
                 v = val->fv;
             }
-            fog->color.r = (u8) (lbl_805E5D30 * v);
+            fog->color.r = (u8) (FogColorScale * v);
             break;
         }
         case 6: {
             f32 v;
-            if (val->fv <= lbl_805E5D10) {
-                v = lbl_805E5D10;
-            } else if (val->fv >= lbl_805E5D20) {
-                v = lbl_805E5D20;
+            if (val->fv <= FogFloatZero) {
+                v = FogFloatZero;
+            } else if (val->fv >= FogFloatOne) {
+                v = FogFloatOne;
             } else {
                 v = val->fv;
             }
-            fog->color.g = (u8) (lbl_805E5D30 * v);
+            fog->color.g = (u8) (FogColorScale * v);
             break;
         }
         case 7: {
             f32 v;
-            if (val->fv <= lbl_805E5D10) {
-                v = lbl_805E5D10;
-            } else if (val->fv >= lbl_805E5D20) {
-                v = lbl_805E5D20;
+            if (val->fv <= FogFloatZero) {
+                v = FogFloatZero;
+            } else if (val->fv >= FogFloatOne) {
+                v = FogFloatOne;
             } else {
                 v = val->fv;
             }
-            fog->color.b = (u8) (lbl_805E5D30 * v);
+            fog->color.b = (u8) (FogColorScale * v);
             break;
         }
         case 8: {
             f32 v;
-            if (val->fv <= lbl_805E5D10) {
-                v = lbl_805E5D10;
-            } else if (val->fv >= lbl_805E5D20) {
-                v = lbl_805E5D20;
+            if (val->fv <= FogFloatZero) {
+                v = FogFloatZero;
+            } else if (val->fv >= FogFloatOne) {
+                v = FogFloatOne;
             } else {
                 v = val->fv;
             }
-            fog->color.a = (u8) (lbl_805E5D30 * v);
+            fog->color.a = (u8) (FogColorScale * v);
             break;
         }
         case 20: {
@@ -346,21 +335,21 @@ void FogRelease(HSD_Fog* fog)
         }
     }
     HSD_AObjRemove(fog->aobj);
-    HSD_OBJECT_PARENT_INFO(&lbl_80504270)->release((HSD_Class*) fog);
+    HSD_OBJECT_PARENT_INFO(&hsdFog)->release((HSD_Class*) fog);
 }
 
 void FogInfoInit(void)
 {
-    hsdInitClassInfo(HSD_CLASS_INFO(&lbl_80504270), &hsdObj, lbl_80504364,
-                     lbl_805DCCD4, sizeof(HSD_FogInfo), sizeof(HSD_Fog));
-    HSD_CLASS_INFO(&lbl_80504270)->release = (void*) FogRelease;
-    lbl_80504270.update = fn_8041B620;
+    hsdInitClassInfo(HSD_CLASS_INFO(&hsdFog), &hsdObj, FogClassStringBlock,
+                     FogClassName, sizeof(HSD_FogInfo), sizeof(HSD_Fog));
+    HSD_CLASS_INFO(&hsdFog)->release = (void*) FogRelease;
+    hsdFog.update = FogUpdateFunc;
 }
 
 void FogAdjInfoInit(void)
 {
-    hsdInitClassInfo((HSD_ClassInfo*) ((char*) &lbl_80504270 + 0x40), &hsdObj,
-                     (char*) &lbl_80504270 + 0xF4,
-                     (char*) &lbl_80504270 + 0x10C, sizeof(HSD_FogAdjInfo),
+    hsdInitClassInfo((HSD_ClassInfo*) ((char*) &hsdFog + 0x40), &hsdObj,
+                     (char*) &hsdFog + 0xF4,
+                     (char*) &hsdFog + 0x10C, sizeof(HSD_FogAdjInfo),
                      sizeof(HSD_FogAdj));
 }

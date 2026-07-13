@@ -1,23 +1,19 @@
 #include <global.h>
 
+#include <dolphin/os.h>
+#include <kar/math.h>
+#include <sysdolphin/constants.h>
 #include <sysdolphin/mtx.h>
 #include <sysdolphin/object.h>
 #include <sysdolphin/particle.h>
+#include <sysdolphin/psinterpret.h>
+#include <sysdolphin/pslist.h>
+#include <sysdolphin/random.h>
 
 extern void memset(void*, int, int);
 extern f32 sqrtf(f32);
-extern f64 __frsqrte(f64 x);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
 extern f32 tanf(f32);
-extern f64 fn_803BD3C8(f64, f64);
-extern f32 lbl_805DC8B8[]; /* epsilon */
-extern f32 HSD_Randf(void);
-extern HSD_JObj* HSD_JObjAlloc(void);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
-extern void OSPanic(const char*, s32, const char*, ...);
 
-extern HSD_Particle* _psListGetFirst(s32 linkNo);
-extern void _psListDelete(HSD_Particle* pp, HSD_Particle* prev);
 extern void psRemoveParticleAppSRT(HSD_Particle* pp);
 extern s32 kar_psdisp__near_80437ddc(HSD_Particle* pp, HSD_psAppSRT* srt);
 extern s32 kar_psdisp__near_80437e18(HSD_Generator* gen, HSD_psAppSRT* srt);
@@ -29,10 +25,6 @@ extern void kar_psdisp__near_80438190(void);
 extern HSD_Particle* kar_psdisp__near_80438238(HSD_Particle** head,
                                                s32 linkNo, s32 bank, u32 kind,
                                                u16 texGroup);
-extern u16 kar_psinterpret__near_80430270(void);
-extern void kar_psinterpret__near_8043051c(void);
-extern void kar_psinterpret__near_80430394(s16 linkNo);
-
 extern HSD_Particle* hsd_804D0908[0x20];
 extern void hsd_8039D048(HSD_Particle* pp);
 extern HSD_ObjAllocData hsdParticle_alloc_data;
@@ -858,14 +850,14 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
     dx = gen->vel.x + vx;
     dy = gen->vel.y + vy;
 
-    if (__fabsf(dz) < lbl_805DC8B8[0]) {
+    if (__fabsf(dz) < HSD_FloatMin[0]) {
         if (dy >= 0.0F) {
             azimuth = 1.5707964F;
         } else {
             azimuth = -1.5707964F;
         }
     } else {
-        azimuth = (f32) fn_803BD3C8(dy, dz);
+        azimuth = (f32) kar_atan2(dy, dz);
     }
 
     sin1 = kar_particle__near_8042c338(azimuth);
@@ -873,14 +865,14 @@ void kar_particle__near_8042bc40(f32 angle, f32 vx, f32 vy, f32 vz,
 
     dy = dy * sin1 + dz * cos1;
 
-    if (__fabsf(dy) < lbl_805DC8B8[0]) {
+    if (__fabsf(dy) < HSD_FloatMin[0]) {
         if (dx >= 0.0F) {
             azimuth = 1.5707964F;
         } else {
             azimuth = -1.5707964F;
         }
     } else {
-        azimuth = (f32) fn_803BD3C8(dx, dy);
+        azimuth = (f32) kar_atan2(dx, dy);
     }
 
     sin2 = kar_particle__near_8042c338(azimuth);
@@ -1054,14 +1046,14 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
     vx = pp->vel.x;
     vy = pp->vel.y;
 
-    if (__fabsf(vz) < lbl_805DC8B8[0]) {
+    if (__fabsf(vz) < HSD_FloatMin[0]) {
         if (vy >= 0.0F) {
             azimuth = 1.5707964F;
         } else {
             azimuth = -1.5707964F;
         }
     } else {
-        azimuth = (f32) fn_803BD3C8(vy, vz);
+        azimuth = (f32) kar_atan2(vy, vz);
     }
 
     sin1 = kar_particle__near_8042c338(azimuth);
@@ -1069,14 +1061,14 @@ void kar_particle__near_8042c784(f32 angle, HSD_Particle* pp)
 
     ny = vy * sin1 + vz * cos1;
 
-    if (__fabsf(ny) < lbl_805DC8B8[0]) {
+    if (__fabsf(ny) < HSD_FloatMin[0]) {
         if (vx >= 0.0F) {
             azimuth = 1.5707964F;
         } else {
             azimuth = -1.5707964F;
         }
     } else {
-        azimuth = (f32) fn_803BD3C8(vx, ny);
+        azimuth = (f32) kar_atan2(vx, ny);
     }
 
     sin2 = kar_particle__near_8042c338(azimuth);

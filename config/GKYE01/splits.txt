@@ -1388,7 +1388,7 @@ util.c:
 objalloc.c:
 	.text       start:0x80417E94 end:0x8041838C
 	.rodata     start:0x8048C548 end:0x8048C570
-	.data       start:0x80504028 end:0x80504500
+	.data       start:0x80504028 end:0x805041C8
 	.bss        start:0x805899B0 end:0x8058BE80
 	.sdata      start:0x805DCD00 end:0x805DCD40
 	.sbss       start:0x805DE2D0 end:0x805DE2F8
@@ -1403,6 +1403,10 @@ id.c:
 
 wobj.c:
 	.text       start:0x8041A7F8 end:0x8041B0D0
+	.data       start:0x805041C8 end:0x80504270
+
+hsd/base/objalloc_data_tail.s:
+	.data       start:0x80504270 end:0x80504500
 
 fog.c:
 	.text       start:0x8041B0D0 end:0x8041B9C4

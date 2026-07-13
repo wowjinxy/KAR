@@ -1,4 +1,6 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef s16 __OSInterrupt;
@@ -30,14 +32,9 @@ typedef struct EXIControl
     } queue[3];
 } EXIControl;
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern OSTime OSGetTime(void);
 extern void __OSMaskInterrupts(u32 mask);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);
 extern __OSInterruptHandler __OSGetInterruptHandler(__OSInterrupt interrupt);
-extern void OSRegisterVersion(char* version);
 extern u32 __OSGetDIConfig(void);
 extern u32 OSGetConsoleType(void);
 extern void OSClearContext(OSContext* context);
@@ -45,7 +42,7 @@ extern void OSSetCurrentContext(OSContext* context);
 extern void* memmove(void* dst, const void* src, u32 n);
 extern BOOL __OSInIPL;
 
-extern const char lbl_804FCD90[];
+extern const char __EXIVersionString[];
 
 #define REG_MAX 5
 #define REG(chan, idx) (__EXIRegs[((chan) * REG_MAX) + (idx)])
@@ -79,15 +76,15 @@ void __OSEnableBarnacle(s32 chan, u32 dev);
 
 static EXIControl Ecb[3];
 
-u32 lbl_805DE07C;
-u32 lbl_805DE078;
-u32 lbl_805DE074;
-s32 lbl_805DE070;
-u32 gap_10_805DE06C_sbss;
+u32 __EXIProbeBarnacleMagic;
+u32 __EXIUartStatus;
+u32 __EXIUartDevice;
+s32 __EXIUartChannel;
+u32 __EXISbssPadding;
 static u32 IDSerialPort1;
 
-char* __EXIVersion = (char*)lbl_804FCD90;
-vu32 gap_09_805DCA14_sdata = 0;
+char* __EXIVersion = (char*)__EXIVersionString;
+vu32 __EXISdataPadding = 0;
 
 static void SetExiInterruptMask(s32 chan, EXIControl* exi)
 {
@@ -881,7 +878,7 @@ s32 EXIGetID(s32 chan, u32 dev, u32* id)
 }
 
 #pragma dont_inline on
-s32 fn_803EB940(s32 chan, u32 dev, u32* type)
+s32 EXIGetType(s32 chan, u32 dev, u32* type)
 {
     u32 _type;
     s32 probe;
@@ -1018,9 +1015,9 @@ void __OSEnableBarnacle(s32 chan, u32 dev)
     default:
         if (ProbeBarnacle(chan, dev, &id))
         {
-            lbl_805DE070 = chan;
-            lbl_805DE074 = dev;
-            lbl_805DE078 = lbl_805DE07C = 0xA5FF005A;
+            __EXIUartChannel = chan;
+            __EXIUartDevice = dev;
+            __EXIUartStatus = __EXIProbeBarnacleMagic = 0xA5FF005A;
             break;
         }
     }
@@ -1031,20 +1028,20 @@ void __OSEnableBarnacle(s32 chan, u32 dev)
 #pragma scheduling on
 int InitializeUART(void)
 {
-    if (lbl_805DE07C == 0xA5FF005A)
+    if (__EXIProbeBarnacleMagic == 0xA5FF005A)
     {
         return 0;
     }
 
     if ((OSGetConsoleType() & 0x10000000) == 0)
     {
-        lbl_805DE078 = 0;
+        __EXIUartStatus = 0;
         return 2;
     }
 
-    lbl_805DE070 = 0;
-    lbl_805DE074 = 1;
-    lbl_805DE078 = 0xA5FF005A;
+    __EXIUartChannel = 0;
+    __EXIUartDevice = 1;
+    __EXIUartStatus = 0xA5FF005A;
     return 0;
 }
 #pragma scheduling reset
@@ -1054,17 +1051,17 @@ static inline int QueueLength(void)
 {
     u32 cmd;
 
-    if (EXISelect(lbl_805DE070, lbl_805DE074, 3) == 0)
+    if (EXISelect(__EXIUartChannel, __EXIUartDevice, 3) == 0)
     {
         return -1;
     }
 
     cmd = 0x20010000;
-    EXIImm(lbl_805DE070, &cmd, sizeof(cmd), EXI_WRITE, 0);
-    EXISync(lbl_805DE070);
-    EXIImm(lbl_805DE070, &cmd, 1, EXI_READ, 0);
-    EXISync(lbl_805DE070);
-    EXIDeselect(lbl_805DE070);
+    EXIImm(__EXIUartChannel, &cmd, sizeof(cmd), EXI_WRITE, 0);
+    EXISync(__EXIUartChannel);
+    EXIImm(__EXIUartChannel, &cmd, 1, EXI_READ, 0);
+    EXISync(__EXIUartChannel);
+    EXIDeselect(__EXIUartChannel);
     return 0x10 - (cmd >> 0x18);
 }
 
@@ -1079,13 +1076,13 @@ int WriteUARTN(void* buf, u32 len)
     int locked;
     int error;
 
-    if ((lbl_805DE078 - 0xA5FF0000) != 0x5A)
+    if ((__EXIUartStatus - 0xA5FF0000) != 0x5A)
     {
         return 2;
     }
 
     enabled = OSDisableInterrupts();
-    locked = EXILock(lbl_805DE070, lbl_805DE074, 0);
+    locked = EXILock(__EXIUartChannel, __EXIUartDevice, 0);
     if (locked == 0)
     {
         OSRestoreInterrupts(enabled);
@@ -1118,14 +1115,14 @@ int WriteUARTN(void* buf, u32 len)
 
         if ((qLen >= 0xC) || (qLen >= len))
         {
-            if (EXISelect(lbl_805DE070, lbl_805DE074, EXI_FREQ_8M) == 0)
+            if (EXISelect(__EXIUartChannel, __EXIUartDevice, EXI_FREQ_8M) == 0)
             {
                 error = 3;
                 break;
             }
 
-            EXIImm(lbl_805DE070, &cmd, sizeof(cmd), EXI_WRITE, 0);
-            EXISync(lbl_805DE070);
+            EXIImm(__EXIUartChannel, &cmd, sizeof(cmd), EXI_WRITE, 0);
+            EXISync(__EXIUartChannel);
 
             while ((qLen != 0) && (len != 0))
             {
@@ -1136,17 +1133,17 @@ int WriteUARTN(void* buf, u32 len)
 
                 xLen = len < 4 ? (long)len : 4;
 
-                EXIImm(lbl_805DE070, buf, xLen, EXI_WRITE, 0);
+                EXIImm(__EXIUartChannel, buf, xLen, EXI_WRITE, 0);
                 (char*)buf += xLen;
                 len -= xLen;
                 qLen -= xLen;
-                EXISync(lbl_805DE070);
+                EXISync(__EXIUartChannel);
             }
-            EXIDeselect(lbl_805DE070);
+            EXIDeselect(__EXIUartChannel);
         }
     }
 
-    EXIUnlock(lbl_805DE070);
+    EXIUnlock(__EXIUartChannel);
     OSRestoreInterrupts(enabled);
     return error;
 }

@@ -1,63 +1,44 @@
 #include <global.h>
+#include <dolphin/mtx/mtx.h>
+#include <dolphin/mtx/vec.h>
+#include <kar/math.h>
+#include <sysdolphin/constants.h>
+#include <sysdolphin/float_epsilon.h>
 #include <sysdolphin/mtx.h>
 
-extern HSD_ObjAllocData lbl_8058BBB8; /* Vec alloc data */
-extern HSD_ObjAllocData lbl_8058BBE4; /* Mtx alloc data */
+extern HSD_ObjAllocData HSD_VecAllocData; /* Vec alloc data */
+extern HSD_ObjAllocData HSD_MtxAllocData; /* Mtx alloc data */
 
-extern char kar_srcfile_mtx_c_805dcc40[6]; /* "mtx.c" */
-extern char lbl_805DCC48[4];               /* "vec" */
-extern char lbl_805DCC4C[4];                /* "mtx" */
+extern char MtxSourceFile[6]; /* "mtx.c" */
+extern char MtxAssertVec[4];               /* "vec" */
+extern char MtxAssertMtx[4];                /* "mtx" */
 #define assert_line_named(line, cond, condstr) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_mtx_c_805dcc40, line, condstr))
+    ((cond) ? ((void) 0) : __assert(MtxSourceFile, line, condstr))
 
-extern f64 lbl_805E5C30; /* EPSILON */
-extern f32 lbl_805E5C38; /* 1.0F */
-extern f32 lbl_805E5C3C; /* 0.0F */
-extern f64 lbl_805E5C40; /* 0.5 */
-extern f64 lbl_805E5C48; /* 3.0 */
-extern f32 lbl_805E5C50; /* PI/2 */
-extern f32 lbl_805E5C54; /* -1.0F */
-extern f32 lbl_805E5C58; /* -PI/2 */
-extern f64 lbl_805E5C60; /* PI/2 */
-extern f64 lbl_805E5C68; /* 2*PI */
-extern f64 lbl_805E5C70; /* PI */
-extern f32 lbl_805E5C78; /* sin c1 */
-extern f32 lbl_805E5C7C; /* sin c2 */
-extern f32 lbl_805E5C80; /* sin c3 */
-extern f32 lbl_805E5C84; /* cos c0 */
-extern f32 lbl_805E5C88; /* cos c1 */
-extern f32 lbl_805E5C8C; /* cos c2 */
-extern f32 lbl_805E5C90; /* cos c3 */
-extern f64 lbl_805E5C98; /* PI/4 */
-extern f32 lbl_805E5CA0; /* EPSILON (f32) */
-extern f64 lbl_805E5CA8; /* 0.0 */
-extern f64 lbl_805E5CB0; /* -1.0 */
+extern f64 HSDMtxDoubleEps; /* EPSILON */
+extern f32 HSDMtxFloatOne; /* 1.0F */
+extern f32 HSDMtxFloatZero; /* 0.0F */
+extern f64 HSDMtxDoubleHalf; /* 0.5 */
+extern f64 HSDMtxDoubleThree; /* 3.0 */
+extern f32 HSDMtxFloatPiOver2; /* PI/2 */
+extern f32 HSDMtxFloatNegOne; /* -1.0F */
+extern f32 HSDMtxFloatNegPiOver2; /* -PI/2 */
+extern f64 HSDMtxDoublePiOver2; /* PI/2 */
+extern f64 HSDMtxDoubleTwoPi; /* 2*PI */
+extern f64 HSDMtxDoublePi; /* PI */
+extern f32 HSDMtxSinC1; /* sin c1 */
+extern f32 HSDMtxSinC2; /* sin c2 */
+extern f32 HSDMtxSinC3; /* sin c3 */
+extern f32 HSDMtxCosC0; /* cos c0 */
+extern f32 HSDMtxCosC1; /* cos c1 */
+extern f32 HSDMtxCosC2; /* cos c2 */
+extern f32 HSDMtxCosC3; /* cos c3 */
+extern f64 HSDMtxDoublePiOver4; /* PI/4 */
+extern f32 HSDMtxFloatEps; /* EPSILON (f32) */
+extern f64 HSDMtxDoubleZero; /* 0.0 */
+extern f64 HSDMtxDoubleNegOne; /* -1.0 */
 
-extern f32 lbl_805DC8B8[]; /* FLOAT_MIN */
-extern f32 lbl_805DC8C0[]; /* FLT_EPSILON */
-
-extern void kar_fl_indirectload__803d13fc(Mtx dest); /* PSMTXIdentity */
-extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void fn_803D19AC(Mtx m, f32 xs, f32 ys, f32 zs); /* PSMTXScale */
-extern void fn_803D19D4(Mtx m, Quaternion* q);          /* PSMTXQuat */
-
-extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern f32 PSVECMag(Vec* v);
-extern f32 PSVECSquareMag(Vec* v);
-
-extern f64 fn_803BD3A8(f64 x);      /* asin */
-extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
-
-extern f64 __frsqrte(f64 x);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fnmsubs(f32 a, f32 c, f32 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b); /* = a*c+b */
-extern f32 __fmsubs(f32 a, f32 c, f32 b); /* = a*c-b */
 
 f32 kar_math_mtx_cosf_approx(f32 x);
 f32 kar_math_mtx_sinf_approx(f32 x);
@@ -66,11 +47,11 @@ static inline f32 mtx_sqrtf(f32 x)
 {
     volatile f32 y;
 
-    if (x > lbl_805E5C3C) {
+    if (x > HSDMtxFloatZero) {
         f64 guess = __frsqrte((f64) x);
-        guess = lbl_805E5C40 * guess * __fnmsub(x, guess * guess, lbl_805E5C48);
-        guess = lbl_805E5C40 * guess * __fnmsub(x, guess * guess, lbl_805E5C48);
-        guess = lbl_805E5C40 * guess * __fnmsub(x, guess * guess, lbl_805E5C48);
+        guess = HSDMtxDoubleHalf * guess * __fnmsub(x, guess * guess, HSDMtxDoubleThree);
+        guess = HSDMtxDoubleHalf * guess * __fnmsub(x, guess * guess, HSDMtxDoubleThree);
+        guess = HSDMtxDoubleHalf * guess * __fnmsub(x, guess * guess, HSDMtxDoubleThree);
         y = (f32) (x * guess);
         return y;
     }
@@ -79,18 +60,18 @@ static inline f32 mtx_sqrtf(f32 x)
 
 static inline f32 mtx_calcVal(f32 x, f32 y)
 {
-    if (lbl_805E5C3C == x) {
-        return y >= lbl_805E5C3C ? lbl_805E5C50 : lbl_805E5C58;
+    if (HSDMtxFloatZero == x) {
+        return y >= HSDMtxFloatZero ? HSDMtxFloatPiOver2 : HSDMtxFloatNegPiOver2;
     }
-    return (f32) fn_803BD3C8(y, x);
+    return (f32) kar_atan2(y, x);
 }
 
 static inline f32 mtx_safe_recip(f32 x)
 {
-    if (x >= lbl_805E5C3C) {
-        return lbl_805E5C38 / (x + lbl_805DC8C0[0]);
+    if (x >= HSDMtxFloatZero) {
+        return HSDMtxFloatOne / (x + HSD_FloatEpsilon[0]);
     }
-    return lbl_805E5C38 / (x - lbl_805DC8C0[0]);
+    return HSDMtxFloatOne / (x - HSD_FloatEpsilon[0]);
 }
 
 static inline f32 HSD_CalcDeterminantMatrix3x4(Mtx m)
@@ -110,8 +91,8 @@ void HSD_MtxInverse(Mtx src, Mtx dest)
     MtxPtr m;
     f32 det = HSD_CalcDeterminantMatrix3x4(src);
 
-    if (__fabs(det) < lbl_805E5C30) {
-        kar_fl_indirectload__803d13fc(dest);
+    if (__fabs(det) < HSDMtxDoubleEps) {
+        PSMTXIdentity(dest);
         return;
     }
 
@@ -122,7 +103,7 @@ void HSD_MtxInverse(Mtx src, Mtx dest)
         m = src;
     }
 
-    det = lbl_805E5C38 / det;
+    det = HSDMtxFloatOne / det;
 
     {
         f32 t;
@@ -172,7 +153,7 @@ BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
 
     det = HSD_CalcDeterminantMatrix3x4(inv);
 
-    if (__fabs(det) < lbl_805E5C30) {
+    if (__fabs(det) < HSDMtxDoubleEps) {
         if (src != dest) {
             PSMTXCopy(src, dest);
         }
@@ -180,7 +161,7 @@ BOOL HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest)
     } else {
         f32 t, v;
 
-        det = lbl_805E5C38 / det;
+        det = HSDMtxFloatOne / det;
         new_var = inv[1][1];
 
         t = inv[2][1] * inv[1][2];
@@ -262,25 +243,25 @@ void HSD_MtxGetRotation(Mtx m, Vec* vec)
     f32 val_01;
 
     length0 = mtx_sqrtf(m[0][0] * m[0][0] + m[1][0] * m[1][0] + m[2][0] * m[2][0]);
-    if (!(length0 < lbl_805DC8B8[0])) {
+    if (!(length0 < HSD_FloatMin[0])) {
         length1 = mtx_sqrtf(m[0][1] * m[0][1] + m[1][1] * m[1][1] + m[2][1] * m[2][1]);
-        if (!(length1 < lbl_805DC8B8[0])) {
+        if (!(length1 < HSD_FloatMin[0])) {
             length2 = mtx_sqrtf(m[0][2] * m[0][2] + m[1][2] * m[1][2] + m[2][2] * m[2][2]);
-            if (!(length2 < lbl_805DC8B8[0])) {
+            if (!(length2 < HSD_FloatMin[0])) {
                 testVal_1 = -m[2][0];
                 testVal_1 /= length0;
 
-                if (testVal_1 >= lbl_805E5C38) {
-                    val_01 = lbl_805E5C50;
-                } else if (testVal_1 <= lbl_805E5C54) {
-                    val_01 = lbl_805E5C58;
+                if (testVal_1 >= HSDMtxFloatOne) {
+                    val_01 = HSDMtxFloatPiOver2;
+                } else if (testVal_1 <= HSDMtxFloatNegOne) {
+                    val_01 = HSDMtxFloatNegPiOver2;
                 } else {
-                    val_01 = (f32) fn_803BD3A8(testVal_1);
+                    val_01 = (f32) kar_asin(testVal_1);
                 }
 
                 vec->y = val_01;
 
-                if (kar_math_mtx_cosf_approx(vec->y) >= lbl_805DC8B8[0]) {
+                if (kar_math_mtx_cosf_approx(vec->y) >= HSD_FloatMin[0]) {
                     f32 testVal_3_pre = m[2][1] / length1;
                     f32 testVal_2_pre = m[2][2] / length2;
 
@@ -290,14 +271,14 @@ void HSD_MtxGetRotation(Mtx m, Vec* vec)
                 }
 
                 vec->x = mtx_calcVal(m[1][1], m[0][1]);
-                vec->z = lbl_805E5C3C;
+                vec->z = HSDMtxFloatZero;
                 return;
             }
         }
     }
 
     {
-        f32 zero = lbl_805E5C3C;
+        f32 zero = HSDMtxFloatZero;
         vec->x = zero;
         vec->y = zero;
         vec->z = zero;
@@ -308,51 +289,51 @@ static inline f32 kar_math_mtx_poly(f32 y)
 {
     f32 z;
 
-    if (y <= lbl_805E5C98) {
+    if (y <= HSDMtxDoublePiOver4) {
         z = y * y;
         return y *
-               (lbl_805E5C38 -
-                z * __fnmsubs(z, __fnmsubs(lbl_805E5C80, z, lbl_805E5C7C),
-                              lbl_805E5C78));
+               (HSDMtxFloatOne -
+                z * __fnmsubs(z, __fnmsubs(HSDMtxSinC3, z, HSDMtxSinC2),
+                              HSDMtxSinC1));
     }
-    z = (f32) (lbl_805E5C60 - (f64) y);
+    z = (f32) (HSDMtxDoublePiOver2 - (f64) y);
     z = z * z;
-    return lbl_805E5C84 -
-           z * __fnmsubs(z, __fnmsubs(lbl_805E5C90, z, lbl_805E5C8C),
-                         lbl_805E5C88);
+    return HSDMtxCosC0 -
+           z * __fnmsubs(z, __fnmsubs(HSDMtxCosC3, z, HSDMtxCosC2),
+                         HSDMtxCosC1);
 }
 
 static inline f32 kar_math_mtx_half(f32 y)
 {
-    if (y <= lbl_805E5C60) {
+    if (y <= HSDMtxDoublePiOver2) {
         return kar_math_mtx_poly(y);
     }
-    return kar_math_mtx_poly((f32) (lbl_805E5C70 - (f64) y));
+    return kar_math_mtx_poly((f32) (HSDMtxDoublePi - (f64) y));
 }
 
 static inline f32 kar_math_mtx_sin_reduce(f32 y)
 {
-    while (y > lbl_805E5C68) {
-        y = (f32) (y - lbl_805E5C68);
+    while (y > HSDMtxDoubleTwoPi) {
+        y = (f32) (y - HSDMtxDoubleTwoPi);
     }
-    if (y <= lbl_805E5C70) {
+    if (y <= HSDMtxDoublePi) {
         return kar_math_mtx_half(y);
     }
-    return -kar_math_mtx_half((f32) (y - lbl_805E5C70));
+    return -kar_math_mtx_half((f32) (y - HSDMtxDoublePi));
 }
 
 f32 kar_math_mtx_cosf_approx(f32 x)
 {
     f32 y;
 
-    if (x != lbl_805E5C3C) {
-        y = (f32) ((f64) x + lbl_805E5C60);
-        if (y < lbl_805E5C3C) {
+    if (x != HSDMtxFloatZero) {
+        y = (f32) ((f64) x + HSDMtxDoublePiOver2);
+        if (y < HSDMtxFloatZero) {
             return -kar_math_mtx_sin_reduce(-y);
         }
         return kar_math_mtx_sin_reduce(y);
     }
-    return lbl_805E5C38;
+    return HSDMtxFloatOne;
 }
 
 void HSD_MtxGetRotationMtx(Mtx v0, Mtx dest, char axis0, char axis1)
@@ -440,7 +421,7 @@ void HSD_MtxGetRotationMtx(Mtx v0, Mtx dest, char axis0, char axis1)
         break;
     }
 
-    zero = lbl_805E5C3C;
+    zero = HSDMtxFloatZero;
     dest[0][0] = vAxis0.x;
     dest[1][0] = vAxis0.y;
     dest[2][0] = vAxis0.z;
@@ -475,9 +456,9 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
     vec1.z = arg0[2][0];
 
     sq1 = PSVECSquareMag(&vec1);
-    if (sq1 > lbl_805E5CA0) {
-        f32 invMag = mtx_sqrtf(lbl_805E5C38 / sq1);
-        arg1->x = lbl_805E5C38 / invMag;
+    if (sq1 > HSDMtxFloatEps) {
+        f32 invMag = mtx_sqrtf(HSDMtxFloatOne / sq1);
+        arg1->x = HSDMtxFloatOne / invMag;
         PSVECScale(invMag, &vec1, &vec1);
 
         vec2.x = arg0[0][1];
@@ -488,9 +469,9 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
         PSVECSubtract(&vec2, &vec4, &vec2);
 
         sq2 = PSVECSquareMag(&vec2);
-        if (sq2 > lbl_805E5CA0) {
-            f32 invMag2 = mtx_sqrtf(lbl_805E5C38 / sq2);
-            arg1->y = lbl_805E5C38 / invMag2;
+        if (sq2 > HSDMtxFloatEps) {
+            f32 invMag2 = mtx_sqrtf(HSDMtxFloatOne / sq2);
+            arg1->y = HSDMtxFloatOne / invMag2;
             PSVECScale(invMag2, &vec2, &vec2);
 
             vec3.x = arg0[0][2];
@@ -503,21 +484,21 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             PSVECSubtract(&vec3, &vec4, &vec3);
 
             sq3 = PSVECSquareMag(&vec3);
-            if (sq3 > lbl_805E5CA0) {
+            if (sq3 > HSDMtxFloatEps) {
                 arg1->z = mtx_sqrtf(sq3);
 
                 PSVECCrossProduct(&vec2, &vec3, &vec4);
-                if (PSVECDotProduct(&vec1, &vec4) < lbl_805E5CA8) {
+                if (PSVECDotProduct(&vec1, &vec4) < HSDMtxDoubleZero) {
                     f64 neg;
-                    arg1->x = (f32) (arg1->x * (neg = lbl_805E5CB0));
+                    arg1->x = (f32) (arg1->x * (neg = HSDMtxDoubleNegOne));
                     arg1->y = (f32) (arg1->y * neg);
                     arg1->z = (f32) (arg1->z * neg);
                 }
             } else {
-                arg1->z = lbl_805E5C3C;
+                arg1->z = HSDMtxFloatZero;
             }
         } else {
-            arg1->y = lbl_805E5C3C;
+            arg1->y = HSDMtxFloatZero;
 
             vec3.x = arg0[0][2];
             vec3.y = arg0[1][2];
@@ -527,23 +508,23 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             PSVECSubtract(&vec3, &vec4, &vec3);
 
             sq3 = PSVECSquareMag(&vec3);
-            if (sq3 > lbl_805E5CA0) {
+            if (sq3 > HSDMtxFloatEps) {
                 arg1->z = mtx_sqrtf(sq3);
             } else {
-                arg1->z = lbl_805E5C3C;
+                arg1->z = HSDMtxFloatZero;
             }
         }
     } else {
-        arg1->x = lbl_805E5C3C;
+        arg1->x = HSDMtxFloatZero;
 
         vec2.x = arg0[0][1];
         vec2.y = arg0[1][1];
         vec2.z = arg0[2][1];
 
         sq2 = PSVECSquareMag(&vec2);
-        if (sq2 > lbl_805E5CA0) {
-            f32 invMag2 = mtx_sqrtf(lbl_805E5C38 / sq2);
-            arg1->y = lbl_805E5C38 / invMag2;
+        if (sq2 > HSDMtxFloatEps) {
+            f32 invMag2 = mtx_sqrtf(HSDMtxFloatOne / sq2);
+            arg1->y = HSDMtxFloatOne / invMag2;
             PSVECScale(invMag2, &vec2, &vec2);
 
             vec3.x = arg0[0][2];
@@ -554,7 +535,7 @@ void HSD_MtxGetScale(Mtx arg0, Vec* arg1)
             PSVECSubtract(&vec3, &vec4, &vec3);
             arg1->z = PSVECMag(&vec3);
         } else {
-            arg1->y = lbl_805E5C3C;
+            arg1->y = HSDMtxFloatZero;
 
             vec3.x = arg0[0][2];
             vec3.y = arg0[1][2];
@@ -586,7 +567,7 @@ void HSD_MkRotationMtx(Mtx arg0, Vec* arg1)
     {
         f32 zero;
         temp1 = sinX * sinY;
-        zero = lbl_805E5C3C;
+        zero = HSDMtxFloatZero;
         arg0[0][0] = cosY * cosZ;
         arg0[1][0] = cosY * sinZ;
         arg0[2][0] = -sinY;
@@ -605,13 +586,13 @@ void HSD_MkRotationMtx(Mtx arg0, Vec* arg1)
 
 f32 kar_math_mtx_sinf_approx(f32 x)
 {
-    if (x != lbl_805E5C3C) {
-        if (x < lbl_805E5C3C) {
+    if (x != HSDMtxFloatZero) {
+        if (x < HSDMtxFloatZero) {
             return -kar_math_mtx_sin_reduce(-x);
         }
         return kar_math_mtx_sin_reduce(x);
     }
-    return lbl_805E5C3C;
+    return HSDMtxFloatZero;
 }
 
 void HSD_MtxSRT(Mtx m, Vec* vec1, Vec* vec2, Vec* vec3, Vec* vec4)
@@ -668,8 +649,8 @@ void HSD_MtxSRTQuat(Mtx arg0, Vec* arg1, Quaternion* arg2, Vec* arg3, Vec* arg4)
 {
     Mtx temp;
 
-    fn_803D19AC(arg0, arg1->x, arg1->y, arg1->z);
-    fn_803D19D4(temp, arg2);
+    PSMTXScale(arg0, arg1->x, arg1->y, arg1->z);
+    PSMTXQuat(temp, arg2);
 
     if (arg4 != NULL) {
         f32 rx = mtx_safe_recip(arg4->x);
@@ -719,26 +700,26 @@ void HSD_VecGetOrthogonal(Vec* v, Vec* out)
 
     if (v->x <= v->y) {
         if (v->x <= v->z) {
-            e.y = lbl_805E5C3C;
-            e.x = lbl_805E5C38;
-            e.z = lbl_805E5C3C;
+            e.y = HSDMtxFloatZero;
+            e.x = HSDMtxFloatOne;
+            e.z = HSDMtxFloatZero;
             PSVECCrossProduct(&e, v, out);
         } else {
-            e.x = lbl_805E5C3C;
-            e.y = lbl_805E5C3C;
-            e.z = lbl_805E5C38;
+            e.x = HSDMtxFloatZero;
+            e.y = HSDMtxFloatZero;
+            e.z = HSDMtxFloatOne;
             PSVECCrossProduct(&e, v, out);
         }
     } else {
         if (v->y <= v->z) {
-            e.x = lbl_805E5C3C;
-            e.y = lbl_805E5C38;
-            e.z = lbl_805E5C3C;
+            e.x = HSDMtxFloatZero;
+            e.y = HSDMtxFloatOne;
+            e.z = HSDMtxFloatZero;
             PSVECCrossProduct(&e, v, out);
         } else {
-            e.x = lbl_805E5C3C;
-            e.y = lbl_805E5C3C;
-            e.z = lbl_805E5C38;
+            e.x = HSDMtxFloatZero;
+            e.y = HSDMtxFloatZero;
+            e.z = HSDMtxFloatOne;
             PSVECCrossProduct(&e, v, out);
         }
     }
@@ -746,15 +727,15 @@ void HSD_VecGetOrthogonal(Vec* v, Vec* out)
 
 Vec* HSD_VecAlloc(void)
 {
-    Vec* vec = HSD_ObjAlloc(&lbl_8058BBB8);
-    assert_line_named(0x3CF, vec, lbl_805DCC48);
+    Vec* vec = HSD_ObjAlloc(&HSD_VecAllocData);
+    assert_line_named(0x3CF, vec, MtxAssertVec);
     return vec;
 }
 
 void HSD_VecFree(Vec* arg0)
 {
     if (arg0 != NULL) {
-        HSD_ObjFree(&lbl_8058BBB8, arg0);
+        HSD_ObjFree(&HSD_VecAllocData, arg0);
     }
 }
 
@@ -762,34 +743,34 @@ void* HSD_MtxAlloc(void)
 {
     void* mtx;
 
-    mtx = HSD_ObjAlloc(&lbl_8058BBE4);
-    assert_line_named(0x3EE, mtx, lbl_805DCC4C);
+    mtx = HSD_ObjAlloc(&HSD_MtxAllocData);
+    assert_line_named(0x3EE, mtx, MtxAssertMtx);
     return mtx;
 }
 
 void HSD_MtxFree(void* arg0)
 {
     if (arg0 != NULL) {
-        HSD_ObjFree(&lbl_8058BBE4, arg0);
+        HSD_ObjFree(&HSD_MtxAllocData, arg0);
     }
 }
 
 HSD_ObjAllocData* HSD_VecGetAllocData(void)
 {
-    return &lbl_8058BBB8;
+    return &HSD_VecAllocData;
 }
 
 void HSD_VecInitAllocData(void)
 {
-    HSD_ObjAllocInit(&lbl_8058BBB8, 0xC, 4);
+    HSD_ObjAllocInit(&HSD_VecAllocData, 0xC, 4);
 }
 
 HSD_ObjAllocData* HSD_MtxGetAllocData(void)
 {
-    return &lbl_8058BBE4;
+    return &HSD_MtxAllocData;
 }
 
 void HSD_MtxInitAllocData(void)
 {
-    HSD_ObjAllocInit(&lbl_8058BBE4, 0x30, 4);
+    HSD_ObjAllocInit(&HSD_MtxAllocData, 0x30, 4);
 }
