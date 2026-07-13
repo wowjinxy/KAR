@@ -4,6 +4,7 @@
 #include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdiag.h>
+#include <kar/gm/gmmain.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/shadow.h>
@@ -106,7 +107,6 @@ extern u8 HSD_PadState[];
 extern const f32 lbl_805DE7A8;
 
 void* memset(void* dst, int val, unsigned long n);
-void* kar_gmmain__near_80006c14(void);
 s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
 f32 kar_gmracenormal__8000a370(s32 arg0);

@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmmain.h>
 #include <kar/gm/gmracenormal.h>
 #include <kar/lb/lbhvqm.h>
 #include <kar/lb/lbvector.h>
@@ -143,7 +144,6 @@ const f32 lbl_805DE968 = 0.0f;
 const f32 lbl_805DE96C = 1.0f;
 
 void* memset(void* dst, int val, unsigned long n);
-void* kar_gmmain__near_80006c14(void);
 void kar_gmlanmenu__near_80051aa4(void);
 void kar_gmlanmenu__near_80051f98(void);
 void kar_gmlanmenu__near_80051ff8(void);

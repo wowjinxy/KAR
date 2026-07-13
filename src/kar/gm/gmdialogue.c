@@ -24,7 +24,6 @@ char kar_src_gmdialoguesub_80497280[] = "gmdialoguesub.c";
 char lbl_805D51B0[] = "0";
 char lbl_805D51B8[] = "0";
 
-void* kar_gmmain__near_80006c14(void);
 void kar_gmviconfigure__near_8004f5e0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
 void fn_80018A04(void);

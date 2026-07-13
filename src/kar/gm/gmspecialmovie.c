@@ -84,7 +84,6 @@ const f32 lbl_805DE904 = 640.0f;
 const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
 extern u8 HSD_PadCopyStatus[];
-void* kar_gmmain__near_80006c14(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));
 void fn_80078604(void);
 void fn_80078620(void);

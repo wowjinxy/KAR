@@ -9,7 +9,6 @@
 #include "kar/pl/plclearcheckerlib.h"
 #include "kar/shadow.h"
 
-extern GmMainData *kar_gmmain__near_80006c14(void);
 extern u8 kar_mnclearchecker_get_main_state_or_assert_operating(void);
 extern void kar_mnclearchecker_create_screen_and_sis_resources(u8 arg0,
                                                                u8 arg1);
