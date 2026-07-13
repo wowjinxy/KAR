@@ -396,8 +396,10 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "class.c",
     "cobj.c",
     "controller.c",
+    "devcom.c",
     "displayfunc.c",
     "dobj.c",
+    "dvdsche.c",
     "fobj.c",
     "fog.c",
     "gobjobject.c",
@@ -458,6 +460,7 @@ DOLDECOMP_SYSDOLPHIN_ASSET_OBJECTS = {
     "hsd/particle/pslist_data_tail.s",
     "hsd/base/sislib_romfont_glyphs.s",
     "hsd/base/sislib_data_tail.s",
+    "hsd/base/objalloc_data_tail.s",
 }
 
 TOP_RIDE_OBJECTS = {
@@ -716,9 +719,10 @@ kar_objects = [
     Object(NonMatching, "mtx.c"),
     Object(Matching, "util.c"),
     Object(NonMatching, "objalloc.c"),
+    Object(NonMatching, "hsd/base/objalloc_data_tail.s"),
     Object(NonMatching, "robj.c"),
     Object(Matching, "id.c"),
-    Object(NonMatching, "wobj.c"),
+    Object(Matching, "wobj.c"),
     Object(NonMatching, "fog.c"),
     Object(NonMatching, "perf.c"),
     Object(Matching, "list.c"),

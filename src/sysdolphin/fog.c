@@ -55,11 +55,11 @@ void HSD_FogSet(HSD_Fog* fog)
     HSD_CObj* cobj;
     HSD_FogAdj* fog_adj;
     u32 flags;
+    GXFogAdjTable tbl;
     f32 v[6];
     s32 range;
     s32 width;
     Mtx44Ptr mtx;
-    GXFogAdjTable tbl;
 
     if (fog == NULL) {
         GXSetFog(0, FogFloatZero, FogFloatZero, FogFloatZero, FogFloatZero,

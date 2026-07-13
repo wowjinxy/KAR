@@ -276,6 +276,8 @@ void HSD_TObjReqAnimAllByFlags(HSD_TObj* tobj, f32 startframe, u32 flags)
     }
 }
 
+char lbl_80501EBC[] = "tobj->imagetbl";
+
 void TObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
 {
     HSD_TObj* tobj = obj;
@@ -287,7 +289,7 @@ void TObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
     switch (type) {
     case HSD_A_T_TIMG: {
         int n;
-        TOBJ_ASSERT(0x155, tobj->imagetbl, "tobj->imagetbl");
+        TOBJ_ASSERT(0x155, tobj->imagetbl, lbl_80501EBC);
         n = (int) val->fv;
         if (tobj->imagetbl[n]) {
             tobj->imagedesc = tobj->imagetbl[n];
@@ -532,6 +534,8 @@ u32 HSD_TexMapID2PTTexMtx(u32 id)
     return 0;
 }
 
+char lbl_80501F68[] = "tobj->repeat_s && tobj->repeat_t";
+
 void MakeTextureMtx(HSD_TObj* tobj)
 {
     Vec scale;
@@ -539,13 +543,12 @@ void MakeTextureMtx(HSD_TObj* tobj)
     Vec trans;
     Quaternion rot;
 
-    TOBJ_ASSERT(0x2A6, tobj->repeat_s && tobj->repeat_t,
-               "tobj->repeat_s && tobj->repeat_t");
+    TOBJ_ASSERT(0x2A6, tobj->repeat_s && tobj->repeat_t, lbl_80501F68);
 
-    scale.x = __fabsf(tobj->scale.x) < TObjFloatEpsilon
+    scale.x = (f32) __fabs(tobj->scale.x) < TObjFloatEpsilon
                   ? TObjFloatZero
                   : (f32) tobj->repeat_s / tobj->scale.x;
-    scale.y = __fabsf(tobj->scale.y) < TObjFloatEpsilon
+    scale.y = (f32) __fabs(tobj->scale.y) < TObjFloatEpsilon
                   ? TObjFloatZero
                   : (f32) tobj->repeat_t / tobj->scale.y;
     scale.z = tobj->scale.z;

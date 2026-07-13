@@ -513,7 +513,6 @@ static inline void setup_diffuse_lightobj(HSD_LObj* lobj)
     GXInitLightColor(&lobj->lightobj, lobj->color);
     lobj->hw_color = lobj->color;
     lobj->flags |= LOBJ_DIFF_DIRTY;
-    LObjLightMaskDiffuse |= lobj->id;
 
     switch (HSD_LObjGetType(lobj)) {
     case LOBJ_SPOT:
@@ -524,6 +523,10 @@ static inline void setup_diffuse_lightobj(HSD_LObj* lobj)
         break;
     default:
         assert_line(664, 0);
+    }
+
+    if (lobj->flags & LOBJ_DIFFUSE) {
+        LObjLightMaskDiffuse |= lobj->id;
     }
 
     if (lobj->flags & LOBJ_ALPHA) {
@@ -566,7 +569,7 @@ static inline void setup_spec_lightobj(HSD_LObj* lobj, Mtx mtx, GXLightID spec_i
 void HSD_LObjSetupInit(HSD_CObj* cobj)
 {
     MtxPtr vmtx;
-    s32 idx, num, i;
+    s32 i, num, idx;
     HSD_SList* list;
 
     LObjLightMaskDiffuse = GX_LIGHT_NULL;

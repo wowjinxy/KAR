@@ -95,13 +95,13 @@ typedef struct _SisCamWObjDesc {
     struct _SisCamWObjDesc* next;
 } SisCamWObjDesc;
 
-static SisCamWObjDesc HSD_SisLib_camera_eye_desc = {
+SisCamWObjDesc lbl_80509678 = {
     NULL,
     { 0.0F, 0.0F, 300.0F },
     NULL,
 };
 
-static SisCamWObjDesc HSD_SisLib_camera_interest_desc = {
+SisCamWObjDesc lbl_8050968C = {
     NULL,
     { 0.0F, 0.0F, 0.0F },
     NULL,
@@ -129,14 +129,14 @@ typedef struct _SisCamDesc {
     f32 aspect;
 } SisCamDesc;
 
-static SisCamDesc HSD_SisLib_camera_desc = {
+SisCamDesc lbl_805096A0 = {
     NULL,
     0,
     PROJ_ORTHO,
     0, 0x280, 0, 0x1E0,
     0, 0x280, 0, 0x1E0,
-    (HSD_WObjDesc*) &HSD_SisLib_camera_eye_desc,
-    (HSD_WObjDesc*) &HSD_SisLib_camera_interest_desc,
+    (HSD_WObjDesc*) &lbl_80509678,
+    (HSD_WObjDesc*) &lbl_8050968C,
     0.0F,
     NULL,
     0.1F,
@@ -144,15 +144,18 @@ static SisCamDesc HSD_SisLib_camera_desc = {
     30.0F, 1.3333F,
 };
 
+s32 lbl_805DE570[2];
 sislib_UnkAlloc3* lbl_805DE56C;
 HSD_Text* lbl_805DE568;
-SisBlock* used_head;
-SisBlock* free_head;
+SisBlock* lbl_805DE564;
+SisBlock* lbl_805DE560;
 SisBlock* HSD_SisLib_804D796C;
 u32 HSD_SisLib_804D7968;
 
 HSD_Archive* lbl_8059A848[5];
 SIS* lbl_8059A85C[5];
+
+char lbl_805DD1A8[] = "";
 
 static inline u8* HSD_SisLib_BytePtr(void* ptr)
 {
@@ -170,11 +173,11 @@ void* HSD_SisLib_Alloc(s32 size)
 
     best = NULL;
     alloc_tail = NULL;
-    free_cur = free_head;
-    alloc_cur = used_head;
+    free_cur = lbl_805DE560;
+    alloc_cur = lbl_805DE564;
     if (size == 0) {
         OSReport("ZERO byte alloc\n");
-        OSPanic("sislib.c", 0x61, "");
+        OSPanic("sislib.c", 0x61, lbl_805DD1A8);
     }
     remainder = size % 4;
     if (remainder != 0) {
@@ -205,29 +208,29 @@ void* HSD_SisLib_Alloc(s32 size)
     }
     if (best == NULL) {
         OSReport("Memory Empty\n");
-        OSPanic("sislib.c", 0x7B, "");
+        OSPanic("sislib.c", 0x7B, lbl_805DD1A8);
     }
 
-    search = free_head;
+    search = lbl_805DE560;
 
     if (search == best) {
         int remaining_size;
         u8* data_ptr;
         SisBlock* next_free;
 
-        data_ptr = (u8*) free_head->data;
-        next_free = free_head->next;
+        data_ptr = (u8*) lbl_805DE560->data;
+        next_free = lbl_805DE560->next;
         remaining_size = size;
-        remaining_size = (free_head->size - remaining_size) - (sizeof(SisBlock));
+        remaining_size = (lbl_805DE560->size - remaining_size) - (sizeof(SisBlock));
         if (remaining_size < 0) {
             OSReport("Memory Empty\n");
-            OSPanic("sislib.c", 0x84, "");
+            OSPanic("sislib.c", 0x84, lbl_805DD1A8);
         }
 
-        free_head = (SisBlock*) (data_ptr + size);
-        free_head->next = next_free;
-        free_head->data = (HSD_Text*) (free_head + 1);
-        free_head->size = remaining_size;
+        lbl_805DE560 = (SisBlock*) (data_ptr + size);
+        lbl_805DE560->next = next_free;
+        lbl_805DE560->data = (HSD_Text*) (lbl_805DE560 + 1);
+        lbl_805DE560->size = remaining_size;
         best->size = size;
     } else {
         while (search->next != best) {
@@ -239,8 +242,8 @@ void* HSD_SisLib_Alloc(s32 size)
     if (alloc_tail != NULL) {
         alloc_tail->next = best;
     }
-    if (used_head == NULL) {
-        used_head = best;
+    if (lbl_805DE564 == NULL) {
+        lbl_805DE564 = best;
     }
     return best->data;
 }
@@ -252,9 +255,9 @@ void HSD_SisLib_Free(void* ptr)
     SisBlock* alloc_prev;
     SisBlock* alloc_cur;
 
-    free_cur = free_head;
+    free_cur = lbl_805DE560;
     free_tail = NULL;
-    alloc_cur = used_head;
+    alloc_cur = lbl_805DE564;
     alloc_prev = NULL;
     while (alloc_cur != NULL) {
         if (alloc_cur->data == ptr) {
@@ -276,12 +279,12 @@ void HSD_SisLib_Free(void* ptr)
         if (alloc_prev != NULL) {
             alloc_prev->next = alloc_cur->next;
         } else {
-            used_head = alloc_cur->next;
+            lbl_805DE564 = alloc_cur->next;
         }
-        free_head = alloc_cur;
+        lbl_805DE560 = alloc_cur;
         alloc_cur->next = old_next;
-        free_head->data = (HSD_Text*) (free_head + 1);
-        free_head->size = new_size;
+        lbl_805DE560->data = (HSD_Text*) (lbl_805DE560 + 1);
+        lbl_805DE560->size = new_size;
         return;
     }
     while (free_cur != NULL) {
@@ -294,7 +297,7 @@ void HSD_SisLib_Free(void* ptr)
     if (alloc_prev != NULL) {
         alloc_prev->next = alloc_cur->next;
     } else {
-        used_head = alloc_cur->next;
+        lbl_805DE564 = alloc_cur->next;
     }
     alloc_cur->next = NULL;
 }
@@ -494,11 +497,11 @@ void HSD_SisLib_803A6048(u32 size)
     int i;
 
     HSD_SisLib_804D7968 = size;
-    used_head = NULL;
-    free_head = HSD_SisLib_804D796C = HSD_Alloc(HSD_SisLib_804D7968);
-    free_head->next = NULL;
-    free_head->data = (HSD_Text*) (free_head + 1);
-    free_head->size = HSD_SisLib_804D7968 - 0xC;
+    lbl_805DE564 = NULL;
+    lbl_805DE560 = HSD_SisLib_804D796C = HSD_Alloc(HSD_SisLib_804D7968);
+    lbl_805DE560->next = NULL;
+    lbl_805DE560->data = (HSD_Text*) (lbl_805DE560 + 1);
+    lbl_805DE560->size = HSD_SisLib_804D7968 - 0xC;
     lbl_805DE568 = NULL;
     lbl_805DE56C = NULL;
 
@@ -558,7 +561,7 @@ s32 HSD_SisLib_803A611C(int font_idx, HSD_GObj* parent_gobj, u16 class_id,
     } else {
         entry->x4 = HSD_GObjCreate(class_id, p_link, p_prio);
         if (entry->x4 != NULL) {
-            HSD_CObj* cobj = HSD_CObjLoadDesc((HSD_CObjDesc*) &HSD_SisLib_camera_desc);
+            HSD_CObj* cobj = HSD_CObjLoadDesc((HSD_CObjDesc*) &lbl_805096A0);
             if (cobj != NULL) {
                 HSD_CObjSetOrtho(cobj, 0.0F, -480.0F, 0.0F, 640.0F);
                 HSD_GObjObjectLink(entry->x4, hsdGObj_default_object_kind, cobj);
@@ -582,7 +585,7 @@ void HSD_SisLib_803A62A0(s32 font_idx, char* archive_name, char* symbol_name)
     lbl_8059A848[font_idx] = tmp;
     if (tmp == NULL) {
         OSReport("Cannot open archive %s.\n", archive_name);
-        OSPanic("sislib.c", 0x26F, "");
+        OSPanic("sislib.c", 0x26F, lbl_805DD1A8);
     }
     {
         SIS* sis = HSD_ArchiveGetPublicAddress(lbl_8059A848[font_idx],
@@ -590,7 +593,7 @@ void HSD_SisLib_803A62A0(s32 font_idx, char* archive_name, char* symbol_name)
         lbl_8059A85C[font_idx] = sis;
         if (sis == NULL) {
             OSReport("Cannot find symbol %s.\n", symbol_name);
-            OSPanic("sislib.c", 0x274, "");
+            OSPanic("sislib.c", 0x274, lbl_805DD1A8);
         }
     }
 }
@@ -2406,4 +2409,673 @@ HSD_Archive* kar_sislib_load_archive_wrapper(char* path)
 void kar_sislib_release_archive_wrapper(HSD_Archive* archive)
 {
     kar_lbarchive__80059798(archive);
+}
+
+extern void kar_diagnostic__803d7e58(void* mutex); /* OSLockMutex */
+extern void kar_diagnostic__803d7f34(void* mutex);  /* OSUnlockMutex */
+
+extern s32 kar_gcpmemcard_calc_save_descriptor_size(void* save_desc);
+extern s32 kar_gcpmemcard_compare_generation8(void);
+
+s32 kar_memcard_mount_card_for_preload(s32 chan);
+s32 kar_memcard_check_card_for_preload(s32 chan);
+s32 kar_memcard_open_current_save_file(void);
+s32 kar_memcard_write_region0_tail_then_linear(s32 arg0);
+s32 kar_memcard_write_linear_region_payload(s32 arg0);
+s32 kar_memcard_write_mirror_region_payload(s32 arg0);
+s32 kar_memcard_write_remapped_region_payload(s32 arg0);
+s32 kar_memcard_resolve_sector2block_region(s32 arg0);
+s32 kar_memcard_close_current_save_file(s32 chan);
+s32 kar_memcard_reprobe_card_status(void);
+s32 kar_memcard_write_icon_sector_table(void);
+s32 kar_memcard_compare_region_payload(s32 arg0, s32* out_code);
+void kar_memcard_update_card_status(void);
+
+extern s32 CARDCheck(s32 chan);
+extern s32 CARDUnmount(s32 chan);
+extern s32 CARDOpen(s32 chan, const char* fileName, void* fileInfo);
+extern s32 CARDClose(void* fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, void* stat);
+extern s32 CARDFreeBlocks(s32 chan, s32* byteNotUsed, s32* filesNotUsed);
+extern s32 CARDGetResultCode(s32 chan);
+extern s32 kar_diagnostic__803e64ec(s32 chan, void* workArea, s32 unused); /* CARDMount */
+extern s32 kar_diagnostic__803e7a88(void* fileInfo, void* buf, s32 length, s32 offset); /* CARDRead */
+extern s32 kar_diagnostic__803e7e04(void* fileInfo, void* buf, s32 length, s32 offset); /* CARDWrite */
+extern s32 kar_diagnostic__803e84e0(s32 chan, s32 fileNo, void* stat); /* CARDSetStatus */
+extern s32 fn_803E6E18(s32 chan); /* CARDFormat */
+
+extern void kar_gcpmemcard_append_logf(const char* fmt, ...);
+extern char kar_debug_romfont_end_gcpmemcard_strings_80531e40[];
+
+s32 lbl_805DD1B0[2] = { 0, 0 };
+
+static inline s32 kar_memcard_translate_card_result(s32 result)
+{
+    s32 code;
+    switch (result) {
+    case -1: code = 0xB; break;
+    case -3: code = 0xE; break;
+    case -2: code = 0xF; break;
+    case -4: code = 0x6; break;
+    case 0: code = 0x0; break;
+    case -5: case -128: code = 0xD; break;
+    case -13: code = 0x9; break;
+    case -6: code = 0xA; break;
+    case -14: case 1: default: code = 0xC; break;
+    }
+    return code;
+}
+
+typedef struct MemCardRegionRec {
+    s32 unk0;
+    s32 mode;   //0x04 0=linear, 1=mirror, 2=remapped
+    s32 unk8;
+    s32 count;  //0x0C
+    s32 base_idx; //0x10
+    s32 status; //0x14
+    s32 unk18;
+    s32 dirty;  //0x1C
+    s32 unk20;
+} MemCardRegionRec; //0x24
+
+typedef struct MemCardSaveDesc {
+    u8 pad[0x24];
+    s32 region_count; //0x24
+    s32 unk28;
+} MemCardSaveDesc;
+
+typedef struct MemCardMountCtx {
+    u8 pad0[0x40];
+    char filename[0x20];           //0x40
+    MemCardRegionRec* region_table; //0x60
+    MemCardSaveDesc* save_desc;     //0x64
+} MemCardMountCtx;
+
+typedef struct MemCardFileInfo {
+    s32 chan;
+    s32 fileNo;
+    s32 offset;
+    s32 length;
+    u16 iBlock;
+} MemCardFileInfo;
+
+s32 lbl_8059A880[0x5D80];
+
+#define MC_BASE ((u8*) lbl_8059A880)
+#define MC_S32(off) (*(s32*) (MC_BASE + (off)))
+#define MC_PTR(off) (*(void**) (MC_BASE + (off)))
+
+s32 kar_sislib__near_80452790(void)
+{
+    return MC_S32(0x598);
+}
+
+void kar_memcard_mount_check_open_file(s32 chan)
+{
+    s32 result = kar_memcard_mount_card_for_preload(chan);
+    if ((result == 0) || (result == 0xA)) {
+        if (kar_memcard_check_card_for_preload(chan) == 0) {
+            kar_memcard_open_current_save_file();
+        }
+    }
+}
+
+void kar_memcard_mount_and_check_card(s32 chan)
+{
+    s32 result = kar_memcard_mount_card_for_preload(chan);
+    if ((result == 0) || (result == 0xA)) {
+        kar_memcard_check_card_for_preload(chan);
+    }
+}
+
+s32 kar_memcard_decode_icon_sector_header(u8* data, s32* arg1, s32* arg2, s32* arg3, s32* arg4,
+                                          s32* arg5)
+{
+    if (arg2 != NULL) {
+        *arg2 = (data[0] << 8) | data[1];
+    }
+    if (arg3 != NULL) {
+        *arg3 = data[2];
+    }
+    if (arg1 != NULL) {
+        *arg1 = data[3];
+    }
+    if (arg4 != NULL) {
+        *arg4 = (data[4] >> 6) & 3;
+    }
+    if (arg5 != NULL) {
+        *arg5 = data[4] & 0x3F;
+        *arg5 = (*arg5 << 8) | data[5];
+        *arg5 = (*arg5 << 8) | data[6];
+    }
+    return 1;
+}
+
+s32 kar_memcard_get_preload_block_size(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x608);
+}
+
+s32 kar_sislib__near_80453398(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x614);
+}
+
+s32 kar_sislib__near_804533c4(s32 chan)
+{
+    u8* base = MC_BASE;
+    if ((chan < 0) || (chan > 1)) {
+        chan = 0;
+    }
+    base = base + chan * 0x1C;
+    return *(s32*) (base + 0x600);
+}
+
+s32 kar_sislib__near_804533f0(void)
+{
+    s32 val;
+    void* mutex = MC_BASE + 0x5A0;
+
+    kar_diagnostic__803d7e58(mutex);
+    val = MC_S32(0x59C);
+    kar_diagnostic__803d7f34(mutex);
+    return val;
+}
+
+s32 kar_memcard_get_icon_preload_tail_bytes(void* save_desc, s32 divisor)
+{
+    return divisor - ((kar_gcpmemcard_calc_save_descriptor_size(save_desc) % divisor) + 0x20);
+}
+
+#pragma push
+#pragma dont_inline on
+s32 kar_memcard_clamp_icon_preload_length(s32* arg0, void* save_desc, s32 divisor)
+{
+    s32 val = *arg0;
+    s32 tail = kar_memcard_get_icon_preload_tail_bytes(save_desc, divisor);
+    if (val >= tail) {
+        val = tail;
+    }
+    return val;
+}
+#pragma pop
+
+void kar_memcard_refresh_linear_region_state(s32 arg0)
+{
+    u8* base;
+    MemCardMountCtx* ctx;
+    MemCardRegionRec* region_table;
+    MemCardSaveDesc* save_desc;
+    s32 chan;
+    s32 last_field;
+    MemCardRegionRec* rec;
+    s32 base_idx;
+    s32 i;
+    s32 idx;
+
+    base = MC_BASE;
+    ctx = MC_PTR(0x0);
+    chan = MC_S32(0x50C);
+    region_table = ctx->region_table;
+    save_desc = ctx->save_desc;
+    last_field = 0;
+
+    if (arg0 == 0) {
+        s32 region_count = save_desc->region_count;
+        if (*(s32*) (base + 0x9614 + (region_count - 1) * 4) == 0) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+        last_field = *(s32*) (base + 0x7624 + region_count * 4);
+    }
+
+    rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24);
+    base_idx = rec->base_idx;
+    for (i = 0; i < rec->count; i++) {
+        idx = i + base_idx;
+        if (((i > 0) || (arg0 == 0)) && (last_field != *(s32*) (base + 0x7628 + idx * 4))) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+        last_field = *(s32*) (base + 0x7628 + idx * 4);
+        if (*(s32*) (base + 0x9614 + idx * 4) == 0) {
+            rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+            rec->dirty = 2;
+            rec->status = 0;
+            return;
+        }
+    }
+    rec = (MemCardRegionRec*) ((u8*) region_table + arg0 * 0x24 + chan * 4);
+    rec->dirty = 0;
+    rec->status = last_field;
+}
+
+static s32 lbl_805E6280 = -1;
+static s32 lbl_805E6284 = -1;
+static s32 lbl_805E6288 = 1;
+static s32 lbl_805E628C = 1;
+
+s32 kar_memcard_resolve_mirror_region_side(s32 arg0)
+{
+    u8* base;
+    s32 status[2];
+    s32 flag[2];
+    MemCardMountCtx* ctx;
+    MemCardRegionRec* rec;
+    s32 side;
+    s32 i;
+    s32 idx;
+
+    base = MC_BASE;
+    ctx = MC_PTR(0x0);
+    rec = (MemCardRegionRec*) ((u8*) ctx->region_table + arg0 * 0x24);
+    status[0] = lbl_805E6280;
+    status[1] = lbl_805E6284;
+    flag[0] = lbl_805E6288;
+    flag[1] = lbl_805E628C;
+
+    for (side = 0; side < 2; side++) {
+        for (i = 0; i < rec->count; i++) {
+            idx = rec->base_idx + side * rec->count + i;
+            if (*(s32*) (base + 0x9614 + idx * 4) == 0) {
+                flag[side] = 0;
+                status[side] = -1;
+                break;
+            }
+            if ((i > 0) && (*(s32*) (base + 0x7628 + idx * 4) != status[side])) {
+                flag[side] = 0;
+                status[side] = -1;
+                break;
+            }
+            status[side] = *(s32*) (base + 0x7628 + idx * 4);
+        }
+    }
+
+    if ((flag[0] != 0) && (flag[1] != 0)) {
+        if (status[0] == status[1]) {
+            return 0;
+        }
+        {
+            s32 gen = kar_gcpmemcard_compare_generation8();
+            s32 t = (-gen) & ~gen;
+            return (t >> 31) + 2;
+        }
+    }
+    if ((flag[0] != 0) && (flag[1] == 0)) {
+        return 1;
+    }
+    if ((flag[0] == 0) && (flag[1] != 0)) {
+        return 2;
+    }
+    return -1;
+}
+
+s32 kar_memcard_mount_card_for_preload(s32 chan)
+{
+    s32 result;
+    s32 code;
+
+    lbl_805DD1B0[chan] += 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                lbl_805DD1B0[chan]);
+
+    result = kar_diagnostic__803e64ec(chan, (u8*) lbl_8059A880 + 0xD600, 0);
+    code = kar_memcard_translate_card_result(result);
+
+    if ((result != 0) && (result != -6)) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+s32 kar_memcard_check_card_for_preload(s32 chan)
+{
+    s32 code = kar_memcard_translate_card_result(CARDCheck(chan));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+s32 kar_memcard_open_current_save_file(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    MemCardMountCtx* ctx = *(MemCardMountCtx**) base;
+    s32 code;
+
+    code = kar_memcard_translate_card_result(CARDOpen(chan, ctx->filename, base + 0x518));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+
+    lbl_805DE570[0] += 1;
+    CARDGetStatus(chan, *(s32*) (base + 0x51C), base + 0x52C);
+    if ((*(u32*) (base + 0x564) == 0xFFFFFFFF) || (*(u32*) (base + 0x55C) == 0xFFFFFFFF)) {
+        if (kar_memcard_close_current_save_file(chan) == 0) {
+            lbl_805DD1B0[chan] -= 1;
+            kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                        lbl_805DD1B0[chan]);
+            CARDUnmount(chan);
+        }
+        return 5;
+    }
+    return code;
+}
+
+s32 kar_memcard_reprobe_card_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan_raw = *(s32*) (base + 0x50C);
+    s32 chan_clamped = chan_raw;
+    s32 status;
+    s32 code;
+
+    if ((chan_clamped < 0) || (chan_clamped > 1)) {
+        chan_clamped = 0;
+    }
+    status = *(s32*) (base + chan_clamped * 0x1C + 0x614);
+
+    if (status == 0xE) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return status;
+    }
+
+    lbl_805DD1B0[chan_raw] += 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                lbl_805DD1B0[chan_raw]);
+
+    code = kar_memcard_translate_card_result(kar_diagnostic__803e64ec(chan_raw, base + 0xD600, 0));
+    if (code == 9) {
+        code = 0xA;
+    }
+
+    if ((code != 0) && (code != 0xA)) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return code;
+    }
+
+    code = kar_memcard_translate_card_result(fn_803E6E18(chan_raw));
+
+    if (code != 0) {
+        lbl_805DD1B0[chan_raw] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                    lbl_805DD1B0[chan_raw]);
+        CARDUnmount(chan_raw);
+        return code;
+    }
+    lbl_805DD1B0[chan_raw] -= 1;
+    kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan_raw,
+                                lbl_805DD1B0[chan_raw]);
+    CARDUnmount(chan_raw);
+    return code;
+}
+
+s32 kar_memcard_write_linear_or_region0(s32 arg0)
+{
+    if (arg0 == 0) {
+        return kar_memcard_write_region0_tail_then_linear(arg0);
+    }
+    return kar_memcard_write_linear_region_payload(arg0);
+}
+
+#pragma push
+#pragma dont_inline on
+s32 kar_memcard_write_region_by_mode(s32 arg0)
+{
+    void* p = MC_PTR(0x0);
+    s32 mode;
+    p = *(void**) ((u8*) p + 0x60);
+    p = (u8*) p + arg0 * 0x24;
+    mode = *(s32*) ((u8*) p + 4);
+
+    if (mode != 1) {
+        goto check2;
+    }
+    return kar_memcard_write_mirror_region_payload(arg0);
+check2:
+    if (mode != 2) {
+        goto check3;
+    }
+    return kar_memcard_write_remapped_region_payload(arg0);
+check3:
+    if (mode == 0) {
+        return kar_memcard_write_linear_or_region0(arg0);
+    }
+    return 0;
+}
+#pragma pop
+
+s32 kar_memcard_repair_dirty_regions(void)
+{
+    MemCardMountCtx* ctx;
+    MemCardRegionRec* region_table;
+    MemCardSaveDesc* save_desc;
+    MemCardRegionRec* rec;
+    s32 code;
+    s32 result;
+    s32 i;
+
+    ctx = MC_PTR(0x0);
+    region_table = ctx->region_table;
+    save_desc = ctx->save_desc;
+
+    if (region_table == NULL) {
+        return 4;
+    }
+
+    if (save_desc->unk28 != 0) {
+        void* mutex = MC_BASE + 0x5A0;
+        kar_diagnostic__803d7e58(mutex);
+        MC_S32(0x59C) = 6;
+        kar_diagnostic__803d7f34(mutex);
+        result = kar_memcard_write_icon_sector_table();
+        if (result != 0) {
+            return result;
+        }
+        result = kar_memcard_write_region_by_mode(0);
+        if (result != 0) {
+            return result;
+        }
+        kar_memcard_update_card_status();
+        kar_memcard_refresh_linear_region_state(0);
+        save_desc->unk28 = 0;
+    }
+
+    rec = region_table;
+    {
+        s32 byte_off = 0;
+        for (i = 0; i < 0x10; i++, rec = (MemCardRegionRec*) ((u8*) rec + 0x24), byte_off += 0x24) {
+            if (rec->mode == 3) {
+                break;
+            }
+            if (rec->unk0 <= 0) {
+                continue;
+            }
+            result = kar_memcard_compare_region_payload(i, &code);
+            if (result != 0) {
+                goto compare_nonzero;
+            }
+            {
+                void* mutex = MC_BASE + 0x5A0;
+                kar_diagnostic__803d7e58(mutex);
+                MC_S32(0x59C) = 6;
+                kar_diagnostic__803d7f34(mutex);
+            }
+            code = kar_memcard_write_region_by_mode(i);
+            if (code != 0) {
+                return code;
+            }
+            switch (rec->mode) {
+            case 0:
+                kar_memcard_refresh_linear_region_state(i);
+                break;
+            case 2:
+                kar_memcard_resolve_sector2block_region(i);
+                break;
+            case 1: {
+                s32 chan = MC_S32(0x50C);
+                s32 flag = 0;
+                MemCardRegionRec* rt = ctx->region_table;
+                s32 side = kar_memcard_resolve_mirror_region_side(i);
+                if (side > 0) {
+                    flag = 1;
+                    side -= 1;
+                }
+                if (side < 0) {
+                    MemCardRegionRec* r = (MemCardRegionRec*) ((u8*) rt + byte_off + chan * 4);
+                    r->dirty = 2;
+                    r->status = 0;
+                } else {
+                    MemCardRegionRec* r = (MemCardRegionRec*) ((u8*) rt + byte_off);
+                    MemCardRegionRec* rc = (MemCardRegionRec*) ((u8*) r + chan * 4);
+                    if (flag) {
+                        rc->dirty = 3;
+                    } else {
+                        rc->dirty = 0;
+                    }
+                    rc->status = *(s32*) (MC_BASE + 0x7628 + (r->base_idx + side * r->count) * 4);
+                }
+                break;
+            }
+            }
+            continue;
+        compare_nonzero:
+            if (result == 1) {
+                continue;
+            }
+            return code;
+        }
+    }
+    return 0;
+}
+
+s32 kar_memcard_close_current_save_file(s32 chan)
+{
+    s32 result;
+    s32 code;
+
+    lbl_805DE570[0] -= 1;
+    result = CARDClose((u8*) lbl_8059A880 + 0x518);
+    code = kar_memcard_translate_card_result(result);
+
+    if (result != 0) {
+        lbl_805DD1B0[chan] -= 1;
+        kar_gcpmemcard_append_logf(kar_debug_romfont_end_gcpmemcard_strings_80531e40, chan,
+                                    lbl_805DD1B0[chan]);
+        CARDUnmount(chan);
+        return code;
+    }
+    return code;
+}
+
+extern char lbl_805322B0[];
+
+void kar_memcard_update_card_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    u8* save_desc = *(u8**) (*(u8**) base + 0x64);
+    s32 pos = 0;
+    s32 idx = 0;
+    s32 i;
+    u16 iconFormat;
+    u16 iconSpeed;
+    u8 speed;
+    u8* frame;
+    u32 mask;
+
+    CARDGetStatus(chan, *(s32*) (base + 0x51C), base + 0x52C);
+
+    *(u32*) (base + 0x55C) = 0x40;
+    *(u32*) (base + 0x564) = 0;
+
+    *(u8*) (base + 0x55A) = (*(u8*) (base + 0x55A) & ~3) | save_desc[0];
+    *(u8*) (base + 0x55A) = (*(u8*) (base + 0x55A) & ~4) | save_desc[1];
+
+    for (i = 0; i < 4; i++) {
+        frame = save_desc + idx;
+        mask = ~(3 << pos);
+        iconFormat = (*(u16*) (base + 0x560) & mask) | (frame[2] << pos);
+        *(u16*) (base + 0x560) = iconFormat;
+        speed = frame[0xA];
+        iconSpeed = (*(u16*) (base + 0x562) & mask) | (speed << pos);
+        *(u16*) (base + 0x562) = iconSpeed;
+        if (speed == 0) {
+            break;
+        }
+        idx += 1;
+        pos += 2;
+        frame = save_desc + idx;
+        mask = ~(3 << pos);
+        iconFormat = (iconFormat & mask) | (frame[2] << pos);
+        *(u16*) (base + 0x560) = iconFormat;
+        speed = frame[0xA];
+        iconSpeed = (iconSpeed & mask) | (speed << pos);
+        *(u16*) (base + 0x562) = iconSpeed;
+        if (speed == 0) {
+            break;
+        }
+        pos += 2;
+        idx += 1;
+    }
+
+    kar_gcpmemcard_append_logf(lbl_805322B0);
+    kar_diagnostic__803e84e0(chan, *(s32*) (base + 0x51C), base + 0x52C);
+}
+
+s32 kar_memcard_get_cached_or_reprobe_status(void)
+{
+    u8* base = MC_BASE;
+    s32 chan = *(s32*) (base + 0x50C);
+    s32 status;
+    s32* p;
+
+    base = base + chan * 0x1C;
+    status = *(s32*) (base + 0x614);
+
+    if (status == 0xA) {
+        goto do_reprobe;
+    }
+    p = (s32*) (base + 0x614);
+    if (status == 0) {
+        return 0x10;
+    }
+    return *p;
+do_reprobe:
+    return kar_memcard_reprobe_card_status();
 }

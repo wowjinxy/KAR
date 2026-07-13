@@ -31,7 +31,7 @@ void HSD_FObjRemoveAll(HSD_FObj* fobj)
 static inline u32 HSD_FObjSetState(HSD_FObj* fobj, u32 state)
 {
     if (fobj) {
-        fobj->flags = (state & 0xF) | (fobj->flags & 0xF0);
+        fobj->flags = (fobj->flags & 0xF0) | (state & 0xF);
     }
     return state;
 }

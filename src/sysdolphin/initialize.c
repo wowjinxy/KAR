@@ -62,6 +62,7 @@ s32 HSD_CacheInvalidateFlags;
 s32 HSD_CurrentRenderPass;
 s32 HSD_PixelFormat;
 
+extern char kar_src_objalloc_80503d18[];
 #define assert_line_objalloc(line, cond) \
     ((cond) ? (void) 0 : __assert("objalloc.h", line, "data"))
 
@@ -311,7 +312,7 @@ void HSD_SetNextArena(void* lo, void* hi)
 {
     assert_line_memcb(0x1ED);
 
-    if ((lo == NULL) != (hi == NULL)) {
+    if ((lo == NULL && hi != NULL) || (lo != NULL && hi == NULL)) {
         OSReport("missing argument.\n");
     } else {
         HSD_NextArenaLo = (u32) lo;
@@ -329,6 +330,8 @@ void HSD_GetNextArena(void** lo, void** hi)
         *hi = (void*) HSD_HeapHi;
     }
 }
+
+char lbl_80503CE4[] = "sysdolphin_base_library";
 
 void HSD_ClearHeap(void)
 {
@@ -405,6 +408,8 @@ void HSD_ObjInit(void)
     HSD_ShadowInitAllocData();
     HSD_ZListInitAllocData();
 }
+
+char kar_src_objalloc_80503d18[] = "objalloc.h";
 
 static inline u32 HSD_ObjAllocGetUsing(HSD_ObjAllocData* data)
 {

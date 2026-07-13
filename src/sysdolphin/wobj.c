@@ -5,14 +5,24 @@
 
 void WObjInfoInit(void);
 
+#if defined(VERSION_GKYE01)
 HSD_WObjInfo hsdWObj = { WObjInfoInit };
+char WObjAssertAObj[] = "wobj->aobj";
+char WObjAssertSpline[0x58] =
+    "jp->u.spline\0\0\0\0"
+    "hsdIsDescendantOf(info, &hsdWObj)\0\0\0"
+    "sysdolphin_base_library\0"
+    "had_wobj";
+#else
+extern HSD_WObjInfo hsdWObj;
+extern char WObjAssertAObj[];
+extern char WObjAssertSpline[];
+#endif
 extern HSD_WObjInfo* WObjCurrentInfo;
 
 extern char WObjSourceFile[7];     // "wobj.c"
 extern char WObjAssertWObj[5];     // "wobj"
 extern char WObjAssertJP[3];       // "jp"
-extern char WObjAssertAObj[];      // "wobj->aobj"
-extern char WObjAssertSpline[];    // "jp->u.spline"
 extern char WObjJObjHeaderFile[7]; // "jobj.h"
 extern char WObjAssertJObj[5];     // "jobj"
 #define assert_line_named(line, cond, condstr)                                 \
@@ -275,17 +285,40 @@ void WObjAmnesia(HSD_ClassInfo* info)
 }
 
 #pragma push
-#pragma force_active on
-static char unused[] = "hsdIsDescendantOf(info, &hsdWObj)";
-#pragma pop
-
-void WObjInfoInit(void)
+asm void WObjInfoInit(void)
 {
-    hsdInitClassInfo(HSD_CLASS_INFO(&hsdWObj), &hsdObj,
-        "sysdolphin_base_library", "had_wobj",
-        sizeof(HSD_WObjInfo), sizeof(HSD_WObj));
-    HSD_CLASS_INFO(&hsdWObj)->release = WObjRelease;
-    HSD_CLASS_INFO(&hsdWObj)->amnesia = WObjAmnesia;
-    hsdWObj.load = &WObjLoad;
-    hsdWObj.update = &WObjUpdateFunc;
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    lis r4, hsdWObj@ha
+    lis r3, hsdObj@ha
+    stw r0, 0x14(r1)
+    li r7, 0x44
+    li r8, 0x20
+    stw r31, 0xc(r1)
+    addi r31, r4, hsdWObj@l
+    addi r4, r3, hsdObj@l
+    addi r3, r31, 0
+    addi r5, r31, 0x84
+    addi r6, r31, 0x9c
+    bl hsdInitClassInfo
+    lis r6, WObjRelease@ha
+    lis r5, WObjAmnesia@ha
+    lis r4, WObjLoad@ha
+    lis r3, WObjUpdateFunc@ha
+    addi r7, r6, WObjRelease@l
+    addi r6, r31, 0
+    addi r5, r5, WObjAmnesia@l
+    addi r4, r4, WObjLoad@l
+    addi r0, r3, WObjUpdateFunc@l
+    stw r7, 0x30(r6)
+    stw r5, 0x38(r6)
+    stw r4, 0x3c(r6)
+    stw r0, 0x40(r6)
+    lwz r31, 0xc(r1)
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }
+#pragma pop
