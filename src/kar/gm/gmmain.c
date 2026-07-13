@@ -168,10 +168,8 @@ u32 kar_gmmain__near_80005d04(s32 bit)
 {
     u8* base = kar_gmmain__near_80006c14();
     u64 mask = 1;
-    u32 flags;
 
-    flags = base[0x7F0];
-    return flags & (u32) (mask << bit);
+    return base[0x7F0] & (u32) (mask << bit);
 }
 
 u8 kar_gmmain__near_80005d54(void)
@@ -193,7 +191,7 @@ void kar_gmmain__near_80005dcc(s32 bit)
     u64 mask = 1;
     u32 inverse;
 
-    inverse = ~((u32) (mask << bit));
+    inverse = ~(mask << bit);
     base[0x7F0] = base[0x7F0] & inverse;
 }
 
