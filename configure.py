@@ -399,6 +399,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "devcom.c",
     "displayfunc.c",
     "dobj.c",
+    "dvdsche.c",
     "fobj.c",
     "fog.c",
     "gobjobject.c",
