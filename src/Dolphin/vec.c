@@ -120,7 +120,7 @@ asm void PSVECCrossProduct(Vec* a, Vec* b, Vec* result)
 }
 
 /* PSVECReflect */
-#pragma peephole off
+#pragma fp_contract off
 void fn_803D21F8(Vec* src, Vec* normal, Vec* dst)
 {
     Vec negSrc;
@@ -142,7 +142,7 @@ void fn_803D21F8(Vec* src, Vec* normal, Vec* dst)
 
     PSVECNormalize(dst, dst);
 }
-#pragma peephole reset
+#pragma fp_contract reset
 
 /* PSVECSquareDistance */
 asm f32 fn_803D22CC(Vec* a, Vec* b)
