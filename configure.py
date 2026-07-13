@@ -396,6 +396,7 @@ DOLDECOMP_SYSDOLPHIN_SOURCE_OBJECTS = {
     "class.c",
     "cobj.c",
     "controller.c",
+    "devcom.c",
     "displayfunc.c",
     "dobj.c",
     "fobj.c",
