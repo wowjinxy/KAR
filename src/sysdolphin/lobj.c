@@ -52,7 +52,7 @@ extern s32 lbl_805DE220;        /* lightmask_alpha */
 extern HSD_LObj* lbl_805899B0[MAX_GXLIGHT]; /* active_lights */
 
 extern f32 lbl_805DC8B8[]; /* epsilon */
-extern f32 lbl_805DC8C0;   /* epsilon */
+extern f32 lbl_805DC8C0[]; /* epsilon */
 extern Vec lbl_8048C458;  /* zero vector */
 extern Vec lbl_8048C464;  /* zero vector */
 extern char lbl_805DCAD8[8]; /* "lobj.c" */
@@ -467,11 +467,11 @@ static inline void setup_point_lightobj(HSD_LObj* lobj, Mtx mtx)
         f32 cutoff = lobj->u.point.cutoff;
         s32 dist_func = lobj->u.point.dist_func;
 
-        if (ref_br < lbl_805DC8C0) {
-            ref_br = lbl_805DC8C0;
+        if (ref_br < lbl_805DC8C0[0]) {
+            ref_br = lbl_805DC8C0[0];
         }
-        if (cutoff < lbl_805DC8C0) {
-            cutoff = lbl_805DC8C0;
+        if (cutoff < lbl_805DC8C0[0]) {
+            cutoff = lbl_805DC8C0[0];
         }
         GXInitLightDistAttn(&lobj->lightobj, cutoff, ref_br, dist_func);
         GXInitLightSpot(&lobj->lightobj, lbl_805E5A28, 0);
@@ -503,11 +503,11 @@ static inline void setup_spot_lightobj(HSD_LObj* lobj, Mtx mtx)
         s32 spot_func = lobj->u.spot.spot_func;
         s32 dist_func = lobj->u.spot.dist_func;
 
-        if (ref_br < lbl_805DC8C0) {
-            ref_br = lbl_805DC8C0;
+        if (ref_br < lbl_805DC8C0[0]) {
+            ref_br = lbl_805DC8C0[0];
         }
-        if (ref_dist < lbl_805DC8C0) {
-            ref_dist = lbl_805DC8C0;
+        if (ref_dist < lbl_805DC8C0[0]) {
+            ref_dist = lbl_805DC8C0[0];
         }
         GXInitLightDistAttn(&lobj->lightobj, ref_dist, ref_br, dist_func);
         GXInitLightSpot(&lobj->lightobj, cutoff, 0);
@@ -520,7 +520,6 @@ static inline void setup_diffuse_lightobj(HSD_LObj* lobj)
     GXInitLightColor(&lobj->lightobj, lobj->color);
     lobj->hw_color = lobj->color;
     lobj->flags |= LOBJ_DIFF_DIRTY;
-    lbl_805DE214 |= lobj->id;
 
     switch (HSD_LObjGetType(lobj)) {
     case LOBJ_SPOT:
@@ -531,6 +530,10 @@ static inline void setup_diffuse_lightobj(HSD_LObj* lobj)
         break;
     default:
         assert_line(664, 0);
+    }
+
+    if (lobj->flags & LOBJ_DIFFUSE) {
+        lbl_805DE214 |= lobj->id;
     }
 
     if (lobj->flags & LOBJ_ALPHA) {
@@ -573,7 +576,7 @@ static inline void setup_spec_lightobj(HSD_LObj* lobj, Mtx mtx, GXLightID spec_i
 void HSD_LObjSetupInit(HSD_CObj* cobj)
 {
     MtxPtr vmtx;
-    s32 idx, num, i;
+    s32 i, num, idx;
     HSD_SList* list;
 
     lbl_805DE214 = GX_LIGHT_NULL;
