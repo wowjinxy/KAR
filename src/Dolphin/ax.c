@@ -604,6 +604,8 @@ void fn_803EC744(u32* p)
     *p = (u32)&lbl_80570180[lbl_805DE0B4][0];
 }
 
+extern u32 lbl_805DE0D0;
+
 void salHandleAuxProcessing(void)
 {
     lbl_805DE098 = &lbl_8056EB00[lbl_805DE0A8][0];
@@ -612,16 +614,29 @@ void salHandleAuxProcessing(void)
     lbl_805DE0A4 = &lbl_80570180[lbl_805DE0AC][0];
 
     if (lbl_805DE088) {
-        AX_AUX_DATA auxData;
-        auxData.l = &lbl_8056EB00[lbl_805DE0B8][0];
-        auxData.r = &lbl_8056EB00[lbl_805DE0B8][160];
-        auxData.s = &lbl_8056EB00[lbl_805DE0B8][320];
-        DCInvalidateRange(auxData.l, 0x780);
-        lbl_805DE088(&auxData.l, lbl_805DE090);
-        DCFlushRangeNoSync(auxData.l, 0x780);
+        if (lbl_805DE0D0 == 2) {
+            AX_AUX_DATA_DPL2 auxData;
+            auxData.l = &lbl_8056EB00[lbl_805DE0B8][0];
+            auxData.r = &lbl_8056EB00[lbl_805DE0B8][160];
+            auxData.ls = &lbl_8056EB00[lbl_805DE0B8][320];
+            auxData.rs = &lbl_80570180[lbl_805DE0B8][320];
+            DCInvalidateRange(auxData.l, 0x780);
+            DCInvalidateRange(auxData.rs, 0x280);
+            lbl_805DE088(&auxData.l, lbl_805DE090);
+            DCFlushRangeNoSync(auxData.l, 0x780);
+            DCFlushRangeNoSync(auxData.rs, 0x280);
+        } else {
+            AX_AUX_DATA auxData;
+            auxData.l = &lbl_8056EB00[lbl_805DE0B8][0];
+            auxData.r = &lbl_8056EB00[lbl_805DE0B8][160];
+            auxData.s = &lbl_8056EB00[lbl_805DE0B8][320];
+            DCInvalidateRange(auxData.l, 0x780);
+            lbl_805DE088(&auxData.l, lbl_805DE090);
+            DCFlushRangeNoSync(auxData.l, 0x780);
+        }
     }
 
-    if (lbl_805DE08C) {
+    if (lbl_805DE08C && lbl_805DE0D0 != 2) {
         AX_AUX_DATA auxData;
         auxData.l = &lbl_80570180[lbl_805DE0B8][0];
         auxData.r = &lbl_80570180[lbl_805DE0B8][160];
@@ -1911,7 +1926,13 @@ void salInitAi(void)
     }
 
     DCFlushRange(&lbl_80571E00, 0x500);
-    memset(lbl_80571E00.outBuf[2], 0, 0x280);
+
+    p = (u32*)lbl_80571E00.outBuf[2];
+    for (i = 0xA0; i != 0; i--) {
+        *p = 0;
+        p++;
+    }
+
     DCFlushRange(lbl_80571E00.outBuf[2], 0x280);
 
     salInitDsp();
@@ -2492,6 +2513,9 @@ void salInitDspCtrl(void)
 
 void fn_803EE7F4(AXVPB* p, u32 type)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
     switch (type) {
     case 0:
         p->pb.srcSelect = 2;
@@ -2514,71 +2538,269 @@ void fn_803EE7F4(AXVPB* p, u32 type)
     }
 
     p->sync |= AX_SYNC_FLAG_COPYSELECT;
+    OSRestoreInterrupts(old);
 }
 
 void kar_axdriver__803ee8b8(AXVPB* p, u16 state)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
     p->pb.state = state;
     p->sync |= AX_SYNC_FLAG_COPYSTATE;
     if (state == 0) {
         p->depop = 1;
     }
+    OSRestoreInterrupts(old);
 }
 
-void hwSetVolume(void)
+void hwSetVolume(AXVPB* p, AXPBMIX* mix)
 {
+    BOOL old;
+    u16 mixerCtrl;
+    u16* dst;
+    u16* src;
+
+    src = (u16*)mix;
+    dst = (u16*)&p->pb.mix;
+    mixerCtrl = 0;
+
+    old = OSDisableInterrupts();
+
+    if ((*dst++ = *src++)) mixerCtrl |= 0x1;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x9;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x2;
+    if ((*dst++ = *src++)) mixerCtrl |= 0xA;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x10;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x50;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x20;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x60;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x200;
+    if ((*dst++ = *src++)) mixerCtrl |= 0xA00;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x400;
+    if ((*dst++ = *src++)) mixerCtrl |= 0xC00;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x1000;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x3000;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x4;
+    if ((*dst++ = *src++)) mixerCtrl |= 0xC;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x80;
+    if ((*dst++ = *src++)) mixerCtrl |= 0x180;
+
+    p->pb.mixerCtrl = mixerCtrl;
+    p->sync |= (AX_SYNC_FLAG_COPYAXPBMIX | AX_SYNC_FLAG_COPYMXRCTRL);
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEB68(void)
+void fn_803EEB68(AXVPB* p)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.itd.flag = 1;
+    p->pb.itd.shiftL = p->pb.itd.shiftR = p->pb.itd.targetShiftL = p->pb.itd.targetShiftR = 0;
+    p->sync &= ~(AX_SYNC_FLAG_COPYTSHIFT);
+    p->sync |= AX_SYNC_FLAG_COPYITD;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEBCC(void)
+void fn_803EEBCC(AXVPB* p, u16 lShift, u16 rShift)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.itd.targetShiftL = lShift;
+    p->pb.itd.targetShiftR = rShift;
+    p->sync |= AX_SYNC_FLAG_COPYTSHIFT;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEC28(void)
+void fn_803EEC28(AXVPB* p, AXPBVE* ve)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.ve.currentVolume = ve->currentVolume;
+    p->pb.ve.currentDelta = ve->currentDelta;
+    p->sync |= AX_SYNC_FLAG_COPYVOL;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEC80(void)
+void fn_803EEC80(AXVPB* p, s16 delta)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.ve.currentDelta = delta;
+    p->sync |= AX_SYNC_FLAG_SWAPVOL;
+    OSRestoreInterrupts(old);
 }
 
-void AXHwStub55(void)
+void fn_803EECCC(AXVPB* p, AXPBADDR* addr)
 {
+    BOOL old;
+    u32* dst;
+    u32* src;
+
+    dst = (u32*)&p->pb.addr;
+    src = (u32*)addr;
+
+    old = OSDisableInterrupts();
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src);
+
+    switch (addr->format) {
+    case 10:
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0x08000000; dst += 1;
+        *(dst) = 0;
+        break;
+    case 25:
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0; dst += 1;
+        *(dst) = 0x01000000; dst += 1;
+        *(dst) = 0;
+        break;
+    }
+
+    p->sync &= ~(AX_SYNC_FLAG_COPYLOOP | AX_SYNC_FLAG_COPYLOOPADDR | AX_SYNC_FLAG_COPYENDADDR | AX_SYNC_FLAG_COPYCURADDR);
+    p->sync |= (AX_SYNC_FLAG_COPYADDR | AX_SYNC_FLAG_COPYADPCM);
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEDDC(void)
+void fn_803EEDDC(AXVPB* p, u16 loop)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.addr.loopFlag = loop;
+    p->sync |= AX_SYNC_FLAG_COPYLOOP;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEE28(void)
+void fn_803EEE28(AXVPB* p, u32 addr)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.addr.loopAddressHi = (addr >> 0x10);
+    p->pb.addr.loopAddressLo = (addr);
+    p->sync |= AX_SYNC_FLAG_COPYLOOPADDR;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEE7C(void)
+void fn_803EEE7C(AXVPB* p, u32 addr)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.addr.endAddressHi = (addr >> 0x10);
+    p->pb.addr.endAddressLo = (addr);
+    p->sync |= AX_SYNC_FLAG_COPYENDADDR;
+    OSRestoreInterrupts(old);
 }
 
-void AXHwStub59(void)
+void fn_803EEED0(AXVPB* p, u32 addr)
 {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    p->pb.addr.currentAddressHi = (addr >> 0x10);
+    p->pb.addr.currentAddressLo = (addr);
+    p->sync |= AX_SYNC_FLAG_COPYCURADDR;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEF24(void)
+void fn_803EEF24(AXVPB* p, AXPBADPCM* adpcm)
 {
+    BOOL old;
+    u32* dst;
+    u32* src;
+
+    dst = (u32*)&p->pb.adpcm;
+    src = (u32*)adpcm;
+
+    old = OSDisableInterrupts();
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src);
+    p->sync |= AX_SYNC_FLAG_COPYADPCM;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EEFC8(void)
+void fn_803EEFC8(AXVPB* p, AXPBSRC* src_)
 {
+    BOOL old;
+    u16* dst;
+    u16* src;
+
+    dst = (u16*)&p->pb.src;
+    src = (u16*)src_;
+
+    old = OSDisableInterrupts();
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src);
+    p->sync &= ~(AX_SYNC_FLAG_COPYRATIO);
+    p->sync |= AX_SYNC_FLAG_COPYSRC;
+    OSRestoreInterrupts(old);
 }
 
-void hwSetPitch(void)
+void hwSetPitch(AXVPB* p, f32 ratio)
 {
+    u32 r;
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    r = 65536.0f * ratio;
+    if ((u32)(65536.0f * ratio) > 0x40000) {
+        r = 0x40000;
+    }
+    p->pb.src.ratioHi = (u16)(r >> 16);
+    p->pb.src.ratioLo = (u16)r;
+    p->sync |= AX_SYNC_FLAG_COPYRATIO;
+    OSRestoreInterrupts(old);
 }
 
-void fn_803EF0F8(void)
+void fn_803EF0F8(AXVPB* p, AXPBADPCMLOOP* adpcmloop)
 {
+    BOOL old;
+    u16* dst;
+    u16* src;
+
+    dst = (u16*)&p->pb.adpcmLoop;
+    src = (u16*)adpcmloop;
+    old = OSDisableInterrupts();
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    *(dst) = *(src); dst += 1; src += 1;
+    p->sync |= AX_SYNC_FLAG_COPYADPCMLOOP;
+    OSRestoreInterrupts(old);
 }
 
 typedef struct
@@ -2677,9 +2899,12 @@ typedef struct AXFX_REVSTD_WORK
     f32* preDelayPtr[3];
 } AXFX_REVSTD_WORK;
 
-extern void* (*__AXFXAlloc)(u32);
-extern void (*__AXFXFree)(void*);
+extern void* salMalloc(u32 size);
+extern void salFree(void* p);
 extern f32 powf(f32 base, f32 exp);
+
+static void* (*__AXFXAlloc)(u32) = salMalloc;
+static void (*__AXFXFree)(void*) = salFree;
 
 static inline void DLsetdelayHI(AXFX_REVHI_DELAYLINE* dl, s32 lag)
 {
@@ -2820,8 +3045,8 @@ asm void DoCrossTalk(register s32* l, register s32* r, register f32 cross, regis
     stw r5, 16(r1)
     stw r5, 24(r1)
     stw r5, 32(r1)
-    ps_merge00 f3, invcross, cross
-    ps_merge00 f4, cross, invcross
+    ps_merge00 f3, f2, f1
+    ps_merge00 f4, f1, f2
     lis r5, value1_0@ha
     lfs f5, value1_0@l(r5)
     li r5, 79
