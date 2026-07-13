@@ -322,7 +322,7 @@ void TRK_board_display(char* str);
 
 DSError kar_diagnostic__near_803c046c(void);
 void kar_diag__near_803c27b0(u8 value);
-void kar_diag__near_803c27a0(void);
+u8 kar_diag__near_803c27a0(void);
 DSError kar_diag__near_803c27bc(void);
 void kar_diag__near_803c2878(u8 value);
 DSError kar_diagnostic__near_803c2018(void);
@@ -341,6 +341,10 @@ typedef struct msgbuf_t {
 
 typedef struct FramingState {
     /* 0x00 */ MessageBufferID fBufferID;
+    /* 0x04 */ void* fBuffer;
+    /* 0x08 */ u32 fReceiveState;
+    /* 0x0C */ u32 fEscape;
+    /* 0x10 */ u8 pad[0x18 - 0x10];
 } FramingState;
 extern FramingState lbl_8056B840;
 
@@ -887,6 +891,26 @@ DSError kar_diag__near_803be368(void)
     return kNoError;
 }
 
+extern u8 lbl_8048BC78[];
+
+DSError TRKInitializeSerialHandler(void)
+{
+    const char* fmt = (const char*) lbl_8048BC78;
+
+    lbl_8056B840.fBufferID = -1;
+    lbl_8056B840.fReceiveState = 0;
+    lbl_8056B840.fEscape = 0;
+
+    MWTRACE(1, fmt + 0x00, 0x40);
+    MWTRACE(1, fmt + 0x24, 0x40);
+    MWTRACE(1, fmt + 0x48, 0x40);
+    MWTRACE(1, fmt + 0x6c, 0x40);
+    MWTRACE(1, fmt + 0x8c, 0x40);
+    MWTRACE(1, fmt + 0xac, 0x40);
+
+    return kNoError;
+}
+
 inline void kar_diag__near_803be434(MessageBufferID bufID)
 {
     NubEvent event;
@@ -897,17 +921,23 @@ inline void kar_diag__near_803be434(MessageBufferID bufID)
     kar_diagnostic__803bd764(&event);
 }
 
+#pragma dont_inline on
 void TRKGetInput(void)
 {
     MessageBufferID bufID;
+    NubEvent event;
 
     bufID = kar_diag__803be4e4();
 
     if (bufID != -1) {
         TRKGetBuffer(bufID);
-        kar_diag__near_803be434(bufID);
+        fn_803BD74C(&event, kRequestEvent);
+        event.fMessageBufferID = bufID;
+        lbl_8056B840.fBufferID = -1;
+        kar_diagnostic__803bd764(&event);
     }
 }
+#pragma dont_inline reset
 
 void usr_put_initialize(void) {}
 
@@ -1796,6 +1826,53 @@ asm void TRKInterruptHandlerEnableInterrupts(void)
     b TRKPostInterruptEvent
 }
 
+DSError fn_803C16CC(void* data, u32 start)
+{
+    size_t length = 4;
+    DSError err = fn_803C1718(data, start, &length, kUserMemory, 1);
+
+    if (err == kNoError && length != 4) {
+        err = 0x700;
+    }
+
+    return err;
+}
+
+asm void gap_03_803C1B08_text(void)
+{
+    nofralloc
+    opword 0x00000000
+    opword 0x00000000
+}
+
+asm void fn_803C1B10(void)
+{
+    nofralloc
+    twi 31, r0, 0
+    blr
+}
+
+asm void fn_803C1B18(void)
+{
+    nofralloc
+    twi 31, r0, 0
+    blr
+}
+
+asm void fn_803C1B20(void)
+{
+    nofralloc
+    twi 31, r0, 0
+    blr
+}
+
+asm void fn_803C1B28(void)
+{
+    nofralloc
+    twi 31, r0, 0
+    blr
+}
+
 asm void TRKSaveExtended1Block(void)
 {
     nofralloc
@@ -2240,6 +2317,12 @@ initCommTableSuccess:
     b TRK_main
 }
 
+asm void gap_03_803C1F34_text(void)
+{
+    nofralloc
+    blr
+}
+
 extern u8 lbl_8056BDE0[];
 
 DSError TRKInitializeTarget(void)
@@ -2306,6 +2389,7 @@ typedef struct ExcStatusWords {
     u32 w0, w4, w8, wC;
 } ExcStatusWords;
 
+#pragma dont_inline on
 DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
                                  MessageBuffer* b, size_t* length, bool read)
 {
@@ -2319,7 +2403,7 @@ DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
     }
 
     tempExceptionStatus = *(ExcStatusWords*) gTRKExceptionStatus;
-    *(u8*) (gTRKExceptionStatus + 0xC) = 0;
+    *(u8*) (gTRKExceptionStatus + 0xD) = 0;
 
     data = (u32*) gTRKCPUState + firstRegister;
     count = (lastRegister - firstRegister) + 1;
@@ -2339,6 +2423,7 @@ DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
     *(ExcStatusWords*) gTRKExceptionStatus = tempExceptionStatus;
     return error;
 }
+#pragma dont_inline reset
 
 typedef struct TRKStepStatus {
     /* 0x00 */ bool active;
@@ -2518,6 +2603,7 @@ MessageBufferID kar_diag__803be4e4(void)
 
 DSError fn_803C16CC(void* data, u32 start);
 
+#pragma dont_inline on
 void TRKPostInterruptEvent(void)
 {
     NubEvent event;
@@ -2525,14 +2611,16 @@ void TRKPostInterruptEvent(void)
     int eventType;
     u32 exceptionID;
 
-    if (*(bool*) (gTRKState + 0x9C)) {
-        *(bool*) (gTRKState + 0x9C) = false;
+    if (*(s32*) (gTRKState + 0x9C)) {
+        *(u32*) (gTRKState + 0x9C) = 0;
         return;
     }
 
     exceptionID = *(u32*) (gTRKCPUState + 0x2F8) & 0xFFFF;
 
-    if (exceptionID == 0xD00 || exceptionID == 0x700) {
+    switch (exceptionID) {
+    case 0xD00:
+    case 0x700:
         fn_803C16CC(&inst, *(u32*) (gTRKCPUState + 0x80));
 
         if (inst == 0x0FE00000) {
@@ -2540,13 +2628,16 @@ void TRKPostInterruptEvent(void)
         } else {
             eventType = kBreakpointEvent;
         }
-    } else {
+        break;
+    default:
         eventType = kExceptionEvent;
+        break;
     }
 
     fn_803BD74C(&event, eventType);
     kar_diagnostic__803bd764(&event);
 }
+#pragma dont_inline reset
 
 
 DSError TRKTargetInterrupt(NubEvent* event)
@@ -2564,4 +2655,443 @@ DSError TRKTargetInterrupt(NubEvent* event)
     }
 
     return result;
+}
+
+extern u32 OSDisableInterrupts(void);
+extern u32 OSRestoreInterrupts(u32 level);
+extern void EXI2_Init(void* ptr, void* callback);
+extern void EXI2_EnableInterrupts(void);
+extern int EXI2_Poll(void);
+extern DSError EXI2_ReadN(void* bytes, u32 length);
+extern int EXI2_WriteN(const void* bytes, u32 length);
+extern void EXI2_Reserve(void);
+extern void EXI2_Unreserve(void);
+
+typedef struct DSMutex2 {
+    /* 0x00 */ u32 state;
+} DSMutex2;
+
+void kar_diagnostic__near_803c3318(DSMutex2* m)
+{
+}
+
+void kar_diagnostic__803c32e8(DSMutex2* m)
+{
+    m->state = OSDisableInterrupts();
+}
+
+void kar_diagnostic__803c32c4(DSMutex2* m)
+{
+    OSRestoreInterrupts(m->state);
+}
+
+typedef struct RingBuffer {
+    /* 0x00 */ u8* readPtr;
+    /* 0x04 */ u8* writePtr;
+    /* 0x08 */ u8* base;
+    /* 0x0C */ u32 capacity;
+    /* 0x10 */ u32 count;
+    /* 0x14 */ u32 free;
+    /* 0x18 */ DSMutex2 mutex;
+} RingBuffer;
+
+#pragma dont_inline on
+void kar_diagnostic__near_803c2ed0(RingBuffer* ring, void* buffer, u32 size)
+{
+    ring->base = buffer;
+    ring->capacity = size;
+    ring->readPtr = buffer;
+    ring->writePtr = buffer;
+    ring->count = 0;
+    ring->free = size;
+    kar_diagnostic__near_803c3318(&ring->mutex);
+}
+#pragma dont_inline reset
+
+u32 kar_diagnostic__803c2f20(RingBuffer* ring)
+{
+    return ring->count;
+}
+
+#pragma dont_inline on
+DSError kar_diagnostic__803c2cc0(RingBuffer* ring, void* dest, u32 len)
+{
+    u32 contig;
+
+    if (len > ring->count) {
+        return kUARTError;
+    }
+
+    kar_diagnostic__803c32e8(&ring->mutex);
+
+    contig = ring->capacity - (ring->readPtr - ring->base);
+
+    if (len < contig) {
+        memcpy(dest, ring->readPtr, len);
+        ring->readPtr += len;
+    } else {
+        memcpy(dest, ring->readPtr, contig);
+        memcpy((u8*) dest + contig, ring->base, len - contig);
+        ring->readPtr = ring->base + (len - contig);
+    }
+
+    if (ring->readPtr - ring->base == ring->capacity) {
+        ring->readPtr = ring->base;
+    }
+
+    ring->free += len;
+    ring->count -= len;
+
+    kar_diagnostic__803c32c4(&ring->mutex);
+    return kNoError;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+DSError kar_diagnostic__803c2dc8(RingBuffer* ring, const void* src, u32 len)
+{
+    u32 contig;
+
+    if (len > ring->free) {
+        return kUARTError;
+    }
+
+    kar_diagnostic__803c32e8(&ring->mutex);
+
+    contig = ring->capacity - (ring->writePtr - ring->base);
+
+    if (contig >= len) {
+        memcpy(ring->writePtr, src, len);
+        ring->writePtr += len;
+    } else {
+        memcpy(ring->writePtr, src, contig);
+        memcpy(ring->base, (const u8*) src + contig, len - contig);
+        ring->writePtr = ring->base + (len - contig);
+    }
+
+    if (ring->writePtr - ring->base == ring->capacity) {
+        ring->writePtr = ring->base;
+    }
+
+    ring->free -= len;
+    ring->count += len;
+
+    kar_diagnostic__803c32c4(&ring->mutex);
+    return kNoError;
+}
+#pragma dont_inline reset
+
+extern u8 lbl_8056BDF8[];
+
+u8 kar_diag__near_803c27a0(void)
+{
+    return lbl_8056BDF8[0];
+}
+
+void kar_diag__near_803c27b0(u8 value)
+{
+    lbl_8056BDF8[0] = value;
+}
+
+extern RingBuffer lbl_8056C600;
+extern u8 lbl_8056BE00[];
+extern BOOL lbl_805DDD08;
+
+DSError ddh_cc_initinterrupts(void)
+{
+    EXI2_EnableInterrupts();
+    return kNoError;
+}
+
+#pragma dont_inline on
+DSError ddh_cc_peek(void)
+{
+    u8 buf[0x800];
+    int bytes = EXI2_Poll();
+    DSError err;
+
+    if (bytes <= 0) {
+        return kNoError;
+    }
+
+    err = EXI2_ReadN(buf, bytes);
+
+    if (err == kNoError) {
+        kar_diagnostic__803c2dc8(&lbl_8056C600, buf, bytes);
+        return bytes;
+    }
+
+    return -0x2719;
+}
+#pragma dont_inline reset
+
+DSError ddh_cc_post_stop(void)
+{
+    EXI2_Reserve();
+    return kNoError;
+}
+
+DSError ddh_cc_pre_continue(void)
+{
+    EXI2_Unreserve();
+    return kNoError;
+}
+
+extern u8 lbl_8048C288[];
+
+DSError ddh_cc_write(const void* data, u32 length)
+{
+    const u8* ptr = (const u8*) data;
+    u32 remaining = length;
+
+    if (!lbl_805DDD08) {
+        MWTRACE(8, (const char*) lbl_8048C288 + 0x00);
+        return -0x2711;
+    }
+
+    MWTRACE(8, (const char*) lbl_8048C288 + 0x14, data, length);
+
+    while (remaining > 0) {
+        int written;
+
+        MWTRACE(1, (const char*) lbl_8048C288 + 0x40, remaining);
+        written = EXI2_WriteN(ptr, remaining);
+
+        if (written == 0) {
+            break;
+        }
+
+        ptr += written;
+        remaining -= written;
+    }
+
+    return kNoError;
+}
+
+extern u8 lbl_8048C2E4[];
+extern u8 lbl_8048C30C[];
+
+#pragma dont_inline on
+DSError ddh_cc_read(void* dest, u32 length)
+{
+    DSError readErr = kNoError;
+
+    if (!lbl_805DDD08) {
+        return -0x2711;
+    }
+
+    MWTRACE(1, (const char*) lbl_8048C2E4 + 0x00, length, length);
+
+    while (kar_diagnostic__803c2f20(&lbl_8056C600) < length) {
+        u8 buf[0x800];
+        int bytes;
+
+        readErr = kNoError;
+        bytes = EXI2_Poll();
+
+        if (bytes != 0) {
+            readErr = EXI2_ReadN(buf, bytes);
+
+            if (readErr == kNoError) {
+                kar_diagnostic__803c2dc8(&lbl_8056C600, buf, bytes);
+            }
+        }
+    }
+
+    if (readErr != kNoError) {
+        MWTRACE(8, (const char*) lbl_8048C30C + 0x00, readErr);
+        return readErr;
+    }
+
+    return kar_diagnostic__803c2cc0(&lbl_8056C600, dest, length);
+}
+#pragma dont_inline reset
+
+DSError ddh_cc_close(void)
+{
+    return kNoError;
+}
+
+DSError ddh_cc_open(void)
+{
+    if (lbl_805DDD08) {
+        return -0x2715;
+    }
+
+    lbl_805DDD08 = TRUE;
+    return kNoError;
+}
+
+DSError ddh_cc_shutdown(void)
+{
+    return kNoError;
+}
+
+extern u8 lbl_8048C33C[];
+extern u8 lbl_8048C350[];
+
+DSError ddh_cc_initialize(void* ptr, void* callback)
+{
+    MWTRACE(1, (const char*) lbl_8048C33C);
+    EXI2_Init(ptr, callback);
+    MWTRACE(1, (const char*) lbl_8048C350);
+    kar_diagnostic__near_803c2ed0(&lbl_8056C600, lbl_8056BE00, 0x800);
+    return kNoError;
+}
+
+extern RingBuffer lbl_8056CB20;
+extern u8 lbl_8056C620[];
+extern BOOL lbl_805DDD10;
+extern int DBInitInterrupts(void);
+extern int DBQueryData(void);
+extern int DBRead(void* param1, u32 param2);
+extern int DBWrite(const void* data, u32 size);
+extern void DBClose(void);
+extern void DBOpen(void);
+extern void DBInitComm(int* inputFlagPtr, int* mtrCallback);
+
+DSError gdev_cc_initinterrupts(void)
+{
+    DBInitInterrupts();
+    return kNoError;
+}
+
+#pragma dont_inline on
+DSError gdev_cc_peek(void)
+{
+    u8 buf[0x500];
+    int bytes = DBQueryData();
+    DSError err;
+
+    if (bytes <= 0) {
+        return kNoError;
+    }
+
+    err = DBRead(buf, bytes);
+
+    if (err == kNoError) {
+        kar_diagnostic__803c2dc8(&lbl_8056CB20, buf, bytes);
+        return bytes;
+    }
+
+    return -0x2719;
+}
+#pragma dont_inline reset
+
+DSError gdev_cc_post_stop(void)
+{
+    DBOpen();
+    return kNoError;
+}
+
+DSError gdev_cc_pre_continue(void)
+{
+    DBClose();
+    return kNoError;
+}
+
+extern u8 lbl_8048C368[];
+
+DSError gdev_cc_write(const void* data, u32 length)
+{
+    const u8* ptr = (const u8*) data;
+    u32 remaining = length;
+
+    if (!lbl_805DDD10) {
+        MWTRACE(8, (const char*) lbl_8048C368 + 0x00);
+        return -0x2711;
+    }
+
+    MWTRACE(8, (const char*) lbl_8048C368 + 0x14, data, length);
+
+    while (remaining > 0) {
+        int written;
+
+        MWTRACE(1, (const char*) lbl_8048C368 + 0x40, remaining);
+        written = DBWrite(ptr, remaining);
+
+        if (written == 0) {
+            break;
+        }
+
+        ptr += written;
+        remaining -= written;
+    }
+
+    return kNoError;
+}
+
+extern u8 lbl_8048C3C4[];
+extern u8 lbl_8048C3EC[];
+
+#pragma dont_inline on
+DSError gdev_cc_read(void* dest, u32 length)
+{
+    DSError readErr = kNoError;
+
+    if (!lbl_805DDD10) {
+        return -0x2711;
+    }
+
+    MWTRACE(1, (const char*) lbl_8048C3C4 + 0x00, length, length);
+
+    while (kar_diagnostic__803c2f20(&lbl_8056CB20) < length) {
+        u8 buf[0x800];
+        int bytes;
+
+        readErr = kNoError;
+        bytes = DBQueryData();
+
+        if (bytes != 0) {
+            readErr = DBRead(buf, bytes);
+
+            if (readErr == kNoError) {
+                kar_diagnostic__803c2dc8(&lbl_8056CB20, buf, bytes);
+            }
+        }
+    }
+
+    if (readErr != kNoError) {
+        MWTRACE(8, (const char*) lbl_8048C3EC + 0x00, readErr);
+        return readErr;
+    }
+
+    return kar_diagnostic__803c2cc0(&lbl_8056CB20, dest, length);
+}
+#pragma dont_inline reset
+
+DSError gdev_cc_close(void)
+{
+    return kNoError;
+}
+
+DSError gdev_cc_open(void)
+{
+    if (lbl_805DDD10) {
+        return -0x2715;
+    }
+
+    lbl_805DDD10 = TRUE;
+    return kNoError;
+}
+
+DSError gdev_cc_shutdown(void)
+{
+    return kNoError;
+}
+
+extern u8 lbl_8048C41C[];
+extern u8 lbl_8048C430[];
+
+DSError gdev_cc_initialize(void* ptr, void* callback)
+{
+    MWTRACE(1, (const char*) lbl_8048C41C);
+    DBInitComm(ptr, callback);
+    MWTRACE(1, (const char*) lbl_8048C430);
+    kar_diagnostic__near_803c2ed0(&lbl_8056CB20, lbl_8056C620, 0x500);
+    return kNoError;
+}
+
+void MWTRACE(int level, const char* fmt, ...)
+{
 }
