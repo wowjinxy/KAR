@@ -19,10 +19,10 @@ extern u8 hsd_saved_context[];
 extern char lbl_805DCDA8[8];
 extern char lbl_805DCDB0[6];
 
-extern HSD_DebugExceptionCallback lbl_805DE308;
-extern s32 lbl_805DE30C;
-extern HSD_DebugConsoleCallback lbl_805DE310;
-extern HSD_DebugUserCallback lbl_805DE314;
+HSD_DebugUserCallback lbl_805DE314;
+HSD_DebugConsoleCallback lbl_805DE310;
+s32 lbl_805DE30C;
+HSD_DebugExceptionCallback lbl_805DE308;
 
 void HSD_SaveContext(void* arg0);
 void HSD_Panic(const char* file, s32 line, const char* msg);
