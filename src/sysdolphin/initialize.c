@@ -380,7 +380,9 @@ void HSD_StartRender(HSD_RenderPass pass)
 
 void HSD_EndRender(void)
 {
-    (*(volatile s32*) &HSD_CurrentRenderPass) == HSD_RP_OFFSCREEN;
+    if ((*(volatile s32*) &HSD_CurrentRenderPass) == HSD_RP_OFFSCREEN) {
+        return;
+    }
 }
 
 void _HSD_NeedCacheInvalidate(u32 flags)
