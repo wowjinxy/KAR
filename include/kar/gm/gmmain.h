@@ -22,6 +22,7 @@ u8 kar_gmmain__near_80006384(void);
 void kar_gmmain__near_800063a8(void);
 void kar_gmmain__near_800064f0(void);
 void kar_gmmain__near_80006518(void);
+void kar_gmmain__near_80006540(void* callbacks);
 s32 kar_gmmain__near_800067a4(void);
 void kar_gmmain__near_80006b58(void);
 void* kar_gmmain__near_80006c14(void);

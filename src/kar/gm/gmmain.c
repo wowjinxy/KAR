@@ -6,6 +6,8 @@
 #include <kar/gm/gmlanmenu.h>
 #include <kar/gm/gmmain.h>
 #include <kar/lb/lbaudio.h>
+#include <sysdolphin/displayfunc.h>
+#include <sysdolphin/gobj.h>
 #include <sysdolphin/video.h>
 
 typedef struct HSD_PadData HSD_PadData;
@@ -44,6 +46,11 @@ typedef union {
 extern u8 lbl_805359D8[];
 extern u8 HSD_PadState[];
 extern HSD_PadStatusLocal HSD_PadMasterStatus[];
+extern void* lbl_805D5100;
+extern void* lbl_805D5104;
+extern GObjFuncs lbl_80509668;
+extern const f32 lbl_805DE708;
+extern u8 lbl_805DE550;
 
 u8 lbl_80535300[0x694];
 u8 lbl_80535994[0x44];
@@ -72,6 +79,8 @@ void HSD_PadReset(void);
 void HSD_PadFlushQueue(s32 arg0);
 void HSD_VIWaitXFBFlush(void);
 void kar_lbaudio__near_8005a064(void);
+void kar_lbaudio__near_80062874(u64 arg0);
+void kar_lbaudio__near_80062888(void);
 u8 kar_lbaudio__near_800628a0(void);
 void kar_lbaudio__near_8006293c(s32 arg0);
 void kar_lbaudio__near_80062978(void);
@@ -95,9 +104,22 @@ void fn_80041664(void);
 void fn_80041740(void);
 void fn_800418F4(void);
 void fn_8007CBB0(void);
+void fn_800AD1F0(void);
 void fn_80131878(void);
 u32 kar_osthread__near_803d96b4(void);
 void kar_osthread__near_803d9724(s32 arg0);
+void kar_gmautodemo__near_8000fa78(void);
+void kar_lbvector__near_8006595c(void);
+void kar_lb_assets__asset_80071cc0(void);
+void kar_lb_assets__asset_80078f98(void);
+void kar_pslist__near_8043979c(void);
+void kar_pslist__near_804397a8(void** p);
+void* fn_80009100(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void fn_8000914C(void);
+void GObj_InitializeLibInitData(HSD_GObjLibInitDataType* init_data);
+u8 GObj_AddFuncTable(HSD_GObjLibInitDataType* init_data, GObjFuncs* funcs);
+void GObj_Init(HSD_GObjLibInitDataType* init_data);
+void HSD_SObjLib_803A44A4(void);
 
 #define GMMAIN_BASE ((u8*) kar_gmmain__near_80006c14())
 #define GMMAIN_FIELD_U8(offset) (*(u8*) (GMMAIN_BASE + (offset)))
@@ -326,6 +348,98 @@ void kar_gmmain__near_80006518(void)
     u8* base = kar_gmmain__near_80006c14();
 
     base[0x829] = 1;
+}
+
+void kar_gmmain__near_80006540(void* callbacks)
+{
+    void* color_first_new;
+    void* color_first_existing;
+    void* color_second_new;
+    void* color_second_existing;
+    HSD_GObjLibInitDataType init_data;
+    u8* state = (u8*) kar_gmmain__near_80006c14() + 0x7E0;
+    u32 tick_rate;
+
+    memset(state, 0, 0x50);
+    *(void**) (state + 0x34) = callbacks;
+    tick_rate = *(u32*) 0x800000F8;
+    kar_lbaudio__near_80062874((u64) (lbl_805DE708 * (f32) (tick_rate >> 2)));
+    kar_lbaudio__near_80062888();
+    state[0x49] = 0;
+    *(u32*) (state + 0x38) = 0;
+    *(u32*) (state + 0x3C) = 0;
+    *(u32*) (state + 0x40) = 0;
+    *(s32*) (state + 0x44) = -1;
+
+    kar_gmmain__near_80006354(0);
+    lbl_805DD538[0] = NULL;
+    lbl_805DD534 = NULL;
+    lbl_805DD530 = 0;
+    {
+        u8* base = kar_gmmain__near_80006c14();
+        *(void**) (base + 0x7F4) = fn_80005E24;
+        *(void**) (base + 0x7F8) = fn_80005FD4;
+    }
+
+    HSD_SetZSortMode(0, 0);
+    GObj_InitializeLibInitData(&init_data);
+    init_data.gproc_pri_max = 0x17;
+    lbl_805DE550 = GObj_AddFuncTable(&init_data, &lbl_80509668);
+    HSD_SObjLib_803A44A4();
+    init_data.unk_2 = (u64*) (state + 0x28);
+    GObj_Init(&init_data);
+    kar_pslist__near_8043979c();
+    fn_800AD1F0();
+    kar_gmautodemo__near_8000fa78();
+    kar_lbvector__near_8006595c();
+    kar_lb_assets__asset_80071cc0();
+    kar_lb_assets__asset_80078f98();
+
+    if (lbl_805DD528 != 0) {
+        lbl_805DD530++;
+        if (lbl_805DD530 > 2) {
+            lbl_805DD530 = 0;
+        }
+
+        if (lbl_805DD538[0] != NULL) {
+            if (lbl_805DD530 == 0) {
+                fn_8000914C();
+                lbl_805DD538[0] = NULL;
+            } else {
+                color_first_existing = lbl_805D5104;
+                kar_pslist__near_804397a8(&color_first_existing);
+            }
+        } else {
+            lbl_805DD538[0] = fn_80009100(0x26, 0x3F, 0, 0xFE);
+            color_first_new = lbl_805D5100;
+            kar_pslist__near_804397a8(&color_first_new);
+            if (lbl_805DD534 != NULL) {
+                lbl_805DD534();
+            }
+        }
+
+        lbl_805DD530++;
+        if (lbl_805DD530 > 2) {
+            lbl_805DD530 = 0;
+        }
+
+        if (lbl_805DD538[0] != NULL) {
+            if (lbl_805DD530 == 0) {
+                fn_8000914C();
+                lbl_805DD538[0] = NULL;
+            } else {
+                color_second_existing = lbl_805D5104;
+                kar_pslist__near_804397a8(&color_second_existing);
+            }
+        } else {
+            lbl_805DD538[0] = fn_80009100(0x26, 0x3F, 0, 0xFE);
+            color_second_new = lbl_805D5100;
+            kar_pslist__near_804397a8(&color_second_new);
+            if (lbl_805DD534 != NULL) {
+                lbl_805DD534();
+            }
+        }
+    }
 }
 
 void kar_gmmain__near_80006b58(void)
