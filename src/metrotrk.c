@@ -1540,10 +1540,12 @@ void TRKTargetSetInputPendingPtr(void* ptr)
     *(void**) (gTRKState + 0xA0) = ptr;
 }
 
+#pragma dont_inline on
 void TRKTargetSetStopped(bool stopped)
 {
     *(bool*) (gTRKState + 0x98) = stopped;
 }
+#pragma dont_inline reset
 
 bool TRKTargetStopped(void)
 {
@@ -2101,6 +2103,7 @@ DSError kar_diagnostic__803c2388(const void* bytes, u32 length)
     return !result ? kNoError : kUARTError;
 }
 
+#pragma dont_inline on
 void fn_803C2430(void)
 {
     extern bool TRK_Use_BBA;
@@ -2111,21 +2114,26 @@ void fn_803C2430(void)
         }
     }
 }
+#pragma dont_inline reset
 
 void EnableMetroTRKInterrupts(void)
 {
     fn_803C2430();
 }
 
+#pragma dont_inline on
 void UnreserveEXI2Port(void)
 {
     gDBCommTable.pre_continue_func();
 }
+#pragma dont_inline reset
 
+#pragma dont_inline on
 void ReserveEXI2Port(void)
 {
     gDBCommTable.post_stop_func();
 }
+#pragma dont_inline reset
 
 DSError TRKInitializeIntDrivenUART(u32 r3, u32 r4, u32 r5, void* r6)
 {
@@ -2294,20 +2302,24 @@ DSError TRKTargetContinue(void)
     return kNoError;
 }
 
+typedef struct ExcStatusWords {
+    u32 w0, w4, w8, wC;
+} ExcStatusWords;
+
 DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
                                  MessageBuffer* b, size_t* length, bool read)
 {
     DSError error;
     u32 count;
     u32* data;
-    u8 tempExceptionStatus[0x10];
+    ExcStatusWords tempExceptionStatus;
 
     if (lastRegister > 0x24) {
         return kInvalidRegister;
     }
 
-    memcpy(tempExceptionStatus, gTRKExceptionStatus, sizeof(tempExceptionStatus));
-    gTRKExceptionStatus[0xC] = 0;
+    tempExceptionStatus = *(ExcStatusWords*) gTRKExceptionStatus;
+    *(u8*) (gTRKExceptionStatus + 0xC) = 0;
 
     data = (u32*) gTRKCPUState + firstRegister;
     count = (lastRegister - firstRegister) + 1;
@@ -2319,11 +2331,237 @@ DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
         error = kar_diagnostic__803bdb2c(b, data, count);
     }
 
-    if (gTRKExceptionStatus[0xD]) {
+    if (*(u8*) (gTRKExceptionStatus + 0xD)) {
         *length = 0;
         error = kCWDSException;
     }
 
-    memcpy(gTRKExceptionStatus, tempExceptionStatus, sizeof(tempExceptionStatus));
+    *(ExcStatusWords*) gTRKExceptionStatus = tempExceptionStatus;
     return error;
+}
+
+typedef struct TRKStepStatus {
+    /* 0x00 */ bool active;
+    /* 0x04 */ u32 type;
+    /* 0x08 */ u32 count;
+    /* 0x0C */ u32 rangeStart;
+    /* 0x10 */ u32 rangeEnd;
+} TRKStepStatus;
+
+extern TRKStepStatus lbl_804F9274;
+extern u8 lbl_8048C160[];
+
+u32 kar_diagnostic__near_803c06a4(void)
+{
+    return *(u32*) (gTRKCPUState + 0x80);
+}
+
+DSError kar_diagnostic__near_803c076c(u32 count, bool stepOver)
+{
+    if (stepOver) {
+        return kUnsupportedError;
+    }
+
+    lbl_804F9274.count = count;
+    lbl_804F9274.type = kDSStepIntoCount;
+    lbl_804F9274.active = true;
+
+    MWTRACE(1, (const char*) lbl_8048C160, lbl_804F9274.type);
+
+    *(u32*) (gTRKCPUState + 0x1f8) |= 0x400;
+
+    if (lbl_804F9274.type == kDSStepIntoCount ||
+        lbl_804F9274.type == kDSStepOverCount)
+    {
+        lbl_804F9274.count--;
+    }
+
+    TRKTargetSetStopped(false);
+    return kNoError;
+}
+
+DSError kar_diagnostic__near_803c06b4(u32 rangeStart, u32 rangeEnd, bool stepOver)
+{
+    if (stepOver) {
+        return kUnsupportedError;
+    }
+
+    lbl_804F9274.rangeStart = rangeStart;
+    lbl_804F9274.rangeEnd = rangeEnd;
+    lbl_804F9274.type = kDSStepIntoRange;
+    lbl_804F9274.active = true;
+
+    MWTRACE(1, (const char*) lbl_8048C160, lbl_804F9274.type);
+
+    *(u32*) (gTRKCPUState + 0x1f8) |= 0x400;
+
+    if (lbl_804F9274.type == kDSStepIntoCount ||
+        lbl_804F9274.type == kDSStepOverCount)
+    {
+        lbl_804F9274.count--;
+    }
+
+    TRKTargetSetStopped(false);
+    return kNoError;
+}
+
+extern u8 PPCHalt[];
+extern u8 EndofProgramInstruction[];
+extern void ICInvalidateRange(void* addr, u32 len);
+extern void DCFlushRange(void* addr, u32 len);
+
+void InitializeProgramEndTrap(void)
+{
+    TRK_memcpy(PPCHalt + 4, EndofProgramInstruction, 4);
+    ICInvalidateRange(PPCHalt + 4, 4);
+    DCFlushRange(PPCHalt + 4, 4);
+}
+
+extern u8 lbl_8048C184[];
+
+void TRK_board_display(char* str)
+{
+    OSReport((const char*) lbl_8048C184, str);
+}
+
+static int TRK_mainError;
+
+#pragma dont_inline on
+void TRK_main(void)
+{
+    MWTRACE(1, "TRK_main\n");
+    TRK_mainError = TRKInitializeNub();
+
+    if (!TRK_mainError) {
+        TRKNubWelcome();
+        TRKNubMainLoop();
+    }
+
+    TRK_mainError = TRKTerminateNub();
+}
+#pragma dont_inline reset
+
+void kar_diagnostic__near_803bf730(u32 val)
+{
+    *(u32*) lbl_8056B858 = val;
+}
+
+u32 kar_diagnostic__near_803bf73c(void)
+{
+    return *(u32*) lbl_8056B858;
+}
+
+void fn_803BE624(const char* msg)
+{
+    u32 saved;
+    bool done = false;
+
+    while (!done) {
+        char c = *msg++;
+
+        if (c == 0) {
+            done = true;
+        } else {
+            saved = kar_diagnostic__near_803bf73c();
+            kar_diagnostic__near_803bf730(0);
+            OSReport("%c", c);
+            kar_diagnostic__near_803bf730(saved);
+        }
+    }
+}
+
+extern u8 lbl_8048BC78[];
+
+MessageBufferID kar_diag__803be4e4(void)
+{
+    int bytesAvailable;
+    int bufferIndex;
+    MessageBuffer* buffer;
+    DSError err;
+    u32 msgLength;
+    u8 header[0x40];
+    u8 body[0x800];
+
+    bytesAvailable = fn_803C2400();
+
+    if (bytesAvailable <= 0) {
+        return -1;
+    }
+
+    err = kar_diag__803be22c(&bufferIndex, &buffer);
+    MWTRACE(4, (const char*) lbl_8048BC78 + 0xD0, err);
+
+    kar_diagnostic__803be12c(buffer, 0);
+    fn_803C23C4(header, 0x40);
+    kar_diagnostic__803bde98(buffer, header, 0x40);
+
+    msgLength = *(u32*) header;
+
+    if ((s32) (msgLength - 0x40) > 0) {
+        DSError readErr;
+
+        MWTRACE(1, (const char*) lbl_8048BC78 + 0xF4);
+        readErr = fn_803C23C4(body, msgLength - 0x40);
+
+        if (readErr == kNoError) {
+            kar_diagnostic__803bde98(buffer, body, msgLength);
+        } else {
+            MWTRACE(8, (const char*) lbl_8048BC78 + 0x110);
+            kar_diagnostic__803be19c(err);
+            bufferIndex = -1;
+        }
+    }
+
+    MWTRACE(1, (const char*) lbl_8048BC78 + 0x16C, bufferIndex);
+    return bufferIndex;
+}
+
+DSError fn_803C16CC(void* data, u32 start);
+
+void TRKPostInterruptEvent(void)
+{
+    NubEvent event;
+    u32 inst;
+    int eventType;
+    u32 exceptionID;
+
+    if (*(bool*) (gTRKState + 0x9C)) {
+        *(bool*) (gTRKState + 0x9C) = false;
+        return;
+    }
+
+    exceptionID = *(u32*) (gTRKCPUState + 0x2F8) & 0xFFFF;
+
+    if (exceptionID == 0xD00 || exceptionID == 0x700) {
+        fn_803C16CC(&inst, *(u32*) (gTRKCPUState + 0x80));
+
+        if (inst == 0x0FE00000) {
+            eventType = kSupportEvent;
+        } else {
+            eventType = kBreakpointEvent;
+        }
+    } else {
+        eventType = kExceptionEvent;
+    }
+
+    fn_803BD74C(&event, eventType);
+    kar_diagnostic__803bd764(&event);
+}
+
+
+DSError TRKTargetInterrupt(NubEvent* event)
+{
+    DSError result = kNoError;
+
+    switch (event->fType) {
+    case kBreakpointEvent:
+    case kExceptionEvent:
+        TRKTargetSetStopped(true);
+        result = kar_diagnostic__near_803bff40(kDSNotifyStopped);
+        break;
+    default:
+        break;
+    }
+
+    return result;
 }
