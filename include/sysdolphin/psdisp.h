@@ -24,7 +24,7 @@ typedef struct HSD_psAppSRT {
     f32 ssy;                      // 0x74
     void (*freefunc)(struct HSD_psAppSRT* srt); // 0x78
     u16 idnum;                    // 0x7C
-    s8 xA2;                       // 0x7E
+    u8 xA2;                       // 0x7E
 } HSD_psAppSRT;
 
 struct HSD_Generator {

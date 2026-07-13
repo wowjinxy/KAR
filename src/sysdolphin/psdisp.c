@@ -95,6 +95,7 @@ extern void GXSetVtxDesc(u32 attr, u32 type);
 extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
 extern void GXSetPointSize(u8 size, u32 tex_offsets);
 extern void fn_803D19AC(Mtx out, HSD_psAppSRT* srt, f32 sx, f32 sy, f32 sz);
+extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
 
 extern void* lbl_8058C408[64];
 extern void* lbl_8058C508[64];
@@ -226,7 +227,7 @@ static inline f32 psdisp_sqrtf(f32 x)
 {
     volatile f32 y;
 
-    if (x > 0.0F) {
+    if (x > lbl_805E5FA0) {
         f64 guess = __frsqrte((f64) x);
         guess = 0.5 * guess * -(((f64) x * (guess * guess)) - 3.0);
         guess = 0.5 * guess * -(((f64) x * (guess * guess)) - 3.0);
@@ -688,7 +689,7 @@ extern s32 kar_psdisp__near_80435268(HSD_Particle* pp, u32* cmdList, f32 curX, f
                                       f32 prevX, f32 prevY, f32 prevZ, f32 rightX, f32 rightY,
                                       f32 rightZ, f32 upX, f32 upY, f32 upZ);
 
-static f64 lbl_805E6010 = 0.01;
+static const f64 lbl_805E6010 = 0.01;
 
 void kar_psdisp__near_80434d84(HSD_Particle* pp, u32* cmdList)
 {
@@ -726,8 +727,8 @@ void kar_psdisp__near_80434d84(HSD_Particle* pp, u32* cmdList)
     }
 
     if (pp->kind & 0x100000 || pp->kind & 0x200000) {
-        f32 vx = 0.0F;
-        f32 vy = 0.0F;
+        f32 vx = lbl_805E5FA0;
+        f32 vy = lbl_805E5FA0;
         s32 skip = 0;
 
         if (lbl_805E5FA0 == lbl_8058CC08.unk30) {
@@ -933,17 +934,13 @@ s32 kar_psdisp__near_80435268(HSD_Particle* pp, u32* cmdList, f32 curX, f32 curY
         } else {
             dist = (curZ * curZ) + ((curX * curX) + (curY * curY));
             hueScale = 255.0F * (lbl_805E5FC0 - pp->trail);
-            if (dist > lbl_805E5FA0) {
-                dist = psdisp_sqrtf(dist);
-            }
+            dist = psdisp_sqrtf(dist);
             if (!(__fabs(dist) < lbl_805DC8B8[0])) {
                 f32 dx = prevX - curX;
                 f32 dy = prevY - curY;
                 f32 dz = prevZ - curZ;
                 f32 len = (dz * dz) + ((dx * dx) + (dy * dy));
-                if (len > lbl_805E5FA0) {
-                    len = psdisp_sqrtf(len);
-                }
+                len = psdisp_sqrtf(len);
                 half = len / dist;
                 if (half < lbl_805E5FC0) {
                     half = lbl_805E5FC0;
@@ -1187,8 +1184,8 @@ void kar_psdisp__near_80435c0c(HSD_Particle* pp, u32* cmdList)
     }
 
     if (pp->kind & 0x100000 || pp->kind & 0x200000) {
-        f32 vx = 0.0F;
-        f32 vy = 0.0F;
+        f32 vx = lbl_805E5FA0;
+        f32 vy = lbl_805E5FA0;
         s32 skip = 0;
 
         if (lbl_805E5FA0 == lbl_8058CC08.unk30) {
