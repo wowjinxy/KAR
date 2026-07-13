@@ -2707,15 +2707,18 @@ void fn_803BE624(const char* msg)
 
 extern u8 lbl_8048BC78[];
 
+#pragma dont_inline on
 MessageBufferID kar_diag__803be4e4(void)
 {
     int bytesAvailable;
     int bufferIndex;
     MessageBuffer* buffer;
     DSError err;
+    DSError headerErr;
     u32 msgLength;
     u8 header[0x40];
     u8 body[0x800];
+    const char* fmt = (const char*) lbl_8048BC78;
 
     bytesAvailable = fn_803C2400();
 
@@ -2724,32 +2727,40 @@ MessageBufferID kar_diag__803be4e4(void)
     }
 
     err = kar_diag__803be22c(&bufferIndex, &buffer);
-    MWTRACE(4, (const char*) lbl_8048BC78 + 0xD0, err);
+    MWTRACE(4, fmt + 0xD0, err);
 
     kar_diagnostic__803be12c(buffer, 0);
-    fn_803C23C4(header, 0x40);
-    kar_diagnostic__803bde98(buffer, header, 0x40);
+    headerErr = fn_803C23C4(header, 0x40);
 
-    msgLength = *(u32*) header;
+    if (headerErr == kNoError) {
+        kar_diagnostic__803bde98(buffer, header, 0x40);
 
-    if ((s32) (msgLength - 0x40) > 0) {
-        DSError readErr;
+        msgLength = *(u32*) header;
 
-        MWTRACE(1, (const char*) lbl_8048BC78 + 0xF4);
-        readErr = fn_803C23C4(body, msgLength - 0x40);
+        if ((s32) (msgLength - 0x40) > 0) {
+            DSError readErr;
 
-        if (readErr == kNoError) {
-            kar_diagnostic__803bde98(buffer, body, msgLength);
-        } else {
-            MWTRACE(8, (const char*) lbl_8048BC78 + 0x110);
-            kar_diagnostic__803be19c(err);
-            bufferIndex = -1;
+            MWTRACE(1, fmt + 0xF4);
+            readErr = fn_803C23C4(body, msgLength - 0x40);
+
+            if (readErr == kNoError) {
+                kar_diagnostic__803bde98(buffer, body, msgLength);
+            } else {
+                MWTRACE(8, fmt + 0x110);
+                kar_diagnostic__803be19c(err);
+                bufferIndex = -1;
+            }
         }
+    } else {
+        MWTRACE(8, fmt + 0x144);
+        kar_diagnostic__803be19c(err);
+        bufferIndex = -1;
     }
 
-    MWTRACE(1, (const char*) lbl_8048BC78 + 0x16C, bufferIndex);
+    MWTRACE(1, fmt + 0x16C, bufferIndex);
     return bufferIndex;
 }
+#pragma dont_inline reset
 
 DSError fn_803C16CC(void* data, u32 start);
 
