@@ -152,13 +152,6 @@ typedef struct _AXPBADPCMLOOP {
     /* 0x04 */ u16 loop_yn2;
 } AXPBADPCMLOOP;
 
-typedef struct _AXPBLPF {
-    u16 on;
-    u16 yn1;
-    u16 a0;
-    u16 b0;
-} AXPBLPF;
-
 typedef struct _AXPB {
     /* 0x00 */ u16 nextHi;
     /* 0x02 */ u16 nextLo;
@@ -179,8 +172,7 @@ typedef struct _AXPB {
     /* 0x7E */ AXPBADPCM adpcm;
     /* 0xA6 */ AXPBSRC src;
     /* 0xB4 */ AXPBADPCMLOOP adpcmLoop;
-    /* 0xBA */ AXPBLPF lpf;
-    /* 0xC2 */ u16 pad[25];
+    /* 0xBA */ u16 pad[25];
 } AXPB;
 
 typedef struct _AXVPB {
@@ -338,12 +330,14 @@ void __AXAllocInit(void)
     }
 }
 
+#pragma dont_inline on
 void __AXPushFreeStack(AXVPB* p)
 {
     p->next = lbl_8056E9E8[0];
     lbl_8056E9E8[0] = p;
     p->priority = 0;
 }
+#pragma dont_inline off
 
 static inline AXVPB* __AXPopFreeStack(void)
 {
@@ -356,11 +350,13 @@ static inline AXVPB* __AXPopFreeStack(void)
     return p;
 }
 
+#pragma dont_inline on
 void __AXPushCallbackStack(AXVPB* p)
 {
     p->next1 = lbl_805DE080;
     lbl_805DE080 = p;
 }
+#pragma dont_inline off
 
 AXVPB* __AXPopCallbackStack(void)
 {
@@ -405,6 +401,13 @@ void __AXRemoveFromStack(AXVPB* p)
     tail->prev = head;
 }
 
+static inline void __AXPushFreeStackInline(AXVPB* p)
+{
+    p->next = lbl_8056E9E8[0];
+    lbl_8056E9E8[0] = p;
+    p->priority = 0;
+}
+
 void AXFreeVoice(AXVPB* p)
 {
     BOOL old;
@@ -415,7 +418,7 @@ void AXFreeVoice(AXVPB* p)
         p->depop = 1;
     }
     fn_803EE5BC(p);
-    __AXPushFreeStack(p);
+    __AXPushFreeStackInline(p);
     OSRestoreInterrupts(old);
 }
 
@@ -1588,10 +1591,12 @@ static const u16 lbl_804FEA00[3984] = {
 
 u16 __AXDspCodeSize = sizeof(lbl_804FEA00);
 
+#pragma dont_inline on
 u32 fn_803EC9B4(void)
 {
     return lbl_805DE0C8;
 }
+#pragma dont_inline off
 
 u32 fn_803EC9BC(void)
 {
@@ -1989,6 +1994,7 @@ void __AXSPBInit(void)
         0;
 }
 
+#pragma dont_inline on
 void fn_803EDBA4(AXPB* p)
 {
     lbl_805DE100 += p->dpop.aL;
@@ -2001,6 +2007,7 @@ void fn_803EDBA4(AXPB* p)
     lbl_805DE114 += p->dpop.aAuxAS;
     lbl_805DE120 += p->dpop.aAuxBS;
 }
+#pragma dont_inline off
 
 static u32 lbl_805DE130;
 
@@ -2009,19 +2016,388 @@ u32 fn_803EDC38(void)
     return lbl_805DE130;
 }
 
-void salCalcVolume(u32 lessDspCycles)
+static u32 lbl_804FCEE8[54] = {
+    0x00000DF8, 0x00000F78, 0x000014B8, 0x000019F8, 0x000019F8,
+    0x00000000, 0x000002F8, 0x000002F8, 0x000005BE, 0x000002F8,
+    0x000005F0, 0x000005F0, 0x000008B6, 0x00000000, 0x000004F1,
+    0x000004F1, 0x000009A6, 0x000004F1, 0x000009E2, 0x000009E2,
+    0x00000E97, 0x00000000, 0x000002F8, 0x000002F8, 0x000005BE,
+    0x00000000, 0x000004F1, 0x000004F1, 0x000009A6, 0x000002F8,
+    0x000005F0, 0x000005F0, 0x000008B6, 0x000002F8, 0x000007E9,
+    0x000007E9, 0x00000C9E, 0x00000000, 0x000002F8, 0x000002F8,
+    0x000005BE, 0x00000000, 0x000004F1, 0x000004F1, 0x000009A6,
+    0x000004F1, 0x000007E9, 0x000007E9, 0x00000AAF, 0x000004F1,
+    0x000009E2, 0x000009E2, 0x00000E97, 0x00000000
+};
+
+static struct {
+    AXPB pb[AX_MAX_VOICES];
+    AXPBITDBUFFER itd[AX_MAX_VOICES];
+    AXPBU updates[AX_MAX_VOICES];
+    AXVPB vpb[AX_MAX_VOICES];
+} lbl_80576660;
+
+void salCalcVolume(AXVPB* p)
 {
+    AXPB* ppbDsp;
+    AXPB* ppbUser;
+    u32 sync;
+
+    lbl_805DE130 += 1;
+    ppbDsp = &lbl_80576660.pb[p->index];
+    ppbUser = &p->pb;
+    sync = p->sync;
+
+    if (sync == 0) {
+        ppbUser->state = ppbDsp->state;
+        ppbUser->ve.currentVolume = ppbDsp->ve.currentVolume;
+        ppbUser->addr.currentAddressHi = ppbDsp->addr.currentAddressHi;
+        ppbUser->addr.currentAddressLo = ppbDsp->addr.currentAddressLo;
+        return;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYALL) {
+        u32* src = (u32*)ppbUser;
+        u32* dst = (u32*)ppbDsp;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+
+        if (p->updateCounter != 0) {
+            u32 count;
+            u16* src2 = (u16*)&lbl_80576660.updates[p->index];
+            u16* dst2 = p->updateData;
+            for (count = p->updateCounter; count; count--) {
+                *(dst2) = *(src2);
+                dst2 += 1;
+                src2 += 1;
+            }
+        }
+        return;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYSELECT) {
+        ppbDsp->srcSelect = ppbUser->srcSelect;
+        ppbDsp->coefSelect = ppbUser->coefSelect;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYMXRCTRL) {
+        ppbDsp->mixerCtrl = ppbUser->mixerCtrl;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYSTATE) {
+        ppbDsp->state = ppbUser->state;
+    } else {
+        ppbUser->state = ppbDsp->state;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYTYPE) {
+        ppbDsp->type = ppbUser->type;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYAXPBMIX) {
+        u16* src = (u16*)&ppbUser->mix;
+        u16* dst = (u16*)&ppbDsp->mix;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYTSHIFT) {
+        ppbDsp->itd.targetShiftL = ppbUser->itd.targetShiftL;
+        ppbDsp->itd.targetShiftR = ppbUser->itd.targetShiftR;
+    } else if (sync & AX_SYNC_FLAG_COPYITD) {
+        u16* src = (u16*)&ppbUser->itd;
+        u16* dst = (u16*)&ppbDsp->itd;
+        u32* dst_;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+
+        dst_ = p->itdBuffer;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0; dst_ += 1;
+        *(dst_) = 0;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYUPDATE) {
+        u16* src = (u16*)&ppbUser->update;
+        u16* dst = (u16*)&ppbDsp->update;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+
+        if (p->updateCounter) {
+            u32* src_ = (u32*)p->updateData;
+            u32* dst_ = (u32*)&lbl_80576660.updates[p->index];
+            u32 count;
+
+            for (count = p->updateCounter; count; count--) {
+                *(dst_) = *(src_);
+                dst_ += 1;
+                src_ += 1;
+            }
+        }
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYDPOP) {
+        u16* src = (u16*)&ppbUser->dpop;
+        u16* dst = (u16*)&ppbDsp->dpop;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
+
+    if (sync & AX_SYNC_FLAG_SWAPVOL) {
+        ppbUser->ve.currentVolume = ppbDsp->ve.currentVolume;
+        ppbDsp->ve.currentDelta = ppbUser->ve.currentDelta;
+    } else if (sync & AX_SYNC_FLAG_COPYVOL) {
+        ppbDsp->ve.currentVolume = ppbUser->ve.currentVolume;
+        ppbDsp->ve.currentDelta = ppbUser->ve.currentDelta;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYFIR) {
+        u16* src = (u16*)&ppbUser->fir;
+        u16* dst = (u16*)&ppbDsp->fir;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
+
+    if (sync & (AX_SYNC_FLAG_COPYLOOP | AX_SYNC_FLAG_COPYLOOPADDR | AX_SYNC_FLAG_COPYENDADDR | AX_SYNC_FLAG_COPYCURADDR)) {
+        if (sync & AX_SYNC_FLAG_COPYLOOP) {
+            ppbDsp->addr.loopFlag = ppbUser->addr.loopFlag;
+        }
+        if (sync & AX_SYNC_FLAG_COPYLOOPADDR) {
+            *(u32*)&ppbDsp->addr.loopAddressHi = *(u32*)&ppbUser->addr.loopAddressHi;
+        }
+        if (sync & AX_SYNC_FLAG_COPYENDADDR) {
+            *(u32*)&ppbDsp->addr.endAddressHi = *(u32*)&ppbUser->addr.endAddressHi;
+        }
+        if (sync & AX_SYNC_FLAG_COPYCURADDR) {
+            *(u32*)&ppbDsp->addr.currentAddressHi = *(u32*)&ppbUser->addr.currentAddressHi;
+        } else {
+            *(u32*)&ppbUser->addr.currentAddressHi = *(u32*)&ppbDsp->addr.currentAddressHi;
+        }
+    } else if (sync & AX_SYNC_FLAG_COPYADDR) {
+        u32* src = (u32*)&ppbUser->addr;
+        u32* dst = (u32*)&ppbDsp->addr;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    } else {
+        ppbUser->addr.currentAddressHi = ppbDsp->addr.currentAddressHi;
+        ppbUser->addr.currentAddressLo = ppbDsp->addr.currentAddressLo;
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYADPCM) {
+        u32* src = (u32*)&ppbUser->adpcm;
+        u32* dst = (u32*)&ppbDsp->adpcm;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYRATIO) {
+        ppbDsp->src.ratioHi = ppbUser->src.ratioHi;
+        ppbDsp->src.ratioLo = ppbUser->src.ratioLo;
+    } else if (sync & AX_SYNC_FLAG_COPYSRC) {
+        u16* src = (u16*)&ppbUser->src;
+        u16* dst = (u16*)&ppbDsp->src;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
+
+    if (sync & AX_SYNC_FLAG_COPYADPCMLOOP) {
+        u16* src = (u16*)&ppbUser->adpcmLoop;
+        u16* dst = (u16*)&ppbDsp->adpcmLoop;
+
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src);
+    }
 }
 
-static u8 lbl_80576660[AX_MAX_VOICES][0x450];
+static u32 lbl_805DE128;
+static u32 lbl_805DE12C;
 
 void SortVoices(u32 lessDspCycles)
 {
+    u32 cycles;
+    u32 i;
+    AXVPB* p;
+
+    lbl_805DE130 = 0;
+    DCInvalidateRange(lbl_80576660.pb, sizeof(lbl_80576660.pb));
+    DCInvalidateRange(lbl_80576660.itd, sizeof(lbl_80576660.itd));
+    cycles = (fn_803EC9B4() + 0x10000) - 0x55F0 + lessDspCycles;
+
+    for (i = 31; i; i--) {
+        for (p = __AXGetStackHead(i); p; p = p->next) {
+            if (p->depop != 0) {
+                fn_803EDBA4(&lbl_80576660.pb[p->index]);
+            }
+
+            if ((p->pb.state == 1) || (p->updateCounter != 0)) {
+                if (p->pb.srcSelect != 2) {
+                    cycles += lbl_804FCEE8[p->pb.src.ratioHi];
+                }
+
+                cycles += lbl_804FCEE8[5 + (p->pb.mixerCtrl & 0xF)]
+                    + lbl_804FCEE8[21 + ((p->pb.mixerCtrl >> 4) & 0x1F)]
+                    + lbl_804FCEE8[21 + ((p->pb.mixerCtrl >> 9) & 0x1F)] + 0x8C;
+
+                if (lbl_805DE128 > cycles) {
+                    salCalcVolume(p);
+                } else {
+                    AXPB* ppbDsp = &lbl_80576660.pb[p->index];
+                    if (ppbDsp->state == 1) {
+                        fn_803EDBA4(ppbDsp);
+                    }
+                    p->pb.state = ppbDsp->state = ppbDsp->update.updNum[0] = ppbDsp->update.updNum[1] = ppbDsp->update.updNum[2] =
+                        ppbDsp->update.updNum[3] = ppbDsp->update.updNum[4] = 0;
+                    __AXPushCallbackStack(p);
+                }
+            } else {
+                salCalcVolume(p);
+            }
+
+            p->sync = 0;
+            p->depop = 0;
+            p->updateMS = p->updateCounter = 0;
+            p->updateWrite = p->updateData;
+        }
+    }
+
+    lbl_805DE12C = cycles;
+    for (p = __AXGetStackHead(0); p; p = p->next) {
+        if (p->depop != 0) {
+            fn_803EDBA4(&lbl_80576660.pb[p->index]);
+        }
+        p->depop = 0;
+        lbl_80576660.pb[p->index].state = lbl_80576660.pb[p->index].update.updNum[0] = lbl_80576660.pb[p->index].update.updNum[1]
+            = lbl_80576660.pb[p->index].update.updNum[2] = lbl_80576660.pb[p->index].update.updNum[3]
+            = lbl_80576660.pb[p->index].update.updNum[4] = 0;
+    }
+
+    DCFlushRange(lbl_80576660.pb, sizeof(lbl_80576660.pb));
+    DCFlushRange(lbl_80576660.itd, sizeof(lbl_80576660.itd));
+    DCFlushRange(lbl_80576660.updates, sizeof(lbl_80576660.updates));
 }
 
 u32 fn_803EE5B0(void)
 {
-    return (u32)lbl_80576660;
+    return (u32)lbl_80576660.pb;
 }
 
 void fn_803EE5BC(AXVPB* p)
@@ -2035,8 +2411,83 @@ void fn_803EE5BC(AXVPB* p)
         p->pb.update.updNum[4] = 0;
 }
 
+#define OS_BUS_CLOCK (*(volatile u32*)0x800000F8)
+
 void salInitDspCtrl(void)
 {
+    u32 i;
+    AXPB* ppb;
+    AXPBITDBUFFER* ppbi;
+    AXPBU* ppbu;
+    AXVPB* pvpb;
+    u32* p;
+
+    lbl_805DE128 = OS_BUS_CLOCK / 400;
+    lbl_805DE12C = 0;
+
+    p = (u32*)lbl_80576660.pb;
+    for (i = sizeof(lbl_80576660.pb) / 4; i != 0; i--) {
+        *p = 0;
+        p++;
+    }
+
+    p = (u32*)lbl_80576660.itd;
+    for (i = sizeof(lbl_80576660.itd) / 4; i != 0; i--) {
+        *p = 0;
+        p++;
+    }
+
+    p = (u32*)lbl_80576660.vpb;
+    for (i = sizeof(lbl_80576660.vpb) / 4; i != 0; i--) {
+        *p = 0;
+        p++;
+    }
+
+    for (i = 0; i < AX_MAX_VOICES; i++) {
+        ppb = &lbl_80576660.pb[i];
+        ppbi = &lbl_80576660.itd[i];
+        ppbu = &lbl_80576660.updates[i];
+        pvpb = &lbl_80576660.vpb[i];
+
+        pvpb->index = i;
+        pvpb->updateWrite = pvpb->updateData;
+        pvpb->itdBuffer = ppbi;
+
+        pvpb->pb.state = 0;
+        pvpb->pb.itd.flag = 0;
+        pvpb->sync = 0xA4;
+        pvpb->updateMS = pvpb->updateCounter = 0;
+        pvpb->updateWrite = pvpb->updateData;
+        pvpb->pb.update.updNum[0] = pvpb->pb.update.updNum[1] = pvpb->pb.update.updNum[2] = pvpb->pb.update.updNum[3] =
+            pvpb->pb.update.updNum[4] = 0;
+
+        if (i == 0x3F) {
+            pvpb->pb.nextHi = pvpb->pb.nextLo = ppb->nextHi = ppb->nextLo = 0;
+        } else {
+            pvpb->pb.nextHi = (u16)((u32)(ppb + 1) >> 16);
+            pvpb->pb.nextLo = (u16)(u32)(ppb + 1);
+            ppb->nextHi = (u16)((u32)(ppb + 1) >> 16);
+            ppb->nextLo = (u16)(u32)(ppb + 1);
+        }
+
+        pvpb->pb.currHi = (u16)((u32)ppb >> 16);
+        pvpb->pb.currLo = (u16)(u32)ppb;
+        ppb->currHi = (u16)((u32)ppb >> 16);
+        ppb->currLo = (u16)(u32)ppb;
+        pvpb->pb.itd.bufferHi = (u16)((u32)ppbi >> 16);
+        pvpb->pb.itd.bufferLo = (u16)(u32)ppbi;
+        ppb->itd.bufferHi = (u16)((u32)ppbi >> 16);
+        ppb->itd.bufferLo = (u16)(u32)ppbi;
+        pvpb->pb.update.dataHi = (u16)((u32)ppbu >> 16);
+        pvpb->pb.update.dataLo = (u16)(u32)ppbu;
+        ppb->update.dataHi = (u16)((u32)ppbu >> 16);
+        ppb->update.dataLo = (u16)(u32)ppbu;
+
+        pvpb->priority = 1;
+        __AXPushFreeStack(pvpb);
+    }
+
+    DCFlushRange(lbl_80576660.pb, sizeof(lbl_80576660.pb));
 }
 
 void fn_803EE7F4(AXVPB* p, u32 type)
