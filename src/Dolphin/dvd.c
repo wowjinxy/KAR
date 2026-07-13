@@ -173,8 +173,8 @@ extern const char lbl_804F9590[];
     if (!(cond))                               \
     OSPanic("dvd.c", line, msg)
 
-#define __DIRegs ((volatile u32*)0xCC006000)
-#define __PIRegs ((volatile u32*)0xCC003000)
+volatile u32 __DIRegs[] : (0xCC006000);
+volatile u32 __PIRegs[] : (0xCC003000);
 #define OS_BUS_CLOCK (*(volatile u32*)0x800000F8)
 #define OSSecondsToTicks(sec) ((OS_BUS_CLOCK / 4) * (sec))
 #define OSMillisecondsToTicks(msec) ((msec) * ((OS_BUS_CLOCK / 4) / 1000))
@@ -226,8 +226,8 @@ extern BOOL lbl_805DC8D0; /* FirstRead */
 
 BOOL DVDLowSeek(u32 offset, DVDLowCallback callback);
 BOOL DVDLowReadDiskID(DVDDiskID* diskID, DVDLowCallback callback);
-BOOL DVDLowStopMotor(DVDLowCallback callback);
-BOOL DVDLowWaitCoverClose(DVDLowCallback callback);
+__declspec(weak) BOOL DVDLowStopMotor(DVDLowCallback callback);
+__declspec(weak) BOOL DVDLowWaitCoverClose(DVDLowCallback callback);
 BOOL DVDLowRequestError(DVDLowCallback callback);
 BOOL DVDLowInquiry(DVDDriveInfo* info, DVDLowCallback callback);
 BOOL DVDLowAudioStream(u32 subcmd, u32 length, u32 offset, DVDLowCallback callback);
@@ -253,6 +253,7 @@ int DVDReadAbsAsyncPrio(DVDCommandBlock* block, void* addr, s32 length, s32 offs
 int DVDReadAbsAsyncForBS(DVDCommandBlock* block, void* addr, s32 length, s32 offset, DVDCBCallback callback);
 int DVDReadDiskID(DVDCommandBlock* block, DVDDiskID* diskID, DVDCBCallback callback);
 int DVDCancelAsync(DVDCommandBlock* block, DVDCBCallback callback);
+void fn_803C7C34(s32 result, DVDCommandBlock* block);
 s32 DVDCancel(volatile DVDCommandBlock* block);
 void __DVDStoreErrorCode(u32 error);
 int __DVDPushWaitingQueue(s32 prio, DVDCommandBlock* block);
@@ -365,7 +366,7 @@ BOOL DVDLowSeek(u32 offset, DVDLowCallback callback)
     return TRUE;
 }
 
-BOOL DVDLowWaitCoverClose(DVDLowCallback callback)
+__declspec(weak) BOOL DVDLowWaitCoverClose(DVDLowCallback callback)
 {
     Callback_805DDD48 = callback;
     WaitingCoverClose_805DDD5C = TRUE;
@@ -391,7 +392,7 @@ BOOL DVDLowReadDiskID(DVDDiskID* diskID, DVDLowCallback callback)
     return TRUE;
 }
 
-BOOL DVDLowStopMotor(DVDLowCallback callback)
+__declspec(weak) BOOL DVDLowStopMotor(DVDLowCallback callback)
 {
     OSTime timeout;
     Callback_805DDD48 = callback;
@@ -478,13 +479,15 @@ void DVDLowReset(void)
 {
     u32 reg;
     OSTime resetStart;
+    OSTime waitTicks;
 
     __DIRegs[1] = 2;
     reg = __PIRegs[9];
     __PIRegs[9] = (reg & ~4) | 1;
 
     resetStart = __OSGetSystemTime();
-    while ((__OSGetSystemTime() - resetStart) < OSMicrosecondsToTicks(12))
+    waitTicks = OSMicrosecondsToTicks(12);
+    while ((__OSGetSystemTime() - resetStart) < waitTicks)
         ;
 
     __PIRegs[9] = reg | 4 | 1;
@@ -2112,11 +2115,6 @@ int DVDCancelAsync(DVDCommandBlock* block, DVDCBCallback callback)
     return TRUE;
 }
 
-void fn_803C7C34(s32 result, DVDCommandBlock* block)
-{
-    OSWakeupThread(&__DVDThreadQueue);
-}
-
 s32 DVDCancel(volatile DVDCommandBlock* block)
 {
     int result;
@@ -2148,6 +2146,11 @@ s32 DVDCancel(volatile DVDCommandBlock* block)
 
     OSRestoreInterrupts(enabled);
     return 0;
+}
+
+void fn_803C7C34(s32 result, DVDCommandBlock* block)
+{
+    OSWakeupThread(&__DVDThreadQueue);
 }
 
 DVDDiskID* DVDGetCurrentDiskID(void)
