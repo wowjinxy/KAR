@@ -572,10 +572,6 @@ size_t wcstombs(char* dest, const __wchar_t* src, size_t max)
             len = 3;
         }
 
-        if (i + len > max) {
-            break;
-        }
-
         {
             u32 lead_table = lbl_805E5198;
             u32 v = wc;
@@ -590,6 +586,10 @@ size_t wcstombs(char* dest, const __wchar_t* src, size_t max)
                 v >>= 6;
             }
             *--p = (unsigned char) (v | ((unsigned char*) &lead_table)[len]);
+        }
+
+        if (i + len > max) {
+            break;
         }
 
         strncpy(dest + i, (char*) buf, len);
@@ -2127,7 +2127,7 @@ int strcmp(const char* str1, const char* str2)
     r1 = *right;
     result = (int) l1 - (int) r1;
     if (result) {
-        return l1 - r1;
+        return result;
     }
 
     if ((align = ((unsigned int) left & 3u)) != ((unsigned int) right & 3u)) {
@@ -2340,6 +2340,75 @@ int fn_803B7CD0(int sig)
     return 0;
 }
 
+/* strstr */
+char* fn_803B7D90(char* haystack, char* needle)
+{
+    unsigned char* p1;
+    unsigned char* n = (unsigned char*) needle;
+    unsigned char n0;
+
+    if (needle == 0) {
+        return haystack;
+    }
+    p1 = (unsigned char*) haystack - 1;
+    n0 = *n;
+    if (n0 != 0) {
+        for (;;) {
+            unsigned char c;
+            do {
+                c = *++p1;
+                if (c == 0) {
+                    return 0;
+                }
+            } while (c != n0);
+
+            {
+                unsigned char* p2 = p1 - 1;
+                unsigned char* p3 = n - 1;
+                do {
+                    p2 = p2 + 1;
+                    p3 = p3 + 1;
+                    if (*p2 != *p3) {
+                        break;
+                    }
+                } while (*p2 != 0);
+                if (*p3 == 0) {
+                    return (char*) p1;
+                }
+            }
+        }
+    }
+    return haystack;
+}
+
+/* strrchr */
+char* fn_803B7DF8(char* s, int c)
+{
+    unsigned char* p = (unsigned char*) s - 1;
+    unsigned char* found = 0;
+    unsigned char ch = (unsigned char) c;
+    unsigned char ci;
+
+    while ((ci = *++p) != 0) {
+        if (ci == ch) {
+            found = p;
+        }
+    }
+
+    if (found != 0) {
+        return (char*) found;
+    }
+    if (ch != 0) {
+        return 0;
+    }
+    return (char*) p;
+}
+
+int fn_803B98AC(void)
+{
+    return 0;
+}
+
 int fwide(FILE* stream, int mode)
 {
     int orientation;
@@ -2377,7 +2446,251 @@ extern double fn_803BA434(double x);
 extern double fn_803BA770(double x);
 extern double fn_803BA9EC(double x);
 extern double fn_803BAAFC(double x);
+union du {
+    double d;
+    struct {
+        s32 hi;
+        u32 lo;
+    } w;
+};
+
+/* ceil */
+static const double lbl_805E56F0 = 1e300;
+static const double lbl_805E56F8 = 0.0;
+
+double fn_803BCB64(double x)
+{
+    union du u;
+    s32 i0, i1, j0;
+    u32 i, j;
+
+    u.d = x;
+    i0 = u.w.hi;
+    i1 = u.w.lo;
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    if (j0 < 20) {
+        if (j0 < 0) {
+            if (lbl_805E56F0 + x > lbl_805E56F8) {
+                if (i0 < 0) {
+                    i0 = 0x80000000;
+                    i1 = 0;
+                } else if ((i0 | i1) != 0) {
+                    i0 = 0x3ff00000;
+                    i1 = 0;
+                }
+            }
+        } else {
+            i = (0x000fffff) >> j0;
+            if (((i0 & i) | i1) == 0) {
+                return x;
+            }
+            if (lbl_805E56F0 + x > lbl_805E56F8) {
+                if (i0 > 0) {
+                    i0 += (0x00100000) >> j0;
+                }
+                i0 &= (~i);
+                i1 = 0;
+            }
+        }
+    } else if (j0 > 51) {
+        if (j0 == 0x400) {
+            return x + x;
+        } else {
+            return x;
+        }
+    } else {
+        i = ((u32) 0xffffffff) >> (j0 - 20);
+        if ((i1 & i) == 0) {
+            return x;
+        }
+        if (lbl_805E56F0 + x > lbl_805E56F8) {
+            if (i0 > 0) {
+                if (j0 == 20) {
+                    i0 += 1;
+                } else {
+                    j = i1 + (1 << (52 - j0));
+                    if (j < (u32) i1) {
+                        i0 += 1;
+                    }
+                    i1 = j;
+                }
+            }
+            i1 &= (~i);
+        }
+    }
+    u.w.hi = i0;
+    u.w.lo = i1;
+    return u.d;
+}
+
+/* copysign */
+double fn_803BCCA8(double x, double y)
+{
+    union {
+        double d;
+        struct {
+            u32 hi;
+            u32 lo;
+        } w;
+    } uy, ux;
+
+    ux.d = x;
+    uy.d = y;
+    ux.w.hi = (ux.w.hi & 0x7FFFFFFF) | (uy.w.hi & 0x80000000);
+    return ux.d;
+}
+
 extern double fn_803BCCD0(double x);
+
+/* floor */
+static const double lbl_805E5708 = 1e300;
+static const double lbl_805E5710 = 0.0;
+
+double fn_803BCDA4(double x)
+{
+    union du u;
+    s32 i0, i1, j0;
+    u32 i, j;
+
+    u.d = x;
+    i0 = u.w.hi;
+    i1 = u.w.lo;
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    if (j0 < 20) {
+        if (j0 < 0) {
+            if (lbl_805E5708 + x > lbl_805E5710) {
+                if (i0 >= 0) {
+                    i0 = 0;
+                    i1 = 0;
+                } else if (((i0 & 0x7fffffff) | i1) != 0) {
+                    i0 = 0xbff00000;
+                    i1 = 0;
+                }
+            }
+        } else {
+            i = (0x000fffff) >> j0;
+            if (((i0 & i) | i1) == 0) {
+                return x;
+            }
+            if (lbl_805E5708 + x > lbl_805E5710) {
+                if (i0 < 0) {
+                    i0 += (0x00100000) >> j0;
+                }
+                i0 &= (~i);
+                i1 = 0;
+            }
+        }
+    } else if (j0 > 51) {
+        if (j0 == 0x400) {
+            return x + x;
+        } else {
+            return x;
+        }
+    } else {
+        i = ((u32) 0xffffffff) >> (j0 - 20);
+        if ((i1 & i) == 0) {
+            return x;
+        }
+        if (lbl_805E5708 + x > lbl_805E5710) {
+            if (i0 < 0) {
+                if (j0 == 20) {
+                    i0 += 1;
+                } else {
+                    j = i1 + (1 << (52 - j0));
+                    if (j < (u32) i1) {
+                        i0 += 1;
+                    }
+                    i1 = j;
+                }
+            }
+            i1 &= (~i);
+        }
+    }
+    u.w.hi = i0;
+    u.w.lo = i1;
+    return u.d;
+}
+
+/* frexp */
+static const double lbl_805E5718 = 1.8014398509481984e+16;
+
+double fn_803BCEEC(double x, int* exponent)
+{
+    union du u;
+    s32 hx, ix, lx;
+
+    u.d = x;
+    hx = u.w.hi;
+    ix = 0x7fffffff & hx;
+    lx = u.w.lo;
+    *exponent = 0;
+
+    if (ix >= 0x7ff00000 || ((ix | lx) == 0)) {
+        return x;
+    }
+    if (ix < 0x00100000) {
+        x *= lbl_805E5718;
+        u.d = x;
+        hx = u.w.hi;
+        ix = hx & 0x7fffffff;
+        *exponent = -54;
+    }
+    *exponent += (ix >> 20) - 1022;
+    hx = (hx & 0x800fffff) | 0x3fe00000;
+    u.w.hi = hx;
+    x = u.d;
+    return x;
+}
+
+/* modf */
+double fn_803BD13C(double x, double* iptr)
+{
+    union du u;
+    s32 i0, i1, j0;
+    u32 i;
+
+    u.d = x;
+    i0 = u.w.hi;
+    i1 = u.w.lo;
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    if (j0 < 20) {
+        if (j0 < 0) {
+            ((s32*) iptr)[0] = i0 & 0x80000000;
+            ((u32*) iptr)[1] = 0;
+            return x;
+        } else {
+            i = (0x000fffff) >> j0;
+            if (((i0 & i) | i1) == 0) {
+                *iptr = x;
+                u.w.hi = i0 & 0x80000000;
+                u.w.lo = 0;
+                return u.d;
+            } else {
+                ((s32*) iptr)[0] = i0 & (~i);
+                ((u32*) iptr)[1] = 0;
+                return x - *iptr;
+            }
+        }
+    } else if (j0 > 51) {
+        *iptr = x;
+        u.w.hi = i0 & 0x80000000;
+        u.w.lo = 0;
+        return u.d;
+    } else {
+        i = ((u32) 0xffffffff) >> (j0 - 20);
+        if ((i1 & i) == 0) {
+            *iptr = x;
+            u.w.hi = i0 & 0x80000000;
+            u.w.lo = 0;
+            return u.d;
+        } else {
+            ((s32*) iptr)[0] = i0;
+            ((u32*) iptr)[1] = i1 & (~i);
+            return x - *iptr;
+        }
+    }
+}
+
 extern double fn_803B3C64(double x);
 
 double sin(double x);
