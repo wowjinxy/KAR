@@ -8,6 +8,7 @@
 
 #include <sysdolphin/object.h>
 #include <sysdolphin/fobj.h>
+#include <sysdolphin/lobj_setup.h>
 
 #define HSD_A_L_LITC_R 9
 #define HSD_A_L_LITC_G 10
@@ -157,5 +158,11 @@ s32 HSD_LObjGetLightMaskAttnFunc(void);
 s32 HSD_LObjGetLightMaskAlpha(void);
 s32 HSD_LObjGetLightMaskSpecular(void);
 s32 HSD_LObjGetNbActive(void);
+s32 HSD_LightID2Index(u32 id);
+s32 HSD_Index2LightID(s32 index);
+HSD_LObj* HSD_LObjLoadDesc(HSD_LightDesc* desc);
+void HSD_LObjAddAnimAll(HSD_LObj* lobj, HSD_LightAnim* anim);
+void HSD_LObjSetCurrentAll(HSD_LObj* lobj);
+void HSD_LObjRemoveAll(HSD_LObj* lobj);
 
 #endif

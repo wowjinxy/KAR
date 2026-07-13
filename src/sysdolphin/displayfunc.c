@@ -1,11 +1,22 @@
 #include <global.h>
 
-#include <dolphin/gx/gxtypes.h>
+#include <dolphin/gx/gx.h>
+#include <dolphin/mtx/mtx.h>
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
+#include <kar/math.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/displayfunc.h>
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/float_epsilon.h>
+#include <sysdolphin/gobjproc.h>
+#include <sysdolphin/identity_mtx.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/lobj_setup.h>
+#include <sysdolphin/mtx_inverse.h>
+#include <sysdolphin/pobj.h>
+#include <sysdolphin/tev.h>
+#include <sysdolphin/unit_vec.h>
 #include <sysdolphin/video.h>
 
 #define HSD_JOBJ_METHOD(o) ((HSD_JObjInfo*) ((o)->object.parent.class_info))
@@ -28,28 +39,11 @@ typedef struct _HSD_ZList {
     struct _HSD_ZList* next_all;
 } HSD_ZList;
 
-extern void HSD_Panic(char* file, s32 line, char* msg);
-extern void HSD_LObjSetupSpecularInit(Mtx pmtx);
-extern void HSD_JObjSetCurrent(HSD_JObj* jobj);
-extern HSD_CObj* HSD_CObjGetCurrent(void);
 extern MtxPtr HSD_MtxAlloc(void);
 extern void HSD_MtxFree(MtxPtr mtx);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void HSD_MtxInverseConcat(Mtx inv, Mtx src, Mtx dest);
-extern void fn_803D1578(MtxPtr src, Mtx dst);
 extern void memset(void* ptr, s32 value, u32 size);
-extern f32 PSVECMag(Vec* vec);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern void HSD_ClearVtxDesc(void);
-extern void HSD_StateInitTev(void);
-extern void HSD_SetupRenderMode(u32 rendermode);
-extern void fn_803D19AC(Mtx m, f32 xs, f32 ys, f32 zs);
 extern void kar_grcoll__near_803d1738(Mtx m, s32 axis, f32 rad);
-extern f32 lbl_805DC8C0[];
-extern Vec lbl_8048C498;
 
 extern void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 format,
                          u32 wrap_s, u32 wrap_t, u32 mipmap);
@@ -57,42 +51,19 @@ extern void GXLoadTexObj(GXTexObj* obj, u32 mapid);
 extern void GXSetNumTexGens(u32 n);
 extern void GXSetTexCoordGen2(u16 dst_coord, u32 func, u32 src_param, u32 mtx, u32 normalize,
                               u32 post_mtx);
-extern void GXSetNumTevStages(u8 n);
-extern void GXSetTevOrder(u8 stage, u32 coord, u32 map, u32 color);
-extern void GXSetTevOp(u8 stage, u32 mode);
 extern void GXSetZTexture(u32 op, u32 fmt, u32 bias);
-extern void GXSetCullMode(u32 mode);
-extern void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
-extern void GXSetZCompLoc(u32 before_tex);
-extern void GXSetZMode(u32 enable, u32 func, u32 update_enable);
-extern void GXSetBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
-extern void GXSetColorUpdate(u32 update_enable);
-extern void GXSetAlphaUpdate(u32 update_enable);
-extern void GXSetNumChans(u8 n);
 extern void GXSetChanCtrl(u8 chan, u32 enable, u32 amb_src, u32 mat_src, u32 light_mask,
                           u32 diff_fn, u32 attn_fn);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxAttrFmt(u32 vtxfmt, u32 attr, u32 comp_cnt, u32 comp_type, u8 frac);
-extern void GXLoadPosMtxImm(MtxPtr mtx, u32 id);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetVtxDesc(u32 attr, u32 type);
-extern void GXBegin(u8 prim, u8 vtxfmt, u16 nverts);
-extern void HSD_StateInvalidate(s32 mask);
 
-extern u8 lbl_805DCB88[4];
-extern HSD_ObjAllocData lbl_80589A18;
-extern GXRenderModeObj lbl_804F9C20;
-extern Mtx lbl_80503FC0;
+extern u8 JObjSPtclColor[4];
+extern HSD_ObjAllocData HSD_ZListAllocData;
+extern GXRenderModeObj HSD_DefaultRenderModeObj;
 
-void _HSD_ZListClear(void);
+extern HSD_ZList* HSD_ZListAll;
+extern HSD_ZList* HSD_ZListOpaque;
+extern HSD_ZList* HSD_ZListTranslucent;
 
-extern HSD_ZList* lbl_805DE278;
-extern HSD_ZList* lbl_805DE27C;
-extern HSD_ZList* lbl_805DE284;
-
-char kar_src_displayfunc_80503ba0[] = "displayfunc.c";
-char lbl_80503BB0[] = "unkown type of billboard.\n";
-u32 lbl_80503BE0[32] = {
+u32 DisplayFuncWhiteTexImage[32] = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -103,32 +74,28 @@ u32 lbl_80503BE0[32] = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 };
 
-HSD_ZList** lbl_805DCB8C = &lbl_805DE278;
-HSD_ZList** lbl_805DCB90 = &lbl_805DE27C;
-HSD_ZList** lbl_805DCB94 = &lbl_805DE284;
-char lbl_805DCB98[] = "jobj";
-char lbl_805DCBA0[] = "x";
-char kar_srcfile_jobj_h_805dcba4[] = "jobj.h";
-s32 lbl_805DCBB0 = -1;
-GXRenderModeObj* lbl_805DCBB4 = &lbl_804F9C20;
-s32 lbl_805DCBB8 = 2;
-s32 lbl_805DCBBC = 0x40000;
-s32 lbl_805DCBC0 = 2;
-s32 lbl_805DCBC4 = 0;
-char lbl_805DCBC8[] = "addr";
+HSD_ZList** HSD_ZListAllTail = &HSD_ZListAll;
+HSD_ZList** HSD_ZListOpaqueTail = &HSD_ZListOpaque;
+HSD_ZList** HSD_ZListTranslucentTail = &HSD_ZListTranslucent;
+s32 HSD_CurrentHeap = -1;
+GXRenderModeObj* HSD_RenderMode = &HSD_DefaultRenderModeObj;
+s32 HSD_ZBufferFormat = 2;
+s32 HSD_FIFOSize = 0x40000;
+s32 HSD_XFBMaxNum = 2;
+s32 HSD_ClearColor = 0;
 
-s32 lbl_805DE270;
-s32 lbl_805DE274;
-HSD_ZList* lbl_805DE278;
-HSD_ZList* lbl_805DE27C;
-s32 lbl_805DE280;
-HSD_ZList* lbl_805DE284;
-s32 lbl_805DE288[2];
-const u32 lbl_805E6378[2];
+s32 HSD_ZSortMode;
+s32 HSD_ZSortCompare;
+HSD_ZList* HSD_ZListAll;
+HSD_ZList* HSD_ZListOpaque;
+s32 HSD_ZListOpaqueCount;
+HSD_ZList* HSD_ZListTranslucent;
+s32 HSD_ZListTranslucentCount[2];
+const u32 HSD_DefaultClearColor[2];
 
 void HSD_ZListInitAllocData(void)
 {
-    HSD_ObjAllocInit(&lbl_80589A18, sizeof(HSD_ZList), 4);
+    HSD_ObjAllocInit(&HSD_ZListAllocData, sizeof(HSD_ZList), 4);
 }
 
 void HSD_StateInitDirect(u32 vtxfmt, u32 rendermode)
@@ -142,11 +109,6 @@ void HSD_StateInitDirect(u32 vtxfmt, u32 rendermode)
     GXSetVtxDesc(0xB, 1);
     GXSetCurrentMtx(0);
 }
-
-extern f64 __frsqrte(f64 x);
-
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fmadds(f32 a, f32 c, f32 b);
 
 static inline f32 displayfunc_sqrtf(f32 x)
 {
@@ -184,7 +146,7 @@ void mkVBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
     ay.z = src[2][1];
 
     mag = PSVECMag(&ay);
-    PSVECScale(1.0F / (lbl_805DC8C0[0] + mag), &ay, &ay_n);
+    PSVECScale(1.0F / (HSD_FloatEpsilon[0] + mag), &ay, &ay_n);
 
     sx = displayfunc_col_mag(src, 0);
     sz = displayfunc_col_mag(src, 2);
@@ -193,15 +155,15 @@ void mkVBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
         Vec pos_n;
 
         mag = PSVECMag(&pos);
-        PSVECScale(-1.0F / (lbl_805DC8C0[0] + mag), &pos, &pos_n);
+        PSVECScale(-1.0F / (HSD_FloatEpsilon[0] + mag), &pos, &pos_n);
         PSVECCrossProduct(&ay_n, &pos_n, &ax);
     } else {
-        Vec zOne = lbl_8048C498;
+        Vec zOne = HSD_UnitZVec;
         PSVECCrossProduct(&ay_n, &zOne, &ax);
     }
 
     mag = PSVECMag(&ax);
-    if (mag < lbl_805DC8C0[0]) {
+    if (mag < HSD_FloatEpsilon[0]) {
         PSMTXCopy(src, dst);
     } else {
         f32 sxFactor = sx / mag;
@@ -209,7 +171,7 @@ void mkVBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
 
         PSVECCrossProduct(&ax, &ay_n, &az);
         mag = PSVECMag(&az);
-        szFactor = sz / (lbl_805DC8C0[0] + mag);
+        szFactor = sz / (HSD_FloatEpsilon[0] + mag);
 
         dst[0][0] = sxFactor * ax.x;
         dst[1][0] = sxFactor * ax.y;
@@ -244,7 +206,7 @@ void mkHBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
     ax.z = src[2][0];
 
     mag = PSVECMag(&ax);
-    PSVECScale(1.0F / (lbl_805DC8C0[0] + mag), &ax, &ax_n);
+    PSVECScale(1.0F / (HSD_FloatEpsilon[0] + mag), &ax, &ax_n);
 
     sy = displayfunc_col_mag(src, 1);
     sz = displayfunc_col_mag(src, 2);
@@ -253,9 +215,9 @@ void mkHBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
         f32 t;
 
         uy.y = displayfunc_sqrtf(__fmadds(pos.x, pos.x, pos.z * pos.z));
-        t = -pos.y / (lbl_805DC8C0[0] + uy.y);
+        t = -pos.y / (HSD_FloatEpsilon[0] + uy.y);
         uy.x = pos.x * t;
-        uy.y = lbl_805DC8C0[0] + uy.y;
+        uy.y = HSD_FloatEpsilon[0] + uy.y;
         uy.z = pos.z * t;
         PSVECNormalize(&uy, &uy);
     } else {
@@ -266,7 +228,7 @@ void mkHBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
 
     PSVECCrossProduct(&ax_n, &uy, &az);
     mag = PSVECMag(&az);
-    if (mag < lbl_805DC8C0[0]) {
+    if (mag < HSD_FloatEpsilon[0]) {
         PSMTXCopy(src, dst);
     } else {
         f32 szFactor = sz / mag;
@@ -274,7 +236,7 @@ void mkHBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
 
         PSVECCrossProduct(&az, &ax_n, &ay);
         mag = PSVECMag(&ay);
-        syFactor = sy / (lbl_805DC8C0[0] + mag);
+        syFactor = sy / (HSD_FloatEpsilon[0] + mag);
 
         dst[0][0] = ax.x;
         dst[1][0] = ax.y;
@@ -314,24 +276,24 @@ void mkBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
 
     if (jobj->flags & PBILLBOARD) {
         mag = PSVECMag(&pos);
-        PSVECScale(-1.0F / (lbl_805DC8C0[0] + mag), &pos, &az);
+        PSVECScale(-1.0F / (HSD_FloatEpsilon[0] + mag), &pos, &az);
     } else {
         az.x = 0.0F;
         az.y = 0.0F;
         az.z = 1.0F;
     }
 
-    PSVECScale(1.0F / (sy + lbl_805DC8C0[0]), &ay, &ay);
+    PSVECScale(1.0F / (sy + HSD_FloatEpsilon[0]), &ay, &ay);
 
     PSVECCrossProduct(&ay, &az, &ax);
     mag = PSVECMag(&ax);
-    if (mag >= lbl_805DC8C0[0]) {
+    if (mag >= HSD_FloatEpsilon[0]) {
         f32 sxFactor = sx / mag;
         f32 syFactor;
 
         PSVECCrossProduct(&az, &ax, &ay);
         mag = PSVECMag(&ay);
-        syFactor = sy / (lbl_805DC8C0[0] + mag);
+        syFactor = sy / (HSD_FloatEpsilon[0] + mag);
 
         dst[0][0] = sxFactor * ax.x;
         dst[1][0] = sxFactor * ax.y;
@@ -345,14 +307,14 @@ void mkBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
         f32 t;
 
         mag = displayfunc_sqrtf(az.x * az.x + az.z * az.z);
-        t = -az.y / (lbl_805DC8C0[0] + mag);
+        t = -az.y / (HSD_FloatEpsilon[0] + mag);
         ay2.x = az.x * t;
-        ay2.y = lbl_805DC8C0[0] + mag;
+        ay2.y = HSD_FloatEpsilon[0] + mag;
         ay2.z = az.z * t;
 
         PSVECCrossProduct(&ay2, &az, &ax);
         mag = PSVECMag(&ax);
-        sx /= (lbl_805DC8C0[0] + mag);
+        sx /= (HSD_FloatEpsilon[0] + mag);
 
         dst[0][0] = sx * ax.x;
         dst[1][0] = sx * ax.y;
@@ -381,7 +343,7 @@ void mkRBillBoardMtx(HSD_JObj* jobj, Mtx src, Mtx dst)
     sy = displayfunc_col_mag(src, 1);
     sz = displayfunc_col_mag(src, 2);
 
-    fn_803D19AC(scl, sx, sy, sz);
+    PSMTXScale(scl, sx, sy, sz);
     kar_grcoll__near_803d1738(rot, 'z', jobj->rotate.z);
 
     rot[0][3] = src[0][3];
@@ -396,7 +358,7 @@ static inline BOOL displayfunc_jobj_mtx_is_dirty(HSD_JObj* jobj)
     BOOL result;
 
     if (jobj == NULL) {
-        __assert(kar_srcfile_jobj_h_805dcba4, 0x25D, lbl_805DCB98);
+        __assert("jobj.h", 0x25D, "jobj");
     }
     result = FALSE;
     if (!(jobj->flags & 0x800000) && (jobj->flags & MTX_DIRTY)) {
@@ -425,11 +387,11 @@ void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx)
             break;
         case 0x800:
             mkRBillBoardMtx(jobj, sp8, pmtx);
-            break;
-        default:
-            HSD_Panic(kar_src_displayfunc_80503ba0, 0x16E, lbl_80503BB0);
-            break;
-        }
+        break;
+    default:
+        HSD_Panic("displayfunc.c", 0x16E, "unkown type of billboard.\n");
+        break;
+    }
     } else {
         PSMTXConcat(vmtx, jobj->mtx, pmtx);
     }
@@ -439,7 +401,7 @@ void HSD_JObjMakePositionMtx(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx)
 static inline HSD_JObj* displayfunc_find_skeleton(HSD_JObj* jobj)
 {
     if (jobj == NULL) {
-        __assert(kar_src_displayfunc_80503ba0, 0x182, lbl_805DCB98);
+        __assert("displayfunc.c", 0x182, "jobj");
     }
     for (; jobj != NULL; jobj = jobj->parent) {
         if (jobj->flags & 3) {
@@ -459,11 +421,11 @@ MtxPtr _HSD_mkEnvelopeModelNodeMtx(HSD_JObj* jobj, Mtx dst)
     }
     x = displayfunc_find_skeleton(jobj);
     if (x == NULL) {
-        __assert(kar_src_displayfunc_80503ba0, 0x1D2, lbl_805DCBA0);
+        __assert("displayfunc.c", 0x1D2, "x");
     }
 
     if (x == jobj) {
-        fn_803D1578(x->envelopemtx, dst);
+        PSMTXInverse(x->envelopemtx, dst);
     } else if (x->flags & SKELETON_ROOT) {
         HSD_MtxInverseConcat(x->mtx, jobj->mtx, dst);
     } else {
@@ -534,7 +496,7 @@ void HSD_JObjDispDObj(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rend
         HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 1, rendermode);
     }
 
-    if (lbl_805DE270 == 0) {
+    if (HSD_ZSortMode == 0) {
         if (mask & 0x100000) {
             HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 4, rendermode);
         }
@@ -542,7 +504,7 @@ void HSD_JObjDispDObj(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rend
             HSD_JOBJ_METHOD(jobj)->disp(jobj, vmtx, pmtx, 2, rendermode);
         }
     } else if (mask & 0x180000) {
-        entry = HSD_ObjAlloc(&lbl_80589A18);
+        entry = HSD_ObjAlloc(&HSD_ZListAllocData);
         memset(&entry->vmtx, 0, 0x18);
         PSMTXCopy(pmtx, entry->pmtx);
         if (vmtx != NULL) {
@@ -551,17 +513,17 @@ void HSD_JObjDispDObj(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rend
         }
         entry->jobj = jobj;
         entry->rendermode = rendermode;
-        *lbl_805DCB8C = entry;
-        lbl_805DCB8C = &entry->next_all;
+        *HSD_ZListAllTail = entry;
+        HSD_ZListAllTail = &entry->next_all;
         if (mask & 0x100000) {
-            *lbl_805DCB90 = entry;
-            lbl_805DCB90 = &entry->next_opa;
-            lbl_805DE280++;
+            *HSD_ZListOpaqueTail = entry;
+            HSD_ZListOpaqueTail = &entry->next_opa;
+            HSD_ZListOpaqueCount++;
         }
         if (mask & 0x80000) {
-            *lbl_805DCB94 = entry;
-            lbl_805DCB94 = &entry->next_xlu;
-            lbl_805DE288[0]++;
+            *HSD_ZListTranslucentTail = entry;
+            HSD_ZListTranslucentTail = &entry->next_xlu;
+            HSD_ZListTranslucentCount[0]++;
         }
     }
 }
@@ -614,9 +576,10 @@ HSD_ZList* zlist_sort(HSD_ZList* list, s32 count, s32 next_offset)
 
 void _HSD_ZListSort(void)
 {
-    if (lbl_805DE274 != 0) {
-        lbl_805DE27C = zlist_sort(lbl_805DE27C, lbl_805DE280, 0x3C);
-        lbl_805DE284 = zlist_sort(lbl_805DE284, lbl_805DE288[0], 0x40);
+    if (HSD_ZSortCompare != 0) {
+        HSD_ZListOpaque = zlist_sort(HSD_ZListOpaque, HSD_ZListOpaqueCount, 0x3C);
+        HSD_ZListTranslucent =
+            zlist_sort(HSD_ZListTranslucent, HSD_ZListTranslucentCount[0], 0x40);
     }
 }
 
@@ -627,11 +590,11 @@ void _HSD_ZListDisp(void)
     MtxPtr vmtx;
 
     default_vmtx = HSD_CObjGetCurrent()->view_mtx;
-    for (entry = lbl_805DE27C; entry != NULL; entry = entry->next_opa) {
+    for (entry = HSD_ZListOpaque; entry != NULL; entry = entry->next_opa) {
         vmtx = entry->vmtx != NULL ? entry->vmtx : default_vmtx;
         HSD_JOBJ_METHOD(entry->jobj)->disp(entry->jobj, vmtx, entry->pmtx, 4, entry->rendermode);
     }
-    for (entry = lbl_805DE284; entry != NULL; entry = entry->next_xlu) {
+    for (entry = HSD_ZListTranslucent; entry != NULL; entry = entry->next_xlu) {
         vmtx = entry->vmtx != NULL ? entry->vmtx : default_vmtx;
         HSD_JOBJ_METHOD(entry->jobj)->disp(entry->jobj, vmtx, entry->pmtx, 2, entry->rendermode);
     }
@@ -640,14 +603,14 @@ void _HSD_ZListDisp(void)
 
 static inline void reset_zlist(void)
 {
-    lbl_805DE278 = NULL;
-    lbl_805DCB8C = &lbl_805DE278;
-    lbl_805DE27C = NULL;
-    lbl_805DCB90 = &lbl_805DE27C;
-    lbl_805DE280 = 0;
-    lbl_805DE284 = NULL;
-    lbl_805DCB94 = &lbl_805DE284;
-    lbl_805DE288[0] = 0;
+    HSD_ZListAll = NULL;
+    HSD_ZListAllTail = &HSD_ZListAll;
+    HSD_ZListOpaque = NULL;
+    HSD_ZListOpaqueTail = &HSD_ZListOpaque;
+    HSD_ZListOpaqueCount = 0;
+    HSD_ZListTranslucent = NULL;
+    HSD_ZListTranslucentTail = &HSD_ZListTranslucent;
+    HSD_ZListTranslucentCount[0] = 0;
 }
 
 void _HSD_ZListClear(void)
@@ -655,20 +618,20 @@ void _HSD_ZListClear(void)
     HSD_ZList* entry;
     HSD_ZList* next;
 
-    for (entry = lbl_805DE278; entry != NULL; entry = next) {
+    for (entry = HSD_ZListAll; entry != NULL; entry = next) {
         next = entry->next_all;
         if (entry->vmtx != NULL) {
             HSD_MtxFree(entry->vmtx);
         }
-        HSD_ObjFree(&lbl_80589A18, entry);
+        HSD_ObjFree(&HSD_ZListAllocData, entry);
     }
     reset_zlist();
 }
 
 void HSD_SetZSortMode(s32 mode, s32 sort)
 {
-    lbl_805DE270 = mode;
-    lbl_805DE274 = sort;
+    HSD_ZSortMode = mode;
+    HSD_ZSortCompare = sort;
 }
 
 void HSD_JObjDisp(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rendermode)
@@ -680,15 +643,15 @@ void HSD_JObjDisp(HSD_JObj* jobj, Mtx vmtx, HSD_TrspMask trsp_mask, u32 rendermo
 
 void HSD_JObjSetSPtclCallback(u8 arg0, u8 arg1, u8 arg2, u8 arg3)
 {
-    lbl_805DCB88[0] = arg0;
-    lbl_805DCB88[1] = arg1;
-    lbl_805DCB88[2] = arg2;
-    lbl_805DCB88[3] = arg3;
+    JObjSPtclColor[0] = arg0;
+    JObjSPtclColor[1] = arg1;
+    JObjSPtclColor[2] = arg2;
+    JObjSPtclColor[3] = arg3;
 }
 
-u32 fn_8040F89C(void)
+u32 HSD_JObjGetSPtclColor(void)
 {
-    return *(u32*) lbl_805DCB88;
+    return *(u32*) JObjSPtclColor;
 }
 
 static inline void write_quad_vertex(f32 x, f32 y, f32 z, u8* color, u8 s, u8 t)
@@ -716,7 +679,7 @@ void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top, f32 bot
     }
 
     if (tex_enable != 0) {
-        GXInitTexObj(&texobj, lbl_80503BE0, 4, 4, 0x11, 1, 1, 0);
+        GXInitTexObj(&texobj, DisplayFuncWhiteTexImage, 4, 4, 0x11, 1, 1, 0);
         GXLoadTexObj(&texobj, 0);
         GXSetNumTexGens(1);
         GXSetTexCoordGen2(0, 1, 4, 0x3C, 0, 0x7D);
@@ -744,13 +707,13 @@ void kar_displayfunc_draw_viewport_scale_quad(s32 color_update, f32 top, f32 bot
     GXSetVtxAttrFmt(0, 9, 1, 4, 0);
     GXSetVtxAttrFmt(0, 0xB, 1, 5, 0);
     GXSetVtxAttrFmt(0, 0xD, 1, 0, 0);
-    GXLoadPosMtxImm(lbl_80503FC0, 0);
+    GXLoadPosMtxImm(HSD_IdentityMtx, 0);
     GXSetCurrentMtx(0);
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xB, 1);
     GXSetVtxDesc(0xD, 1);
 
-    color = *(u32*) lbl_805DCB88;
+    color = *(u32*) JObjSPtclColor;
     GXBegin(0x80, 0, 4);
     write_quad_vertex(left, top, z, (u8*) &color, 0, 0);
     write_quad_vertex(right, top, z, (u8*) &color, 1, 0);

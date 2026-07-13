@@ -1,4 +1,6 @@
 #include <global.h>
+#include <kar/math.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/list.h>
 #include <sysdolphin/random.h>
 
@@ -10,36 +12,15 @@ typedef union {
 
 extern HSD_SList* HSD_SListPrepend(HSD_SList* list, void* data);
 
-extern void OSReport(const char*, ...);
-extern void HSD_Panic(const char* file, s32 line, const char* msg);
-
-extern f64 tan(f64 x);
-extern f64 fn_803BD3A8(f64 x); /* asin */
-extern f64 fn_803BD388(f64 x); /* acos */
-extern f64 fn_803BC94C(f64 x); /* atan */
-extern f64 kar_axdriver__near_803bd428(f64 x); /* log */
-extern f64 kar_axdriver__803bd3e8(f64 x); /* exp */
-extern f64 kar_axdriver__near_803bd408(f64 x, f64 y); /* fmod */
-extern f64 kar_axdriver__803bd468(f64 x, f64 y); /* pow */
-extern f64 fn_803BD3C8(f64 y, f64 x); /* atan2 */
-
-extern f64 __frsqrte(f64 x);
-extern f64 __fnmsub(f64 a, f64 c, f64 b);
-extern f32 __fnmsubs(f32 a, f32 c, f32 b);
-
 f32 kar_math_bytecode_sinf_approx(f32 x);
 f32 kar_math_bytecode_cosf_approx(f32 x);
 
 #define BC_DEG_TO_RAD 0.017453292519943295
 #define BC_RAD_TO_DEG 57.29577951308232
 
-char kar_src_bytecode_80504708[] = "bytecode.c";
-
-char lbl_805DCD40[4] = "";
-char lbl_805DCD44[] = "stack";
 
 #define BC_ASSERT_MSG(line, cond, msg) \
-    ((cond) ? ((void) 0) : __assert(kar_src_bytecode_80504708, line, msg))
+    ((cond) ? ((void) 0) : __assert("bytecode.c", line, msg))
 
 static inline f32 bytecode_sqrtf(f32 x)
 {
@@ -101,14 +82,14 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 }
                 if (list == NULL) {
                     OSReport("specified stack doesn't exist (%d).\n", operand);
-                    HSD_Panic(kar_src_bytecode_80504708, 299, lbl_805DCD40);
+                    HSD_Panic("bytecode.c", 299, "");
                 } else {
                     stack = HSD_SListPrepend(stack, list->data);
                 }
                 break;
             }
             case 3:
-                BC_ASSERT_MSG(307, stack, lbl_805DCD44);
+                BC_ASSERT_MSG(307, stack, "stack");
                 if ((int) stack->data != 0) {
                     bytecode += operand;
                 }
@@ -121,10 +102,10 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 stack = HSD_SListPrepend(stack, (void*) operand);
                 break;
             case 0xFF:
-                HSD_Panic(kar_src_bytecode_80504708, 0x143, "not yet implemented.\n");
+                HSD_Panic("bytecode.c", 0x143, "not yet implemented.\n");
                 /* fallthrough */
             default:
-                HSD_Panic(kar_src_bytecode_80504708, 0x146, "unexpected byte code.\n");
+                HSD_Panic("bytecode.c", 0x146, "unexpected byte code.\n");
                 break;
             }
             continue;
@@ -135,7 +116,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
         case 0:
             break;
         case 1:
-            BC_ASSERT_MSG(339, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(339, stack, "stack");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             while (stack != NULL) {
                 stack = HSD_SListRemove(stack);
@@ -158,94 +139,93 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             operand = 0;
             break;
         case 7:
-            BC_ASSERT_MSG(376, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(376, stack, "stack");
             {
                 ((ByteCodeVal*) &stack->data)->i =
                     (int) ((ByteCodeVal*) &stack->data)->f;
             }
             break;
         case 8:
-            BC_ASSERT_MSG(381, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(381, stack, "stack");
             {
                 fv = (f32) ((ByteCodeVal*) &stack->data)->i;
                 stack->data = *(void**) &fv;
             }
             break;
         case 9:
-            BC_ASSERT_MSG(387, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(387, stack, "stack");
             fv = -(((ByteCodeVal*) &stack->data)->f);
             stack->data = *(void**) &fv;
             break;
         case 0x0A:
-            BC_ASSERT_MSG(393, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(393, stack, "stack");
             ((ByteCodeVal*) &stack->data)->i =
                 -((ByteCodeVal*) &stack->data)->i;
             break;
         case 0x0B:
-            BC_ASSERT_MSG(399, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(399, stack, "stack");
             ((ByteCodeVal*) &stack->data)->i = HSD_Randi(2);
             break;
         case 0x0C:
-            BC_ASSERT_MSG(405, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(405, stack, "stack");
             fv = HSD_Randf();
             stack->data = *(void**) &fv;
             break;
         case 0x0D:
-            BC_ASSERT_MSG(411, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(411, stack, "stack");
             fv = kar_math_bytecode_sinf_approx(
                 (f32) (BC_DEG_TO_RAD * (f64) ((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x0E:
-            BC_ASSERT_MSG(417, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(417, stack, "stack");
             fv = kar_math_bytecode_cosf_approx(
                 (f32) (BC_DEG_TO_RAD * (f64) ((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x0F:
-            BC_ASSERT_MSG(423, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(423, stack, "stack");
             fv = (f32) tan(
                 (f32) (BC_DEG_TO_RAD * (f64) ((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x10:
-            BC_ASSERT_MSG(429, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(429, stack, "stack");
             fv = (f32) (BC_RAD_TO_DEG *
-                        fn_803BD3A8(((ByteCodeVal*) &stack->data)->f));
+                        kar_asin(((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x11:
-            BC_ASSERT_MSG(435, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(435, stack, "stack");
             fv = (f32) (BC_RAD_TO_DEG *
-                        fn_803BD388(((ByteCodeVal*) &stack->data)->f));
+                        kar_acos(((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x12:
-            BC_ASSERT_MSG(441, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(441, stack, "stack");
             fv = (f32) (BC_RAD_TO_DEG *
-                        fn_803BC94C(((ByteCodeVal*) &stack->data)->f));
+                        kar_atan(((ByteCodeVal*) &stack->data)->f));
             stack->data = *(void**) &fv;
             break;
         case 0x13:
-            BC_ASSERT_MSG(447, stack, lbl_805DCD44);
-            fv = (f32) kar_axdriver__near_803bd428(
-                ((ByteCodeVal*) &stack->data)->f);
+            BC_ASSERT_MSG(447, stack, "stack");
+            fv = (f32) kar_log(((ByteCodeVal*) &stack->data)->f);
             stack->data = *(void**) &fv;
             break;
         case 0x14:
-            BC_ASSERT_MSG(453, stack, lbl_805DCD44);
-            fv = (f32) kar_axdriver__803bd3e8(((ByteCodeVal*) &stack->data)->f);
+            BC_ASSERT_MSG(453, stack, "stack");
+            fv = (f32) kar_exp(((ByteCodeVal*) &stack->data)->f);
             stack->data = *(void**) &fv;
             break;
         case 0x15:
-            BC_ASSERT_MSG(459, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(459, stack, "stack");
             if (((ByteCodeVal*) &stack->data)->f < 0.0F) {
                 fv = -(((ByteCodeVal*) &stack->data)->f);
                 stack->data = *(void**) &fv;
             }
             break;
         case 0x28:
-            BC_ASSERT_MSG(467, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(467, stack, "stack");
             {
                 d0 = ((ByteCodeVal*) &stack->data)->i;
                 if (d0 < 0) {
@@ -254,16 +234,16 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x16:
-            BC_ASSERT_MSG(474, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(474, stack, "stack");
             fv = bytecode_sqrtf(((ByteCodeVal*) &stack->data)->f);
             stack->data = *(void**) &fv;
             break;
         case 0x31:
-            BC_ASSERT_MSG(480, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(480, stack, "stack");
             stack->data = (void*) !(s32) stack->data;
             break;
         case 0x17:
-            BC_ASSERT_MSG(501, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(501, stack, "stack");
             BC_ASSERT_MSG(501, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -271,7 +251,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             stack->data = *(void**) &fv;
             break;
         case 0x18:
-            BC_ASSERT_MSG(507, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(507, stack, "stack");
             BC_ASSERT_MSG(507, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -279,7 +259,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             stack->data = *(void**) &fv;
             break;
         case 0x19:
-            BC_ASSERT_MSG(513, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(513, stack, "stack");
             BC_ASSERT_MSG(513, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -287,7 +267,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             stack->data = *(void**) &fv;
             break;
         case 0x1A:
-            BC_ASSERT_MSG(519, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(519, stack, "stack");
             BC_ASSERT_MSG(519, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -295,16 +275,16 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             stack->data = *(void**) &fv;
             break;
         case 0x1B:
-            BC_ASSERT_MSG(525, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(525, stack, "stack");
             BC_ASSERT_MSG(525, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
-            fv = (f32) kar_axdriver__near_803bd408(
+            fv = (f32) kar_fmod(
                 ((ByteCodeVal*) &stack->data)->f, f0);
             stack->data = *(void**) &fv;
             break;
         case 0x1C:
-            BC_ASSERT_MSG(531, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(531, stack, "stack");
             BC_ASSERT_MSG(531, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -312,7 +292,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i + d1);
             break;
         case 0x1D:
-            BC_ASSERT_MSG(536, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(536, stack, "stack");
             BC_ASSERT_MSG(536, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -320,7 +300,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i - d1);
             break;
         case 0x1E:
-            BC_ASSERT_MSG(541, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(541, stack, "stack");
             BC_ASSERT_MSG(541, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -328,7 +308,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i * d1);
             break;
         case 0x1F:
-            BC_ASSERT_MSG(546, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(546, stack, "stack");
             BC_ASSERT_MSG(546, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -336,7 +316,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i / d1);
             break;
         case 0x20:
-            BC_ASSERT_MSG(551, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(551, stack, "stack");
             BC_ASSERT_MSG(551, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -344,16 +324,15 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (d0 % d1);
             break;
         case 0x21:
-            BC_ASSERT_MSG(556, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(556, stack, "stack");
             BC_ASSERT_MSG(556, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
-            fv = (f32) kar_axdriver__803bd468(
-                ((ByteCodeVal*) &stack->data)->f, f0);
+            fv = (f32) kar_pow(((ByteCodeVal*) &stack->data)->f, f0);
             stack->data = *(void**) &fv;
             break;
         case 0x22:
-            BC_ASSERT_MSG(562, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(562, stack, "stack");
             BC_ASSERT_MSG(562, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -362,7 +341,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x23:
-            BC_ASSERT_MSG(569, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(569, stack, "stack");
             BC_ASSERT_MSG(569, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -371,7 +350,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x24:
-            BC_ASSERT_MSG(576, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(576, stack, "stack");
             BC_ASSERT_MSG(576, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -380,7 +359,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x25:
-            BC_ASSERT_MSG(583, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(583, stack, "stack");
             BC_ASSERT_MSG(583, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -390,7 +369,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             break;
         case 0x26: {
             f32 result;
-            BC_ASSERT_MSG(590, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(590, stack, "stack");
             BC_ASSERT_MSG(590, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -398,14 +377,14 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             if (f0 == 0.0F) {
                 result = f1 >= 0.0F ? 1.5707964F : -1.5707964F;
             } else {
-                result = (f32) fn_803BD3C8(f1, f0);
+                result = (f32) kar_atan2(f1, f0);
             }
             fv = (f32) (BC_RAD_TO_DEG * result);
             stack->data = *(void**) &fv;
             break;
         }
         case 0x33:
-            BC_ASSERT_MSG(596, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(596, stack, "stack");
             BC_ASSERT_MSG(596, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -413,7 +392,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (f1 < f0);
             break;
         case 0x34:
-            BC_ASSERT_MSG(601, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(601, stack, "stack");
             BC_ASSERT_MSG(601, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -421,7 +400,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (f1 > f0);
             break;
         case 0x35:
-            BC_ASSERT_MSG(606, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(606, stack, "stack");
             BC_ASSERT_MSG(606, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -429,7 +408,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->f <= f0);
             break;
         case 0x36:
-            BC_ASSERT_MSG(611, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(611, stack, "stack");
             BC_ASSERT_MSG(611, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -437,7 +416,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (f1 >= f0);
             break;
         case 0x37:
-            BC_ASSERT_MSG(616, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(616, stack, "stack");
             BC_ASSERT_MSG(616, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -445,7 +424,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (f1 == f0);
             break;
         case 0x38:
-            BC_ASSERT_MSG(621, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(621, stack, "stack");
             BC_ASSERT_MSG(621, stack->next, "stack->next");
             f0 = ((ByteCodeVal*) &stack->data)->f;
             stack = HSD_SListRemove(stack);
@@ -453,7 +432,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             ((ByteCodeVal*) &stack->data)->i = (f1 != f0);
             break;
         case 0x29:
-            BC_ASSERT_MSG(626, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(626, stack, "stack");
             BC_ASSERT_MSG(626, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -461,7 +440,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i < d1);
             break;
         case 0x2A:
-            BC_ASSERT_MSG(631, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(631, stack, "stack");
             BC_ASSERT_MSG(631, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -469,7 +448,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i > d1);
             break;
         case 0x2B:
-            BC_ASSERT_MSG(636, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(636, stack, "stack");
             BC_ASSERT_MSG(636, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -477,7 +456,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i <= d1);
             break;
         case 0x2C:
-            BC_ASSERT_MSG(641, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(641, stack, "stack");
             BC_ASSERT_MSG(641, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -485,7 +464,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i >= d1);
             break;
         case 0x2D:
-            BC_ASSERT_MSG(646, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(646, stack, "stack");
             BC_ASSERT_MSG(646, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -493,7 +472,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i == d1);
             break;
         case 0x2E:
-            BC_ASSERT_MSG(651, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(651, stack, "stack");
             BC_ASSERT_MSG(651, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -501,7 +480,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (((ByteCodeVal*) &stack->data)->i != d1);
             break;
         case 0x2F:
-            BC_ASSERT_MSG(656, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(656, stack, "stack");
             BC_ASSERT_MSG(656, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -515,7 +494,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x30:
-            BC_ASSERT_MSG(661, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(661, stack, "stack");
             BC_ASSERT_MSG(661, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -529,7 +508,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             }
             break;
         case 0x32:
-            BC_ASSERT_MSG(666, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(666, stack, "stack");
             BC_ASSERT_MSG(666, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -538,28 +517,28 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
                 (d0 == 0 && d1 != 0) || (d0 != 0 && d1 == 0);
             break;
         case 0x39:
-            BC_ASSERT_MSG(671, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(671, stack, "stack");
             BC_ASSERT_MSG(671, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
             stack->data = (void*) (((ByteCodeVal*) &stack->data)->i & d1);
             break;
         case 0x3A:
-            BC_ASSERT_MSG(676, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(676, stack, "stack");
             BC_ASSERT_MSG(676, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
             stack->data = (void*) (((ByteCodeVal*) &stack->data)->i | d1);
             break;
         case 0x3B:
-            BC_ASSERT_MSG(681, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(681, stack, "stack");
             BC_ASSERT_MSG(681, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
             stack->data = (void*) (((ByteCodeVal*) &stack->data)->i ^ d1);
             break;
         case 0x27:
-            BC_ASSERT_MSG(687, stack, lbl_805DCD44);
+            BC_ASSERT_MSG(687, stack, "stack");
             BC_ASSERT_MSG(687, stack->next, "stack->next");
             d1 = ((ByteCodeVal*) &stack->data)->i;
             stack = HSD_SListRemove(stack);
@@ -568,7 +547,7 @@ float HSD_ByteCodeEval(u8* bytecode, f32* args, s32 nb_args)
             break;
         default:
             OSReport("unexpected opcode 0x%x.\n", last_command);
-            HSD_Panic(kar_src_bytecode_80504708, 693, "unexpected opcode 0x%x.\n");
+            HSD_Panic("bytecode.c", 693, "unexpected opcode 0x%x.\n");
             break;
         }
     }

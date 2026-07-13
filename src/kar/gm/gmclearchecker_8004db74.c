@@ -3,33 +3,33 @@
 #include "kar/gm/gmglobal.h"
 #include "kar/gm/gmclearchecker.h"
 #include "kar/gm/gmclearchecker_8004db74.h"
+#include "kar/gm/gmlanmenu.h"
+#include "kar/gm/gmmain.h"
+#include "kar/gm/gmracenormal.h"
+#include "kar/gr/greventgenerator.h"
+#include "kar/lb/lbarealightzone.h"
+#include "kar/lb/lbaudio.h"
+#include "kar/lb/lbvector.h"
+#include "kar/pl/plclearcheckerlib.h"
+#include "kar/shadow.h"
+#include <sysdolphin/random.h>
 
 typedef struct {
   /* 0x0 */ u32 _0;
   /* 0x4 */ u32 _4;
   /* 0x8 */ u32 _8;
-} lbl_8058B634_s;
+} HSD_PadCopyStatus_s;
 
-extern lbl_8058B634_s lbl_8058B634;
+extern HSD_PadCopyStatus_s HSD_PadCopyStatus;
 
-extern s32 kar_shadow__near_8007b650(void);
-extern void kar_gmmain__near_800064f0(void);
 extern GmMainData *kar_gmmain__near_80006c14(void);
-extern s8 kar_gmracenormal__8000aea8(void);
 extern s32 kar_plclearcheckerlib__near_8022c858(s32 arg0);
 extern f32 fn_80281A0C(void);
 extern s8 fn_8000C228(s8);
-extern u32 kar_plclearcheckerlib__8022fccc(int, int);
-extern void kar_lbaudio__near_8005e5d0(void);
-extern void kar_gmlanmenu__800082a0(int);
-extern void kar_gmlanmenu__80008220(void);
 extern int fn_80282F70(void);
 extern int fn_80281610(void);
 extern int fn_80282F38(void);
 extern void fn_80282EC8(int);
-extern int kar_lbaudio_alloc_weapon_track_subtype_0(void);
-extern int kar_lbaudio__near_8005dbc8(void);
-extern void kar_lbaudio_start_track(int, int, int);
 extern f32 kar_plclearcheckerlib__80231614(int);
 extern u32 kar_plclearcheckerlib__8022fa58(int);
 extern u32 kar_plclearcheckerlib__80230b38(int);
@@ -37,16 +37,13 @@ extern u32 kar_plclearcheckerlib__80230b90(int);
 extern u32 kar_plclearcheckerlib__8022f920(int);
 extern u32 kar_plclearcheckerlib__8022fe28(int);
 extern u32 kar_plclearcheckerlib__80230934(int);
-extern u32 kar_plclearcheckerlib__8022fe80(int);
 extern u32 kar_plclearcheckerlib__80230838(int);
 extern u32 kar_plclearcheckerlib__8022faac(int);
 extern u32 kar_plclearcheckerlib__8022ebdc(int);
 extern u32 kar_plclearcheckerlib__8022ec34(int);
 extern u32 kar_plclearcheckerlib__8022f898(int, int);
-extern u32 kar_greventgenerator_get_kind_use_count(int);
 extern u16 kar_plclearcheckerlib__8022f3a4(int, int);
 extern u32 kar_plclearcheckerlib__8022f19c(int);
-extern int HSD_Randi(int);
 extern int kar_plclearcheckerlib__8022f9bc(int);
 extern int kar_plclearcheckerlib__8022f514(int);
 extern int kar_plclearcheckerlib__8022f4c0(int);
@@ -72,15 +69,10 @@ extern void fn_80282004(void);
 extern void fn_80281F10(void);
 extern void fn_80281ECC(int);
 extern void kar_pltrick__near_802339e4(void);
-extern void kar_lbarealightzone__near_8007adb8(void);
 extern void fn_80281660(void);
 extern void fn_80281AD4(void);
 extern void fn_80281BB4(void);
 extern void fn_802823FC(int);
-extern void kar_lbaudio__near_8005ab84(void);
-extern void kar_lbaudio__near_8005e1a8(int);
-extern void kar_lbaudio__near_8005a5b0(void);
-extern void kar_lbvector__near_8006595c(void);
 extern int fn_802819CC(void);
 extern void fn_8028208C(int);
 extern void fn_80281F4C(int);
@@ -931,7 +923,7 @@ void kar_gmclearchecker__near_8004f454(void) {
 
   kar_gmclearchecker__near_8004f454_inline();
   if (fn_80282F70() == 0) {
-    if (lbl_8058B634._8 & 0x1000) {
+    if (HSD_PadCopyStatus._8 & 0x1000) {
       fn_80282EC8(60);
     }
     if (fn_80281610() != 0) {

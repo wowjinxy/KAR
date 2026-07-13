@@ -3,6 +3,8 @@
 
 #include <dolphin/types.h>
 
+void kar_gmlanmenu__80008220(void);
+void kar_gmlanmenu__800082a0(s32 arg0);
 void kar_gmlanmenu_show_lan_bg_panel(void);
 void kar_gmlanmenu_set_sis_lan_box0_message_id_adjusted(s32 id);
 void kar_gmlanmenu_set_sis_lan_box1_message_id(s32 id);

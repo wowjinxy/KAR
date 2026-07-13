@@ -3,6 +3,7 @@
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/lobj.h>
+#include <sysdolphin/lobj_setup.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/object.h>
 
@@ -15,21 +16,6 @@ typedef struct _GObjDefaultInitData {
     u64* unk_2;
     u32 unused;
 } GObjDefaultInitData;
-
-extern void HSD_LObjSetCurrentAll(void* obj);
-extern HSD_CObj* HSD_CObjGetCurrent(void);
-extern void HSD_LObjSetupInit(HSD_CObj* cobj);
-extern void HSD_LObjRemoveAll(void* obj);
-extern void HSD_JObjDispAll(HSD_JObj* jobj, void* arg1, u32 flags, u32 rendermode);
-extern s32 HSD_CObjSetCurrent(void* cobj);
-extern void HSD_CObjEndCurrent(void);
-extern void RecalcParentTrspBits(void* obj);
-
-char kar_src_gobjuserdata_80504eb0[0x10] = "gobjuserdata.c";
-char lbl_80504EC0[0x30] = "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE";
-char lbl_80504EF0[0x20] = "gobj->user_data_remove_func";
-
-u32 hsdGObj_gxlink_render_masks[] = { 1, 4, 2, 0 };
 
 u8 hsdGObj_default_object_kind;
 u8 hsdGObj_lobj_kind;
@@ -53,33 +39,10 @@ GObjFunc* hsdGObj_obj_remove_funcs;
 void HSD_GObjDefaultObjectRemove(HSD_Obj* obj);
 void HSD_GObjDefaultObjectRemoveAlt(HSD_Obj* obj);
 
-GObjFunc gobj_default_obj_remove_funcs[] = {
-    HSD_GObjDefaultObjectRemove,
-    (GObjFunc) HSD_LObjRemoveAll,
-    (GObjFunc) RecalcParentTrspBits,
-    HSD_GObjDefaultObjectRemoveAlt,
-};
-
-GObjFuncs gobj_default_func_node = {
-    NULL,
-    4,
-    gobj_default_obj_remove_funcs,
-    0,
-};
-
-GObjDefaultInitData gobj_default_init_data = {
-    0x3F,
-    0x3F,
-    2,
-    0,
-    NULL,
-    NULL,
-};
-
 void HSD_GObjUserDataLink(HSD_GObj* gobj, u8 kind, void (*remove_func)(void*), void* data)
 {
     if (gobj->user_data_kind != HSD_GOBJ_USER_DATA_NONE) {
-        __assert(kar_src_gobjuserdata_80504eb0, 40, lbl_80504EC0);
+        __assert("gobjuserdata.c", 40, "gobj->user_data_kind == HSD_GOBJ_USER_DATA_NONE");
     }
     gobj->user_data_kind = kind;
     gobj->user_data = data;
@@ -106,12 +69,37 @@ void HSD_GObjUserDataRemove(HSD_GObj* gobj)
         return;
 
     if (gobj->user_data_remove_func == NULL) {
-        __assert(kar_src_gobjuserdata_80504eb0, 99, lbl_80504EF0);
+        __assert("gobjuserdata.c", 99, "gobj->user_data_remove_func\0\0\0\0");
     }
     (*gobj->user_data_remove_func)(gobj->user_data);
     gobj->user_data_kind = HSD_GOBJ_USER_DATA_NONE;
     gobj->user_data = NULL;
 }
+
+u32 hsdGObj_gxlink_render_masks[] = { 1, 4, 2, 0 };
+
+GObjFunc gobj_default_obj_remove_funcs[] = {
+    HSD_GObjDefaultObjectRemove,
+    (GObjFunc) HSD_LObjRemoveAll,
+    (GObjFunc) RecalcParentTrspBits,
+    HSD_GObjDefaultObjectRemoveAlt,
+};
+
+GObjFuncs gobj_default_func_node = {
+    NULL,
+    4,
+    gobj_default_obj_remove_funcs,
+    0,
+};
+
+GObjDefaultInitData gobj_default_init_data = {
+    0x3F,
+    0x3F,
+    2,
+    0,
+    NULL,
+    NULL,
+};
 
 static inline void GObj_SetPauseFlagAll(HSD_GObjProc* proc, u8 value)
 {

@@ -1,8 +1,12 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmglobal.h>
 #include <kar/gm/gmlanmenu.h>
+#include <kar/lb/lbkdcoll.h>
+#include <kar/lb/lbhvqm.h>
 #include <kar/mn/mnlandialogue.h>
 #include <kar/mn/mnlannumber.h>
+#include <kar/shadow.h>
 
 
 u8 lbl_80497AE8[] = {
@@ -101,17 +105,12 @@ u64 lbl_80537430[8];
 char lbl_805D51D8[] = "0";
 
 void HSD_VISetConfigure(void* configure);
-s32 kar_shadow__near_8007b650(void);
-void kar_gmglobal__near_800088c8(s32 arg0);
 void fn_801390E0(void);
 void fn_80139188(void);
 void fn_801391C8(void);
-void kar_lbkdcoll__near_80072aa0(void);
 void kar_lbfile_wait_for_group6_loads(void);
 void kar_pltrick__near_8023295c(void);
-s32 kar_lbhvqm__near_80078d24(void);
 void fn_801391F0(void);
-extern void shadowRendering(void);
 
 void kar_gmclearchecker__near_8004f5b0(void) { shadowRendering(); }
 

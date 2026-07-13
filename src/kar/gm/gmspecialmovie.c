@@ -1,5 +1,16 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmglobal.h>
+#include <kar/gm/gmlanmenu.h>
+#include <kar/gm/gmmain.h>
+#include <kar/gm/gmmovieassets.h>
+#include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbarchive.h>
+#include <kar/lb/lbaudio.h>
+#include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbkdcoll.h>
+#include <kar/lb/lbvector.h>
+#include <sysdolphin/gobj_kinds.h>
 
 typedef struct GObj GObj;
 typedef struct MovieWork MovieWork;
@@ -72,27 +83,9 @@ const f32 lbl_805DE900 = 0.0f;
 const f32 lbl_805DE904 = 640.0f;
 const f32 lbl_805DE908[2] = { 480.0f, 0.0f };
 
-extern u8 lbl_8058B634[];
-extern u8 hsdGObj_default_object_kind;
+extern u8 HSD_PadCopyStatus[];
 void* kar_gmmain__near_80006c14(void);
-void kar_gmmain__near_800064f0(void);
-void kar_gmglobal__near_800088c8(s32 arg0);
-void kar_gmlanmenu__800082a0(s32 arg0);
-void kar_gmlanmenu__80008220(void);
-s8 kar_gmracenormal__8000aea8(void);
-void kar_movie_assets__8000a498(s32 arg0);
-void kar_lbarchive__near_80059cfc(void);
 void HSD_SynthSFXWaitForLoadCompletion(void (*callback)(void));
-void kar_lbhvqm_init_movie_system(void);
-void* kar_lbhvqm_open_movie(char* path, s32 arg1, s32 arg2, s32 arg3,
-                            void (*arg4)(void), void (*arg5)(void));
-void kar_lbhvqm__near_80077ed4(void* movie);
-void kar_lbhvqm__near_80077a5c(void);
-s32 kar_lbhvqm__near_80077f14(void* movie);
-void kar_lbhvqm__near_80078028(void* movie, s32* arg1, s32* arg2, s32* arg3);
-void kar_lbhvqm__near_800780d0(void* movie);
-void kar_lbhvqm__near_80078284(void* movie);
-void kar_lbhvqm__near_8007859c(void);
 void fn_80078604(void);
 void fn_80078620(void);
 s32 GObj_GetFlagFromArray(GObj* gobj);
@@ -105,16 +98,6 @@ void HSD_GObjObjectLink(GObj* gobj, u8 kind, void* object);
 void GObj_SetCamera(GObj* gobj, GObj* camera);
 void GObj_SetupGXLinkMax(GObj* gobj, void (*callback)(GObj*, GObj*),
                          s32 priority);
-void kar_lbkdcoll__near_80076f8c(s32 arg0, s32 arg1, s32 arg2, s32 arg3,
-                                 s32 arg4, f32 arg5, f32 arg6, f32 arg7,
-                                 f32 arg8);
-void kar_lbaudio__near_80061658(void);
-void kar_lbaudio__near_800616c8(void);
-void kar_lbaudio__near_8005e5d0(void);
-void kar_lbaudio__near_8005e1a8(s32 arg0);
-void kar_lbaudio__near_8005ab84(void);
-void kar_lbaudio__near_8005a440(void);
-void kar_lbaudio__near_8005a608(void);
 s32 fn_8027C830(void);
 void kar_en_assets__asset_8027c838(void);
 MovieWork* fn_8027E574(void);
@@ -125,9 +108,8 @@ void kar_en_assets__asset_8027ef6c(void);
 void fn_8027F5B4(void);
 void fn_8027F610(void);
 void kar_pltrick__near_80233a74(void);
-void kar_lbvector__near_8006595c(void);
 
-#define PLAYER_INPUT(i) (*(u32*) (lbl_8058B634 + ((u8) (i) * 0x44) + 8))
+#define PLAYER_INPUT(i) (*(u32*) (HSD_PadCopyStatus + ((u8) (i) * 0x44) + 8))
 #define LOAD_F32(sym) (*(const f32*) &(sym))
 #define CAMERA_GOBJ() (lbl_805DD57C)
 #define MOVIE_GOBJ() (lbl_805DD580[0])

@@ -1,4 +1,6 @@
 #include "dolphin/types.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef u32 OSTick;
@@ -24,12 +26,8 @@ typedef struct OSCalendarTime
     int usec;
 } OSCalendarTime;
 
-extern void* OSGetStackPointer(void);
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-
-extern const int lbl_804FC488[12];
-extern const int lbl_804FC4B8[12];
+extern const int DaysToMonth365[12];
+extern const int DaysToMonth366[12];
 
 #define OS_CURRENT_THREAD (*(OSThread**)0x800000E4)
 #define OS_BUS_CLOCK (*(volatile u32*)0x800000F8)
@@ -83,7 +81,7 @@ OSTime __OSGetSystemTime(void)
     return result;
 }
 
-OSTime kar_osthread__near_803db59c(OSTime ticks)
+OSTime __OSTimeToSystemTime(OSTime ticks)
 {
     BOOL enabled;
     OSTime now;
@@ -96,7 +94,7 @@ OSTime kar_osthread__near_803db59c(OSTime ticks)
     return time;
 }
 
-void kar_osthread__near_803db5f4(int days, OSCalendarTime* td)
+void GetDates(int days, OSCalendarTime* td)
 {
     int year;
     int daysBeforeYear;
@@ -130,7 +128,7 @@ void kar_osthread__near_803db5f4(int days, OSCalendarTime* td)
     td->yday = dayOfYear;
 
     isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-    table = isLeap ? lbl_804FC4B8 : lbl_804FC488;
+    table = isLeap ? DaysToMonth366 : DaysToMonth365;
 
     mon = 12;
     do
@@ -142,7 +140,7 @@ void kar_osthread__near_803db5f4(int days, OSCalendarTime* td)
     td->mday = dayOfYear - table[mon] + 1;
 }
 
-void kar_osthread__near_803db790(OSTime ticks, OSCalendarTime* td)
+void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime* td)
 {
     OSTime remainder;
     OSTime daySeconds;
@@ -170,7 +168,7 @@ void kar_osthread__near_803db790(OSTime ticks, OSCalendarTime* td)
         secOfDay += 86400;
     }
 
-    kar_osthread__near_803db5f4(days, td);
+    GetDates(days, td);
 
     totalMin = secOfDay / 60;
     td->hour = totalMin / 60;

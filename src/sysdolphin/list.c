@@ -1,30 +1,30 @@
 #include <sysdolphin/list.h>
 
 extern HSD_ObjAllocData hsdSList_alloc_data; // slist_alloc_data
-extern HSD_ObjAllocData lbl_8058BE54;        // dlist_alloc_data
+extern HSD_ObjAllocData hsdDList_alloc_data; // dlist_alloc_data
 
-extern char kar_src_list_805dccf0[7]; // "list.c"
-extern char lbl_805DCCF8[5];          // "list"
-extern char lbl_805DCD00[5];          // "next"
-extern char lbl_805DCD08[5];          // "prev"
+extern char ListSourceFile[7]; // "list.c"
+extern char ListAssertList[5]; // "list"
+extern char ListAssertNext[5]; // "next"
+extern char ListAssertPrev[5]; // "prev"
 
 #define assert_line_named(line, cond, condstr)                                 \
-    ((cond) ? ((void) 0) : __assert(kar_src_list_805dccf0, line, condstr))
+    ((cond) ? ((void) 0) : __assert(ListSourceFile, line, condstr))
 
 void HSD_ListInitAllocData()
 {
     HSD_ObjAllocInit(&hsdSList_alloc_data, sizeof(HSD_SList), 4);
-    HSD_ObjAllocInit(&lbl_8058BE54, sizeof(HSD_DList), 4);
+    HSD_ObjAllocInit(&hsdDList_alloc_data, sizeof(HSD_DList), 4);
 }
 
-HSD_ObjAllocData* fn_8041BC54()
+HSD_ObjAllocData* HSD_SListGetAllocData()
 {
     return &hsdSList_alloc_data;
 }
 
-HSD_ObjAllocData* fn_8041BC60()
+HSD_ObjAllocData* HSD_DListGetAllocData()
 {
-    return &lbl_8058BE54;
+    return &hsdDList_alloc_data;
 }
 
 HSD_SList *HSD_SListAlloc()
@@ -32,7 +32,7 @@ HSD_SList *HSD_SListAlloc()
     HSD_SList *list;
 
     list = HSD_ObjAlloc(&hsdSList_alloc_data);
-    assert_line_named(76, list, lbl_805DCCF8);
+    assert_line_named(76, list, ListAssertList);
 
     memset(list, 0, sizeof(HSD_SList));
     return list;
@@ -54,7 +54,7 @@ void HSD_SListPrepend(HSD_SList* list, void* data)
 
 HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 {
-    assert_line_named(179, next, lbl_805DCD00);
+    assert_line_named(179, next, ListAssertNext);
     if (list != NULL) {
         next->next = list->next;
         list->next = next;
@@ -66,7 +66,7 @@ HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 
 HSD_SList *HSD_SListPrependList(HSD_SList *list, HSD_SList *prev)
 {
-    assert_line_named(202, prev, lbl_805DCD08);
+    assert_line_named(202, prev, ListAssertPrev);
     prev->next = list;
     return prev;
 }

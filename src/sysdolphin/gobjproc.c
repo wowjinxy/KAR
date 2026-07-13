@@ -1,7 +1,9 @@
+#include <functions.h>
+#include <dolphin/os.h>
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjproc.h>
 
 typedef s32 (*HSD_DebugExceptionCallback)(s32, s32, void*, void*);
-typedef void (*HSD_DebugConsoleCallback)(void*, ...);
 typedef void (*HSD_DebugUserCallback)(s32, u32);
 
 typedef struct _HSD_StackFrame {
@@ -9,28 +11,17 @@ typedef struct _HSD_StackFrame {
     u32 ret_addr;
 } HSD_StackFrame;
 
-extern void OSFillFPUContext(void*);
-extern void OSReport(const char*, ...);
-extern void OSPanic(const char*, s32, const char*, ...);
-extern void* OSGetStackPointer(void);
-
 extern u8 __files[];
 extern u8 hsd_saved_context[];
-extern char lbl_805DCDA8[8];
-extern char lbl_805DCDB0[6];
+extern char HSDAssertPanicMessage[8];
+extern char GObjProcAssertProc[6];
 
-HSD_DebugUserCallback lbl_805DE314;
-HSD_DebugConsoleCallback lbl_805DE310;
-s32 lbl_805DE30C;
-HSD_DebugExceptionCallback lbl_805DE308;
+extern HSD_DebugExceptionCallback HSDDebugExceptionCallback;
+extern s32 HSDDebugExceptionCallbackInstalled;
+extern HSD_DebugConsoleCallback HSDDebugConsoleCallback;
+extern HSD_DebugUserCallback HSDDebugUserCallback;
 
 void HSD_SaveContext(void* arg0);
-void HSD_Panic(const char* file, s32 line, const char* msg);
-
-char lbl_80504D70[0x18] = "assertion \"%s\" failed";
-char lbl_80504D88[0x18] = "%s in %s on line %d.\n";
-char kar_src_gobjproc_80504da0[0xC] = "gobjproc.c";
-char lbl_80504DAC[0x2C] = "pri <= HSD_GObjLibInitData.gproc_pri_max";
 
 #pragma push
 asm void HSD_SaveContext(void* arg0)
@@ -79,10 +70,10 @@ asm void HSD_SaveContext(void* arg0)
 
 s32 HSD_DebugExceptionCallbackThunk(s32 arg0, s32 exception, void* context, void* arg3)
 {
-    if (lbl_805DE314 != NULL) {
-        lbl_805DE314(exception, *(u32*) context);
+    if (HSDDebugUserCallback != NULL) {
+        HSDDebugUserCallback(exception, *(u32*) context);
     }
-    lbl_805DE308(arg0, exception, context, arg3);
+    HSDDebugExceptionCallback(arg0, exception, context, arg3);
     return 0;
 }
 
@@ -90,16 +81,16 @@ s32 HSD_DebugExceptionCallbackThunk(s32 arg0, s32 exception, void* context, void
 #pragma dont_inline on
 void __assert(const char* file, unsigned long line, const char* assertion)
 {
-    OSReport(lbl_80504D70, assertion);
-    HSD_Panic(file, line, lbl_805DCDA8);
+    OSReport("assertion \"%s\" failed", assertion);
+    HSD_Panic(file, line, HSDAssertPanicMessage);
 }
 
 void HSD_Panic(const char* file, s32 line, const char* msg)
 {
-    if (lbl_805DE310 != NULL) {
+    if (HSDDebugConsoleCallback != NULL) {
         HSD_SaveContext((void*) file);
-        OSReport(lbl_80504D88, msg, file, line);
-        lbl_805DE310(hsd_saved_context);
+        OSReport("%s in %s on line %d.\n", msg, file, line);
+        HSDDebugConsoleCallback(hsd_saved_context);
     }
     OSPanic(file, line, msg);
 }
@@ -107,24 +98,24 @@ void HSD_Panic(const char* file, s32 line, const char* msg)
 
 HSD_DebugUserCallback HSD_SetDebugExceptionCallback(HSD_DebugUserCallback callback)
 {
-    HSD_DebugUserCallback old_callback = lbl_805DE314;
+    HSD_DebugUserCallback old_callback = HSDDebugUserCallback;
 
-    if (lbl_805DE30C == 0) {
-        if (lbl_805DE308 == NULL) {
-            lbl_805DE308 = *(HSD_DebugExceptionCallback*) &__files[0x90];
+    if (HSDDebugExceptionCallbackInstalled == 0) {
+        if (HSDDebugExceptionCallback == NULL) {
+            HSDDebugExceptionCallback = *(HSD_DebugExceptionCallback*) &__files[0x90];
         }
         *(s32*) &__files[0x90] = (s32) HSD_DebugExceptionCallbackThunk;
         __files[0x5A] = 0;
-        lbl_805DE30C = 1;
+        HSDDebugExceptionCallbackInstalled = 1;
     }
-    lbl_805DE314 = callback;
+    HSDDebugUserCallback = callback;
     return old_callback;
 }
 
 HSD_DebugConsoleCallback HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback)
 {
-    HSD_DebugConsoleCallback old_callback = lbl_805DE310;
-    lbl_805DE310 = callback;
+    HSD_DebugConsoleCallback old_callback = HSDDebugConsoleCallback;
+    HSDDebugConsoleCallback = callback;
     return old_callback;
 }
 
@@ -237,10 +228,10 @@ HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj, void (*callback)(HSD_GObj*), u8
     proc = HSD_ObjAlloc(&hsdGObjProc_alloc_data);
 
     if (proc == NULL) {
-        __assert(kar_src_gobjproc_80504da0, 0x1F, lbl_805DCDB0);
+        __assert("gobjproc.c", 0x1F, GObjProcAssertProc);
     }
     if (priority > hsdGObj_p_link_max.gproc_pri_max) {
-        __assert(kar_src_gobjproc_80504da0, 0xD8, lbl_80504DAC);
+        __assert("gobjproc.c", 0xD8, "pri <= HSD_GObjLibInitData.gproc_pri_max");
     }
 
     proc->s_link = priority;

@@ -1,32 +1,33 @@
 #include <sysdolphin/shadow.h>
 
+#include <dolphin/mtx/mtx.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/constants.h>
+#include <sysdolphin/float_epsilon.h>
+#include <sysdolphin/identity_mtx.h>
+#include <sysdolphin/list.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/tobj.h>
+#include <sysdolphin/vec_orthogonal.h>
 
-void HSD_CObjSetScissorx4(struct _HSD_CObj*, s32, u16, s32, u16);        /* extern */
-void HSD_CObjSetViewportfx4(struct _HSD_CObj*, f32, f32, f32, f32);      /* extern */
 void* HSD_Alloc(s32);
-s32 kar_shadow__803cd5b0(u16, u16, s32, s32, s32);        /* GXGetTexBufferSize */
+s32 GXGetTexBufferSize(u16, u16, s32, s32, s32);
 
 void makeMatrix(HSD_Shadow* shadow);
 
-extern char lbl_805DCD18[7]; /* "shadow" */
-extern char lbl_805DCD20[2]; /* "0" */
-extern char lbl_805DCD24[5]; /* "rect" */
+extern char ShadowAssertShadow[7]; /* "shadow" */
+extern char ShadowAssertZero[2]; /* "0" */
+extern char ShadowAssertRect[5]; /* "rect" */
 
-extern const f32 lbl_805E5DC0; /* 0.0F */
-
-char kar_src_shadow_80504528[] = "shadow.c";
-
-#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert(kar_src_shadow_80504528, line, str))
-#define ASSERT_NAMED(line, cond) ((cond) ? ((void) 0) : __assert(kar_src_shadow_80504528, line, #cond))
+#define ASSERT_STR(line, cond, str) ((cond) ? ((void) 0) : __assert("shadow.c", line, str))
+#define ASSERT_NAMED(line, cond) ((cond) ? ((void) 0) : __assert("shadow.c", line, #cond))
 
 void HSD_ShadowInit(HSD_Shadow* shadow)
 {
     HSD_ImageDesc* imagedesc;
 
-    ASSERT_STR(0xF5, shadow, lbl_805DCD18);
+    ASSERT_STR(0xF5, shadow, ShadowAssertShadow);
     imagedesc = shadow->texture->imagedesc;
     GXSetTexCopySrc(0, 0, imagedesc->width, imagedesc->height);
     GXSetTexCopyDst(imagedesc->width, imagedesc->height, 32, 0);
@@ -37,7 +38,7 @@ void HSD_ShadowSetSize(HSD_Shadow* shadow, u16 width, u16 height)
     u32 size;
     HSD_ImageDesc* imgdesc;
 
-    ASSERT_STR(0x115, shadow, lbl_805DCD18);
+    ASSERT_STR(0x115, shadow, ShadowAssertShadow);
     ASSERT_NAMED(0x116, width > 0);
     ASSERT_NAMED(0x117, height > 0);
 
@@ -46,13 +47,13 @@ void HSD_ShadowSetSize(HSD_Shadow* shadow, u16 width, u16 height)
         if (imgdesc->img_ptr != NULL) {
             HSD_Free(imgdesc->img_ptr);
         }
-        size = kar_shadow__803cd5b0(width, height, 0, 0, 0);
+        size = GXGetTexBufferSize(width, height, 0, 0, 0);
         ASSERT_NAMED(0x122, size > 0);
 
         imgdesc->img_ptr = HSD_Alloc(size);
         imgdesc->width = width;
         imgdesc->height = height;
-        HSD_CObjSetViewportfx4(shadow->camera, lbl_805E5DC0, width, lbl_805E5DC0, height);
+        HSD_CObjSetViewportfx4(shadow->camera, 0.0F, width, 0.0F, height);
         HSD_CObjSetScissorx4(shadow->camera, 0, width, 0, height);
     }
 }
@@ -86,13 +87,10 @@ HSD_Chan channel = {
     2,     // attn_fn
 };
 
-extern Mtx lbl_80503FC0;
-extern f32 lbl_805DC8C0[];
-
 extern struct {
     u8 x0_pad[0xC];
     s32 unkC;
-} lbl_80504418;
+} HSD_PerfCurrentStat;
 
 struct {
     u32 unused[29];
@@ -142,8 +140,8 @@ f32 HSD_CObjGetEyeDistance();
 void C_MTXOrtho(void*, f32, f32, f32, f32, f32, f32);
 void GXSetViewport(f32, f32, f32, f32, f32, f32);
 
-f32 lbl_805E5DD0 = 1.0F;
-f32 lbl_805E5DD4 = -1.0F;
+f32 ShadowOne = 1.0F;
+f32 ShadowNegOne = -1.0F;
 
 void HSD_ShadowStartRender(HSD_Shadow* shadow)
 {
@@ -154,7 +152,7 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
     HSD_ImageDesc* imgdesc;
     HSD_SList* var_r26;
 
-    ASSERT_STR(0x159, shadow, lbl_805DCD18);
+    ASSERT_STR(0x159, shadow, ShadowAssertShadow);
     ASSERT_NAMED(0x15A, shadow->camera);
     ASSERT_NAMED(0x15B, shadow->texture);
     ASSERT_NAMED(0x15C, shadow->texture->imagedesc);
@@ -170,12 +168,12 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
         channel.mat_color.g = 0xFF;
         channel.mat_color.b = 0xFF;
         HSD_SetupChannelAll(&channel);
-        C_MTXOrtho(&sp8, lbl_805E5DD0, lbl_805E5DC0, lbl_805E5DC0, lbl_805E5DD0, lbl_805E5DD4, lbl_805E5DD0);
+        C_MTXOrtho(&sp8, ShadowOne, 0.0F, 0.0F, ShadowOne, ShadowNegOne, ShadowOne);
         GXSetProjection(&sp8, 1);
-        GXSetViewport(lbl_805E5DC0, lbl_805E5DC0, imgdesc->width, imgdesc->height, lbl_805E5DC0, lbl_805E5DD0);
+        GXSetViewport(0.0F, 0.0F, imgdesc->width, imgdesc->height, 0.0F, ShadowOne);
         GXSetScissor(0, 0, imgdesc->width, imgdesc->height);
-        GXLoadPosMtxImm(&lbl_80503FC0, 0);
-        GXSetCurrentMtx(0, lbl_80504418.unkC++, &lbl_80504418);
+        GXLoadPosMtxImm(&HSD_IdentityMtx, 0);
+        GXSetCurrentMtx(0, HSD_PerfCurrentStat.unkC++, &HSD_PerfCurrentStat);
         HSD_ClearVtxDesc();
         GXSetVtxDesc(9, 1);
         GXSetVtxAttrFmt(0, 9, 0, 0, 0);
@@ -194,7 +192,7 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
         channel.mat_color.g = temp_r0;
         channel.mat_color.b = temp_r0;
         HSD_SetupChannelAll(&channel);
-        if (shadow->objects != NULL && HSD_CObjGetEyeDistance(camera) >= lbl_805DC8C0[0] && HSD_CObjSetCurrent(camera)) {
+        if (shadow->objects != NULL && HSD_CObjGetEyeDistance(camera) >= HSD_FloatEpsilon[0] && HSD_CObjSetCurrent(camera)) {
             GXSetScissor(2, 2, imgdesc->width - 4, imgdesc->height - 4);
             for (var_r26 = shadow->objects; var_r26 != NULL; var_r26 = var_r26->next) {
                 HSD_JObjDispAll(var_r26->data, 0, 5, 0x04000000);
@@ -207,7 +205,7 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
 void HSD_ShadowEndRender(HSD_Shadow* shadow)
 {
     HSD_ImageDesc* imgdesc;
-    ASSERT_STR(0x1ED, shadow, lbl_805DCD18);
+    ASSERT_STR(0x1ED, shadow, ShadowAssertShadow);
     imgdesc = shadow->texture->imagedesc;
     if (imgdesc->img_ptr == NULL) {
         HSD_ShadowSetSize(shadow, imgdesc->width, imgdesc->height);
@@ -220,7 +218,7 @@ void HSD_ShadowEndRender(HSD_Shadow* shadow)
 
 void HSD_ShadowSetActive(HSD_Shadow *shadow, s32 active)
 {
-    ASSERT_STR(0x23A, shadow, lbl_805DCD18);
+    ASSERT_STR(0x23A, shadow, ShadowAssertShadow);
     // skip if already in requested state
     if (shadow->active && active || !shadow->active && !active) {
         return;
@@ -261,8 +259,6 @@ void HSD_ShadowAddObject(HSD_Shadow* shadow, HSD_Obj* obj)
     }
 }
 
-HSD_SList* HSD_SListRemove(HSD_SList*);
-
 void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
 {
     if (shadow == NULL) {
@@ -286,13 +282,11 @@ void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
     }
 }
 
-extern void PSMTXCopy(Mtx src, Mtx dst);
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
 void C_MTXLightPerspective(Mtx, f32, f32, f32, f32, f32, f32);
 void C_MTXLightFrustum(Mtx, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 void C_MTXLightOrtho(Mtx, f32, f32, f32, f32, f32, f32, f32, f32);
 
-Mtx lbl_80504678 = {
+Mtx ShadowProjectionFallbackMtx = {
     { 0.0F, 0.0F, 0.0F, 0.0F },
     { 0.0F, 0.0F, 0.0F, 0.0F },
     { 0.0F, 0.0F, 0.0F, 1.0F },
@@ -302,8 +296,8 @@ void makeMatrix(HSD_Shadow* shadow)
 {
     Mtx Mprj;
 
-    if (HSD_CObjGetEyeDistance(shadow->camera) < lbl_805DC8C0[0]) {
-        PSMTXCopy(lbl_80504678, shadow->texture->mtx);
+    if (HSD_CObjGetEyeDistance(shadow->camera) < HSD_FloatEpsilon[0]) {
+        PSMTXCopy(ShadowProjectionFallbackMtx, shadow->texture->mtx);
         return;
     }
 
@@ -332,26 +326,26 @@ void makeMatrix(HSD_Shadow* shadow)
         break;
 
     default:
-        ASSERT_STR(0x2BB, 0, lbl_805DCD20);
+        ASSERT_STR(0x2BB, 0, ShadowAssertZero);
     }
 
     PSMTXConcat(Mprj, shadow->camera->view_mtx, shadow->texture->mtx);
 }
 
-f32 fn_803BD3C8(f32, f32); /* atan2f */
+f32 kar_atan2(f32, f32); /* atan2f */
 
-f32 lbl_805E5DD8 = 57.29578F;
+f32 ShadowRadToDeg = 57.29578F;
 
 void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left, f32 right)
 {
     HSD_CObj* camera;
     f32 distance;
 
-    ASSERT_STR(0x2D2, shadow, lbl_805DCD18);
+    ASSERT_STR(0x2D2, shadow, ShadowAssertShadow);
 
     camera = shadow->camera;
     distance = HSD_CObjGetEyeDistance(camera);
-    if (distance < lbl_805DC8C0[0]) {
+    if (distance < HSD_FloatEpsilon[0]) {
         return;
     }
 
@@ -369,8 +363,8 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
         } else {
             height = __fabs(right);
         }
-        HSD_CObjSetAspect(camera, height / (width + lbl_805DC8C0[0]));
-        HSD_CObjSetFov(camera, fn_803BD3C8(width, distance) * lbl_805E5DD8);
+        HSD_CObjSetAspect(camera, height / (width + HSD_FloatEpsilon[0]));
+        HSD_CObjSetFov(camera, kar_atan2(width, distance) * ShadowRadToDeg);
     } break;
 
     case PROJ_ORTHO:
@@ -379,36 +373,29 @@ void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left,
 
     case PROJ_FRUSTRUM: {
         f32 scale = HSD_CObjGetNear(camera) / distance;
-        if (scale < lbl_805DC8C0[0]) {
-            scale = lbl_805DC8C0[0];
+        if (scale < HSD_FloatEpsilon[0]) {
+            scale = HSD_FloatEpsilon[0];
         }
         HSD_CObjSetFrustum(camera, scale * top, scale * bottom, scale * left, scale * right);
     } break;
 
     default:
-        ASSERT_STR(0x2FF, 0, lbl_805DCD20);
+        ASSERT_STR(0x2FF, 0, ShadowAssertZero);
     }
 }
 
-extern void PSVECSubtract(Vec* a, Vec* b, Vec* dst);
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern f32 PSVECMag(Vec* vec);
-extern f32 PSVECDotProduct(Vec* a, Vec* b);
-extern void PSVECCrossProduct(Vec* a, Vec* b, Vec* dst);
 extern void PSVECScale(f32 scale, Vec* src, Vec* dst);
-void HSD_VecGetOrthogonal(Vec*, Vec*);
 
-extern f32 lbl_805DC8B8[]; /* epsilon: direction-normalize threshold */
-f32 lbl_805E5DDC = -3.4028235E38F; /* -FLT_MAX */
-f32 lbl_805E5DE0[2] = { 3.4028235E38F, 0.0F }; /* +FLT_MAX */
+f32 ShadowNegFloatMax = -3.4028235E38F; /* -FLT_MAX */
+f32 ShadowFloatMaxPair[2] = { 3.4028235E38F, 0.0F }; /* +FLT_MAX */
 
 static inline BOOL TryNormalizeChecked(Vec* src, Vec* dst)
 {
     if (src == NULL || dst == NULL) {
         return ~0;
     }
-    if (__fabs(src->x) <= lbl_805DC8B8[0] && __fabs(src->y) <= lbl_805DC8B8[0] &&
-        __fabs(src->z) <= lbl_805DC8B8[0]) {
+    if (__fabs(src->x) <= HSD_FloatMin[0] && __fabs(src->y) <= HSD_FloatMin[0] &&
+        __fabs(src->z) <= HSD_FloatMin[0]) {
         return ~0;
     }
     PSVECNormalize(src, dst);
@@ -417,7 +404,7 @@ static inline BOOL TryNormalizeChecked(Vec* src, Vec* dst)
 
 void HSD_ViewingRectInit(HSD_ViewingRect* rect, Vec* position, Vec* interest, Vec* upvector, s32 perspective)
 {
-    ASSERT_STR(0x31E, rect, lbl_805DCD24);
+    ASSERT_STR(0x31E, rect, ShadowAssertRect);
 
     rect->invalid = 0;
     rect->origin = *position;
@@ -435,14 +422,14 @@ void HSD_ViewingRectInit(HSD_ViewingRect* rect, Vec* position, Vec* interest, Ve
     PSVECCrossProduct(&rect->right_v, &rect->eye_vn, &rect->up_v);
     rect->distance = PSVECMag(&rect->eye_v);
 
-    rect->top = rect->right = lbl_805E5DDC;
-    rect->bottom = rect->left = lbl_805E5DE0[0];
+    rect->top = rect->right = ShadowNegFloatMax;
+    rect->bottom = rect->left = ShadowFloatMaxPair[0];
     rect->perspective = perspective != 0;
 }
 
 s32 HSD_ViewingRectCheck(HSD_ViewingRect* rect)
 {
-    ASSERT_STR(0x33C, rect, lbl_805DCD24);
+    ASSERT_STR(0x33C, rect, ShadowAssertRect);
     return !rect->invalid && rect->top > rect->bottom && rect->right > rect->left;
 }
 
@@ -451,7 +438,7 @@ void HSD_ViewingRectAddRect(HSD_ViewingRect* rect, Vec* position, f32 top, f32 b
     f32 x, y, dot;
     Vec o2p, e2p;
 
-    ASSERT_STR(0x362, rect, lbl_805DCD24);
+    ASSERT_STR(0x362, rect, ShadowAssertRect);
     ASSERT_NAMED(0x363, position);
 
     if (rect->invalid) {
@@ -463,7 +450,7 @@ void HSD_ViewingRectAddRect(HSD_ViewingRect* rect, Vec* position, f32 top, f32 b
     if (rect->perspective) {
         f32 scale;
 
-        if (dot <= lbl_805E5DC0) {
+        if (dot <= 0.0F) {
             return;
         }
         scale = rect->distance / dot;

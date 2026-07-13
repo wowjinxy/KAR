@@ -1,13 +1,10 @@
 #include <sysdolphin/dobj.h>
+#include <sysdolphin/gobjproc.h>
 
-extern HSD_ClassInfo hsdClass;
-
-extern HSD_DObj* lbl_805DE174;
-extern HSD_DObjInfo* lbl_805DE170;
-#define current_dobj lbl_805DE174
-#define default_class lbl_805DE170
-
-extern void kar_object__80405968(HSD_PObj*, HSD_PObjDesc*);
+extern HSD_DObj* DObjCurrent;
+extern HSD_DObjInfo* DObjDefaultClass;
+#define current_dobj DObjCurrent
+#define default_class DObjDefaultClass
 
 void DObjInfoInit(void);
 void _HSD_StateInvalidateTevRegister();
@@ -111,8 +108,6 @@ void HSD_DObjReqAnimAllByFlags(HSD_DObj* dobj, f32 startframe, u32 flags)
     }
 }
 
-extern void HSD_MObjAnim();
-extern void HSD_PObjAnimAll();
 #pragma push
 asm void HSD_DObjAnimAll(HSD_DObj* dobj)
 {
@@ -151,7 +146,6 @@ lbl_803F4648:
 }
 #pragma pop
 
-HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);
 HSD_PObj* HSD_PObjLoadDesc(HSD_PObjDesc* desc);
 HSD_MObj* HSD_MObjLoadDesc(HSD_MObjDesc* desc);
 
@@ -250,7 +244,7 @@ static inline void HSD_DObjResolveRefs(HSD_DObj* dobj, HSD_DObjDesc* desc)
 {
     if (dobj == NULL || desc == NULL)
        return;
-    kar_object__80405968(dobj->pobj, desc->pobjdesc);
+    HSD_PObjResolveRefsAll(dobj->pobj, desc->pobjdesc);
 }
 
 void HSD_DObjResolveRefsAll(HSD_DObj* dobj, HSD_DObjDesc* desc)

@@ -1,6 +1,12 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmautodemo.h>
+#include <kar/gm/gmclearchecker.h>
+#include <kar/gm/gmdiag.h>
+#include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbaudio.h>
+#include <kar/shadow.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/gobjuserdata.h>
 #include <sysdolphin/objalloc.h>
@@ -96,28 +102,20 @@ const f64 lbl_805DE8F8 = 4503601774854144.0;
 
 extern RaceUserData* lbl_805DD570;
 extern char kar_linkfile_gmdata_dat_80496028[];
-extern u8 lbl_8058B080[];
+extern u8 HSD_PadState[];
 extern const f32 lbl_805DE7A8;
 
 void* memset(void* dst, int val, unsigned long n);
 void* kar_gmmain__near_80006c14(void);
-void kar_gmautodemo__near_80011024(HSD_GObj* gobj);
-void* kar_gmautodemo__near_8000fcb0(void);
-void ClearChecker_MarkUnlockSfxPlayedThisFrame(void);
-s32 kar_diag__8000acb0(void);
 s32 fn_8000AD48(void);
 s32 kar_gmracenormal__8000ae08(void);
 f32 kar_gmracenormal__8000a370(s32 arg0);
-s32 kar_gmracenormal__8000ae50(void);
-s32 kar_gmracenormal__8000aea8(void);
 s32 kar_gmracenormal__8000af5c(void);
 s32 kar_gmracenormal__8000af94(void);
 s32 kar_gmracenormal__8003d5f0(void);
 s32 kar_gmracenormal__8003f6cc(void);
 s32 fn_800095F8(s32 arg0);
 s32 fn_80262060(s32 arg0);
-s32 kar_shadow__near_8007b650(void);
-u8 kar_shadow__near_8007b990(void);
 void kar_grcommon_get_startpos_vectors_by_index(s32 index, Vec* pos, Vec* dir,
                                                 Vec* scale);
 void kar_plclearchecker_set_template_vec_008(s32 arg0, Vec* arg1);
@@ -146,8 +144,6 @@ void fn_8022BA5C(s32 arg0);
 void fn_8022B768(s32 arg0);
 u64 fn_803AE0F0(f32 arg0);
 f32 fn_803AE03C(u64 arg0);
-void kar_lbaudio__near_80062874(u64 arg0);
-HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
 
 #define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
 #define GET_S8(base, offset) (*(s8*) ((u8*) (base) + (offset)))
@@ -509,11 +505,11 @@ void kar_gmracecommon__near_800135ec(s32 player)
 
     if (kar_shadow__near_8007b650() != 0) {
         s32 shadow_offset = player_index * 2;
-        s32 shadow_player = (s8) lbl_8058B080[shadow_offset + 0x12];
+        s32 shadow_player = (s8) HSD_PadState[shadow_offset + 0x12];
 
         if (shadow_player == (u8) kar_shadow__near_8007b990()) {
             s32 source_slot =
-                (s8) lbl_8058B080[shadow_offset + 0x13] * sizeof(RaceSlot);
+                (s8) HSD_PadState[shadow_offset + 0x13] * sizeof(RaceSlot);
             kar_plclearcheckerlib__near_8022cc10(player_index,
                                                  GET_S8(slots, source_slot + 5));
         } else {

@@ -27,8 +27,7 @@ asm void PSMTXMultVec(const Mtx m, const Vec* src, Vec* dst)
     blr
 }
 
-/* PSMTXMultVecSR */
-asm void fn_803D1E40(const Mtx m, const Vec* src, Vec* dst)
+asm void PSMTXMultVecSR(const Mtx m, const Vec* src, Vec* dst)
 {
     nofralloc
     psq_l f0, 0(r3), 0, 0

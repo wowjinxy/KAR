@@ -1,4 +1,6 @@
 #include "functions.h"
+#include <kar/lb/lbarealightzone.h>
+#include <kar/lb/lbhvqm.h>
 #include <sysdolphin/objalloc.h>
 
 typedef struct VecBits {
@@ -39,7 +41,6 @@ ObjAllocDataStorage lbl_805529D0;
 HSD_ObjAllocData lbl_805529A4;
 HSD_ObjAllocData lbl_80552978;
 
-void* kar_lbhvqm__near_80079428(s32 kind, void* desc, void* data);
 void kar_lbarealight__80079518(AreaLight* light);
 void kar_lbarealight__800797a8();
 void kar_lbarealightuser__near_8007a7e0(void* arg0, void* arg1, u8 kind, void* arg3);

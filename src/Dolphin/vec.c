@@ -1,8 +1,8 @@
 #include "dolphin/types.h"
 #include "dolphin/mtx/mtxtypes.h"
 
-extern const f32 lbl_805E58E8; // 0.5F
-extern const f32 lbl_805E58EC; // 3.0F
+extern const f32 vec_half;
+extern const f32 vec_three;
 
 asm void PSVECSubtract(Vec* a, Vec* b, Vec* result)
 {
@@ -33,8 +33,8 @@ asm void PSVECScale(Vec* src, Vec* dst, f32 scale)
 asm void PSVECNormalize(Vec* src, Vec* unit)
 {
     nofralloc
-    lfs f0, lbl_805E58E8(r0)
-    lfs f1, lbl_805E58EC(r0)
+    lfs f0, vec_half(r0)
+    lfs f1, vec_three(r0)
     psq_l f2, 0(r3), 0, 0
     ps_mul f5, f2, f2
     psq_l f3, 8(r3), 1, 0
@@ -66,7 +66,7 @@ asm f32 PSVECSquareMag(Vec* v)
 asm f32 PSVECMag(Vec* v)
 {
     nofralloc
-    lfs f4, lbl_805E58E8(r0)
+    lfs f4, vec_half(r0)
     psq_l f0, 0(r3), 0, 0
     ps_mul f0, f0, f0
     lfs f1, 8(r3)
@@ -76,7 +76,7 @@ asm f32 PSVECMag(Vec* v)
     fcmpu cr0, f1, f2
     beq magret
     frsqrte f0, f1
-    lfs f3, lbl_805E58EC(r0)
+    lfs f3, vec_three(r0)
     fmuls f2, f0, f0
     fmuls f0, f0, f4
     fnmsubs f2, f2, f1, f3
@@ -119,9 +119,8 @@ asm void PSVECCrossProduct(Vec* a, Vec* b, Vec* result)
     blr
 }
 
-/* PSVECReflect */
 #pragma peephole off
-void fn_803D21F8(Vec* src, Vec* normal, Vec* dst)
+void PSVECReflect(Vec* src, Vec* normal, Vec* dst)
 {
     Vec negSrc;
     Vec unitNormal;
@@ -144,8 +143,7 @@ void fn_803D21F8(Vec* src, Vec* normal, Vec* dst)
 }
 #pragma peephole reset
 
-/* PSVECSquareDistance */
-asm f32 fn_803D22CC(Vec* a, Vec* b)
+asm f32 PSVECSquareDistance(Vec* a, Vec* b)
 {
     nofralloc
     psq_l f0, 4(r3), 0, 0
@@ -160,8 +158,7 @@ asm f32 fn_803D22CC(Vec* a, Vec* b)
     blr
 }
 
-/* PSVECDistance */
-asm f32 fn_803D22F4(Vec* a, Vec* b)
+asm f32 PSVECDistance(Vec* a, Vec* b)
 {
     nofralloc
     psq_l f0, 4(r3), 0, 0
@@ -171,13 +168,13 @@ asm f32 fn_803D22F4(Vec* a, Vec* b)
     psq_l f1, 0(r4), 0, 0
     ps_mul f2, f2, f2
     ps_sub f0, f0, f1
-    lfs f3, lbl_805E58E8(r0)
+    lfs f3, vec_half(r0)
     ps_madd f1, f0, f0, f2
     fsubs f0, f3, f3
     ps_sum0 f1, f1, f2, f2
     fcmpu cr0, f0, f1
     beq distret
-    lfs f4, lbl_805E58EC(r0)
+    lfs f4, vec_three(r0)
     frsqrte f0, f1
     fmuls f2, f0, f0
     fmuls f0, f0, f3

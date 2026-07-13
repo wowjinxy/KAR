@@ -8,6 +8,7 @@
 #include <sysdolphin/object.h>
 #include <sysdolphin/objalloc.h>
 
+#include <sysdolphin/aobj_alloc.h>
 #include <sysdolphin/fobj.h>
 #include <sysdolphin/list.h>
 
@@ -63,8 +64,6 @@ typedef struct _HSD_AnimJoint {
     u32 flags;
 } HSD_AnimJoint;
 
-void HSD_AObjInitAllocData(void);
-HSD_ObjAllocData* HSD_AObjGetAllocData(void);
 u32 HSD_AObjGetFlags(HSD_AObj* aobj);
 void HSD_AObjSetFlags(HSD_AObj* aobj, u32 flags);
 void HSD_AObjClearFlags(HSD_AObj* aobj, u32 flags);

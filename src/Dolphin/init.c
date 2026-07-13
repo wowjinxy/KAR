@@ -1,7 +1,7 @@
 #include "dolphin/types.h"
+#include "dolphin/ppcarch.h"
 
 extern void (*_ctors[])(void);
-extern void PPCHalt(void);
 
 static void __init_cpp(void);
 

@@ -7,3 +7,10 @@ splits: config/GKYP01/splits.txt
 # Change this to match the linker version.
 # See config.example.yml for a list.
 mw_comment_version: 10
+extract:
+- symbol: kar_debugconsole_font_i4_8x14
+  binary: kar/debug/debugconsole_font_i4_8x14.bin
+  header_type: none
+- symbol: kar_sislib_romfont_glyphs_i4_32x32
+  binary: kar/hsd/base/sislib_romfont_glyphs_i4_32x32.bin
+  header_type: none

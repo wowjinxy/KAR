@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/lb/lbheap.h>
 #include <sysdolphin/memory.h>
 
 typedef struct LbHeapConfig LbHeapConfig;
@@ -46,24 +47,14 @@ struct LbHeapReportData {
     char missing_kind_fmt[40];
 };
 
-extern LbHeapConfig lbl_80497ED0[];
+extern LbHeapConfig kar_lbmemory_heap_config[];
 
 char kar_src_lbheap_80497f60[] = "lbheap.c";
-char lbl_80497F6C[] = "p->status == LbHeapStatus_Create";
-char lbl_80497F90[] = "     Hsd";
-char lbl_80497F9C[] = "    ARAM";
-char lbl_80497FA8[] = "    Init";
-char lbl_80497FB4[] = "    Stay";
-char lbl_80497FC0[] = "    AllM";
-char lbl_80497FCC[] = "     Net";
-char lbl_80497FD8[] = "    AllA";
-char lbl_80497FE4[] = "  Stay2d";
-char lbl_80497FF0[] = "   All2d";
-LbHeapReportData lbl_80497FFC = {
+LbHeapReportData kar_lbheap_report_data = {
     "     Dat",
-    { lbl_80497F90, lbl_80497F9C, lbl_80497FA8, lbl_80497FB4, lbl_80497FC0,
-      lbl_80497FCC, lbl_80497FD8, lbl_80497FE4, lbl_80497FF0,
-      (char*) &lbl_80497FFC },
+    { "     Hsd", "    ARAM", "    Init", "    Stay", "    AllM",
+      "     Net", "    AllA", "  Stay2d", "   All2d",
+      (char*) &kar_lbheap_report_data },
     "[lbHeap] -- Report --\n",
     " %5d KB + ",
     " %5d KB( %8d)",
@@ -74,15 +65,13 @@ LbHeapReportData lbl_80497FFC = {
     "   ARAM Total : %5d KB( %8d)\n",
     "[LbHeap] heap_kind %d is not exist!\n",
 };
-LbHeapState lbl_80537F40;
-char lbl_805D5258[] = "%s :";
+LbHeapState lbheap_state;
 
 u32 OSDisableInterrupts(void);
 void OSRestoreInterrupts(u32 level);
 s32 HSD_GetHeap(void);
 void HSD_SetHeap(s32 heap);
 void HSD_GetNextArena(void** start, void** end);
-s32 kar_diag__803d3884(s32 heap);
 void* kar_lbmemory_free_to_heap(void* heap, void* ptr);
 s32 kar_lbmemory__near_80057924(void* heap);
 void* kar_lbmemory__near_80057d14(void* heap, u32 size, void* ptr);
@@ -94,11 +83,12 @@ void kar_lbheap__80058920(s32 kind, void* ptr)
     u32 interrupts;
 
     interrupts = OSDisableInterrupts();
-    p = (LbHeapEntry*) ((u8*) &lbl_80537F40 + (kind * sizeof(LbHeapEntry)) +
+    p = (LbHeapEntry*) ((u8*) &lbheap_state + (kind * sizeof(LbHeapEntry)) +
                         0x10);
 
     if (p->status != 0) {
-        __assert(kar_src_lbheap_80497f60, 0x16A, lbl_80497F6C);
+        __assert(kar_src_lbheap_80497f60, 0x16A,
+                 "p->status == LbHeapStatus_Create");
     }
 
     if (p->type == 0) {
@@ -120,7 +110,7 @@ void* kar_lbheap__near_800589e4(s32 kind, u32 size, void* ptr)
     u32 interrupts;
 
     interrupts = OSDisableInterrupts();
-    p = (LbHeapEntry*) ((u8*) &lbl_80537F40 + (kind * sizeof(LbHeapEntry)) +
+    p = (LbHeapEntry*) ((u8*) &lbheap_state + (kind * sizeof(LbHeapEntry)) +
                         0x10);
 
     if (kind == 0 || kind == 1) {
@@ -135,7 +125,7 @@ void* kar_lbheap__near_800589e4(s32 kind, u32 size, void* ptr)
 
 void kar_lbheap__near_80058a80(void)
 {
-    u8* data_base = (u8*) lbl_80497ED0;
+    u8* data_base = (u8*) kar_lbmemory_heap_config;
     char** names;
     u8* heap;
     LbHeapEntry* p;
@@ -143,10 +133,10 @@ void kar_lbheap__near_80058a80(void)
 
     OSReport((char*) (data_base + 0x160));
 
-    heap = (u8*) &lbl_80537F40;
+    heap = (u8*) &lbheap_state;
     names = (char**) (data_base + 0x138);
     for (i = 0; i < 10; i++) {
-        OSReport(lbl_805D5258, *names);
+        OSReport("%s :", *names);
         p = (LbHeapEntry*) (heap + 0x10);
         if (*(s32*) (heap + 0x28) == 0) {
             s32 free_size;
@@ -172,10 +162,10 @@ void kar_lbheap__near_80058a80(void)
         heap += sizeof(LbHeapEntry);
     }
 
-    i = lbl_80537F40.main_end - lbl_80537F40.main_start;
+    i = lbheap_state.main_end - lbheap_state.main_start;
     OSReport((char*) (data_base + 0x1D0), i / 1024, i);
 
-    i = lbl_80537F40.aram_end - lbl_80537F40.aram_start;
+    i = lbheap_state.aram_end - lbheap_state.aram_start;
     OSReport((char*) (data_base + 0x1F0), i / 1024, i);
 }
 
@@ -186,12 +176,12 @@ void kar_lbheap__near_80058be8(void)
     s32 kind;
     s32 i;
 
-    HSD_GetNextArena((void**) &lbl_80537F40.main_start,
-                     (void**) &lbl_80537F40.main_end);
-    kar_lbmemory__near_8005811c((void**) &lbl_80537F40.aram_start,
-                                (void**) &lbl_80537F40.aram_end);
+    HSD_GetNextArena((void**) &lbheap_state.main_start,
+                     (void**) &lbheap_state.main_end);
+    kar_lbmemory__near_8005811c((void**) &lbheap_state.aram_start,
+                                (void**) &lbheap_state.aram_end);
 
-    p = lbl_80537F40.entries;
+    p = lbheap_state.entries;
     for (i = 0; i < 2; i++) {
         p[0].hsd_heap = -1;
         p[0].memory_heap = (void*) -1;
@@ -231,9 +221,9 @@ void kar_lbheap__near_80058be8(void)
         p += 5;
     }
 
-    config = lbl_80497ED0;
+    config = kar_lbmemory_heap_config;
     while ((kind = config->kind) != 10) {
-        p = &lbl_80537F40.entries[kind];
+        p = &lbheap_state.entries[kind];
 
         p->type = config->type;
         p->size = config->size;
@@ -241,17 +231,18 @@ void kar_lbheap__near_80058be8(void)
         if (config->reference_kind == 10) {
             switch (p->type) {
             case 1:
-                p->start = lbl_80537F40.main_start;
+                p->start = lbheap_state.main_start;
                 break;
             case 2:
-                p->start = lbl_80537F40.main_end - p->size;
+                p->start = lbheap_state.main_end - p->size;
                 break;
             case 4:
-                p->start = lbl_80537F40.aram_start;
+                p->start = lbheap_state.aram_start;
                 break;
             }
         } else {
-            LbHeapEntry* ref = &lbl_80537F40.entries[config->reference_kind];
+            LbHeapEntry* ref =
+                &lbheap_state.entries[config->reference_kind];
 
             switch (p->type) {
             case 1:

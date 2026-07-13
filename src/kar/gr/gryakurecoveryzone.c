@@ -1,6 +1,10 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
+#include <kar/gr/graudio.h>
+#include <kar/gr/grcoll.h>
+#include <kar/gr/gryaku.h>
 #include <kar/gm/gmlanmenu.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/memory.h>
@@ -15,6 +19,30 @@ typedef struct Kind41Param Kind41Param;
 typedef struct GroundGroupParam GroundGroupParam;
 typedef union YakuFlagByte YakuFlagByte;
 typedef union YakuKind41FlagByte YakuKind41FlagByte;
+
+#if defined(VERSION_GKYJ01)
+#define kar_grcoll__near_800d7ad0 fn_800D68FC
+#define kar_gryakuanim_apply_zone_enabled_state fn_800F516C
+#define kar_gryakulib_get_yaku_data_checked fn_800F6870
+#define kar_gryakulib_get_yaku_state_or_none fn_800F68C4
+#define kar_gryakulib_get_model_root_position fn_800F68E4
+#define GRRECOVERY_GROUND_ASSERT_MSG lbl_805D0CB0
+#elif defined(VERSION_GKYP01)
+#define kar_grcoll__near_800d7ad0 fn_800D922C
+#define kar_gryakuanim_apply_zone_enabled_state fn_800F7ABC
+#define kar_gryakulib_get_yaku_data_checked fn_800F91C0
+#define kar_gryakulib_get_yaku_state_or_none fn_800F9214
+#define kar_gryakulib_get_model_root_position fn_800F9234
+#define GRRECOVERY_GROUND_ASSERT_MSG lbl_805C8C20
+#else
+#define GRRECOVERY_GROUND_ASSERT_MSG lbl_805D6248
+#endif
+
+#define GRRECOVERY_NEAREST_INIT_DIST 3.4028235E38F
+#define GRRECOVERY_STATE_ZERO 0.0F
+#define GRRECOVERY_ENABLED_END 1.0F
+#define GRRECOVERY_KIND41_ZERO 0.0F
+#define GRRECOVERY_KIND41_END 1.0F
 
 struct Ground {
     u8 pad_0[0x54];
@@ -102,18 +130,11 @@ union YakuKind41FlagByte {
 #define YAKU_FLAGS_13C(yaku) (*(u8*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_13C_BITS(yaku) (*(YakuFlagByte*) ((u8*) (yaku) + 0x13C))
 #define YAKU_FLAGS_144_BITS(yaku) (*(YakuKind41FlagByte*) ((u8*) (yaku) + 0x144))
-extern Ground* lbl_805DD6CC;
-extern const f32 lbl_805DC8BC[];
-extern const f32 lbl_805DF8D4;
-extern const f32 lbl_805DF8D8;
-extern const f32 lbl_805DF8E4;
-extern const f32 lbl_805DF8E8;
 extern char kar_src_gryakurecoveryzone_c[];
 extern char kar_gryakurecoveryzone_assert_kind_recoveryzone[];
 extern char kar_src_ground_h_804a6170[];
-extern char lbl_805D6248;
+extern char GRRECOVERY_GROUND_ASSERT_MSG;
 
-HSD_GObj* kar_gryaku_create_yaku_from_main_kind(s32 kind);
 void kar_gryakurecoveryzone_enter_enabled_state_sequence(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_init_stage_linked_recoveryzone_yaku(HSD_GObj* gobj,
                                                                 HSD_GObj* ground_gobj);
@@ -126,7 +147,6 @@ void kar_gryakurecoveryzone_start_state1_path_motion(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_start_state2_path_motion(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj);
 void kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(HSD_GObj* gobj);
-void* kar_grcoll__800d79c0(void* collision_root, void* jobj, s32 arg2);
 void kar_grcoll__near_800d7ad0(void* collision, s32 enabled);
 void kar_gryaku_set_path_node_motion(Yaku* yaku, s32 state, void* path_nodes,
                                      s32 joint_index, s32 arg4, f32 start, f32 end,
@@ -135,11 +155,9 @@ u64 kar_gryakueffect_request_by_entry_mode(HSD_GObj* gobj, void* effect_entry,
                                            s32 effect_resource, s32 arg3, s32 arg4,
                                            Vec* pos, s32 arg6);
 void kar_gryakuanim_apply_zone_enabled_state(Yaku* yaku, s32 state);
-void kar_graudio_play_fgm_entry_id(void* entry, s32 id);
 s32 kar_gryakulib_get_yaku_data_checked(HSD_GObj* gobj);
 s32 kar_gryakulib_get_yaku_state_or_none(HSD_GObj* gobj);
 void kar_gryakulib_get_model_root_position(HSD_GObj* gobj, Vec* out);
-f32 fn_803D22F4(Vec* a, Vec* b);
 f32 kar_gryakurecoveryzone_update_recovery_progress(HSD_GObj* gobj, void* arg,
                                                     f32 delta);
 
@@ -160,7 +178,7 @@ void kar_gryakurecoveryzone_init_stage_linked_recoveryzone_yaku(HSD_GObj* gobj,
     RecoveryZoneParam* param = YAKU_PARAM(yaku, RecoveryZoneParam);
 
     YAKU_FIELD_130(yaku) =
-        kar_grcoll__800d79c0(&lbl_805DD6CC->collision_root,
+        kar_grcoll__800d79c0(&kar_gryaku_current_ground->collision_root,
                              ground_data->jobjs[param->joint_index].jobj, 0);
     flag = 1;
     *(void**) ((u8*) YAKU_FIELD_130(yaku) + 0x138) = yaku->owner;
@@ -173,7 +191,7 @@ void kar_gryakurecoveryzone_start_state1_path_motion(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
     RecoveryZoneParam* param = YAKU_PARAM(yaku, RecoveryZoneParam);
-    f32 zero = lbl_805DF8D4;
+    f32 zero = GRRECOVERY_STATE_ZERO;
 
     kar_gryaku_set_path_node_motion(yaku, 1, (void*) -1, param->joint_index, 0, zero,
                                     zero, zero);
@@ -183,7 +201,7 @@ void kar_gryakurecoveryzone_start_state2_path_motion(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
     RecoveryZoneParam* param = YAKU_PARAM(yaku, RecoveryZoneParam);
-    f32 zero = lbl_805DF8D4;
+    f32 zero = GRRECOVERY_STATE_ZERO;
 
     YAKU_FIELD_134_F(yaku) = zero;
     kar_gryaku_set_path_node_motion(yaku, 2, (void*) -1, param->joint_index, 0, zero,
@@ -218,9 +236,9 @@ void kar_gryakurecoveryzone_enter_enabled_state_sequence(HSD_GObj* gobj)
         param = YAKU_PARAM(yaku, RecoveryZoneParam);
         kar_gryakuanim_apply_zone_enabled_state(yaku, 0);
         {
-            f32 zero = lbl_805DF8D4;
+            f32 zero = GRRECOVERY_STATE_ZERO;
             kar_gryaku_set_path_node_motion(yaku, 3, param->enabled_path_nodes, -1,
-                                            4, zero, lbl_805DF8D8, zero);
+                                            4, zero, GRRECOVERY_ENABLED_END, zero);
         }
     }
 }
@@ -228,7 +246,7 @@ void kar_gryakurecoveryzone_enter_enabled_state_sequence(HSD_GObj* gobj)
 s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* out)
 {
     Vec zone_pos;
-    f32 nearest_dist = lbl_805DC8BC[0];
+    f32 nearest_dist = GRRECOVERY_NEAREST_INIT_DIST;
     f32 dist;
     HSD_GObj* gobj;
     s32 found;
@@ -241,7 +259,7 @@ s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* o
             case 0:
             case 1:
                 kar_gryakulib_get_model_root_position(gobj, &zone_pos);
-                dist = fn_803D22F4(pos, &zone_pos);
+                dist = PSVECDistance(pos, &zone_pos);
                 if (dist < nearest_dist) {
                     *out = zone_pos;
                     nearest_dist = dist;
@@ -251,7 +269,7 @@ s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* o
         }
     }
 
-    if (nearest_dist < lbl_805DC8BC[0]) {
+    if (nearest_dist < GRRECOVERY_NEAREST_INIT_DIST) {
         found = 1;
     } else {
         found = 0;
@@ -265,7 +283,7 @@ s32 kar_gryakurecoveryzone_find_nearest_active_recoveryzone_pos(Vec* pos, Vec* o
 f32 kar_gryakurecoveryzone_try_update_player_slot_recovery(s32 player, void* arg,
                                                            f32 delta)
 {
-    Ground* ground = lbl_805DD6CC;
+    Ground* ground = kar_gryaku_current_ground;
     u8* player_slot = (u8*) ground->player_slots + player * 0x140;
     HSD_GObj* gobj = *(HSD_GObj**) (player_slot + 0x138);
 
@@ -280,7 +298,7 @@ f32 kar_gryakurecoveryzone_try_update_player_slot_recovery(s32 player, void* arg
         }
     }
 
-    return lbl_805DF8D4;
+    return GRRECOVERY_STATE_ZERO;
 }
 
 void kar_gryakurecoveryzone_create_stage_indexed_kind41_joint_yaku(HSD_GObj* ground_gobj,
@@ -298,7 +316,7 @@ void kar_gryakurecoveryzone_start_kind41_joint_idle_motion(HSD_GObj* gobj)
     YAKU_FIELD_140(yaku) = *(s32*) ((u8*) param->motion_param + 0x18);
     kar_grcoll__near_800d7ad0(YAKU_FIELD_130(yaku), 0);
     {
-        f32 zero = lbl_805DF8E4;
+        f32 zero = GRRECOVERY_KIND41_ZERO;
         kar_gryaku_set_path_node_motion(yaku, 0, param->path_nodes,
                                         param->motion_joint_index, 0, zero, zero, zero);
     }
@@ -331,10 +349,10 @@ void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj)
         }
 
         {
-            f32 zero = lbl_805DF8E4;
+            f32 zero = GRRECOVERY_KIND41_ZERO;
             kar_gryaku_set_path_node_motion(yaku2, 1, param->path_nodes,
                                             param->motion_joint_index, 0, zero,
-                                            lbl_805DF8E8, zero);
+                                            GRRECOVERY_KIND41_END, zero);
         }
     }
 }
@@ -372,7 +390,7 @@ void kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku(
             }
         }
 
-        __assert(kar_src_ground_h_804a6170, 0x96C, &lbl_805D6248);
+        __assert(kar_src_ground_h_804a6170, 0x96C, &GRRECOVERY_GROUND_ASSERT_MSG);
         ground = NULL;
 
     found_ground:
@@ -402,7 +420,7 @@ void kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(HSD_GObj* gobj
 {
     Yaku* yaku = gobj->user_data;
     GroundGroupParam* param = YAKU_PARAM(yaku, GroundGroupParam);
-    f32 zero = lbl_805DF8E4;
+    f32 zero = GRRECOVERY_KIND41_ZERO;
 
     YAKU_FIELD_134_S32(yaku) = param->joint_index;
     kar_gryaku_set_path_node_motion(yaku, 0, (void*) -1, -1, 0, zero, zero, zero);

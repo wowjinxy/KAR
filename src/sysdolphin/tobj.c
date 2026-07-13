@@ -1,20 +1,30 @@
 #include <global.h>
+#include <dolphin/gx/gx.h>
+#include <dolphin/mtx/mtx.h>
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/tobj.h>
 
 #include <sysdolphin/aobj.h>
+#include <sysdolphin/class_new.h>
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/gobjproc.h>
+#include <sysdolphin/initialize.h>
+#include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
+#include <sysdolphin/tev_state.h>
+#include <sysdolphin/tev_stage.h>
 
-extern f32 lbl_805E59C8; /* 0.0F */
-extern f32 lbl_805E59CC; /* 1.0F */
-extern f32 lbl_805E59D0; /* 255.0F */
-extern f32 lbl_805E59D4; /* ~1e-10F */
-extern f32 lbl_805E59E0; /* 0.5F */
-extern f32 lbl_805E59E4; /* -0.5F */
-extern f32 lbl_805E59E8; /* -1.0F */
-extern f64 lbl_805E59F0; /* -0.5 (double) */
+extern f32 TObjFloatZero; /* 0.0F */
+extern f32 TObjFloatOne; /* 1.0F */
+extern f32 TObjFloat255; /* 255.0F */
+extern f32 TObjFloatEpsilon; /* ~1e-10F */
+extern f32 TObjFloatHalf; /* 0.5F */
+extern f32 TObjFloatNegHalf; /* -0.5F */
+extern f32 TObjFloatNegOne; /* -1.0F */
+extern f64 TObjDoubleNegHalf; /* -0.5 (double) */
 
 #define ClampUnit(v) \
-    ((v) <= lbl_805E59C8 ? lbl_805E59C8 : ((v) >= lbl_805E59CC ? lbl_805E59CC : (v)))
+    ((v) <= TObjFloatZero ? TObjFloatZero : ((v) >= TObjFloatOne ? TObjFloatOne : (v)))
 
 #define GX_MTX3x4 0
 #define GX_MTX2x4 1
@@ -99,57 +109,23 @@ typedef struct _GXTexObj {
     u8 pad[0x20];
 } GXTexObj;
 
-extern HSD_ClassInfo hsdObj;
-
-char kar_srcfile_tobj_c_805dca50[] = "tobj.c";
-char lbl_805DCA58[] = "tobj";
-char lbl_805DCA60[] = "cobj";
-char lbl_805DCA68[] = "0";
-char lbl_805DCA6C[] = "tlut";
-char lbl_805DCA74[] = "";
-char lbl_805DCA78[] = "new";
-char lbl_805DCA7C[] = "tev";
-char lbl_805DCA80[] = "idesc";
 
 #define TOBJ_ASSERT(line, cond, str) \
-    ((cond) ? ((void) 0) : __assert(kar_srcfile_tobj_c_805dca50, line, str))
+    ((cond) ? ((void) 0) : __assert("tobj.c", line, str))
 
-extern void* hsdNew(HSD_ClassInfo* info);
-extern void hsdInitClassInfo(HSD_ClassInfo* class_info,
-                             HSD_ClassInfo* parent_info,
-                             char* base_class_library, char* type,
-                             s32 info_size, s32 class_size);
-extern void HSD_Panic(char* file, s32 line, char* msg);
-
-extern void* HSD_Alloc(u32 size);
-extern void HSD_Free(void* ptr);
 extern void* hsdAllocMemPiece(u32 size);
 extern void memcpy(void* dst, const void* src, u32 size);
 extern void memset(void* ptr, s32 value, u32 size);
-extern void OSReport(const char* fmt, ...);
-
-extern void _HSD_NeedCacheInvalidate(u32 flags);
 
 extern HSD_LObj* HSD_LObjGetCurrentByType(u16 flags);
 extern void HSD_LObjGetLightVector(HSD_LObj* lobj, Vec* v);
 extern u32 HSD_LObjGetLightMaskDiffuse(void);
 
-extern HSD_CObj* HSD_CObjGetCurrent(void);
-extern MtxPtr HSD_CObjGetInvViewingMtxPtrDirect(HSD_CObj* cobj);
-
 extern void kar_grcoll__803d1978(Mtx m, f32 x, f32 y, f32 z); /* PSMTXTrans */
-extern void fn_803D19AC(Mtx m, f32 xs, f32 ys, f32 zs);       /* PSMTXScale */
-extern void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
-extern void fn_803D1E40(Mtx mtx, Vec* src, Vec* dst); /* PSMTXMultVecSR */
-extern void PSVECNormalize(Vec* src, Vec* dst);
-extern void HSD_MkRotationMtx(Mtx m, Vec* rot);
 
-extern void GXLoadTexMtxImm(MtxPtr mtx, u32 id, u32 type);
 extern void GXSetTexCoordGen2(u32 dst_coord, u32 func, u32 src_param, u32 mtx,
                               u32 normalize, u32 postmtx);
 
-extern u32 HSD_StateAssignTev(void);
-extern void HSD_SetupTevStage(HSD_TevDesc* tevdesc);
 extern void HSD_StateAssignTexGen(u32 coord);
 
 extern HSD_TExp* HSD_TExpTev(HSD_TExp** list);
@@ -181,8 +157,6 @@ extern void GXLoadTexObj(void* texobj, u32 mapid);
 extern void GXSetTexCopySrc(u16 orig_x, u16 orig_y, u16 width, u16 height);
 extern void GXSetTexCopyDst(u16 width, u16 height, u32 format, u32 mipmap);
 extern void GXCopyTex(void* dest, u8 clear);
-extern void GXPixModeSync(void);
-extern void GXInvalidateTexAll(void);
 extern void HSD_StateSetZMode(u32 enable, u32 func, u32 update_enable);
 
 void TObjInfoInit(void);
@@ -199,9 +173,9 @@ HSD_TObjInfoBlock hsdTObj = {
     },
 };
 
-static HSD_TObjInfo* lbl_805DE178 = NULL;
+static HSD_TObjInfo* TObjDefaultClass = NULL;
 
-HSD_TObj* lbl_805DE17C;
+HSD_TObj* TObjCurrent;
 
 static inline void TObjRemoveAnim(HSD_TObj* tobj)
 {
@@ -360,62 +334,62 @@ void TObjUpdateFunc(void* obj, enum_t type, HSD_ObjData* val)
         break;
     case HSD_A_T_KONST_R:
         if (tobj->tev) {
-            tobj->tev->konst.r = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->konst.r = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_KONST_G:
         if (tobj->tev) {
-            tobj->tev->konst.g = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->konst.g = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_KONST_B:
         if (tobj->tev) {
-            tobj->tev->konst.b = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->konst.b = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_KONST_A:
         if (tobj->tev) {
-            tobj->tev->konst.a = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->konst.a = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV0_R:
         if (tobj->tev) {
-            tobj->tev->tev0.r = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev0.r = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV0_G:
         if (tobj->tev) {
-            tobj->tev->tev0.g = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev0.g = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV0_B:
         if (tobj->tev) {
-            tobj->tev->tev0.b = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev0.b = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV0_A:
         if (tobj->tev) {
-            tobj->tev->tev0.a = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev0.a = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV1_R:
         if (tobj->tev) {
-            tobj->tev->tev1.r = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev1.r = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV1_G:
         if (tobj->tev) {
-            tobj->tev->tev1.g = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev1.g = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV1_B:
         if (tobj->tev) {
-            tobj->tev->tev1.b = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev1.b = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TEV1_A:
         if (tobj->tev) {
-            tobj->tev->tev1.a = (u8) (lbl_805E59D0 * ClampUnit(val->fv));
+            tobj->tev->tev1.a = (u8) (TObjFloat255 * ClampUnit(val->fv));
         }
         break;
     case HSD_A_T_TS_BLEND:
@@ -487,7 +461,7 @@ HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
             tobj = HSD_TObjAlloc();
         } else {
             tobj = hsdNew(info);
-            TOBJ_ASSERT(0x22C, tobj, lbl_805DCA58);
+            TOBJ_ASSERT(0x22C, tobj, "tobj");
         }
         HSD_TOBJ_METHOD(tobj)->load(tobj, td);
         return tobj;
@@ -521,7 +495,7 @@ HSD_TObj* _HSD_TObjGetCurrentByType(HSD_TObj* from, u32 mapping)
     HSD_TObj* tp;
 
     if (from == NULL) {
-        tp = lbl_805DE17C;
+        tp = TObjCurrent;
     } else {
         tp = from->next;
     }
@@ -555,7 +529,7 @@ u32 HSD_TexMapID2PTTexMtx(u32 id)
     case GX_TEXMAP7:
         return GX_PTTEXMTX7;
     default:
-        HSD_Panic(kar_srcfile_tobj_c_805dca50, 0x297, "unexpected texmap id.\n");
+        HSD_Panic("tobj.c", 0x297, "unexpected texmap id.\n");
     }
     return 0;
 }
@@ -571,11 +545,11 @@ void MakeTextureMtx(HSD_TObj* tobj)
 
     TOBJ_ASSERT(0x2A6, tobj->repeat_s && tobj->repeat_t, lbl_80501F68);
 
-    scale.x = (f32) __fabs(tobj->scale.x) < lbl_805E59D4
-                  ? lbl_805E59C8
+    scale.x = (f32) __fabs(tobj->scale.x) < TObjFloatEpsilon
+                  ? TObjFloatZero
                   : (f32) tobj->repeat_s / tobj->scale.x;
-    scale.y = (f32) __fabs(tobj->scale.y) < lbl_805E59D4
-                  ? lbl_805E59C8
+    scale.y = (f32) __fabs(tobj->scale.y) < TObjFloatEpsilon
+                  ? TObjFloatZero
                   : (f32) tobj->repeat_t / tobj->scale.y;
     scale.z = tobj->scale.z;
     rot.x = tobj->rotate.x;
@@ -584,14 +558,14 @@ void MakeTextureMtx(HSD_TObj* tobj)
     trans.x = -tobj->translate.x;
     trans.y =
         -(tobj->translate.y + (tobj->wrap_t == GX_MIRROR
-                                   ? lbl_805E59CC / ((f32) tobj->repeat_t / tobj->scale.y)
-                                   : lbl_805E59C8));
+                                   ? TObjFloatOne / ((f32) tobj->repeat_t / tobj->scale.y)
+                                   : TObjFloatZero));
     trans.z = tobj->translate.z;
 
     kar_grcoll__803d1978(tobj->mtx, trans.x, trans.y, trans.z);
     HSD_MkRotationMtx(m, (Vec*) &rot);
     PSMTXConcat(m, tobj->mtx, tobj->mtx);
-    fn_803D19AC(m, scale.x, scale.y, scale.z);
+    PSMTXScale(m, scale.x, scale.y, scale.z);
     PSMTXConcat(m, tobj->mtx, tobj->mtx);
 }
 
@@ -613,11 +587,11 @@ void TObjSetupMtx(HSD_TObj* tobj)
         Mtx mtx;
 
         for (i = 0; i < 3; i++) {
-            mtx[i][0] = lbl_805E59E0 * tobj->mtx[i][0];
-            mtx[i][1] = lbl_805E59E4 * tobj->mtx[i][1];
-            mtx[i][2] = lbl_805E59C8;
-            mtx[i][3] = lbl_805E59E0 * tobj->mtx[i][0] +
-                        lbl_805E59E0 * tobj->mtx[i][1] + tobj->mtx[i][2] +
+            mtx[i][0] = TObjFloatHalf * tobj->mtx[i][0];
+            mtx[i][1] = TObjFloatNegHalf * tobj->mtx[i][1];
+            mtx[i][2] = TObjFloatZero;
+            mtx[i][3] = TObjFloatHalf * tobj->mtx[i][0] +
+                        TObjFloatHalf * tobj->mtx[i][1] + tobj->mtx[i][2] +
                         tobj->mtx[i][3];
         }
         GXLoadTexMtxImm(mtx, tobj->mtxid, GX_MTX3x4);
@@ -632,27 +606,27 @@ void TObjSetupMtx(HSD_TObj* tobj)
             Mtx mtx;
 
             cobj = HSD_CObjGetCurrent();
-            TOBJ_ASSERT(0x301, cobj, lbl_805DCA60);
+            TOBJ_ASSERT(0x301, cobj, "cobj");
             HSD_LObjGetLightVector(lobj, &ldir);
-            fn_803D1E40(cobj->view_mtx, &ldir, &ldir);
-            ldir.z += lbl_805E59E8;
+            PSMTXMultVecSR(cobj->view_mtx, &ldir, &ldir);
+            ldir.z += TObjFloatNegOne;
 
             PSVECNormalize(&ldir, &half);
 
-            half.x *= lbl_805E59F0;
-            half.y *= lbl_805E59F0;
-            half.z *= lbl_805E59F0;
+            half.x *= TObjDoubleNegHalf;
+            half.y *= TObjDoubleNegHalf;
+            half.z *= TObjDoubleNegHalf;
 
             mtx[0][0] = tobj->mtx[0][0] * half.x;
             mtx[0][1] = tobj->mtx[0][0] * half.y;
             mtx[0][2] = tobj->mtx[0][0] * half.z;
-            mtx[0][3] = tobj->mtx[0][0] * lbl_805E59E0 + tobj->mtx[0][3];
+            mtx[0][3] = tobj->mtx[0][0] * TObjFloatHalf + tobj->mtx[0][3];
             mtx[1][0] = tobj->mtx[1][0] * half.x;
             mtx[1][1] = tobj->mtx[1][0] * half.y;
             mtx[1][2] = tobj->mtx[1][0] * half.z;
-            mtx[1][3] = tobj->mtx[1][0] * lbl_805E59E0 + tobj->mtx[1][3];
-            mtx[2][0] = mtx[2][1] = mtx[2][2] = lbl_805E59C8;
-            mtx[2][3] = lbl_805E59CC;
+            mtx[1][3] = tobj->mtx[1][0] * TObjFloatHalf + tobj->mtx[1][3];
+            mtx[2][0] = mtx[2][1] = mtx[2][2] = TObjFloatZero;
+            mtx[2][3] = TObjFloatOne;
 
             GXLoadTexMtxImm(mtx, tobj->mtxid, GX_MTX3x4);
         } else {
@@ -1028,7 +1002,7 @@ void MakeColorGenTExp(u32 lightmap, HSD_TObj* tobj, HSD_TExp** c, HSD_TExp** a,
                 exp[i] = tmp;
                 break;
             default:
-                TOBJ_ASSERT(0x500, 0, lbl_805DCA68);
+                TOBJ_ASSERT(0x500, 0, "0");
                 break;
             }
         }
@@ -1095,7 +1069,7 @@ void MakeColorGenTExp(u32 lightmap, HSD_TObj* tobj, HSD_TExp** c, HSD_TExp** a,
                 exp[i] = tmp;
                 break;
             default:
-                TOBJ_ASSERT(0x549, 0, lbl_805DCA68);
+                TOBJ_ASSERT(0x549, 0, "0");
                 break;
             }
         }
@@ -1177,7 +1151,7 @@ void TObjMakeTExp(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done,
                         HSD_TEXP_ZERO, HSD_TE_RGB, *c);
         break;
     default:
-        TOBJ_ASSERT(0x5B5, 0, lbl_805DCA68);
+        TOBJ_ASSERT(0x5B5, 0, "0");
     }
     *c = e0;
 
@@ -1230,7 +1204,7 @@ void TObjMakeTExp(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done,
                             HSD_TE_0, HSD_TEXP_ZERO, HSD_TE_A, *a);
             break;
         default:
-            TOBJ_ASSERT(0x5EF, 0, lbl_805DCA68);
+            TOBJ_ASSERT(0x5EF, 0, "0");
         }
         *a = e0;
     }
@@ -1333,7 +1307,7 @@ void HSD_TObjSetup(HSD_TObj* tobj)
     u32 big_tlut_name = GX_BIGTLUT0;
     int i;
 
-    lbl_805DE17C = tobj;
+    TObjCurrent = tobj;
 
     if (tobj == NULL) {
         return;
@@ -1376,7 +1350,7 @@ void HSD_TObjSetup(HSD_TObj* tobj)
                 tlut = tobj->tlut;
             }
 
-            TOBJ_ASSERT(0x694, tlut, lbl_805DCA6C);
+            TOBJ_ASSERT(0x694, tlut, "tlut");
 
             for (i = 0; i < nb_tluts; i++) {
                 if (!DifferentTluts(tluts[i], tlut)) {
@@ -1422,7 +1396,7 @@ void HSD_TObjSetup(HSD_TObj* tobj)
             break;
 
         default:
-            TOBJ_ASSERT(0x6D0, 0, lbl_805DCA68);
+            TOBJ_ASSERT(0x6D0, 0, "0");
         }
 
         if (!imagedesc->mipmap) {
@@ -1456,7 +1430,7 @@ u32 HSD_TGTex2Index(u32 tgtex)
     case GX_TG_TEX0 + 7:
         return 7;
     default:
-        TOBJ_ASSERT(0x6FE, 0, lbl_805DCA68);
+        TOBJ_ASSERT(0x6FE, 0, "0");
     }
     return GX_TG_TEX0;
 }
@@ -1480,7 +1454,7 @@ u32 HSD_TexCoordID2TexGenSrc(u32 coord)
         return GX_TG_TEXCOORD0 + 6;
     case GX_TEXCOORD0 + 7:
     default:
-        TOBJ_ASSERT(0x723, 0, lbl_805DCA68);
+        TOBJ_ASSERT(0x723, 0, "0");
     }
     return GX_TG_TEXCOORD0;
 }
@@ -1505,7 +1479,7 @@ u32 HSD_TexCoord2Index(u32 coord_id)
     case GX_TEXCOORD0 + 7:
         return 7;
     default:
-        TOBJ_ASSERT(0x749, 0, lbl_805DCA68);
+        TOBJ_ASSERT(0x749, 0, "0");
     }
     return GX_TEXCOORD0;
 }
@@ -1536,7 +1510,7 @@ u32 HSD_TexMtx2Index(u32 texmtx)
     case GX_IDENTITY:
         return 10;
     default:
-        HSD_Panic(kar_srcfile_tobj_c_805dca50, 0x790,
+        HSD_Panic("tobj.c", 0x790,
                  "specified texmtx id desn't exist.\n");
     }
     return (u32) -1;
@@ -1569,7 +1543,7 @@ u32 HSD_Index2TexMtx(u32 index)
         return GX_IDENTITY;
     default:
         OSReport("texmtx index exceed hardware limit (%d).\n", index);
-        HSD_Panic(kar_srcfile_tobj_c_805dca50, 0x7b0, lbl_805DCA74);
+        HSD_Panic("tobj.c", 0x7b0, "");
     }
     return GX_IDENTITY;
 }
@@ -1594,7 +1568,7 @@ u32 HSD_Index2TexMap(u32 index)
     case 7:
         return GX_TEXMAP7;
     default:
-        TOBJ_ASSERT(0x7F0, 0, lbl_805DCA68);
+        TOBJ_ASSERT(0x7F0, 0, "0");
     }
     return GX_TEXMAP0;
 }
@@ -1639,9 +1613,9 @@ void HSD_TObjInsertNext(HSD_TObj* tobj, HSD_TObj* next)
 
 HSD_TObj* HSD_TObjAlloc(void)
 {
-    HSD_TObj* new = hsdNew((HSD_ClassInfo*) (lbl_805DE178 ? lbl_805DE178
+    HSD_TObj* new = hsdNew((HSD_ClassInfo*) (TObjDefaultClass ? TObjDefaultClass
                                                             : &hsdTObj.info));
-    TOBJ_ASSERT(0x855, new, lbl_805DCA78);
+    TOBJ_ASSERT(0x855, new, "new");
     return new;
 }
 
@@ -1655,7 +1629,7 @@ void HSD_TObjRemove(HSD_TObj* tobj)
 HSD_Tlut* HSD_TlutAlloc(void)
 {
     HSD_Tlut* tlut = hsdAllocMemPiece(sizeof(HSD_Tlut));
-    TOBJ_ASSERT(0x872, tlut, lbl_805DCA6C);
+    TOBJ_ASSERT(0x872, tlut, "tlut");
     memset(tlut, 0, sizeof(HSD_Tlut));
     return tlut;
 }
@@ -1670,7 +1644,7 @@ void HSD_TlutRemove(HSD_Tlut* tlut)
 HSD_TObjTev* HSD_TObjTevAlloc(void)
 {
     HSD_TObjTev* tev = hsdAllocMemPiece(sizeof(HSD_TObjTev));
-    TOBJ_ASSERT(0x89D, tev, lbl_805DCA7C);
+    TOBJ_ASSERT(0x89D, tev, "tev");
     memset(tev, 0, sizeof(HSD_TObjTev));
     return tev;
 }
@@ -1678,7 +1652,7 @@ HSD_TObjTev* HSD_TObjTevAlloc(void)
 HSD_ImageDesc* HSD_ImageDescAlloc(void)
 {
     HSD_ImageDesc* idesc = hsdAllocMemPiece(sizeof(HSD_ImageDesc));
-    TOBJ_ASSERT(0x8C8, idesc, lbl_805DCA80);
+    TOBJ_ASSERT(0x8C8, idesc, "idesc");
     memset(idesc, 0, sizeof(HSD_ImageDesc));
     return idesc;
 }
@@ -1742,11 +1716,11 @@ void TObjRelease(HSD_Class* o)
 
 void TObjAmnesia(HSD_ClassInfo* info)
 {
-    if (info == HSD_CLASS_INFO(lbl_805DE178)) {
-        lbl_805DE178 = NULL;
+    if (info == HSD_CLASS_INFO(TObjDefaultClass)) {
+        TObjDefaultClass = NULL;
     }
     if (info == HSD_CLASS_INFO(&hsdTObj)) {
-        lbl_805DE17C = NULL;
+        TObjCurrent = NULL;
     }
     HSD_PARENT_INFO(&hsdTObj.info)->amnesia(info);
 }

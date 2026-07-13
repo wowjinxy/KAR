@@ -1,8 +1,11 @@
 #include <global.h>
 
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/os.h>
 
 #include <sysdolphin/cobj.h>
+#include <sysdolphin/memory.h>
+#include <sysdolphin/particle.h>
 #include <sysdolphin/perf.h>
 #include <sysdolphin/pslist.h>
 
@@ -378,7 +381,6 @@ typedef struct PSListEntry {
     s32 priority;
 } PSListEntry;
 
-extern void* HSD_Alloc(u32 size);
 extern HSD_SList* HSD_SListAppend(HSD_SList* node, void* data);
 extern HSD_SList* HSD_SListPrepend(HSD_SList* node, void* data);
 
@@ -495,8 +497,6 @@ typedef struct PSLogState {
 extern PSLogState lbl_8058D198;
 
 extern void HSD_SetDebugExceptionCallback(void (*callback)(u8*, u32));
-extern void OSDisableInterrupts(void);
-extern void OSRestoreInterrupts();
 
 void kar_pslist__near_8043a010(u8* src, u32 count)
 {
@@ -505,8 +505,9 @@ void kar_pslist__near_8043a010(u8* src, u32 count)
     u32 cursor;
     u8 col;
     u8* p;
+    u32 intr;
 
-    OSDisableInterrupts();
+    intr = OSDisableInterrupts();
 
     p = src;
     cursor = lbl_8058D198.cursor;
@@ -559,7 +560,7 @@ void kar_pslist__near_8043a010(u8* src, u32 count)
     lbl_8058D198.cursor = cursor;
     lbl_8058D198.col = col;
 
-    OSRestoreInterrupts();
+    OSRestoreInterrupts(intr);
 }
 
 s32 kar_pslist__near_8043a15c(s32 enable)

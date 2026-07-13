@@ -2,20 +2,19 @@
 
 #include <dolphin/types.h>
 
-extern HSD_ObjAllocData lbl_8058BC68; // hsd_iddata
-extern HSD_IDTable lbl_8058BC94;      // default_table
+extern HSD_IDTable HSD_IDDefaultTable;
 
-extern char lbl_805DCC88[5]; // "id.c"
-extern char lbl_805DCC90[6]; // "entry"
+extern char IDSourceFile[5];  // "id.c"
+extern char IDAssertEntry[6]; // "entry"
 
 void HSD_IDInitAllocData(void)
 {
-    HSD_ObjAllocInit(&lbl_8058BC68, sizeof(IDEntry), 4);
+    HSD_ObjAllocInit(&hsdIDAllocData, sizeof(IDEntry), 4);
 }
 
 void HSD_IDSetup(void)
 {
-    memset(&lbl_8058BC94, 0, sizeof(HSD_IDTable));
+    memset(&HSD_IDDefaultTable, 0, sizeof(HSD_IDTable));
 }
 
 inline u32 hash(u32 id)
@@ -27,9 +26,9 @@ inline IDEntry* IDEntryAlloc()
 {
     IDEntry* entry;
 
-    entry = HSD_ObjAlloc(&lbl_8058BC68);
+    entry = HSD_ObjAlloc(&hsdIDAllocData);
     if (entry == NULL) {
-        __assert(lbl_805DCC88, 67, lbl_805DCC90);
+        __assert(IDSourceFile, 67, IDAssertEntry);
     }
     memset(entry, 0, sizeof(IDEntry));
 
@@ -41,7 +40,7 @@ void HSD_IDInsertToTable(HSD_IDTable* table, u32 id, void* data)
     IDEntry* entry;
 
     if (table == NULL) {
-        table = &lbl_8058BC94;
+        table = &HSD_IDDefaultTable;
     }
 
     entry = table->table[hash(id)];
@@ -64,7 +63,7 @@ void HSD_IDInsertToTable(HSD_IDTable* table, u32 id, void* data)
 }
 
 inline void IDEntryFree(IDEntry* entry) {
-    HSD_ObjFree(&lbl_8058BC68, entry);
+    HSD_ObjFree(&hsdIDAllocData, entry);
 }
 
 void HSD_IDRemoveByIDFromTable(HSD_IDTable* table, u32 id) {
@@ -72,7 +71,7 @@ void HSD_IDRemoveByIDFromTable(HSD_IDTable* table, u32 id) {
     IDEntry* prev;
 
     if (table == NULL) {
-        table = &lbl_8058BC94;
+        table = &HSD_IDDefaultTable;
     }
 
     prev = NULL;
@@ -95,7 +94,7 @@ void* HSD_IDGetDataFromTable(HSD_IDTable* table, u32 id, s32* success)
     IDEntry* entry;
 
     if (table == NULL) {
-        table = &lbl_8058BC94;
+        table = &HSD_IDDefaultTable;
     }
 
     entry = table->table[hash(id)];
@@ -115,7 +114,7 @@ void* HSD_IDGetDataFromTable(HSD_IDTable* table, u32 id, s32* success)
     return NULL;
 }
 
-void fn_8041A7C8(void* low, void* high)
+void _HSD_IDForgetMemory(void)
 {
-    memset(&lbl_8058BC94, 0, sizeof(HSD_IDTable));
+    memset(&HSD_IDDefaultTable, 0, sizeof(HSD_IDTable));
 }
