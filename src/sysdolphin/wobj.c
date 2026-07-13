@@ -5,6 +5,7 @@
 
 void WObjInfoInit(void);
 
+#if defined(VERSION_GKYE01)
 HSD_WObjInfo hsdWObj = { WObjInfoInit };
 char WObjAssertAObj[] = "wobj->aobj";
 char WObjAssertSpline[0x58] =
@@ -12,6 +13,11 @@ char WObjAssertSpline[0x58] =
     "hsdIsDescendantOf(info, &hsdWObj)\0\0\0"
     "sysdolphin_base_library\0"
     "had_wobj";
+#else
+extern HSD_WObjInfo hsdWObj;
+extern char WObjAssertAObj[];
+extern char WObjAssertSpline[];
+#endif
 extern HSD_WObjInfo* WObjCurrentInfo;
 
 extern char WObjSourceFile[7];     // "wobj.c"
