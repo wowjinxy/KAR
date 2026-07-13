@@ -2,9 +2,12 @@
 
 #include <stdarg.h>
 
+#include <dolphin/db.h>
 #include <dolphin/mtx/mtxtypes.h>
+#include <dolphin/os.h>
 
 #include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjproc.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/video.h>
 
@@ -14,9 +17,6 @@ typedef struct {
     u8 pad[0x2FC];
 } OSThread;
 
-typedef void (*HSD_DebugConsoleCallback)(void* context, ...);
-typedef void (*OSErrorHandler)(s32 error, void* context, ...);
-
 extern void OSLoadContext(OSContext* context);
 extern void __OSSetExceptionHandler(s32 exception,
                                     void (*handler)(s32, OSContext*));
@@ -25,22 +25,6 @@ extern OSThread* OSCreateThread(OSThread* thread, void* (*func)(void*),
                                 s32 priority, u16 attr);
 extern void OSResumeThread(OSThread* thread);
 
-extern BOOL DBIsDebuggerPresent(void);
-extern HSD_DebugConsoleCallback
-HSD_SetDebugConsoleCallback(HSD_DebugConsoleCallback callback);
-extern OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
-
-extern void OSReport(const char*, ...);
-extern void OSPanic(const char*, s32, const char*, ...);
-
-extern void VIConfigure(GXRenderModeObj* rmode);
-extern void VISetBlack(BOOL black);
-extern void VIFlush(void);
-extern void VISetNextFrameBuffer(void* fb);
-extern void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
-extern void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
-
-extern BOOL HSD_CObjSetCurrent(HSD_CObj* cobj);
 extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
                                      void (*render_cb)(HSD_GObj*, s32),
                                      u8 priority);

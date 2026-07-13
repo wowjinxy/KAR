@@ -33,6 +33,17 @@ typedef enum _HSD_RenderPass {
 typedef void (*HSD_VIRetraceCallback)(u32);
 typedef void (*HSD_VIGXDrawDoneCallback)(int);
 
+void VIInit(void);
+void VIConfigure(GXRenderModeObj* rmode);
+void VISetBlack(bool black);
+void VIFlush(void);
+void VISetNextFrameBuffer(void* fb);
+void VIWaitForRetrace(void);
+void VISetPreRetraceCallback(HSD_VIRetraceCallback cb);
+void VISetPostRetraceCallback(HSD_VIRetraceCallback cb);
+u32 VIGetNextField(void);
+u32 VIGetTvFormat(void);
+
 HSD_VIRetraceCallback HSD_VISetUserPreRetraceCallback(HSD_VIRetraceCallback cb);
 HSD_VIRetraceCallback HSD_VISetUserPostRetraceCallback(HSD_VIRetraceCallback cb);
 HSD_VIGXDrawDoneCallback HSD_VISetUserGXDrawDoneCallback(HSD_VIGXDrawDoneCallback cb);
@@ -41,7 +52,9 @@ void HSD_VICopyEFB2XFBPtr(HSD_VIStatus* vi, void* buffer, HSD_RenderPass rpass);
 void HSD_VICopyXFBAsync(HSD_RenderPass rpass);
 void HSD_VIDrawDoneXFB(s32 idx);
 void HSD_VIWaitXFBFlush(void);
+#ifndef VERSION_GKYP01
 void HSD_VIWaitXFBFlushNoYield(void);
+#endif
 s32 HSD_VIGetXFBLastDrawDone(void);
 void HSD_VISetConfigure(GXRenderModeObj* rmode);
 void HSD_VISetBlack(bool black);

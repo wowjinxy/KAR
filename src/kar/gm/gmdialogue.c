@@ -1,8 +1,18 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gm/gmautodemo.h>
 #include <kar/gm/gmclearchecker.h>
 #include <kar/gm/gmdialogue.h>
 #include <kar/gm/gmdialoguestatus.h>
+#include <kar/gm/gmlanmenu.h>
+#include <kar/gm/gmmain.h>
+#include <kar/gm/gmmovieassets.h>
+#include <kar/gm/gmracenormal.h>
+#include <kar/lb/lbaudio.h>
+#include <kar/lb/lbhvqm.h>
+#include <kar/lb/lbkdcoll.h>
+#include <kar/shadow.h>
+#include <kar/vc/vcgenerator.h>
 
 char kar_src_gmdialogue_80496f38[] = "gmdialogue.c";
 char lbl_80497118[] =
@@ -15,35 +25,8 @@ char lbl_805D51B0[] = "0";
 char lbl_805D51B8[] = "0";
 
 void* kar_gmmain__near_80006c14(void);
-void* kar_gmmain__near_80006eec(void);
-void kar_gmmain__near_800064f0(void);
-void kar_gmlanmenu__80008220(void);
-void kar_gmlanmenu__800082a0(s32 arg0);
 void kar_gmviconfigure__near_8004f5e0(s32 arg0);
-void kar_gmglobal__near_80007640(void);
-void kar_gmglobal__near_80007808(void);
-s32 kar_gmglobal__near_80007e8c(s32 arg0);
-s32 kar_gmglobal__near_80007ee4(s32 arg0);
-void kar_gmglobal__near_80007f6c(s32 arg0, s32 arg1);
-s32 kar_gmglobal__near_80008038(s32 arg0);
-void kar_gmglobal__near_800080c0(s32 arg0, s32 arg1);
-void kar_gmautodemo__near_8000cd10(s32 arg0);
-void* kar_gmautodemo__near_8000fcb0(void);
-u64 kar_gmautodemo__near_8000ecf0(s32 arg0);
-u64 kar_gmautodemo__near_8000ed10(s32 arg0);
-void kar_gm_assets__asset_8000fc70(void);
-void kar_movie_assets__8000a498(s32 arg0);
-void kar_lbaudio__near_8005a474(void);
-void kar_lbaudio__near_8005e1a8(s32 arg0);
-void kar_lbaudio__near_80061620(void);
-void kar_lbaudio__near_80061658(void);
-void kar_lbaudio__near_80061734(void);
-void kar_lbaudio__near_8006176c(s32 arg0);
-void kar_lbkdcoll__near_800726f0(s32 arg0);
 void kar_lbfile_queue_startup_resource_loads(void);
-s32 kar_gmracenormal__8000ae50(void);
-s32 kar_gmracenormal__800092fc(void);
-s32 kar_vcgenerator__8000af38(void);
 void fn_80018A04(void);
 void fn_8000A444(s32 arg0);
 s32 fn_8000A4EC(s32 arg0);
@@ -89,30 +72,7 @@ void kar_pltrick__near_802322a0(void* arg0, s32 arg1, s32 arg2);
 void kar_pltrick__near_802322b0(void* arg0, s32 arg1, s32 arg2);
 void kar_pltrick__near_802322d8(void* arg0);
 void kar_pltrick__near_80232500(void* arg0);
-void kar_lbaudio__near_8005e5d0(void);
-void kar_lbaudio__near_8005e788(void);
-s32 kar_shadow__near_8007b650(void);
-void kar_lbhvqm__near_80078720(void);
-void kar_lbhvqm__near_8007875c(void);
-void kar_lbhvqm__near_80078990(void);
-void kar_lbhvqm__near_80078c3c(void);
-void kar_lbhvqm__near_80078c7c(void);
-s32 kar_lbhvqm__near_8007863c(void);
-s32 kar_lbhvqm__near_8007865c(void);
-s32 kar_lbhvqm__near_800786d4(void* arg0);
-void kar_lbhvqm__near_800786f8(void);
-s32 kar_lbhvqm__near_80079108(void);
-void kar_lbhvqm__near_80078cb0(s32 arg0);
-s32 kar_lbhvqm__near_80078cc0(void);
-void kar_lbhvqm__near_80078cd0(s32 arg0);
-s32 kar_lbhvqm__near_80078ce0(void* arg0);
-s32 kar_lbhvqm__near_80078e30(void);
-void kar_lbhvqm__near_80078e40(s32 arg0);
-s32 kar_lbhvqm__near_80078e4c(void);
-void kar_lbhvqm__near_80078e5c(void);
-s32 kar_lbhvqm__near_8007901c(void);
 void kar_mnclearchecker_create_progressive_text_windows(void);
-s8 kar_gmracenormal__8000aea8(void);
 void fn_80138F44(void);
 void kar_osthread__near_803d9724(s32 arg0);
 void* memset(void* dst, int val, unsigned long n);
@@ -143,7 +103,7 @@ typedef struct GmDialogueEntry {
     s32 field_8;
 } GmDialogueEntry;
 
-extern GmDialogueInput lbl_8058B634[];
+extern GmDialogueInput HSD_PadCopyStatus[];
 
 #define REPORT_STATUS_ERROR(status, fmt)                                      \
     do {                                                                      \
@@ -378,7 +338,7 @@ void kar_gmdialogue__near_800462c8(void)
         } else {
             for (i = 0; i < 4; i++, player++) {
                 if (player->field_0 == 0 &&
-                    (lbl_8058B634[(u8) i].buttons & 0x1360) != 0) {
+                    (HSD_PadCopyStatus[(u8) i].buttons & 0x1360) != 0) {
                     kar_lbaudio__near_80061658();
                     if (*(s32*) &gm[0x340] > 0) {
                         *(s32*) &gm[0x340] = 0;
@@ -445,7 +405,7 @@ void kar_gmdialogue__near_80046df0(void)
     count = 0;
     offset = 0;
 
-    if (lbl_805DD630 >= 3 && (lbl_8058B634[0].raw_buttons & 0x28) == 0x28) {
+    if (lbl_805DD630 >= 3 && (HSD_PadCopyStatus[0].raw_buttons & 0x28) == 0x28) {
         for (i = 0; i < 0x18; i++) {
             if ((s8) kar_gmglobal__near_80007ee4((s8) i) == 0) {
                 kar_gmglobal__near_80007f6c((s8) i, 1);

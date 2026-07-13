@@ -1,5 +1,7 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
+#include <kar/gr/grcommon.h>
+#include <kar/gr/grnullpos.h>
 #include <sysdolphin/memory.h>
 
 typedef struct GlobalDeadConfig GlobalDeadConfig;
@@ -41,10 +43,11 @@ struct GroundData {
 static const f32 lbl_805DF790 = 3.4028234663852886e38f;
 static const f32 lbl_805DF794 = -1.0f;
 
-s32 kar_grnullpos_get_global_dead_pos_count(void);
-void kar_grnullpos_get_global_dead_pos(s32 index, Vec* pos, Vec* dir, Vec* scale);
-void kar_grcommon__800ceeb8(Vec* pos, s32 pos_id, GlobalDeadEntry* out);
-f32 kar_grcommon__near_800d066c(s32 a, s32 b, f32 c, f32 d);
+#if defined(VERSION_GKYP01)
+#define GRGLOBALDEAD_ASSERT_COUNT_LINE 0x5D
+#else
+#define GRGLOBALDEAD_ASSERT_COUNT_LINE 0x59
+#endif
 
 void kar_grglobaldead_init(Ground* ground)
 {
@@ -109,7 +112,7 @@ s32 kar_grglobaldead_find_nearest_index(Ground* ground, GlobalDeadQuery* query)
     best_index = -1;
 
     if (count == 0) {
-        __assert("grglobaldead.c", 0x59, "num");
+        __assert("grglobaldead.c", GRGLOBALDEAD_ASSERT_COUNT_LINE, "num");
     }
 
     no_hit = lbl_805DF794;

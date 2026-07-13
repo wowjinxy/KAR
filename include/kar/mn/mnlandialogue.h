@@ -4,6 +4,16 @@
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
 
+#if defined(VERSION_GKYJ01)
+#define kar_mnlandialogue_project_box0_origin_to_screen fn_80180408
+#define kar_mnlandialogue_project_box0_right_edge_to_screen fn_801804BC
+#define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80180570
+#elif defined(VERSION_GKYP01)
+#define kar_mnlandialogue_project_box0_origin_to_screen fn_80184A54
+#define kar_mnlandialogue_project_box0_right_edge_to_screen fn_80184B08
+#define kar_mnlandialogue_project_box0_bottom_edge_to_screen fn_80184BBC
+#endif
+
 void kar_mnlandialogue_show_panel(void);
 void kar_mnlandialogue_show_connect_panel(void);
 void kar_mnlandialogue_show_wait_panel(void);

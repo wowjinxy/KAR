@@ -196,7 +196,7 @@ void HSD_PObjRemoveAll(HSD_PObj* pobj);
 void HSD_PObjSetCurrent(HSD_PObjInfo* info);
 HSD_PObjInfo* HSD_PObjGetCurrent(void);
 HSD_PObj* HSD_PObjAlloc(void);
-void kar_object__80405968(HSD_PObj* pobj, HSD_PObjDesc* pdesc);
+void HSD_PObjResolveRefsAll(HSD_PObj* pobj, HSD_PObjDesc* pdesc);
 void HSD_ClearVtxDesc(void);
 void HSD_PObjClearMtxMark(void* obj, u32 mark);
 void HSD_PObjDisp(HSD_PObj* pobj, Mtx vmtx, Mtx pmtx, u32 rendermode);

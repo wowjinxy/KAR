@@ -1,7 +1,6 @@
 #include <global.h>
 #include <sysdolphin/fobj.h>
-
-extern HSD_ObjAllocData hsdFObj_alloc_data;
+#include <sysdolphin/fobj_alloc.h>
 
 f32 splGetHelmite(f32, f32, f32, f32, f32, f32);
 void memset(void*, int, int);

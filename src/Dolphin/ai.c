@@ -1,4 +1,6 @@
-#include "dolphin/types.h"
+#include "dolphin/ai.h"
+#include "dolphin/os.h"
+#include "dolphin/ostime.h"
 
 typedef s64 OSTime;
 typedef struct OSContext
@@ -6,20 +8,13 @@ typedef struct OSContext
     u8 pad[0x2C8];
 } OSContext;
 
-typedef void (*AISCallback)(u32 count);
-typedef void (*AIDCallback)(void);
 typedef void (*__OSInterruptHandler)(u32 interrupt, OSContext* context);
 
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
-extern void OSRegisterVersion(char* version);
 extern void __OSSetInterruptHandler(u32 interrupt, __OSInterruptHandler handler);
-extern u32 __OSUnmaskInterrupts(u32 mask);
 extern void OSClearContext(OSContext* context);
 extern void OSSetCurrentContext(OSContext* context);
-extern OSTime OSGetTime(void);
 
-extern char lbl_804FC910[];
+extern char __AIVersionString[];
 
 #define OS_BUS_CLOCK (*(u32*)0x800000F8)
 #define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
@@ -33,10 +28,6 @@ extern char lbl_804FC910[];
 #define AI_SAMPLERATE_32KHZ 0
 #define AI_SAMPLERATE_48KHZ 1
 
-AIDCallback AIRegisterDMACallback(AIDCallback callback);
-void AIInitDMA(u32 startAddr, u32 length);
-void AIStartDMA(void);
-void AIStopDMA(void);
 void AISetStreamPlayState(u32 state);
 u32 AIGetStreamPlayState(void);
 void AISetDSPSampleRate(u32 rate);
@@ -52,9 +43,8 @@ void __AISHandler(u32 interrupt, OSContext* context);
 void __AIDHandler(u32 interrupt, OSContext* context);
 asm void __AICallbackStackSwitch(register void* cb);
 void __AI_SRC_INIT(void);
-AIDCallback __tmp_aid_callback(AIDCallback callback);
 
-AIDCallback lbl_805DE000;
+AIDCallback __AR_Callback;
 OSTime lbl_805DDFF8;
 OSTime lbl_805DDFF0;
 OSTime lbl_805DDFE8;
@@ -73,7 +63,7 @@ typedef struct
     u32 unused;
 } AIVersionInfo;
 
-AIVersionInfo lbl_805DC9D8 = { lbl_804FC910, 0 };
+AIVersionInfo __AIVersion = { __AIVersionString, 0 };
 
 AIDCallback AIRegisterDMACallback(AIDCallback callback)
 {
@@ -238,7 +228,7 @@ void AIInit(u8* stack)
         u32 busClock;
         u32 ticksPer125k;
 
-        OSRegisterVersion(lbl_805DC9D8.version);
+        OSRegisterVersion(__AIVersion.version);
 
         busClock = OS_BUS_CLOCK;
         ticksPer125k = (busClock / 4) / 125000;
@@ -388,9 +378,9 @@ AIDCallback __tmp_aid_callback(AIDCallback callback)
     AIDCallback old;
     BOOL enabled;
 
-    old = lbl_805DE000;
+    old = __AR_Callback;
     enabled = OSDisableInterrupts();
-    lbl_805DE000 = callback;
+    __AR_Callback = callback;
     OSRestoreInterrupts(enabled);
     return old;
 }

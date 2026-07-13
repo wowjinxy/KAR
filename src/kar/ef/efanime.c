@@ -1,14 +1,51 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <sysdolphin/aobj.h>
+#include <sysdolphin/gobj.h>
+#include <sysdolphin/gobjuserdata.h>
+#include <sysdolphin/jobj.h>
+
+#if defined(VERSION_GKYJ01)
+#define kar_src_efanime_804b5628 lbl_804B0370
+#define lbl_804B5638 lbl_804B0380
+#define lbl_805D7300 lbl_805D1D40
+#define lbl_805D7308 lbl_805D1D48
+#define kar_srcfile_aobj_h_805d7310 lbl_805D1D50
+#define lbl_805D7318 lbl_805D1D58
+#define lbl_805E2B20 lbl_805DD390
+#define lbl_8055DA08 lbl_805584E0
+#define kar_lbairride__near_800550f4 fn_800547CC
+#define kar_efdata__near_802369e0 fn_8023296C
+#define kar_efdata__near_802369f0 fn_8023297C
+#define kar_efrequest2__8023cc20 fn_80238BAC
+#define kar_efcontrol__near_8023f4e4 fn_8023B470
+#define kar_efcontrol__near_8023f514 fn_8023B4A0
+#define kar_efcontrol__near_8023f8f8 fn_8023B884
+#define ExPPC_UnwindStack fn_803A915C
+#elif defined(VERSION_GKYP01)
+#define kar_src_efanime_804b5628 lbl_804BAE18
+#define lbl_804B5638 lbl_804BAE28
+#define lbl_805D7300 lbl_805C9CE8
+#define lbl_805D7308 lbl_805C9CF0
+#define kar_srcfile_aobj_h_805d7310 lbl_805C9CF8
+#define lbl_805D7318 lbl_805C9D00
+#define lbl_805E2B20 lbl_805D55B8
+#define lbl_8055DA08 lbl_80550378
+#define kar_lbairride__near_800550f4 fn_80055794
+#define kar_efdata__near_802369e0 fn_802376BC
+#define kar_efdata__near_802369f0 fn_802376CC
+#define kar_efrequest2__8023cc20 fn_8023D8E4
+#define kar_efcontrol__near_8023f4e4 fn_802401A8
+#define kar_efcontrol__near_8023f514 fn_802401D8
+#define kar_efcontrol__near_8023f8f8 fn_802405BC
+#define ExPPC_UnwindStack fn_803B06F8
+#endif
+
 #include <kar/ef/efanime.h>
 #include <kar/ef/efcallback.h>
 #include <kar/ef/efcontrol.h>
 #include <kar/ef/efdata.h>
 #include <kar/ef/efrequest2.h>
-#include <sysdolphin/aobj.h>
-#include <sysdolphin/gobj.h>
-#include <sysdolphin/gobjuserdata.h>
-#include <sysdolphin/jobj.h>
 
 #define EFFECT_OBJECT_ACTIVE(effect) \
     ((effect) != NULL && (effect)->active)

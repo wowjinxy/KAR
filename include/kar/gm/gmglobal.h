@@ -78,7 +78,14 @@ typedef struct {
 } kar_gmglobal__near_8000774c_s;
 
 GmGlobalSaveData *kar_gmglobal__800076a0(int);
+void kar_gmglobal__near_80007640(void);
 GmGlobalData *kar_gmglobal__near_8000771c(void);
+void kar_gmglobal__near_80007808(void);
+s32 kar_gmglobal__near_80007e8c(s32 arg0);
+s32 kar_gmglobal__near_80007ee4(s32 arg0);
+void kar_gmglobal__near_80007f6c(s32 arg0, s32 arg1);
+s32 kar_gmglobal__near_80008038(s32 arg0);
+void kar_gmglobal__near_800080c0(s32 arg0, s32 arg1);
 void kar_gmglobal__near_800088c8(s8 value);
 kar_gmglobal__near_8000774c_s *kar_gmglobal__near_8000774c();
 

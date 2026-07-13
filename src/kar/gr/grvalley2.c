@@ -1,7 +1,18 @@
 #include "functions.h"
+#include <kar/gr/granim.h>
+#include <kar/gr/graudio.h>
+#include <kar/gr/grcommon.h>
+#include <kar/gr/gryaku.h>
 #include <sysdolphin/gobj.h>
 
 #define GRVALLEY2_FGM_COUNTER_NUM 10
+#ifdef VERSION_GKYP01
+#define GRVALLEY2_ASSERT_LOOP_ANIM_LINE 45
+#define GRVALLEY2_ASSERT_FGM_COUNT_LINE 51
+#else
+#define GRVALLEY2_ASSERT_LOOP_ANIM_LINE 41
+#define GRVALLEY2_ASSERT_FGM_COUNT_LINE 47
+#endif
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
@@ -39,12 +50,6 @@ struct GroundIndiviParam {
     void* bitCounterIdAll;
 };
 
-extern Ground* lbl_805DD6CC;
-
-void kar_granim__800dbe48(Ground* ground, void* loopAnimAll);
-void kar_graudio_configure_individual_fgm_tracks(Ground* ground, IndividualFgmAll* indiviFgmAll);
-void kar_graudio_update_individual_fgm_timers(Ground* ground, IndividualFgmAll* indiviFgmAll, s32* counters, s32 counter_num);
-void kar_grcommon__800db654(Ground* ground, void* bitCounterIdAll, s32 id);
 void kar_gryakucommon_create_stage_linked_kind16_yaku(Ground* ground, s32 link);
 void kar_gryakubreakcoral_create_stage_linked_kind28_breakcoral(Ground* ground, s32 link);
 
@@ -70,13 +75,14 @@ void kar_grvalley2_init_loop_anim_and_individual_fgm_ids(HSD_GObj* gobj)
     }
 
     if (!hasLoopAnim) {
-        __assert("grvalley2.c", 41, "indiviParam && indiviParam->loopAnimAll");
+        __assert("grvalley2.c", GRVALLEY2_ASSERT_LOOP_ANIM_LINE,
+                 "indiviParam && indiviParam->loopAnimAll");
     }
 
     kar_granim__800dbe48(ground, indiviParam->loopAnimAll);
 
     if (indiviParam->indiviFgmAll->indiviFgmNum > GRVALLEY2_FGM_COUNTER_NUM) {
-        __assert("grvalley2.c", 47,
+        __assert("grvalley2.c", GRVALLEY2_ASSERT_FGM_COUNT_LINE,
                  "indiviParam->indiviFgmAll->indiviFgmNum <= GrValley2_FgmCounterNum");
     }
 
@@ -105,6 +111,6 @@ void kar_grvalley2_update_individual_fgm_timers(HSD_GObj* gobj)
 
 void kar_grvalley2_start_bit_counter_id0_duration100(void)
 {
-    Ground* ground = lbl_805DD6CC;
+    Ground* ground = kar_gryaku_current_ground;
     kar_grcommon__800db654(ground, ground->data->indiviParam->bitCounterIdAll, 0);
 }

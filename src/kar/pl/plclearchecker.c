@@ -1,6 +1,18 @@
 #include "functions.h"
 #include <dolphin/mtx/mtxtypes.h>
 #include <dolphin/types.h>
+#include <kar/gm/gmdiag.h>
+#include <kar/vc/vcgenerator.h>
+
+#if defined(VERSION_GKYJ01)
+#define plclearchecker_player_template_table lbl_805554C8
+#define lbl_805DD898 lbl_805D82F0
+#define kar_clobject__near_8018e21c fn_8018AB18
+#elif defined(VERSION_GKYP01)
+#define plclearchecker_player_template_table lbl_8054D360
+#define lbl_805DD898 lbl_805D02E0
+#define kar_clobject__near_8018e21c fn_8018EF84
+#endif
 
 typedef struct PlClearCheckerTemplate PlClearCheckerTemplate;
 
@@ -40,9 +52,6 @@ void fn_801C7628(void* arg);
 void fn_801C7648(void* arg);
 void fn_80191BF8(void* arg);
 void fn_80191C18(void* arg);
-s32 kar_diag__8000acb0(void);
-s32 kar_vcgenerator__8000af38(void);
-
 #define PLCC_TEMPLATE_SIZE 0x90C
 #define PLCC_TEMPLATE(slot)                                                           \
     ((PlClearCheckerTemplate*) ((u8*) plclearchecker_player_template_table +          \

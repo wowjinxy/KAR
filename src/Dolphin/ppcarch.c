@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "dolphin/ppcarch.h"
 
 asm u32 PPCMfmsr(void)
 {

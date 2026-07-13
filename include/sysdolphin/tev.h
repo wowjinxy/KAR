@@ -6,6 +6,8 @@
 #include <sysdolphin/objalloc.h>
 #include <sysdolphin/mobj.h>
 #include <sysdolphin/texp.h>
+#include <sysdolphin/tev_state.h>
+#include <sysdolphin/tev_stage.h>
 
 typedef struct _HSD_Chan {
     struct _HSD_Chan* next;
@@ -42,12 +44,7 @@ void HSD_StateSetDither(u32 enable);
 void _HSD_StateInvalidatePrimitive(void);
 void _HSD_StateInvalidateVtxAttr(void);
 void _HSD_StateInvalidateRenderMode(void);
-void HSD_StateInvalidate(s32 mask);
 
-void HSD_RenderInitAllocData(void);
-HSD_ObjAllocData* HSD_RenderGetAllocData(void);
-HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
-HSD_ObjAllocData* HSD_ChanGetAllocData(void);
 void HSD_SetupChannel(HSD_Chan* ch);
 void HSD_DisableChannelLighting(s32 chan);
 void HSD_StateSetNumChans(s32 num);
@@ -56,10 +53,7 @@ s32 HSD_StateAssignTexGen(s32 coord);
 void HSD_StateSetNumTexGens(void);
 void HSD_StateInitTev(void);
 s32 HSD_StateGetNumTevStages(void);
-u32 HSD_StateAssignTev(void);
 void HSD_StateSetNumTevStages(void);
-void HSD_SetupTevStage(HSD_TevDesc* desc);
-void HSD_SetupTevStageAll(HSD_TevDesc* desc);
 s32 HSD_Channel2Num(s32 chan);
 void HSD_SetTevRegAll(void);
 void _HSD_StateInvalidateColorChannel(void);

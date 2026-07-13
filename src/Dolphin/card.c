@@ -350,8 +350,8 @@ DVDDiskID __CARDDiskNone;
 
 static u16 __CARDEncode;
 
-extern const char lbl_804FC9E8[];
-const char* __CARDVersion = lbl_804FC9E8;
+extern const char __CARDVersionString[];
+const char* __CARDVersion = __CARDVersionString;
 
 u16 __CARDVendorID = 0xFFFF;
 

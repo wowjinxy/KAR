@@ -15,6 +15,8 @@ typedef struct _HSD_IDTable {
     struct _IDEntry* table[101];
 } HSD_IDTable;
 
+extern HSD_ObjAllocData hsdIDAllocData;
+
 HSD_ObjAllocData* HSD_IDGetAllocData(void);
 void HSD_IDInitAllocData(void);
 void HSD_IDSetup(void);

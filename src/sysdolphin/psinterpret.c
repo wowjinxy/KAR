@@ -1,6 +1,12 @@
 #include <global.h>
 
+#include <dolphin/mtx/vec.h>
 #include <sysdolphin/jobj.h>
+#include <sysdolphin/list.h>
+#include <sysdolphin/memory.h>
+#include <sysdolphin/mtx.h>
+#include <sysdolphin/psinterpret.h>
+#include <sysdolphin/pslist.h>
 
 typedef struct HSD_psAppSRT HSD_psAppSRT;
 
@@ -40,22 +46,13 @@ struct HSD_Particle {
     HSD_Particle* next; //0x00
 };
 
-extern void* HSD_Alloc(u32 size);
-extern void HSD_Free(void* ptr);
-extern void HSD_JObjUnref(HSD_JObj* jobj);
-extern void HSD_MtxGetScale(Mtx mtx, Vec* scale);
-extern void PSVECNormalize(Vec* src, Vec* dst);
 extern void memset(void*, int, int);
 
-extern HSD_SList* HSD_SListRemove(HSD_SList* list);
-
-extern HSD_Particle* _psListGetFirst(s32 linkNo);
 extern HSD_Particle* psInterpretParticle0(HSD_Particle* pp, HSD_Particle* prev);
 extern void psKillParticle(void);
 extern void psKillGeneratorChild(HSD_Generator* gp);
 extern void kar_generator__near_80433154(s32 count);
 extern s32 kar_psdisp__near_80437fcc(HSD_Generator* gp);
-extern void kar_psinterpret__near_8043051c(void);
 
 extern u16 lbl_805DCDD0;
 

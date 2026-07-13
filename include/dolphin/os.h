@@ -3,6 +3,9 @@
 
 #include "dolphin/types.h"
 
+typedef s32 OSHeapHandle;
+typedef void (*OSErrorHandler)(s32 error, void* context, ...);
+
 //void*   OSGetArenaHi( void );
 //void*   OSGetArenaLo( void );
 //void    OSSetArenaHi( void* newHi );
@@ -63,6 +66,19 @@
 //BOOL    OSDisableInterrupts ( void );
 //BOOL    OSEnableInterrupts  ( void );
 //BOOL    OSRestoreInterrupts ( BOOL level );
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
+void* OSGetArenaLo(void);
+void* OSGetArenaHi(void);
+void OSSetArenaLo(void* newLo);
+void* OSAllocFromArenaLo(u32 size, u32 align);
+OSHeapHandle OSCreateHeap(void* lo, void* hi);
+void OSDestroyHeap(OSHeapHandle heap);
+void OSSetCurrentHeap(OSHeapHandle heap);
+void* OSAllocFromHeap(OSHeapHandle heap, u32 size);
+void OSFreeToHeap(OSHeapHandle heap, void* ptr);
+void OSFillFPUContext(void* context);
+OSErrorHandler OSSetErrorHandler(u16 error, OSErrorHandler handler);
 //
 //void* OSPhysicalToCached    ( u32   paddr  );
 //void* OSPhysicalToUncached  ( u32   paddr  );
@@ -157,7 +173,17 @@
 //void OSPanic ( char* file, int line, char* msg, ... );
 //void OSReport( char* msg, ... );
 //
-//u32 OSGetPhysicalMemSize(void);
+void OSPanic(const char* file, s32 line, const char* msg, ...);
+void OSRegisterVersion(char* version);
+u32 __OSUnmaskInterrupts(u32 mask);
+void DCFlushRange(void* addr, u32 nBytes);
+void DCFlushRangeNoSync(void* addr, u32 nBytes);
+void DCInvalidateRange(void* addr, u32 nBytes);
+void OSDumpContext(void* context);
+u32 OSGetPhysicalMemSize(void);
+void* OSGetStackPointer(void);
+u16 OSGetWirelessID(s32 chan);
+void OSSetWirelessID(s32 chan, u16 id);
 //u32 OSGetConsoleSimulatedMemSize(void);
 
 #endif  // __OS_H__
