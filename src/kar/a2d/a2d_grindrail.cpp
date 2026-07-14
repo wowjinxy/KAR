@@ -35,7 +35,7 @@ public:
 
 class KartIF {
 public:
-    virtual void v08();
+    virtual Vec3f *v08();
     virtual void v0c();
     virtual void v10();
     virtual void v14();
@@ -45,7 +45,7 @@ public:
     virtual void v24();
     virtual s32 v28();
     virtual void v2c();
-    virtual void v30();
+    virtual s32 v30();
     virtual void v34();
     virtual void v38();
     virtual void v3c();
@@ -1026,18 +1026,18 @@ extern "C" void kar_a2d_grindrail__near_80325250(void *arg0) {
     }
 }
 
-extern "C" char lbl_804E2DC0[4];
-extern "C" char lbl_804E2D6C[4];
+extern "C" char lbl_804E2DC0[0x54];
+extern "C" char lbl_804E2D6C[0x54];
 extern "C" s32 lbl_805DDBC0;
 extern "C" char lbl_805DA7D0[8];
 extern "C" char lbl_805DA7C8[8];
 
 extern "C" void *kar_a2d_grindrail__near_80325354(void) {
-    void *r = lbl_804E2DC0;
-    if (FU32(kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DA7D0, lbl_805DA7C8, 0), 0x14) == 1U) {
-        r = lbl_804E2D6C;
+    void *diag = kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DA7D0, lbl_805DA7C8, 0);
+    if (FU32(diag, 0x14) == 1U) {
+        return lbl_804E2D6C;
     }
-    return r;
+    return lbl_804E2DC0;
 }
 
 extern "C" void *kar_a2d_grindrail__near_803253a4(u32 arg0) {
@@ -1149,12 +1149,12 @@ extern "C" GrElemFn const lbl_804E30C4;
 extern "C" void kar_a2d_grindrail__near_80325c00(void *arg0) {
     fn_8031DF54((char *) arg0 + 0x2C);
     GrElemFn pmf = lbl_804E30C4;
-    char *p = (char *) FP(arg0, 0xC);
-    char *end = p + FS32(arg0, 8) * 0x10;
+    GrElem **p = (GrElem **) FP(arg0, 0xC);
+    GrElem **end = p + FS32(arg0, 8);
     while (p != end) {
-        GrElem *obj = *(GrElem **) p;
+        GrElem *obj = *p;
         (obj->*pmf)();
-        p += 0x10;
+        p++;
     }
     void *t7 = (char *) arg0 + 0x1C;
     void *spC = FP(arg0, 0x20);
@@ -1334,16 +1334,17 @@ extern "C" void kar_a2d_grindrail__near_80327a2c(void *arg0) {
     kar_a2d_grindrail__near_80327ae8(arg0);
 }
 
-extern "C" char lbl_804E2BF8b_5A4[0x10];
+extern "C" const f64 lbl_805E4100;
 
 extern "C" void kar_a2d_grindrail__near_80327ae8(void *arg0) {
-    if (kar_fl_indirectload__80391f10(FP(arg0, 0x10), lbl_804E2BF8b_5A4) != 0) {
-        fn_8038D0E8(FP(arg0, 0), lbl_804E2BF8b_5A4, 1);
+    char *base = lbl_804E2BF8;
+    if (kar_fl_indirectload__80391f10(FP(arg0, 0x10), base + 0x5A4) != 0) {
+        fn_8038D0E8(FP(arg0, 0), base + 0x5B4, 1);
     } else {
-        fn_8038D0E8(FP(arg0, 0), lbl_804E2BF8b_5A4, 1);
+        fn_8038D0E8(FP(arg0, 0), base + 0x5C4, 1);
     }
-    HSD_ForeachAnim(FP(FP(arg0, 0), 4), LOBJ_TYPE, ALL_TYPE_MASK, (void *) HSD_AObjSetRate, AOBJ_ARG_AF, FF32(arg0, 0x20));
-    HSD_ForeachAnim(FP(FP(arg0, 0), 4), LOBJ_TYPE, ALL_TYPE_MASK, (void *) HSD_AObjSetCurrentFrame, AOBJ_ARG_AF, 0.0f);
+    HSD_ForeachAnim(FP(FP(arg0, 0), 4), JOBJ_TYPE, ALL_TYPE_MASK, (void *) HSD_AObjSetRate, AOBJ_ARG_AF, FF32(arg0, 0x20));
+    HSD_ForeachAnim(FP(FP(arg0, 0), 4), JOBJ_TYPE, ALL_TYPE_MASK, (void *) HSD_AObjSetCurrentFrame, AOBJ_ARG_AF, lbl_805E4100);
 }
 
 extern "C" void kar_a2d_grindrail__near_80327bb0(void *arg0) {
@@ -1515,11 +1516,11 @@ extern "C" char lbl_805DA9A8[8];
 extern "C" char lbl_805DA9A0[8];
 
 extern "C" f32 *kar_a2d_grindrail__near_80328cc0(void) {
-    f32 *r = (f32 *) lbl_804E3B54;
-    if (FU32(kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DA9A8, lbl_805DA9A0, 0), 0x14) == 1U) {
-        r = (f32 *) lbl_804E3A98;
+    void *diag = kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DA9A8, lbl_805DA9A0, 0);
+    if (FU32(diag, 0x14) == 1U) {
+        return (f32 *) lbl_804E3A98;
     }
-    return r;
+    return (f32 *) lbl_804E3B54;
 }
 
 extern "C" f32 *kar_a2d_grindrail__near_80328d10(u32 arg0) {
@@ -1623,10 +1624,19 @@ extern "C" void kar_a2d_grindrail__near_8032aaf0(void *arg0) {
     (void) arg0;
 }
 
+extern "C" void *lbl_805DA9E4;
+
 extern "C" void kar_a2d_grindrail__near_8032b834(void *arg0, void *arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    void *t1 = FP(arg1, 4);
+    void *t2 = FP(t1, 4);
+    void *t3 = FP(t2, 0xC);
+    void *v = FP(t3, -4);
+    if (v == NULL) {
+        v = &lbl_805DA9E4;
+    }
+    if ((kar_fl_indirectload__80391f10(FP(arg0, 0x18), v) & 0xFF) != 0) {
+        FU8(arg0, 0x6C) = 1;
+    }
 }
 
 extern "C" void *kar_a2d_grindrail__near_8032b894(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
@@ -1665,9 +1675,16 @@ extern "C" void kar_a2d_grindrail__near_8032c798(void *arg0) {
 }
 
 extern "C" void kar_a2d_grindrail__near_8032d96c(void *arg0, void *arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    void *t1 = FP(arg1, 4);
+    void *t2 = FP(t1, 4);
+    void *t3 = FP(t2, 0xC);
+    void *v = FP(t3, -4);
+    if (v == NULL) {
+        v = &lbl_805DA9E4;
+    }
+    if ((kar_fl_indirectload__80391f10(FP(arg0, 0x1C), v) & 0xFF) != 0) {
+        FU8(arg0, 0x20) = 1;
+    }
 }
 
 extern "C" void kar_a2d_grindrail__near_8032d9cc(void *arg0, u8 arg1) {
@@ -1676,10 +1693,25 @@ extern "C" void kar_a2d_grindrail__near_8032d9cc(void *arg0, u8 arg1) {
     (void) arg1;
 }
 
+extern "C" char lbl_805DA908[8];
+extern "C" char lbl_805DA900[8];
+extern "C" char lbl_804E4738[0xA0];
+
+namespace {
+extern "C" void *fn_8038D0A8(void *, void *);
+extern "C" void kar_a2d_game_effect__near_8037afd0(void *, u8);
+extern "C" void kar_a2d_effecthandle__8037b028(void *, s32, s32, void *, s32, s32);
+}
+
 extern "C" void kar_a2d_grindrail__near_8032dbcc(void *arg0, u8 arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    if (arg1 != 0) {
+        void *diag = kar_diag__803ad760(lbl_805DDBC8, 0, lbl_805DA908, lbl_805DA900, 0);
+        void *r = fn_8038D0A8(FP(diag, 0x18), lbl_804E4738);
+        kar_a2d_game_effect__near_8037afd0((char *) arg0 + 0x1AC, 0);
+        kar_a2d_effecthandle__8037b028((char *) arg0 + 0x1AC, 10137, 1, r, 0, 0);
+    } else {
+        kar_a2d_effecthandle__near_8037b33c((char *) arg0 + 0x1AC, 0);
+    }
 }
 
 extern "C" void *kar_a2d_grindrail__near_8032dc68(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4) {
@@ -1691,9 +1723,14 @@ extern "C" void *kar_a2d_grindrail__near_8032dc68(void *arg0, void *arg1, void *
     return arg0;
 }
 
+extern "C" const f32 lbl_805E4120;
+
 extern "C" void kar_a2d_grindrail__near_8032de10(void *arg0) {
-    /* best-effort shape only */
-    (void) arg0;
+    FS32(arg0, 0x48) = 0;
+    FU8(arg0, 0x3C) = 0;
+    FF32(arg0, 0x40) = lbl_805E4120;
+    FS32(arg0, 0x4C) = 0;
+    kar_a2d_game_lib__near_80289768(FP(arg0, 0), 0xFFFF, lbl_805E4120);
 }
 
 extern "C" void kar_a2d_grindrail__near_8032de54(void *arg0) {
@@ -1702,9 +1739,16 @@ extern "C" void kar_a2d_grindrail__near_8032de54(void *arg0) {
 }
 
 extern "C" void kar_a2d_grindrail__near_8032eb54(void *arg0, void *arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    void *t1 = FP(arg1, 4);
+    void *t2 = FP(t1, 4);
+    void *t3 = FP(t2, 0xC);
+    void *v = FP(t3, -4);
+    if (v == NULL) {
+        v = &lbl_805DA9E4;
+    }
+    if ((kar_fl_indirectload__80391f10(FP(arg0, 0x38), v) & 0xFF) != 0) {
+        FU8(arg0, 0x3C) = 1;
+    }
 }
 
 extern "C" u8 kar_a2d_grindrail__near_8032ebb4(void *arg0) {
@@ -1794,8 +1838,7 @@ extern "C" void fn_80331538(void *arg0) {
 }
 
 extern "C" void kar_a2d_grindrail__near_80331558(void *arg0) {
-    /* best-effort shape only */
-    (void) arg0;
+    FU8(arg0, 0x14) = 0;
 }
 
 extern "C" void kar_a2d_grindrail__near_80331564(void *arg0) {
@@ -1809,12 +1852,17 @@ extern "C" void kar_a2d_grindrail__near_80331bc4(void *arg0, void *arg1) {
     (void) arg1;
 }
 
-extern "C" void kar_a2d_grindrail__near_80331cf0(void *arg0, void **arg1, s32 arg2, void *arg_sp0) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    (void) arg_sp0;
+extern "C" void kar_a2d_grindrail__near_80331cf0(void *arg0, KartIF *kif, void *arg2) {
+    void *elem = (char *) arg0 + kif->v30() * 20;
+    if (FS32(elem, 0x1C) == 0) {
+        kif->vCC();
+        FP(elem, 0x1C) = kif;
+        FP(elem, 0x18) = arg2;
+        Vec3f *v = kif->v74();
+        FF32(elem, 0x20) = v->x;
+        FF32(elem, 0x24) = v->y;
+        FF32(elem, 0x28) = v->z;
+    }
 }
 
 extern "C" u8 kar_a2d_grindrail__near_80331d98(void *arg0, f32 *arg1) {
@@ -1864,15 +1912,21 @@ extern "C" void kar_a2d_grindrail__near_8033308c(void *arg0) {
     (void) arg0;
 }
 
+extern "C" void kar_a2d_grindrail__near_803334cc(void *arg0);
+
 extern "C" void kar_a2d_grindrail__near_8033343c(void *arg0, void *arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    FF32(arg0, 0x168) = FF32(arg1, 0x10);
+    FF32(arg0, 0x16C) = FF32(arg1, 0x14);
+    FF32(arg0, 0x170) = FF32(arg1, 0x18);
+    kar_a2d_grindrail__near_803334cc(arg0);
 }
 
 extern "C" void kar_a2d_grindrail__near_80333474(void *arg0) {
-    /* best-effort shape only */
-    (void) arg0;
+    Vec3f *v = ((KartIF *) arg0)->v08();
+    FF32(arg0, 0x168) = v->x;
+    FF32(arg0, 0x16C) = v->y;
+    FF32(arg0, 0x170) = v->z;
+    kar_a2d_grindrail__near_803334cc(arg0);
 }
 
 extern "C" void kar_a2d_grindrail__near_803334cc(void *arg0) {
@@ -1919,19 +1973,31 @@ extern "C" void *kar_a2d_grindrail__near_80333d24(void *arg0, s16 arg1, s32 arg_
     return arg0;
 }
 
-extern "C" void fn_80334340(void) {
+extern "C" void *fn_80334340(void) {
+    return NULL;
 }
+
+extern "C" const f32 lbl_805E41E8;
+extern "C" const f32 lbl_805E4120;
 
 extern "C" void kar_a2d_grindrail__near_80334348(void *arg0, s32 arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    kar_grcoll__803d1978(arg1, lbl_805E4120, FF32(arg0, 0x60), lbl_805E4120);
+    FF32(arg0, 0x60) = FF32(arg0, 0x60) + FF32(arg0, 0x64);
+    if (FF32(arg0, 0x60) > lbl_805E41E8) {
+        FF32(arg0, 0x60) = FF32(arg0, 0x60) - lbl_805E41E8;
+    }
 }
 
+extern "C" const f32 lbl_805E4160;
+extern "C" const f32 lbl_805E4120;
+
 extern "C" void fn_803343AC(void *arg0, void *arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+    FF32(arg1, 0) = lbl_805E4160;
+    FF32(arg1, 4) = lbl_805E4120;
+    FF32(arg1, 8) = FF32(arg0, 0x68);
+    FF32(arg1, 0xC) = lbl_805E4120;
+    FF32(arg1, 0x10) = lbl_805E4160;
+    FF32(arg1, 0x14) = FF32(arg0, 0x68);
 }
 
 extern "C" void kar_a2d_grindrail__near_803343d8(void) {
@@ -1942,10 +2008,12 @@ extern "C" void kar_a2d_grindrail__near_803343f8(void *arg0_unused, Mtx arg1) {
     PSMTXIdentity(arg1);
 }
 
-extern "C" void fn_8033441C(f32 *arg1, f32 *arg2) {
-    /* best-effort shape only */
-    (void) arg1;
-    (void) arg2;
+extern "C" const f32 lbl_805E4124;
+
+extern "C" void fn_8033441C(void *arg0, f32 *arg1, f32 *arg2) {
+    (void) arg0;
+    *arg2 = lbl_805E4124;
+    *arg1 = lbl_805E4124;
 }
 
 extern "C" void fn_8033442C(void) {
@@ -1975,12 +2043,14 @@ extern "C" void kar_a2d_grindrail__near_80334600(void *arg0, void *arg1, void *a
     (void) arg3;
 }
 
+extern "C" void *kar_a2d_grindrail__near_803346e4(void *arg0, void *arg1);
+
 extern "C" void kar_a2d_grindrail__near_803346b4(void *arg1, void *arg2, void *arg3, void *arg4) {
-    /* best-effort shape only */
     (void) arg1;
-    (void) arg2;
-    (void) arg3;
     (void) arg4;
+    if (arg2 != NULL) {
+        kar_a2d_grindrail__near_803346e4(arg2, arg3);
+    }
 }
 
 extern "C" void *kar_a2d_grindrail__near_803346e4(void *arg0, void *arg1) {
@@ -2001,14 +2071,17 @@ extern "C" void *kar_a2d_grindrail__near_80334a8c(void *arg0) {
 }
 
 extern "C" s32 *kar_a2d_grindrail__near_80334bd0(void *arg0) {
-    /* best-effort shape only */
-    return (s32 *) arg0;
+    s32 idx = FS32(arg0, 0x3A80);
+    s32 *elem = (s32 *) ((char *) arg0 + idx * 468);
+    FS32(arg0, 0x3A80) = *elem;
+    FS32(arg0, 0x3A84) = FS32(arg0, 0x3A84) - 1;
+    return elem;
 }
 
-extern "C" void kar_a2d_grindrail__near_80334bf8(void *arg0, void **arg1) {
-    /* best-effort shape only */
-    (void) arg0;
-    (void) arg1;
+extern "C" void kar_a2d_grindrail__near_80334bf8(void *arg0, void *arg1) {
+    FS32(arg1, 0) = FS32(arg0, 0x3A80);
+    FS32(arg0, 0x3A80) = (s32) ((u32) ((char *) arg1 - (char *) arg0) / 468);
+    FS32(arg0, 0x3A84) = FS32(arg0, 0x3A84) + 1;
 }
 
 extern "C" void fn_80334C34(s32 arg0) {
@@ -2016,15 +2089,18 @@ extern "C" void fn_80334C34(s32 arg0) {
     (void) arg0;
 }
 
-extern "C" char lbl_804E5614[4];
-extern "C" char lbl_804E55E0[4];
+extern "C" char lbl_804E5614[0x34];
+extern "C" char lbl_804E55E0[0x34];
+
+extern "C" char lbl_805DABF0[8];
+extern "C" char lbl_805DABE8[8];
 
 extern "C" void *kar_a2d_grindrail__near_80334c3c(void) {
-    void *r = lbl_804E5614;
-    if (FU32(kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DA9A8, lbl_805DA9A0, 0), 0x14) == 1U) {
-        r = lbl_804E55E0;
+    void *diag = kar_diag__803ad760(lbl_805DDBC0, 0, lbl_805DABF0, lbl_805DABE8, 0);
+    if (FU32(diag, 0x14) == 1U) {
+        return lbl_804E55E0;
     }
-    return r;
+    return lbl_804E5614;
 }
 
 extern "C" void *kar_a2d_grindrail__near_80334c8c(u32 arg0) {
