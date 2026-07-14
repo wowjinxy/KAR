@@ -125,6 +125,70 @@ public:
     virtual void v15();
 };
 
+class VDispatch60 {
+public:
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3();
+    virtual void v4();
+    virtual void v5();
+    virtual void v6();
+    virtual void v7();
+    virtual void v8();
+    virtual void v9();
+    virtual void v10();
+    virtual void v11();
+    virtual void v12();
+    virtual void v13();
+    virtual void v14();
+    virtual void v15();
+    virtual void v16();
+    virtual void v17();
+    virtual void v18();
+    virtual void v19();
+    virtual void v20();
+    virtual void v21();
+    virtual void v22();
+    virtual void v23();
+    virtual void v24();
+    virtual void v25();
+    virtual void v26();
+    virtual void v27();
+    virtual void v28();
+    virtual void v29();
+    virtual void v30();
+    virtual void v31();
+    virtual void v32();
+    virtual void v33();
+    virtual void v34();
+    virtual void v35();
+    virtual void v36();
+    virtual void v37();
+    virtual void v38();
+    virtual void v39();
+    virtual void v40();
+    virtual void v41();
+    virtual void v42();
+    virtual void v43();
+    virtual void v44();
+    virtual void v45();
+    virtual void v46();
+    virtual void v47();
+    virtual void v48();
+    virtual void v49();
+    virtual void v50();
+    virtual void v51();
+    virtual void v52();
+    virtual void v53();
+    virtual void v54();
+    virtual void v55();
+    virtual void v56();
+    virtual void v57();
+    virtual void v58();
+    virtual void v59();
+};
+
 extern "C" {
 void *fn_802DE0E4(void);
 void *TopRideItem_GetDataBase(void);
@@ -156,13 +220,37 @@ extern char lbl_804E0E6C[0xC];
 extern u32 lbl_805DDBC8;
 extern u32 lbl_805DDBCC;
 extern u32 lbl_805DDB30;
-extern char kar_resrec_a2a2dbg_000f_804e0620[0x15C];
+struct ResRecEntry {
+    s32 f0;
+    s32 f4;
+    s32 f8;
+    s32 fC;
+    s32 f10;
+    s32 f14;
+    s32 f18;
+    s32 f1C;
+    s32 f20;
+};
+extern ResRecEntry kar_resrec_a2a2dbg_000f_804e0620[];
 HSD_JObj *fn_8038D0A8(void *, s32);
 void PSMTXCopy(Mtx src, Mtx dst);
 /* "jobj.h" assert strings, owned by a2d_cpu_kirby */
 extern char kar_srcfile_jobj_h_805d9800[7];
 extern char lbl_805D9808[5];
 extern char lbl_805D9810[4];
+extern char kar_srcfile_jobj_h_805d9b80[7];
+extern char lbl_805D9B88[5];
+extern char lbl_805D9B90[4];
+extern char lbl_805D99C0[7];
+extern char lbl_805D99C8[5];
+extern char lbl_805D99D0[4];
+void fn_802E26DC(void *arg0);
+void fn_802E28C4(void *arg0);
+s32 kar_a2d_game_audio__near_80379784(void *arg0, s32 arg1, void *arg2);
+void *kar_diag__803ad760(s32, s32, void *, void *, s32);
+extern char lbl_805D9AE0[8];
+extern char lbl_805D9AE8[8];
+void fn_802D1D84(void *arg0);
 }
 
 extern "C" {
@@ -833,11 +921,15 @@ extern "C" void fn_802F1828(void * arg0) {
 }
 
 extern "C" void fn_802F1860(void * arg0) {
-    (void)arg0;
+    if (FU8(arg0, 4) != 0) {
+        kar_a2d_game_audio__near_80379784((char *) arg0 + 0x274, 0x8002E, NULL);
+    }
 }
 
 extern "C" void fn_802F189C(void * arg0) {
-    (void)arg0;
+    if (FU8(arg0, 4) != 0) {
+        kar_a2d_game_audio__near_80379784((char *) arg0 + 0x274, 0x8002F, NULL);
+    }
 }
 
 extern "C" void * fn_802F18D8(void * arg0) {
@@ -963,10 +1055,34 @@ extern "C" void fn_802F4E6C(void * arg0) {
     (void)arg0;
 }
 
+static inline u8 kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty(HSD_JObj *jobj) {
+    u8 result;
+    if (jobj == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 605, lbl_805D9808);
+    }
+    result = 0;
+    if (!(jobj->flags & 0x800000) && (jobj->flags & 0x40)) {
+        result = 1;
+    }
+    return result;
+}
+
+static inline void kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(HSD_JObj *jobj) {
+    if (jobj != NULL && kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty(jobj)) {
+        HSD_JObjSetupMatrixSub(jobj);
+    }
+}
+
+static inline void kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(HSD_JObj *jobj) {
+    if (jobj != NULL && !kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty(jobj)) {
+        HSD_JObjSetMtxDirtySub(jobj);
+    }
+}
+
 extern "C" void fn_802F52A0(void * arg0) {
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj = (HSD_JObj *) FP(obj4, 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -981,7 +1097,7 @@ extern "C" void fn_802F52A0(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1022,7 +1138,7 @@ extern "C" void fn_802F66A0(void * arg0) {
 
 extern "C" void fn_802F6AEC(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1037,7 +1153,7 @@ extern "C" void fn_802F6AEC(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1062,7 +1178,7 @@ extern "C" void fn_802F7190(void * arg0) {
 
 extern "C" void fn_802F75DC(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1077,7 +1193,7 @@ extern "C" void fn_802F75DC(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1117,7 +1233,7 @@ extern "C" void fn_802F82F0(void * arg0) {
 
 extern "C" void fn_802F8450(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1132,7 +1248,7 @@ extern "C" void fn_802F8450(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1150,7 +1266,7 @@ extern "C" void fn_802F88DC(void * arg0) {
 
 extern "C" void fn_802F8920(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1165,7 +1281,7 @@ extern "C" void fn_802F8920(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1206,7 +1322,7 @@ extern "C" void fn_802F9C34(void * arg0) {
 
 extern "C" void fn_802FA030(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1221,7 +1337,7 @@ extern "C" void fn_802FA030(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1242,7 +1358,7 @@ extern "C" void fn_802FA734(void * arg0) {
 
 extern "C" void fn_802FA8A8(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1257,7 +1373,7 @@ extern "C" void fn_802FA8A8(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1286,7 +1402,7 @@ extern "C" void fn_802FAD0C(void * arg0) {
 
 extern "C" void fn_802FAE80(void * arg0) {
     HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
-    HSD_JObjSetupMatrix(jobj);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrix(jobj);
 
     void *obj4 = FP(arg0, 4);
     HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
@@ -1301,7 +1417,7 @@ extern "C" void fn_802FAE80(void * arg0) {
     }
     PSMTXCopy(*mtx, retrieved->mtx);
     retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
-    HSD_JObjSetMtxDirty(retrieved);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty(retrieved);
 
     obj4 = FP(arg0, 4);
     kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
@@ -1428,8 +1544,7 @@ extern "C" s32 fn_802FC624(void) {
 }
 
 extern "C" s32 fn_802FC62C(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(FP(arg0, 4), 0x58) > (u32) (FU16(arg0, 0x58) + FU16(arg0, 0x5A));
 }
 
 extern "C" void ** fn_802FC654(void *arg0, s16 arg1) {
@@ -1451,8 +1566,8 @@ extern "C" s32 fn_802FC794(void) {
 }
 
 extern "C" s32 fn_802FC79C(void * arg0) {
-    (void)arg0;
-    return 0;
+    void *base = TopRideItem_GetDataBase();
+    return (f32) FU32(FP(arg0, 4), 0x58) > FF32(base, 0x5FC);
 }
 
 extern "C" void ** fn_802FC7F8(void *arg0, s16 arg1) {
@@ -1466,7 +1581,8 @@ extern "C" s32 fn_802FC98C(void) {
 }
 
 extern "C" void fn_802FC994(void ** arg0) {
-    (void)arg0;
+    fn_802D1D84(arg0);
+    ((VDispatch60 *) arg0)->v55();
 }
 
 extern "C" s32 fn_802FC9D4(void * arg0) {
@@ -1504,8 +1620,7 @@ extern "C" s32 fn_802FCFB4(void) {
 }
 
 extern "C" s32 fn_802FCFBC(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(FP(arg0, 4), 0x58) > (u32) (FU16(arg0, 0x58) + FU16(arg0, 0x5A));
 }
 
 extern "C" s32 fn_802FCFE4(void) {
@@ -1538,12 +1653,13 @@ extern "C" s32 fn_802FD3A4(void) {
 }
 
 extern "C" void fn_802FD3AC(void ** arg0) {
-    (void)arg0;
+    fn_802D1D84(arg0);
+    ((VDispatch60 *) arg0)->v55();
 }
 
 extern "C" s32 fn_802FD3EC(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1560,7 +1676,7 @@ extern "C" s32 fn_802FD444(void) {
 
 extern "C" s32 fn_802FD44C(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1598,7 +1714,7 @@ extern "C" f32 fn_802FD90C(void * arg0) {
 
 extern "C" s32 fn_802FDA94(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1626,7 +1742,7 @@ extern "C" f32 fn_802FDC84(void * arg0) {
 
 extern "C" s32 fn_802FDE0C(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1654,7 +1770,7 @@ extern "C" f32 fn_802FDFFC(void * arg0) {
 
 extern "C" s32 fn_802FE184(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x34)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x34)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1662,8 +1778,7 @@ extern "C" s32 fn_802FE184(void * arg0) {
 }
 
 extern "C" s32 fn_802FE1D4(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(FP(arg0, 4), 0x58) < 10;
 }
 
 extern "C" void ** fn_802FE1F4(void *arg0, s16 arg1) {
@@ -1682,7 +1797,7 @@ extern "C" s32 fn_802FE348(void) {
 
 extern "C" s32 fn_802FE350(void * arg0) {
     void *p = FP(arg0, 0x4);
-    if ((f64) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
+    if ((f32) FU32(p, 0x58) >= FF32(arg0, 0x38)) {
         FU32(p, 0x7C) = 0;
         return 1;
     }
@@ -1730,8 +1845,8 @@ extern "C" s32 fn_802FE3E4(void) {
 }
 
 extern "C" s32 fn_802FE3EC(void * arg0) {
-    (void)arg0;
-    return 0;
+    void *base = TopRideItem_GetDataBase();
+    return (f32) FU32(FP(arg0, 4), 0x58) > FF32(base, 0x584);
 }
 
 extern "C" void fn_802FE448(void) {
@@ -1822,8 +1937,61 @@ extern "C" void fn_802FECE0(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
     (void)farg0;
 }
 
+static inline u8 kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty2(HSD_JObj *jobj, char *file, char *str605) {
+    u8 result;
+    if (jobj == NULL) {
+        __assert(file, 605, str605);
+    }
+    result = 0;
+    if (!(jobj->flags & 0x800000) && (jobj->flags & 0x40)) {
+        result = 1;
+    }
+    return result;
+}
+
+static inline void kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty2(HSD_JObj *jobj, char *file, char *str605) {
+    if (jobj != NULL && !kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty2(jobj, file, str605)) {
+        HSD_JObjSetMtxDirtySub(jobj);
+    }
+}
+
+static inline void kar_a2d_kirbyjointanim__JointMtxCopy(void *arg0, s32 jobj2Off, s32 thOff, char *file, char *str1173, char *str1174) {
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, jobj2Off);
+    void *th = FP(obj4, thOff);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(file, 1173, str1173);
+    }
+    if (mtx == NULL) {
+        __assert(file, 1174, str1174);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    kar_a2d_kirbyjointanim__HSD_JObjSetMtxDirty2(retrieved, file, str1173);
+
+    obj4 = FP(arg0, 4);
+    ((VDispatch3 *) FP(obj4, thOff))->v1();
+}
+
+static inline void kar_a2d_kirbyjointanim__HSD_JObjSetupMatrixX(HSD_JObj *jobj, char *file, char *str605) {
+    if (jobj != NULL && kar_a2d_kirbyjointanim__HSD_JObjMtxIsDirty2(jobj, file, str605)) {
+        HSD_JObjSetupMatrixSub(jobj);
+    }
+}
+
+static inline void kar_a2d_kirbyjointanim__JointSetupAndCopy(void *arg0, s32 jobjOff, s32 thOff, char *file, char *str1173, char *str1174) {
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj = (HSD_JObj *) FP(obj4, jobjOff);
+    kar_a2d_kirbyjointanim__HSD_JObjSetupMatrixX(jobj, file, str1173);
+
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, jobjOff, thOff, file, str1173, str1174);
+}
+
 extern "C" void fn_802FED78(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointSetupAndCopy(arg0, 0x470, 0x4F8, lbl_805D99C0, lbl_805D99C8, lbl_805D99D0);
 }
 
 extern "C" void fn_802FEEC4(void * arg0) {
@@ -1897,7 +2065,8 @@ extern "C" void fn_80300A80(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_80300BC8(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointSetupAndCopy(arg0, 0x470, 0x514, lbl_805D99C0, lbl_805D99C8, lbl_805D99D0);
 }
 
 extern "C" void fn_80300D14(void * arg0) {
@@ -2015,7 +2184,8 @@ extern "C" void fn_80302F90(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_803032B0(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointSetupAndCopy(arg0, 0x470, 0x508, lbl_805D99C0, lbl_805D99C8, lbl_805D99D0);
 }
 
 extern "C" void fn_803033FC(void * arg0) {
@@ -2043,7 +2213,8 @@ extern "C" void fn_80303678(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_803038F8(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, 0x46C, 0x528, lbl_805D99C0, lbl_805D99C8, lbl_805D99D0);
 }
 
 extern "C" void fn_803039F4(void * arg0) {
@@ -2181,8 +2352,7 @@ extern "C" s32 fn_80304B50(void) {
 }
 
 extern "C" s32 fn_80304B58(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(arg0, 0x8) == 0 ? 1 : 0;
 }
 
 extern "C" s32 fn_80304B68(void * arg0) {
@@ -2233,8 +2403,7 @@ extern "C" s32 fn_80304CB8(void) {
 }
 
 extern "C" s32 fn_80304CC0(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(arg0, 0x14) == 0 ? 1 : 0;
 }
 
 extern "C" s32 fn_80304CD0(void * arg0) {
@@ -2519,11 +2688,11 @@ extern "C" void fn_803059D8(void *arg0) {
 }
 
 extern "C" void fn_80305A54(void *arg0) {
-    (void)arg0;
+    kar_diag__803ad760(FU32(arg0, 4), 0, lbl_805D9AE8, lbl_805D9AE0, 0);
 }
 
 extern "C" void fn_80305A88(void *arg0) {
-    (void)arg0;
+    kar_diag__803ad760(FU32(arg0, 8), 0, lbl_805D9AE8, lbl_805D9AE0, 0);
 }
 
 extern "C" void fn_80305ABC(void *arg0, u32 arg1) {
@@ -2546,13 +2715,19 @@ extern "C" void fn_80305BEC(s32 ** arg0, void * arg1, s32 *** arg2, void * arg3)
 }
 
 extern "C" s32 * fn_80305CA0(void * arg0) {
-    (void)arg0;
-    return 0;
+    u32 idx = FU32(arg0, 0x7C00);
+    char *elem = (char *) arg0 + idx * 0x1F0;
+    FU32(arg0, 0x7C00) = FU32(elem, 0);
+    FU32(arg0, 0x7C04) -= 1;
+    return (s32 *) elem;
 }
 
 extern "C" s32 * fn_80305CC8(void * arg0) {
-    (void)arg0;
-    return 0;
+    u32 idx = FU32(arg0, 0x2C00);
+    char *elem = (char *) arg0 + idx * 0x160;
+    FU32(arg0, 0x2C00) = FU32(elem, 0);
+    FU32(arg0, 0x2C04) -= 1;
+    return (s32 *) elem;
 }
 
 extern "C" void * fn_80305CF0(void * arg0, void * arg1, void * arg2) {
@@ -2693,8 +2868,7 @@ extern "C" void fn_80307550(void ** arg0) {
 }
 
 extern "C" s32 fn_8030757C(void * arg0) {
-    (void)arg0;
-    return 0;
+    return FU32(FP(arg0, 4), 0x58) > 44;
 }
 
 extern "C" void fn_8030759C(void) {
@@ -2787,7 +2961,8 @@ extern "C" void fn_80309698(void * arg0) {
 }
 
 extern "C" void fn_80309830(void * arg0) {
-    (void)arg0;
+    fn_802E28C4(arg0);
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, 0x46C, 0x51C, kar_srcfile_jobj_h_805d9b80, lbl_805D9B88, lbl_805D9B90);
 }
 
 extern "C" void fn_8030992C(void * arg0) {
@@ -2834,7 +3009,8 @@ extern "C" void fn_8030A248(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_8030A5BC(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, 0x46C, 0x504, kar_srcfile_jobj_h_805d9b80, lbl_805D9B88, lbl_805D9B90);
 }
 
 extern "C" void fn_8030A6B8(void * arg0) {
@@ -2868,7 +3044,8 @@ extern "C" void fn_8030AB3C(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_8030B1F8(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, 0x46C, 0x518, kar_srcfile_jobj_h_805d9b80, lbl_805D9B88, lbl_805D9B90);
 }
 
 extern "C" void fn_8030B2F4(void * arg0) {
@@ -2902,7 +3079,8 @@ extern "C" void fn_8030BB24(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg
 }
 
 extern "C" void fn_8030C334(void * arg0) {
-    (void)arg0;
+    fn_802E26DC(arg0);
+    kar_a2d_kirbyjointanim__JointMtxCopy(arg0, 0x46C, 0x52C, kar_srcfile_jobj_h_805d9b80, lbl_805D9B88, lbl_805D9B90);
 }
 
 extern "C" void fn_8030C430(void * arg0) {
@@ -3280,15 +3458,15 @@ extern "C" void fn_80312558(void) {
 }
 
 extern "C" s32 fn_80312650(s32 arg0) {
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + arg0 * 0x24, 0x4);
+    return kar_resrec_a2a2dbg_000f_804e0620[arg0].f4;
 }
 
 extern "C" s32 fn_80312668(s32 arg0) {
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + arg0 * 0x24, 0x8);
+    return kar_resrec_a2a2dbg_000f_804e0620[arg0].f8;
 }
 
 extern "C" s32 fn_80312680(s32 arg0) {
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + arg0 * 0x24, 0x20);
+    return kar_resrec_a2a2dbg_000f_804e0620[arg0].f20;
 }
 
 extern "C" s32 fn_80312698(void) {
@@ -3301,7 +3479,7 @@ extern "C" s32 fn_803126A0(s32 arg0) {
 }
 
 extern "C" s32 fn_803126B4(s32 arg0) {
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + arg0 * 0x24, 0x8);
+    return kar_resrec_a2a2dbg_000f_804e0620[arg0].f8;
 }
 
 extern "C" void ** fn_803126CC(void *arg0, void * arg1, s32 arg_sp0) {
@@ -3324,32 +3502,32 @@ extern "C" void fn_80312E50(void *arg0, s32 arg1) {
 
 extern "C" s32 fn_80312ECC(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0x10);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].f10;
 }
 
 extern "C" s32 fn_80312EF4(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0x14);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].f14;
 }
 
 extern "C" s32 fn_80312F1C(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0x18);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].f18;
 }
 
 extern "C" s32 fn_80312F44(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0x20);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].f20;
 }
 
 extern "C" s32 fn_80312F6C(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0xC);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].fC;
 }
 
 extern "C" s32 fn_80312F94(void * arg0) {
     s8 idx = (s8) FU8(FP(FP(arg0, 0x4), 0x4), 0x3B);
-    return FU32(kar_resrec_a2a2dbg_000f_804e0620 + idx * 0x24, 0x1C);
+    return kar_resrec_a2a2dbg_000f_804e0620[idx].f1C;
 }
 
 extern "C" void * fn_80312FBC(void * arg0, void * arg1) {
@@ -3407,13 +3585,13 @@ extern "C" void fn_80313AC4(void * arg0, void * arg1, void * arg2, s32 arg_sp0) 
 }
 
 extern "C" void fn_80314068(void * arg0, void ** arg1) {
-    (void)arg0;
-    (void)arg1;
+    void *base = FP(arg0, 8);
+    kar_diag__80315c0c(arg0, (char *) base + FU32(arg0, 4) * 8, 1, arg1, (s32) base);
 }
 
 extern "C" void fn_803140A0(void * arg0, void ** arg1) {
-    (void)arg0;
-    (void)arg1;
+    void *base = FP(arg0, 8);
+    kar_diag__80315c0c(arg0, (char *) base + FU32(arg0, 4) * 8, 1, arg1, (s32) base);
 }
 
 extern "C" void fn_803140D8(void ** arg0, void ** arg1, void ** arg2) {
