@@ -145,7 +145,7 @@ struct GameEffectItem : public GameEffectItemBase {
     Vec4f *unk28; //0x28
     s32 unk2C;    //0x2C
     s32 unk30;    //0x30
-    s32 unk34;    //0x34
+    u32 unk34;    //0x34
     u8 unk38;     //0x38
     u8 unk39;     //0x39
     ParticleHandle *unk3C; //0x3C
@@ -370,12 +370,13 @@ extern "C" void kar_a2d_game_effect__80379f94(GameEffect *arg0, u32 arg1) {
 
     kar_lbarchive__near_80059520(arg0->unk74->unk4, &sp14, base + 0x22C, 0);
     ASSERT2(0xAB, sp14, base + 0x248, base + 0x25C);
+    void * const archive1 = sp14;
     WipeModelHolder *wm = arg0->unk64;
-    wm->unk1C = sp14;
+    wm->unk1C = archive1;
     if (wm->unk1C != NULL) {
         DiagObj *obj = (DiagObj *) kar_diag__803ad760(lbl_805DDAE8, 0, &lbl_805DBBB0, &lbl_805DBBA8, 0);
         while (obj != NULL) {
-            kar_a2d_wipeeffect__near_8037efb0(obj, sp14);
+            kar_a2d_wipeeffect__near_8037efb0(obj, archive1);
             obj = obj->GetNext();
         }
     }
@@ -398,7 +399,7 @@ extern "C" void kar_a2d_game_effect__80379f94(GameEffect *arg0, u32 arg1) {
     kar_lbarchive__near_80059520(arg0->unk74->unk4, &sp10, base + 0x2A0, 0);
     ASSERT2(0xB7, sp10, base + 0x248, base + 0x280);
     JobjModelHolder *jm = arg0->unk70;
-    ArchiveResult *ar = (ArchiveResult *) sp10;
+    ArchiveResult * const ar = (ArchiveResult *) sp10;
     void *model = *ar->unk0;
     ASSERT2(0xBE, model, base + 0x2B8, lbl_805DBC00);
     jm->unk4 = model;
@@ -434,11 +435,12 @@ extern "C" void kar_a2d_game_effect__80379f94(GameEffect *arg0, u32 arg1) {
     if (arg1 != 0U) {
         sp8 = NULL;
         kar_lbarchive__near_80059520(arg0->unk74->unk8, &sp8, base + 0x2F0, 0);
-        if (sp8 != NULL) {
-            arg0->unk58->unk8 = sp8;
+        void * const audience1 = sp8;
+        if (audience1 != NULL) {
+            arg0->unk58->unk8 = audience1;
             DiagObj *obj = (DiagObj *) kar_diag__803ad760(lbl_805DDA4C, 0, &lbl_805DBB90, &lbl_805DBB88, 0);
             while (obj != NULL) {
-                kar_a2d_effecthandle__near_8037e14c(obj, sp8);
+                kar_a2d_effecthandle__near_8037e14c(obj, audience1);
                 obj = obj->GetNext();
             }
         }
@@ -491,8 +493,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk58 = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        ParticleHolder *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -519,8 +522,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk5C = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        WipeCamera2Holder *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -549,8 +553,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk60 = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        WipeCameraHolder *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -575,8 +580,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk64 = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        WipeModelHolder *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -598,8 +604,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk68 = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        Slot4Obj *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -622,8 +629,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk6C = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        Slot8Obj *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -646,8 +654,9 @@ extern "C" GameEffect *kar_a2d_game_effect__near_8037a3b0(GameEffect *arg0, s32 
             }
             arg0->unk70 = commit;
         }
-        if (tmp != NULL) {
-            tmp->Release(1);
+        JobjModelHolder *tmpRead = tmp;
+        if (tmpRead != NULL) {
+            tmpRead->Release(1);
         }
     }
 
@@ -702,37 +711,46 @@ extern "C" void GameEffect_UpdateAllEffects(GameEffect *arg0) {
         item = item->GetNext();
     }
 
-    item = (GameEffectItem *) kar_diag__803ad760(lbl_805DDAF4, 0, &lbl_805DBBE8, &lbl_805DBBE0, 0);
-    while (item != NULL) {
-        if (item->unkC != 0x7531) {
-            if (item->unk34 != 0) {
-                item->unk34 -= 1;
-            } else if (item->unk38 != 0) {
-                kar_a2d_effecthandle__near_8037b33c(item, 0);
-            } else if (item->unk10 == 2) {
-                Vec3f *va = item->unk24;
-                Vec4f *vb = item->unk28;
+    GameEffectItem *item2 = (GameEffectItem *) kar_diag__803ad760(lbl_805DDAF4, 0, &lbl_805DBBE8, &lbl_805DBBE0, 0);
+    while (item2 != NULL) {
+        if (item2->unkC != 0x7531) {
+            if (item2->unk34 != 0) {
+                item2->unk34 -= 1;
+            } else if (item2->unk38 != 0) {
+                kar_a2d_effecthandle__near_8037b33c(item2, 0);
+                goto advance2;
+            }
+            if (item2->unk10 == 2) {
+                Vec3f *va = item2->unk24;
+                Vec4f *vb = item2->unk28;
                 if (va != NULL || vb != NULL) {
-                    ParticleHandle *ph = item->unk3C;
+                    ParticleHandle *ph = item2->unk3C;
                     if (ph != NULL) {
                         ParticleBuf *pb = ph->unk54;
                         if (pb != NULL) {
                             if (va != NULL) {
-                                pb->pos = *va;
+                                pb->pos.x = va->x;
+                                pb->pos.y = va->y;
+                                pb->pos.z = va->z;
                             }
                             if (vb != NULL) {
-                                ph->unk54->quat = *vb;
+                                ParticleBuf *pb2 = ph->unk54;
+                                pb2->quat.x = vb->x;
+                                pb2->quat.y = vb->y;
+                                pb2->quat.z = vb->z;
+                                pb2->quat.w = vb->w;
                             }
-                            if (item->unk39 != 0) {
+                            if (item2->unk39 != 0) {
                                 Vec3f *dst = &ph->unk54->pos;
-                                PSVECAdd(dst, &item->unk18, dst);
+                                PSVECAdd(dst, &item2->unk18, dst);
                             }
                         }
                     }
                 }
             }
         }
-        item = item->GetNext();
+advance2:
+        item2 = item2->GetNext();
     }
 
     psInterpretParticles(0);
