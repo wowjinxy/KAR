@@ -327,6 +327,9 @@ internal static class Program
 
             if (root.DataDefinition != null)
                 PrintDataDefinition(root.DataDefinition, indent + "    ");
+
+            if (root.HasFieldValues)
+                PrintFieldValues(root.FieldValues, indent + "    ");
         }
 
         if (archive.HasMissingRequiredRoots)
@@ -397,6 +400,17 @@ internal static class Program
             string pointer = field.IsPointer ? " ptr" : "";
             string description = string.IsNullOrEmpty(field.Description) ? "" : " - " + field.Description;
             Console.WriteLine(indent + "  " + offset + " " + field.Name + ": " + field.TypeName + pointer + description);
+        }
+    }
+
+    private static void PrintFieldValues(IReadOnlyList<KarDataFieldValue> values, string indent)
+    {
+        Console.WriteLine(indent + "values:");
+        foreach (KarDataFieldValue value in values)
+        {
+            string offset = value.Field.OffsetHex ?? "n/a";
+            string error = string.IsNullOrEmpty(value.Error) ? "" : " (" + value.Error + ")";
+            Console.WriteLine(indent + "  " + offset + " " + value.Field.Name + " = " + value.DisplayValue + error);
         }
     }
 
@@ -485,6 +499,7 @@ internal static class Program
             displayAccessorTypeName = root.DisplayAccessorTypeName,
             description = root.Definition == null ? null : root.Definition.Description,
             dataDefinition = ToDataDefinitionDtoOrNull(root.DataDefinition),
+            fieldValues = root.FieldValues.Select(ToFieldValueDto).ToList(),
         };
     }
 
@@ -519,6 +534,24 @@ internal static class Program
             description = field.Description,
             isPointer = field.IsPointer,
             dataDefinitionId = field.DataDefinitionId,
+        };
+    }
+
+    private static object ToFieldValueDto(KarDataFieldValue value)
+    {
+        return new
+        {
+            field = ToDataFieldDto(value.Field),
+            isAvailable = value.IsAvailable,
+            valueKind = value.ValueKind,
+            displayValue = value.DisplayValue,
+            signedValue = value.SignedValue,
+            unsignedValue = value.UnsignedValue,
+            floatValue = value.FloatValue,
+            hasReference = value.HasReference,
+            referenceLength = value.ReferenceLength,
+            referenceLengthHex = value.ReferenceLengthHex,
+            error = value.Error,
         };
     }
 

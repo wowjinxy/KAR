@@ -168,13 +168,32 @@ namespace KARToolkit.Core
 
             KarArchiveDefinition definition = file.ArchiveDefinition ?? GetDefinition(file.RelativePath, file.Kind);
             List<KarArchiveRootInfo> roots = hsdFile.Roots
-                .Select(root => new KarArchiveRootInfo(
-                    root.Name,
-                    root.Data == null ? null : root.Data.GetType().Name,
-                    definition.FindRoot(root.Name)))
+                .Select(root =>
+                {
+                    KarRootDefinition rootDefinition = definition.FindRoot(root.Name);
+                    string accessorTypeName = root.Data == null ? null : root.Data.GetType().Name;
+                    KarDataDefinition dataDefinition = ResolveDataDefinition(rootDefinition, accessorTypeName);
+                    return new KarArchiveRootInfo(
+                        root.Name,
+                        accessorTypeName,
+                        rootDefinition,
+                        KarDataInspector.InspectFields(root.Data, dataDefinition));
+                })
                 .ToList();
 
             return new KarArchiveInfo(file, definition, roots);
+        }
+
+        private static KarDataDefinition ResolveDataDefinition(KarRootDefinition rootDefinition, string accessorTypeName)
+        {
+            if (rootDefinition != null && rootDefinition.DataDefinition != null)
+                return rootDefinition.DataDefinition;
+
+            KarDataDefinition definition;
+            if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(accessorTypeName, out definition))
+                return definition;
+
+            return null;
         }
 
         private static KarArchiveDefinition DefineMapData(string relativePath, KarFileKind kind)
