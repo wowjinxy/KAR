@@ -2,6 +2,7 @@
 
 extern "C" {
 #include <global.h>
+#include <sysdolphin/jobj.h>
 }
 
 #define FU8(p, o) (*(u8 *) ((char *) (p) + (o)))
@@ -14,6 +15,88 @@ extern "C" {
 #define FP(p, o) (*(void **) ((char *) (p) + (o)))
 
 #define GX_FIFO_F32 (*(volatile f32 *) 0xCC008000)
+
+struct Vec3f {
+    f32 x, y, z;
+};
+
+struct Vec4f {
+    f32 x, y, z, w;
+};
+
+class GameEffectItem;
+
+class GameEffectItemBase {
+public:
+    virtual void v00();
+    virtual void v04();
+    virtual void Init();
+    virtual void v14();
+    virtual void v18();
+    virtual void v1c();
+    virtual void v20();
+    virtual GameEffectItem *GetNext();
+};
+
+struct ParticleBuf {
+    s32 pad0[2];
+    Vec3f pos;
+    Vec4f quat;
+    Vec3f scale;
+};
+
+struct ParticleHandle {
+    char pad0[0x10];
+    u32 unk10;
+    char pad14[0x8];
+    u16 unk1C;
+    char pad1E[0x36];
+    ParticleBuf *unk54;
+    char pad58[4];
+    void *unk5C;
+};
+
+struct GameEffectItem : public GameEffectItemBase {
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    Vec3f *unk24;
+    Vec4f *unk28;
+    s32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    u8 unk38;
+    u8 unk39;
+    ParticleHandle *unk3C;
+    void *unk40;
+    s32 unk44;
+    u16 unk48;
+};
+
+struct KJPartWithEffect {
+    char pad0[0xC];
+    GameEffectItem effect;
+};
+
+struct KJPartWithEffect10 {
+    char pad0[0x10];
+    GameEffectItem effect;
+};
+
+struct KJPartWithEffect8 {
+    char pad0[0x8];
+    GameEffectItem effect;
+};
+
+struct KJPartWithEffect18 {
+    char pad0[0x18];
+    GameEffectItem effect;
+};
 
 class VDispatch3 {
 public:
@@ -49,22 +132,45 @@ void fn_802E498C(void *arg0, f32 *arg1);
 void fn_8038CB78(void *arg0);
 extern const f32 lbl_805E3AD0;
 extern const f32 lbl_805E3EE8;
+extern const f32 lbl_805E3C98;
+extern const f32 lbl_805E3BC0;
 extern char lbl_804DD0D8[0x808];
 extern char lbl_804E09F4[0xC];
+extern char lbl_804DB4D4[0x1BC];
+extern char lbl_804DAAB4[0xC];
+extern char lbl_804D6F5C[0xE4];
+extern char lbl_804D1A98[0x80];
+extern char lbl_804DB7B8[0xE0];
+extern char lbl_804DC254[0xE4];
+extern char lbl_804DBF80[0xC];
+extern char lbl_804DC050[0xE0];
+extern char lbl_804DB188[0xE0];
+extern char lbl_804DB088[0xE0];
+extern char lbl_804DB9C4[0xE0];
+extern char lbl_804DB288[0x108];
+extern char lbl_804BDF70[0x28];
+extern char lbl_804BDF2C[0x28];
+void kar_a2d_effecthandle__near_8037b33c(GameEffectItem *arg0, u8 arg1);
 extern char lbl_804E0898[0xC];
 extern char lbl_804E0E6C[0xC];
 extern u32 lbl_805DDBC8;
 extern u32 lbl_805DDBCC;
 extern u32 lbl_805DDB30;
 extern char kar_resrec_a2a2dbg_000f_804e0620[0x15C];
+HSD_JObj *fn_8038D0A8(void *, s32);
+void PSMTXCopy(Mtx src, Mtx dst);
+/* "jobj.h" assert strings, owned by a2d_cpu_kirby */
+extern char kar_srcfile_jobj_h_805d9800[7];
+extern char lbl_805D9808[5];
+extern char lbl_805D9810[4];
 }
 
 extern "C" {
 void kar_a2d_kirbyjointanim__802efa2c(void * arg0, void * arg1, void * arg2, f32 farg0);
 void kar_a2d_kirbyjointanim__near_802efd8c(void *arg0, void *arg1, void * arg2, f32 farg0);
 void fn_802EFE1C(void * arg0);
-void kar_a2d_kirbyjointanim__near_802efe44(void * arg0, s32 arg_sp0);
-void kar_a2d_kirbyjointanim__near_802effb8(void * arg0, void * arg1, u32 arg2, u32 arg_sp0);
+void kar_a2d_kirbyjointanim__near_802efe44(void * arg0);
+void kar_a2d_kirbyjointanim__near_802effb8(void * arg0, void * arg1, u32 arg2);
 void kar_a2d_kirbyjointanim__near_802f0148(void * arg0, u32 arg1, f32 farg0);
 void * kar_a2d_kirbyjointanim__near_802f0268(void * arg0, s32 arg1, s32 arg_sp0);
 void * kar_a2d_kirbyjointanim__near_802f0944(void * arg0, void ** arg1, s32 arg_sp0);
@@ -285,16 +391,16 @@ void fn_80303D64(void *arg0, s32 arg1, s32 * arg2, s32 arg3, f32 farg0);
 f32 fn_80304248(f32 farg0);
 void fn_803046A4(void * arg0);
 void fn_8030481C(void * arg0);
-void ** fn_803048E0(void *arg0, s16 arg1);
+void ** fn_803048E0(KJPartWithEffect10 *arg0, s16 arg1);
 s32 fn_803049FC(void);
 s32 fn_80304A04(void);
 s32 fn_80304A0C(void * arg0);
-void ** fn_80304A68(void *arg0, s16 arg1);
+void ** fn_80304A68(KJPartWithEffect *arg0, s16 arg1);
 s32 fn_80304B48(void);
 s32 fn_80304B50(void);
 s32 fn_80304B58(void * arg0);
 s32 fn_80304B68(void * arg0);
-void ** fn_80304BC0(void *arg0, s16 arg1);
+void ** fn_80304BC0(KJPartWithEffect18 *arg0, s16 arg1);
 s32 fn_80304CB0(void);
 s32 fn_80304CB8(void);
 s32 fn_80304CC0(void * arg0);
@@ -321,7 +427,7 @@ s32 fn_80305108(void *arg0);
 f32 fn_80305190(void);
 f32 fn_803051B4(void);
 f32 fn_803051D8(void * arg0);
-void ** fn_803051F8(void *arg0, s16 arg1);
+void ** fn_803051F8(KJPartWithEffect8 *arg0, s16 arg1);
 s32 fn_80305314(void);
 s32 fn_8030531C(void);
 s32 fn_80305324(void *arg0, f32 farg0);
@@ -621,17 +727,19 @@ extern "C" void fn_802EFE1C(void * arg0) {
     (void)arg0;
 }
 
-extern "C" void kar_a2d_kirbyjointanim__near_802efe44(void * arg0, s32 arg_sp0) {
-    (void)arg0;
-    (void)arg_sp0;
+#pragma dont_inline on
+extern "C" void kar_a2d_kirbyjointanim__near_802efe44(void * arg0) {
+    FU32(arg0, 0x0) = 0;
 }
+#pragma dont_inline off
 
-extern "C" void kar_a2d_kirbyjointanim__near_802effb8(void * arg0, void * arg1, u32 arg2, u32 arg_sp0) {
-    (void)arg0;
+#pragma dont_inline on
+extern "C" void kar_a2d_kirbyjointanim__near_802effb8(void * arg0, void * arg1, u32 arg2) {
     (void)arg1;
     (void)arg2;
-    (void)arg_sp0;
+    FU32(arg0, 0x0) = 0;
 }
+#pragma dont_inline off
 
 extern "C" void kar_a2d_kirbyjointanim__near_802f0148(void * arg0, u32 arg1, f32 farg0) {
     (void)arg0;
@@ -856,7 +964,27 @@ extern "C" void fn_802F4E6C(void * arg0) {
 }
 
 extern "C" void fn_802F52A0(void * arg0) {
-    (void)arg0;
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj = (HSD_JObj *) FP(obj4, 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void fn_802F53DC(void * arg0, u32 arg1, void * arg2) {
@@ -893,7 +1021,26 @@ extern "C" void fn_802F66A0(void * arg0) {
 }
 
 extern "C" void fn_802F6AEC(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void * fn_802F6C28(void * arg0, u32 arg2, void * arg3, s16 arg4, s16 arg5) {
@@ -914,7 +1061,26 @@ extern "C" void fn_802F7190(void * arg0) {
 }
 
 extern "C" void fn_802F75DC(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void * fn_802F7718(void * arg0, u16 arg2, void *arg3, s16 arg4) {
@@ -950,7 +1116,26 @@ extern "C" void fn_802F82F0(void * arg0) {
 }
 
 extern "C" void fn_802F8450(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void * fn_802F858C(void * arg0, s32 arg2) {
@@ -964,7 +1149,26 @@ extern "C" void fn_802F88DC(void * arg0) {
 }
 
 extern "C" void fn_802F8920(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void * fn_802F8A5C(void * arg0, void * arg2, void * arg3, s16 arg4, s16 arg5) {
@@ -1001,7 +1205,26 @@ extern "C" void fn_802F9C34(void * arg0) {
 }
 
 extern "C" void fn_802FA030(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void ** fn_802FA16C(void *arg0) {
@@ -1018,7 +1241,26 @@ extern "C" void fn_802FA734(void * arg0) {
 }
 
 extern "C" void fn_802FA8A8(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void fn_802FA9E4(void * arg0) {
@@ -1043,7 +1285,26 @@ extern "C" void fn_802FAD0C(void * arg0) {
 }
 
 extern "C" void fn_802FAE80(void * arg0) {
-    (void)arg0;
+    HSD_JObj *jobj = (HSD_JObj *) FP(FP(arg0, 4), 0x464);
+    HSD_JObjSetupMatrix(jobj);
+
+    void *obj4 = FP(arg0, 4);
+    HSD_JObj *jobj2 = (HSD_JObj *) FP(obj4, 0x464);
+    void *th = FP(obj4, 0x4A8);
+    Mtx *mtx = &jobj2->mtx;
+    HSD_JObj *retrieved = fn_8038D0A8(th, 0);
+    if (retrieved == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1173, lbl_805D9808);
+    }
+    if (mtx == NULL) {
+        __assert(kar_srcfile_jobj_h_805d9800, 1174, lbl_805D9810);
+    }
+    PSMTXCopy(*mtx, retrieved->mtx);
+    retrieved->flags |= (USER_DEF_MTX | MTX_INDEP_PARENT | MTX_INDEP_SRT);
+    HSD_JObjSetMtxDirty(retrieved);
+
+    obj4 = FP(arg0, 4);
+    kar_a2d_kirbyjointanim__near_802efe44(FP(obj4, 0x4AC));
 }
 
 extern "C" void fn_802FAFBC(void * arg0) {
@@ -1822,10 +2083,47 @@ extern "C" void fn_8030481C(void * arg0) {
     (void)arg0;
 }
 
-extern "C" void ** fn_803048E0(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+extern "C" void ** fn_803048E0(KJPartWithEffect10 *arg0, s16 arg1) {
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB088;
+    {
+        void *obj4 = FP(arg0, 4);
+        HSD_JObjSetFlagsAll((HSD_JObj *) FP(obj4, 0xBC4), 0x10);
+        FU8(obj4, 0xBC8) = 0;
+        FU32(obj4, 0xBCC) = 2;
+        FF32(obj4, 0xBD8) = lbl_805E3BC0;
+        FF32(obj4, 0xBD4) = lbl_805E3BC0;
+        FF32(obj4, 0xBD0) = lbl_805E3BC0;
+        FU32(obj4, 0xBDC) = 0;
+    }
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF70;
+    kar_a2d_effecthandle__near_8037b33c(&arg0->effect, 0);
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF2C;
+    arg0->effect.v1c();
+skip_effect:
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_803049FC(void) {
@@ -1841,10 +2139,37 @@ extern "C" s32 fn_80304A0C(void * arg0) {
     return 0;
 }
 
-extern "C" void ** fn_80304A68(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+extern "C" void ** fn_80304A68(KJPartWithEffect *arg0, s16 arg1) {
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB188;
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF70;
+    kar_a2d_effecthandle__near_8037b33c(&arg0->effect, 0);
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF2C;
+    arg0->effect.v1c();
+skip_effect:
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80304B48(void) {
@@ -1865,10 +2190,38 @@ extern "C" s32 fn_80304B68(void * arg0) {
     return 0;
 }
 
-extern "C" void ** fn_80304BC0(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+extern "C" void ** fn_80304BC0(KJPartWithEffect18 *arg0, s16 arg1) {
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB288;
+    FU32(FP(arg0, 4), 0x90) += 1;
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF70;
+    kar_a2d_effecthandle__near_8037b33c(&arg0->effect, 0);
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF2C;
+    arg0->effect.v1c();
+skip_effect:
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80304CB0(void) {
@@ -1890,9 +2243,25 @@ extern "C" s32 fn_80304CD0(void * arg0) {
 }
 
 extern "C" void ** fn_80304D18(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB4D4;
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80304DAC(void) {
@@ -1909,9 +2278,25 @@ extern "C" s32 fn_80304DBC(void * arg0) {
 }
 
 extern "C" void ** fn_80304DD0(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB7B8;
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80304E64(void) {
@@ -1994,10 +2379,47 @@ extern "C" f32 fn_803051D8(void * arg0) {
     return -FF32(arg0, 0x8);
 }
 
-extern "C" void ** fn_803051F8(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+extern "C" void ** fn_803051F8(KJPartWithEffect8 *arg0, s16 arg1) {
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DB9C4;
+    {
+        void *obj4 = FP(arg0, 4);
+        HSD_JObjSetFlagsAll((HSD_JObj *) FP(obj4, 0xBC4), 0x10);
+        FU8(obj4, 0xBC8) = 0;
+        FU32(obj4, 0xBCC) = 2;
+        FF32(obj4, 0xBD8) = lbl_805E3BC0;
+        FF32(obj4, 0xBD4) = lbl_805E3BC0;
+        FF32(obj4, 0xBD0) = lbl_805E3BC0;
+        FU32(obj4, 0xBDC) = 0;
+    }
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF70;
+    kar_a2d_effecthandle__near_8037b33c(&arg0->effect, 0);
+    if (&arg0->effect == NULL) {
+        goto skip_effect;
+    }
+    *(void **) &arg0->effect = lbl_804BDF2C;
+    arg0->effect.v1c();
+skip_effect:
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DAAB4, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80305314(void) {
@@ -2202,9 +2624,33 @@ extern "C" void fn_80307244(void * arg0) {
 }
 
 extern "C" void ** fn_803072E8(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DC050;
+    void *obj4 = FP(arg0, 4);
+    HSD_JObjSetFlagsAll((HSD_JObj *) FP(obj4, 0xBC4), 0x10);
+    FU8(obj4, 0xBC8) = 0;
+    FU32(obj4, 0xBCC) = 2;
+    FF32(obj4, 0xBD8) = lbl_805E3C98;
+    FF32(obj4, 0xBD4) = lbl_805E3C98;
+    FF32(obj4, 0xBD0) = lbl_805E3C98;
+    FU32(obj4, 0xBDC) = 0;
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DBF80, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_803073BC(void) {
@@ -2256,9 +2702,25 @@ extern "C" void fn_8030759C(void) {
 }
 
 extern "C" void ** fn_803075A0(void *arg0, s16 arg1) {
-    (void)arg0;
-    (void)arg1;
-    return 0;
+    if (arg0 == NULL) {
+        goto skip_all;
+    }
+    FP(arg0, 0) = lbl_804DC254;
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FP(FP(arg0, 4), 0x4AC), lbl_804DBF80, 0);
+    if (arg0 == NULL) {
+        goto skip2;
+    }
+    FP(arg0, 0) = lbl_804D1A98;
+skip2:
+    if (arg1 > 0) {
+        fn_8038CB78(arg0);
+    }
+skip_all:
+    return (void **) arg0;
 }
 
 extern "C" s32 fn_80307634(void) {
@@ -2955,8 +3417,8 @@ extern "C" void fn_803140A0(void * arg0, void ** arg1) {
 }
 
 extern "C" void fn_803140D8(void ** arg0, void ** arg1, void ** arg2) {
-    u32 b = FU32(arg2, 0x0);
     u32 a = FU32(arg1, 0x0);
+    u32 b = FU32(arg2, 0x0);
     FU32(arg0, 0x0) = a;
     FU32(arg0, 0x4) = b;
 }
