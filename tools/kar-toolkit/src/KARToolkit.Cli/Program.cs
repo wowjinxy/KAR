@@ -36,6 +36,8 @@ internal static class Program
                 "copy" => CopyFile(options),
                 "copy-map" => CopyMap(options),
                 "validate" => ValidateProject(options),
+                "definitions" => ShowDefinitions(options),
+                "definition" => ShowDefinition(options),
                 _ => Fail("Unknown command: " + args[0]),
             };
         }
@@ -251,6 +253,43 @@ internal static class Program
         return report.IsValid ? 0 : 2;
     }
 
+    private static int ShowDefinitions(CliOptions options)
+    {
+        options.RequirePositionals("definitions", 0);
+        List<KarDataDefinition> definitions = KarDataDefinitionCatalog.All
+            .OrderBy(definition => definition.Category)
+            .ThenBy(definition => definition.DisplayName)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(definitions.Select(ToDataDefinitionDto).ToList());
+            return 0;
+        }
+
+        foreach (KarDataDefinition definition in definitions)
+            Console.WriteLine(definition.Id + " (" + definition.Category + "): " + definition.DisplayName + " - " + definition.Fields.Count + " field(s)");
+
+        return 0;
+    }
+
+    private static int ShowDefinition(CliOptions options)
+    {
+        options.RequirePositionals("definition", 1);
+        KarDataDefinition definition;
+        if (!KarDataDefinitionCatalog.TryFind(options.Positionals[0], out definition))
+            throw new KeyNotFoundException("KAR data definition was not found: " + options.Positionals[0]);
+
+        if (options.Json)
+        {
+            WriteJson(ToDataDefinitionDto(definition));
+            return 0;
+        }
+
+        PrintDataDefinition(definition, "");
+        return 0;
+    }
+
     private static KarProject OpenProject(CliOptions options)
     {
         string sourceRoot = options.Positionals[0];
@@ -285,6 +324,9 @@ internal static class Program
                 : " - " + root.Definition.Description;
 
             Console.WriteLine(indent + "  " + root.Name + " [" + known + ", " + type + "]" + description);
+
+            if (root.DataDefinition != null)
+                PrintDataDefinition(root.DataDefinition, indent + "    ");
         }
 
         if (archive.HasMissingRequiredRoots)
@@ -313,6 +355,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots]");
+        Console.WriteLine("  kar-toolkit definitions");
+        Console.WriteLine("  kar-toolkit definition <definition-id-or-accessor-type>");
         Console.WriteLine();
         Console.WriteLine("Global options:");
         Console.WriteLine("  --json");
@@ -339,6 +383,21 @@ internal static class Program
     private static void WriteJson(object value)
     {
         Console.WriteLine(JsonSerializer.Serialize(value, JsonOptions));
+    }
+
+    private static void PrintDataDefinition(KarDataDefinition definition, string indent)
+    {
+        Console.WriteLine(indent + "schema: " + definition.Id + " (" + definition.DisplayName + ")");
+        if (!string.IsNullOrEmpty(definition.Description))
+            Console.WriteLine(indent + "  " + definition.Description);
+
+        foreach (KarDataFieldDefinition field in definition.Fields)
+        {
+            string offset = field.OffsetHex ?? "n/a";
+            string pointer = field.IsPointer ? " ptr" : "";
+            string description = string.IsNullOrEmpty(field.Description) ? "" : " - " + field.Description;
+            Console.WriteLine(indent + "  " + offset + " " + field.Name + ": " + field.TypeName + pointer + description);
+        }
     }
 
     private static object ToProjectDto(KarProject project)
@@ -425,6 +484,41 @@ internal static class Program
             expectedAccessorTypeName = root.ExpectedAccessorTypeName,
             displayAccessorTypeName = root.DisplayAccessorTypeName,
             description = root.Definition == null ? null : root.Definition.Description,
+            dataDefinition = ToDataDefinitionDtoOrNull(root.DataDefinition),
+        };
+    }
+
+    private static object ToDataDefinitionDtoOrNull(KarDataDefinition definition)
+    {
+        return definition == null ? null : ToDataDefinitionDto(definition);
+    }
+
+    private static object ToDataDefinitionDto(KarDataDefinition definition)
+    {
+        return new
+        {
+            id = definition.Id,
+            displayName = definition.DisplayName,
+            category = definition.Category,
+            accessorTypeName = definition.AccessorTypeName,
+            description = definition.Description,
+            source = definition.Source,
+            fieldCount = definition.Fields.Count,
+            fields = definition.Fields.Select(ToDataFieldDto).ToList(),
+        };
+    }
+
+    private static object ToDataFieldDto(KarDataFieldDefinition field)
+    {
+        return new
+        {
+            name = field.Name,
+            offset = field.Offset,
+            offsetHex = field.OffsetHex,
+            typeName = field.TypeName,
+            description = field.Description,
+            isPointer = field.IsPointer,
+            dataDefinitionId = field.DataDefinitionId,
         };
     }
 

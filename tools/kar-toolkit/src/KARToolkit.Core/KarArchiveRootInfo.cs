@@ -19,6 +19,23 @@ namespace KARToolkit.Core
 
         public string ExpectedAccessorTypeName => Definition == null ? null : Definition.AccessorTypeName;
 
+        public string DataDefinitionId => DataDefinition == null ? null : DataDefinition.Id;
+
+        public KarDataDefinition DataDefinition
+        {
+            get
+            {
+                if (Definition != null && Definition.DataDefinition != null)
+                    return Definition.DataDefinition;
+
+                KarDataDefinition definition;
+                if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(DisplayAccessorTypeName, out definition))
+                    return definition;
+
+                return null;
+            }
+        }
+
         public string DisplayAccessorTypeName
         {
             get

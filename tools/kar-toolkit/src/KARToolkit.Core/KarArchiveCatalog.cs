@@ -98,7 +98,7 @@ namespace KARToolkit.Core
             switch (kind)
             {
                 case KarFileKind.StageTable:
-                    return Define(kind, "Stage Table", "Maps", "Global stage table.", Root("stData", "Stage table", "KAR_stData"));
+                    return Define(kind, "Stage Table", "Maps", "Global stage table.", Root("stData", "Stage table", "KAR_stData", dataDefinitionId: "kar.stage.table"));
                 case KarFileKind.MapCommon:
                     return Define(kind, "Map Common Data", "Maps", "Shared map data used by stages.", Root("grDataCommon", "Shared map data", "KAR_grDataCommon"));
                 case KarFileKind.MapData:
@@ -114,7 +114,7 @@ namespace KARToolkit.Core
                 case KarFileKind.RiderData:
                     return DefineRider(name, kind);
                 case KarFileKind.VersusData:
-                    return Define(kind, name + " Data", "Versus", "Legendary machine versus data.", Root("vsData" + StripPrefix(name, "Vs"), "Legendary machine data", "KAR_vsLegendaryData"));
+                    return Define(kind, name + " Data", "Versus", "Legendary machine versus data.", Root("vsData" + StripPrefix(name, "Vs"), "Legendary machine data", "KAR_vsLegendaryData", dataDefinitionId: "kar.vs.legendary"));
                 case KarFileKind.ItemData:
                     return DefineItem(name, kind);
                 case KarFileKind.EnemyData:
@@ -182,7 +182,7 @@ namespace KARToolkit.Core
             if (!TryGetMapName(relativePath, kind, out string mapName))
                 return GetDefinitionFallback(relativePath, kind);
 
-            return Define(kind, "Map Data: " + mapName, "Maps", "Map gameplay data and stage setup.", Root("grData" + mapName, "Map gameplay data", "KAR_grData"));
+            return Define(kind, "Map Data: " + mapName, "Maps", "Map gameplay data and stage setup.", Root("grData" + mapName, "Map gameplay data", "KAR_grData", dataDefinitionId: "kar.gr.data"));
         }
 
         private static KarArchiveDefinition DefineMapModel(string relativePath, KarFileKind kind)
@@ -204,13 +204,13 @@ namespace KARToolkit.Core
             if (!TryGetMapName(relativePath, kind, out string mapName))
                 return GetDefinitionFallback(relativePath, kind);
 
-            return Define(kind, "Map Events: " + mapName, "Maps", "Map event/script archive tied to the map bundle.", Root("grEventDataAll" + mapName, "Map event/script data", null));
+            return Define(kind, "Map Events: " + mapName, "Maps", "Map event/script archive tied to the map bundle.", Root("grEventDataAll" + mapName, "Map event/script data", null, dataDefinitionId: "kar.gr.eventDataAll"));
         }
 
         private static KarArchiveDefinition DefineVehicle(string name, KarFileKind kind)
         {
             if (name.Equals("VcCommon", StringComparison.OrdinalIgnoreCase))
-                return Define(kind, "Vehicle Common Data", "Vehicles", "Shared vehicle data.", Root("vcDataCommon", "Shared vehicle data", "KAR_vcDataCommon"));
+                return Define(kind, "Vehicle Common Data", "Vehicles", "Shared vehicle data.", Root("vcDataCommon", "Shared vehicle data", "KAR_vcDataCommon", dataDefinitionId: "kar.vc.common"));
             if (name.Equals("VcStar", StringComparison.OrdinalIgnoreCase))
                 return Define(kind, "Star Kind Table", "Vehicles", "Vehicle kind table for stars.", Root("vcDataKindStar", "Star kind table", "KAR_vcDataKindStar"), KarRootDefinition.Suffix("_cmpatree", "Vehicle animation tree", "HSD_FigaTree", false));
             if (name.Equals("VcWheel", StringComparison.OrdinalIgnoreCase))
@@ -268,8 +268,11 @@ namespace KARToolkit.Core
             return new KarArchiveDefinition(kind, displayName, category, description, roots);
         }
 
-        private static KarRootDefinition Root(string name, string description, string accessorTypeName, bool isRequired = true)
+        private static KarRootDefinition Root(string name, string description, string accessorTypeName, bool isRequired = true, string dataDefinitionId = null)
         {
+            if (!string.IsNullOrWhiteSpace(dataDefinitionId))
+                return KarRootDefinition.ExactData(name, description, accessorTypeName, dataDefinitionId, isRequired);
+
             return KarRootDefinition.Exact(name, description, accessorTypeName, isRequired);
         }
 
