@@ -20,6 +20,7 @@ struct RefractItem {
     f32 unk1C;
     s32 unk20;
     u8 unk24;
+    u8 unk25;
 };
 
 struct RippleWave {
@@ -77,10 +78,21 @@ extern "C" void kar_a2d_refract__near_803845f4(s32 *arg0) {
     *arg0 = 0;
 }
 
-extern "C" void * kar_a2d_refract__near_80384600(void *arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+extern "C" void kar_a2d_refract__near_80384a80(RefractItem **arg0);
+extern "C" void fn_8038CB78(void *arg0);
+
+extern "C" RefractItem ** kar_a2d_refract__near_80384600(RefractItem **arg0, s16 arg1) {
+    if (arg0 != NULL) {
+        if (*arg0 != NULL) {
+            kar_a2d_refract__near_80384a80(arg0);
+            (*arg0)->unk25 = 1;
+            *arg0 = NULL;
+        }
+        if (arg1 > 0) {
+            fn_8038CB78(arg0);
+        }
+    }
+    return arg0;
 }
 
 extern "C" void kar_a2d_refract__near_80384670(s32 ***arg0, s32 arg1, void **arg2, f32 farg0) {
@@ -161,11 +173,6 @@ extern "C" s32 *kar_a2d_refract__near_80384cc8(FreeListMgr *arg0) {
     return elem;
 }
 
-extern "C" void * kar_a2d_refract__near_80384cf0(void *arg0) {
-    (void) arg0;
-    return 0;
-}
-
 struct RippleGroup {
     char pad0[4];
     s32 unk4;
@@ -173,6 +180,35 @@ struct RippleGroup {
     f32 unk10, unk14, unk18;
     f32 unk1C, unk20, unk24;
 };
+
+struct RippleGroupObj {
+    void *vtbl;
+    s32 unk4;
+    char pad8[8];
+    f32 unk10, unk14, unk18;
+    f32 unk1C, unk20, unk24;
+    s32 unk28;
+    f32 unk2C;
+    f32 unk30;
+};
+
+extern "C" char lbl_804BCDD8[0x20];
+extern "C" char lbl_804BCDF0[0x20];
+extern "C" const f32 lbl_805E4DB8; /* ? */
+extern "C" const f32 lbl_805E4DBC; /* ? */
+extern "C" void *lbl_805DDB80;
+extern "C" void kar_a2d_refract__near_80384d5c(RippleGroup *arg0);
+
+extern "C" void * kar_a2d_refract__near_80384cf0(RippleGroupObj *arg0) {
+    arg0->vtbl = lbl_804BCDD8;
+    lbl_805DDB80 = arg0;
+    arg0->vtbl = lbl_804BCDF0;
+    arg0->unk28 = 20;
+    arg0->unk2C = lbl_805E4DB8;
+    arg0->unk30 = lbl_805E4DBC;
+    kar_a2d_refract__near_80384d5c((RippleGroup *) arg0);
+    return arg0;
+}
 
 extern "C" const f32 lbl_805E4DC0; /* 0.0F */
 
@@ -198,9 +234,18 @@ extern "C" void kar_a2d_refract__near_80384ea4(RippleWave *arg0, s32 arg1, f32 f
     }
 }
 
-extern "C" void kar_a2d_refract__near_80384ec4(void *arg0, void *arg1) {
-    (void) arg0;
-    (void) arg1;
+struct TwoVec3 {
+    char pad0[0x10];
+    Vec3 a;
+    Vec3 b;
+};
+
+extern "C" Vec3 kar_a2d_refract__near_80384ec4(TwoVec3 *arg1) {
+    Vec3 result;
+    result.x = arg1->a.x - arg1->b.x;
+    result.y = arg1->a.y - arg1->b.y;
+    result.z = arg1->a.z - arg1->b.z;
+    return result;
 }
 
 extern "C" const f32 lbl_805E4DC4; /* 0.5F */
@@ -234,16 +279,47 @@ extern "C" void kar_a2d_refract__near_80385094(void *arg0, void *arg1) {
     (void) arg1;
 }
 
-extern "C" u8 * kar_a2d_refract__near_803851c4(u8 *arg0, f32 farg0) {
-    (void) arg0;
-    (void) farg0;
-    return 0;
+struct TwoVec3At4 {
+    char pad0[4];
+    Vec3 v1;
+    Vec3 v2;
+};
+
+extern "C" void PSVECSubtract(Vec3 *, Vec3 *, Vec3 *);
+extern "C" void PSVECAdd(Vec3 *, Vec3 *, Vec3 *);
+
+extern "C" TwoVec3At4 * kar_a2d_refract__near_803851c4(TwoVec3At4 *arg0, f32 farg0) {
+    Vec3 local;
+    local.x = farg0;
+    local.y = farg0;
+    local.z = farg0;
+    PSVECSubtract(&arg0->v1, &local, &arg0->v1);
+    PSVECAdd(&arg0->v2, &local, &arg0->v2);
+    return arg0;
 }
 
-extern "C" u8 kar_a2d_refract__near_8038521c(void *arg0, u8 *arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+struct AABB {
+    char pad0[4];
+    f32 minX, minY, minZ;
+    f32 maxX, maxY, maxZ;
+};
+
+extern "C" s32 kar_a2d_refract__near_8038521c(AABB *arg0, AABB *arg1) {
+    s32 result = 0;
+    if (arg0->maxX > arg1->minX) {
+        if (arg1->maxX > arg0->minX) {
+            if (arg0->maxZ > arg1->minZ) {
+                if (arg1->maxZ > arg0->minZ) {
+                    if (arg0->maxY > arg1->minY) {
+                        if (arg1->maxY > arg0->minY) {
+                            result = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }
 
 struct MultiArrInit {
@@ -270,20 +346,17 @@ extern "C" void kar_a2d_refract__near_8038528c(MultiArrInit *arg0, s8 arg1, s32 
 }
 
 struct MultiArr {
-    char pad0[0x50];
+    char pad0[8];
+    s32 arr1[8];
+    s32 arr2[8];
+    s8 arr3[8];
     u8 count;
 };
 
 extern "C" void kar_a2d_refract__near_803852b4(MultiArr *arg0, s8 arg1, s32 arg2, s32 arg3) {
-    u32 idx = arg0->count;
-    char *slot = (char *) arg0 + idx * 4;
-    *(s32 *) (slot + 8) = arg2;
-    idx = arg0->count;
-    slot = (char *) arg0 + idx * 4;
-    *(s32 *) (slot + 0x28) = arg3;
-    idx = arg0->count;
-    slot = (char *) arg0 + idx;
-    *(s8 *) (slot + 0x48) = arg1;
+    arg0->arr1[arg0->count] = arg2;
+    arg0->arr2[arg0->count] = arg3;
+    arg0->arr3[arg0->count] = arg1;
     arg0->count = arg0->count + 1;
 }
 
@@ -295,9 +368,30 @@ extern "C" s32 kar_a2d_refract__near_803852f0(void *arg0, void *arg1, void *arg2
     return 0;
 }
 
-extern "C" s32 kar_a2d_refract__near_803855bc(void *arg0) {
-    (void) arg0;
-    return 0;
+extern "C" s32 kar_a2d_refract__near_803855bc(char *arg0) {
+    s32 flags = 64;
+    if (*(void **)(arg0 + 0) != 0) {
+        flags = 6144;
+        if (*(void **)(arg0 + 4) != 0) {
+            flags = 3584;
+        }
+        flags += 64;
+    }
+    u8 found = 0;
+    u32 count = *(u8 *)(arg0 + 0x50);
+    for (u32 i = 0; i < count; i++) {
+        if (*(u32 *)(arg0 + 0x28) != 0) {
+            found = 1;
+            flags += 1024;
+        } else {
+            flags += 2048;
+        }
+        arg0 += 4;
+    }
+    if (found != 0) {
+        flags += 512;
+    }
+    return flags;
 }
 
 extern "C" void kar_a2d_refract__near_80385630(void *arg0, void *arg1, void *arg2, s32 arg_sp0) {
@@ -412,10 +506,26 @@ extern "C" void kar_diag__80387688(void *arg0, u32 arg1) {
     (void) arg1;
 }
 
-extern "C" void * kar_diag__near_803878e4(void *arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+struct DiagArr {
+    char pad0[4];
+    u32 count;
+    char *base;
+};
+
+extern "C" void kar_diag__near_80387f20(DiagArr *arg0);
+extern "C" void fn_8038CB78(void *arg0);
+
+extern "C" void * kar_diag__near_803878e4(DiagArr *arg0, s16 arg1) {
+    if (arg0 != NULL) {
+        kar_diag__near_80387f20(arg0);
+        if (arg0->base != NULL) {
+            fn_8038CB78(arg0->base);
+        }
+        if (arg1 > 0) {
+            fn_8038CB78(arg0);
+        }
+    }
+    return arg0;
 }
 
 extern "C" void kar_diag__near_80387944(void **arg0, void **arg1, void **arg2) {
@@ -444,10 +554,18 @@ extern "C" void kar_diag__near_80387b78(void **arg0, s32 *arg1, void **arg2, voi
     (void) arg3;
 }
 
-extern "C" void kar_diag__near_80387c28(void **arg0, s32 *arg1, void **arg2) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
+extern "C" void kar_diag__near_80387c28(void **arg0, s32 *arg1, ListNode **arg2) {
+    ListNode *node = *arg2;
+    ListNode *prev = node->prev;
+    ListNode *next = node->next;
+    *arg2 = prev;
+    next->prev = prev;
+    node->prev->next = node->next;
+    fn_8038CB78(node);
+    s32 c = *arg1;
+    void *d = *arg2;
+    *arg1 = c - 1;
+    *arg0 = d;
 }
 
 extern "C" void kar_diag__near_80387ca0(void **arg0, s32 *arg1, void **arg2, void **arg3, s32 arg_sp0) {
@@ -480,12 +598,6 @@ extern "C" void kar_diag__near_80387e40(void **arg0, s32 *arg1, void **arg2, voi
 extern "C" void kar_diag__near_80387f08(ListHead *arg0) {
     ListHead_Init(arg0);
 }
-
-struct DiagArr {
-    char pad0[4];
-    u32 count;
-    char *base;
-};
 
 extern "C" void kar_diag__near_80387f20(DiagArr *arg0) {
     char *end = arg0->base + arg0->count * 112;
@@ -686,8 +798,8 @@ extern "C" void kar_a2d_game_lib__near_802889d0(f32 *, f32 *, f32);
 
 extern "C" void kar_diag__near_8038b844(f32 *arg0, f32 *arg1, f32 farg0) {
     f32 base = arg0[0];
-    f32 num = farg0 - base;
     f32 den = arg1[0] - base;
+    f32 num = farg0 - base;
     kar_a2d_game_lib__near_802889d0(arg0 + 1, arg1 + 1, num / den);
 }
 
@@ -704,13 +816,28 @@ extern "C" f32 kar_diag__near_8038b8e4(void *arg0, void *arg1, f32 farg0) {
     return 0.0f;
 }
 
+extern "C" const f32 lbl_805E4E08; /* 1.0F */
+extern "C" const f32 lbl_805E4E0C; /* 3.0F */
+extern "C" const f32 lbl_805E4E10; /* 2.0F */
+
 extern "C" f32 kar_diag__near_8038b964(f32 *arg0, f32 *arg1, f32 *arg2, f32 *arg3, f32 farg0) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    (void) arg3;
-    (void) farg0;
-    return 0.0f;
+    f32 t = farg0;
+    f32 t2 = t * t;
+    f32 tm1 = t - lbl_805E4E08;
+    f32 at = lbl_805E4E10 * t;
+    f32 v2 = *arg2;
+    f32 v0 = *arg0;
+    f32 cm = lbl_805E4E0C - at;
+    f32 tm1sq = tm1 * tm1;
+    f32 v1 = *arg1;
+    f32 bp = lbl_805E4E08 + at;
+    f32 v3 = *arg3;
+    f32 h01 = cm * t2;
+    f32 tm1t = tm1 * t;
+    f32 h00 = bp * tm1sq;
+    f32 h10 = t * tm1sq;
+    f32 h11 = t * tm1t;
+    return v0 * h00 + v2 * h01 + v1 * h10 + v3 * h11;
 }
 
 extern "C" void * kar_diag__8038b9c0(void *arg0, s8 *arg1, void *arg2, s32 arg_sp0) {
@@ -721,10 +848,32 @@ extern "C" void * kar_diag__8038b9c0(void *arg0, s8 *arg1, void *arg2, s32 arg_s
     return 0;
 }
 
-extern "C" void * fn_8038BB68(void *arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+extern "C" void fn_8038BDE0(DVDFileInfo *arg0);
+extern "C" void *fn_8038BD64(void *arg0, s16 arg1);
+
+struct HasVtblAndFields {
+    void *vtbl;
+    void *unk4;
+    u8 unk8;
+    char pad9[3];
+    DVDFileInfo fileInfo;
+};
+
+extern "C" char lbl_804F4D5C[0x18];
+
+extern "C" HasVtblAndFields * fn_8038BB68(HasVtblAndFields *arg0, s16 arg1) {
+    if (arg0 != 0) {
+        arg0->vtbl = lbl_804F4D5C;
+        fn_8038BDE0(&arg0->fileInfo);
+        if (arg0->unk8 == 0) {
+            fn_8038CB78(arg0->unk4);
+        }
+        fn_8038BD64(&arg0->fileInfo, -1);
+        if (arg1 > 0) {
+            fn_8038CB78(arg0);
+        }
+    }
+    return arg0;
 }
 
 extern "C" void * fn_8038BBE8(void *arg0, s32 arg1) {
@@ -738,8 +887,20 @@ extern "C" s32 fn_8038BC80(s32 arg0, s32 arg1) {
     return arg0 + slot[3] + 4;
 }
 
-extern "C" void fn_8038BC98(void *arg0) {
-    (void) arg0;
+struct HasCount4 {
+    char pad[4];
+    u32 count;
+};
+
+extern "C" char lbl_805DC044[4];
+
+extern "C" void fn_8038BC98(HasCount4 *arg0) {
+    char *p = (char *) arg0;
+    for (u32 i = 0; i < arg0->count; i++) {
+        s32 off = *(s32 *)(p + 8);
+        OSReport(lbl_805DC044, (char *) arg0 + off);
+        p += 8;
+    }
 }
 
 struct FlagObj9 {
@@ -855,9 +1016,18 @@ extern "C" void fn_8038BEF4(TexRect *arg0) {
     arg0->h = 480;
 }
 
-extern "C" void fn_8038BF28(void *arg0, void *arg1) {
-    (void) arg0;
-    (void) arg1;
+extern "C" void fn_8038BF28(TexRect *arg0, s16 *arg1) {
+    arg0->img = lbl_804C0470;
+    u16 a = arg1[0];
+    arg0->unk4 = 0;
+    u16 b = arg1[1];
+    arg0->unk8 = 0;
+    u16 c = arg1[2];
+    u16 d = arg1[3];
+    arg0->unkC = a;
+    arg0->unkE = b;
+    arg0->w = c;
+    arg0->h = d;
 }
 
 extern "C" void fn_8038BF64(void **arg0, void **arg1, void **arg2, s32 arg_sp0) {
@@ -967,11 +1137,17 @@ extern "C" void *fn_8038CCAC(JointHolder *arg0, void **arg1) {
     return arg0;
 }
 
-extern "C" void * fn_8038CCF8(void *arg0, s32 *arg1, s32 arg2) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    return 0;
+extern "C" s32 kar_fl_indirectload__80396f54(s32);
+
+extern "C" void * fn_8038CCF8(JointHolder *arg0, void **arg1, s32 arg2) {
+    arg0->vtbl = lbl_804F4E38;
+    arg0->unk8 = arg1;
+    if (arg2 & 2) {
+        arg0->unk4 = (void *) kar_fl_indirectload__80396f54((s32) *arg0->unk8);
+    } else {
+        arg0->unk4 = HSD_JObjLoadJoint(*arg0->unk8);
+    }
+    return arg0;
 }
 
 extern "C" s32 * fn_8038CD60(void *arg0, s32 *arg1, s32 *arg2, void **arg_sp0) {
@@ -999,9 +1175,24 @@ extern "C" s32 *fn_8038D0A8(HasTwoPtrs *arg0, s32 *arg1) {
     return arg0->unk4;
 }
 
-extern "C" void fn_8038D0E8(void *arg0, u8 arg2) {
-    (void) arg0;
-    (void) arg2;
+struct HasJointAndArr {
+    char pad0[4];
+    void *unk4;
+    void **unk8;
+};
+
+extern "C" void fn_803910B0(void **arg0, s32 *arg1, void **arg2, void **arg3, void **arg4);
+extern "C" void HSD_JObjAddAnimAll(void *, void *, void *, void *);
+extern "C" void HSD_JObjReqAnimAll(void *, f32);
+extern "C" const f32 lbl_805E4E20;
+
+extern "C" void fn_8038D0E8(HasJointAndArr *arg0, s32 *arg1, u8 arg2) {
+    void *valueA, *valueB, *valueC;
+    fn_803910B0(arg0->unk8, arg1, &valueA, &valueB, &valueC);
+    HSD_JObjAddAnimAll(arg0->unk4, valueA, valueB, valueC);
+    if (arg2 != 0) {
+        HSD_JObjReqAnimAll(arg0->unk4, lbl_805E4E20);
+    }
 }
 
 extern "C" void kar_object__8038d158(void *arg0, s32 arg1, u8 arg2) {
@@ -1010,8 +1201,17 @@ extern "C" void kar_object__8038d158(void *arg0, s32 arg1, u8 arg2) {
     (void) arg2;
 }
 
-extern "C" void fn_8038D20C(void *arg0) {
-    (void) arg0;
+struct HasJObjAt4 {
+    char pad[4];
+    void *unk4;
+};
+
+extern "C" void HSD_JObjDispAll(void *, s32, s32, s32);
+
+extern "C" void fn_8038D20C(HasJObjAt4 *arg0) {
+    HSD_JObjDispAll(arg0->unk4, 0, 1, 0);
+    HSD_JObjDispAll(arg0->unk4, 0, 4, 0);
+    HSD_JObjDispAll(arg0->unk4, 0, 2, 0);
 }
 
 extern "C" void * fn_8038D270(void *arg0, void *arg1, s32 arg2, s32 *arg3) {
@@ -1167,9 +1367,31 @@ extern "C" void kar_diagnostic__80390258(void *arg0, void *arg1, void *arg2) {
     }
 }
 
-extern "C" void fn_80390288(void *arg0, void *arg1) {
-    (void) arg0;
-    (void) arg1;
+struct RefractRecordPayload {
+    s32 unk4, unk8, unkC;
+    f32 unk10, unk14, unk18, unk1C, unk20, unk24;
+    s32 unk28, unk2C, unk30, unk34, unk38, unk3C, unk40, unk44;
+    s32 unk48, unk4C, unk50, unk54, unk58, unk5C, unk60, unk64;
+    u8 unk68, unk69, unk6A, unk6B, unk6C, unk6D, unk6E, unk6F;
+};
+
+struct RefractRecord {
+    void *next;
+    RefractRecordPayload payload;
+};
+
+struct BigRefractObj {
+    RefractRecord rec0, rec1, rec2;
+    f32 tail0, tail1, tail2;
+};
+
+extern "C" void fn_80390288(BigRefractObj *arg0, BigRefractObj *arg1) {
+    arg0->rec0.payload = arg1->rec0.payload;
+    arg0->rec1.payload = arg1->rec1.payload;
+    arg0->rec2.payload = arg1->rec2.payload;
+    arg0->tail0 = arg1->tail0;
+    arg0->tail1 = arg1->tail1;
+    arg0->tail2 = arg1->tail2;
 }
 
 extern "C" void kar_diag__803905bc(void *arg0, void *arg1, u32 arg2, void *arg3, s32 arg_sp0) {
@@ -1180,23 +1402,27 @@ extern "C" void kar_diag__803905bc(void *arg0, void *arg1, u32 arg2, void *arg3,
     (void) arg_sp0;
 }
 
-extern "C" void kar_diag__near_803908f4(void *arg0, u32 arg1, void *arg2) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
+extern "C" void kar_diag__near_803908f4(char *arg0, u32 arg1, void *arg2) {
+    while (arg1 != 0) {
+        fn_80390288((BigRefractObj *) arg0, (BigRefractObj *) arg2);
+        arg0 += 348;
+        arg1 -= 1;
+    }
 }
 
-extern "C" void *kar_diag__near_80390974(u32 arg0, void *arg1, void *arg2);
+extern "C" void *kar_diag__near_80390974(u32 arg0, char *arg1, char *arg2);
 
 extern "C" void kar_diag__near_80390954(u32 arg0, void *arg1, void *arg2) {
-    kar_diag__near_80390974(arg0, arg1, arg2);
+    kar_diag__near_80390974(arg0, (char *) arg1, (char *) arg2);
 }
 
-extern "C" void * kar_diag__near_80390974(u32 arg0, void *arg1, void *arg2) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    return 0;
+extern "C" void * kar_diag__near_80390974(u32 arg0, char *arg1, char *arg2) {
+    while (arg1 > (char *) arg0) {
+        arg2 -= 348;
+        arg1 -= 348;
+        fn_80390288((BigRefractObj *) arg2, (BigRefractObj *) arg1);
+    }
+    return arg2;
 }
 
 extern "C" void kar_diag__803909d8(void *arg0, u32 arg1) {
@@ -1215,8 +1441,30 @@ extern "C" u32 fn_80390BE0(void *arg0, s16 arg1) {
     return 0;
 }
 
-extern "C" void fn_80390C74(void) {
+extern "C" void GXSetNumChans(u32);
+extern "C" void GXSetChanCtrl(u32, u32, u32, u32, u32, u32, u32);
+extern "C" void GXSetTexCoordGen2(u32, u32, u32, u32, u32, u32);
+extern "C" void GXSetBlendMode(u32, u32, u32, u32);
+extern "C" void GXSetNumTexGens(u32);
+extern "C" void GXSetNumTevStages(u32);
+extern "C" void GXSetTevOrder(u32, u32, u32, u32);
+extern "C" void GXSetTevColorIn(u32, u32, u32, u32, u32);
+extern "C" void fn_803CEC68(u32, u32, u32, u32, u32, u32);
+extern "C" void GXSetTevAlphaIn(u32, u32, u32, u32, u32);
+extern "C" void fn_803CECD0(u32, u32, u32, u32, u32, u32);
 
+extern "C" void fn_80390C74(void) {
+    GXSetNumChans(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
+    GXSetBlendMode(1, 4, 5, 0);
+    GXSetNumTexGens(1);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(0, 0, 0, 255);
+    GXSetTevColorIn(0, 15, 8, 2, 15);
+    fn_803CEC68(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaIn(0, 7, 4, 1, 7);
+    fn_803CECD0(0, 0, 0, 0, 1, 0);
 }
 
 extern "C" void fn_80390D74(void *arg0, s32 arg1, s32 arg2, s16 arg3) {
@@ -1244,13 +1492,12 @@ extern "C" void fn_803910AC(void) {
 
 }
 
-extern "C" void fn_803910B0(void **arg0, s32 *arg1, void **arg2, void **arg3, void **arg4, s32 arg_sp0) {
+extern "C" void fn_803910B0(void **arg0, s32 *arg1, void **arg2, void **arg3, void **arg4) {
     (void) arg0;
     (void) arg1;
     (void) arg2;
     (void) arg3;
     (void) arg4;
-    (void) arg_sp0;
 }
 
 extern "C" s32 fn_803911B8(u32 **arg0) {
@@ -1266,9 +1513,23 @@ extern "C" s32 fn_803911B8(u32 **arg0) {
     return count;
 }
 
-extern "C" void fn_803911EC(void ****arg0, s32 *arg1) {
-    (void) arg0;
-    (void) arg1;
+extern "C" u8 kar_fl_indirectload__80391f10(void *, void *);
+extern "C" char lbl_805DC0AC[4];
+
+extern "C" void fn_803911EC(void ***arg0, void *arg1) {
+    void **p;
+    p = *arg0;
+    while (*p != 0) {
+        char *inner = (char *) *(void **) *p;
+        void *header = *(void **)(inner - 4);
+        if (header == 0) {
+            header = lbl_805DC0AC;
+        }
+        if (kar_fl_indirectload__80391f10(arg1, header)) {
+            break;
+        }
+        p += 1;
+    }
 }
 
 struct HasArrAt8 {
@@ -1307,23 +1568,48 @@ extern "C" void fn_803919FC(u32 arg1) {
 }
 
 extern "C" void fn_80391B1C(void) {
-
+    GXSetBlendMode(1, 4, 5, 0);
+    GXSetNumTexGens(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(1);
+    GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(0, 0, 0, 255);
+    GXSetTevColorIn(0, 15, 15, 12, 8);
+    fn_803CEC68(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaIn(0, 7, 7, 6, 4);
+    fn_803CECD0(0, 0, 0, 0, 1, 0);
 }
 
-extern "C" void fn_80391C1C(u16 arg0, u16 arg1, u32 arg2, void *arg3) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    (void) arg3;
+typedef struct _GXTexObj {
+    u32 dummy[8];
+} GXTexObj;
+
+typedef struct _GXTlutObj {
+    u32 dummy[3];
+} GXTlutObj;
+
+extern "C" void GXInitTexObj(void *, void *, u16, u16, u32, u32, u32, u8);
+extern "C" void GXLoadTexObj(void *, u32);
+extern "C" void GXInitTlutObj(void *, void *, u32, u16);
+extern "C" void GXLoadTlut(void *, u32);
+extern "C" void GXInitTexObjCI(void *, void *, u16, u16, u32, u32, u32, u32);
+
+extern "C" void fn_80391C1C(u32 arg0, u32 arg1, u32 arg2, void *arg3) {
+    GXTexObj tex;
+    GXInitTexObj(&tex, arg3, (u16) arg0, (u16) arg1, arg2, 0, 0, 0);
+    GXLoadTexObj(&tex, 0);
 }
 
-extern "C" void fn_80391C70(u16 arg0, u16 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
-    (void) arg0;
-    (void) arg1;
-    (void) arg2;
-    (void) arg3;
-    (void) arg4;
-    (void) arg5;
+extern "C" void fn_80391C70(u32 arg0, u32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    volatile s32 unused[2];
+    GXTlutObj tlut;
+    GXInitTlutObj(&tlut, (void *) arg5, arg4, 0);
+    GXLoadTlut(&tlut, 0);
+    unused[0] = 0;
+    GXTexObj tex;
+    GXInitTexObjCI(&tex, (void *) arg3, (u16) arg0, (u16) arg1, arg2, 0, 0, 0);
+    GXLoadTexObj(&tex, 0);
 }
 
 extern "C" void fn_80391D14(void *arg0, s32 arg1, s32 arg2) {
