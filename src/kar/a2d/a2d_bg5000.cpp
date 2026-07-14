@@ -6,6 +6,8 @@ extern "C" {
 
 struct Vec3f {
     f32 x, y, z;
+    Vec3f() {}
+    Vec3f(const Vec3f &o) { x = o.x; y = o.y; z = o.z; }
 };
 
 struct Vec4f {
@@ -133,7 +135,7 @@ public:
     virtual void vC8();
     virtual void vCC();
     virtual void vD0();
-    virtual void vD4(f32, f32, f32);
+    virtual void vD4(Vec3f);
 };
 
 class GeneratorIface {
@@ -764,7 +766,7 @@ extern "C" void kar_a2d_bg5000__near_803411f4(BgObj *arg0, void *arg1) {
         KartIF **holder = (KartIF **) ((char *) arg1 + 0x2C);
         KartIF *kif = *holder;
         if ((kif != NULL) && (kif->v64() == 0)) {
-            f32 mag = arg0->unk20;
+            f32 mag = *(f32 *) &arg0->unk20;
             f32 a = fn_80296264(lbl_805E4488);
             f32 b = fn_8029626C(lbl_805E44FC) * a;
             f32 rate = lbl_805E4488 * (fn_802D4C30(lbl_805E44F8) * b);
@@ -776,7 +778,7 @@ extern "C" void kar_a2d_bg5000__near_803411f4(BgObj *arg0, void *arg1) {
             v.x = lbl_805E4480;
             v.y = lbl_805E4480;
             PSVECScale(&v, &v, (mag * rate) / f2, f2, e);
-            kif->vD4(v.x, v.y, v.z);
+            kif->vD4(v);
         }
     }
 }
@@ -790,7 +792,7 @@ extern "C" void kar_a2d_bg5000__near_80341360(BgObj *arg0, JobjXform *arg1) {
         var_r4 = &lbl_805DAF38;
     }
     if (kar_fl_indirectload__80391f10(lbl_804E79F8, var_r4) != 0) {
-        f32 mag = arg0->unk20;
+        f32 mag = *(f32 *) &arg0->unk20;
         f32 a = fn_80296264(lbl_805E4488);
         f32 b = fn_8029626C(lbl_805E44FC) * a;
         f32 rate = lbl_805E4488 * (fn_802D4C30(lbl_805E44F8) * b);
@@ -863,7 +865,7 @@ extern "C" void kar_a2d_bg5000__near_80341490(BgObj *arg0, JobjXform *arg1) {
             if (which != 0) {
                 Vec3f v;
                 kar_a2d_bg5000__near_80341860((f32 *) &v, arg0, which, kif->v64());
-                kif->vD4(v.x, v.y, v.z);
+                kif->vD4(v);
             }
         }
     }

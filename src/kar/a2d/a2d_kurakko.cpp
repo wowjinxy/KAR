@@ -284,6 +284,7 @@ extern char lbl_804BE238[];
 extern char lbl_804BF078[];
 extern char lbl_804BF0BC[];
 extern char lbl_804BF0E4[];
+extern char lbl_804F0678[];
 extern char lbl_804BF1B0[];
 extern char lbl_804BF288[];
 extern char lbl_804BF3C0[];
@@ -294,7 +295,7 @@ extern char lbl_804C4B00[];
 extern char lbl_804D7700[];
 extern void *lbl_804E09E4;
 extern void *lbl_804EA538;
-extern const Vec3f lbl_804F07EC;
+extern const MatchMemFn lbl_804F07EC;
 extern void *lbl_805DB918;
 extern void *lbl_805DB920;
 extern void *lbl_805DB930;
@@ -308,11 +309,12 @@ extern void *lbl_805DB968;
 extern void *lbl_805DB978;
 extern void *lbl_805DB9C0;
 extern void *lbl_805DB9C8;
+extern char lbl_804F0D70[0xA];
 extern void *lbl_804F0D7C;
-extern void *lbl_804F1010;
-extern void *lbl_804F1004;
-extern void *lbl_804F0FE8;
-extern void *lbl_804F0F8C;
+extern char lbl_804F1010[0x24];
+extern char lbl_804F1004[0xC];
+extern char lbl_804F0FE8[0x1C];
+extern char lbl_804F0F8C[0x1C];
 extern void *lbl_805DB9F0;
 extern void *lbl_805DB9E8;
 extern void *lbl_805DBA70;
@@ -387,6 +389,24 @@ extern f32 lbl_805E4908;
 extern f32 lbl_805E490C;
 extern f32 lbl_805E4910;
 extern f64 lbl_805E4918;
+extern const f32 lbl_805E49D0;
+extern const f32 lbl_805E49D4;
+extern const f32 lbl_805E49D8;
+extern const f32 lbl_805E49E0;
+extern const f32 lbl_805E49DC;
+extern const f32 lbl_805E49E4;
+extern const f32 lbl_805E49E8;
+extern const f32 lbl_805E49EC;
+extern const f32 lbl_805E49F0;
+extern const f32 lbl_805E49F4;
+extern const f32 lbl_805E49F8;
+extern const f32 lbl_805E49FC;
+extern const f32 lbl_805E4A00;
+extern const f32 lbl_805E4A04;
+extern const f32 lbl_805E4A08;
+extern const f32 lbl_805E4A6C;
+extern const f32 lbl_805E4A70;
+extern const f32 lbl_805E4A74;
 extern s32 lbl_805E6370;
 extern s32 lbl_805E6374;
 
@@ -575,7 +595,7 @@ void kar_a2d_kurakko__near_8036f1b8(KurakkoObj *arg0);
 void kar_a2d_kurakko__near_8036f214(KurakkoObj *arg0);
 void kar_a2d_kurakko__near_8036f57c(KurakkoObj *arg0);
 void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1);
-void kar_a2d_kurakko__near_80370e24(void *arg0, void *arg1, s32 arg2);
+void kar_a2d_kurakko__near_80370e24(void *arg0, MatchMemFn arg1);
 void *kar_a2d_kurakko__near_80370edc(void *arg0, s32 arg1);
 void kar_a2d_kurakko__near_80370f9c(void *arg0);
 s32 fn_8037102C(void *arg0);
@@ -866,14 +886,14 @@ extern "C" void fn_8036E748(void *arg0, void *arg1) {
 }
 
 extern "C" void kar_a2d_kurakko__near_8036e764(void *arg0, MatchMemFn arg1) {
-    MatchNodeBase *sentinel = (MatchNodeBase *) ((char *) arg0 + 0xC);
-    MatchNodeBase *cur = *(MatchNodeBase **) ((char *) arg0 + 0x10);
+    void *sentinel = (char *) arg0 + 0xC;
+    void *cur = *(void **) ((char *) arg0 + 0x10);
     while (cur != sentinel) {
-        if ((cur->*arg1)() != 0) {
-            MatchNodeBase *scan = *(MatchNodeBase **) ((char *) cur + 4);
+        if ((((MatchNodeBase *) ((char *) cur + 8))->*arg1)() != 0) {
+            void *scan = *(void **) ((char *) cur + 4);
             while (scan != sentinel) {
-                if ((scan->*arg1)() != 0) {
-                    scan = *(MatchNodeBase **) ((char *) scan + 4);
+                if ((((MatchNodeBase *) ((char *) scan + 8))->*arg1)() != 0) {
+                    scan = *(void **) ((char *) scan + 4);
                     continue;
                 }
                 break;
@@ -882,12 +902,12 @@ extern "C" void kar_a2d_kurakko__near_8036e764(void *arg0, MatchMemFn arg1) {
             void *a = scan;
             void *b = cur;
             fn_80297828(&result, arg0, &b, &a);
-            cur = (MatchNodeBase *) result;
+            cur = result;
             if (cur != sentinel) {
                 continue;
             }
         }
-        cur = *(MatchNodeBase **) ((char *) cur + 4);
+        cur = *(void **) ((char *) cur + 4);
     }
 }
 
@@ -906,9 +926,8 @@ extern "C" void kar_a2d_kurakko__near_8036e82c(void *arg0, u8 arg1) {
         kar_a2d_kurakko__near_8036fa8c((KurakkoObj *) ((char *) cur + 8), arg1);
         cur = *(void **) ((char *) cur + 4);
     }
-    Vec3f tmp1 = lbl_804F07EC;
-    Vec3f tmp2 = lbl_804F07EC;
-    kar_a2d_kurakko__near_80370e24((char *) arg0 + 4, (void *) &tmp1, 0);
+    MatchMemFn tmp1 = lbl_804F07EC;
+    kar_a2d_kurakko__near_80370e24((char *) arg0 + 4, tmp1);
 }
 
 extern "C" u8 fn_8036E8CC(void *arg0) {
@@ -929,13 +948,13 @@ extern "C" void kar_a2d_kurakko__near_8036e8d4(void *arg0) {
 
 extern "C" void *kar_a2d_kurakko__8036e92c(KurakkoObj *arg0, KartIF *arg1) {
     PreConstruct(arg0, &lbl_804BF0E4);
-    ((GameEffectItemBase *) arg0)->Init("PostDrawEffect");
+    ((GameEffectItemBase *) arg0)->Init(lbl_804F0678);
     arg0->unk0 = &lbl_804BF288;
     *(KartIF **) ((char *) arg0 + 0x84) = arg1;
     fn_8038CCAC((char *) arg0 + 0x8C, ((DiagResult *) kar_diag__803ad760((s32) lbl_805DDB50, 0, &lbl_805DB920, &lbl_805DB918, 0))->unk18);
-    HSD_JObj *j98 = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804BF0E4 + 0x1B0);
+    HSD_JObj *j98 = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804F0678 + 0x1B0);
     *(HSD_JObj **) ((char *) arg0 + 0x98) = j98;
-    HSD_JObj *j9c = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804BF0E4 + 0x1C8);
+    HSD_JObj *j9c = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804F0678 + 0x1C8);
     *(HSD_JObj **) ((char *) arg0 + 0x9C) = j9c;
 
     void *effect = (char *) arg0 + 0xEC;
@@ -998,7 +1017,7 @@ extern "C" void *kar_a2d_kurakko__8036e92c(KurakkoObj *arg0, KartIF *arg1) {
 
 extern "C" void *kar_a2d_kurakko__near_8036eba4(KurakkoObj *arg0, KurakkoObj *arg1) {
     PreConstruct(arg0, &lbl_804BF0E4);
-    ((GameEffectItemBase *) arg0)->Init("PostDrawEffect");
+    ((GameEffectItemBase *) arg0)->Init(lbl_804F0678);
     arg0->unk0 = &lbl_804BF288;
     *(s32 *) ((char *) arg0 + 0x84) = *(s32 *) ((char *) arg1 + 0x84);
     *(void **) ((char *) arg0 + 0x8C) = &lbl_804F4E38;
@@ -1012,9 +1031,9 @@ extern "C" void *kar_a2d_kurakko__near_8036eba4(KurakkoObj *arg0, KurakkoObj *ar
             __assert(lbl_804BF0E4 + 0x204, 0x5D, lbl_804BF0E4 + 0x210);
         }
     }
-    HSD_JObj *j98 = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804BF0E4 + 0x1B0);
+    HSD_JObj *j98 = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804F0678 + 0x1B0);
     *(HSD_JObj **) ((char *) arg0 + 0x98) = j98;
-    HSD_JObj *j9c = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804BF0E4 + 0x1C8);
+    HSD_JObj *j9c = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), lbl_804F0678 + 0x1C8);
     *(HSD_JObj **) ((char *) arg0 + 0x9C) = j9c;
     u8 cc = *(u8 *) ((char *) arg1 + 0xCC);
     *(s32 *) ((char *) arg0 + 0xA0) = *(s32 *) ((char *) arg1 + 0xA0);
@@ -1195,6 +1214,105 @@ extern "C" void kar_a2d_kurakko__near_8036f214(KurakkoObj *arg0) {
 #define FF32(p, o) (*(f32 *) ((char *) (p) + (o)))
 #define FP(p, o) (*(void **) ((char *) (p) + (o)))
 #define FV3(p, o) (*(Vec3f *) ((char *) (p) + (o)))
+
+extern "C" void kar_a2d_kurakko__near_8036f57c(KurakkoObj *arg0) {
+    s32 state = FS32(arg0, 0xA0);
+    switch (state) {
+    case 4:
+    case 2: {
+        if (FP(arg0, 0x88) != NULL) {
+            FF32(arg0, 0xBC) = FF32(arg0, 0xBC) + 0.01f;
+            if (FF32(arg0, 0xBC) > 1.0f) {
+                FF32(arg0, 0xBC) = 1.0f;
+            }
+        } else {
+            FF32(arg0, 0xBC) = FF32(arg0, 0xBC) - 0.01f;
+            if (FF32(arg0, 0xBC) < 0.0f) {
+                FF32(arg0, 0xBC) = 0.0f;
+            }
+        }
+        HSD_JObj *j9c = *(HSD_JObj **) ((char *) arg0 + 0x9C);
+        f32 t = FF32(arg0, 0xBC);
+        void *kif = FP(arg0, 0x88);
+        Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
+        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
+        HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
+        Vec3f dir;
+        if (kif != NULL) {
+            HSD_JObj *jbase = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
+            Vec3f *kp = ((KartIF *) kif)->v74();
+            Vec3f d;
+            PSVECSubtract((Vec3f *) &jbase->translate, kp, &d);
+            kar_a2d_game_lib__near_80289158(&d, (Vec3f *) &jr->rotate);
+            PSVECNormalize(&d, &d);
+            dir = d;
+        } else {
+            dir = FV3(arg0, 0xA4);
+        }
+        f32 s = 1.0f - t;
+        Vec3f blend;
+        blend.x = (cur.x * s) + (FF32(arg0, 0xB0) * t);
+        blend.y = (cur.y * s) + (FF32(arg0, 0xB4) * t);
+        blend.z = (cur.z * s) + (FF32(arg0, 0xB8) * t);
+        f32 ang = kar_lbvector_angle_between(&dir, &blend);
+        if (ang > maxAngle) {
+            ang = maxAngle;
+        }
+        if (ang > 0.05235988f) {
+            Vec3f axis;
+            PSVECCrossProduct(&dir, &blend, &axis);
+            PSVECNormalize(&axis, &axis);
+            kar_lbvector_rotate_about_axis(&blend, &axis, -ang * t);
+            SetTranslate_G2(j9c, &blend);
+            FV3(arg0, 0xA4) = blend;
+            return;
+        }
+        return;
+    }
+    case 5: {
+        FF32(arg0, 0xBC) = FF32(arg0, 0xBC) - 0.05f;
+        if (FF32(arg0, 0xBC) < 0.0f) {
+            FF32(arg0, 0xBC) = 0.0f;
+        }
+        HSD_JObj *j9c = *(HSD_JObj **) ((char *) arg0 + 0x9C);
+        f32 t = FF32(arg0, 0xBC);
+        void *kif = FP(arg0, 0x88);
+        Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
+        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
+        HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
+        Vec3f dir;
+        if (kif != NULL) {
+            HSD_JObj *jbase = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
+            Vec3f *kp = ((KartIF *) kif)->v74();
+            Vec3f d;
+            PSVECSubtract((Vec3f *) &jbase->translate, kp, &d);
+            kar_a2d_game_lib__near_80289158(&d, (Vec3f *) &jr->rotate);
+            PSVECNormalize(&d, &d);
+            dir = d;
+        } else {
+            dir = FV3(arg0, 0xA4);
+        }
+        f32 s = 1.0f - t;
+        Vec3f blend;
+        blend.x = (cur.x * s) + (FF32(arg0, 0xB0) * t);
+        blend.y = (cur.y * s) + (FF32(arg0, 0xB4) * t);
+        blend.z = (cur.z * s) + (FF32(arg0, 0xB8) * t);
+        f32 ang = kar_lbvector_angle_between(&dir, &blend);
+        if (ang > maxAngle) {
+            ang = maxAngle;
+        }
+        if (ang > 0.05235988f) {
+            Vec3f axis;
+            PSVECCrossProduct(&dir, &blend, &axis);
+            PSVECNormalize(&axis, &axis);
+            kar_lbvector_rotate_about_axis(&blend, &axis, -ang * t);
+            SetTranslate_G2(j9c, &blend);
+            FV3(arg0, 0xA4) = blend;
+        }
+        break;
+    }
+    }
+}
 
 static inline void SetTransFa8c(void *arg0, Vec3f *v) {
     HSD_JObj *j = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
@@ -1545,113 +1663,14 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
     FU32(arg0, 0xD8) = FU32(arg0, 0xD8) + 1;
 }
 
-extern "C" void kar_a2d_kurakko__near_8036f57c(KurakkoObj *arg0) {
-    s32 state = FS32(arg0, 0xA0);
-    switch (state) {
-    case 4:
-    case 2: {
-        if (FP(arg0, 0x88) != NULL) {
-            FF32(arg0, 0xBC) = FF32(arg0, 0xBC) + 0.01f;
-            if (FF32(arg0, 0xBC) > 1.0f) {
-                FF32(arg0, 0xBC) = 1.0f;
-            }
-        } else {
-            FF32(arg0, 0xBC) = FF32(arg0, 0xBC) - 0.01f;
-            if (FF32(arg0, 0xBC) < 0.0f) {
-                FF32(arg0, 0xBC) = 0.0f;
-            }
-        }
-        HSD_JObj *j9c = *(HSD_JObj **) ((char *) arg0 + 0x9C);
-        f32 t = FF32(arg0, 0xBC);
-        void *kif = FP(arg0, 0x88);
-        Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
-        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
-        HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
-        Vec3f dir;
-        if (kif != NULL) {
-            HSD_JObj *jbase = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
-            Vec3f *kp = ((KartIF *) kif)->v74();
-            Vec3f d;
-            PSVECSubtract((Vec3f *) &jbase->translate, kp, &d);
-            kar_a2d_game_lib__near_80289158(&d, (Vec3f *) &jr->rotate);
-            PSVECNormalize(&d, &d);
-            dir = d;
-        } else {
-            dir = FV3(arg0, 0xA4);
-        }
-        f32 s = 1.0f - t;
-        Vec3f blend;
-        blend.x = (cur.x * s) + (FF32(arg0, 0xB0) * t);
-        blend.y = (cur.y * s) + (FF32(arg0, 0xB4) * t);
-        blend.z = (cur.z * s) + (FF32(arg0, 0xB8) * t);
-        f32 ang = kar_lbvector_angle_between(&dir, &blend);
-        if (ang > maxAngle) {
-            ang = maxAngle;
-        }
-        if (ang > 0.05235988f) {
-            Vec3f axis;
-            PSVECCrossProduct(&dir, &blend, &axis);
-            PSVECNormalize(&axis, &axis);
-            kar_lbvector_rotate_about_axis(&blend, &axis, -ang * t);
-            SetTranslate_G2(j9c, &blend);
-            FV3(arg0, 0xA4) = blend;
-            return;
-        }
-        return;
-    }
-    case 5: {
-        FF32(arg0, 0xBC) = FF32(arg0, 0xBC) - 0.05f;
-        if (FF32(arg0, 0xBC) < 0.0f) {
-            FF32(arg0, 0xBC) = 0.0f;
-        }
-        HSD_JObj *j9c = *(HSD_JObj **) ((char *) arg0 + 0x9C);
-        f32 t = FF32(arg0, 0xBC);
-        void *kif = FP(arg0, 0x88);
-        Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
-        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
-        HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
-        Vec3f dir;
-        if (kif != NULL) {
-            HSD_JObj *jbase = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
-            Vec3f *kp = ((KartIF *) kif)->v74();
-            Vec3f d;
-            PSVECSubtract((Vec3f *) &jbase->translate, kp, &d);
-            kar_a2d_game_lib__near_80289158(&d, (Vec3f *) &jr->rotate);
-            PSVECNormalize(&d, &d);
-            dir = d;
-        } else {
-            dir = FV3(arg0, 0xA4);
-        }
-        f32 s = 1.0f - t;
-        Vec3f blend;
-        blend.x = (cur.x * s) + (FF32(arg0, 0xB0) * t);
-        blend.y = (cur.y * s) + (FF32(arg0, 0xB4) * t);
-        blend.z = (cur.z * s) + (FF32(arg0, 0xB8) * t);
-        f32 ang = kar_lbvector_angle_between(&dir, &blend);
-        if (ang > maxAngle) {
-            ang = maxAngle;
-        }
-        if (ang > 0.05235988f) {
-            Vec3f axis;
-            PSVECCrossProduct(&dir, &blend, &axis);
-            PSVECNormalize(&axis, &axis);
-            kar_lbvector_rotate_about_axis(&blend, &axis, -ang * t);
-            SetTranslate_G2(j9c, &blend);
-            FV3(arg0, 0xA4) = blend;
-        }
-        break;
-    }
-    }
-}
-
-extern "C" void kar_a2d_kurakko__near_80370e24(void *arg0, void *arg1, s32 arg2) {
+extern "C" void kar_a2d_kurakko__near_80370e24(void *arg0, MatchMemFn arg1) {
     void *sentinel = (char *) arg0 + 0xC;
     void *a = FP(arg0, 0x10);
     while (a != sentinel) {
-        if (__ptmf_scall((char *) a + 8) != 0) {
+        if ((((MatchNodeBase *) ((char *) a + 8))->*arg1)() != 0) {
             void *b = FP(a, 4);
             while (b != sentinel) {
-                if (__ptmf_scall((char *) b + 8) != 0) {
+                if ((((MatchNodeBase *) ((char *) b + 8))->*arg1)() != 0) {
                     b = FP(b, 4);
                     continue;
                 }
@@ -1675,16 +1694,20 @@ extern "C" void *kar_a2d_kurakko__near_80370edc(void *arg0, s32 arg1) {
     lbl_805DDB48 = (void **) arg0;
     FP(arg0, 0) = &lbl_804BD5BC;
     kar_a2d_kurakko__near_8037182c((char *) arg0 + 4);
-    u32 *rec = (u32 *) fn_803919FC(0x14, (void *) fn_8038BBE8(arg1, "OB1800.tm"));
+    void **rec = (void **) fn_803919FC(0x14, (void *) fn_8038BBE8(arg1, lbl_804F0D70));
     if (rec != NULL) {
         if (lbl_805DDCB0 != 0) {
             fn_80391644();
         }
     }
-    u32 v = 0;
-    if (rec != NULL && *rec != 0) {
-        v = *(u32 *) *rec;
-    }
+    u32 v;
+    u32 *p = (u32 *) *rec;
+    if (p == NULL) goto zero;
+    v = *p;
+    if (v != 0) goto store;
+    zero:
+    v = 0;
+    store:
     FU32(arg0, 0x18) = v;
     return arg0;
 }
@@ -1896,36 +1919,36 @@ extern "C" void *kar_a2d_kurakko__near_80371968(void *arg0, s32 *arg1) {
     FS32(arg0, 8) = HSD_CObjLoadDesc(*arg1, &lbl_804BD26C);
     FP(arg0, 0xC) = &lbl_804BCEC0;
     lbl_805DDB7C = (void **) ((char *) arg0 + 0xC);
-    PreConstruct(arg0, &lbl_804F1010);
-    FF32(arg0, 0x1C) = 0.0f;
-    FF32(arg0, 0x18) = 0.0f;
-    FF32(arg0, 0x14) = 0.0f;
-    FF32(arg0, 0x28) = 0.0f;
-    FF32(arg0, 0x24) = 0.0f;
-    FF32(arg0, 0x20) = 0.0f;
-    FF32(arg0, 0x34) = 0.0f;
-    FF32(arg0, 0x30) = 0.0f;
-    FF32(arg0, 0x2C) = 0.0f;
+    FP(arg0, 0) = lbl_804F1010;
+    FP(arg0, 0xC) = lbl_804F1010 + 24;
+    FS32(arg0, 0x10) = 0;
+    FF32(arg0, 0x1C) = lbl_805E49D0;
+    FF32(arg0, 0x18) = lbl_805E49D0;
+    FF32(arg0, 0x14) = lbl_805E49D0;
+    FF32(arg0, 0x28) = lbl_805E49D0;
+    FF32(arg0, 0x24) = lbl_805E49D0;
+    FF32(arg0, 0x20) = lbl_805E49D0;
+    FF32(arg0, 0x34) = lbl_805E49D0;
+    FF32(arg0, 0x30) = lbl_805E49D0;
+    FF32(arg0, 0x2C) = lbl_805E49D0;
     FS32(arg0, 0x40) = 0;
     FS32(arg0, 0x44) = 0;
     FS32(arg0, 0x48) = 0;
     FS32(arg0, 0x4C) = 1;
-    FF32(arg0, 0x14) = 0.0f;
-    FF32(arg0, 0x18) = 0.0f;
-    FF32(arg0, 0x1C) = 0.0f;
-    FF32(arg0, 0x20) = 0.0f;
-    FF32(arg0, 0x24) = 0.0f;
-    FF32(arg0, 0x28) = 1.0f;
-    FF32(arg0, 0x2C) = 0.0f;
-    FF32(arg0, 0x30) = 1.0f;
-    FF32(arg0, 0x34) = 0.0f;
-    f32 a = fn_80296264(0.0f);
-    f32 b = fn_80296264(1.0f) * a;
-    f32 c = fn_80296264(1.0f) * b;
-    f32 rad = 0.017453292f * c;
-    f32 deg30 = 30.0f * rad;
-    FF32(arg0, 0x38) = deg30;
-    FF32(arg0, 0x3C) = 1.33f;
+    FF32(arg0, 0x14) = lbl_805E49D0;
+    FF32(arg0, 0x18) = lbl_805E49D0;
+    FF32(arg0, 0x1C) = lbl_805E49D0;
+    FF32(arg0, 0x20) = lbl_805E49D0;
+    FF32(arg0, 0x24) = lbl_805E49D0;
+    FF32(arg0, 0x28) = lbl_805E49D4;
+    FF32(arg0, 0x2C) = lbl_805E49D0;
+    FF32(arg0, 0x30) = lbl_805E49D4;
+    FF32(arg0, 0x34) = lbl_805E49D0;
+    f32 a = fn_80296264(lbl_805E49D0);
+    f32 b = fn_80296264(lbl_805E49D4) * a;
+    f32 c = fn_80296264(lbl_805E49D4) * b;
+    FF32(arg0, 0x38) = lbl_805E49DC * (lbl_805E49D8 * c);
+    FF32(arg0, 0x3C) = lbl_805E49E0;
     kar_a2d_kurakko__near_80374214((char *) arg0 + 0x40, 0x28U);
     return arg0;
 }
@@ -1947,40 +1970,42 @@ extern "C" void kar_a2d_kurakko__near_80371aa0(void *arg0) {
 }
 
 extern "C" void *kar_a2d_kurakko__near_80371b90(void *arg0) {
-    FP(arg0, 0) = &lbl_804F1004;
+    FP(arg0, 0) = lbl_804F1004;
     FP(arg0, 4) = &lbl_804BCEE8;
     lbl_805DDB78 = (void **) ((char *) arg0 + 4);
-    PreConstruct((char *) arg0, &lbl_804F0FE8);
-    FF32(arg0, 8) = 1.0f;
-    FF32(arg0, 0xC) = 15.0f;
-    FF32(arg0, 0x10) = 32.0f;
-    FF32(arg0, 0x14) = 0.5f;
-    FF32(arg0, 0x18) = 5.0f;
-    f32 a1 = fn_80296264(1.0f);
-    f32 b1 = fn_80296264(1.0f) * a1;
-    f32 c1 = fn_80296264(1.0f) * b1;
-    FF32(arg0, 0x1C) = 60.0f * (0.017453292f * c1);
-    f32 a2 = fn_80296264(1.0f);
-    f32 b2 = fn_80296264(1.0f) * a2;
-    f32 c2 = fn_80296264(1.0f) * b2;
-    FF32(arg0, 0x20) = 30.0f * (0.017453292f * c2);
-    f32 a3 = fn_80296264(1.0f);
-    f32 b3 = fn_80296264(1.0f) * a3;
-    f32 c3 = fn_80296264(1.0f) * b3;
-    FF32(arg0, 0x24) = 8.0f * (0.01f * c3);
-    f32 a4 = fn_80296264(1.0f);
-    f32 b4 = fn_80296264(1.0f) * a4;
-    f32 c4 = fn_80296264(1.0f) * b4;
-    FF32(arg0, 0x28) = 8.0f * (0.01f * c4);
-    f32 a5 = fn_80296264(1.0f);
-    f32 b5 = fn_80296264(1.0f) * a5;
-    f32 c5 = fn_80296264(1.0f) * b5;
-    FF32(arg0, 0x2C) = 25.0f * (0.01f * c5);
-    f32 a6 = fn_80296264(1.0f);
-    f32 b6 = fn_80296264(1.0f) * a6;
-    f32 c6 = fn_80296264(1.0f) * b6;
-    FF32(arg0, 0x30) = 50.0f * (0.01f * c6);
-    FF32(arg0, 0x34) = 0.6f;
+    FP(arg0, 0) = lbl_804F0FE8;
+    FP(arg0, 4) = lbl_804F0FE8 + 0xC;
+    FS32(arg0, 8) = 0;
+    FF32(arg0, 8) = lbl_805E49D4;
+    FF32(arg0, 0xC) = lbl_805E49E4;
+    FF32(arg0, 0x10) = lbl_805E49E8;
+    FF32(arg0, 0x14) = lbl_805E49EC;
+    FF32(arg0, 0x18) = lbl_805E49F0;
+    f32 a1 = fn_80296264(lbl_805E49D4);
+    f32 b1 = fn_80296264(lbl_805E49D4) * a1;
+    f32 c1 = fn_80296264(lbl_805E49D4) * b1;
+    FF32(arg0, 0x1C) = lbl_805E49F4 * (lbl_805E49D8 * c1);
+    f32 a2 = fn_80296264(lbl_805E49D4);
+    f32 b2 = fn_80296264(lbl_805E49D4) * a2;
+    f32 c2 = fn_80296264(lbl_805E49D4) * b2;
+    FF32(arg0, 0x20) = lbl_805E49DC * (lbl_805E49D8 * c2);
+    f32 a3 = fn_80296264(lbl_805E49D4);
+    f32 b3 = fn_80296264(lbl_805E49D4) * a3;
+    f32 c3 = fn_80296264(lbl_805E49D4) * b3;
+    FF32(arg0, 0x24) = lbl_805E49FC * (lbl_805E49F8 * c3);
+    f32 a4 = fn_80296264(lbl_805E49D4);
+    f32 b4 = fn_80296264(lbl_805E49D4) * a4;
+    f32 c4 = fn_80296264(lbl_805E49D4) * b4;
+    FF32(arg0, 0x28) = lbl_805E49FC * (lbl_805E49F8 * c4);
+    f32 a5 = fn_80296264(lbl_805E49D4);
+    f32 b5 = fn_80296264(lbl_805E49D4) * a5;
+    f32 c5 = fn_80296264(lbl_805E49D4) * b5;
+    FF32(arg0, 0x2C) = lbl_805E4A00 * (lbl_805E49F8 * c5);
+    f32 a6 = fn_80296264(lbl_805E49D4);
+    f32 b6 = fn_80296264(lbl_805E49D4) * a6;
+    f32 c6 = fn_80296264(lbl_805E49D4) * b6;
+    FF32(arg0, 0x30) = lbl_805E4A04 * (lbl_805E49F8 * c6);
+    FF32(arg0, 0x34) = lbl_805E4A08;
     FU8(arg0, 0x38) = 0;
     FU8(arg0, 0x39) = 0;
     return arg0;
@@ -2152,23 +2177,23 @@ extern "C" void kar_a2d_kurakko__near_80372d88(void *arg0, void *arg1, f32 *arg2
 }
 
 extern "C" void *kar_a2d_kurakko__near_803738fc(void *arg0) {
-    FP(arg0, 0) = &lbl_804F1004;
+    FP(arg0, 0) = lbl_804F1004;
     FP(arg0, 4) = &lbl_804BCF14;
     lbl_805DDB74 = (void **) ((char *) arg0 + 4);
-    PreConstruct(arg0, &lbl_804F0F8C);
+    FP(arg0, 0) = lbl_804F0F8C;
+    FP(arg0, 4) = lbl_804F0F8C + 0xC;
     FS32(arg0, 8) = 0;
-    f32 a = fn_80296264(1.0f);
-    f32 b = fn_80296264(1.0f) * a;
-    f32 c = fn_80296264(1.0f) * b;
-    f32 rad = 0.017453292f * c;
-    FF32(arg0, 0xC) = 30.0f * rad;
-    f32 a2 = fn_80296264(1.0f);
-    f32 b2 = fn_80296264(1.0f) * a2;
-    f32 c2 = fn_80296264(1.0f) * b2;
-    FF32(arg0, 0x10) = 90.0f * (0.017453292f * c2);
-    FF32(arg0, 0x14) = 0.033f;
-    FF32(arg0, 0x18) = 35.0f;
-    FF32(arg0, 0x1C) = 0.6f;
+    f32 a = fn_80296264(lbl_805E49D4);
+    f32 b = fn_80296264(lbl_805E49D4) * a;
+    f32 c = fn_80296264(lbl_805E49D4) * b;
+    FF32(arg0, 0xC) = lbl_805E49DC * (lbl_805E49D8 * c);
+    f32 a2 = fn_80296264(lbl_805E49D4);
+    f32 b2 = fn_80296264(lbl_805E49D4) * a2;
+    f32 c2 = fn_80296264(lbl_805E49D4) * b2;
+    FF32(arg0, 0x10) = lbl_805E4A6C * (lbl_805E49D8 * c2);
+    FF32(arg0, 0x14) = lbl_805E4A70;
+    FF32(arg0, 0x18) = lbl_805E4A74;
+    FF32(arg0, 0x1C) = lbl_805E4A08;
     return arg0;
 }
 
@@ -2215,7 +2240,7 @@ extern "C" void kar_a2d_kurakko__near_803739fc(void *arg0, void *arg1, Vec3f *ar
 }
 
 extern "C" void *kar_a2d_kurakko__near_80373cb4(void *arg0) {
-    FP(arg0, 0) = &lbl_804F1004;
+    FP(arg0, 0) = lbl_804F1004;
     FP(arg0, 4) = &lbl_804BCF3C;
     lbl_805DDB70 = (void **) ((char *) arg0 + 4);
     PreConstruct(arg0, &lbl_804F0F28);
@@ -2261,7 +2286,7 @@ extern "C" void kar_a2d_kurakko__near_80373d74(void *arg0, void *arg1, Vec3f *ar
 }
 
 extern "C" void kar_a2d_kurakko__near_80374020(void *arg0) {
-    FP(arg0, 0) = &lbl_804F1004;
+    FP(arg0, 0) = lbl_804F1004;
     FP(arg0, 4) = &lbl_804BCF64;
     lbl_805DDB6C = (s32) ((char *) arg0 + 4);
     PreConstruct(arg0, &lbl_804F0ECC);
@@ -2648,11 +2673,17 @@ extern "C" void kar_a2d_kurakko__near_803769c8(void *arg0) {
     (void) arg0;
 }
 
+class Fn10Widget {
+public:
+    virtual void v08();
+    virtual void v0c();
+    virtual void Method(void *, void *, f32);
+};
+
 extern "C" void kar_a2d_kurakko__near_80376bcc(void *arg0) {
     if (FU8(arg0, 0x2D) != 0 && FU8(arg0, 0x2E) != 0 && FU8(arg0, 0x2C) != 0) {
         void *fn = FP(kar_diag__803ad760((s32) lbl_805DDBAC, 0, &lbl_805DBAB0, &lbl_805DBAA8, 0), 4);
-        typedef void (*Fn10)(void *, void *, void *, f32);
-        (*(Fn10 *) ((char *) *(void **) fn + 0x10))(fn, (char *) arg0 + 0xC, (char *) arg0 + 0x18, FF32(arg0, 0x24));
+        ((Fn10Widget *) fn)->Method((char *) arg0 + 0xC, (char *) arg0 + 0x18, FF32(arg0, 0x24));
     }
 }
 
@@ -2972,6 +3003,7 @@ extern "C" void *kar_a2d_kurakko__near_803785bc(void *arg0) {
 
 extern "C" f32 *kar_a2d_kurakko__near_80378900(f32 *arg0, s16 arg1) {
     if (arg0 != NULL) {
+        lbl_805DDC70 = NULL;
         char *p = (char *) arg0;
         for (s32 i = 0; i < 4; i++) {
             kar_lbaudio_mark_auto_track_started(FS32(p, 4));
@@ -2979,10 +3011,13 @@ extern "C" f32 *kar_a2d_kurakko__near_80378900(f32 *arg0, s16 arg1) {
             kar_lbaudio_release_track_handle_when_idle(FS32(p, 0xC));
             p += 0x18;
         }
-        p = (char *) arg0;
-        for (s32 i = 0; i < 4; i++) {
-            kar_lbaudio_mark_auto_track_started(FS32(p, 0x60));
-            p += 4;
+        {
+            s32 i = 0;
+            p = (char *) arg0;
+            for (; i < 4; i++) {
+                kar_lbaudio_mark_auto_track_started(FS32(p, 0x60));
+                p += 4;
+            }
         }
         kar_lbaudio_mark_auto_track_started(FS32(arg0, 0x88));
         kar_lbaudio_release_track_handle_when_idle(FS32(arg0, 0x8C));

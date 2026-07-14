@@ -296,8 +296,8 @@ void *TopRideItem_GetDataBase(void);
 void *fn_80305ABC(void *, u32);
 void __construct_array(void *, void *, void *, s32, s32);
 extern void *fn_802CD8DC;
-extern void *fn_8028DF40;
-extern void *fn_8028DFC8;
+void *fn_8028DF40(void *, s16);
+void *fn_8028DFC8(void *, s16);
 
 double tan(double);
 s32 HSD_Randi(s32);
@@ -363,6 +363,8 @@ extern char lbl_804BDD98[];
 extern char lbl_804BDDD8[];
 extern char lbl_804BDF2C[];
 extern char lbl_804BDF70[];
+extern char lbl_804F3350[];
+extern char lbl_804F3510[];
 
 }
 
@@ -685,6 +687,8 @@ struct SoundFadeVol {
     f32 unkC;
 };
 
+#pragma push
+#pragma dont_inline on
 extern "C" void kar_a2d_effecthandle__near_8037b650(SoundFadeVol *arg0, u8 arg1, f32 farg0) {
     f32 var_f1;
     if (arg1 != 0) {
@@ -709,6 +713,7 @@ extern "C" u8 kar_a2d_effecthandle__near_8037b694(SoundFadeVol *arg0) {
     }
     return 0;
 }
+#pragma pop
 
 struct GameEffectItem10;
 
@@ -852,7 +857,7 @@ extern "C" u8 kar_a2d_effecthandle__near_8037be50(SpraySubMgr *arg0, s32 kind, V
 
 struct SlipstreamMgr {
     s32 unk0;                   //0x0
-    char pad4[0x4C];             //0x4
+    GameEffectItem unk4;         //0x4
     GameEffectItem unk50;         //0x50
     char pad9C[0xE8 - 0x9C];       //0x9C
     u8 unkE8;                       //0xE8
@@ -863,13 +868,13 @@ struct SlipstreamMgr {
     f32 unk180;                          //0x180
     f32 unk184;                           //0x184
     char pad188[4];
-    s32 unk18C;                             //0x18C
+    u8 unk18C;                             //0x18C
     f32 unk190;                              //0x190
     f32 unk194;                               //0x194
     f32 unk198;                                //0x198
     char pad19C[0x1B8 - 0x19C];
     void *unk1B8;                                 //0x1B8
-    u32 unk1BC;                                    //0x1BC
+    u8 unk1BC;                                    //0x1BC
     KartIF *unk1C0;                                 //0x1C0
     char pad1C4[0x200 - 0x1C4];
     s32 unk200;                                       //0x200
@@ -1028,21 +1033,19 @@ extern "C" void kar_a2d_effecthandle__near_8037c2fc(SlipstreamMgr *arg0) {
     arg0->unk208.unk8 = 0.0f;
 }
 
-extern "C" void kar_a2d_effecthandle__near_8037c390(GameEffectItem *arg0) {
-    if (arg0->unk10 == 0x7531) {
-        GameEffectItem *item = (GameEffectItem *) ((char *) arg0 + 4);
-        kar_a2d_game_effect__near_8037afd0(item, 0);
-        kar_a2d_effecthandle__8037b028(item, -1, 0, NULL, NULL, NULL);
+extern "C" void kar_a2d_effecthandle__near_8037c390(SlipstreamMgr *arg0) {
+    if (arg0->unk4.unkC == 0x7531) {
+        kar_a2d_game_effect__near_8037afd0(&arg0->unk4, 0);
+        kar_a2d_effecthandle__8037b028(&arg0->unk4, -1, 0, NULL, NULL, NULL);
     }
-    arg0->unk40 = (void *) &kar_a2d_effecthandle__near_8037b908;
-    arg0->unk44 = (s32) arg0;
+    arg0->unk4.unk40 = (void *) &kar_a2d_effecthandle__near_8037b908;
+    arg0->unk4.unk44 = (s32) arg0;
 }
 
 extern "C" void kar_a2d_effecthandle__near_8037c3fc(SlipstreamMgr *arg0) {
-    GameEffectItem *item = (GameEffectItem *) ((char *) arg0 + 4);
-    if (item->unk10 != 0x7531) {
-        item->unk40 = 0;
-        item->unk44 = (s32) item;
+    if (arg0->unk4.unkC != 0x7531) {
+        arg0->unk4.unk40 = 0;
+        arg0->unk4.unk44 = (s32) arg0;
     }
     arg0->unk0 = 0x7531;
     arg0->unkE8 = 0;
@@ -1139,6 +1142,25 @@ struct TireMgrOuter {
 
 extern "C" void kar_a2d_effecthandle__near_8037c878(TireMgrOuter *arg0);
 
+static inline u8 kar_a2d_effecthandle__HSD_JObjMtxIsDirty(HSD_JObj *jobj) {
+    u8 result;
+    ASSERT2(0x25D, jobj != NULL, kar_srcfile_jobj_h_805dbca0, lbl_805DBCA8);
+    result = 0;
+    if (!(jobj->flags & 0x800000) && (jobj->flags & 0x40)) {
+        result = 1;
+    }
+    return result;
+}
+
+static inline void kar_a2d_effecthandle__HSD_JObjSetupMatrix(HSD_JObj *jobj) {
+    if (jobj == NULL) {
+        return;
+    }
+    if (kar_a2d_effecthandle__HSD_JObjMtxIsDirty(jobj)) {
+        HSD_JObjSetupMatrixSub(jobj);
+    }
+}
+
 extern "C" void kar_a2d_effecthandle__near_8037c660(GameEffectItem *item) {
     TireMgrOuter *arg0 = (TireMgrOuter *) item->unk44;
     kar_a2d_effecthandle__near_8037c878(arg0);
@@ -1147,10 +1169,7 @@ extern "C" void kar_a2d_effecthandle__near_8037c660(GameEffectItem *item) {
         f32 mag = PSVECMag();
         if (arg0->unk35C->v94() < 1.0f) {
             HSD_JObj *jobj = arg0->unk360;
-            ASSERT2(0x25D, jobj != NULL, kar_srcfile_jobj_h_805dbca0, lbl_805DBCA8);
-            if (!(jobj->flags & 0x800000) && (jobj->flags & 0x40)) {
-                HSD_JObjSetupMatrixSub(jobj);
-            }
+            kar_a2d_effecthandle__HSD_JObjSetupMatrix(jobj);
             f32 velx = jobj->mtx[3];
             f32 vely = jobj->mtx[7];
             f32 velz = jobj->mtx[11];
@@ -1162,9 +1181,9 @@ extern "C" void kar_a2d_effecthandle__near_8037c660(GameEffectItem *item) {
             HSD_JObj *jobj2 = arg0->unk360;
             Vec3f *pos = arg0->unk35C->v7c();
             s32 kind = arg0->unk0;
-            kar_a2d_effecthandle__near_8037b650((SoundFadeVol *) ((char *) item + 4), flag, mag);
-            while (kar_a2d_effecthandle__near_8037b694((SoundFadeVol *) ((char *) item + 4)) != 0) {
-                kar_a2d_effecthandle__near_8037b6d4((SpraySubMgr *) ((char *) item + 4), kind, &velVec, pos, jobj2, flag, 1.94f);
+            kar_a2d_effecthandle__near_8037b650((SoundFadeVol *) ((char *) arg0 + 4), flag, mag);
+            while (kar_a2d_effecthandle__near_8037b694((SoundFadeVol *) ((char *) arg0 + 4)) != 0) {
+                kar_a2d_effecthandle__near_8037b6d4((SpraySubMgr *) ((char *) arg0 + 4), kind, &velVec, pos, jobj2, flag, 1.94f);
             }
         }
     }
@@ -1235,7 +1254,8 @@ struct RippleFadeState {
     f32 unk34;
     char pad38[0x40 - 0x38];
     f32 unk40;
-    s32 unk44;
+    u8 unk44;
+    char pad45[3];
     char pad48[0x60 - 0x48];
     f32 unk60;
     Vec3f *unk64;
@@ -1249,22 +1269,22 @@ struct RippleFadeState {
 extern "C" void kar_a2d_effecthandle__near_8037c948(RippleFadeState *arg0) {
     if (arg0->unk68 != 0) {
         f32 t = 1.0f - ((f32) arg0->unk68 / (f32) arg0->unk6C);
-        f32 v;
         if (arg0->unk70 != 0) {
             arg0->unk70 = 0;
-            v = t + 0.05f;
+            t += 0.05f;
         } else {
-            v = t - 0.05f;
+            t = t - 0.05f;
             arg0->unk70 = 1;
-            if (v <= 0.0f) {
-                v = 0.001f;
+            if (t <= 0.0f) {
+                t = 0.001f;
             }
         }
-        arg0->unk34 = v;
-        arg0->unk30 = v;
-        arg0->unk2C = v;
+        arg0->unk34 = t;
+        arg0->unk30 = t;
+        arg0->unk2C = t;
         if (arg0->unk68 < 0x12) {
-            arg0->unk60 = -0.5f + (((f32) arg0->unk68 / 18.0f) * arg0->unk74);
+            f32 m = ((f32) arg0->unk68 / 18.0f) * arg0->unk74;
+            arg0->unk60 = -0.5f + m;
         }
         if (arg0->unk68 > 0) {
             arg0->unk68 = arg0->unk68 - 1;
@@ -1276,24 +1296,24 @@ extern "C" void kar_a2d_effecthandle__near_8037c948(RippleFadeState *arg0) {
 }
 
 extern "C" void kar_a2d_effecthandle__near_8037ca5c(RippleFadeState *arg0, s32 arg1, f32 farg0) {
-    f32 sp10, spC, sp8;
+    Vec3f pos;
     Vec3f *src = arg0->unk64;
     if (src != NULL) {
-        sp8 = src->x;
-        spC = src->y;
-        sp10 = src->z;
+        pos.x = src->x;
+        pos.y = src->y;
+        pos.z = src->z;
     } else {
-        sp10 = 0.0f;
-        spC = 0.0f;
-        sp8 = 0.0f;
+        pos.x = 0.0f;
+        pos.y = 0.0f;
+        pos.z = 0.0f;
     }
     arg0->unk6C = arg1;
     arg0->unk68 = arg1;
     arg0->unk74 = farg0;
     arg0->unkC = 2;
-    arg0->unk10 = sp8;
-    arg0->unk14 = spC;
-    arg0->unk18 = sp10;
+    arg0->unk10 = pos.x;
+    arg0->unk14 = pos.y;
+    arg0->unk18 = pos.z;
     arg0->unk44 = 1;
     arg0->unk34 = 0.0f;
     arg0->unk30 = 0.0f;
@@ -1319,6 +1339,110 @@ extern "C" void fn_8037CB18(RippleFadeState *arg0, Vec4f *arg1) {
     arg1->w = 0.0f;
     ((f32 *) arg1)[4] = 0.5f;
     ((f32 *) arg1)[5] = arg0->unk60;
+}
+
+extern "C" void kar_a2d_effecthandle__near_8037cb44(void *arg0) {
+    char *self = *(char **) ((char *) arg0 + 0x44);
+    s32 cnt = *(s32 *) (self + 0x4B4);
+    if (cnt != 0) {
+        if (cnt > 0) {
+            *(s32 *) (self + 0x4B4) = cnt - 1;
+        }
+        u32 cnt2 = *(u32 *) (self + 0x4B8);
+        if (cnt2 == 0U) {
+            char *p = self;
+            s32 idx;
+            for (idx = 0; idx < 10; idx++) {
+                if (*(u32 *) (p + 0xB8) == 0U) {
+                    char *src = *(char **) (self + 0x4B0);
+                    Vec3f sp;
+                    ((u32 *) &sp)[0] = ((u32 *) src)[0];
+                    ((u32 *) &sp)[1] = ((u32 *) src)[1];
+                    ((u32 *) &sp)[2] = ((u32 *) src)[2];
+                    PSVECScale(&sp, &sp, -3.6f);
+                    PSVECAdd(&sp, *(void **) (self + 0x4AC), &sp);
+                    char *slot = self + idx * 0x70;
+                    *(s32 *) (slot + 0xB8) = 0x36;
+                    *(s32 *) (slot + 0x58) = 2;
+                    *(f32 *) (slot + 0x5C) = sp.x;
+                    *(f32 *) (slot + 0x60) = sp.y;
+                    *(f32 *) (slot + 0x64) = sp.z;
+                    *(u32 *) (self + 0x4B8) = 6;
+                    return;
+                }
+                p += 0x70;
+            }
+            return;
+        }
+        *(u32 *) (self + 0x4B8) = cnt2 - 1;
+    }
+}
+
+extern "C" void kar_a2d_effecthandle__near_8037cc44(void *arg0) {
+    char *p = (char *) arg0;
+    if (*(u32 *) (p + 0x6C) != 0) {
+        f32 t = 1.0f - ((f32) *(u32 *) (p + 0x6C) / 54.0f);
+        f32 v;
+        if (t < 0.45f) {
+            v = t / 0.45f;
+        } else {
+            v = (t - 1.0f) / 0.55f;
+        }
+        f32 sc = 3.4f * v;
+        *(f32 *) (p + 0x34) = sc;
+        *(f32 *) (p + 0x30) = sc;
+        *(f32 *) (p + 0x2C) = sc;
+        *(f32 *) (p + 0x40) = v;
+        *(u8 *) (p + 0x44) = 1;
+        *(u32 *) (p + 0x6C) = *(u32 *) (p + 0x6C) - 1;
+        return;
+    }
+    *(u8 *) (p + 0x44) = 0;
+}
+
+extern "C" void kar_a2d_effecthandle__near_8037ccdc(void *arg0) {
+    char *p = (char *) arg0;
+    *(void **) p = lbl_804BD724;
+    *(s32 *) (p + 4) = 0;
+    *(s32 *) (p + 8) = 0;
+    ((DiagObj *) arg0)->Init();
+    *(void **) p = lbl_804F3510;
+    *(f32 *) (p + 0x38) = 1.6f;
+    *(f32 *) (p + 0x3C) = 1.6f;
+    *(s32 *) (p + 0x1C) = 0;
+    *(f32 *) (p + 0x20) = 0.0f;
+    *(f32 *) (p + 0x24) = 0.0f;
+    *(f32 *) (p + 0x28) = 0.0f;
+    *(f32 *) (p + 0x2C) = 1.0f;
+    *(f32 *) (p + 0x30) = 1.0f;
+    *(f32 *) (p + 0x34) = 1.0f;
+    *(f32 *) (p + 0x40) = 0.0f;
+    *(u8 *) (p + 0x44) = 1;
+    *(void **) p = lbl_804F3350;
+    *(s32 *) (p + 0xC) = 0;
+    *(f32 *) (p + 0x60) = 0.0f;
+    *(f32 *) (p + 0x64) = 0.005f;
+    *(f32 *) (p + 0x68) = -0.36f;
+    *(s32 *) (p + 0x6C) = 0;
+}
+
+extern "C" void kar_a2d_effecthandle__near_8037cda4(void *arg0, void *arg1, void *arg2) {
+    char *p = (char *) arg0;
+    *(void **) p = lbl_804BDF2C;
+    *(s32 *) (p + 4) = 0;
+    *(s32 *) (p + 8) = 0;
+    ((DiagObj *) arg0)->Init();
+    *(void **) p = lbl_804BDF70;
+    kar_a2d_effecthandle__8037b028((GameEffectItem *) arg0, -1, 0, NULL, NULL, NULL);
+    __construct_array(p + 0x4C, (void *) &kar_a2d_effecthandle__near_8037ccdc, (void *) &fn_8028DF40, 0x70, 10);
+    *(s32 *) (p + 0x4AC) = 0;
+    *(s32 *) (p + 0x4B0) = 0;
+    *(s32 *) (p + 0x4B4) = 0;
+    *(s32 *) (p + 0x4B8) = 0;
+    *(void **) (p + 0x40) = (void *) &kar_a2d_effecthandle__near_8037cb44;
+    *(void **) (p + 0x44) = arg0;
+    *(void **) (p + 0x4AC) = arg1;
+    *(void **) (p + 0x4B0) = arg2;
 }
 
 static char lbl_804F345C[] = "GameEffect";
@@ -1389,6 +1513,57 @@ extern "C" void fn_8037CF28(void *arg0, Vec4f *arg1) {
     arg1->w = 0.0f;
     ((f32 *) arg1)[4] = 0.5f;
     ((f32 *) arg1)[5] = f[0x68 / 4];
+}
+
+class PostDrawEffectBase : public DiagObj {
+public:
+    virtual void v28();
+    virtual void v2c();
+    virtual void v30();
+    virtual void v34();
+    virtual void v38();
+    virtual void v3c();
+    virtual void Draw(s32, void *, void *);
+};
+
+class PostDrawEffectNode : public PostDrawEffectBase {
+public:
+    char pad4[0x1C - 4];
+    s32 unk1C;
+};
+
+static char lbl_804F3490[] = "PostDrawEffect";
+static char lbl_804F34A0[] = "ObjCollect<PostDrawEffect>";
+static NamePair lbl_805DBD00 = {lbl_804F34A0, 0};
+static ClassInfo3 lbl_804F34BC = {&lbl_805DBD00, 0, 0};
+static NamePair lbl_805DBD08 = {lbl_804F3490, (char *) &lbl_804F34BC};
+
+extern "C" void kar_a2d_effecthandle__near_8037dc54(void *arg0, s32 arg1) {
+    if (HSD_CObjSetCurrent(*(s32 *) ((char *) arg0 + 0xC)) != 0) {
+        char sp8[8];
+        char sp10[0x40];
+        kar_lbvector__near_80064770(*(s32 *) ((char *) arg0 + 8), sp10);
+        kar_a2d_game_lib__near_8028b2cc(*(s32 *) ((char *) arg0 + 0xC));
+        HSD_CObjGetViewport(*(s32 *) ((char *) arg0 + 0xC), sp8);
+        GXSetCullMode(GX_CULL_BACK);
+        GXSetZMode(GX_DISABLE, GX_ALWAYS, GX_DISABLE);
+        GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1EU, GX_DISABLE, 0x7DU);
+        GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, 0x21U, GX_DISABLE, 0x7DU);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ONE, GX_CC_TEXC);
+        fn_803CEC68(0, 0, 0, 0, 1, 0);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
+        PostDrawEffectNode *node = (PostDrawEffectNode *) kar_diag__803ad760(lbl_805DDB00, 0, &lbl_805DBD08, &lbl_805DBD00, 0);
+        while (node != NULL) {
+            if (node->unk1C == arg1) {
+                node->Draw(*(s32 *) ((char *) arg0 + 8), sp10, sp8);
+            }
+            node = (PostDrawEffectNode *) node->GetNext();
+        }
+        GXSetTevDirect(0);
+        GXSetNumIndStages(0);
+        HSD_StateInvalidate(-1);
+        HSD_CObjEndCurrent();
+    }
 }
 
 static char kar_src_a2d_modeleffect_804f3558[] = "a2d_modeleffect.h";
@@ -1502,7 +1677,7 @@ extern "C" void *kar_a2d_effecthandle__near_8037dfc4(char *arg0) {
     *(s32 *) (arg0 + 8) = 0;
     ((DiagObj *) arg0)->Init();
     *(void **) arg0 = lbl_804BDD58;
-    __construct_array(arg0 + 0xC, (void *) &kar_a2d_effecthandle__near_8037e0e0, &fn_8028DFC8, 0x14, 6);
+    __construct_array(arg0 + 0xC, (void *) &kar_a2d_effecthandle__near_8037e0e0, (void *) &fn_8028DFC8, 0x14, 6);
     *(s32 *) (arg0 + 0xB8) = 0;
     s32 idx = 0;
     char *item = arg0;
@@ -1529,27 +1704,14 @@ extern "C" void *kar_a2d_effecthandle__near_8037dfc4(char *arg0) {
 extern "C" void kar_a2d_effecthandle__near_8037e210(char *arg0) {
     if (*(u8 *) (arg0 + 0x9C) != 0) {
         *(f32 *) (arg0 + 0x98) = 0.0625f * *(f32 *) (arg0 + 0x90) + *(f32 *) (arg0 + 0x98);
+        goto check;
         for (;;) {
-            f32 v = *(f32 *) (arg0 + 0x98);
-            u8 fire;
-            if (v >= 1.0f) {
-                fire = 1;
-                *(f32 *) (arg0 + 0x98) = v - 1.0f;
-            } else {
-                if (v < 0.0001f) {
-                    *(f32 *) (arg0 + 0x98) = 0.0f;
-                }
-                fire = 0;
-            }
-            if (fire == 0) {
-                break;
-            }
             char *item = arg0 + *(s32 *) (arg0 + 0x8C) * 0x14;
             if (*(u8 *) (item + 0x1C) != 0) {
                 HSD_JObjSetFlagsAll(*(void **) (item + 0x18), 0x10);
                 *(u8 *) (item + 0x1C) = 0;
             }
-            char *item2 = arg0 + (*(s32 *) (arg0 + 0x8C) * 0x14 + 0xC);
+            char *item2 = (arg0 + *(s32 *) (arg0 + 0x8C) * 0x14) + 0xC;
             HSD_JObjClearFlagsAll(*(void **) (item2 + 0xC), 0x10);
             HSD_JObjReqAnimAll(*(void **) (item2 + 0xC), 0.0f);
             *(u8 *) (item2 + 0x10) = 1;
@@ -1562,6 +1724,23 @@ extern "C" void kar_a2d_effecthandle__near_8037e210(char *arg0) {
             *(s32 *) (arg0 + 0x8C) = next;
             if (next >= 6) {
                 *(s32 *) (arg0 + 0x8C) = 0;
+            }
+        check:
+            {
+                f32 v = *(f32 *) (arg0 + 0x98);
+                u8 fire;
+                if (v >= 1.0f) {
+                    fire = 1;
+                    *(f32 *) (arg0 + 0x98) = v - 1.0f;
+                } else {
+                    if (v < 0.0001f) {
+                        *(f32 *) (arg0 + 0x98) = 0.0f;
+                    }
+                    fire = 0;
+                }
+                if (fire == 0) {
+                    break;
+                }
             }
         }
     }
@@ -1610,6 +1789,63 @@ extern "C" char *kar_a2d_effecthandle__near_8037cf54(u32 arg0) {
         return lbl_804F3424[arg0].name;
     }
     return NULL;
+}
+
+extern "C" void kar_a2d_effecthandle__near_8037d104(_HSD_ImageDesc *arg0, _HSD_ImageDesc *arg1, _HSD_ImageDesc *arg2,
+                                                     f32 farg0, f32 farg1, f32 farg2, f32 farg3, f32 farg4) {
+    char * const texBase = (char *) &lbl_80569950;
+    u8 numTexGens = 1;
+    struct { u8 r, g, b, a; } color;
+    color.a = (s8) (255.0f * farg0);
+    GXInitTexObj(texBase, arg0->img_ptr, arg0->width, arg0->height, arg0->format, GX_CLAMP, GX_CLAMP, (u8) arg0->mipmap);
+    GXLoadTexObj(texBase, GX_TEXMAP0);
+    if (arg1 != NULL) {
+        GXInitTexObj(texBase + 0x20, arg1->img_ptr, arg1->width, arg1->height, arg1->format, GX_MIRROR, GX_MIRROR, (u8) arg1->mipmap);
+        GXLoadTexObj(texBase + 0x20, GX_TEXMAP1);
+        numTexGens = 2;
+        GXSetNumIndStages(1);
+        fn_803CE8E0(0, 1, 1);
+        s32 sp8 = 0;
+        s32 spC = 0;
+        GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0);
+        GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+    } else {
+        GXSetTevDirect(0);
+        GXSetNumIndStages(0);
+    }
+    if (arg2 != NULL) {
+        GXInitTexObj(texBase + 0x40, arg2->img_ptr, arg2->width, arg2->height, arg2->format, GX_CLAMP, GX_CLAMP, (u8) arg2->mipmap);
+        GXLoadTexObj(texBase + 0x40, GX_TEXMAP2);
+        GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, 0x24U, GX_DISABLE, 0x7DU);
+        GXSetNumTexGens((u8) (numTexGens + 1));
+        GXSetNumTevStages(2U);
+        s32 sp14 = *(s32 *) &color;
+        GXSetTevKColor(0, &sp14);
+        GXSetTevKAlphaSel(GX_TEVSTAGE1, 0x1C);
+        GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD2, GX_TEXMAP2, GX_COLOR_NULL);
+        GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ONE, GX_CC_CPREV);
+        fn_803CEC68(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        fn_803CECD0(0, 0, 0, 0, 1, 0);
+        GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ONE, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+        fn_803CECD0(1, 1, 0, 0, 1, 0);
+    } else {
+        GXSetNumTexGens(numTexGens);
+        GXSetNumTevStages(1U);
+        s32 sp10 = *(s32 *) &color;
+        GXSetTevColor(GX_TEVREG0, &sp10);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ONE);
+        fn_803CECD0(0, 1, 0, 0, 1, 0);
+    }
+    GXClearVtxDesc();
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_TEX_S, GX_RGBA6, 0U);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_RGBA6, 0U);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    u16 width = arg0->width;
+    s32 rows = (s32) arg0->height / (s32) fn_803CDC34(texBase);
+    kar_a2d_game_lib__near_8028b358(farg1, farg2, (f32) width, (f32) arg0->height,
+                                     (f32) ((s32) width / (s32) fn_803CDC24(texBase, rows)), (f32) rows, farg4, farg3);
 }
 
 extern "C" void fn_8037D528(void *arg0, Vec4f *arg1) {

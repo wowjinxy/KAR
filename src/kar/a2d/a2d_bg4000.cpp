@@ -35,10 +35,18 @@ public:
     virtual void Init();
     virtual void v14();
     virtual void v18();
-    virtual void v1c();
+    virtual void v1c(s32);
     virtual void v20();
     virtual GameEffectItem *GetNext();
 };
+
+class BgFxItemBase {
+public:
+    virtual ~BgFxItemBase();
+    virtual u8 Match();
+};
+
+typedef u8 (BgFxItemBase::*BgFxMatchFn)();
 
 struct ParticleBuf {
     s32 pad0[2];
@@ -586,7 +594,7 @@ extern "C" void kar_a2d_bg4000__near_8033b954(BgObj *arg0) {
 }
 
 extern "C" s32 fn_8033BEEC(MeteorNode *arg0) {
-    return arg0->unk60 <= 0;
+    return arg0->unk60 <= 0 ? 1 : 0;
 }
 
 extern "C" void kar_a2d_bg4000__near_8033bf00(BgObj *arg0) {
@@ -808,9 +816,13 @@ extern "C" void kar_a2d_bg4000__near_8033dfa0(RotAccum *arg0, s32 arg1) {
     }
 }
 
-extern "C" void fn_8033E004(void *arg0, Vec3f *arg1) {
-    (void) arg0;
-    (void) arg1;
+extern "C" void fn_8033E004(void *arg0, f32 *arg1) {
+    arg1[0] = lbl_805E4418;
+    arg1[1] = lbl_805E43D8;
+    arg1[2] = *(f32 *) ((char *) arg0 + 104);
+    arg1[3] = lbl_805E43D8;
+    arg1[4] = lbl_805E4418;
+    arg1[5] = *(f32 *) ((char *) arg0 + 104);
 }
 
 extern "C" void kar_a2d_bg4000__near_8033e030(void) {
@@ -894,25 +906,27 @@ extern "C" MeteorNode *kar_a2d_bg4000__near_8033e298(MeteorNode *arg0, s16 arg1)
     return arg0;
 }
 
-extern "C" void kar_a2d_bg4000__near_8033e500(BgFxListMgr *arg0, s32 *arg1, s32 arg2) {
-    BgFxNode *end = &arg0->head;
+extern "C" void kar_a2d_bg4000__near_8033e500(BgFxListMgr *arg0, BgFxMatchFn arg1, s32 arg2) {
     BgFxNode *cur = arg0->head.next;
+    BgFxNode *end = &arg0->head;
 
     while (cur != end) {
-        if (__ptmf_scall((char *) cur + 8)) {
+        if ((((BgFxItemBase *) ((char *) cur + 8))->*arg1)()) {
             BgFxNode *scan = cur->next;
             while (scan != end) {
-                if (!__ptmf_scall((char *) scan + 8)) {
+                if (!(((BgFxItemBase *) ((char *) scan + 8))->*arg1)()) {
                     break;
                 }
                 scan = scan->next;
             }
             if (cur != scan) {
                 while (cur != scan) {
-                    BgFxNode *nextNode = cur->next;
-                    kar_a2d_bg4000__near_8033eb6c((BgFxPool *) lbl_805DD944, cur);
+                    BgFxNode *dead;
+                    ((GameEffectItemBase *) ((char *) cur + 8))->v1c(-1);
+                    dead = cur;
+                    cur = cur->next;
+                    kar_a2d_bg4000__near_8033eb6c((BgFxPool *) lbl_805DD944, dead);
                     arg0->unk0 -= 1;
-                    cur = nextNode;
                 }
             }
             cur = scan;
@@ -940,13 +954,13 @@ extern "C" void kar_a2d_bg4000__near_8033e604(BgFxNode **arg0, BgFxListMgr *arg1
         p->next = newNext;
         newNext->unk0 = (s32) p;
     }
-    do {
+    while (*arg2 != *arg3) {
         BgFxNode *n = *arg2;
-        __ptmf_scall((char *) n + 8);
+        ((GameEffectItemBase *) ((char *) n + 8))->v1c(-1);
         *arg2 = n->next;
         kar_a2d_bg4000__near_8033eb6c((BgFxPool *) lbl_805DD944, n);
         arg1->unk4 -= 1;
-    } while (*arg2 != *arg3);
+    }
     *arg0 = *arg3;
 }
 
@@ -1069,8 +1083,40 @@ extern "C" void *kar_a2d_bg4000__near_8033fa44(void *arg0, s16 arg1) {
     return arg0;
 }
 
-extern "C" void kar_a2d_bg4000__near_8033faa0(void *arg0) {
-    (void) arg0;
+struct RibbonState {
+    char pad0[4];
+    void *jobjA;
+    void *jobjB;
+    f32 width;
+    char pad10[8];
+    s32 unk18;
+    s32 unk1C;
+    f32 unk20;
+};
+
+struct RibbonOwner {
+    char pad0[12];
+    RibbonState *sub;
+};
+
+extern "C" void kar_a2d_bg4000__near_8033faa0(RibbonOwner *arg0) {
+    DiagResult *d;
+    char *table;
+    RibbonState *s = arg0->sub;
+
+    s->unk18 = 0;
+    s->unk1C = 0;
+    s->unk20 = lbl_805E4480;
+
+    d = (DiagResult *) kar_diag__803ad760(lbl_805DDBC0, 0, &lbl_805DAEF8, &lbl_805DAEF0, 0);
+    table = ((u32) d->unk14 == 1U) ? lbl_804E7614 : lbl_804E7660;
+    s->width = *(f32 *) (table + 40);
+
+    kar_a2d_game_lib__near_8028967c(s->jobjB, 0xFFFF, lbl_805E4480, lbl_805E4484);
+    kar_a2d_game_lib__near_80289730(s->jobjB, 0xFFFF, lbl_805E4480);
+    kar_a2d_game_lib__near_80289768(s->jobjB, 0xFFFF, lbl_805E4488);
+    kar_a2d_game_lib__near_80289768(s->jobjA, 0xFFFF, s->width);
+    kar_a2d_game_lib__near_80289768(s->jobjB, 32, s->width);
 }
 
 extern "C" void kar_a2d_bg4000__near_8033fb7c(void *arg0) {
