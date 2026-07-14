@@ -292,7 +292,7 @@ void kar_lbvector__near_80064900(s32, f32 *, f32 *, s32, s32, f32, f32, f32);
 
 void *kar_diag__803ad760(s32, s32, void *, void *, s32);
 
-void *fn_8034D1F8(void);
+void *TopRideItem_GetDataBase(void);
 void *fn_80305ABC(void *, u32);
 void __construct_array(void *, void *, void *, s32, s32);
 extern void *fn_802CD8DC;

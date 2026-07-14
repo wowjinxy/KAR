@@ -153,7 +153,7 @@ void kar_lbvector_dirs_to_euler(f32 *, f32 *, f32 *, f32, f32);
 
 void *kar_diag__803ad760(s32, s32, void *, void *, s32);
 
-void *fn_8034D1F8(void);
+void *TopRideItem_GetDataBase(void);
 void *fn_80305ABC(void *, u32);
 void __construct_array(void *, void *, s32, s32, s32);
 extern void *fn_802CD8DC;
@@ -822,7 +822,7 @@ extern "C" void kar_a2d_wipeeffect__near_8037f840(WipeLanternDrawObj *arg0) {
 
     if (arg0->unk28 != 0) {
         if (HSD_CObjSetCurrent(arg0->unk20)) {
-            void *im = fn_8034D1F8();
+            void *im = TopRideItem_GetDataBase();
             f32 imAlpha = *(f32 *) ((char *) im + 0x4E0);
             void *cobj = arg0->unk20;
             f32 invAlpha = 255.0f - imAlpha;
