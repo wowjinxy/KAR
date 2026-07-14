@@ -15,7 +15,7 @@ extern "C" {
 
 class VDispatch {
 public:
-    virtual void v0();
+    virtual void v0(s32);
     virtual void v1();
     virtual void v2();
     virtual void v3();
@@ -35,9 +35,43 @@ public:
     virtual void v17();
 };
 
+class VColorWidget {
+public:
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3(void *);
+    virtual void v4();
+    virtual void v5(void *);
+};
+
+struct Color4 {
+    u8 r, g, b, a;
+};
+
+struct Vec3f {
+    f32 x, y, z;
+};
+
+class VGeom {
+public:
+    virtual Vec3f *v0();
+    virtual f32 v1();
+};
+
 extern "C" {
 extern char lbl_804D40F0[0x2A08];
 extern char lbl_804D7F48[0x528];
+extern char lbl_804D1A98[0x80];
+extern char lbl_804D1EB8[0xC];
+extern char lbl_804D1EE4[0xE0];
+extern char lbl_804D20F0[0xE0];
+extern char lbl_804D21F4[0xE0];
+extern char lbl_804D6F5C[0xE4];
+
+void kar_a2d_kirbyjointanim__near_802effb8(s32, void *, s32);
+f32 fn_80296264(f32);
+f32 fn_8029626C(f32);
 extern char lbl_804F5230[0x3C];
 extern char lbl_804F526C[0x3C];
 extern char lbl_804F52A8[0x3C];
@@ -45,11 +79,39 @@ extern const f32 lbl_805E3690;
 extern const f32 lbl_805E3728;
 extern const f32 lbl_805E3730;
 extern const f32 lbl_805E3780;
+extern const f32 lbl_805E37A0;
+extern const f32 lbl_805E3834;
 extern const f32 lbl_805E3788;
+extern const f32 lbl_805E3870;
+extern const f32 lbl_805E3880;
+extern const f32 lbl_805E3940;
 
 void HSD_JObjAnimAll(void *jobj);
+void PSVECSubtract(void *, void *, void *);
+f32 PSVECSquareMag(void *);
 void *fn_803120C0(void *arg0);
 void *kar_fl_indirectload__near_80393820(void *arg0);
+void fn_8038CB78(void *arg0);
+
+extern void *lbl_805DD96C;
+extern void *lbl_805DD974;
+extern void *lbl_805DD97C;
+extern void *lbl_805DD984;
+extern void *lbl_805DD98C;
+
+extern char lbl_804D7104[0x60];
+extern char lbl_804D719C[0x60];
+extern char lbl_804D7260[0x68];
+extern char lbl_804D7300[0x68];
+extern char lbl_804D743C[0x60];
+extern char lbl_804D74D0[0x60];
+extern char lbl_804D7568[0x68];
+extern char lbl_804D7604[0x68];
+extern char lbl_804D76A0[0x60];
+extern char lbl_804D7700[0x38];
+extern char lbl_804BDB74[0x28];
+extern char lbl_804BF3C0[0x30];
+extern char lbl_804BF4DC[0x28];
 }
 
 extern "C" {
@@ -389,11 +451,12 @@ void ** fn_802DD880(void ** arg0);
 void * fn_802DD94C(void * arg0);
 void * fn_802DDA18(void * arg0);
 void * fn_802DDAE4(void * arg0);
-void fn_802DDBB0(void * arg0);
-void fn_802DDBE8(void * arg0);
-void fn_802DDC94(void * arg0);
-void fn_802DDD40(void * arg0);
-void fn_802DDDEC(void * arg0);
+void * fn_802DDBB0(void * arg0);
+void * fn_802DDBE8(void * arg0);
+void * fn_802DDC94(void * arg0);
+void * fn_802DDD40(void * arg0);
+void * fn_802DDDEC(void * arg0);
+void *fn_8038CB28(s32 size);
 void fn_802DDF30(void *** arg0, void *** arg1, void *** arg2, u8 (*arg3)(void **, void **), s32 arg_sp0);
 void fn_802DE038(void *** arg0, void *** arg1, u8 (*arg2)(void **, void **), s32 arg_sp0);
 void * fn_802DE0E4(void);
@@ -1286,9 +1349,15 @@ extern "C" void * fn_802D1FE8(void * arg0, void ** arg1, s8 arg2, u8 arg3, s8 ar
 }
 
 extern "C" void *** fn_802D3900(void *** arg0, void *** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void **n = *arg1;
+    void **old = *arg0;
+    if (old != n) {
+        if (old != 0) {
+            ((VDispatch *) old)->v0(1);
+        }
+        *arg0 = n;
+    }
+    return arg0;
 }
 
 extern "C" void ** fn_802D3964(void ** arg0, void **** arg1, void ** arg2, void ** arg3) {
@@ -1305,15 +1374,27 @@ extern "C" void fn_802D3B68(void ** arg0, f32 (*arg1)[3][4]) {
 }
 
 extern "C" void *** fn_802D3C28(void *** arg0, void *** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void **n = *arg1;
+    void **old = *arg0;
+    if (old != n) {
+        if (old != 0) {
+            ((VDispatch *) old)->v0(1);
+        }
+        *arg0 = n;
+    }
+    return arg0;
 }
 
 extern "C" void *** fn_802D3C8C(void *** arg0, void *** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void **n = *arg1;
+    void **old = *arg0;
+    if (old != n) {
+        if (old != 0) {
+            ((VDispatch *) old)->v0(1);
+        }
+        *arg0 = n;
+    }
+    return arg0;
 }
 
 extern "C" u32 fn_802D3CF0(void **** arg0, s32 arg1) {
@@ -1497,14 +1578,18 @@ extern "C" s32 fn_802D4C28(void) {
     return 0;
 }
 
+#pragma dont_inline on
 extern "C" f32 fn_802D4C30(f32 farg0) {
     return lbl_805E3728 / farg0;
 }
+#pragma dont_inline off
 
+#pragma dont_inline on
 extern "C" f32 fn_802D4C3C(f32 farg0) {
     f32 t = lbl_805E3728 / farg0;
     return t / farg0;
 }
+#pragma dont_inline off
 
 extern "C" s32 fn_802D4C4C(void * arg0, f32 * arg1, f32 * arg2) {
     (void) arg0;
@@ -1719,9 +1804,26 @@ extern "C" void **** fn_802D95A8(void **** arg0, s16 arg1) {
 }
 
 extern "C" void **** fn_802D962C(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D1EE4;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FS32(FP(arg0, 4), 0x4AC), &lbl_804D1EB8, 0);
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D1A98;
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" s32 fn_802D96C0(void) {
@@ -1749,7 +1851,11 @@ extern "C" void fn_802D97B8(void * arg0) {
 }
 
 extern "C" void fn_802D9800(f32 * arg0) {
-    (void) arg0;
+    f32 a = fn_80296264(lbl_805E3788);
+    f32 b = fn_8029626C(lbl_805E3788) * a;
+    f32 c = fn_802D4C3C(lbl_805E3788) * b;
+    f32 d = lbl_805E3788 * c;
+    *arg0 = lbl_805E3780 * d;
 }
 
 extern "C" f32 fn_802D9870(void) {
@@ -1757,7 +1863,11 @@ extern "C" f32 fn_802D9870(void) {
 }
 
 extern "C" void fn_802D9878(f32 * arg0) {
-    (void) arg0;
+    f32 a = fn_80296264(lbl_805E3788);
+    f32 b = fn_8029626C(lbl_805E3788) * a;
+    f32 c = fn_802D4C3C(lbl_805E3788) * b;
+    f32 d = lbl_805E3788 * c;
+    *arg0 = lbl_805E3780 * d;
 }
 
 extern "C" f32 fn_802D98E8(void) {
@@ -1809,9 +1919,26 @@ extern "C" s32 fn_802D9B3C(void * arg0) {
 }
 
 extern "C" void **** fn_802D9B98(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D20F0;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FS32(FP(arg0, 4), 0x4AC), &lbl_804D1EB8, 0);
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D1A98;
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" s32 fn_802D9C2C(void) {
@@ -1819,9 +1946,26 @@ extern "C" s32 fn_802D9C2C(void) {
 }
 
 extern "C" void **** fn_802D9C34(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D21F4;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D6F5C;
+    kar_a2d_kirbyjointanim__near_802effb8(FS32(FP(arg0, 4), 0x4AC), &lbl_804D1EB8, 0);
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D1A98;
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" s32 fn_802D9CC8(void) {
@@ -2014,7 +2158,11 @@ extern "C" s32 fn_802DA3CC(void * arg0) {
 }
 
 extern "C" void fn_802DA3D4(void * arg0) {
-    (void) arg0;
+    f32 a = fn_80296264(lbl_805E3788);
+    f32 b = fn_80296264(lbl_805E3788) * a;
+    f32 c = fn_802D4C30(lbl_805E37A0) * b;
+    f32 d = lbl_805E3788 * c;
+    FF32(arg0, 0xC0) = lbl_805E3780 * d;
 }
 
 extern "C" void **** fn_802DA444(void **** arg0, s16 arg1) {
@@ -2121,8 +2269,17 @@ extern "C" f32 fn_802DABD8(f32 farg0) {
 }
 
 extern "C" void fn_802DABEC(f32 * arg0, f32 * arg1) {
-    (void) arg0;
-    (void) arg1;
+    f32 threshold = lbl_805E3780 * lbl_805E3834;
+    f32 threshold2 = threshold;
+    f32 v = *arg1;
+    u32 ge = v >= threshold2;
+    f32 neg;
+    f32 *p = arg1;
+    if (!ge) {
+        neg = -v;
+        p = &neg;
+    }
+    *arg0 = *p;
 }
 
 extern "C" f32 fn_802DAC44(void * arg0, f32 * arg1, f32 farg0, f32 farg1) {
@@ -2218,48 +2375,213 @@ extern "C" void kar_diag__802dd040(void ** arg0, void * arg1, u32 arg2, f32 * ar
 }
 
 extern "C" void * fn_802DD7B4(void * arg0) {
-    (void) arg0;
-    return 0;
+    void * volatile old = 0;
+    void *n;
+    FP(arg0, 0) = 0;
+    FP(arg0, 4) = 0;
+    n = fn_8038CB28(0x2C08);
+    if (n != 0) {
+        n = fn_802DDDEC(n);
+    }
+    {
+        void * volatile tmp = n;
+        tmp = 0;
+        void * volatile dead = n;
+        void * volatile commit = n;
+        (void) dead;
+        if (old != n) {
+            if (old != 0) {
+                lbl_805DD98C = 0;
+                fn_8038CB78(old);
+            }
+            old = commit;
+        }
+        if (tmp != 0) {
+            lbl_805DD98C = 0;
+            fn_8038CB78(tmp);
+        }
+        FP(arg0, 8) = old;
+        old = 0;
+    }
+    {
+        void *node = (char *) arg0 + 0xC;
+        FP(node, 4) = node;
+        FP(arg0, 0xC) = node;
+    }
+    return arg0;
 }
 
 extern "C" void ** fn_802DD880(void ** arg0) {
-    (void) arg0;
-    return 0;
+    void * volatile old = 0;
+    void *n;
+    FP(arg0, 0) = 0;
+    FP(arg0, 4) = 0;
+    n = fn_8038CB28(0x4608);
+    if (n != 0) {
+        n = fn_802DDD40(n);
+    }
+    {
+        void * volatile tmp = n;
+        tmp = 0;
+        void * volatile dead = n;
+        void * volatile commit = n;
+        (void) dead;
+        if (old != n) {
+            if (old != 0) {
+                lbl_805DD984 = 0;
+                fn_8038CB78(old);
+            }
+            old = commit;
+        }
+        if (tmp != 0) {
+            lbl_805DD984 = 0;
+            fn_8038CB78(tmp);
+        }
+        FP(arg0, 8) = old;
+        old = 0;
+    }
+    {
+        void *node = (char *) arg0 + 0xC;
+        FP(node, 4) = node;
+        FP(arg0, 0xC) = node;
+    }
+    return (void **) arg0;
 }
 
 extern "C" void * fn_802DD94C(void * arg0) {
-    (void) arg0;
-    return 0;
+    void * volatile old = 0;
+    void *n;
+    FP(arg0, 0) = 0;
+    FP(arg0, 4) = 0;
+    n = fn_8038CB28(0x4008);
+    if (n != 0) {
+        n = fn_802DDC94(n);
+    }
+    {
+        void * volatile tmp = n;
+        tmp = 0;
+        void * volatile dead = n;
+        void * volatile commit = n;
+        (void) dead;
+        if (old != n) {
+            if (old != 0) {
+                lbl_805DD97C = 0;
+                fn_8038CB78(old);
+            }
+            old = commit;
+        }
+        if (tmp != 0) {
+            lbl_805DD97C = 0;
+            fn_8038CB78(tmp);
+        }
+        FP(arg0, 8) = old;
+        old = 0;
+    }
+    {
+        void *node = (char *) arg0 + 0xC;
+        FP(node, 4) = node;
+        FP(arg0, 0xC) = node;
+    }
+    return arg0;
 }
 
 extern "C" void * fn_802DDA18(void * arg0) {
-    (void) arg0;
-    return 0;
+    void * volatile old = 0;
+    void *n;
+    FP(arg0, 0) = 0;
+    FP(arg0, 4) = 0;
+    n = fn_8038CB28(0x7C08);
+    if (n != 0) {
+        n = fn_802DDBE8(n);
+    }
+    {
+        void * volatile tmp = n;
+        tmp = 0;
+        void * volatile dead = n;
+        void * volatile commit = n;
+        (void) dead;
+        if (old != n) {
+            if (old != 0) {
+                lbl_805DD974 = 0;
+                fn_8038CB78(old);
+            }
+            old = commit;
+        }
+        if (tmp != 0) {
+            lbl_805DD974 = 0;
+            fn_8038CB78(tmp);
+        }
+        FP(arg0, 8) = old;
+        old = 0;
+    }
+    {
+        void *node = (char *) arg0 + 0xC;
+        FP(node, 4) = node;
+        FP(arg0, 0xC) = node;
+    }
+    return arg0;
 }
 
 extern "C" void * fn_802DDAE4(void * arg0) {
-    (void) arg0;
-    return 0;
+    void * volatile old = 0;
+    void *n;
+    FP(arg0, 0) = 0;
+    FP(arg0, 4) = 0;
+    n = fn_8038CB28(0x818);
+    if (n != 0) {
+        n = fn_802DDBB0(n);
+    }
+    {
+        void * volatile tmp = n;
+        tmp = 0;
+        void * volatile dead = n;
+        void * volatile commit = n;
+        (void) dead;
+        if (old != n) {
+            if (old != 0) {
+                lbl_805DD96C = 0;
+                fn_8038CB78(old);
+            }
+            old = commit;
+        }
+        if (tmp != 0) {
+            lbl_805DD96C = 0;
+            fn_8038CB78(tmp);
+        }
+        FP(arg0, 8) = old;
+        old = 0;
+    }
+    {
+        void *node = (char *) arg0 + 0xC;
+        FP(node, 4) = node;
+        FP(arg0, 0xC) = node;
+    }
+    return arg0;
 }
 
-extern "C" void fn_802DDBB0(void * arg0) {
+extern "C" void * fn_802DDBB0(void * arg0) {
     (void) arg0;
+    return arg0;
 }
 
-extern "C" void fn_802DDBE8(void * arg0) {
+extern "C" void * fn_802DDBE8(void * arg0) {
     (void) arg0;
+    return arg0;
 }
 
-extern "C" void fn_802DDC94(void * arg0) {
+extern "C" void * fn_802DDC94(void * arg0) {
     (void) arg0;
+    return arg0;
 }
 
-extern "C" void fn_802DDD40(void * arg0) {
+extern "C" void * fn_802DDD40(void * arg0) {
     (void) arg0;
+    return arg0;
 }
 
-extern "C" void fn_802DDDEC(void * arg0) {
+extern "C" void * fn_802DDDEC(void * arg0) {
     (void) arg0;
+    return arg0;
 }
 
 extern "C" void fn_802DDF30(void *** arg0, void *** arg1, void *** arg2, u8 (*arg3)(void **, void **), s32 arg_sp0) {
@@ -2474,13 +2796,31 @@ extern "C" void fn_802E5D18(f32 * arg0, f32 * arg1, f32 * arg2, f32 farg0) {
 }
 
 extern "C" void fn_802E5D74(f32 * arg0, f32 * arg1) {
-    (void) arg0;
-    (void) arg1;
+    f32 threshold = lbl_805E3870 * lbl_805E3880;
+    f32 threshold2 = threshold;
+    f32 v = *arg1;
+    u32 ge = v >= threshold2;
+    f32 neg;
+    f32 *p = arg1;
+    if (!ge) {
+        neg = -v;
+        p = &neg;
+    }
+    *arg0 = *p;
 }
 
 extern "C" void fn_802E5DCC(f32 * arg0, f32 * arg1) {
-    (void) arg0;
-    (void) arg1;
+    f32 threshold = lbl_805E3870 * lbl_805E3940;
+    f32 threshold2 = threshold;
+    f32 v = *arg1;
+    u32 ge = v >= threshold2;
+    f32 neg;
+    f32 *p = arg1;
+    if (!ge) {
+        neg = -v;
+        p = &neg;
+    }
+    *arg0 = *p;
 }
 
 extern "C" f32 fn_802E5E24(f32 * arg0, f32 * arg1, f32 farg0, f32 farg1) {
@@ -2589,35 +2929,117 @@ extern "C" s32 fn_802E7F2C(void * arg0, void ** arg1) {
 }
 
 extern "C" u32 fn_802E7FE4(void * arg0, void ** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    VGeom *o = (VGeom *) arg1;
+    Vec3f *b;
+    Vec3f pos;
+    Vec3f sq;
+    f32 distSq;
+    f32 sumSq;
+    b = ((VGeom *) ((char *) arg0 + 0x24))->v0();
+    pos = *o->v0();
+    PSVECSubtract(&pos, b, &pos);
+    sq = pos;
+    distSq = PSVECSquareMag(&sq);
+    sumSq = o->v1() * o->v1()
+          + ((VGeom *) ((char *) arg0 + 0x24))->v1() * ((VGeom *) ((char *) arg0 + 0x24))->v1();
+    return distSq < sumSq;
 }
 
 extern "C" void fn_802E8134(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v3(&c);
 }
 
 extern "C" void **** fn_802E817C(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7104;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D7104 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BDB74;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" u32 fn_802E8228(void * arg0, void ** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    VGeom *o = (VGeom *) arg1;
+    Vec3f *b;
+    Vec3f pos;
+    Vec3f sq;
+    f32 distSq;
+    f32 sumSq;
+    b = ((VGeom *) ((char *) arg0 + 0x24))->v0();
+    pos = *o->v0();
+    PSVECSubtract(&pos, b, &pos);
+    sq = pos;
+    distSq = PSVECSquareMag(&sq);
+    sumSq = o->v1() * o->v1()
+          + ((VGeom *) ((char *) arg0 + 0x24))->v1() * ((VGeom *) ((char *) arg0 + 0x24))->v1();
+    return distSq < sumSq;
 }
 
 extern "C" void fn_802E8378(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v3(&c);
 }
 
 extern "C" void **** fn_802E83C0(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D719C;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D719C + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BDB74;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" void fn_802E846C(s32 arg0) {
@@ -2625,13 +3047,43 @@ extern "C" void fn_802E846C(s32 arg0) {
 }
 
 extern "C" void fn_802E8490(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v5(&c);
 }
 
 extern "C" void **** fn_802E84D8(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7260;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D7260 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BF3C0;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" void fn_802E8584(s32 arg0) {
@@ -2639,23 +3091,69 @@ extern "C" void fn_802E8584(s32 arg0) {
 }
 
 extern "C" void fn_802E85A8(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v5(&c);
 }
 
 extern "C" void **** fn_802E85F0(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7300;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D7300 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BF3C0;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" u32 fn_802E869C(void * arg0, void ** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    VGeom *o = (VGeom *) arg1;
+    Vec3f *b;
+    Vec3f pos;
+    Vec3f sq;
+    f32 distSq;
+    f32 sumSq;
+    b = ((VGeom *) ((char *) arg0 + 0x24))->v0();
+    pos = *o->v0();
+    PSVECSubtract(&pos, b, &pos);
+    sq = pos;
+    distSq = PSVECSquareMag(&sq);
+    sumSq = o->v1() * o->v1()
+          + ((VGeom *) ((char *) arg0 + 0x24))->v1() * ((VGeom *) ((char *) arg0 + 0x24))->v1();
+    return distSq < sumSq;
 }
 
 extern "C" void fn_802E87EC(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v3(&c);
 }
 
 extern "C" void **** fn_802E8834(void **** arg0, s16 arg1) {
@@ -2665,25 +3163,91 @@ extern "C" void **** fn_802E8834(void **** arg0, s16 arg1) {
 }
 
 extern "C" void **** fn_802E88F8(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D743C;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D743C + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BDB74;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" u32 fn_802E89A4(void * arg0, void ** arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    VGeom *o = (VGeom *) arg1;
+    Vec3f *b;
+    Vec3f pos;
+    Vec3f sq;
+    f32 distSq;
+    f32 sumSq;
+    b = ((VGeom *) ((char *) arg0 + 0x24))->v0();
+    pos = *o->v0();
+    PSVECSubtract(&pos, b, &pos);
+    sq = pos;
+    distSq = PSVECSquareMag(&sq);
+    sumSq = o->v1() * o->v1()
+          + ((VGeom *) ((char *) arg0 + 0x24))->v1() * ((VGeom *) ((char *) arg0 + 0x24))->v1();
+    return distSq < sumSq;
 }
 
 extern "C" void fn_802E8AF4(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v3(&c);
 }
 
 extern "C" void **** fn_802E8B3C(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D74D0;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D74D0 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BDB74;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" void fn_802E8BE8(s32 arg0) {
@@ -2691,13 +3255,43 @@ extern "C" void fn_802E8BE8(s32 arg0) {
 }
 
 extern "C" void fn_802E8C0C(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v5(&c);
 }
 
 extern "C" void **** fn_802E8C54(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7568;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D7568 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BF3C0;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" void fn_802E8D00(s32 arg0) {
@@ -2705,13 +3299,43 @@ extern "C" void fn_802E8D00(s32 arg0) {
 }
 
 extern "C" void fn_802E8D24(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v5(&c);
 }
 
 extern "C" void **** fn_802E8D6C(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7604;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D7604 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BF3C0;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" s32 fn_802E8E18(void * arg0, void ** arg1) {
@@ -2721,13 +3345,43 @@ extern "C" s32 fn_802E8E18(void * arg0, void ** arg1) {
 }
 
 extern "C" void fn_802E9004(void * arg0) {
-    (void) arg0;
+    Color4 c;
+    c.r = 0xFF;
+    c.g = 0;
+    c.b = 0xFF;
+    c.a = 0xFF;
+    ((VColorWidget *) ((char *) arg0 + 0x24))->v3(&c);
 }
 
 extern "C" void **** fn_802E904C(void **** arg0, s16 arg1) {
-    (void) arg0;
-    (void) arg1;
-    return 0;
+    void *e;
+    if (arg0 == 0) {
+        goto skip_all;
+    }
+    *(void **) arg0 = (void *) &lbl_804D76A0;
+    e = (char *) arg0 + 0x24;
+    *(void **) e = (void *) ((char *) &lbl_804D76A0 + 0x38);
+    if (e == 0) {
+        goto skip1;
+    }
+    *(void **) e = (void *) &lbl_804BDB74;
+skip1:
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804D7700;
+    if (arg0 == 0) {
+        goto skip2;
+    }
+    *(void **) arg0 = (void *) &lbl_804BF4DC;
+    ((VDispatch *) arg0)->v5();
+skip2:
+    if (arg1 <= 0) {
+        goto skip_all;
+    }
+    fn_8038CB78(arg0);
+skip_all:
+    return arg0;
 }
 
 extern "C" void **** fn_802E90F8(void **** arg0, s16 arg1) {
