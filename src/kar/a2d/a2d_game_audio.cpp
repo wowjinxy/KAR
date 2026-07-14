@@ -130,7 +130,7 @@ void PSVECSubtract(void *, void *, void *);
 void PSVECScale(void *, void *, f32);
 void PSVECNormalize(void *, void *);
 f32 PSVECMag(void *);
-f64 fn_803BD3C8(f32, f32);
+f64 kar_atan2(f32, f32);
 
 s32 kar_lbaudio__near_8005b8ac(void);
 s32 kar_lbaudio__near_8005e184(void);
@@ -148,7 +148,7 @@ s32 kar_lbaudio_is_track_handle_playing(s32);
 void kar_lbaudio_set_track_mode_fixed_position(s32, s32, f32);
 void kar_lbaudio_stop_track_handle_chain(void *);
 
-extern f32 lbl_805E4B08;
+extern volatile f32 lbl_805E4B08;
 extern f32 lbl_805DC8BC[];
 extern s32 lbl_805DDB18;
 extern s32 lbl_805DDB44;
@@ -220,7 +220,9 @@ extern "C" void kar_a2d_game_audio__803789c4(EngineAudioState *arg0) {
     SoundHandle *item;
 
     cam = ((GameCameraHolder *) kar_diag__803ad760(lbl_805DDB7C, 0, &lbl_805DBB70, &lbl_805DBB68, 0))->unk8;
-    outVec = *(FloatArr3 *) &lbl_8048B3A0;
+    ((s32 *) &outVec)[0] = ((s32 *) &lbl_8048B3A0)[0];
+    ((s32 *) &outVec)[1] = ((s32 *) &lbl_8048B3A0)[1];
+    ((s32 *) &outVec)[2] = ((s32 *) &lbl_8048B3A0)[2];
     PSVECSubtract(&cam->unk28->pos, &cam->unk24->pos, &delta);
 
     if (delta.x > lbl_805E4B08) {
@@ -306,7 +308,7 @@ extern "C" void kar_a2d_game_audio__803789c4(EngineAudioState *arg0) {
             if (PSVECMag(&rel) > lbl_805E4B08) {
                 f32 angle;
                 PSVECNormalize(&rel, &rel);
-                angle = (f32) fn_803BD3C8(-rel.x, rel.y);
+                angle = (f32) kar_atan2(-rel.x, rel.y);
                 kar_lbaudio__near_8005f688(item->unk10, (s32) (57.29578f * angle) + 0xB3, angle);
             }
         }
@@ -367,42 +369,45 @@ extern "C" void kar_a2d_game_audio__near_80378f44(EngineAudioState *arg0, s32 un
 }
 
 extern "C" s32 kar_a2d_game_audio__near_80378fb4(EngineAudioState *arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4) {
-    EngineChannel *chan = &arg0->ch[arg2];
-    s32 kind = chan->unk0;
-    s32 vol0 = arg4 ? chan->unk4 : chan->unk8;
+    s32 vol0 = arg4 ? arg0->ch[arg2].unk4 : arg0->ch[arg2].unk8;
     s32 handle;
+    EngineChannel *chan = &arg0->ch[arg2];
 
-    if (arg0->unk70 == kind || arg0->unk70 == 3) {
-        return -1;
+    if (arg0->unk70 == chan->unk0 || arg0->unk70 == 3) {
+        handle = -1;
+        goto done;
     }
     handle = kar_lbaudio__near_8005f57c(arg1, vol0, chan->unkC);
     if (handle != -1 && arg3 != 0) {
         FloatArr5 tiers = *(FloatArr5 *) &lbl_8048B3AC;
         f32 vol = 255.0f;
-        if (arg0->unk74 == kind || arg0->unk74 == 3) {
+        if (arg0->unk74 == chan->unk0 || arg0->unk74 == 3) {
             vol *= 0.4f;
         }
-        if (arg0->unk78 == 1 || arg0->unk78 == kind) {
+        if (arg0->unk78 == 1 || arg0->unk78 == chan->unk0) {
             vol *= tiers.v[arg0->unk80];
-        } else if (arg0->unk78 == 2 || arg0->unk78 == kind) {
+        } else if (arg0->unk78 == 2 || arg0->unk78 == chan->unk0) {
             vol *= tiers.v[arg0->unk84];
         } else if (arg0->unk78 == 3) {
             vol *= tiers.v[arg0->unk80 + arg0->unk84];
         }
         kar_a2d_game_audio__near_80379310(arg0, handle, (s32) vol);
-        if (arg0->unk7C == kind || arg0->unk7C == 3) {
+        if (arg0->unk7C == chan->unk0 || arg0->unk7C == 3) {
             IntArr4 pans = *(IntArr4 *) &lbl_8048B3C0;
             kar_a2d_game_audio__near_803792dc(arg0, handle, pans.v[arg2]);
         }
     }
+done:
     return handle;
 }
 
 extern "C" s32 kar_a2d_game_audio__near_8037919c(EngineAudioState *arg0, s32 arg1, s32 arg2, s32 arg3) {
-    if (arg0->ch[arg2].unk0 == arg0->unk70 || arg0->unk70 == 3) {
+    s32 kind = arg0->unk70;
+    s32 vol = arg0->unk60[arg3];
+    if (kind == arg0->ch[arg2].unk0 || kind == 3) {
         return -1;
     }
-    return kar_lbaudio__near_8005f57c(arg1, arg0->unk60[arg3], arg0->ch[arg2].unkC);
+    return kar_lbaudio__near_8005f57c(arg1, vol, arg0->ch[arg2].unkC);
 }
 
 extern "C" void kar_a2d_game_audio__near_803791fc(EngineAudioState *arg0, s32 arg1, s32 arg2) {
@@ -589,9 +594,10 @@ extern "C" s32 kar_a2d_game_audio__near_8037967c(SoundHandle *arg0, s32 arg1, Ve
 #pragma push
 #pragma dont_inline on
 extern "C" s32 kar_a2d_game_audio__near_80379784(SoundHandle *arg0, s32 arg1, Vec3 *arg2) {
-    s32 result = 0;
+    s32 result;
 
     kar_a2d_game_audio__near_803799b8(arg0);
+    result = 0;
     switch (arg0->unkC) {
     case 0:
         arg0->unk10 = kar_a2d_game_audio__near_80378e04((EngineAudioState *) lbl_805DDC70, arg1);
@@ -624,12 +630,14 @@ extern "C" s32 kar_a2d_game_audio__near_80379784(SoundHandle *arg0, s32 arg1, Ve
 #pragma push
 #pragma dont_inline on
 extern "C" s32 kar_a2d_game_audio__near_8037989c(SoundHandle *arg0, s32 arg1) {
-    s32 result = 0;
+    s32 result;
+    s32 playing = kar_lbaudio_is_track_handle_playing(arg0->unk10);
 
-    if (kar_lbaudio_is_track_handle_playing(arg0->unk10) && arg1 == arg0->unk14) {
+    if (((u32) (-playing | playing) >> 31) && arg1 == arg0->unk14) {
         return 1;
     }
     kar_a2d_game_audio__near_803799b8(arg0);
+    result = 0;
     switch (arg0->unkC) {
     case 0:
         arg0->unk10 = kar_a2d_game_audio__near_80378e04((EngineAudioState *) lbl_805DDC70, arg1);
