@@ -30,6 +30,8 @@ void HSD_TExpSetupTev(void *, void *);
 
 void HSD_MtxAlloc(void);
 void HSD_RObjLoadDesc(s32);
+void HSD_DObjSetDefaultClass(HSD_DObjInfo *);
+void HSD_MObjSetDefaultClass(HSD_MObjInfo *);
 
 void HSD_PadRumbleOffH(u8);
 void HSD_PadRumbleOffN(u8);
@@ -58,16 +60,11 @@ s32 strncmp(char *, char *, s32);
 
 }
 
+#pragma push
+#pragma inline_max_size(600)
 extern "C" u8 kar_fl_indirectload__80391f10(s8 *arg0, s8 *arg1) {
-    while (1) {
-        s8 c0 = *arg0;
-        if (c0 == 0) {
-            break;
-        }
-        s8 c1 = *arg1;
-        if (c1 == 0) {
-            break;
-        }
+    s8 c0, c1;
+    while ((c0 = *arg0) != 0 && (c1 = *arg1) != 0) {
         if (c0 == c1 || c0 == '?') {
             arg0++;
             arg1++;
@@ -91,6 +88,7 @@ extern "C" u8 kar_fl_indirectload__80391f10(s8 *arg0, s8 *arg1) {
     while (*arg0 == '*') arg0++;
     return (*arg0 == 0) && (*arg1 == 0);
 }
+#pragma pop
 
 struct TexExtRow {
     void *unk0;
@@ -184,7 +182,76 @@ extern "C" void kar_fl_indirectload__near_80394c60(char *arg0) {
     }
 }
 
+struct NamePair {
+    char *a;
+    char *b;
+};
+
+class RcListItem {
+public:
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3();
+    virtual void v4();
+    virtual void v5();
+    virtual void v6();
+    virtual RcListItem *GetNext();
+    virtual void v8();
+    virtual void v9();
+    virtual u8 v10();
+    s32 pad4[2];
+    void *unkC;
+    s32 unk10;
+    f32 unk14;
+};
+
+extern "C" s32 lbl_805DDB24;
+extern "C" NamePair lbl_805DC130;
+extern "C" NamePair lbl_805DC128;
+
+extern "C" s32 kar_fl_indirectload__near_80394e64(f32 *arg0, f32 farg0);
+
 extern "C" void kar_fl_indirectload__near_80394cd4(void *arg0) {
+    u8 *arg0b = (u8 *) arg0;
+    if (arg0b[0x24] != 0 && arg0b[0x29] != 0) {
+        f32 vals[4];
+        vals[3] = lbl_805E4FA8;
+        vals[2] = lbl_805E4FA8;
+        vals[1] = lbl_805E4FA8;
+        vals[0] = lbl_805E4FA8;
+        RcListItem *item = (RcListItem *) kar_diag__803ad760(lbl_805DDB24, 0, &lbl_805DC130, &lbl_805DC128, 0);
+        while (item != NULL) {
+            if (arg0b[item->unk10 + 0x25] != 0) {
+                item->v10();
+                f32 *dst = &vals[item->unk10];
+                f32 *src = (item->unk14 < *dst) ? dst : &item->unk14;
+                *dst = *src;
+            }
+            item = item->GetNext();
+        }
+        u8 *p = arg0b;
+        f32 *v = vals;
+        u32 i;
+        for (i = 0; i < 4; i++) {
+            if (arg0b[i + 0x25] != 0) {
+                *(s32 *) (p + 0x14) = kar_fl_indirectload__near_80394e64((f32 *) (p + 4), *v);
+                switch (*(s32 *) (p + 0x14)) {
+                case 0:
+                    HSD_PadRumbleOn((u8) i);
+                    break;
+                case 1:
+                    HSD_PadRumbleOffH((u8) i);
+                    break;
+                case 2:
+                    HSD_PadRumbleOffN((u8) i);
+                    break;
+                }
+            }
+            p += 4;
+            v += 1;
+        }
+    }
 }
 
 extern "C" s32 kar_fl_indirectload__near_80394e64(f32 *arg0, f32 farg0) {
@@ -326,7 +393,64 @@ extern "C" void *kar_fl_indirectload__near_80395e2c(void **arg0, s16 arg1) {
     return arg0;
 }
 
+struct FloatCurveArr {
+    f32 *unk0;
+    s32 unk4;
+};
+
+class RcCurvePlayer {
+public:
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3();
+    virtual void v4();
+    virtual void v5();
+    virtual void v6();
+    virtual void v7();
+    virtual void v8();
+    virtual void SetValue(f32);
+    char pad4[0x10];
+    f32 unk14;
+    u32 unk18;
+    s32 unk1C;
+    u32 unk20;
+    f32 unk24;
+    u8 unk28;
+};
+
+extern "C" f32 kar_fl_indirectload__near_80395fbc(FloatCurveArr *arg0, f32 farg0);
+extern "C" f64 lbl_805E4FB0;
+
+static inline f32 u32_to_f32_biased(u32 v) {
+    f64 d;
+    ((u32 *) &d)[0] = 0x43300000;
+    ((u32 *) &d)[1] = v;
+    return (f32) (d - lbl_805E4FB0);
+}
+
 extern "C" void kar_fl_indirectload__near_80395e88(void *arg0) {
+    RcCurvePlayer *obj = (RcCurvePlayer *) arg0;
+    if (obj->unk18 == 0) {
+        obj->unk14 = lbl_805E4FA8;
+        return;
+    }
+    FloatCurveArr tmp;
+    tmp.unk0 = (f32 *) obj->unk18;
+    tmp.unk4 = obj->unk1C;
+    obj->SetValue(obj->unk24 * kar_fl_indirectload__near_80395fbc(&tmp, u32_to_f32_biased(obj->unk20)));
+    s32 count = kar_a2d_kurakko__near_80378568((void **) &tmp);
+    u32 old20 = obj->unk20;
+    f32 lastX = tmp.unk0[(count - 1) * 2];
+    f32 oldF = u32_to_f32_biased(old20);
+    obj->unk20 = old20 + 1;
+    if (lastX <= oldF) {
+        obj->unk20 = 0;
+        if (obj->unk28 == 0) {
+            obj->unk18 = 0;
+            obj->SetValue(lbl_805E4FA8);
+        }
+    }
 }
 
 extern "C" void fn_80395F8C(s32 *arg0) {
@@ -341,11 +465,6 @@ extern "C" void fn_80395FAC(s32 *arg0) {
     arg0[6] += 2;
 }
 
-struct FloatCurveArr {
-    f32 *unk0;
-    s32 unk4;
-};
-
 extern "C" s32 kar_fl_indirectload__near_80396068(FloatCurveArr *arg0, f32 farg0);
 
 extern "C" f32 kar_fl_indirectload__near_80395fbc(FloatCurveArr *arg0, f32 farg0) {
@@ -356,8 +475,7 @@ extern "C" f32 kar_fl_indirectload__near_80395fbc(FloatCurveArr *arg0, f32 farg0
     s32 count = kar_a2d_kurakko__near_80378568((void **) arg0);
     if (idx >= count - 1) {
         s32 count2 = kar_a2d_kurakko__near_80378568((void **) arg0);
-        char *p = (char *) arg0->unk0 + count2 * 8;
-        return *(f32 *) (p - 4);
+        return arg0->unk0[count2 * 2 - 1];
     }
     char *p1 = (char *) arg0->unk0 + idx * 8;
     char *p2 = (char *) arg0->unk0 + (idx + 1) * 8;
@@ -500,8 +618,43 @@ extern "C" void *kar_fl_indirectload__80396e88(char *arg0, void *arg1, u8 arg2) 
     return jobj;
 }
 
+extern "C" u8 lbl_805DDCB8;
+
 extern "C" void *kar_fl_indirectload__80396f54(void *arg0) {
-    return NULL;
+    lbl_805DDCB8 = 0;
+    char *name1 = *(char **) ((char *) arg0 - 4);
+    if (name1 == NULL) {
+        name1 = (char *) &lbl_805DC170;
+    }
+    u32 matched1 = kar_fl_indirectload__80391f10((s8 *) lbl_804F5794, (s8 *) name1) != 0;
+    void *jobj;
+    if (arg0 == NULL) {
+        jobj = NULL;
+    } else {
+        char *name2 = *(char **) ((char *) arg0 - 4);
+        if (name2 == NULL) {
+            name2 = (char *) &lbl_805DC170;
+        }
+        u8 matched2 = kar_fl_indirectload__80391f10((s8 *) lbl_804F5794, (s8 *) name2);
+        char *className = *(char **) arg0;
+        HSD_ClassInfo *found = NULL;
+        if (className != NULL) {
+            found = hsdSearchClassInfo(className);
+        }
+        if (found == NULL) {
+            jobj = HSD_JObjAlloc();
+        } else {
+            jobj = hsdNew(found);
+            if (jobj == NULL) {
+                __assert((char *) kar_src_fl_indirectload_804f5750, 0x26B, lbl_805DC174);
+            }
+        }
+        kar_fl_indirectload__80396c8c(jobj, arg0, NULL, matched2, matched1);
+    }
+    HSD_JObjResolveRefsAll((HSD_JObj *) jobj, (HSD_Joint *) arg0);
+    HSD_DObjSetDefaultClass(NULL);
+    HSD_MObjSetDefaultClass(NULL);
+    return jobj;
 }
 
 extern "C" u32 kar_fl_indirectload__near_80397080(s32 arg0) {
@@ -515,11 +668,6 @@ extern "C" void kar_fl_indirectload__near_80397094(void *arg0) {
 extern "C" void kar_fl_indirectload__near_803973a4(void *arg0) {
 }
 
-struct NamePair {
-    char *a;
-    char *b;
-};
-
 extern "C" s32 lbl_805DDAA0;
 extern "C" NamePair lbl_805DC198;
 extern "C" NamePair lbl_805DC1A0;
@@ -530,23 +678,6 @@ extern "C" NamePair lbl_805DC190;
 extern "C" void kar_fl_indirectload__near_80397970(void) {
     kar_diag__803ad760(lbl_805DDAA0, 0, &lbl_805DC198, &lbl_805DC1A0, 0);
 }
-
-class RcListItem {
-public:
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5();
-    virtual void v6();
-    virtual RcListItem *GetNext();
-    virtual void v8();
-    virtual void v9();
-    virtual u8 v10();
-    s32 pad4[2];
-    void *unkC;
-};
 
 extern "C" void kar_fl_indirectload__near_80397c28(s32 arg0, void *arg1, void *arg2, s32 arg3, s32 arg4);
 
