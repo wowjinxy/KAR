@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/KARToolkit.Cli/KARToolkit.Cli.csproj" />
+    <Project Path="src/KARToolkit.Core/KARToolkit.Core.csproj" />
+  </Folder>
+</Solution>

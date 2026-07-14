@@ -1,0 +1,3 @@
+[submodule "external/HSDLib"]
+	path = external/HSDLib
+	url = https://github.com/wowjinxy/HSDLib.git

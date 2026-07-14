@@ -1,0 +1,24 @@
+# KAR Toolkit
+
+`tools/kar-toolkit` is the KAR-owned tooling layer built on top of HSDLib.
+
+## Layout
+
+- `src/KARToolkit.Core`: project-safe KAR file indexing, archive inspection, map bundle grouping, copy-to-output helpers, and validation.
+- `src/KARToolkit.Cli`: command-line entry point for batch inspection, validation, JSON output, and safe copy operations.
+- `external/HSDLib`: external HSD parsing/viewer dependency. KAR-specific workflows should live here only when they are viewer UI glue or low-level HSD support.
+
+## Build
+
+```powershell
+dotnet build .\tools\kar-toolkit\KARToolkit.slnx --no-restore /p:UseSharedCompilation=false
+```
+
+## CLI
+
+```powershell
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
+```
+
+All copy commands write to the configured output folder and leave the extracted source folder untouched.
