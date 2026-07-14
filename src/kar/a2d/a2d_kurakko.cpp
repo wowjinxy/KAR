@@ -187,7 +187,7 @@ void fn_803B4D80(void *, const char *, void *);
 void *fn_802AFD4C(void **, void **);
 void fn_802B0AB8(void *, s32, s32 *, void **);
 void *fn_802DE0E4(s32, f32);
-void *fn_8034D1F8(void);
+void *TopRideItem_GetDataBase(void);
 void fn_802E99F8(Vec3f *, Vec3f *, Vec3f *, f32, f32);
 void fn_802FE674(Vec3f *, Vec3f *, Vec3f *, s32, Vec3f *, f32);
 void *fn_8031A74C(void *, f32, f32);
@@ -702,10 +702,10 @@ extern "C" void kar_a2d_kurakko__near_8036dbf8(KurakkoObj *arg0) {
             *(u8 *) ((char *) arg0 + 0x70) = 1;
         }
     }
-    if ((u32) timer == (u32) *(u32 *) ((char *) fn_8034D1F8() + 0x35C)) {
+    if ((u32) timer == (u32) *(u32 *) ((char *) TopRideItem_GetDataBase() + 0x35C)) {
         *(s32 *) ((char *) arg0 + 0x124) = 0;
     }
-    f32 rate = *(f32 *) ((char *) fn_8034D1F8() + 0x368);
+    f32 rate = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x368);
     f32 scale = rate / lbl_805E4860;
     Vec3f *accel = (Vec3f *) ((char *) arg0 + 0x2C);
     PSVECScale(accel, accel, scale);
@@ -718,7 +718,7 @@ extern "C" void kar_a2d_kurakko__near_8036dbf8(KurakkoObj *arg0) {
 
 extern "C" void kar_a2d_kurakko__near_8036df38(KurakkoObj *arg0, u32 arg1) {
     if (*(u16 *) ((char *) arg0 + 0x7A) == 0) {
-        char *cfg = (char *) fn_8034D1F8();
+        char *cfg = (char *) TopRideItem_GetDataBase();
         kar_a2d_effecthandle__near_8037b33c((char *) arg0 + 0x7C, 0);
         Vec3f *pos = CallV00(arg0);
         HSD_JObj *j = arg0->unkD4;
@@ -1073,12 +1073,12 @@ extern "C" void kar_a2d_kurakko__near_8036edd8(KurakkoObj *arg0) {
     SetTranslate_G2(j, &tr);
 
     Vec3f sc = { 1.0f, 1.0f, 1.0f };
-    PSVECScale(&sc, &sc, *(f32 *) ((char *) fn_8034D1F8() + 0x548));
+    PSVECScale(&sc, &sc, *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x548));
     HSD_JObj *j2 = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), NULL);
     SetScale_G2(j2, &sc);
 
     *(s32 *) ((char *) arg0 + 0x88) = 0;
-    f32 rad = *(f32 *) ((char *) fn_8034D1F8() + 0x53C);
+    f32 rad = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x53C);
     *(f32 *) ((char *) arg0 + 0xC0) = 0.017453292f * rad;
     *(f32 *) ((char *) arg0 + 0xC4) = 0.0f;
     *(f32 *) ((char *) arg0 + 0xC8) = 0.0f;
@@ -1108,7 +1108,7 @@ extern "C" void kar_a2d_kurakko__near_8036edd8(KurakkoObj *arg0) {
     Vec3f half;
     PSVECScale(&half, &mid, 0.5f);
     *(Vec3f *) ((char *) arg0 + 0xDC) = half;
-    f32 e4 = *(f32 *) ((char *) fn_8034D1F8() + 0x558);
+    f32 e4 = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x558);
     f32 *pE4 = (f32 *) ((char *) arg0 + 0xE4);
     *pE4 = *pE4 + e4;
     f32 minE4 = *(f32 *) ((char *) fn_803124F0(e4) + 0x1C);
@@ -1119,14 +1119,14 @@ extern "C" void kar_a2d_kurakko__near_8036edd8(KurakkoObj *arg0) {
 
 extern "C" void kar_a2d_kurakko__near_8036f1b8(KurakkoObj *arg0) {
     *(u32 *) ((char *) arg0 + 0xA0) = 0;
-    f32 rate = *(f32 *) ((char *) fn_8034D1F8() + 0x540);
+    f32 rate = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x540);
     *(u32 *) ((char *) arg0 + 0xD0) = (u32) rate;
     fn_8038D0E8((char *) arg0 + 0x8C, &lbl_804F08DC, 1, rate);
     kar_a2d_kurakko__near_8036f214(arg0);
 }
 
 extern "C" void kar_a2d_kurakko__near_8036f214(KurakkoObj *arg0) {
-    f32 spread = *(f32 *) ((char *) fn_8034D1F8() + 0x550);
+    f32 spread = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x550);
     HSD_JObj *j = fn_8038D0A8((HSD_JObj *) ((char *) arg0 + 0x8C), NULL);
     f32 *base = (f32 *) ((char *) arg0 + 0xC);
     base[0] = j->translate.x;
@@ -1136,7 +1136,7 @@ extern "C" void kar_a2d_kurakko__near_8036f214(KurakkoObj *arg0) {
     base2[0] = base[0];
     base2[1] = base[1] + 2.0f;
     base2[2] = base[2];
-    f32 depth = *(f32 *) ((char *) fn_8034D1F8() + 0x554);
+    f32 depth = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x554);
     f32 r = HSD_Randf();
     f32 *end = (f32 *) ((char *) arg0 + 0x54);
     f32 *dc = (f32 *) ((char *) arg0 + 0xDC);
@@ -1215,7 +1215,7 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
     s32 state = FS32(arg0, 0xA0);
     switch (state) {
     case 0: {
-        f32 t = 1.0f - ((f32) FU32(arg0, 0xD0) / *(f32 *) ((char *) fn_8034D1F8() + 0x540));
+        f32 t = 1.0f - ((f32) FU32(arg0, 0xD0) / *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x540));
         f32 tt = t;
         if (t == 1.0f) {
             tt = 0.999999f;
@@ -1226,8 +1226,8 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
         splGetCardinalPoint(&p, (char *) arg0 + (idx * 0xC) + 0xC, idxF - (f32) idx);
         SetTransFa8c(arg0, &p);
         Vec3f s = *(Vec3f *) &lbl_8048A580;
-        f32 rate = *(f32 *) ((char *) fn_8034D1F8() + 0x548);
-        PSVECScale(&s, &s, (t * *(f32 *) ((char *) fn_8034D1F8() + 0x54C)) + rate);
+        f32 rate = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x548);
+        PSVECScale(&s, &s, (t * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x54C)) + rate);
         SetScaleFa8c(arg0, &s);
         if (FU32(arg0, 0xD0) == 0xC) {
             fn_8038D0E8((char *) arg0 + 0x8C, (void *) (nameBase + 0x32C), 1, 0.0f);
@@ -1249,7 +1249,7 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
         f32 t0 = kar_a2d_game_lib__near_802899d0();
         fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
         if ((kar_a2d_game_lib__near_80289928() - t0) == 1.0f) {
-            f32 dur = *(f32 *) ((char *) fn_8034D1F8() + 0x544);
+            f32 dur = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x544);
             FU32(arg0, 0xD0) = (u32) dur;
             HSD_JObj *j = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
             FF32(arg0, 0xC) = j->translate.x;
@@ -1362,7 +1362,7 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
             if (timer != 0) {
                 FU32(arg0, 0xD0) = timer - 1;
             } else {
-                f32 dur = *(f32 *) ((char *) fn_8034D1F8() + 0x544);
+                f32 dur = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x544);
                 FU32(arg0, 0xD0) = (u32) dur;
                 HSD_JObj *j = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
                 FF32(arg0, 0xC) = j->translate.x;
@@ -1438,9 +1438,9 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
         if ((kar_a2d_game_lib__near_80289928() - t2) == 1.0f) {
             FS32(arg0, 0x144) = 0;
             u32 rd4 = FU32(arg0, 0xD4);
-            s32 lt = rd4 < (u32) *(u32 *) ((char *) fn_8034D1F8() + 0x564);
+            s32 lt = rd4 < (u32) *(u32 *) ((char *) TopRideItem_GetDataBase() + 0x564);
             FU32(arg0, 0xD4) = rd4 + 1;
-            f32 chance = *(f32 *) ((char *) fn_8034D1F8() + 0x560);
+            f32 chance = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x560);
             if (lt == 0 || HSD_Randf() > (0.01f * chance)) {
                 FU32(arg0, 0xD0) = 0xA0U;
                 HSD_JObj *j5 = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
@@ -1453,7 +1453,7 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
                 FU32(arg0, 0x190) = 0x50;
                 FU8(arg0, 0x198) = 0;
             } else {
-                f32 dur = *(f32 *) ((char *) fn_8034D1F8() + 0x544);
+                f32 dur = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x544);
                 FU32(arg0, 0xD0) = (u32) dur;
                 HSD_JObj *j6 = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
                 FF32(arg0, 0xC) = j6->translate.x;
@@ -1502,8 +1502,8 @@ extern "C" void kar_a2d_kurakko__near_8036fa8c(KurakkoObj *arg0, u8 arg1) {
         }
         if (FU32(arg0, 0xD0) <= 0x28U) {
             Vec3f s = *(Vec3f *) &lbl_8048A58C;
-            f32 rate2 = *(f32 *) ((char *) fn_8034D1F8() + 0x54C);
-            f32 rate1 = *(f32 *) ((char *) fn_8034D1F8() + 0x548) + rate2;
+            f32 rate2 = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x54C);
+            f32 rate1 = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x548) + rate2;
             PSVECScale(&s, &s, ((0.1f + (f32) FU32(arg0, 0xD0)) / 40.0f) * rate1);
             SetScaleFa8c(arg0, &s);
         }
@@ -1565,7 +1565,7 @@ extern "C" void kar_a2d_kurakko__near_8036f57c(KurakkoObj *arg0) {
         f32 t = FF32(arg0, 0xBC);
         void *kif = FP(arg0, 0x88);
         Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
-        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) fn_8034D1F8() + 0x55C);
+        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
         HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
         Vec3f dir;
         if (kif != NULL) {
@@ -1608,7 +1608,7 @@ extern "C" void kar_a2d_kurakko__near_8036f57c(KurakkoObj *arg0) {
         f32 t = FF32(arg0, 0xBC);
         void *kif = FP(arg0, 0x88);
         Vec3f cur = { j9c->translate.x, j9c->translate.y, j9c->translate.z };
-        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) fn_8034D1F8() + 0x55C);
+        f32 maxAngle = 0.017453292f * *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x55C);
         HSD_JObj *jr = fn_8038D0A8((HSD_JObj *) FP(arg0, 0x8C), NULL);
         Vec3f dir;
         if (kif != NULL) {
@@ -1729,7 +1729,7 @@ extern "C" void *kar_a2d_kurakko__near_8037113c(void *arg0, void *arg1, s32 arg2
     ((GameEffectItemBase *) arg0)->Init(NULL);
     FP(arg0, 0) = &lbl_804BF0BC;
     fn_8038CCAC((char *) arg0 + 0xC, ((DiagResult *) kar_diag__803ad760((s32) lbl_805DDB48, 0, &lbl_805DB9C8, &lbl_805DB9C0, 0))->unk18);
-    f32 t = *(f32 *) ((char *) fn_8034D1F8() + 0x600);
+    f32 t = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x600);
     FU32(arg0, 0x18) = (u32) t;
     Vec3f *pos = ((KartIF *) arg1)->v74();
     FF32(arg0, 0x1C) = pos->x;
@@ -1742,7 +1742,7 @@ extern "C" void *kar_a2d_kurakko__near_8037113c(void *arg0, void *arg1, s32 arg2
 
 extern "C" void kar_a2d_kurakko__near_8037122c(void *arg0) {
     u32 total = FU32(arg0, 0x18);
-    f32 dur = *(f32 *) ((char *) fn_8034D1F8() + 0x600);
+    f32 dur = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x600);
     f32 t = (f32) total / dur;
     Vec3f up = { 0.0f, -20.0f, 0.0f };
     Vec3f *kif = (Vec3f *) FP(arg0, 0x28);
@@ -1835,7 +1835,7 @@ extern "C" void kar_a2d_kurakko__near_803715dc(void *arg0, void *arg1, void *arg
         FS32(w, 0x24) = FS32(arg3, 0x24);
         FS32(w, 0x28) = FS32(arg3, 0x28);
         FU8(w, 0x2C) = FU8(arg3, 0x2C);
-        f32 sc = *(f32 *) ((char *) fn_8034D1F8() + 0x20F8);
+        f32 sc = *(f32 *) ((char *) TopRideItem_GetDataBase() + 0x20F8);
         Vec3f scv = { sc, sc, sc };
         HSD_JObj *j = fn_8038D0A8((HSD_JObj *) ((char *) w + 0xC), NULL);
         SetScale_G3(j, &scv);
