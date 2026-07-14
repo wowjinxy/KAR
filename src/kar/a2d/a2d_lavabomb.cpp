@@ -165,13 +165,11 @@ extern "C" void kar_a2d_lavabomb__near_80321d68(LB_ListNode *arg0) {
 }
 
 extern "C" void kar_a2d_lavabomb__near_80321de4(LB_ListNode *arg0) {
-    s32 id = (s32) arg0->prev;
-    kar_diag__803ad760(id, 0, &lbl_805DA57C, &lbl_805DA574, 0);
+    kar_diag__803ad760((s32) arg0->prev, 0, &lbl_805DA57C, &lbl_805DA574, 0);
 }
 
 extern "C" void kar_a2d_lavabomb__near_80321e18(LB_ListNode *arg0) {
-    s32 id = (s32) arg0->next;
-    kar_diag__803ad760(id, 0, &lbl_805DA57C, &lbl_805DA574, 0);
+    kar_diag__803ad760((s32) arg0->next, 0, &lbl_805DA57C, &lbl_805DA574, 0);
 }
 
 extern "C" void kar_a2d_lavabomb__near_80320e50(LBNodeBase *arg0) {
@@ -253,11 +251,14 @@ struct LB_Bomb {
 
 extern "C" void kar_a2d_lavabomb__near_80320eb8(LB_Bomb *arg0);
 
+#pragma push
+#pragma dont_inline on
 extern "C" void kar_a2d_lavabomb__near_80320e7c(LB_Bomb *arg0) {
     arg0->unk28 = 2;
     kar_a2d_lavabomb__near_80320eb8(arg0);
     arg0->unk2C = 0;
 }
+#pragma pop
 
 extern "C" void kar_a2d_lavabomb__near_80320eb8(LB_Bomb *arg0) {
     if (arg0->unk28 == 2) {
@@ -306,12 +307,14 @@ extern "C" void kar_a2d_lavabomb__near_80320ee8(LB_Bomb *arg0) {
             }
         }
         if (arg0->unkEC == 2) {
+            void *jobj = arg0->unk14;
             kar_a2d_game_effect__near_8037afd0((char *) arg0 + 0x54, 0);
-            kar_a2d_effecthandle__8037b028((char *) arg0 + 0x54, 0x28B3, 1, arg0->unk14, 0, 0);
+            kar_a2d_effecthandle__8037b028((char *) arg0 + 0x54, 0x28B3, 1, jobj, 0, 0);
         }
         if (arg0->unkEC == 0x78) {
+            void *jobj = arg0->unk18;
             kar_a2d_game_effect__near_8037afd0((char *) arg0 + 0xA0, 0);
-            kar_a2d_effecthandle__8037b028((char *) arg0 + 0xA0, 0x28B6, 1, arg0->unk18, 0, 0);
+            kar_a2d_effecthandle__8037b028((char *) arg0 + 0xA0, 0x28B6, 1, jobj, 0, 0);
         }
         if (arg0->unkEC >= 0x78 && kar_a2d_effecthandle__near_8037b61c((char *) arg0 + 0x54) != 0) {
             kar_a2d_effecthandle__near_8037b33c((char *) arg0 + 0x54, 1);
@@ -370,8 +373,13 @@ extern "C" void kar_a2d_lavabomb__near_80321e54(void *unused, MagmaPlate *arg1) 
     arg1->unk4C = lbl_805E4018;
 }
 
+struct LBBombRegistry {
+    char pad0[0x12];
+    u16 counts[8];
+};
+
 extern "C" void kar_a2d_lavabomb__near_803212f4(char *arg0, u16 arg1, s32 arg2) {
-    u16 maxCount = *(u16 *) (arg0 + 0x12 + arg2 * 2);
+    u16 maxCount = ((LBBombRegistry *) arg0)->counts[arg2];
     u16 tryCount = arg1;
     if ((s32) tryCount > (s32) maxCount) {
         tryCount = maxCount;
@@ -384,26 +392,24 @@ extern "C" void kar_a2d_lavabomb__near_803212f4(char *arg0, u16 arg1, s32 arg2) 
         if (arg2 == bomb->unk4) {
             char *p = arg0;
             s32 ctr = tryCount;
-            if (ctr > 0) {
-                do {
-                    if ((s32) *(u16 *) (p + 0x1A) == bomb->unk8) {
-                        s32 state = bomb->unk28;
-                        if (state == 0 || state == 2) {
-                            if (state == 0) {
-                                *bomb->unk20 -= 1;
-                            }
-                            bomb->unk28 = 1;
-                            HSD_JObjReqAnimAll(bomb->unk10, lbl_805E3F78);
-                            kar_a2d_game_lib__near_80289768(bomb->unk10, 0xFFFF, lbl_805E3F80);
-                            bomb->unk2E = kar_a2d_game_lib__near_8028ac98(0x78, 0, 2);
-                            bomb->unkEC = 0;
-                            bomb->unkF4 = 0x294;
+            while (ctr > 0) {
+                if ((s32) *(u16 *) (p + 0x1A) == bomb->unk8) {
+                    s32 state = bomb->unk28;
+                    if (state == 0 || state == 2) {
+                        if (state == 0) {
+                            *bomb->unk20 -= 1;
                         }
-                    } else {
-                        p += 2;
-                        ctr -= 1;
+                        bomb->unk28 = 1;
+                        HSD_JObjReqAnimAll(bomb->unk10, lbl_805E3F78);
+                        kar_a2d_game_lib__near_80289768(bomb->unk10, 0xFFFF, lbl_805E3F80);
+                        bomb->unk2E = kar_a2d_game_lib__near_8028ac98(0x78, 0, 2);
+                        bomb->unkEC = 0;
+                        bomb->unkF4 = 0x294;
                     }
-                } while (ctr != 0);
+                    break;
+                }
+                p += 2;
+                ctr -= 1;
             }
         }
         byteOff += 4;
@@ -412,21 +418,19 @@ extern "C" void kar_a2d_lavabomb__near_803212f4(char *arg0, u16 arg1, s32 arg2) 
 }
 
 extern "C" void kar_a2d_lavabomb__near_80321430(char *arg0, s32 arg1, f32 farg0) {
-    u32 idx = 0;
     s32 byteOff = 0;
+    u32 idx = 0;
     while (idx < (u32) *(s32 *) (arg0 + 8)) {
+        s32 maxCount = ((LBBombRegistry *) arg0)->counts[arg1];
         LB_Bomb *bomb = *(LB_Bomb **) (arg0 + 0xC + byteOff);
         if (arg1 == bomb->unk4) {
-            u16 maxCount = *(u16 *) (arg0 + 0x12 + arg1 * 2);
             f32 invMax = 1.0f / (f32) maxCount;
-            u16 *lo = bomb->unk20;
-            u16 *hi = (u16 *) bomb->unk24;
-            if (((invMax > farg0) && (*lo == *hi) && ((lbl_805E3FF0 * HSD_Randf()) < (farg0 / invMax))) ||
-                ((invMax <= farg0) && (HSD_Randi((s32) *lo) == 0) && ((invMax * (f32) (*hi - *lo)) < farg0))) {
+            if (((invMax > farg0) && (*bomb->unk20 == *(u16 *) bomb->unk24) && ((lbl_805E3FF0 * HSD_Randf()) < (farg0 / invMax))) ||
+                ((invMax <= farg0) && (HSD_Randi((s32) *bomb->unk20) == 0) && ((invMax * (f32) (*(u16 *) bomb->unk24 - *bomb->unk20)) < farg0))) {
                 s32 state = bomb->unk28;
                 if (state == 0 || state == 2) {
                     if (state == 0) {
-                        *lo -= 1;
+                        *bomb->unk20 -= 1;
                     }
                     bomb->unk28 = 1;
                     HSD_JObjReqAnimAll(bomb->unk10, lbl_805E3F78);
@@ -635,27 +639,26 @@ extern "C" void kar_a2d_lavabomb__near_803218dc(LBSmallArrB *arg0, char *arg1) {
     s32 byteOff = 0;
     for (i = 0; i < (u32) arg0->count; i++, byteOff += 4) {
         void *handle = *(void **) (arg1 + 0x2C);
+        LB_BombNamed *bomb = *(LB_BombNamed **) (*(char **) ((char *) arg0 + 0xC) + byteOff);
         if (handle != NULL) {
             char *name = *(char **) (*(char **) (*(char **) (arg1 + 4) + 4) + 0xC - 4);
             if (name == NULL) {
                 name = lbl_805DA548;
             }
-            LB_BombNamed *bomb = *(LB_BombNamed **) (*(char **) ((char *) arg0 + 0xC) + byteOff);
-            void **vt = *(void ***) handle;
-            f32 (*call94)(void *) = (f32 (*)(void *)) vt[0x94 / 4];
-            u8 (*call64)(void *) = (u8 (*)(void *)) vt[0x64 / 4];
-            if (strcmp(bomb->unkC, name) == 0 && call94(handle) < lbl_805E3FD8 && call64(handle) != 0) {
+            if (strcmp(bomb->unkC, name) == 0
+                    && ((f32 (*)(void *)) (*(void ***) handle)[0x94 / 4])(handle) < lbl_805E3FD8
+                    && ((u8 (*)(void *)) (*(void ***) handle)[0x64 / 4])(handle) != 0) {
                 Bg3000Singleton *bg = (Bg3000Singleton *) kar_a2d_bg3000__near_8033ab00();
-                u32 count = (u32) bg->unk6C;
+                f32 countF = (f32) (u32) bg->unk6C;
                 f32 a = fn_80296264(lbl_805E3F80);
                 f32 b = fn_8029626C(lbl_805E3FE0) * a;
                 f32 rate = fn_802D4C30(lbl_805E3FDC) * b;
-                f32 vol = (f32) count * (lbl_805E3F80 * rate);
+                f32 vol = countF * (lbl_805E3F80 * rate);
                 bg = (Bg3000Singleton *) kar_a2d_bg3000__near_8033ab00();
                 u32 hi = (u32) bg->unk74;
                 bg = (Bg3000Singleton *) kar_a2d_bg3000__near_8033ab00();
                 u32 lo = (u32) bg->unk70;
-                void (*call224)(void *, u32, f32 *, u32) = (void (*)(void *, u32, f32 *, u32)) vt[0xE0 / 4];
+                void (*call224)(void *, u32, f32 *, u32) = (void (*)(void *, u32, f32 *, u32)) (*(void ***) handle)[0xE0 / 4];
                 call224(handle, lo, &vol, hi);
             }
         }
@@ -677,7 +680,7 @@ extern "C" void kar_a2d_lavabomb__near_80320708(void) {
 extern "C" LBCollection *kar_a2d_lavabomb__near_8032070c(LBCollection *arg0, s16 arg1) {
     if (arg0 != NULL) {
         arg0->vtable = lbl_804E1620;
-        for (s32 i = 0; i < arg0->count; i++) {
+        for (u32 i = 0; i < (u32) arg0->count; i++) {
             void *elem = arg0->items[i];
             if (elem != NULL) {
                 ((void (*)(void *, s32)) (*(void ***) ((char *) elem + 0x1AC))[2])(elem, 1);
@@ -690,6 +693,208 @@ extern "C" LBCollection *kar_a2d_lavabomb__near_8032070c(LBCollection *arg0, s16
             fn_8038CB78(arg0);
         }
     }
+    return arg0;
+}
+
+extern "C" void __destroy_arr(void *, void *, s32, s32);
+extern "C" char lbl_804E1910[0xC];
+extern "C" char lbl_804BE104[0x20];
+extern "C" char lbl_804BE0C4[0x20];
+extern "C" char lbl_804D719C[0x40];
+extern "C" char lbl_804D7700[0x20];
+extern "C" char lbl_804BF4DC[0x20];
+extern "C" char lbl_804BF424[0x40];
+extern "C" char lbl_804BF3C0[0x20];
+extern "C" char lbl_804D7260[0x40];
+extern s32 lbl_805DDC70;
+
+extern "C" char *kar_a2d_lavabomb__near_803207d8(char *arg0, s16 arg1) {
+    if (arg0 != NULL) {
+        *(void **) (arg0 + 0x1AC) = lbl_804E1910;
+        __destroy_arr(arg0 + 0x1A4, (void *) kar_a2d_refract__near_80384600, 4, 2);
+        if ((arg0 + 0x168) != NULL) {
+            *(void **) (arg0 + 0x168) = lbl_804BE104;
+            if (*(s32 *) (arg0 + 0x178) != -1) {
+                kar_a2d_game_audio__near_803792b8(lbl_805DDC70);
+            }
+            if ((arg0 + 0x168) != NULL) {
+                *(void **) (arg0 + 0x168) = lbl_804BE0C4;
+                ((LBNodeBase *) (arg0 + 0x168))->Remove();
+            }
+        }
+        if ((arg0 + 0x11C) != NULL) {
+            *(void **) (arg0 + 0x11C) = lbl_804BDF70;
+            kar_a2d_effecthandle__near_8037b33c(arg0 + 0x11C, 0);
+            if ((arg0 + 0x11C) != NULL) {
+                *(void **) (arg0 + 0x11C) = lbl_804BDF2C;
+                ((LBNodeBase *) (arg0 + 0x11C))->Remove();
+            }
+        }
+        if ((arg0 + 0xD0) != NULL) {
+            *(void **) (arg0 + 0xD0) = lbl_804D719C;
+            *(void **) (arg0 + 0xF4) = lbl_804D719C + 0x38;
+            if ((arg0 + 0xF4) != NULL) {
+                *(void **) (arg0 + 0xF4) = lbl_804BDB74;
+            }
+            if ((arg0 + 0xD0) != NULL) {
+                *(void **) (arg0 + 0xD0) = lbl_804D7700;
+                if ((arg0 + 0xD0) != NULL) {
+                    *(void **) (arg0 + 0xD0) = lbl_804BF4DC;
+                    ((LBNodeBase *) (arg0 + 0xD0))->Remove();
+                }
+            }
+        }
+        if ((arg0 + 0x78) != NULL) {
+            *(void **) (arg0 + 0x78) = lbl_804BF424;
+            *(void **) (arg0 + 0x9C) = lbl_804BF424 + 0x38;
+            if ((arg0 + 0x9C) != NULL) {
+                *(void **) (arg0 + 0x9C) = lbl_804BF3C0;
+            }
+            if ((arg0 + 0x78) != NULL) {
+                *(void **) (arg0 + 0x78) = lbl_804D7700;
+                if ((arg0 + 0x78) != NULL) {
+                    *(void **) (arg0 + 0x78) = lbl_804BF4DC;
+                    ((LBNodeBase *) (arg0 + 0x78))->Remove();
+                }
+            }
+        }
+        if ((arg0 + 0x28) != NULL) {
+            *(void **) (arg0 + 0x28) = lbl_804D7260;
+            *(void **) (arg0 + 0x4C) = lbl_804D7260 + 0x38;
+            if ((arg0 + 0x4C) != NULL) {
+                *(void **) (arg0 + 0x4C) = lbl_804BF3C0;
+            }
+            if ((arg0 + 0x28) != NULL) {
+                *(void **) (arg0 + 0x28) = lbl_804D7700;
+                if ((arg0 + 0x28) != NULL) {
+                    *(void **) (arg0 + 0x28) = lbl_804BF4DC;
+                    ((LBNodeBase *) (arg0 + 0x28))->Remove();
+                }
+            }
+        }
+        if (arg1 > 0) {
+            fn_8038CB78(arg0);
+        }
+    }
+    return arg0;
+}
+
+extern "C" char lbl_804F51DC[0x20];
+extern const f32 lbl_805E3F84;
+extern const f32 lbl_805E3F88;
+extern const f32 lbl_805E3F8C;
+extern const f32 lbl_805E3F90;
+extern const f32 lbl_805E3F94;
+extern const f32 lbl_805E3F98;
+extern const f32 lbl_805E3F9C;
+extern const f32 lbl_805E3FA0;
+extern const f32 lbl_805E3FA4;
+extern const f32 lbl_805E3FA8;
+extern const f32 lbl_805E3FAC;
+extern const f32 lbl_805E3FB0;
+extern const f32 lbl_805E3FB4;
+extern const f32 lbl_805E3FB8;
+extern const f32 lbl_805E3FBC;
+extern const f32 lbl_805E3FC0;
+extern const f32 lbl_805E3FC4;
+extern const f32 lbl_805E3FC8;
+extern const f32 lbl_805E3FCC;
+extern const f32 lbl_805E3FD0;
+extern const f32 lbl_805E3FD4;
+
+extern "C" void *kar_a2d_lavabomb__near_80320a24(char *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, s32 arg8, s32 arg9) {
+    *(void **) arg0 = lbl_804E0EB8;
+    *(void **) arg0 = lbl_804E22E0;
+    *(s32 *) (arg0 + 0xC) = arg5;
+    *(void **) (arg0 + 0x30) = lbl_804F51DC;
+    *(void **) (arg0 + 0x30) = lbl_804BDB74;
+    *(f32 *) (arg0 + 0x34) = lbl_805E3F78;
+    *(f32 *) (arg0 + 0x38) = lbl_805E3F78;
+    *(f32 *) (arg0 + 0x3C) = lbl_805E3F78;
+    *(f32 *) (arg0 + 0x40) = lbl_805E3F80;
+    *(void **) (arg0 + 0x44) = lbl_804E2260;
+    *(s32 *) (arg0 + 0x48) = 0;
+    *(s32 *) (arg0 + 0x4C) = 0;
+    ((LBNodeBase *) (arg0 + 0x44))->v10();
+    *(void **) (arg0 + 0x30) = lbl_804E21EC;
+    *(void **) (arg0 + 0x44) = lbl_804E21EC + 0x28;
+    char *effHandle1 = arg0 + 0x54;
+    *(u8 *) (arg0 + 0x50) = 0;
+    *(void **) effHandle1 = lbl_804BDF2C;
+    *(s32 *) (arg0 + 0x58) = 0;
+    *(s32 *) (arg0 + 0x5C) = 0;
+    ((LBNodeBase *) effHandle1)->v10();
+    *(void **) effHandle1 = lbl_804BDF70;
+    kar_a2d_effecthandle__8037b028(effHandle1, -1, 0, 0, 0, 0);
+    char *effHandle2 = arg0 + 0xA0;
+    *(void **) effHandle2 = lbl_804BDF2C;
+    *(s32 *) (arg0 + 0xA4) = 0;
+    *(s32 *) (arg0 + 0xA8) = 0;
+    ((LBNodeBase *) effHandle2)->v10();
+    *(void **) effHandle2 = lbl_804BDF70;
+    kar_a2d_effecthandle__8037b028(effHandle2, -1, 0, 0, 0, 0);
+    kar_a2d_refract__near_803845f4(arg0 + 0xF0);
+    *(u16 *) (arg0 + 0xF4) = 0;
+    *(s32 *) (arg0 + 0x24) = arg6;
+    *(s32 *) (arg0 + 0x20) = arg7;
+    *(s32 *) (arg0 + 0x10) = arg1;
+    *(s32 *) (arg0 + 0x14) = arg2;
+    *(s32 *) (arg0 + 0x18) = arg3;
+    *(s32 *) (arg0 + 0x1C) = arg4;
+    *(s32 *) (arg0 + 0x4) = arg8;
+    *(s32 *) (arg0 + 0x8) = arg9;
+    f32 sp[3];
+    sp[2] = lbl_805E3F78;
+    sp[1] = lbl_805E3F78;
+    sp[0] = lbl_805E3F78;
+    switch (*(s32 *) (arg0 + 4)) {
+    case 0:
+        switch (*(s32 *) (arg0 + 8)) {
+        case 0:
+            sp[0] = lbl_805E3F84;
+            sp[1] = lbl_805E3F88;
+            sp[2] = lbl_805E3F8C;
+            break;
+        case 1:
+            sp[0] = lbl_805E3F90;
+            sp[1] = lbl_805E3F94;
+            sp[2] = lbl_805E3F98;
+            break;
+        case 2:
+            sp[0] = lbl_805E3F9C;
+            sp[1] = lbl_805E3FA0;
+            sp[2] = lbl_805E3FA4;
+            break;
+        case 3:
+            sp[0] = lbl_805E3FA8;
+            sp[1] = lbl_805E3FAC;
+            sp[2] = lbl_805E3FB0;
+            break;
+        }
+        break;
+    case 1:
+        switch (*(s32 *) (arg0 + 8)) {
+        case 0:
+            sp[0] = lbl_805E3FB4;
+            sp[1] = lbl_805E3FB8;
+            sp[2] = lbl_805E3FBC;
+            break;
+        case 1:
+            sp[0] = lbl_805E3FC0;
+            sp[1] = lbl_805E3FC4;
+            sp[2] = lbl_805E3FA4;
+            break;
+        }
+        break;
+    case 2:
+        sp[0] = lbl_805E3FC8;
+        sp[1] = lbl_805E3FCC;
+        sp[2] = lbl_805E3FD0;
+        break;
+    }
+    kar_a2d_refract__near_803848e0(arg0 + 0xF0, 3, sp, lbl_805E3FD4);
+    kar_a2d_refract__near_80384a80(arg0 + 0xF0);
+    kar_a2d_lavabomb__near_80320e7c((LB_Bomb *) arg0);
     return arg0;
 }
 
@@ -719,10 +924,10 @@ extern "C" char *kar_a2d_lavabomb__near_80321a6c(char *arg0, s16 arg1) {
     if (arg0 != NULL) {
         LBArrHandle *h = (LBArrHandle *) arg0;
         h->vtable = lbl_804E2104;
-        for (s32 i = 0; i < h->count; i++) {
+        for (u32 i = 0; i < (u32) h->count; i++) {
             void *elem = h->items[i];
             if (elem != NULL) {
-                ((void (*)(s32)) (*(void ***) elem)[2])(1);
+                ((void (*)(void *, s32)) (*(void ***) elem)[2])(elem, 1);
             }
         }
         if ((arg0 + 4) != NULL && (arg0 + 4) != NULL && (arg0 + 4) != NULL && h->items != NULL) {
