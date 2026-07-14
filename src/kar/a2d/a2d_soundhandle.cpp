@@ -14,17 +14,17 @@ struct SoundHandle {
     int unk10;  //0x10
 };
 
-static const int lbl_8048B3D0[3][3] = {
-    {0x00060037, 0x00060038, 0x00060039},
-    {0x00060033, 0x00060034, 0x00060034},
-    {0x00060035, 0x00060036, 0x00060036},
+static const int lbl_8048B3D0[10] = {
+    0x00060037, 0x00060038, 0x00060039,
+    0x00060033, 0x00060034, 0x00060034,
+    0x00060035, 0x00060036, 0x00060036,
 };
 
 extern "C" int kar_a2d_soundhandle__80379b1c(SoundHandle *h, int row, unsigned int level) {
     int track;
     bool playing;
     assert_line(0xBE, level < AudienceLevelMax);
-    track = lbl_8048B3D0[row][level];
+    track = ((const int (*)[3]) lbl_8048B3D0)[row][level];
     if (h->unkC != -1 && track == h->unk10) {
         playing = kar_lbaudio_is_track_handle_playing();
         if (playing) {
@@ -205,10 +205,10 @@ extern "C" void kar_a2d_soundhandle__near_80379de4(void *unused, u32 arg1) {
 }
 
 extern "C" void kar_a2d_soundhandle__near_80379e58(SoundOwner *arg0) {
-    ArchiveEntryResult *sp10;
-    ArchiveEntryResult *sp14;
-    ArchiveEntryResult *sp18;
     ArchiveEntryResult *sp1C;
+    ArchiveEntryResult *sp18;
+    ArchiveEntryResult *sp14;
+    ArchiveEntryResult *sp10;
 
     kar_particle__near_8042ad44(0, lbl_804F2B30);
     kar_psinterpret__near_80430298(0);
