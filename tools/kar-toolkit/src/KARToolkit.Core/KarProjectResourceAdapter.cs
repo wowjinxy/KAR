@@ -200,6 +200,20 @@ namespace KARToolkit.Core
                 return CreateProjectFileOutputInfo(resource);
             }
 
+            public override byte[] ReadBytes(KarProjectResourceInfo resource)
+            {
+                EnsureResourceCapability(resource, KarProjectResourceCapability.ReadBytes);
+                var archive = Project.ArchiveService.OpenHsdFile(resource.RelativePath);
+                var root = archive.Roots.FirstOrDefault(candidate =>
+                    string.Equals(candidate.Name, resource.Reference.RootName, StringComparison.Ordinal));
+                if (root == null)
+                    throw new FileNotFoundException("HSD root was not found.", resource.Reference.RootName);
+                if (root.Data == null || root.Data._s == null)
+                    return Array.Empty<byte>();
+
+                return root.Data._s.GetBytes(0, root.Data._s.Length);
+            }
+
             public override KarProjectResourceExportResult ExportToOutput(KarProjectResourceInfo resource, bool overwrite = false)
             {
                 EnsureResourceCapability(resource, KarProjectResourceCapability.ExportToOutput);

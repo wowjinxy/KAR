@@ -370,7 +370,7 @@ namespace KARToolkit.Core.Tests
 
             KarProjectResourceHandler rootHandler = registry.GetHandler(KarResourceKind.HsdRoot);
             AssertTrue(rootHandler.CanQueryFieldValues && rootHandler.CanSetScalarFields, "HSD root resources should support field and scalar workflows");
-            AssertTrue(rootHandler.CanExportToOutput && !rootHandler.CanReadBytes && !rootHandler.CanImportFromFile, "HSD root resources should stage containing archives without standalone byte imports");
+            AssertTrue(rootHandler.CanReadBytes && rootHandler.CanExportToOutput && !rootHandler.CanImportFromFile, "HSD root resources should expose struct byte reads and stage containing archives without standalone byte imports");
 
             KarProjectResourceHandler entryHandler = registry.GetHandler(KarResourceKind.A2DEntry);
             AssertTrue(entryHandler.CanReadBytes && entryHandler.CanImportFromFile, "A2D entry resources should support byte reads and imports");
@@ -805,17 +805,18 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(resources.Adapters.Count == Enum.GetValues(typeof(KarResourceKind)).Length, "resource services should expose default resource adapters");
                 KarProjectResourceInfo packageResource = resources.Get("A2Info.dat");
                 AssertTrue(resources.GetAdapter(packageResource).ReadBytes(packageResource).SequenceEqual(packageBytes), "resource adapters should expose file byte reads");
-                AssertThrows<NotSupportedException>(
-                    () => resources.GetAdapter(KarResourceKind.HsdRoot).ReadBytes(resources.Get("VsHydra.dat:vsDataHydra")),
-                    "resource adapters should reject unsupported root byte reads");
+                byte[] rootBytes = resources.GetAdapter(KarResourceKind.HsdRoot).ReadBytes(resources.Get("VsHydra.dat:vsDataHydra"));
+                int rootLength = project.GetArchiveContext("VsHydra.dat").Roots.Single().StructLength.Value;
+                AssertTrue(rootBytes.Length == rootLength && rootBytes.Length > 0, "resource adapters should expose HSD root struct byte reads");
                 AssertTrue(resources.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource reads should return active file bytes");
                 AssertTrue(project.ResourceAddressService.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource address services should read file bytes");
                 AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "project resource read wrapper should return A2D entry bytes");
                 KarProjectResolvedResource resolvedEntry = project.ResolveResourceAddress("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(resolvedEntry.CanReadBytes && project.ResourceAddressService.ReadBytes(resolvedEntry).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "resource address services should read resolved entry bytes");
-                AssertThrows<NotSupportedException>(
-                    () => resources.ReadBytes("VsHydra.dat:vsDataHydra"),
-                    "resource reads should reject non-byte-addressable HSD roots");
+                AssertTrue(project.ReadResourceBytes("VsHydra.dat:vsDataHydra").SequenceEqual(rootBytes), "project resource read wrapper should return HSD root struct bytes");
+                byte originalFirstByte = rootBytes[0];
+                rootBytes[0] ^= 0xFF;
+                AssertTrue(resources.ReadBytes("VsHydra.dat:vsDataHydra")[0] == originalFirstByte, "HSD root byte reads should return a defensive copy");
 
                 KarProjectResourceExportResult fileExport = resources.ExportToOutput("A2Info.dat");
                 AssertTrue(fileExport.Address == "A2Info.dat", "resource file export should report resource address");

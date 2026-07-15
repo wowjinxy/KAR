@@ -102,6 +102,7 @@ namespace KARToolkit.Core
                     "HSD Root",
                     "Named root inside an HSD archive.",
                     KarProjectResourceCapability.QueryOutput |
+                    KarProjectResourceCapability.ReadBytes |
                     KarProjectResourceCapability.ExportToOutput |
                     KarProjectResourceCapability.QueryFieldValues |
                     KarProjectResourceCapability.SetScalarFields),
