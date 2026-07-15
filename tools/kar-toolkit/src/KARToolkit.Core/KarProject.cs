@@ -239,6 +239,12 @@ namespace KARToolkit.Core
             return new KarProjectOutputInventory(this, QueryOutputFiles(options));
         }
 
+        public IReadOnlyList<KarProjectMapOutputInfo> QueryMapOutputs(KarProjectMapOutputQueryOptions options)
+        {
+            IReadOnlyList<KarProjectOutputFileInfo> outputFiles = QueryOutputFiles(options == null ? null : options.Outputs);
+            return KarProjectMapOutputInfo.BuildMany(Maps, outputFiles, options);
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

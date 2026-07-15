@@ -22,6 +22,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
+            Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
@@ -240,6 +241,85 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(report.OrphanOutputFileCount == 0, "project report should count filtered orphan output files");
                 AssertTrue(report.UnchangedProjectOutputFileCount == 1, "project report should count filtered unchanged project outputs");
                 AssertTrue(report.ModifiedProjectOutputFileCount == 0, "project report should count filtered modified project outputs");
+                AssertTrue(report.MapOutputCount == 1, "project report should count map outputs");
+                AssertTrue(report.ModifiedMapOutputCount == 0, "project report should count modified map outputs");
+                AssertTrue(report.CompleteMapOutputCount == 1, "project report should count complete filtered map outputs");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectMapOutputQueryGroupsModFiles()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-map-output-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1.dat"), new byte[] { 0x10 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Model.dat"), new byte[] { 0x20 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Event.dat"), new byte[] { 0x30 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrSimple.dat"), new byte[] { 0x40 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                project.CopyToOutput("GrCity1.dat", true);
+                project.WriteFileBytes("GrCity1Event.dat", new byte[] { 0x31, 0x32 });
+
+                IReadOnlyList<KarProjectMapOutputInfo> allMapOutputs = project.QueryMapOutputs(null);
+                AssertTrue(allMapOutputs.Count == 2, "map output query should include all maps by default");
+                AssertTrue(allMapOutputs.Single(map => map.Name == "Simple").OutputFileCount == 0, "map output query should keep maps without staged outputs");
+
+                IReadOnlyList<KarProjectMapOutputInfo> mapOutputs = project.QueryMapOutputs(new KarProjectMapOutputQueryOptions
+                {
+                    HasOutput = true,
+                });
+
+                AssertTrue(mapOutputs.Count == 1, "map output query should filter maps with staged outputs");
+                KarProjectMapOutputInfo city = mapOutputs.Single(map => map.Name == "City1");
+                AssertTrue(city.ExpectedOutputFileCount == 3, "map output should know how many source bundle files exist");
+                AssertTrue(city.OutputFileCount == 2, "map output should count staged bundle files");
+                AssertTrue(city.MissingOutputFileCount == 1, "map output should count unstaged bundle files");
+                AssertTrue(city.ModifiedOutputFileCount == 1, "map output should count modified bundle files");
+                AssertTrue(city.UnchangedOutputFileCount == 1, "map output should count unchanged bundle files");
+                AssertTrue(city.HasDataOutput, "map output should expose the staged data file");
+                AssertTrue(!city.HasModelOutput, "map output should expose missing model output");
+                AssertTrue(city.HasScriptOutput, "map output should expose staged event/script file");
+                AssertTrue(city.DataOutput.Status == KarProjectOutputFileStatus.MatchesSource, "map output should keep data output status");
+                AssertTrue(city.ScriptOutput.Status == KarProjectOutputFileStatus.DiffersFromSource, "map output should keep script output status");
+                AssertTrue(city.HasModifiedOutput, "map output should flag modified outputs");
+                AssertTrue(!city.HasCompleteOutputSet, "map output should flag incomplete staged map bundles");
+
+                IReadOnlyList<KarProjectMapOutputInfo> modifiedOnly = project.QueryMapOutputs(new KarProjectMapOutputQueryOptions
+                {
+                    Outputs = new KarProjectOutputFileQueryOptions { Status = KarProjectOutputFileStatus.DiffersFromSource },
+                    HasOutput = true,
+                });
+
+                AssertTrue(modifiedOnly.Count == 1, "map output query should filter output file status");
+                AssertTrue(modifiedOnly[0].OutputFileCount == 1, "map output status filtering should keep only matching output files");
+                AssertTrue(modifiedOnly[0].ScriptOutput != null, "map output status filtering should keep the modified script output");
+                AssertTrue(modifiedOnly[0].DataOutput == null, "map output status filtering should omit unchanged data output");
+
+                IReadOnlyList<KarProjectMapOutputInfo> modifiedMaps = project.QueryMapOutputs(new KarProjectMapOutputQueryOptions
+                {
+                    HasModifiedOutput = true,
+                });
+
+                AssertTrue(modifiedMaps.Count == 1, "map output query should filter maps with modified outputs");
+                AssertTrue(modifiedMaps[0].Name == "City1", "map output modified filter should keep the edited map");
+
+                IReadOnlyList<KarProjectMapOutputInfo> namedMaps = project.QueryMapOutputs(new KarProjectMapOutputQueryOptions
+                {
+                    MapName = "city1",
+                });
+
+                AssertTrue(namedMaps.Count == 1, "map output query should filter map names case-insensitively");
             }
             finally
             {

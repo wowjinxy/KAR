@@ -41,6 +41,9 @@ internal static class KarCliDtoFactory
             modifiedProjectOutputFileCount = report.ModifiedProjectOutputFileCount,
             unchangedProjectOutputFileCount = report.UnchangedProjectOutputFileCount,
             missingSourceOutputFileCount = report.MissingSourceOutputFileCount,
+            mapOutputCount = report.MapOutputCount,
+            modifiedMapOutputCount = report.ModifiedMapOutputCount,
+            completeMapOutputCount = report.CompleteMapOutputCount,
             mapCount = report.MapCount,
             completeMapCount = report.CompleteMapCount,
             incompleteMapCount = report.IncompleteMapCount,
@@ -55,9 +58,35 @@ internal static class KarCliDtoFactory
             fileCategories = report.FileCategories.Select(ToProjectFileGroupSummaryDto).ToList(),
             fileKinds = report.FileKinds.Select(ToProjectFileGroupSummaryDto).ToList(),
             outputs = ToProjectOutputInventoryDto(report.OutputInventory),
+            mapOutputs = report.MapOutputs.Select(ToProjectMapOutputDto).ToList(),
             rootSummaries = report.RootSummaries.Select(ToProjectRootSummaryDto).ToList(),
             dataDefinitionUsage = report.DataDefinitionUsage.Select(ToDataDefinitionUsageDto).ToList(),
             fieldSummaries = report.FieldSummaries.Select(ToProjectFieldSummaryDto).ToList(),
+        };
+    }
+
+    public static object ToProjectMapOutputDto(KarProjectMapOutputInfo map)
+    {
+        return new
+        {
+            name = map.Name,
+            expectedOutputFileCount = map.ExpectedOutputFileCount,
+            outputFileCount = map.OutputFileCount,
+            missingOutputFileCount = map.MissingOutputFileCount,
+            modifiedOutputFileCount = map.ModifiedOutputFileCount,
+            unchangedOutputFileCount = map.UnchangedOutputFileCount,
+            missingSourceOutputFileCount = map.MissingSourceOutputFileCount,
+            hasOutput = map.HasOutput,
+            hasModifiedOutput = map.HasModifiedOutput,
+            hasCompleteOutputSet = map.HasCompleteOutputSet,
+            dataFile = ToProjectFileDtoOrNull(map.DataFile),
+            modelFile = ToProjectFileDtoOrNull(map.ModelFile),
+            eventFile = ToProjectFileDtoOrNull(map.EventFile),
+            dataOutput = ToProjectOutputFileDtoOrNull(map.DataOutput),
+            modelOutput = ToProjectOutputFileDtoOrNull(map.ModelOutput),
+            eventOutput = ToProjectOutputFileDtoOrNull(map.EventOutput),
+            scriptOutput = ToProjectOutputFileDtoOrNull(map.ScriptOutput),
+            outputs = map.OutputFiles.Select(ToProjectOutputFileDto).ToList(),
         };
     }
 
@@ -120,6 +149,11 @@ internal static class KarCliDtoFactory
             isSameLengthAsSource = file.IsSameLengthAsSource,
             isSameContentAsSource = file.IsSameContentAsSource,
         };
+    }
+
+    public static object ToProjectOutputFileDtoOrNull(KarProjectOutputFileInfo file)
+    {
+        return file == null ? null : ToProjectOutputFileDto(file);
     }
 
     public static object ToMapInfoDto(KarMapInfo map)
@@ -460,6 +494,11 @@ internal static class KarCliDtoFactory
                 rootCount = file.ArchiveDefinition.Roots.Count,
             },
         };
+    }
+
+    public static object ToProjectFileDtoOrNull(KarProjectFile file)
+    {
+        return file == null ? null : ToProjectFileDto(file);
     }
 
     public static object ToA2DEntryDto(A2DPackageEntry entry)

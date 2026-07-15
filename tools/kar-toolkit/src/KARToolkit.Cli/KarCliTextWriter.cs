@@ -44,6 +44,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Output: " + report.Project.OutputRoot);
         Console.WriteLine("Files: " + report.FileCount);
         Console.WriteLine("Output files: " + report.OutputFileCount + " project=" + report.ProjectOutputFileCount + " modified=" + report.ModifiedProjectOutputFileCount + " unchanged=" + report.UnchangedProjectOutputFileCount + " orphan=" + report.OrphanOutputFileCount);
+        Console.WriteLine("Map outputs: " + report.MapOutputCount + " modified=" + report.ModifiedMapOutputCount + " complete=" + report.CompleteMapOutputCount);
         Console.WriteLine("Maps: " + report.MapCount + " complete=" + report.CompleteMapCount + " incomplete=" + report.IncompleteMapCount);
         Console.WriteLine("HSD archives: " + report.HsdArchiveCount);
         Console.WriteLine("A2D packages: " + report.A2DPackageCount);
@@ -80,6 +81,31 @@ internal static class KarCliTextWriter
             ? " size=" + file.OutputLength + "/" + file.SourceLength.Value
             : " size=" + file.OutputLength;
         Console.WriteLine(file.RelativePath + " [" + file.Kind + ", " + file.Category + ", " + status + "]" + length + " -> " + file.OutputPath);
+    }
+
+    public static void PrintProjectMapOutput(KarProjectMapOutputInfo map)
+    {
+        Console.WriteLine(map.Name + ": outputs=" + map.OutputFileCount + "/" + map.ExpectedOutputFileCount + " modified=" + map.ModifiedOutputFileCount + " unchanged=" + map.UnchangedOutputFileCount + " missing=" + map.MissingOutputFileCount);
+        PrintProjectMapOutputSlot("Data", map.DataFile, map.DataOutput);
+        PrintProjectMapOutputSlot("Model", map.ModelFile, map.ModelOutput);
+        PrintProjectMapOutputSlot("Event/Script", map.EventFile, map.EventOutput);
+    }
+
+    private static void PrintProjectMapOutputSlot(string label, KarProjectFile file, KarProjectOutputFileInfo output)
+    {
+        if (file == null)
+        {
+            Console.WriteLine("  " + label + ": <missing source file>");
+            return;
+        }
+
+        if (output == null)
+        {
+            Console.WriteLine("  " + label + ": " + file.RelativePath + " <no output>");
+            return;
+        }
+
+        Console.WriteLine("  " + label + ": " + output.RelativePath + " [" + output.Status + "] -> " + output.OutputPath);
     }
 
     public static void PrintProjectRootSummary(KarProjectRootInfo root)

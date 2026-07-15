@@ -24,6 +24,7 @@ namespace KARToolkit.Core
                 .OrderBy(map => map.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
+            MapOutputs = BuildMapOutputs(Maps, OutputFiles);
             Archives = BuildArchives(project, Files);
             Roots = BuildRoots(Archives, options.Roots);
             RootSummaries = BuildRootSummaries(Roots);
@@ -46,6 +47,8 @@ namespace KARToolkit.Core
         public KarProjectOutputInventory OutputInventory { get; }
 
         public IReadOnlyList<KarMapBundle> Maps { get; }
+
+        public IReadOnlyList<KarProjectMapOutputInfo> MapOutputs { get; }
 
         public IReadOnlyList<KarArchiveInfo> Archives { get; }
 
@@ -76,6 +79,12 @@ namespace KARToolkit.Core
         public int CompleteMapCount => Maps.Count(map => map.HasDataFile && map.HasModelFile && map.HasScriptFile);
 
         public int IncompleteMapCount => MapCount - CompleteMapCount;
+
+        public int MapOutputCount => MapOutputs.Count;
+
+        public int ModifiedMapOutputCount => MapOutputs.Count(map => map.HasModifiedOutput);
+
+        public int CompleteMapOutputCount => MapOutputs.Count(map => map.HasCompleteOutputSet);
 
         public int HsdArchiveCount => Archives.Count;
 
@@ -115,6 +124,16 @@ namespace KARToolkit.Core
                 .OrderBy(archive => archive.File.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
+        }
+
+        private static IReadOnlyList<KarProjectMapOutputInfo> BuildMapOutputs(
+            IEnumerable<KarMapBundle> maps,
+            IEnumerable<KarProjectOutputFileInfo> outputFiles)
+        {
+            return KarProjectMapOutputInfo.BuildMany(
+                maps,
+                outputFiles,
+                new KarProjectMapOutputQueryOptions { HasOutput = true });
         }
 
         private static IReadOnlyList<KarProjectRootInfo> BuildRoots(

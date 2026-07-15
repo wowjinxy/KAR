@@ -70,6 +70,28 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowMapOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("map-outputs", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectMapOutputInfo> mapOutputs = project.QueryMapOutputs(CreateMapOutputQuery(options, project))
+            .OrderBy(map => map.Name)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(mapOutputs.Select(ToProjectMapOutputDto).ToList());
+            return 0;
+        }
+
+        Console.WriteLine("Output: " + project.OutputRoot);
+        Console.WriteLine("Map outputs: " + mapOutputs.Count + " modified=" + mapOutputs.Count(map => map.HasModifiedOutput) + " complete=" + mapOutputs.Count(map => map.HasCompleteOutputSet));
+        foreach (KarProjectMapOutputInfo mapOutput in mapOutputs)
+            PrintProjectMapOutput(mapOutput);
+
+        return 0;
+    }
+
     public static int ShowMaps(KarCliOptions options)
     {
         options.RequirePositionals("maps", 1);
@@ -317,6 +339,16 @@ internal static class KarCliInspectionCommands
         }
 
         return query;
+    }
+
+    private static KarProjectMapOutputQueryOptions CreateMapOutputQuery(KarCliOptions options, KarProject project)
+    {
+        return new KarProjectMapOutputQueryOptions
+        {
+            Outputs = CreateOutputQuery(options),
+            MapName = options.Positionals.Count >= 2 ? project.GetMap(options.Positionals[1]).Name : null,
+            HasOutput = true,
+        };
     }
 
     public static int ShowFile(KarCliOptions options)
