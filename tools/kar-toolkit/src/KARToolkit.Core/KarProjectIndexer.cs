@@ -30,7 +30,7 @@ namespace KARToolkit.Core
                         relativePath,
                         path,
                         workspace.GetOutputPath(relativePath),
-                        KarArchiveCatalog.ClassifyKind(relativePath));
+                        KarProjectFileClassifier.ClassifyKind(relativePath));
                 })
                 .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()
@@ -67,7 +67,7 @@ namespace KARToolkit.Core
 
         private static bool TryGetMapName(KarProjectFile file, out string mapName)
         {
-            return KarArchiveCatalog.TryGetMapName(file.RelativePath, file.Kind, out mapName);
+            return KarProjectFileClassifier.TryGetMapName(file.RelativePath, file.Kind, out mapName);
         }
 
         private sealed class MapBundleBuilder

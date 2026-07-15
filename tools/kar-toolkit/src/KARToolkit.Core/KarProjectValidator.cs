@@ -68,7 +68,7 @@ namespace KARToolkit.Core
 
                 foreach (KarProjectFile file in _index.Files)
                 {
-                    if (_options.InspectHsdArchives && KarArchiveCatalog.IsHsdArchiveKind(file.Kind))
+                    if (_options.InspectHsdArchives && KarProjectFileClassifier.IsHsdArchiveKind(file.Kind))
                         ValidateHsdArchive(file);
                     else if (_options.InspectA2DPackages && file.Kind == KarFileKind.A2dPackage)
                         ValidateA2DPackage(file);
