@@ -25,6 +25,7 @@ namespace KARToolkit.Core
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
             DataService = new KarProjectDataService(this);
+            EditService = new KarProjectEditService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -47,6 +48,8 @@ namespace KARToolkit.Core
         public KarProjectMapService MapService { get; }
 
         public KarProjectDataService DataService { get; }
+
+        public KarProjectEditService EditService { get; }
 
         public KarProjectInspector Inspector { get; }
 

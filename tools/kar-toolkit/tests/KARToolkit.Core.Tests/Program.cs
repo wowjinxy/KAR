@@ -27,6 +27,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
+            Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
@@ -500,6 +501,67 @@ namespace KARToolkit.Core.Tests
                 KarProjectFileWriteResult a2dWrite = archives.SaveA2DPackageToOutput("A2Demo.dat", package);
                 AssertTrue(File.Exists(a2dWrite.OutputPath), "archive service should save A2D packages to output");
                 AssertTrue(project.OutputService.HasFile("A2Demo.dat"), "archive A2D saves should register as output files");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectEditServiceWritesScalarEditsToOutput()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-edit-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectEditService edits = project.EditService;
+
+                AssertTrue(object.ReferenceEquals(edits.Project, project), "edit service should retain project context");
+
+                KarProjectScalarEditResult result = edits.SetScalarFieldFromText(
+                    "VsHydra.dat",
+                    "kar.vs.legendary",
+                    "x0C",
+                    "0x190",
+                    byDataDefinition: true);
+
+                AssertTrue(result.RelativePath == "VsHydra.dat", "edit service should report the edited project path");
+                AssertTrue(result.File.RelativePath == "VsHydra.dat", "edit service should retain edited file metadata");
+                AssertTrue(result.Edit.RootName == "vsDataHydra", "edit service should resolve schema edits to the archive root");
+                AssertTrue(result.Edit.Field.Name == "x0C", "edit service should retain edited field metadata");
+                AssertTrue(result.Edit.PreviousValue.SignedValue == 303, "edit service should report the previous scalar value");
+                AssertTrue(result.Edit.NewValue.SignedValue == 400, "edit service should report the new scalar value");
+                AssertTrue(result.Edit.IsChanged, "edit service should flag changed scalar values");
+                AssertTrue(File.Exists(result.OutputPath), "edit service should save edited archives to output");
+                AssertTrue(project.OutputService.GetFile("VsHydra.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "edit service output should be marked modified");
+
+                KarProjectFieldInfo editedField = project.DataService.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "kar.vs.legendary",
+                    FieldName = "x0C",
+                }).Single(field => field.RelativePath == "VsHydra.dat");
+                AssertTrue(editedField.Value.SignedValue == 400, "project data queries should read scalar edits from output copies");
+
+                KarArchiveInfo sourceInfo = project.ArchiveInspector.Inspect(
+                    project.FileService.Get("VsHydra.dat"),
+                    new HSDRawFile(project.FileService.GetSourcePath("VsHydra.dat")));
+                AssertTrue(sourceInfo.GetRootByDataDefinition("kar.vs.legendary").GetFieldValue("x0C").SignedValue == 303, "edit service should not mutate source files");
+
+                KarProjectScalarEditResult rootResult = edits.SetScalarField(
+                    "GrCity1.dat",
+                    "grDataCity1",
+                    "unknown1",
+                    707);
+                AssertTrue(rootResult.Edit.NewValue.SignedValue == 707, "edit service should edit scalar fields by root name");
+                AssertTrue(project.OutputService.GetFile("GrCity1.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "root-name scalar edits should save modified output files");
             }
             finally
             {

@@ -84,8 +84,9 @@ Pointer fields with a known nested schema expose reference definitions and one b
 Pointer fields whose nested schema has a fixed size can also expose bounded `ReferenceEntries`, which split flat referenced tables into labeled rows for text/JSON inspection.
 Use `--max-reference-depth` and `--max-reference-entries` with archive/map inspection when a command needs deeper nested fields or more table rows.
 Map gameplay schemas include position nodes, position-list rows, coordinate rows for event/item/vehicle/dead-position/area tables, and item timing/spawn tables.
-Schema-backed scalar fields can be edited in memory through `KarDataEditor` or `KarProjectHsdArchive.SetScalarField*`, then saved through the output-only project archive APIs.
-The `set-scalar` CLI command exposes that same safe output-only scalar edit path for quick mod experiments.
+Schema-backed scalar fields can be edited safely through `KarProject.EditService`, which opens HSD archives, applies edits, and saves only to the configured output folder.
+Lower-level scalar edits remain available through `KarDataEditor` and `KarProjectHsdArchive.SetScalarField*` for tools that need in-memory control.
+The `set-scalar` CLI command exposes the same safe output-only scalar edit path for quick mod experiments.
 Schema integrity checks go through `KarDataDefinitionValidator`, and the `validate-schemas` CLI command exposes the built-in schema report.
 `KarDataDefinitionRegistry` owns schema indexing by id and accessor type; `KarDataDefinitionCatalog` exposes the built-in KAR registry.
 `KarArchiveInspector` can be constructed with a custom `KarDataDefinitionRegistry`; `Default` uses the built-in KAR registry.
