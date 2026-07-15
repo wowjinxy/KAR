@@ -19,7 +19,7 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
-        private static KarDataFieldValue InspectField(HSDAccessor accessor, KarDataFieldDefinition field)
+        public static KarDataFieldValue InspectField(HSDAccessor accessor, KarDataFieldDefinition field)
         {
             if (!field.Offset.HasValue)
                 return new KarDataFieldValue(field, false, "unknown", "<not mapped>");
@@ -31,31 +31,20 @@ namespace KARToolkit.Core
             if (field.IsPointer)
                 return InspectReference(accessor, field, offset);
 
-            string normalizedType = NormalizeTypeName(field.TypeName);
+            KarDataScalarKind kind;
+            int size;
+            if (!KarDataScalarTypes.TryResolve(field.TypeName, out kind, out size))
+                return new KarDataFieldValue(field, false, "unread", "<unsupported type>");
+
             try
             {
-                switch (normalizedType)
+                switch (kind)
                 {
-                    case "s8":
-                        return ReadSigned(accessor, field, offset, 1);
-                    case "u8":
-                    case "byte":
-                        return ReadUnsigned(accessor, field, offset, 1);
-                    case "s16":
-                        return ReadSigned(accessor, field, offset, 2);
-                    case "u16":
-                        return ReadUnsigned(accessor, field, offset, 2);
-                    case "s32":
-                    case "int":
-                    case "int32":
-                        return ReadSigned(accessor, field, offset, 4);
-                    case "u32":
-                    case "uint":
-                    case "uint32":
-                        return ReadUnsigned(accessor, field, offset, 4);
-                    case "f32":
-                    case "float":
-                    case "single":
+                    case KarDataScalarKind.Signed:
+                        return ReadSigned(accessor, field, offset, size);
+                    case KarDataScalarKind.Unsigned:
+                        return ReadUnsigned(accessor, field, offset, size);
+                    case KarDataScalarKind.Float:
                         return ReadFloat(accessor, field, offset);
                     default:
                         return new KarDataFieldValue(field, false, "unread", "<unsupported type>");
@@ -165,11 +154,6 @@ namespace KARToolkit.Core
                 offset >= 0 &&
                 size >= 0 &&
                 offset + size <= accessor._s.Length;
-        }
-
-        private static string NormalizeTypeName(string typeName)
-        {
-            return (typeName ?? "").Trim().ToLowerInvariant();
         }
 
         private static string FormatHex(int value)

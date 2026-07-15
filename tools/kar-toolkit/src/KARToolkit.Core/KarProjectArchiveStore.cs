@@ -9,11 +9,16 @@ namespace KARToolkit.Core
     {
         private readonly KarProjectWorkspace _workspace;
         private readonly KarProjectFileStore _fileStore;
+        private readonly KarArchiveInspector _archiveInspector;
 
-        public KarProjectArchiveStore(KarProjectWorkspace workspace, KarProjectFileStore fileStore)
+        public KarProjectArchiveStore(
+            KarProjectWorkspace workspace,
+            KarProjectFileStore fileStore,
+            KarArchiveInspector archiveInspector)
         {
             _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             _fileStore = fileStore ?? throw new ArgumentNullException(nameof(fileStore));
+            _archiveInspector = archiveInspector ?? throw new ArgumentNullException(nameof(archiveInspector));
         }
 
         public HSDRawFile OpenHsdFile(string relativePath)
@@ -25,7 +30,7 @@ namespace KARToolkit.Core
         {
             KarProjectFile file = _fileStore.GetFile(relativePath);
             string readPath = file.ReadPath;
-            return new KarProjectHsdArchive(this, file, readPath, new HSDRawFile(readPath));
+            return new KarProjectHsdArchive(this, _archiveInspector, file, readPath, new HSDRawFile(readPath));
         }
 
         public KarProjectMapArchiveBundle OpenMapArchives(KarMapBundle map)

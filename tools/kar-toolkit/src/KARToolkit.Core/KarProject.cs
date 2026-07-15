@@ -17,8 +17,8 @@ namespace KARToolkit.Core
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
             FileStore = new KarProjectFileStore(Workspace, Index);
-            ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
+            ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
             Validator = new KarProjectValidator(this);
         }
 
