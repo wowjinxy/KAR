@@ -353,6 +353,30 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectDataCoverageReport(KarProjectDataCoverageReport report)
+    {
+        Console.WriteLine("Data coverage: " + report.Project.Name);
+        Console.WriteLine("Archives: " + report.ArchiveCount + " inspected=" + report.InspectableArchiveCount + " errors=" + report.InspectionErrorCount);
+        Console.WriteLine("Roots: " + report.RootCount + " known=" + report.KnownRootCount + " unknown=" + report.UnknownRootCount + " data-definitions=" + report.DataDefinitionRootCount + " field-backed=" + report.FieldBackedRootCount);
+        Console.WriteLine("Gaps: " + report.IssueCount + " inspect=" + report.ArchiveInspectionIssueCount + " missing-required=" + report.MissingRequiredRootIssueCount + " unknown=" + report.UnknownRootIssueCount + " no-schema=" + report.MissingDataDefinitionIssueCount + " no-fields=" + report.MissingFieldValueIssueCount);
+
+        foreach (KarProjectDataCoverageIssue issue in report.Issues)
+            PrintProjectDataCoverageIssue(issue);
+    }
+
+    public static void PrintProjectDataCoverageIssue(KarProjectDataCoverageIssue issue)
+    {
+        string target = issue.RelativePath;
+        if (!string.IsNullOrEmpty(issue.RootName))
+            target += ":" + issue.RootName;
+        else if (!string.IsNullOrEmpty(issue.MissingRootPattern))
+            target += ":" + issue.MissingRootPattern;
+
+        string schema = string.IsNullOrEmpty(issue.DataDefinitionId) ? "" : " schema=" + issue.DataDefinitionId;
+        string accessor = string.IsNullOrEmpty(issue.DisplayAccessorTypeName) ? "" : " accessor=" + issue.DisplayAccessorTypeName;
+        Console.WriteLine("  " + target + " [" + issue.Kind + "]" + schema + accessor + " - " + issue.Message);
+    }
+
     public static void PrintProjectModWorkspace(KarProjectModWorkspace workspace)
     {
         Console.WriteLine("Mod workspace: " + workspace.Project.OutputRoot);

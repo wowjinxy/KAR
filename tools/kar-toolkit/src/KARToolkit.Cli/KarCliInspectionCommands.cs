@@ -90,6 +90,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowDataCoverage(KarCliOptions options)
+    {
+        options.RequirePositionals("schema-gaps", 1);
+        KarProject project = OpenProject(options);
+        KarProjectDataCoverageReport report = project.SchemaService.CreateDataCoverageReport(CreateDataCoverageOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectDataCoverageReportDto(report));
+            return 0;
+        }
+
+        PrintProjectDataCoverageReport(report);
+        return 0;
+    }
+
     public static int ShowOutputs(KarCliOptions options)
     {
         options.RequirePositionals("outputs", 1);

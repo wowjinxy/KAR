@@ -203,6 +203,11 @@ namespace KARToolkit.Core
             return SchemaService.QueryDataDefinitionUsage(options);
         }
 
+        public KarProjectDataCoverageReport CreateDataCoverageReport(KarProjectDataCoverageOptions options = null)
+        {
+            return SchemaService.CreateDataCoverageReport(options);
+        }
+
         public IReadOnlyList<KarDataDefinition> QueryDataDefinitions(KarDataDefinitionQueryOptions options = null)
         {
             return SchemaService.QueryDataDefinitions(options);

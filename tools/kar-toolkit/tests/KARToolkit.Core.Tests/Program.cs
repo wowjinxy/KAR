@@ -24,6 +24,7 @@ namespace KARToolkit.Core.Tests
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectSchemaServiceExposesActiveProjectCatalogs", ProjectSchemaServiceExposesActiveProjectCatalogs);
+            Run("ProjectDataCoverageReportIdentifiesSchemaGaps", ProjectDataCoverageReportIdentifiesSchemaGaps);
             Run("FileKindRegistryDescribesProjectHandlers", FileKindRegistryDescribesProjectHandlers);
             Run("ResourceHandlerRegistryDescribesResourceOperations", ResourceHandlerRegistryDescribesResourceOperations);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
@@ -242,6 +243,58 @@ namespace KARToolkit.Core.Tests
                 }).Single();
                 AssertTrue(field.Value.SignedValue == 77, "project field queries should read values through custom active schemas");
                 AssertTrue(schema.ValidateDataDefinitions().IsValid && project.ValidateDataDefinitions().IsValid, "schema validation wrappers should validate active project schemas");
+            }
+            finally
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectDataCoverageReportIdentifiesSchemaGaps()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-data-coverage-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            WriteHsdFile(Path.Combine(tempRoot, "VsMissing.dat"), "unexpectedRoot", new HSDAccessor { _s = new HSDStruct(4) });
+            WriteHsdFile(Path.Combine(tempRoot, "EfDemo.dat"), "demo_texg", new HSDAccessor { _s = new HSDStruct(4) });
+            File.WriteAllBytes(Path.Combine(tempRoot, "VsBroken.dat"), new byte[] { 0x10 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot);
+                KarProjectDataCoverageReport report = project.SchemaService.CreateDataCoverageReport();
+
+                AssertTrue(report.ArchiveCount == 4, "data coverage should scan HSD archive contexts");
+                AssertTrue(report.InspectableArchiveCount == 3 && report.InspectionErrorCount == 1, "data coverage should count inspection failures");
+                AssertTrue(report.RootCount == 3 && report.KnownRootCount == 2 && report.UnknownRootCount == 1, "data coverage should count known and unknown roots");
+                AssertTrue(report.DataDefinitionRootCount == 1 && report.FieldBackedRootCount == 1, "data coverage should count field-backed data definitions");
+                AssertTrue(report.MissingDataDefinitionRootCount == 1, "data coverage should count known roots without KAR data definitions");
+                AssertTrue(report.MissingRequiredRootCount == 1, "data coverage should count missing required roots");
+                AssertTrue(report.IssueCount == 4, "data coverage should report all schema gaps");
+                AssertTrue(report.ArchiveInspectionIssueCount == 1, "data coverage should report archive inspection failures");
+                AssertTrue(report.MissingRequiredRootIssueCount == 1, "data coverage should report missing required roots");
+                AssertTrue(report.UnknownRootIssueCount == 1, "data coverage should report unknown roots");
+                AssertTrue(report.MissingDataDefinitionIssueCount == 1, "data coverage should report known roots without data definitions");
+                AssertTrue(!report.HasCompleteFieldCoverage, "data coverage should flag incomplete field coverage");
+                AssertTrue(report.Issues.Any(issue => issue.RelativePath == "EfDemo.dat" && issue.RootName == "demo_texg" && issue.Kind == KarProjectDataCoverageIssueKind.MissingDataDefinition), "data coverage should retain root issue metadata");
+                AssertTrue(project.CreateDataCoverageReport().IssueCount == report.IssueCount, "project data coverage wrapper should delegate to schema service");
+
+                KarProjectDataCoverageReport filtered = project.CreateDataCoverageReport(new KarProjectDataCoverageOptions
+                {
+                    Archives = new KarProjectArchiveContextQueryOptions
+                    {
+                        Text = "texg",
+                    },
+                    Text = "texg",
+                });
+                AssertTrue(filtered.ArchiveCount == 1 && filtered.IssueCount == 1 && filtered.MissingDataDefinitionIssueCount == 1, "data coverage options should filter archives and issues by text");
+
+                KarProjectDataCoverageReport noUnknownRoots = project.CreateDataCoverageReport(new KarProjectDataCoverageOptions
+                {
+                    ReportUnknownRoots = false,
+                });
+                AssertTrue(noUnknownRoots.UnknownRootIssueCount == 0 && noUnknownRoots.IssueCount == 3, "data coverage options should allow callers to hide issue kinds");
             }
             finally
             {

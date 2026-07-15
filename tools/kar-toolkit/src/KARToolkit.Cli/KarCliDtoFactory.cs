@@ -130,6 +130,35 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectDataCoverageReportDto(KarProjectDataCoverageReport report)
+    {
+        return new
+        {
+            project = ToProjectDto(report.Project),
+            archiveCount = report.ArchiveCount,
+            inspectableArchiveCount = report.InspectableArchiveCount,
+            inspectionErrorCount = report.InspectionErrorCount,
+            rootCount = report.RootCount,
+            knownRootCount = report.KnownRootCount,
+            unknownRootCount = report.UnknownRootCount,
+            missingRequiredRootCount = report.MissingRequiredRootCount,
+            dataDefinitionRootCount = report.DataDefinitionRootCount,
+            missingDataDefinitionRootCount = report.MissingDataDefinitionRootCount,
+            fieldBackedRootCount = report.FieldBackedRootCount,
+            missingFieldValueRootCount = report.MissingFieldValueRootCount,
+            issueCount = report.IssueCount,
+            archiveInspectionIssueCount = report.ArchiveInspectionIssueCount,
+            missingRequiredRootIssueCount = report.MissingRequiredRootIssueCount,
+            unknownRootIssueCount = report.UnknownRootIssueCount,
+            missingDataDefinitionIssueCount = report.MissingDataDefinitionIssueCount,
+            missingFieldValueIssueCount = report.MissingFieldValueIssueCount,
+            hasIssues = report.HasIssues,
+            hasCompleteFieldCoverage = report.HasCompleteFieldCoverage,
+            archives = report.ArchiveContexts.Select(ToProjectDataCoverageArchiveDto).ToList(),
+            issues = report.Issues.Select(ToProjectDataCoverageIssueDto).ToList(),
+        };
+    }
+
     public static object ToProjectModWorkspaceDto(KarProjectModWorkspace workspace)
     {
         return new
@@ -684,6 +713,76 @@ internal static class KarCliDtoFactory
             unknownRootCount = archive.UnknownRoots.Count,
             missingRequiredRootCount = archive.MissingRequiredRoots.Count,
             missingRequiredRoots = archive.MissingRequiredRoots.Select(root => root.Pattern).ToList(),
+        };
+    }
+
+    public static object ToProjectDataCoverageArchiveDto(KarProjectArchiveContext context)
+    {
+        return new
+        {
+            relativePath = context.RelativePath,
+            kind = context.Kind.ToString(),
+            kindId = context.KindId,
+            category = context.Category,
+            displayName = context.DisplayName,
+            hasInspection = context.HasInspection,
+            hasInspectionError = context.HasInspectionError,
+            inspectionError = context.InspectionError,
+            rootCount = context.RootCount,
+            knownRootCount = context.KnownRootCount,
+            unknownRootCount = context.UnknownRootCount,
+            missingRequiredRootCount = context.MissingRequiredRootCount,
+            dataDefinitionRootCount = CountDataDefinitionRoots(context),
+            missingDataDefinitionRootCount = CountMissingDataDefinitionRoots(context),
+            fieldBackedRootCount = CountFieldBackedRoots(context),
+            missingFieldValueRootCount = CountMissingFieldValueRoots(context),
+            fieldCount = context.FieldCount,
+            relationshipCount = context.RelationshipCount,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            outputStatus = context.OutputStatus == null ? null : context.OutputStatus.ToString(),
+        };
+    }
+
+    public static object ToProjectDataCoverageIssueDto(KarProjectDataCoverageIssue issue)
+    {
+        return new
+        {
+            kind = issue.Kind.ToString(),
+            code = issue.Code,
+            message = issue.Message,
+            relativePath = issue.RelativePath,
+            rootName = issue.RootName,
+            missingRootPattern = issue.MissingRootPattern,
+            accessorTypeName = issue.AccessorTypeName,
+            expectedAccessorTypeName = issue.ExpectedAccessorTypeName,
+            displayAccessorTypeName = issue.DisplayAccessorTypeName,
+            dataDefinitionId = issue.DataDefinitionId,
+            category = issue.Category,
+            hasRoot = issue.HasRoot,
+            isArchiveIssue = issue.IsArchiveIssue,
+            isMissingRequiredRoot = issue.IsMissingRequiredRoot,
+            isRootIssue = issue.IsRootIssue,
+            file = ToProjectFileDto(issue.File),
+            root = issue.Root == null ? null : new
+            {
+                name = issue.Root.Name,
+                isKnown = issue.Root.IsKnown,
+                accessorTypeName = issue.Root.AccessorTypeName,
+                expectedAccessorTypeName = issue.Root.ExpectedAccessorTypeName,
+                displayAccessorTypeName = issue.Root.DisplayAccessorTypeName,
+                dataDefinitionId = issue.Root.DataDefinitionId,
+                fieldCount = issue.Root.FieldValues.Count,
+                hasFieldValues = issue.Root.HasFieldValues,
+            },
+            missingRoot = issue.MissingRoot == null ? null : new
+            {
+                pattern = issue.MissingRoot.Pattern,
+                description = issue.MissingRoot.Description,
+                accessorTypeName = issue.MissingRoot.AccessorTypeName,
+                dataDefinitionId = issue.MissingRoot.DataDefinitionId,
+                isRequired = issue.MissingRoot.IsRequired,
+            },
         };
     }
 
@@ -1257,6 +1356,29 @@ internal static class KarCliDtoFactory
         return capabilities
             .Select(capability => capability.ToString())
             .ToList();
+    }
+
+    private static int CountDataDefinitionRoots(KarProjectArchiveContext context)
+    {
+        return context.Roots.Count(root => root.DataDefinition != null);
+    }
+
+    private static int CountMissingDataDefinitionRoots(KarProjectArchiveContext context)
+    {
+        return context.Roots.Count(root => root.IsKnown && root.DataDefinition == null);
+    }
+
+    private static int CountFieldBackedRoots(KarProjectArchiveContext context)
+    {
+        return context.Roots.Count(root => root.DataDefinition != null && root.HasFieldValues);
+    }
+
+    private static int CountMissingFieldValueRoots(KarProjectArchiveContext context)
+    {
+        return context.Roots.Count(root =>
+            root.DataDefinition != null &&
+            root.DataDefinition.Fields.Count != 0 &&
+            !root.HasFieldValues);
     }
 
     public static object ToA2DEntryDto(A2DPackageEntry entry)

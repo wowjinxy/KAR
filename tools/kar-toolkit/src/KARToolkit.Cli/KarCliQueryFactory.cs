@@ -219,6 +219,15 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectDataCoverageOptions CreateDataCoverageOptions(KarCliOptions options)
+    {
+        return new KarProjectDataCoverageOptions
+        {
+            Archives = CreateArchiveContextQuery(options),
+            Text = options.SearchText,
+        };
+    }
+
     public static KarProjectA2DEntryOutputStatus? ToA2DEntryOutputStatus(KarProjectOutputFileStatus? status)
     {
         if (!status.HasValue)

@@ -80,5 +80,10 @@ namespace KARToolkit.Core
         {
             return _project.DataService.QueryDataDefinitionUsage(options);
         }
+
+        public KarProjectDataCoverageReport CreateDataCoverageReport(KarProjectDataCoverageOptions options = null)
+        {
+            return new KarProjectDataCoverageReport(_project, options);
+        }
     }
 }
