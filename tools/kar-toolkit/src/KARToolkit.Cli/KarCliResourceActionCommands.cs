@@ -110,6 +110,14 @@ internal static class KarCliResourceActionCommands
         return new
         {
             succeeded = result.Succeeded,
+            resultKind = result.ResultKind,
+            isReadOnly = result.IsReadOnly,
+            writesOutput = result.WritesOutput,
+            wouldWriteOutput = result.WouldWriteOutput,
+            wroteOutput = result.WroteOutput,
+            skippedOutputWrite = result.SkippedOutputWrite,
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
             plan = ToProjectResourceActionPlanDto(result.Plan),
             errorType = result.ErrorType,
             errorMessage = result.ErrorMessage,
@@ -127,6 +135,11 @@ internal static class KarCliResourceActionCommands
             resultCount = batch.ResultCount,
             succeededCount = batch.SucceededCount,
             failedCount = batch.FailedCount,
+            readOnlyCount = batch.ReadOnlyCount,
+            writeActionCount = batch.WriteActionCount,
+            wouldWriteOutputCount = batch.WouldWriteOutputCount,
+            wroteOutputCount = batch.WroteOutputCount,
+            skippedOutputWriteCount = batch.SkippedOutputWriteCount,
             hasFailures = batch.HasFailures,
             results = batch.Results.Select(ToResourceActionExecutionResultDto).ToList(),
         };

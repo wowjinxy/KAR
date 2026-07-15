@@ -45,6 +45,16 @@ namespace KARToolkit.Core
 
         public int FailedCount => FailedResults.Count;
 
+        public int ReadOnlyCount => Results.Count(result => result.IsReadOnly);
+
+        public int WriteActionCount => Results.Count(result => result.WritesOutput);
+
+        public int WouldWriteOutputCount => Results.Count(result => result.WouldWriteOutput);
+
+        public int WroteOutputCount => Results.Count(result => result.WroteOutput);
+
+        public int SkippedOutputWriteCount => Results.Count(result => result.SkippedOutputWrite);
+
         public bool HasResults => ResultCount != 0;
 
         public bool HasFailures => FailedCount != 0;

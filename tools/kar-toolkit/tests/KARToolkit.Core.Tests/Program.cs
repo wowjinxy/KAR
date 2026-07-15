@@ -788,13 +788,17 @@ namespace KARToolkit.Core.Tests
 
                 KarProjectResourceActionExecutionResult byteStatus = executor.Execute("ScInfPause.tm", "byte-status");
                 AssertTrue(byteStatus.Plan.CanRun && byteStatus.ByteInfo.ActiveLength == 2, "resource action executors should return byte status results");
+                AssertTrue(byteStatus.ResultKind == "byte-status" && byteStatus.IsReadOnly && !byteStatus.WritesOutput && !byteStatus.WroteOutput, "resource action execution results should summarize read-only status actions");
 
                 KarProjectResourceActionExecutionResult dump = project.ExecuteResourceAction("ScInfPause.tm", "dump-bytes");
                 AssertTrue(dump.ByteDumpResult.WroteOutput, "project resource action wrappers should execute byte dump actions");
                 AssertTrue(File.ReadAllBytes(dump.ByteDumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "resource action byte dumps should write active bytes to output assets");
+                AssertTrue(dump.ResultKind == "byte-dump" && dump.WritesOutput && dump.WouldWriteOutput && dump.WroteOutput && !dump.SkippedOutputWrite, "resource action execution results should summarize byte dump writes");
+                AssertTrue(dump.OutputRelativePath == dump.ByteDumpResult.OutputRelativePath && dump.OutputPath == dump.ByteDumpResult.OutputPath, "resource action execution results should expose common output paths");
 
                 KarProjectResourceActionExecutionResult skippedDump = project.ResourceService.ExecuteAction("ScInfPause.tm", "dump-bytes");
                 AssertTrue(!skippedDump.Plan.WouldWriteOutput && !skippedDump.ByteDumpResult.WroteOutput, "resource action executors should keep skip/write state in the execution plan and result");
+                AssertTrue(skippedDump.WritesOutput && !skippedDump.WouldWriteOutput && !skippedDump.WroteOutput && skippedDump.SkippedOutputWrite, "resource action execution results should summarize skipped output writes");
 
                 IReadOnlyList<KarProjectResourceActionExecutionResult> scriptDumps = project.ExecuteResourceActions(new KarProjectResourceActionPlanQueryOptions
                 {
@@ -818,6 +822,7 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(scriptDumpReport.ActionId == "dump-bytes" && scriptDumpReport.Overwrite, "resource action batch reports should keep execution metadata");
                 AssertTrue(scriptDumpReport.ResultCount == 2 && scriptDumpReport.SucceededCount == 2 && !scriptDumpReport.HasFailures, "resource action batch reports should summarize successful batches");
+                AssertTrue(scriptDumpReport.WriteActionCount == 2 && scriptDumpReport.WroteOutputCount == 2 && scriptDumpReport.SkippedOutputWriteCount == 0, "resource action batch reports should summarize output write outcomes");
                 AssertTrue(scriptDumpReport.Results.All(result => result.Succeeded), "resource action batch reports should retain ordered execution results");
 
                 KarProjectResourceActionExecutionResult fields = executor.Execute("VsHydra.dat:vsDataHydra", "field-values");
@@ -852,6 +857,7 @@ namespace KARToolkit.Core.Tests
                         Value = "0x1F4",
                     });
                 AssertTrue(scalarEdit.Plan.CanRun && scalarEdit.ScalarEditResult.Edit.NewValue.SignedValue == 500, "resource action executors should run scalar edit actions through safe output writes");
+                AssertTrue(scalarEdit.ResultKind == "scalar-edit" && scalarEdit.WroteOutput && scalarEdit.OutputPath == scalarEdit.ScalarEditResult.OutputPath, "resource action execution results should summarize scalar edit output writes");
 
                 KarProjectResourceActionExecutionResult outputStatus = executor.Execute("VsHydra.dat:vsDataHydra", "output-status");
                 AssertTrue(outputStatus.OutputInfo.Status == KarProjectResourceOutputStatus.DiffersFromSource, "resource action output status should reflect earlier action writes");
@@ -895,8 +901,9 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(tolerantFailureReport.ContinueOnError && tolerantFailureReport.HasFailures, "tolerant resource action batch reports should expose failure summary state");
                 AssertTrue(tolerantFailureReport.ResultCount == 5 && tolerantFailureReport.SucceededCount == 0 && tolerantFailureReport.FailedCount == 5, "tolerant resource action batch reports should count failed executions");
                 AssertTrue(tolerantFailureReport.FailedResults.Count == 5 && tolerantFailureReport.SucceededResults.Count == 0, "tolerant resource action batch reports should group failed executions");
+                AssertTrue(tolerantFailureReport.WriteActionCount == 5 && tolerantFailureReport.WroteOutputCount == 0, "tolerant resource action batch reports should not count failed writes as written output");
                 AssertTrue(tolerantFailures.Count == 5, "tolerant resource action batches should keep per-resource failures");
-                AssertTrue(tolerantFailures.All(result => result.Failed && result.ErrorType == "NotSupportedException"), "tolerant resource action batches should expose failure metadata");
+                AssertTrue(tolerantFailures.All(result => result.Failed && result.ResultKind == "error" && result.ErrorType == "NotSupportedException"), "tolerant resource action batches should expose failure metadata");
                 AssertTrue(tolerantFailures.All(result => result.Result == null), "failed resource action results should not expose success payloads");
             }
             finally
