@@ -1990,6 +1990,10 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(File.ReadAllBytes(Path.Combine(tempRoot, "Loose.bin")).SequenceEqual(sourceBytes), "project session writes should not mutate source files");
                 AssertTrue(File.ReadAllBytes(Path.Combine(outputRoot, "Loose.bin")).SequenceEqual(new byte[] { 0x99 }), "project session writes should stage changed copies under output");
+                KarProjectFileInsight looseInsight = session.Project.GetFileInsight("Loose.bin");
+                AssertTrue(looseInsight.HasOutputCopy && looseInsight.HasModifiedOutput && looseInsight.DomainIds.Contains("mod-output"), "file insights should expose output-copy state without mutating source files");
+                KarProjectFileInsightContract looseInsightContract = session.Project.GetFileInsightContract("Loose.bin");
+                AssertTrue(looseInsightContract.File.RelativePath == "Loose.bin" && looseInsightContract.HasModifiedOutput, "file insight contracts should preserve compact file and output state");
 
                 KarProjectSession refreshed = session.Refresh();
                 AssertTrue(refreshed.HasOutputs && refreshed.HasModifiedOutputs, "refreshed project sessions should report output state");
@@ -2132,6 +2136,23 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(scriptDomain.ItemCount == 2 && scriptDomain.ModifiedOutputCount == 1 && scriptDomain.ListCommand == "script-tables", "domain contexts should summarize script table outputs");
                 KarProjectDomainContext outputDomain = project.ToolkitService.QueryDomainContexts().Single(domain => domain.Id == "mod-output");
                 AssertTrue(outputDomain.HasOutputs && outputDomain.HasModifiedOutputs && outputDomain.ContextCommand == "mod-workspace", "domain contexts should summarize mod workspace state");
+
+                IReadOnlyList<KarProjectFileInsight> fileInsights = project.QueryFileInsights();
+                AssertTrue(fileInsights.Count == project.Files.Count, "file insights should cover the project file inventory");
+                KarProjectFileInsight mapInsight = fileInsights.Single(insight => insight.RelativePath == "GrCity1.dat");
+                AssertTrue(mapInsight.PrimaryDomainId == "maps" && mapInsight.DomainIds.Contains("archives") && mapInsight.MapName == "City1" && mapInsight.MapCount == 1, "file insights should classify map archives with map bundle metadata");
+                KarProjectFileInsight a2dInsight = project.FileService.GetInsight("A2Info.dat");
+                AssertTrue(a2dInsight.PrimaryDomainId == "a2d-packages" && a2dInsight.A2DEntryResourceCount == 2 && a2dInsight.ScriptTableResourceCount == 1, "file insights should summarize A2D packages and packaged script tables");
+                AssertTrue(a2dInsight.DomainIds.Contains("script-tables") && a2dInsight.RelationshipCount == 1, "file insights should connect A2D script entries to toolkit domains and relationships");
+                KarProjectFileInsight brokenA2DInsight = project.GetFileInsight("A2Broken.dat");
+                AssertTrue(brokenA2DInsight.IsA2DPackage && brokenA2DInsight.HasInspectionError && brokenA2DInsight.A2DEntryResourceCount == 0, "file insights should keep broken A2D packages visible with inspection errors");
+                KarProjectFileInsight scriptInsight = project.GetFileInsight("ScInfPause.tm");
+                AssertTrue(scriptInsight.PrimaryDomainId == "script-tables" && scriptInsight.ScriptTableResourceCount == 1 && scriptInsight.DomainIds.Contains("script-tables"), "file insights should classify loose script tables");
+                KarProjectFileInsight vehicleInsight = project.GetFileInsight("VcCommon.dat");
+                AssertTrue(vehicleInsight.PrimaryDomainId == "vehicles" && vehicleInsight.VehicleBundleCount >= 2 && vehicleInsight.DomainIds.Contains("vehicles"), "file insights should attach shared vehicle bundle membership");
+                KarProjectFileInsightContract a2dInsightContract = a2dInsight.CreateContract();
+                AssertTrue(a2dInsightContract.File.KindInfo.IsA2DPackage && a2dInsightContract.A2DEntryResourceCount == 2 && a2dInsightContract.DomainIds.Contains("script-tables"), "file insight contracts should preserve domain labels and file-kind metadata");
+                AssertTrue(project.FileService.QueryInsightContracts(new KarProjectFileQueryOptions { Domain = "script-tables" }).Any(insight => insight.RelativePath == "ScInfPause.tm"), "file services should expose reusable file insight contracts");
 
                 KarProjectToolkitSurface surface = project.CreateToolkitSurface();
                 AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");

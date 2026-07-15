@@ -33,6 +33,26 @@ namespace KARToolkit.Core
             return _project.Index.QueryFiles(options);
         }
 
+        public KarProjectFileInsight GetInsight(string relativePath)
+        {
+            return _project.FileInsightService.Get(relativePath);
+        }
+
+        public KarProjectFileInsightContract GetInsightContract(string relativePath)
+        {
+            return _project.FileInsightService.GetContract(relativePath);
+        }
+
+        public IReadOnlyList<KarProjectFileInsight> QueryInsights(KarProjectFileQueryOptions options = null)
+        {
+            return _project.FileInsightService.Query(options);
+        }
+
+        public IReadOnlyList<KarProjectFileInsightContract> QueryInsightContracts(KarProjectFileQueryOptions options = null)
+        {
+            return _project.FileInsightService.QueryContracts(options);
+        }
+
         public string GetReadPath(string relativePath)
         {
             return _project.FileStore.GetReadPath(relativePath);

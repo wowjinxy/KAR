@@ -26,6 +26,7 @@ namespace KARToolkit.Core
             OperationPresetRegistry = operationPresets ?? throw new ArgumentNullException(nameof(operationPresets));
             FileStore = new KarProjectFileStore(Workspace, Index);
             FileService = new KarProjectFileService(this);
+            FileInsightService = new KarProjectFileInsightService(this);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ResourceGraphService = new KarProjectResourceGraphService(this);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector, ResourceGraphService.Invalidate);
@@ -70,6 +71,8 @@ namespace KARToolkit.Core
         public KarProjectFileStore FileStore { get; }
 
         public KarProjectFileService FileService { get; }
+
+        public KarProjectFileInsightService FileInsightService { get; }
 
         public KarProjectArchiveStore ArchiveStore { get; }
 
@@ -195,6 +198,26 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectFile> QueryFiles(KarProjectFileQueryOptions options)
         {
             return FileService.Query(options);
+        }
+
+        public KarProjectFileInsight GetFileInsight(string relativePath)
+        {
+            return FileInsightService.Get(relativePath);
+        }
+
+        public KarProjectFileInsightContract GetFileInsightContract(string relativePath)
+        {
+            return FileInsightService.GetContract(relativePath);
+        }
+
+        public IReadOnlyList<KarProjectFileInsight> QueryFileInsights(KarProjectFileQueryOptions options = null)
+        {
+            return FileInsightService.Query(options);
+        }
+
+        public IReadOnlyList<KarProjectFileInsightContract> QueryFileInsightContracts(KarProjectFileQueryOptions options = null)
+        {
+            return FileInsightService.QueryContracts(options);
         }
 
         public IReadOnlyList<KarArchiveInfo> QueryArchives(KarProjectFileQueryOptions options)
