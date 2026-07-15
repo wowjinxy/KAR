@@ -63,7 +63,7 @@ internal static class KarCliInspectionCommands
         }
 
         Console.WriteLine("Output: " + project.OutputRoot);
-        Console.WriteLine("Output files: " + inventory.Count + " project=" + inventory.ProjectFileCount + " orphan=" + inventory.OrphanFileCount);
+        Console.WriteLine("Output files: " + inventory.Count + " project=" + inventory.ProjectFileCount + " modified=" + inventory.ModifiedProjectFileCount + " unchanged=" + inventory.UnchangedProjectFileCount + " orphan=" + inventory.OrphanFileCount);
         foreach (KarProjectOutputFileInfo file in inventory.Files)
             PrintProjectOutputFile(file);
 
@@ -304,6 +304,7 @@ internal static class KarCliInspectionCommands
         KarProjectOutputFileQueryOptions query = new KarProjectOutputFileQueryOptions
         {
             Category = options.FileCategory,
+            Status = options.OutputStatus,
         };
 
         if (!string.IsNullOrWhiteSpace(options.FileKind))

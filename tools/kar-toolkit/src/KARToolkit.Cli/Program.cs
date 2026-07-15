@@ -65,7 +65,7 @@ internal static class Program
         Console.WriteLine("Usage:");
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit report <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--summary]");
-        Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>]");
+        Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--modified|--unchanged|--orphan]");
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archives <source-folder> [--kind <file-kind>] [--category <category>]");
@@ -98,6 +98,9 @@ internal static class Program
         Console.WriteLine("  --category <category>");
         Console.WriteLine("  --output-copy");
         Console.WriteLine("  --source-only");
+        Console.WriteLine("  --modified");
+        Console.WriteLine("  --unchanged");
+        Console.WriteLine("  --orphan");
         Console.WriteLine("  --known");
         Console.WriteLine("  --unknown");
         Console.WriteLine("  --root-name <name>");

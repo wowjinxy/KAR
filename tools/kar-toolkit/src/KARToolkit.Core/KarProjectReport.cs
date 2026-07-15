@@ -65,6 +65,12 @@ namespace KARToolkit.Core
 
         public int OrphanOutputFileCount => OutputInventory.OrphanFileCount;
 
+        public int ModifiedProjectOutputFileCount => OutputInventory.ModifiedProjectFileCount;
+
+        public int UnchangedProjectOutputFileCount => OutputInventory.UnchangedProjectFileCount;
+
+        public int MissingSourceOutputFileCount => OutputInventory.MissingSourceFileCount;
+
         public int MapCount => Maps.Count;
 
         public int CompleteMapCount => Maps.Count(map => map.HasDataFile && map.HasModelFile && map.HasScriptFile);

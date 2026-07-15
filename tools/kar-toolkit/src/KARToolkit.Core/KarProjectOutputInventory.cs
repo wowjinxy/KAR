@@ -21,6 +21,18 @@ namespace KARToolkit.Core
                 .Where(file => file.IsOrphan)
                 .ToList()
                 .AsReadOnly();
+            ModifiedProjectFiles = Files
+                .Where(file => file.Status == KarProjectOutputFileStatus.DiffersFromSource)
+                .ToList()
+                .AsReadOnly();
+            UnchangedProjectFiles = Files
+                .Where(file => file.Status == KarProjectOutputFileStatus.MatchesSource)
+                .ToList()
+                .AsReadOnly();
+            MissingSourceFiles = Files
+                .Where(file => file.Status == KarProjectOutputFileStatus.SourceMissing)
+                .ToList()
+                .AsReadOnly();
         }
 
         public KarProject Project { get; }
@@ -31,11 +43,23 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectOutputFileInfo> OrphanFiles { get; }
 
+        public IReadOnlyList<KarProjectOutputFileInfo> ModifiedProjectFiles { get; }
+
+        public IReadOnlyList<KarProjectOutputFileInfo> UnchangedProjectFiles { get; }
+
+        public IReadOnlyList<KarProjectOutputFileInfo> MissingSourceFiles { get; }
+
         public int Count => Files.Count;
 
         public int ProjectFileCount => ProjectFiles.Count;
 
         public int OrphanFileCount => OrphanFiles.Count;
+
+        public int ModifiedProjectFileCount => ModifiedProjectFiles.Count;
+
+        public int UnchangedProjectFileCount => UnchangedProjectFiles.Count;
+
+        public int MissingSourceFileCount => MissingSourceFiles.Count;
 
         public long TotalOutputLength => Files.Sum(file => file.OutputLength);
     }

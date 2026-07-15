@@ -10,6 +10,8 @@ namespace KARToolkit.Core
 
         public bool? IsProjectFile { get; set; }
 
+        public KarProjectOutputFileStatus? Status { get; set; }
+
         public bool Matches(KarProjectOutputFileInfo file)
         {
             if (file == null)
@@ -25,6 +27,9 @@ namespace KARToolkit.Core
             }
 
             if (IsProjectFile.HasValue && file.IsProjectFile != IsProjectFile.Value)
+                return false;
+
+            if (Status.HasValue && file.Status != Status.Value)
                 return false;
 
             return true;

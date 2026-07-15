@@ -1,4 +1,5 @@
 using System.Globalization;
+using KARToolkit.Core;
 
 namespace KARToolkit.Cli;
 
@@ -18,6 +19,7 @@ internal sealed class KarCliOptions
         string fileKind,
         string fileCategory,
         bool? fileHasOutputCopy,
+        KarProjectOutputFileStatus? outputStatus,
         bool? rootKnown,
         string rootName,
         bool rootSummary,
@@ -37,6 +39,7 @@ internal sealed class KarCliOptions
         FileKind = fileKind;
         FileCategory = fileCategory;
         FileHasOutputCopy = fileHasOutputCopy;
+        OutputStatus = outputStatus;
         RootKnown = rootKnown;
         RootName = rootName;
         RootSummary = rootSummary;
@@ -70,6 +73,8 @@ internal sealed class KarCliOptions
 
     public bool? FileHasOutputCopy { get; }
 
+    public KarProjectOutputFileStatus? OutputStatus { get; }
+
     public bool? RootKnown { get; }
 
     public string RootName { get; }
@@ -97,6 +102,7 @@ internal sealed class KarCliOptions
         string fileKind = null;
         string fileCategory = null;
         bool? fileHasOutputCopy = null;
+        KarProjectOutputFileStatus? outputStatus = null;
         bool? rootKnown = null;
         string rootName = null;
         bool rootSummary = false;
@@ -188,6 +194,24 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--modified" || arg == "--changed" || arg == "--modified-output")
+            {
+                outputStatus = KarProjectOutputFileStatus.DiffersFromSource;
+                continue;
+            }
+
+            if (arg == "--unchanged" || arg == "--same-as-source" || arg == "--unchanged-output")
+            {
+                outputStatus = KarProjectOutputFileStatus.MatchesSource;
+                continue;
+            }
+
+            if (arg == "--orphan" || arg == "--orphan-output")
+            {
+                outputStatus = KarProjectOutputFileStatus.Orphan;
+                continue;
+            }
+
             if (arg == "--known")
             {
                 rootKnown = true;
@@ -241,6 +265,7 @@ internal sealed class KarCliOptions
             fileKind,
             fileCategory,
             fileHasOutputCopy,
+            outputStatus,
             rootKnown,
             rootName,
             rootSummary,
