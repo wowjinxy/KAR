@@ -2,8 +2,6 @@ using HSDRaw;
 using KARToolkit.Core.AirRide;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -15,6 +13,7 @@ namespace KARToolkit.Core
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
+            FileStore = new KarProjectFileStore(Workspace, Index);
             ArchiveInspector = KarArchiveInspector.Default;
             MapInspector = new KarMapInspector(ArchiveInspector);
         }
@@ -22,6 +21,8 @@ namespace KARToolkit.Core
         public KarProjectWorkspace Workspace { get; }
 
         public KarProjectIndex Index { get; }
+
+        public KarProjectFileStore FileStore { get; }
 
         public KarArchiveInspector ArchiveInspector { get; }
 
@@ -81,57 +82,47 @@ namespace KARToolkit.Core
 
         public string GetReadPath(string relativePath)
         {
-            return GetFile(relativePath).ReadPath;
+            return FileStore.GetReadPath(relativePath);
         }
 
         public string GetSourcePath(string relativePath)
         {
-            return GetFile(relativePath).SourcePath;
+            return FileStore.GetSourcePath(relativePath);
         }
 
         public string GetOutputPath(string relativePath)
         {
-            return Workspace.GetOutputPath(relativePath);
+            return FileStore.GetOutputPath(relativePath);
         }
 
         public string CopyToOutput(string relativePath, bool overwrite = false)
         {
-            var file = GetFile(relativePath);
-            return Workspace.CopyToOutput(file.RelativePath, overwrite);
+            return FileStore.CopyToOutput(relativePath, overwrite);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return CopyMapToOutput(GetMap(mapNameOrPath), overwrite);
+            return FileStore.CopyMapToOutput(mapNameOrPath, overwrite);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(KarMapBundle map, bool overwrite = false)
         {
-            if (map == null)
-                throw new ArgumentNullException(nameof(map));
-
-            return map.Files
-                .Select(file => CopyToOutput(file.RelativePath, overwrite))
-                .ToList()
-                .AsReadOnly();
+            return FileStore.CopyMapToOutput(map, overwrite);
         }
 
         public byte[] ReadBytes(string relativePath)
         {
-            return File.ReadAllBytes(GetReadPath(relativePath));
+            return FileStore.ReadBytes(relativePath);
         }
 
         public void WriteBytes(string relativePath, byte[] data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-
-            Workspace.WriteBytes(relativePath, data);
+            FileStore.WriteBytes(relativePath, data);
         }
 
         public HSDRawFile OpenHsdFile(string relativePath)
         {
-            return new HSDRawFile(GetReadPath(relativePath));
+            return FileStore.OpenHsdFile(relativePath);
         }
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
@@ -189,31 +180,22 @@ namespace KARToolkit.Core
 
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
-            return A2DPackage.TryOpen(GetReadPath(relativePath), out package, out error);
+            return FileStore.TryOpenA2DPackage(relativePath, out package, out error);
         }
 
         public A2DPackage OpenA2DPackage(string relativePath)
         {
-            if (!TryOpenA2DPackage(relativePath, out A2DPackage package, out string error))
-                throw new InvalidDataException(error);
-
-            return package;
+            return FileStore.OpenA2DPackage(relativePath);
         }
 
         public string SaveHsdFile(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-
-            return Workspace.SaveOutputFile(relativePath, tempPath => file.Save(tempPath, bufferAlign, optimize, trim));
+            return FileStore.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
         }
 
         public string SaveA2DPackage(string relativePath, A2DPackage package)
         {
-            if (package == null)
-                throw new ArgumentNullException(nameof(package));
-
-            return Workspace.SaveOutputFile(relativePath, package.Save);
+            return FileStore.SaveA2DPackage(relativePath, package);
         }
     }
 }
