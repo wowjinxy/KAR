@@ -487,56 +487,12 @@ internal static class KarCliDtoFactory
 
     public static object ToProjectOperationPresetCatalogDto(KarProjectOperationPresetCatalog catalog)
     {
-        return new
-        {
-            project = ToProjectDto(catalog.Project),
-            presetCount = catalog.PresetCount,
-            availablePresetCount = catalog.AvailablePresetCount,
-            runnablePresetCount = catalog.RunnablePresetCount,
-            outputPresetCount = catalog.OutputPresetCount,
-            modifiedOutputPresetCount = catalog.ModifiedOutputPresetCount,
-            hasPresets = catalog.HasPresets,
-            hasAvailablePresets = catalog.HasAvailablePresets,
-            hasRunnablePresets = catalog.HasRunnablePresets,
-            hasOutputPresets = catalog.HasOutputPresets,
-            hasModifiedOutputPresets = catalog.HasModifiedOutputPresets,
-            presets = catalog.Presets.Select(ToProjectOperationPresetDto).ToList(),
-        };
+        return catalog.CreateContract();
     }
 
     public static object ToProjectOperationPresetDto(KarProjectOperationPreset preset)
     {
-        return new
-        {
-            id = preset.Id,
-            domainId = preset.DomainId,
-            displayName = preset.DisplayName,
-            description = preset.Description,
-            actionId = preset.ActionId,
-            resourceKind = preset.ResourceKind == null ? null : preset.ResourceKind.ToString(),
-            mode = preset.Mode,
-            isReadOnly = preset.IsReadOnly,
-            writesOutput = preset.WritesOutput,
-            supportsBatch = preset.SupportsBatch,
-            requiresInputFile = preset.RequiresInputFile,
-            requiresFieldName = preset.RequiresFieldName,
-            requiresValue = preset.RequiresValue,
-            canRun = preset.CanRun,
-            wouldWriteOutput = preset.WouldWriteOutput,
-            hasModifiedOutputs = preset.HasModifiedOutputs,
-            operationUsage = preset.OperationUsage,
-            operationJsonUsage = preset.OperationJsonUsage,
-            batchUsage = preset.BatchUsage,
-            batchJsonUsage = preset.BatchJsonUsage,
-            operationCount = preset.OperationCount,
-            runnableOperationCount = preset.RunnableOperationCount,
-            outputOperationCount = preset.OutputOperationCount,
-            modifiedOutputOperationCount = preset.ModifiedOutputOperationCount,
-            hasOperations = preset.HasOperations,
-            hasRunnableOperations = preset.HasRunnableOperations,
-            hasOutputOperations = preset.HasOutputOperations,
-            hasModifiedOutputOperations = preset.HasModifiedOutputOperations,
-        };
+        return preset.CreateContract();
     }
 
     public static object ToProjectOperationDto(KarProjectOperation operation)

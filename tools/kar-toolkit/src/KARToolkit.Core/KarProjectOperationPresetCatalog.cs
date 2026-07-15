@@ -64,5 +64,10 @@ namespace KARToolkit.Core
         public bool HasOutputPresets => OutputPresetCount != 0;
 
         public bool HasModifiedOutputPresets => ModifiedOutputPresetCount != 0;
+
+        public KarProjectOperationPresetCatalogContract CreateContract()
+        {
+            return KarProjectOperationPresetCatalogContract.Create(this);
+        }
     }
 }

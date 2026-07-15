@@ -1060,6 +1060,8 @@ namespace KARToolkit.Core.Tests
                 KarProjectOperationPresetCatalog presetCatalog = project.CreateOperationPresetCatalog();
                 AssertTrue(presetCatalog.PresetCount >= 6, "operation preset catalogs should expose reusable toolkit operation queries");
                 AssertTrue(presetCatalog.AvailablePresetCount != 0 && presetCatalog.OutputPresetCount != 0, "operation preset catalogs should summarize availability and output-writing presets");
+                KarProjectOperationPresetCatalogContract presetCatalogContract = presetCatalog.CreateContract();
+                AssertTrue(presetCatalogContract.PresetCount == presetCatalog.PresetCount && presetCatalogContract.Presets.Count == presetCatalog.PresetCount, "operation preset catalog contracts should preserve preset counts");
                 KarProjectOperationPreset dumpScriptPreset = project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions
                 {
                     Id = "dump-script-bytes",
@@ -1067,6 +1069,8 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(dumpScriptPreset.ActionId == "dump-bytes" && dumpScriptPreset.DomainId == "script-tables", "operation presets should describe action and domain filters");
                 AssertTrue(dumpScriptPreset.OperationCount == scriptDumps.Count && dumpScriptPreset.RunnableOperationCount == scriptDumps.Count, "operation presets should attach live operation counts");
                 AssertTrue(dumpScriptPreset.OperationUsage.Contains("--domain script-tables") && dumpScriptPreset.BatchUsage.Contains("operation-batch"), "operation presets should expose reusable CLI usage strings");
+                KarProjectOperationPresetContract dumpScriptPresetContract = dumpScriptPreset.CreateContract();
+                AssertTrue(dumpScriptPresetContract.OperationCount == dumpScriptPreset.OperationCount && dumpScriptPresetContract.OperationJsonUsage.EndsWith("--json") && dumpScriptPresetContract.BatchUsage.Contains("operation-batch"), "operation preset contracts should preserve live counts and launcher usage");
                 AssertTrue(project.QueryOperations(dumpScriptPreset.CreateQueryOptions()).Count == scriptDumps.Count, "operation presets should create operation queries matching their live counts");
                 AssertTrue(project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions { WritesOutput = true, HasOperations = true }).Any(preset => preset.Id == "dump-script-bytes"), "operation preset queries should filter writable available presets");
 

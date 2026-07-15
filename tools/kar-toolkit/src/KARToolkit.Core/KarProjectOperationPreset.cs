@@ -130,6 +130,11 @@ namespace KARToolkit.Core
 
         public bool HasModifiedOutputOperations => Operations.HasModifiedOutputOperations;
 
+        public KarProjectOperationPresetContract CreateContract()
+        {
+            return KarProjectOperationPresetContract.Create(this);
+        }
+
         public KarProjectOperationQueryOptions CreateQueryOptions()
         {
             return new KarProjectOperationPresetDefinition(
