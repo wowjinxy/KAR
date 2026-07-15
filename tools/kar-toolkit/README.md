@@ -26,13 +26,14 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
-`KarProjectFileCatalog` is the replaceable service that connects file classification, archive metadata, HSD-kind checks, and map-name extraction, including map-specific archive root names.
+`KarProjectFileCatalog` is the replaceable service that connects file classification, HSD-kind checks, and map-name extraction.
+`KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.
 Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
 Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
-Archive metadata lives in `KarArchiveCatalog`; live HSD root inspection goes through `KarArchiveInspector`.
-Map archive/root definitions are grouped in `KarMapArchiveDefinitions`; `KarArchiveCatalog` handles lookup and compatibility wrappers.
+Archive metadata lookup lives in `KarArchiveDefinitionProvider`; `KarArchiveCatalog` provides static compatibility wrappers; live HSD root inspection goes through `KarArchiveInspector`.
+Map archive/root definitions are grouped in `KarMapArchiveDefinitions`; `KarArchiveDefinitionProvider` handles lookup.
 Vehicle, rider, versus, item, and enemy archive/root definitions live in their matching domain definition modules.
 General package/media/UI/effect/fallback archive definitions live in `KarGeneralArchiveDefinitions`.
 Map bundle inspection goes through `KarMapInspector`, which ties each map's data, model, and event/script archives together.

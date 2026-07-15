@@ -5,7 +5,7 @@ namespace KARToolkit.Core
 {
     public sealed class KarArchiveDefinition
     {
-        internal KarArchiveDefinition(
+        public KarArchiveDefinition(
             KarFileKind kind,
             string displayName,
             string category,
@@ -16,7 +16,9 @@ namespace KARToolkit.Core
             DisplayName = displayName;
             Category = category;
             Description = description;
-            Roots = roots.ToList().AsReadOnly();
+            Roots = (roots ?? Enumerable.Empty<KarRootDefinition>())
+                .ToList()
+                .AsReadOnly();
         }
 
         public KarFileKind Kind { get; }

@@ -10,6 +10,8 @@ namespace KARToolkit.Core
 
         public KarProjectFileCatalog FileCatalog { get; set; }
 
+        public KarArchiveDefinitionProvider ArchiveDefinitions { get; set; }
+
         public KarArchiveInspector ArchiveInspector { get; set; }
 
         public KarDataDefinitionRegistry DataDefinitions { get; set; }
@@ -21,6 +23,9 @@ namespace KARToolkit.Core
 
             if (FileCatalog != null)
                 return new KarProjectIndexer(FileCatalog);
+
+            if (ArchiveDefinitions != null)
+                return new KarProjectIndexer(new KarProjectFileCatalog(ArchiveDefinitions));
 
             return KarProjectIndexer.Default;
         }

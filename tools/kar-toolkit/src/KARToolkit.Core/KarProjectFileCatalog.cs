@@ -1,8 +1,24 @@
+using System;
+
 namespace KARToolkit.Core
 {
     public class KarProjectFileCatalog
     {
         public static KarProjectFileCatalog Default { get; } = new KarProjectFileCatalog();
+
+        private readonly KarArchiveDefinitionProvider _archiveDefinitions;
+
+        public KarProjectFileCatalog()
+            : this(KarArchiveDefinitionProvider.Default)
+        {
+        }
+
+        public KarProjectFileCatalog(KarArchiveDefinitionProvider archiveDefinitions)
+        {
+            _archiveDefinitions = archiveDefinitions ?? throw new ArgumentNullException(nameof(archiveDefinitions));
+        }
+
+        public KarArchiveDefinitionProvider ArchiveDefinitions => _archiveDefinitions;
 
         public virtual KarFileKind ClassifyKind(string relativePath)
         {
@@ -17,23 +33,10 @@ namespace KARToolkit.Core
         public virtual KarArchiveDefinition GetArchiveDefinition(string relativePath, KarFileKind kind)
         {
             string mapName;
-            switch (kind)
-            {
-                case KarFileKind.MapData:
-                    if (TryGetMapName(relativePath, kind, out mapName))
-                        return KarMapArchiveDefinitions.DefineMapData(kind, mapName);
-                    break;
-                case KarFileKind.MapModel:
-                    if (TryGetMapName(relativePath, kind, out mapName))
-                        return KarMapArchiveDefinitions.DefineMapModel(kind, mapName);
-                    break;
-                case KarFileKind.MapEvent:
-                    if (TryGetMapName(relativePath, kind, out mapName))
-                        return KarMapArchiveDefinitions.DefineMapEvent(kind, mapName);
-                    break;
-            }
+            if (TryGetMapName(relativePath, kind, out mapName))
+                return _archiveDefinitions.GetDefinition(relativePath, kind, mapName);
 
-            return KarArchiveCatalog.GetDefinition(relativePath, kind);
+            return _archiveDefinitions.GetDefinition(relativePath, kind, null);
         }
 
         public virtual bool IsHsdArchiveKind(KarFileKind kind)
