@@ -54,5 +54,88 @@ namespace KARToolkit.Core
             resolved = new KarProjectResolvedResource(resource, scriptTable);
             return true;
         }
+
+        public byte[] ReadBytes(string address)
+        {
+            return ReadBytes(Resolve(address));
+        }
+
+        public byte[] ReadBytes(KarProjectResolvedResource resolved)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+
+            return GetAdapter(resolved).ReadBytes(resolved.Resource);
+        }
+
+        public KarProjectResourceExportResult ExportToOutput(string address, bool overwrite = false)
+        {
+            return ExportToOutput(Resolve(address), overwrite);
+        }
+
+        public KarProjectResourceExportResult ExportToOutput(KarProjectResolvedResource resolved, bool overwrite = false)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+
+            return GetAdapter(resolved).ExportToOutput(resolved.Resource, overwrite);
+        }
+
+        public KarProjectResourceImportResult ImportFromFile(string address, string inputPath)
+        {
+            return ImportFromFile(Resolve(address), inputPath);
+        }
+
+        public KarProjectResourceImportResult ImportFromFile(KarProjectResolvedResource resolved, string inputPath)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+            if (string.IsNullOrWhiteSpace(inputPath))
+                throw new ArgumentException("Input path cannot be empty.", nameof(inputPath));
+
+            return GetAdapter(resolved).ImportFromFile(resolved.Resource, inputPath);
+        }
+
+        public KarProjectResourceScalarEditResult SetScalarFieldFromText(
+            string rootAddress,
+            string fieldName,
+            string rawValue,
+            bool bufferAlign = true,
+            bool optimize = true,
+            bool trim = false)
+        {
+            return SetScalarFieldFromText(
+                Resolve(rootAddress),
+                fieldName,
+                rawValue,
+                bufferAlign,
+                optimize,
+                trim);
+        }
+
+        public KarProjectResourceScalarEditResult SetScalarFieldFromText(
+            KarProjectResolvedResource resolved,
+            string fieldName,
+            string rawValue,
+            bool bufferAlign = true,
+            bool optimize = true,
+            bool trim = false)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+
+            return GetAdapter(resolved).SetScalarFieldFromText(
+                resolved.Resource,
+                fieldName,
+                rawValue,
+                bufferAlign,
+                optimize,
+                trim);
+        }
+
+        private KarProjectResourceAdapter GetAdapter(KarProjectResolvedResource resolved)
+        {
+            return _project.ResourceService.GetAdapter(resolved.Resource);
+        }
     }
 }

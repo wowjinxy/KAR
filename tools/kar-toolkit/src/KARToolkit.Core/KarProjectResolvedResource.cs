@@ -49,5 +49,19 @@ namespace KARToolkit.Core
         public bool IsLooseScriptTable => ScriptTable != null && ScriptTable.IsLooseFile;
 
         public bool IsPackageScriptTable => ScriptTable != null && ScriptTable.IsPackageEntry;
+
+        public bool CanQueryOutput => Resource.CanQueryOutput;
+
+        public bool CanReadBytes => Resource.CanReadBytes;
+
+        public bool CanExportToOutput => Resource.CanExportToOutput;
+
+        public bool CanImportFromFile => Resource.CanImportFromFile;
+
+        public bool CanSetScalarFields => Resource.CanSetScalarFields;
+
+        public bool CanQueryFieldValues => Resource.CanQueryFieldValues;
+
+        public bool CanApplyOutput => Resource.CanApplyOutput;
     }
 }

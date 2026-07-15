@@ -64,7 +64,7 @@ internal static class KarCliCopyCommands
     {
         options.RequirePositionals("export-resource", 2);
         KarProject project = OpenProject(options);
-        KarProjectResourceExportResult result = project.ResourceService.ExportToOutput(options.Positionals[1], options.Overwrite);
+        KarProjectResourceExportResult result = project.ResourceAddressService.ExportToOutput(options.Positionals[1], options.Overwrite);
 
         if (options.Json)
         {
@@ -80,7 +80,7 @@ internal static class KarCliCopyCommands
     {
         options.RequirePositionals("import-resource", 3);
         KarProject project = OpenProject(options);
-        KarProjectResourceImportResult result = project.ResourceService.ImportFromFile(options.Positionals[1], options.Positionals[2]);
+        KarProjectResourceImportResult result = project.ResourceAddressService.ImportFromFile(options.Positionals[1], options.Positionals[2]);
 
         if (options.Json)
         {

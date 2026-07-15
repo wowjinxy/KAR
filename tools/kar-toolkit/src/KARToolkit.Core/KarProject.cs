@@ -347,12 +347,12 @@ namespace KARToolkit.Core
 
         public byte[] ReadResourceBytes(string address)
         {
-            return ResourceService.ReadBytes(address);
+            return ResourceAddressService.ReadBytes(address);
         }
 
         public KarProjectResourceExportResult ExportResourceToOutput(string address, bool overwrite = false)
         {
-            return ResourceService.ExportToOutput(address, overwrite);
+            return ResourceAddressService.ExportToOutput(address, overwrite);
         }
 
         public KarProjectResourceExportResult ExportScriptTableToOutput(string address, bool overwrite = false)
@@ -367,7 +367,7 @@ namespace KARToolkit.Core
 
         public KarProjectResourceImportResult ImportResourceFromFile(string address, string inputPath)
         {
-            return ResourceService.ImportFromFile(address, inputPath);
+            return ResourceAddressService.ImportFromFile(address, inputPath);
         }
 
         public KarProjectResourceImportResult ImportScriptTableFromFile(string address, string inputPath)
@@ -377,7 +377,7 @@ namespace KARToolkit.Core
 
         public KarProjectResourceScalarEditResult SetResourceScalarFieldFromText(string rootAddress, string fieldName, string rawValue)
         {
-            return ResourceService.SetScalarFieldFromText(rootAddress, fieldName, rawValue);
+            return ResourceAddressService.SetScalarFieldFromText(rootAddress, fieldName, rawValue);
         }
 
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)

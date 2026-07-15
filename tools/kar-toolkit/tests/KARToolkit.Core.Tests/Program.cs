@@ -731,7 +731,10 @@ namespace KARToolkit.Core.Tests
                     () => resources.GetAdapter(KarResourceKind.HsdRoot).ReadBytes(resources.Get("VsHydra.dat:vsDataHydra")),
                     "resource adapters should reject unsupported root byte reads");
                 AssertTrue(resources.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource reads should return active file bytes");
+                AssertTrue(project.ResourceAddressService.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource address services should read file bytes");
                 AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "project resource read wrapper should return A2D entry bytes");
+                KarProjectResolvedResource resolvedEntry = project.ResolveResourceAddress("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(resolvedEntry.CanReadBytes && project.ResourceAddressService.ReadBytes(resolvedEntry).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "resource address services should read resolved entry bytes");
                 AssertThrows<NotSupportedException>(
                     () => resources.ReadBytes("VsHydra.dat:vsDataHydra"),
                     "resource reads should reject non-byte-addressable HSD roots");
@@ -758,6 +761,8 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(entryExport.WroteOutput, "A2D resource export should write missing sidecar outputs");
                 AssertTrue(File.ReadAllBytes(entryExport.OutputPath).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D resource export should extract entry bytes to output sidecars");
                 AssertTrue(!File.Exists(project.FileService.GetOutputPath("A2Info.dat")) || File.ReadAllBytes(project.FileService.GetOutputPath("A2Info.dat")).SequenceEqual(packageBytes), "A2D resource export should not mutate source packages");
+                KarProjectResourceExportResult resolvedExport = project.ResourceAddressService.ExportToOutput(resolvedEntry, overwrite: true);
+                AssertTrue(resolvedExport.Address == "A2Info.dat#ScInfGo2D.tm" && resolvedExport.WroteOutput, "resource address services should export resolved resources");
             }
             finally
             {
@@ -804,6 +809,12 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(entryImport.OutputRelativePath == "A2Info.dat", "A2D resource imports should report package output paths");
                 AssertTrue(entryImport.A2DReplaceResult.ReplacementLength == 4, "A2D resource imports should report replacement lengths");
                 AssertTrue(resources.ReadBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0x11, 0x22, 0x33, 0x44 }), "A2D resource reads should see imported output package bytes");
+
+                KarProjectResolvedResource resolvedEntry = project.ResolveResourceAddress("A2Info.dat#ScInfGo2D.tm");
+                File.WriteAllBytes(entryReplacementPath, new byte[] { 0x21, 0x22, 0x23, 0x24 });
+                KarProjectResourceImportResult resolvedImport = project.ResourceAddressService.ImportFromFile(resolvedEntry, entryReplacementPath);
+                AssertTrue(resolvedImport.Address == "A2Info.dat#ScInfGo2D.tm", "resource address services should import resolved resources");
+                AssertTrue(project.ResourceAddressService.ReadBytes(resolvedEntry).SequenceEqual(new byte[] { 0x21, 0x22, 0x23, 0x24 }), "resolved resource reads should see imported output bytes");
 
                 A2DPackage sourceOnlyPackage;
                 string error;
@@ -852,12 +863,20 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(File.Exists(result.OutputPath), "resource scalar edits should save edited archives to output");
                 AssertTrue(project.OutputService.GetFile("VsHydra.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "resource scalar edits should register modified output archives");
 
+                KarProjectResolvedResource resolvedHydra = project.ResolveResourceAddress("VsHydra.dat:vsDataHydra");
+                AssertTrue(resolvedHydra.CanSetScalarFields, "resolved HSD roots should expose scalar edit capability");
+                KarProjectResourceScalarEditResult addressResult = project.ResourceAddressService.SetScalarFieldFromText(
+                    resolvedHydra,
+                    "x0C",
+                    "0x259");
+                AssertTrue(addressResult.Edit.NewValue.SignedValue == 601, "resource address services should edit scalar fields on resolved roots");
+
                 KarProjectFieldInfo editedField = project.DataService.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "kar.vs.legendary",
                     FieldName = "x0C",
                 }).Single(field => field.RelativePath == "VsHydra.dat");
-                AssertTrue(editedField.Value.SignedValue == 500, "project data queries should read resource scalar edits from output copies");
+                AssertTrue(editedField.Value.SignedValue == 601, "project data queries should read address-service scalar edits from output copies");
 
                 KarArchiveInfo sourceInfo = project.ArchiveInspector.Inspect(
                     project.FileService.Get("VsHydra.dat"),

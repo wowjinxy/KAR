@@ -48,7 +48,7 @@ internal static class KarCliEditCommands
         string fieldName = options.Positionals[2];
         string rawValue = options.Positionals[3];
 
-        KarProjectResourceScalarEditResult result = project.ResourceService.SetScalarFieldFromText(
+        KarProjectResourceScalarEditResult result = project.ResourceAddressService.SetScalarFieldFromText(
             rootAddress,
             fieldName,
             rawValue);
