@@ -60,6 +60,8 @@ internal static class KarCliTextWriter
     public static void PrintDataDefinition(KarDataDefinition definition, string indent)
     {
         Console.WriteLine(indent + "schema: " + definition.Id + " (" + definition.DisplayName + ")");
+        if (definition.Size.HasValue)
+            Console.WriteLine(indent + "  size: " + definition.SizeHex);
         if (!string.IsNullOrEmpty(definition.Description))
             Console.WriteLine(indent + "  " + definition.Description);
 
@@ -85,6 +87,19 @@ internal static class KarCliTextWriter
                 Console.WriteLine(indent + "    ref schema: " + value.ReferenceDataDefinition.Id + " (" + value.ReferenceDataDefinition.DisplayName + ")");
             if (value.HasReferenceFieldValues)
                 PrintFieldValues(value.ReferenceFieldValues, indent + "    ");
+            if (value.HasReferenceEntries)
+            {
+                string total = value.ReferenceEntryTotalCount.HasValue
+                    ? "/" + value.ReferenceEntryTotalCount.Value
+                    : "";
+                Console.WriteLine(indent + "    ref entries: " + value.ReferenceEntryCount + total);
+                foreach (KarDataReferenceEntry entry in value.ReferenceEntries)
+                {
+                    Console.WriteLine(indent + "      [" + entry.Index + "] offset=" + entry.OffsetHex);
+                    if (entry.HasFieldValues)
+                        PrintFieldValues(entry.FieldValues, indent + "        ");
+                }
+            }
         }
     }
 }

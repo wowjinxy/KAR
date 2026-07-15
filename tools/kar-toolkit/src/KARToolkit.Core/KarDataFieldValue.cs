@@ -18,6 +18,8 @@ namespace KARToolkit.Core
             int? referenceLength = null,
             KarDataDefinition referenceDataDefinition = null,
             IEnumerable<KarDataFieldValue> referenceFieldValues = null,
+            IEnumerable<KarDataReferenceEntry> referenceEntries = null,
+            int? referenceEntryTotalCount = null,
             string error = null)
         {
             Field = field ?? throw new ArgumentNullException(nameof(field));
@@ -33,6 +35,10 @@ namespace KARToolkit.Core
             ReferenceFieldValues = (referenceFieldValues ?? Enumerable.Empty<KarDataFieldValue>())
                 .ToList()
                 .AsReadOnly();
+            ReferenceEntries = (referenceEntries ?? Enumerable.Empty<KarDataReferenceEntry>())
+                .ToList()
+                .AsReadOnly();
+            ReferenceEntryTotalCount = referenceEntryTotalCount;
             Error = error;
         }
 
@@ -62,11 +68,36 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarDataFieldValue> ReferenceFieldValues { get; }
 
+        public IReadOnlyList<KarDataReferenceEntry> ReferenceEntries { get; }
+
+        public int ReferenceEntryCount => ReferenceEntries.Count;
+
+        public int? ReferenceEntryTotalCount { get; }
+
         public bool HasReferenceDataDefinition => ReferenceDataDefinition != null;
 
         public bool HasReferenceFieldValues => ReferenceFieldValues.Count != 0;
 
+        public bool HasReferenceEntries => ReferenceEntries.Count != 0;
+
+        public bool HasReferenceEntryOverflow => ReferenceEntryTotalCount.HasValue && ReferenceEntryTotalCount.Value > ReferenceEntryCount;
+
         public string Error { get; }
+
+        public KarDataReferenceEntry GetReferenceEntry(int index)
+        {
+            KarDataReferenceEntry entry;
+            if (!TryGetReferenceEntry(index, out entry))
+                throw new KeyNotFoundException("KAR referenced data entry was not found: " + index);
+
+            return entry;
+        }
+
+        public bool TryGetReferenceEntry(int index, out KarDataReferenceEntry entry)
+        {
+            entry = ReferenceEntries.FirstOrDefault(candidate => candidate.Index == index);
+            return entry != null;
+        }
 
         public KarDataFieldValue GetReferenceFieldValue(string fieldName)
         {

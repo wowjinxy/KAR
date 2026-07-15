@@ -20,7 +20,8 @@ namespace KARToolkit.Core
             KarDataInspectionOptions options = null)
         {
             int maxReferenceDepth = options == null ? 1 : Math.Max(0, options.MaxReferenceDepth);
-            return InspectFields(accessor, definition, dataDefinitions, maxReferenceDepth, new HashSet<HSDStruct>());
+            int maxReferenceEntries = options == null ? 8 : Math.Max(0, options.MaxReferenceEntries);
+            return InspectFields(accessor, definition, dataDefinitions, maxReferenceDepth, maxReferenceEntries, new HashSet<HSDStruct>());
         }
 
         private static IReadOnlyList<KarDataFieldValue> InspectFields(
@@ -28,6 +29,7 @@ namespace KARToolkit.Core
             KarDataDefinition definition,
             KarDataDefinitionRegistry dataDefinitions,
             int remainingReferenceDepth,
+            int maxReferenceEntries,
             HashSet<HSDStruct> visited)
         {
             if (accessor == null || accessor._s == null || definition == null)
@@ -36,14 +38,14 @@ namespace KARToolkit.Core
                 return Array.Empty<KarDataFieldValue>();
 
             return definition.Fields
-                .Select(field => InspectField(accessor, field, dataDefinitions, remainingReferenceDepth, visited))
+                .Select(field => InspectField(accessor, field, dataDefinitions, remainingReferenceDepth, maxReferenceEntries, visited))
                 .ToList()
                 .AsReadOnly();
         }
 
         public static KarDataFieldValue InspectField(HSDAccessor accessor, KarDataFieldDefinition field)
         {
-            return InspectField(accessor, field, null, 0, new HashSet<HSDStruct>());
+            return InspectField(accessor, field, null, 0, 0, new HashSet<HSDStruct>());
         }
 
         private static KarDataFieldValue InspectField(
@@ -51,6 +53,7 @@ namespace KARToolkit.Core
             KarDataFieldDefinition field,
             KarDataDefinitionRegistry dataDefinitions,
             int remainingReferenceDepth,
+            int maxReferenceEntries,
             HashSet<HSDStruct> visited)
         {
             if (!field.Offset.HasValue)
@@ -61,7 +64,7 @@ namespace KARToolkit.Core
                 return new KarDataFieldValue(field, false, "error", "<invalid offset>", error: "Field offset is negative.");
 
             if (field.IsPointer)
-                return InspectReference(accessor, field, offset, dataDefinitions, remainingReferenceDepth, visited);
+                return InspectReference(accessor, field, offset, dataDefinitions, remainingReferenceDepth, maxReferenceEntries, visited);
 
             KarDataScalarKind kind;
             int size;
@@ -94,6 +97,7 @@ namespace KARToolkit.Core
             int offset,
             KarDataDefinitionRegistry dataDefinitions,
             int remainingReferenceDepth,
+            int maxReferenceEntries,
             HashSet<HSDStruct> visited)
         {
             if (!IsInRange(accessor, offset, 4))
@@ -105,14 +109,31 @@ namespace KARToolkit.Core
 
             KarDataDefinition referenceDefinition = ResolveReferenceDefinition(field, dataDefinitions);
             IReadOnlyList<KarDataFieldValue> referenceFieldValues = Array.Empty<KarDataFieldValue>();
-            if (referenceDefinition != null && remainingReferenceDepth > 0 && !visited.Contains(reference))
+            IReadOnlyList<KarDataReferenceEntry> referenceEntries = Array.Empty<KarDataReferenceEntry>();
+            int? referenceEntryTotalCount = null;
+            if (referenceDefinition != null && !visited.Contains(reference))
             {
-                referenceFieldValues = InspectFields(
-                    new HSDAccessor { _s = reference },
-                    referenceDefinition,
-                    dataDefinitions,
-                    remainingReferenceDepth - 1,
-                    visited);
+                if (CanInspectReferenceEntries(field, referenceDefinition, reference, maxReferenceEntries))
+                {
+                    referenceEntries = InspectReferenceEntries(
+                        reference,
+                        referenceDefinition,
+                        dataDefinitions,
+                        remainingReferenceDepth,
+                        maxReferenceEntries,
+                        visited,
+                        out referenceEntryTotalCount);
+                }
+                else if (remainingReferenceDepth > 0)
+                {
+                    referenceFieldValues = InspectFields(
+                        new HSDAccessor { _s = reference },
+                        referenceDefinition,
+                        dataDefinitions,
+                        remainingReferenceDepth - 1,
+                        maxReferenceEntries,
+                        visited);
+                }
             }
 
             return new KarDataFieldValue(
@@ -123,7 +144,72 @@ namespace KARToolkit.Core
                 hasReference: true,
                 referenceLength: reference.Length,
                 referenceDataDefinition: referenceDefinition,
-                referenceFieldValues: referenceFieldValues);
+                referenceFieldValues: referenceFieldValues,
+                referenceEntries: referenceEntries,
+                referenceEntryTotalCount: referenceEntryTotalCount);
+        }
+
+        private static bool CanInspectReferenceEntries(
+            KarDataFieldDefinition field,
+            KarDataDefinition referenceDefinition,
+            HSDStruct reference,
+            int maxReferenceEntries)
+        {
+            if (maxReferenceEntries == 0 ||
+                referenceDefinition == null ||
+                !referenceDefinition.Size.HasValue ||
+                referenceDefinition.Size.Value <= 0 ||
+                reference == null)
+            {
+                return false;
+            }
+
+            int entrySize = referenceDefinition.Size.Value;
+            if (reference.Length < entrySize || reference.Length % entrySize != 0)
+                return false;
+
+            return reference.Length != entrySize || LooksLikeReferenceTable(field.TypeName);
+        }
+
+        private static IReadOnlyList<KarDataReferenceEntry> InspectReferenceEntries(
+            HSDStruct reference,
+            KarDataDefinition referenceDefinition,
+            KarDataDefinitionRegistry dataDefinitions,
+            int remainingReferenceDepth,
+            int maxReferenceEntries,
+            HashSet<HSDStruct> visited,
+            out int? referenceEntryTotalCount)
+        {
+            int entrySize = referenceDefinition.Size.Value;
+            int totalEntryCount = reference.Length / entrySize;
+            int entryCount = Math.Min(totalEntryCount, maxReferenceEntries);
+            List<KarDataReferenceEntry> entries = new List<KarDataReferenceEntry>();
+
+            referenceEntryTotalCount = totalEntryCount;
+            for (int i = 0; i < entryCount; i++)
+            {
+                int offset = i * entrySize;
+                HSDStruct entryStruct = reference.GetEmbeddedStruct(offset, entrySize);
+                IReadOnlyList<KarDataFieldValue> fieldValues = InspectFields(
+                    new HSDAccessor { _s = entryStruct },
+                    referenceDefinition,
+                    dataDefinitions,
+                    remainingReferenceDepth,
+                    maxReferenceEntries,
+                    visited);
+
+                entries.Add(new KarDataReferenceEntry(i, offset, fieldValues));
+            }
+
+            return entries.AsReadOnly();
+        }
+
+        private static bool LooksLikeReferenceTable(string typeName)
+        {
+            if (string.IsNullOrWhiteSpace(typeName))
+                return false;
+
+            return typeName.IndexOf("Array", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private static KarDataDefinition ResolveReferenceDefinition(KarDataFieldDefinition field, KarDataDefinitionRegistry dataDefinitions)

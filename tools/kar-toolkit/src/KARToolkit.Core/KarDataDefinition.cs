@@ -13,12 +13,15 @@ namespace KARToolkit.Core
             string accessorTypeName,
             string description,
             string source,
-            IEnumerable<KarDataFieldDefinition> fields)
+            IEnumerable<KarDataFieldDefinition> fields,
+            int? size = null)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("Definition id cannot be empty.", nameof(id));
             if (string.IsNullOrWhiteSpace(displayName))
                 throw new ArgumentException("Display name cannot be empty.", nameof(displayName));
+            if (size.HasValue && size.Value <= 0)
+                throw new ArgumentOutOfRangeException(nameof(size), "Definition size must be positive.");
 
             Id = id;
             DisplayName = displayName;
@@ -26,6 +29,7 @@ namespace KARToolkit.Core
             AccessorTypeName = accessorTypeName;
             Description = description;
             Source = source;
+            Size = size;
             Fields = (fields ?? Enumerable.Empty<KarDataFieldDefinition>())
                 .ToList()
                 .AsReadOnly();
@@ -42,6 +46,10 @@ namespace KARToolkit.Core
         public string Description { get; }
 
         public string Source { get; }
+
+        public int? Size { get; }
+
+        public string SizeHex => Size.HasValue ? "0x" + Size.Value.ToString("X") : null;
 
         public IReadOnlyList<KarDataFieldDefinition> Fields { get; }
 

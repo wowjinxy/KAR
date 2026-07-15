@@ -109,6 +109,8 @@ internal static class KarCliDtoFactory
             accessorTypeName = definition.AccessorTypeName,
             description = definition.Description,
             source = definition.Source,
+            size = definition.Size,
+            sizeHex = definition.SizeHex,
             fieldCount = definition.Fields.Count,
             fields = definition.Fields.Select(ToDataFieldDto).ToList(),
         };
@@ -146,7 +148,21 @@ internal static class KarCliDtoFactory
             referenceLengthHex = value.ReferenceLengthHex,
             referenceDataDefinition = ToDataDefinitionDtoOrNull(value.ReferenceDataDefinition),
             referenceFieldValues = value.ReferenceFieldValues.Select(ToFieldValueDto).ToList(),
+            referenceEntryCount = value.ReferenceEntryCount,
+            referenceEntryTotalCount = value.ReferenceEntryTotalCount,
+            referenceEntries = value.ReferenceEntries.Select(ToReferenceEntryDto).ToList(),
             error = value.Error,
+        };
+    }
+
+    public static object ToReferenceEntryDto(KarDataReferenceEntry entry)
+    {
+        return new
+        {
+            index = entry.Index,
+            offset = entry.Offset,
+            offsetHex = entry.OffsetHex,
+            fieldValues = entry.FieldValues.Select(ToFieldValueDto).ToList(),
         };
     }
 
