@@ -13,36 +13,30 @@ namespace KARToolkit.Core
         private readonly Dictionary<string, KarMapBundle> _mapsByName;
 
         private KarProject(
-            string sourceRoot,
-            string sourceFilesRoot,
-            string outputRoot,
-            string outputFilesRoot,
-            bool sourceHasFilesDirectory,
+            KarProjectWorkspace workspace,
             IReadOnlyList<KarProjectFile> files,
             IReadOnlyList<KarMapBundle> maps)
         {
-            SourceRoot = sourceRoot;
-            SourceFilesRoot = sourceFilesRoot;
-            OutputRoot = outputRoot;
-            OutputFilesRoot = outputFilesRoot;
-            SourceHasFilesDirectory = sourceHasFilesDirectory;
+            Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Files = files;
             Maps = maps;
             _filesByPath = files.ToDictionary(f => f.RelativePath, StringComparer.OrdinalIgnoreCase);
             _mapsByName = maps.ToDictionary(map => map.Name, StringComparer.OrdinalIgnoreCase);
         }
 
-        public string SourceRoot { get; }
+        public KarProjectWorkspace Workspace { get; }
 
-        public string Name => Path.GetFileName(SourceRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        public string SourceRoot => Workspace.SourceRoot;
 
-        public string SourceFilesRoot { get; }
+        public string Name => Workspace.Name;
 
-        public string OutputRoot { get; }
+        public string SourceFilesRoot => Workspace.SourceFilesRoot;
 
-        public string OutputFilesRoot { get; }
+        public string OutputRoot => Workspace.OutputRoot;
 
-        public bool SourceHasFilesDirectory { get; }
+        public string OutputFilesRoot => Workspace.OutputFilesRoot;
+
+        public bool SourceHasFilesDirectory => Workspace.SourceHasFilesDirectory;
 
         public IReadOnlyList<KarProjectFile> Files { get; }
 
@@ -59,43 +53,17 @@ namespace KARToolkit.Core
 
         public static KarProject Open(string sourceRoot, string outputRoot)
         {
-            if (string.IsNullOrWhiteSpace(sourceRoot))
-                throw new ArgumentException("Source root cannot be empty.", nameof(sourceRoot));
-
-            var fullSourceRoot = Path.GetFullPath(sourceRoot);
-            if (!Directory.Exists(fullSourceRoot))
-                throw new DirectoryNotFoundException(fullSourceRoot);
-
-            bool sourceHasFilesDirectory;
-            var sourceFilesRoot = ResolveSourceFilesRoot(fullSourceRoot, out sourceHasFilesDirectory);
-            var fullOutputRoot = string.IsNullOrWhiteSpace(outputRoot)
-                ? GetDefaultOutputRoot(fullSourceRoot, sourceHasFilesDirectory)
-                : Path.GetFullPath(outputRoot);
-            var outputFilesRoot = sourceHasFilesDirectory
-                ? Path.Combine(fullOutputRoot, "files")
-                : fullOutputRoot;
-
-            EnsureSeparateRoot(sourceFilesRoot, outputFilesRoot, "Output files root cannot be inside the source files root.");
-            EnsureSeparateRoot(fullSourceRoot, fullOutputRoot, "Output root cannot be inside the source root.");
-            EnsureSeparateRoot(fullOutputRoot, fullSourceRoot, "Source root cannot be inside the output root.");
-
-            var files = BuildFileIndex(sourceFilesRoot, outputFilesRoot);
+            KarProjectWorkspace workspace = KarProjectWorkspace.Open(sourceRoot, outputRoot);
+            var files = BuildFileIndex(workspace);
             var maps = BuildMapIndex(files);
 
-            return new KarProject(
-                fullSourceRoot,
-                sourceFilesRoot,
-                fullOutputRoot,
-                outputFilesRoot,
-                sourceHasFilesDirectory,
-                files,
-                maps);
+            return new KarProject(workspace, files, maps);
         }
 
         public KarProjectFile GetFile(string relativePath)
         {
             KarProjectFile file;
-            var normalized = NormalizeRelativePath(relativePath);
+            var normalized = KarProjectWorkspace.NormalizeRelativePath(relativePath);
             if (!_filesByPath.TryGetValue(normalized, out file))
                 throw new FileNotFoundException("Project file was not found.", normalized);
             return file;
@@ -103,7 +71,7 @@ namespace KARToolkit.Core
 
         public bool TryGetFile(string relativePath, out KarProjectFile file)
         {
-            var normalized = NormalizeRelativePath(relativePath);
+            var normalized = KarProjectWorkspace.NormalizeRelativePath(relativePath);
             return _filesByPath.TryGetValue(normalized, out file);
         }
 
@@ -138,18 +106,13 @@ namespace KARToolkit.Core
 
         public string GetOutputPath(string relativePath)
         {
-            return ResolveUnderRoot(OutputFilesRoot, NormalizeRelativePath(relativePath));
+            return Workspace.GetOutputPath(relativePath);
         }
 
         public string CopyToOutput(string relativePath, bool overwrite = false)
         {
             var file = GetFile(relativePath);
-            var outputPath = PrepareOutputPath(file.RelativePath);
-
-            if (overwrite || !File.Exists(outputPath))
-                File.Copy(file.SourcePath, outputPath, overwrite);
-
-            return outputPath;
+            return Workspace.CopyToOutput(file.RelativePath, overwrite);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
@@ -178,12 +141,7 @@ namespace KARToolkit.Core
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            var normalized = NormalizeRelativePath(relativePath);
-            var outputPath = PrepareOutputPath(normalized);
-            var tempPath = outputPath + ".tmp";
-
-            File.WriteAllBytes(tempPath, data);
-            ReplaceFile(tempPath, outputPath);
+            Workspace.WriteBytes(relativePath, data);
         }
 
         public HSDRawFile OpenHsdFile(string relativePath)
@@ -269,13 +227,7 @@ namespace KARToolkit.Core
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            var normalized = NormalizeRelativePath(relativePath);
-            var outputPath = PrepareOutputPath(normalized);
-            var tempPath = outputPath + ".tmp";
-
-            file.Save(tempPath, bufferAlign, optimize, trim);
-            ReplaceFile(tempPath, outputPath);
-            return outputPath;
+            return Workspace.SaveOutputFile(relativePath, tempPath => file.Save(tempPath, bufferAlign, optimize, trim));
         }
 
         public string SaveA2DPackage(string relativePath, A2DPackage package)
@@ -283,52 +235,20 @@ namespace KARToolkit.Core
             if (package == null)
                 throw new ArgumentNullException(nameof(package));
 
-            var normalized = NormalizeRelativePath(relativePath);
-            var outputPath = PrepareOutputPath(normalized);
-            var tempPath = outputPath + ".tmp";
-
-            package.Save(tempPath);
-            ReplaceFile(tempPath, outputPath);
-            return outputPath;
+            return Workspace.SaveOutputFile(relativePath, package.Save);
         }
 
-        private static string ResolveSourceFilesRoot(string sourceRoot, out bool sourceHasFilesDirectory)
-        {
-            var filesRoot = Path.Combine(sourceRoot, "files");
-            if (Directory.Exists(filesRoot))
-            {
-                sourceHasFilesDirectory = true;
-                return filesRoot;
-            }
-
-            sourceHasFilesDirectory = false;
-            return sourceRoot;
-        }
-
-        private static string GetDefaultOutputRoot(string sourceRoot, bool sourceHasFilesDirectory)
-        {
-            if (sourceHasFilesDirectory)
-                return sourceRoot + "_mod";
-
-            var directoryName = Path.GetFileName(sourceRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-            var parent = Directory.GetParent(sourceRoot);
-            if (string.Equals(directoryName, "files", StringComparison.OrdinalIgnoreCase) && parent != null && parent.Parent != null)
-                return Path.Combine(parent.Parent.FullName, parent.Name + "_mod", "files");
-
-            return sourceRoot + "_mod";
-        }
-
-        private static IReadOnlyList<KarProjectFile> BuildFileIndex(string sourceFilesRoot, string outputFilesRoot)
+        private static IReadOnlyList<KarProjectFile> BuildFileIndex(KarProjectWorkspace workspace)
         {
             return Directory
-                .EnumerateFiles(sourceFilesRoot, "*", SearchOption.AllDirectories)
+                .EnumerateFiles(workspace.SourceFilesRoot, "*", SearchOption.AllDirectories)
                 .Select(path =>
                 {
-                    var relativePath = GetRelativePath(sourceFilesRoot, path);
+                    var relativePath = workspace.GetRelativeSourcePath(path);
                     return new KarProjectFile(
                         relativePath,
                         path,
-                        ResolveUnderRoot(outputFilesRoot, relativePath),
+                        workspace.GetOutputPath(relativePath),
                         KarArchiveCatalog.ClassifyKind(relativePath));
                 })
                 .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
@@ -377,45 +297,6 @@ namespace KARToolkit.Core
             return InspectHsdArchive(file.RelativePath);
         }
 
-        private string PrepareOutputPath(string relativePath)
-        {
-            var outputPath = ResolveUnderRoot(OutputFilesRoot, relativePath);
-            var parent = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(parent))
-                Directory.CreateDirectory(parent);
-            return outputPath;
-        }
-
-        private static void ReplaceFile(string tempPath, string outputPath)
-        {
-            if (File.Exists(outputPath))
-                File.Delete(outputPath);
-            File.Move(tempPath, outputPath);
-        }
-
-        private static string NormalizeRelativePath(string relativePath)
-        {
-            if (string.IsNullOrWhiteSpace(relativePath))
-                throw new ArgumentException("Relative path cannot be empty.", nameof(relativePath));
-            if (Path.IsPathRooted(relativePath))
-                throw new ArgumentException("Project paths must be relative.", nameof(relativePath));
-
-            var parts = relativePath
-                .Replace('\\', '/')
-                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length == 0)
-                throw new ArgumentException("Relative path cannot be empty.", nameof(relativePath));
-
-            foreach (var part in parts)
-            {
-                if (part == "." || part == "..")
-                    throw new ArgumentException("Project paths cannot contain traversal segments.", nameof(relativePath));
-            }
-
-            return string.Join("/", parts);
-        }
-
         private static string NormalizeMapName(string mapNameOrPath)
         {
             string name = Path.GetFileNameWithoutExtension(mapNameOrPath.Trim());
@@ -431,52 +312,6 @@ namespace KARToolkit.Core
                 name = name.Substring(0, name.Length - "Event".Length);
 
             return name;
-        }
-
-        private static string ResolveUnderRoot(string root, string relativePath)
-        {
-            var normalized = NormalizeRelativePath(relativePath);
-            var platformPath = normalized.Replace('/', Path.DirectorySeparatorChar);
-            var fullPath = Path.GetFullPath(Path.Combine(root, platformPath));
-
-            if (!IsSameOrChildPath(root, fullPath))
-                throw new InvalidOperationException("Resolved path escaped its project root.");
-
-            return fullPath;
-        }
-
-        private static string GetRelativePath(string root, string path)
-        {
-            var rootUri = new Uri(AppendDirectorySeparator(Path.GetFullPath(root)));
-            var pathUri = new Uri(Path.GetFullPath(path));
-            var relativeUri = rootUri.MakeRelativeUri(pathUri);
-            return Uri.UnescapeDataString(relativeUri.ToString()).Replace('\\', '/');
-        }
-
-        private static string AppendDirectorySeparator(string path)
-        {
-            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()) ||
-                path.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
-            {
-                return path;
-            }
-
-            return path + Path.DirectorySeparatorChar;
-        }
-
-        private static void EnsureSeparateRoot(string sourceRoot, string outputRoot, string message)
-        {
-            if (IsSameOrChildPath(sourceRoot, outputRoot))
-                throw new InvalidOperationException(message);
-        }
-
-        private static bool IsSameOrChildPath(string root, string path)
-        {
-            var fullRoot = AppendDirectorySeparator(Path.GetFullPath(root));
-            var fullPath = Path.GetFullPath(path);
-
-            return fullPath.Equals(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) ||
-                fullPath.StartsWith(fullRoot, StringComparison.OrdinalIgnoreCase);
         }
 
         private sealed class MapBundleBuilder
