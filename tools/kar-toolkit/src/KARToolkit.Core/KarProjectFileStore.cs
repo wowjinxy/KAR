@@ -33,22 +33,49 @@ namespace KARToolkit.Core
 
         public string CopyToOutput(string relativePath, bool overwrite = false)
         {
+            return CopyFileToOutput(relativePath, overwrite).OutputPath;
+        }
+
+        public KarProjectFileCopyResult CopyFileToOutput(string relativePath, bool overwrite = false)
+        {
             KarProjectFile file = _index.GetFile(relativePath);
-            return _workspace.CopyToOutput(file.RelativePath, overwrite);
+            DateTime sourceLastWriteTimeUtc = File.GetLastWriteTimeUtc(file.SourcePath);
+            string outputPath = _workspace.CopyToOutput(file.RelativePath, overwrite);
+
+            if (File.GetLastWriteTimeUtc(file.SourcePath) != sourceLastWriteTimeUtc)
+                throw new InvalidOperationException("Source file timestamp changed while copying: " + file.RelativePath);
+
+            return new KarProjectFileCopyResult(file, outputPath, sourceLastWriteTimeUtc);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return CopyMapToOutput(_index.GetMap(mapNameOrPath), overwrite);
+            return CopyMapFilesToOutput(mapNameOrPath, overwrite)
+                .Select(result => result.OutputPath)
+                .ToList()
+                .AsReadOnly();
         }
 
         public IReadOnlyList<string> CopyMapToOutput(KarMapBundle map, bool overwrite = false)
+        {
+            return CopyMapFilesToOutput(map, overwrite)
+                .Select(result => result.OutputPath)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(string mapNameOrPath, bool overwrite = false)
+        {
+            return CopyMapFilesToOutput(_index.GetMap(mapNameOrPath), overwrite);
+        }
+
+        public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(KarMapBundle map, bool overwrite = false)
         {
             if (map == null)
                 throw new ArgumentNullException(nameof(map));
 
             return map.Files
-                .Select(file => CopyToOutput(file.RelativePath, overwrite))
+                .Select(file => CopyFileToOutput(file.RelativePath, overwrite))
                 .ToList()
                 .AsReadOnly();
         }

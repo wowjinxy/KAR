@@ -125,6 +125,11 @@ namespace KARToolkit.Core
             return FileStore.CopyToOutput(relativePath, overwrite);
         }
 
+        public KarProjectFileCopyResult CopyFileToOutput(string relativePath, bool overwrite = false)
+        {
+            return FileStore.CopyFileToOutput(relativePath, overwrite);
+        }
+
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
         {
             return FileStore.CopyMapToOutput(mapNameOrPath, overwrite);
@@ -133,6 +138,16 @@ namespace KARToolkit.Core
         public IReadOnlyList<string> CopyMapToOutput(KarMapBundle map, bool overwrite = false)
         {
             return FileStore.CopyMapToOutput(map, overwrite);
+        }
+
+        public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(string mapNameOrPath, bool overwrite = false)
+        {
+            return FileStore.CopyMapFilesToOutput(mapNameOrPath, overwrite);
+        }
+
+        public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(KarMapBundle map, bool overwrite = false)
+        {
+            return FileStore.CopyMapFilesToOutput(map, overwrite);
         }
 
         public byte[] ReadBytes(string relativePath)
