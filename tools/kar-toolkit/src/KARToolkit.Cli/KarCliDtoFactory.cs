@@ -65,6 +65,39 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectModWorkspaceDto(KarProjectModWorkspace workspace)
+    {
+        return new
+        {
+            project = ToProjectDto(workspace.Project),
+            outputRoot = workspace.Project.OutputRoot,
+            outputFilesRoot = workspace.Project.OutputFilesRoot,
+            hasOutputs = workspace.HasOutputs,
+            hasModifiedOutputs = workspace.HasModifiedOutputs,
+            outputFileCount = workspace.OutputFileCount,
+            projectOutputFileCount = workspace.ProjectOutputFileCount,
+            modifiedProjectOutputFileCount = workspace.ModifiedProjectOutputFileCount,
+            unchangedProjectOutputFileCount = workspace.UnchangedProjectOutputFileCount,
+            orphanOutputFileCount = workspace.OrphanOutputFileCount,
+            missingSourceOutputFileCount = workspace.MissingSourceOutputFileCount,
+            resourceOutputCount = workspace.ResourceOutputCount,
+            projectFileResourceOutputCount = workspace.ProjectFileResourceOutputCount,
+            outputAssetResourceOutputCount = workspace.OutputAssetResourceOutputCount,
+            modifiedResourceOutputCount = workspace.ModifiedResourceOutputCount,
+            unchangedResourceOutputCount = workspace.UnchangedResourceOutputCount,
+            a2dEntryOutputCount = workspace.A2DEntryOutputCount,
+            modifiedA2DEntryOutputCount = workspace.ModifiedA2DEntryOutputCount,
+            matchingA2DEntryOutputCount = workspace.MatchingA2DEntryOutputCount,
+            mapOutputCount = workspace.MapOutputCount,
+            modifiedMapOutputCount = workspace.ModifiedMapOutputCount,
+            completeMapOutputCount = workspace.CompleteMapOutputCount,
+            outputs = ToProjectOutputInventoryDto(workspace.OutputInventory),
+            resourceOutputs = workspace.ResourceOutputs.Select(ToProjectResourceOutputDto).ToList(),
+            a2dEntryOutputs = workspace.A2DEntryOutputs.Select(ToA2DEntryOutputDto).ToList(),
+            mapOutputs = workspace.MapOutputs.Select(ToProjectMapOutputDto).ToList(),
+        };
+    }
+
     public static object ToProjectMapOutputDto(KarProjectMapOutputInfo map)
     {
         return new

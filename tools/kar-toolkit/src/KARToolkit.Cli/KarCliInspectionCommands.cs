@@ -70,6 +70,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowModWorkspace(KarCliOptions options)
+    {
+        options.RequirePositionals("mod-workspace", 1);
+        KarProject project = OpenProject(options);
+        KarProjectModWorkspace workspace = project.ModWorkspaceService.CreateSnapshot(CreateModWorkspaceOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectModWorkspaceDto(workspace));
+            return 0;
+        }
+
+        PrintProjectModWorkspace(workspace);
+        return 0;
+    }
+
     public static int ShowMapOutputs(KarCliOptions options)
     {
         options.RequirePositionals("map-outputs", 1);
@@ -786,6 +802,28 @@ internal static class KarCliInspectionCommands
             Roots = CreateRootQuery(options),
             Fields = CreateFieldQuery(options),
             IncludeFieldSummaries = options.RootSummary,
+        };
+    }
+
+    private static KarProjectModWorkspaceOptions CreateModWorkspaceOptions(KarCliOptions options)
+    {
+        KarProjectOutputFileQueryOptions outputFiles = CreateOutputQuery(options);
+        return new KarProjectModWorkspaceOptions
+        {
+            OutputFiles = outputFiles,
+            ResourceOutputs = new KarProjectResourceOutputQueryOptions
+            {
+                Resources = CreateResourceQuery(options),
+            },
+            A2DEntryOutputs = new KarProjectA2DEntryOutputQueryOptions
+            {
+                Entries = CreateA2DEntryQuery(options),
+            },
+            MapOutputs = new KarProjectMapOutputQueryOptions
+            {
+                Outputs = outputFiles,
+                HasOutput = true,
+            },
         };
     }
 

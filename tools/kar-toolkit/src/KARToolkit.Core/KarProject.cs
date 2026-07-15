@@ -31,6 +31,7 @@ namespace KARToolkit.Core
             ResourceService = new KarProjectResourceService(this);
             ScriptService = new KarProjectScriptService(this);
             MapScriptService = new KarProjectMapScriptService(this);
+            ModWorkspaceService = new KarProjectModWorkspaceService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -65,6 +66,8 @@ namespace KARToolkit.Core
         public KarProjectScriptService ScriptService { get; }
 
         public KarProjectMapScriptService MapScriptService { get; }
+
+        public KarProjectModWorkspaceService ModWorkspaceService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -302,6 +305,11 @@ namespace KARToolkit.Core
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)
         {
             return new KarProjectReport(this, options);
+        }
+
+        public KarProjectModWorkspace CreateModWorkspace(KarProjectModWorkspaceOptions options = null)
+        {
+            return ModWorkspaceService.CreateSnapshot(options);
         }
 
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)

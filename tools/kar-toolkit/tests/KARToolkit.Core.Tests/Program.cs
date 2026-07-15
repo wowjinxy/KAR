@@ -33,6 +33,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceReportsUnifiedOutputStatus", ProjectResourceServiceReportsUnifiedOutputStatus);
             Run("ProjectResourceServiceAppliesModifiedResourceOutputs", ProjectResourceServiceAppliesModifiedResourceOutputs);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
+            Run("ProjectModWorkspaceSummarizesOutputState", ProjectModWorkspaceSummarizesOutputState);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectMapScriptServiceGroupsMapAndScriptResources", ProjectMapScriptServiceGroupsMapAndScriptResources);
@@ -858,6 +859,68 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(report.MapOutputCount == 1, "project report should count map outputs");
                 AssertTrue(report.ModifiedMapOutputCount == 0, "project report should count modified map outputs");
                 AssertTrue(report.CompleteMapOutputCount == 1, "project report should count complete filtered map outputs");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectModWorkspaceSummarizesOutputState()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-mod-workspace-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1.dat"), new byte[] { 0x10 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Model.dat"), new byte[] { 0x20 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Event.dat"), new byte[] { 0x30 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "Loose.bin"), new byte[] { 0x44, 0x55 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectModWorkspaceService mods = project.ModWorkspaceService;
+
+                project.CopyMapToOutput("City1");
+                project.WriteFileBytes("Loose.bin", new byte[] { 0x66, 0x77, 0x88 });
+                KarProjectA2DEntryExtractResult extract = project.ExtractA2DEntryToOutput("A2Info.dat#ScInfGo2D.tm");
+                File.WriteAllBytes(extract.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+
+                KarProjectModWorkspace workspace = mods.CreateSnapshot();
+                AssertTrue(object.ReferenceEquals(mods.Project, project), "mod workspace service should retain project context");
+                AssertTrue(object.ReferenceEquals(workspace.Project, project), "mod workspace snapshots should retain project context");
+                AssertTrue(workspace.HasOutputs, "mod workspace snapshots should detect staged outputs");
+                AssertTrue(workspace.HasModifiedOutputs, "mod workspace snapshots should detect modified outputs");
+                AssertTrue(workspace.OutputFileCount == 5, "mod workspace snapshots should count project-file outputs and output assets");
+                AssertTrue(workspace.ProjectOutputFileCount == 4, "mod workspace snapshots should count staged project files");
+                AssertTrue(workspace.OrphanOutputFileCount == 1, "mod workspace snapshots should count output assets as output-only files when they share the output files root");
+                AssertTrue(workspace.ModifiedProjectOutputFileCount == 1, "mod workspace snapshots should count modified project files");
+                AssertTrue(workspace.UnchangedProjectOutputFileCount == 3, "mod workspace snapshots should count unchanged project files");
+                AssertTrue(workspace.ResourceOutputCount == 5, "mod workspace snapshots should count resource outputs with staged data");
+                AssertTrue(workspace.ProjectFileResourceOutputCount == 4, "mod workspace snapshots should count project-file resource outputs");
+                AssertTrue(workspace.OutputAssetResourceOutputCount == 1, "mod workspace snapshots should count output asset resource outputs");
+                AssertTrue(workspace.ModifiedResourceOutputCount == 2, "mod workspace snapshots should count modified project resources and sidecars");
+                AssertTrue(workspace.A2DEntryOutputCount == 1, "mod workspace snapshots should count staged A2D sidecars");
+                AssertTrue(workspace.ModifiedA2DEntryOutputCount == 1, "mod workspace snapshots should count modified A2D sidecars");
+                AssertTrue(workspace.MapOutputCount == 1, "mod workspace snapshots should count maps with staged outputs");
+                AssertTrue(workspace.CompleteMapOutputCount == 1, "mod workspace snapshots should count complete staged map outputs");
+                AssertTrue(workspace.ModifiedMapOutputCount == 0, "mod workspace snapshots should count modified map outputs");
+                AssertTrue(workspace.ModifiedResourceOutputs.Any(output => output.Address == "Loose.bin"), "mod workspace snapshots should include modified file resources");
+                AssertTrue(workspace.ModifiedResourceOutputs.Any(output => output.Address == "A2Info.dat#ScInfGo2D.tm"), "mod workspace snapshots should include modified A2D sidecars");
+
+                KarProjectModWorkspace wrapper = project.CreateModWorkspace(new KarProjectModWorkspaceOptions
+                {
+                    OutputFiles = new KarProjectOutputFileQueryOptions
+                    {
+                        Status = KarProjectOutputFileStatus.DiffersFromSource,
+                    },
+                });
+                AssertTrue(wrapper.OutputFileCount == 1, "project mod workspace wrapper should delegate filtered output inventories");
             }
             finally
             {

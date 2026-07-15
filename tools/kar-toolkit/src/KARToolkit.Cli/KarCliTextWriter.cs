@@ -206,6 +206,22 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectModWorkspace(KarProjectModWorkspace workspace)
+    {
+        Console.WriteLine("Mod workspace: " + workspace.Project.OutputRoot);
+        Console.WriteLine("Output files: " + workspace.OutputFileCount + " project=" + workspace.ProjectOutputFileCount + " modified=" + workspace.ModifiedProjectOutputFileCount + " unchanged=" + workspace.UnchangedProjectOutputFileCount + " orphan=" + workspace.OrphanOutputFileCount);
+        Console.WriteLine("Resource outputs: " + workspace.ResourceOutputCount + " project-file=" + workspace.ProjectFileResourceOutputCount + " assets=" + workspace.OutputAssetResourceOutputCount + " modified=" + workspace.ModifiedResourceOutputCount + " unchanged=" + workspace.UnchangedResourceOutputCount);
+        Console.WriteLine("A2D sidecars: " + workspace.A2DEntryOutputCount + " modified=" + workspace.ModifiedA2DEntryOutputCount + " matching=" + workspace.MatchingA2DEntryOutputCount);
+        Console.WriteLine("Map outputs: " + workspace.MapOutputCount + " modified=" + workspace.ModifiedMapOutputCount + " complete=" + workspace.CompleteMapOutputCount);
+
+        if (workspace.ModifiedResourceOutputs.Count != 0)
+        {
+            Console.WriteLine("Modified resources:");
+            foreach (KarProjectResourceOutputInfo output in workspace.ModifiedResourceOutputs)
+                Console.WriteLine("  " + output.Address + " [" + output.Status + "] " + output.OutputRelativePath);
+        }
+    }
+
     public static void PrintProjectOutputFile(KarProjectOutputFileInfo file)
     {
         string status = file.Status.ToString();
