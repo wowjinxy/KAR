@@ -13,6 +13,7 @@ namespace KARToolkit.Core
             IEnumerable<KarFileKindDescriptor> fileKinds,
             IEnumerable<KarProjectFileHandler> fileHandlers,
             IEnumerable<KarProjectResourceHandler> resourceHandlers,
+            IEnumerable<KarProjectResourceAdapterProvider> resourceAdapterProviders,
             IEnumerable<KarProjectResourceActionDefinition> resourceActionDefinitions,
             IEnumerable<KarProjectOperationDomainRule> operationDomainRules,
             IEnumerable<KarProjectDomainContextProvider> domainContextProviders,
@@ -23,6 +24,7 @@ namespace KARToolkit.Core
             FileKinds = OrderFileKinds(fileKinds);
             FileHandlers = OrderFileHandlers(fileHandlers);
             ResourceHandlers = OrderResourceHandlers(resourceHandlers);
+            ResourceAdapterProviders = OrderResourceAdapterProviders(resourceAdapterProviders);
             ResourceActionDefinitions = OrderResourceActionDefinitions(resourceActionDefinitions);
             OperationDomainRules = OrderOperationDomainRules(operationDomainRules);
             DomainContextProviders = OrderDomainContextProviders(domainContextProviders);
@@ -37,6 +39,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectFileHandler> FileHandlers { get; }
 
         public IReadOnlyList<KarProjectResourceHandler> ResourceHandlers { get; }
+
+        public IReadOnlyList<KarProjectResourceAdapterProvider> ResourceAdapterProviders { get; }
 
         public IReadOnlyList<KarProjectResourceActionDefinition> ResourceActionDefinitions { get; }
 
@@ -56,13 +60,15 @@ namespace KARToolkit.Core
 
         public string OutputRoot => Project == null ? null : Project.OutputRoot;
 
-        public int RegistryCount => 8;
+        public int RegistryCount => 9;
 
         public int FileKindCount => FileKinds.Count;
 
         public int FileHandlerCount => FileHandlers.Count;
 
         public int ResourceHandlerCount => ResourceHandlers.Count;
+
+        public int ResourceAdapterProviderCount => ResourceAdapterProviders.Count;
 
         public int ResourceActionDefinitionCount => ResourceActionDefinitions.Count;
 
@@ -79,6 +85,8 @@ namespace KARToolkit.Core
         public bool HasFileHandlers => FileHandlerCount != 0;
 
         public bool HasResourceHandlers => ResourceHandlerCount != 0;
+
+        public bool HasResourceAdapterProviders => ResourceAdapterProviderCount != 0;
 
         public bool HasResourceActionDefinitions => ResourceActionDefinitionCount != 0;
 
@@ -102,6 +110,7 @@ namespace KARToolkit.Core
                 KarFileKindRegistry.Default.Descriptors,
                 KarProjectFileHandlerRegistry.Default.Handlers,
                 KarProjectResourceHandlerRegistry.Default.Handlers,
+                KarProjectResourceAdapterProviderRegistry.Default.Providers,
                 KarProjectResourceActionRegistry.Default.Definitions,
                 KarProjectOperationDomainRegistry.Default.Rules,
                 KarProjectDomainContextProviderRegistry.Default.Providers,
@@ -142,6 +151,17 @@ namespace KARToolkit.Core
 
             return resourceHandlers
                 .OrderBy(handler => handler.Kind)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private static IReadOnlyList<KarProjectResourceAdapterProvider> OrderResourceAdapterProviders(IEnumerable<KarProjectResourceAdapterProvider> providers)
+        {
+            if (providers == null)
+                throw new ArgumentNullException(nameof(providers));
+
+            return providers
+                .OrderBy(provider => provider.Kind)
                 .ToList()
                 .AsReadOnly();
         }

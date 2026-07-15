@@ -13,6 +13,7 @@ namespace KARToolkit.Core
             KarProjectIndex index,
             KarProjectFileCatalog fileCatalog,
             KarProjectResourceHandlerRegistry resourceHandlers,
+            KarProjectResourceAdapterProviderRegistry resourceAdapterProviders,
             KarProjectOperationDomainRegistry operationDomains,
             KarProjectDomainContextProviderRegistry domainContextProviders,
             KarProjectToolkitWorkflowProviderRegistry toolkitWorkflowProviders,
@@ -23,6 +24,7 @@ namespace KARToolkit.Core
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
             ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
+            ResourceAdapterProviderRegistry = resourceAdapterProviders ?? throw new ArgumentNullException(nameof(resourceAdapterProviders));
             ResourceActionRegistry = ResourceHandlerRegistry.ActionRegistry;
             OperationDomainRegistry = operationDomains ?? throw new ArgumentNullException(nameof(operationDomains));
             DomainContextProviderRegistry = domainContextProviders ?? throw new ArgumentNullException(nameof(domainContextProviders));
@@ -66,6 +68,8 @@ namespace KARToolkit.Core
         public KarProjectFileCatalog FileCatalog { get; }
 
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; }
+
+        public KarProjectResourceAdapterProviderRegistry ResourceAdapterProviderRegistry { get; }
 
         public KarProjectResourceActionRegistry ResourceActionRegistry { get; }
 
@@ -191,6 +195,7 @@ namespace KARToolkit.Core
                 index,
                 indexer.FileCatalog,
                 options.ResolveResourceHandlerRegistry(),
+                options.ResolveResourceAdapterProviderRegistry(),
                 options.ResolveOperationDomainRegistry(),
                 options.ResolveDomainContextProviderRegistry(),
                 options.ResolveToolkitWorkflowProviderRegistry(),

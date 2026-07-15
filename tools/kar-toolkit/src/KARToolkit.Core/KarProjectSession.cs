@@ -86,6 +86,8 @@ namespace KARToolkit.Core
 
         public int ResourceHandlerCount => RegistryCatalog.ResourceHandlerCount;
 
+        public int ResourceAdapterProviderCount => RegistryCatalog.ResourceAdapterProviderCount;
+
         public int ResourceActionDefinitionCount => RegistryCatalog.ResourceActionDefinitionCount;
 
         public int OperationDomainRuleCount => RegistryCatalog.OperationDomainRuleCount;

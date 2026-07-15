@@ -18,6 +18,8 @@ namespace KARToolkit.Core
 
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; set; }
 
+        public KarProjectResourceAdapterProviderRegistry ResourceAdapterProviderRegistry { get; set; }
+
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; set; }
 
         public KarProjectDomainContextProviderRegistry DomainContextProviderRegistry { get; set; }
@@ -83,6 +85,11 @@ namespace KARToolkit.Core
                 return KarProjectResourceHandlerRegistry.CreateDefault(ResourceActionRegistry);
 
             return KarProjectResourceHandlerRegistry.Default;
+        }
+
+        internal KarProjectResourceAdapterProviderRegistry ResolveResourceAdapterProviderRegistry()
+        {
+            return ResourceAdapterProviderRegistry ?? KarProjectResourceAdapterProviderRegistry.Default;
         }
 
         internal KarProjectOperationDomainRegistry ResolveOperationDomainRegistry()

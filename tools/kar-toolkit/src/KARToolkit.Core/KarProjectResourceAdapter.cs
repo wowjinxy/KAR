@@ -135,14 +135,28 @@ namespace KARToolkit.Core
             return new NotSupportedException("Resource " + resource.Address + " does not support " + capability + ".");
         }
 
-        internal static IReadOnlyList<KarProjectResourceAdapter> CreateDefaultAdapters(KarProject project)
+        internal static KarProjectResourceAdapter CreateFileAdapter(KarProject project)
         {
-            return new KarProjectResourceAdapter[]
-            {
-                new KarProjectFileResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.File)),
-                new KarProjectHsdRootResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.HsdRoot)),
-                new KarProjectA2DEntryResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.A2DEntry)),
-            };
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            return new KarProjectFileResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.File));
+        }
+
+        internal static KarProjectResourceAdapter CreateHsdRootAdapter(KarProject project)
+        {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            return new KarProjectHsdRootResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.HsdRoot));
+        }
+
+        internal static KarProjectResourceAdapter CreateA2DEntryAdapter(KarProject project)
+        {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            return new KarProjectA2DEntryResourceAdapter(project, project.ResourceHandlerRegistry.GetHandler(KarResourceKind.A2DEntry));
         }
 
         private sealed class KarProjectFileResourceAdapter : KarProjectResourceAdapter

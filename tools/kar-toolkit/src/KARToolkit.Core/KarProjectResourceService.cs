@@ -14,7 +14,7 @@ namespace KARToolkit.Core
         internal KarProjectResourceService(KarProject project)
         {
             _project = project ?? throw new ArgumentNullException(nameof(project));
-            _adapters = KarProjectResourceAdapter.CreateDefaultAdapters(project);
+            _adapters = project.ResourceAdapterProviderRegistry.CreateAdapters(project);
             _adaptersByKind = _adapters.ToDictionary(adapter => adapter.Kind);
         }
 

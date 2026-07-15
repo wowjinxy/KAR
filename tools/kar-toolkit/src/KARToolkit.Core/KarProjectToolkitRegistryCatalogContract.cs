@@ -24,6 +24,8 @@ namespace KARToolkit.Core
 
         public int ResourceHandlerCount { get; set; }
 
+        public int ResourceAdapterProviderCount { get; set; }
+
         public int ResourceActionDefinitionCount { get; set; }
 
         public int OperationDomainRuleCount { get; set; }
@@ -40,6 +42,8 @@ namespace KARToolkit.Core
 
         public bool HasResourceHandlers { get; set; }
 
+        public bool HasResourceAdapterProviders { get; set; }
+
         public bool HasResourceActionDefinitions { get; set; }
 
         public bool HasOperationDomainRules { get; set; }
@@ -55,6 +59,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectFileHandlerContract> FileHandlers { get; set; }
 
         public IReadOnlyList<KarProjectResourceHandlerContract> ResourceHandlers { get; set; }
+
+        public IReadOnlyList<KarProjectResourceAdapterProviderContract> ResourceAdapterProviders { get; set; }
 
         public IReadOnlyList<KarProjectResourceActionDefinitionContract> ResourceActionDefinitions { get; set; }
 
@@ -82,6 +88,7 @@ namespace KARToolkit.Core
                 FileKindCount = catalog.FileKindCount,
                 FileHandlerCount = catalog.FileHandlerCount,
                 ResourceHandlerCount = catalog.ResourceHandlerCount,
+                ResourceAdapterProviderCount = catalog.ResourceAdapterProviderCount,
                 ResourceActionDefinitionCount = catalog.ResourceActionDefinitionCount,
                 OperationDomainRuleCount = catalog.OperationDomainRuleCount,
                 DomainContextProviderCount = catalog.DomainContextProviderCount,
@@ -90,6 +97,7 @@ namespace KARToolkit.Core
                 HasFileKinds = catalog.HasFileKinds,
                 HasFileHandlers = catalog.HasFileHandlers,
                 HasResourceHandlers = catalog.HasResourceHandlers,
+                HasResourceAdapterProviders = catalog.HasResourceAdapterProviders,
                 HasResourceActionDefinitions = catalog.HasResourceActionDefinitions,
                 HasOperationDomainRules = catalog.HasOperationDomainRules,
                 HasDomainContextProviders = catalog.HasDomainContextProviders,
@@ -98,6 +106,7 @@ namespace KARToolkit.Core
                 FileKinds = catalog.FileKinds.Select(KarFileKindDescriptorContract.Create).ToList().AsReadOnly(),
                 FileHandlers = catalog.FileHandlers.Select(KarProjectFileHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceHandlers = catalog.ResourceHandlers.Select(KarProjectResourceHandlerContract.Create).ToList().AsReadOnly(),
+                ResourceAdapterProviders = catalog.ResourceAdapterProviders.Select(KarProjectResourceAdapterProviderContract.Create).ToList().AsReadOnly(),
                 ResourceActionDefinitions = catalog.ResourceActionDefinitions.Select(KarProjectResourceActionDefinitionContract.Create).ToList().AsReadOnly(),
                 OperationDomainRules = catalog.OperationDomainRules.Select(KarProjectOperationDomainRuleContract.Create).ToList().AsReadOnly(),
                 DomainContextProviders = catalog.DomainContextProviders.Select(KarProjectDomainContextProviderContract.Create).ToList().AsReadOnly(),
@@ -452,6 +461,31 @@ namespace KARToolkit.Core
                 RequiresOutputInfo = action.RequiresOutputInfo,
                 RequiresByteInfo = action.RequiresByteInfo,
                 WritePolicy = action.WritePolicyName,
+            };
+        }
+    }
+
+    public sealed class KarProjectResourceAdapterProviderContract
+    {
+        public string Kind { get; set; }
+
+        public string Id { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string Description { get; set; }
+
+        public static KarProjectResourceAdapterProviderContract Create(KarProjectResourceAdapterProvider provider)
+        {
+            if (provider == null)
+                throw new ArgumentNullException(nameof(provider));
+
+            return new KarProjectResourceAdapterProviderContract
+            {
+                Kind = provider.Kind.ToString(),
+                Id = provider.Id,
+                DisplayName = provider.DisplayName,
+                Description = provider.Description,
             };
         }
     }
