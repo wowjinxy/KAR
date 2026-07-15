@@ -542,10 +542,10 @@ namespace KARToolkit.Core
             bool hasFieldName,
             bool hasValue)
         {
-            KarProjectResourceOutputInfo output = NeedsOutputInfo(action) && resource.CanQueryOutput
+            KarProjectResourceOutputInfo output = action.RequiresOutputInfo && resource.CanQueryOutput
                 ? CreateOutputInfo(resource)
                 : null;
-            KarProjectResourceByteInfo byteInfo = NeedsByteInfo(action) && resource.CanReadBytes
+            KarProjectResourceByteInfo byteInfo = action.RequiresByteInfo && resource.CanReadBytes
                 ? CreateByteInfo(resource)
                 : null;
             bool canRun = true;
@@ -572,7 +572,7 @@ namespace KARToolkit.Core
                 canRun = false;
                 reason = "Requires a value.";
             }
-            else if (action.Id == "apply-output")
+            else if (action.WritePolicy == KarProjectResourceActionWritePolicy.ModifiedResourceOutput)
             {
                 canRun = output != null && output.Status == KarProjectResourceOutputStatus.SidecarDiffersFromEntry;
                 if (!canRun)
@@ -594,21 +594,6 @@ namespace KARToolkit.Core
                 reason);
         }
 
-        private static bool NeedsOutputInfo(KarProjectResourceAction action)
-        {
-            return action.Id == "output-status" ||
-                action.Id == "export-output" ||
-                action.Id == "import-file" ||
-                action.Id == "set-scalar" ||
-                action.Id == "apply-output";
-        }
-
-        private static bool NeedsByteInfo(KarProjectResourceAction action)
-        {
-            return action.Id == "byte-status" ||
-                action.Id == "dump-bytes";
-        }
-
         private static bool GetWouldWriteOutput(
             KarProjectResourceAction action,
             KarProjectResourceOutputInfo output,
@@ -619,16 +604,21 @@ namespace KARToolkit.Core
             if (!action.WritesOutput)
                 return false;
 
-            if (action.Id == "dump-bytes")
-                return byteInfo != null && (overwrite || !byteInfo.HasOutput);
-            if (action.Id == "export-output")
-                return output != null && (overwrite || !output.HasOutput);
-            if (action.Id == "apply-output")
-                return canRun;
-            if (action.Id == "import-file" || action.Id == "set-scalar")
-                return true;
-
-            return action.WritesOutput;
+            switch (action.WritePolicy)
+            {
+                case KarProjectResourceActionWritePolicy.None:
+                    return false;
+                case KarProjectResourceActionWritePolicy.Always:
+                    return true;
+                case KarProjectResourceActionWritePolicy.MissingByteDump:
+                    return byteInfo != null && (overwrite || !byteInfo.HasOutput);
+                case KarProjectResourceActionWritePolicy.MissingResourceOutput:
+                    return output != null && (overwrite || !output.HasOutput);
+                case KarProjectResourceActionWritePolicy.ModifiedResourceOutput:
+                    return canRun;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action.WritePolicy), "Unsupported resource action write policy.");
+            }
         }
 
         private KarProjectResourceOutputInfo CreateOutputInfo(KarProjectResourceInfo resource)

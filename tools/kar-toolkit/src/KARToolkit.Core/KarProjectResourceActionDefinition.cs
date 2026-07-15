@@ -16,7 +16,9 @@ namespace KARToolkit.Core
             bool requiresInputFile,
             bool requiresFieldName,
             bool requiresValue,
-            bool supportsBatch)
+            bool supportsBatch,
+            KarProjectResourceActionPlanStateKind planStateKind = KarProjectResourceActionPlanStateKind.None,
+            KarProjectResourceActionWritePolicy writePolicy = KarProjectResourceActionWritePolicy.None)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("Resource action id cannot be empty.", nameof(id));
@@ -37,6 +39,8 @@ namespace KARToolkit.Core
             RequiresFieldName = requiresFieldName;
             RequiresValue = requiresValue;
             SupportsBatch = supportsBatch;
+            PlanStateKind = planStateKind;
+            WritePolicy = writePolicy;
         }
 
         public string Id { get; }
@@ -64,6 +68,18 @@ namespace KARToolkit.Core
         public bool RequiresValue { get; }
 
         public bool SupportsBatch { get; }
+
+        public KarProjectResourceActionPlanStateKind PlanStateKind { get; }
+
+        public string PlanStateKindName => PlanStateKind.ToString();
+
+        public KarProjectResourceActionWritePolicy WritePolicy { get; }
+
+        public string WritePolicyName => WritePolicy.ToString();
+
+        public bool RequiresOutputInfo => PlanStateKind == KarProjectResourceActionPlanStateKind.Output;
+
+        public bool RequiresByteInfo => PlanStateKind == KarProjectResourceActionPlanStateKind.Bytes;
 
         internal KarProjectResourceAction CreateAction()
         {

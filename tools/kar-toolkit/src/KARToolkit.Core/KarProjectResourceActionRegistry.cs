@@ -85,7 +85,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: true),
+                    supportsBatch: true,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Output,
+                    writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
                     "byte-status",
                     "Byte Dump Status",
@@ -98,7 +100,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: true),
+                    supportsBatch: true,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Bytes,
+                    writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
                     "dump-bytes",
                     "Dump Bytes",
@@ -111,7 +115,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: true),
+                    supportsBatch: true,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Bytes,
+                    writePolicy: KarProjectResourceActionWritePolicy.MissingByteDump),
                 Define(
                     "export-output",
                     "Export To Output",
@@ -124,7 +130,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: false),
+                    supportsBatch: false,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Output,
+                    writePolicy: KarProjectResourceActionWritePolicy.MissingResourceOutput),
                 Define(
                     "import-file",
                     "Import File",
@@ -137,7 +145,9 @@ namespace KARToolkit.Core
                     requiresInputFile: true,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: false),
+                    supportsBatch: false,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Output,
+                    writePolicy: KarProjectResourceActionWritePolicy.Always),
                 Define(
                     "field-values",
                     "Field Values",
@@ -150,7 +160,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: true),
+                    supportsBatch: true,
+                    planStateKind: KarProjectResourceActionPlanStateKind.None,
+                    writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
                     "set-scalar",
                     "Set Scalar",
@@ -163,7 +175,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: true,
                     requiresValue: true,
-                    supportsBatch: false),
+                    supportsBatch: false,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Output,
+                    writePolicy: KarProjectResourceActionWritePolicy.Always),
                 Define(
                     "apply-output",
                     "Apply Output",
@@ -176,7 +190,9 @@ namespace KARToolkit.Core
                     requiresInputFile: false,
                     requiresFieldName: false,
                     requiresValue: false,
-                    supportsBatch: true),
+                    supportsBatch: true,
+                    planStateKind: KarProjectResourceActionPlanStateKind.Output,
+                    writePolicy: KarProjectResourceActionWritePolicy.ModifiedResourceOutput),
             };
         }
 
@@ -192,7 +208,9 @@ namespace KARToolkit.Core
             bool requiresInputFile,
             bool requiresFieldName,
             bool requiresValue,
-            bool supportsBatch)
+            bool supportsBatch,
+            KarProjectResourceActionPlanStateKind planStateKind,
+            KarProjectResourceActionWritePolicy writePolicy)
         {
             return new KarProjectResourceActionDefinition(
                 id,
@@ -206,7 +224,9 @@ namespace KARToolkit.Core
                 requiresInputFile,
                 requiresFieldName,
                 requiresValue,
-                supportsBatch);
+                supportsBatch,
+                planStateKind,
+                writePolicy);
         }
 
         private static bool HasCapability(KarProjectResourceCapability capabilities, KarProjectResourceCapability capability)
