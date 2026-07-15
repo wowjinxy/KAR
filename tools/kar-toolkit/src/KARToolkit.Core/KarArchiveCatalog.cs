@@ -1,5 +1,4 @@
 using System.IO;
-using static KARToolkit.Core.KarArchiveDefinitionFactory;
 
 namespace KARToolkit.Core
 {
@@ -38,7 +37,7 @@ namespace KARToolkit.Core
                 case KarFileKind.MapEvent:
                     return KarMapArchiveDefinitions.DefineMapEvent(relativePath, kind);
                 case KarFileKind.A2dPackage:
-                    return Define(kind, "A2D Package", "A2D", "Air Ride 2D package containing one or more embedded resources.");
+                    return KarGeneralArchiveDefinitions.DefineA2dPackage(kind);
                 case KarFileKind.VehicleData:
                     return KarVehicleArchiveDefinitions.DefineVehicle(name, kind);
                 case KarFileKind.RiderData:
@@ -50,17 +49,17 @@ namespace KARToolkit.Core
                 case KarFileKind.EnemyData:
                     return KarEnemyArchiveDefinitions.DefineEnemy(name, kind);
                 case KarFileKind.EffectData:
-                    return Define(kind, name + " Effects", "Effects", "Effect archive.", KarRootDefinition.Suffix("_texg", "Texture graphics", "HSD_TEXGraphicBank"), KarRootDefinition.Suffix("_ptcl", "Particle group", "HSD_ParticleGroup"));
+                    return KarGeneralArchiveDefinitions.DefineEffect(name, kind);
                 case KarFileKind.UiData:
-                    return Define(kind, name + " UI", "UI", "UI scene/model archive.", KarRootDefinition.Suffix("_scene_models", "Scene model list", "HSDNullPointerArrayAccessor<HSD_JOBJDesc>"), KarRootDefinition.Suffix("_scene_data", "Scene object", "HSD_SOBJ"));
+                    return KarGeneralArchiveDefinitions.DefineUi(name, kind);
                 case KarFileKind.Audio:
-                    return Define(kind, fileName, "Audio", "Audio stream or sound bank.");
+                    return KarGeneralArchiveDefinitions.DefineAudio(fileName, kind);
                 case KarFileKind.Movie:
-                    return Define(kind, fileName, "Movies", "Movie stream.");
+                    return KarGeneralArchiveDefinitions.DefineMovie(fileName, kind);
                 case KarFileKind.Config:
-                    return Define(kind, fileName, "Config", "Game configuration file.");
+                    return KarGeneralArchiveDefinitions.DefineConfig(fileName, kind);
                 default:
-                    return Define(kind, fileName, "Other", "HSD archive or unclassified project file.");
+                    return KarGeneralArchiveDefinitions.DefineFallback(relativePath, kind);
             }
         }
 
@@ -68,6 +67,5 @@ namespace KARToolkit.Core
         {
             return KarProjectFileClassifier.TryGetMapName(relativePath, kind, out mapName);
         }
-
     }
 }
