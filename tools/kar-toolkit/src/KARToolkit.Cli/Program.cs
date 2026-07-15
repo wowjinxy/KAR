@@ -56,6 +56,8 @@ internal static class Program
                 "toolkit-domains" => KarCliInspectionCommands.ShowDomainContexts(options),
                 "mod-workspace" => KarCliInspectionCommands.ShowModWorkspace(options),
                 "mod-status" => KarCliInspectionCommands.ShowModWorkspace(options),
+                "mod-manifest" => KarCliInspectionCommands.ShowModManifest(options),
+                "manifest" => KarCliInspectionCommands.ShowModManifest(options),
                 "map-outputs" => KarCliInspectionCommands.ShowMapOutputs(options),
                 "map-output-status" => KarCliInspectionCommands.ShowMapOutputs(options),
                 "files" => KarCliInspectionCommands.ShowFiles(options),
@@ -190,6 +192,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit toolkit-workflows <source-folder> [workflow-id] [--domain <domain>] [--search <text>] [--read-only|--writes-output] [--batch|--single] [--requires-input] [--requires-value] [--available] [--json]");
         Console.WriteLine("  kar-toolkit domains <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit mod-workspace <source-folder> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit mod-manifest <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit map-outputs <source-folder> [map-name-or-file] [--output <mod-folder>] [--modified|--unchanged]");
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--domain <domain>] [--kind <file-kind>] [--category <category>] [--search <text>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");

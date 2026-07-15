@@ -571,6 +571,11 @@ namespace KARToolkit.Core
             return ModWorkspaceService.CreateSnapshot(options);
         }
 
+        public KarProjectModManifest CreateModManifest(KarProjectModWorkspaceOptions options = null)
+        {
+            return ModWorkspaceService.CreateManifest(options);
+        }
+
         public KarProjectToolkitSnapshot CreateToolkitSnapshot(KarProjectToolkitSnapshotOptions options = null)
         {
             return ToolkitService.CreateSnapshot(options);

@@ -38,6 +38,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll t
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll domains .\GKYE01 --output .\mod-output --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll outputs .\GKYE01 --output .\mod-output
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll mod-workspace .\GKYE01 --output .\mod-output --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll mod-manifest .\GKYE01 --output .\mod-output --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map-outputs .\GKYE01 --output .\mod-output --modified
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --kind MapData --json
@@ -101,6 +102,7 @@ Project-wide resource inventory, address resolution, resource contexts, field in
 Project-wide report snapshots go through `KarProject.CreateReport`, and the `report` CLI command aggregates file groups, map completeness, archive/root health, schema usage, and optional field summaries.
 Project schema/data coverage reports go through `KarProject.SchemaService.CreateDataCoverageReport` or `KarProject.CreateDataCoverageReport`, and the `schema-gaps` CLI command lists and groups inspection failures, missing required roots, unknown roots, known roots without KAR data definitions, and roots that still lack labeled field values so decomp-backed schema work can be prioritized by repeated root/accessor patterns and observed struct sizes.
 Mod workspace snapshots go through `KarProject.ModWorkspaceService`, and the `mod-workspace` CLI command summarizes staged project files, resource outputs, resource byte dumps, A2D sidecars, and map output completeness for the configured output folder.
+Mod output manifests go through `KarProject.CreateModManifest`, `KarProjectSession.ModManifest`, `KarProject.ModWorkspaceService.CreateManifest`, or the `mod-manifest` CLI command, returning output-root-relative artifacts with project/source/resource references, hashes, status, modified flags, and A2D sidecar apply requirements for packaging and frontend review.
 Project output/mod-state inventory goes through `KarProject.OutputService` or the compatibility wrappers `KarProject.CreateOutputInventory` and `KarProject.QueryOutputFiles`, and the `outputs` CLI command reports staged project files, modified/unchanged source matches, and output-only orphan files.
 Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs` or the compatibility wrapper `KarProject.QueryMapOutputs`, and the `map-outputs` CLI command groups staged output files by map data/model/event-script bundles.
 Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.

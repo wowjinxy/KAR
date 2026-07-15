@@ -51,6 +51,8 @@ internal static class KarCliDtoFactory
 
     public static object ToProjectSessionDto(KarProjectSession session)
     {
+        KarProjectModManifest modManifest = session.ModManifest;
+
         return new
         {
             name = session.Name,
@@ -74,6 +76,7 @@ internal static class KarCliDtoFactory
             outputWorkflowCount = session.OutputWorkflowCount,
             hasOutputs = session.HasOutputs,
             hasModifiedOutputs = session.HasModifiedOutputs,
+            modManifest = modManifest == null ? null : ToProjectModManifestSummaryDto(modManifest),
             surface = ToProjectToolkitSurfaceDto(session.Surface),
         };
     }
@@ -265,6 +268,81 @@ internal static class KarCliDtoFactory
             resourceByteOutputs = workspace.ResourceByteOutputs.Select(ToProjectResourceByteInfoDto).ToList(),
             a2dEntryOutputs = workspace.A2DEntryOutputs.Select(ToA2DEntryOutputDto).ToList(),
             mapOutputs = workspace.MapOutputs.Select(ToProjectMapOutputDto).ToList(),
+        };
+    }
+
+    public static object ToProjectModManifestSummaryDto(KarProjectModManifest manifest)
+    {
+        return new
+        {
+            name = manifest.Name,
+            outputRoot = manifest.OutputRoot,
+            artifactCount = manifest.ArtifactCount,
+            projectFileArtifactCount = manifest.ProjectFileArtifactCount,
+            outputOnlyFileArtifactCount = manifest.OutputOnlyFileArtifactCount,
+            a2dEntrySidecarArtifactCount = manifest.A2DEntrySidecarArtifactCount,
+            resourceByteDumpArtifactCount = manifest.ResourceByteDumpArtifactCount,
+            modifiedArtifactCount = manifest.ModifiedArtifactCount,
+            needsApplyArtifactCount = manifest.NeedsApplyArtifactCount,
+            totalOutputLength = manifest.TotalOutputLength,
+            hasArtifacts = manifest.HasArtifacts,
+            hasModifiedArtifacts = manifest.HasModifiedArtifacts,
+            hasArtifactsNeedingApply = manifest.HasArtifactsNeedingApply,
+            writesOnlyToOutput = manifest.WritesOnlyToOutput,
+            sourceAndOutputRootsAreSeparate = manifest.SourceAndOutputRootsAreSeparate,
+        };
+    }
+
+    public static object ToProjectModManifestDto(KarProjectModManifest manifest)
+    {
+        return new
+        {
+            project = ToProjectDto(manifest.Project),
+            sourceRoot = manifest.SourceRoot,
+            outputRoot = manifest.OutputRoot,
+            outputFilesRoot = manifest.OutputFilesRoot,
+            readPolicy = manifest.ReadPolicy,
+            writePolicy = manifest.WritePolicy,
+            writesOnlyToOutput = manifest.WritesOnlyToOutput,
+            sourceAndOutputRootsAreSeparate = manifest.SourceAndOutputRootsAreSeparate,
+            artifactCount = manifest.ArtifactCount,
+            projectFileArtifactCount = manifest.ProjectFileArtifactCount,
+            outputOnlyFileArtifactCount = manifest.OutputOnlyFileArtifactCount,
+            a2dEntrySidecarArtifactCount = manifest.A2DEntrySidecarArtifactCount,
+            resourceByteDumpArtifactCount = manifest.ResourceByteDumpArtifactCount,
+            modifiedArtifactCount = manifest.ModifiedArtifactCount,
+            needsApplyArtifactCount = manifest.NeedsApplyArtifactCount,
+            totalOutputLength = manifest.TotalOutputLength,
+            hasArtifacts = manifest.HasArtifacts,
+            hasModifiedArtifacts = manifest.HasModifiedArtifacts,
+            hasArtifactsNeedingApply = manifest.HasArtifactsNeedingApply,
+            artifacts = manifest.Artifacts.Select(ToProjectModManifestArtifactDto).ToList(),
+        };
+    }
+
+    public static object ToProjectModManifestArtifactDto(KarProjectModManifestArtifact artifact)
+    {
+        return new
+        {
+            kind = artifact.Kind.ToString(),
+            outputRelativePath = artifact.OutputRelativePath,
+            outputPath = artifact.OutputPath,
+            projectRelativePath = artifact.ProjectRelativePath,
+            resourceAddress = artifact.ResourceAddress,
+            referenceKind = artifact.ReferenceKind,
+            referenceAddress = artifact.ReferenceAddress,
+            referencePath = artifact.ReferencePath,
+            referenceLength = artifact.ReferenceLength,
+            referenceSha256 = artifact.ReferenceSha256,
+            status = artifact.Status,
+            outputLength = artifact.OutputLength,
+            outputLastWriteTimeUtc = artifact.OutputLastWriteTimeUtc,
+            outputSha256 = artifact.OutputSha256,
+            isModified = artifact.IsModified,
+            isUnchanged = artifact.IsUnchanged,
+            isOutputOnly = artifact.IsOutputOnly,
+            isSidecar = artifact.IsSidecar,
+            needsApply = artifact.NeedsApply,
         };
     }
 

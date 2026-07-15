@@ -34,5 +34,10 @@ namespace KARToolkit.Core
                 _project.MapService.QueryOutputs(mapOutputOptions)
                     .Where(output => output.HasOutput));
         }
+
+        public KarProjectModManifest CreateManifest(KarProjectModWorkspaceOptions options = null)
+        {
+            return new KarProjectModManifest(_project, CreateSnapshot(options));
+        }
     }
 }

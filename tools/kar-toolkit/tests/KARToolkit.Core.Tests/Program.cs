@@ -42,6 +42,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectModWorkspaceSummarizesOutputState", ProjectModWorkspaceSummarizesOutputState);
             Run("ProjectSessionExposesToolkitWorkspaceBoundary", ProjectSessionExposesToolkitWorkspaceBoundary);
+            Run("ProjectModManifestIndexesOutputArtifacts", ProjectModManifestIndexesOutputArtifacts);
             Run("ProjectToolkitSnapshotAggregatesDomainContexts", ProjectToolkitSnapshotAggregatesDomainContexts);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -1672,6 +1673,70 @@ namespace KARToolkit.Core.Tests
                     IncludeScriptTableContexts = false,
                 });
                 AssertTrue(openedByProject.SourceRoot == session.SourceRoot && openedByProject.OutputRoot == session.OutputRoot, "project session open wrappers should preserve workspace roots");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectModManifestIndexesOutputArtifacts()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-manifest-project-" + Guid.NewGuid().ToString("N"));
+            string filesRoot = Path.Combine(tempRoot, "files");
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(filesRoot);
+
+            byte[] sourceBytes = new byte[] { 0x10, 0x20, 0x30 };
+            File.WriteAllBytes(Path.Combine(filesRoot, "Loose.bin"), sourceBytes);
+            WriteA2DPackage(Path.Combine(filesRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                project.WriteFileBytes("Loose.bin", new byte[] { 0x66, 0x77 });
+                KarProjectA2DEntryExtractResult extract = project.ExtractA2DEntryToOutput("A2Info.dat#ScInfGo2D.tm");
+                File.WriteAllBytes(extract.OutputPath, new byte[] { 0x01, 0x02, 0x03, 0x04 });
+                KarProjectResourceByteDumpResult byteDump = project.DumpResourceBytesToOutput("Loose.bin");
+                File.WriteAllBytes(byteDump.OutputPath, new byte[] { 0x99 });
+
+                KarProjectModManifest manifest = project.CreateModManifest();
+                AssertTrue(manifest.ArtifactCount == 3, "mod manifests should flatten project files, A2D sidecars, and resource byte dumps");
+                AssertTrue(manifest.ProjectFileArtifactCount == 1, "mod manifests should count project-file artifacts");
+                AssertTrue(manifest.A2DEntrySidecarArtifactCount == 1, "mod manifests should count A2D sidecar artifacts");
+                AssertTrue(manifest.ResourceByteDumpArtifactCount == 1, "mod manifests should count resource byte dump artifacts");
+                AssertTrue(manifest.OutputOnlyFileArtifactCount == 0, "mod manifests should not duplicate richer output assets as orphan files");
+                AssertTrue(manifest.ModifiedArtifactCount == 3, "mod manifests should count modified/stale artifacts");
+                AssertTrue(manifest.NeedsApplyArtifactCount == 1, "mod manifests should flag modified A2D sidecars that need package apply");
+                AssertTrue(manifest.TotalOutputLength == 7, "mod manifests should sum artifact output lengths");
+                AssertTrue(manifest.WritesOnlyToOutput && manifest.SourceAndOutputRootsAreSeparate, "mod manifests should carry workspace safety flags");
+
+                KarProjectModManifestArtifact projectFile = manifest.ProjectFileArtifacts.Single();
+                AssertTrue(projectFile.OutputRelativePath == "files/Loose.bin", "project file artifacts should be relative to the output root");
+                AssertTrue(projectFile.ProjectRelativePath == "Loose.bin", "project file artifacts should keep project-relative paths");
+                AssertTrue(projectFile.ReferenceKind == "source-file" && projectFile.ReferenceLength == sourceBytes.Length, "project file artifacts should reference source files");
+                AssertTrue(projectFile.IsModified && !projectFile.IsOutputOnly && !projectFile.NeedsApply, "project file artifacts should expose modified source comparison");
+
+                KarProjectModManifestArtifact sidecar = manifest.A2DEntrySidecarArtifacts.Single();
+                AssertTrue(sidecar.OutputRelativePath == "a2d-entries/A2Info.dat/ScInfGo2D.tm", "A2D sidecar artifacts should be output-root relative");
+                AssertTrue(sidecar.ResourceAddress == "A2Info.dat#ScInfGo2D.tm", "A2D sidecar artifacts should keep resource addresses");
+                AssertTrue(sidecar.ReferenceKind == "a2d-entry" && sidecar.IsSidecar && sidecar.NeedsApply, "A2D sidecar artifacts should flag sidecar apply state");
+
+                KarProjectModManifestArtifact resourceBytes = manifest.ResourceByteDumpArtifacts.Single();
+                AssertTrue(resourceBytes.OutputRelativePath == "resource-bytes/Loose.bin.bin", "resource byte artifacts should be output-root relative");
+                AssertTrue(resourceBytes.ResourceAddress == "Loose.bin", "resource byte artifacts should keep resource addresses");
+                AssertTrue(resourceBytes.ReferenceKind == "active-resource" && resourceBytes.ReferenceLength == 2, "resource byte artifacts should reference active resource bytes");
+                AssertTrue(resourceBytes.IsModified && !resourceBytes.NeedsApply, "resource byte artifacts should flag stale dumps without apply requirements");
+
+                KarProjectSession session = project.CreateSession();
+                AssertTrue(session.ModManifest.ArtifactCount == manifest.ArtifactCount, "project sessions should expose the current mod manifest");
+                AssertTrue(project.CreateModManifest(new KarProjectModWorkspaceOptions
+                {
+                    ResourceByteOutputs = new KarProjectResourceByteQueryOptions { HasOutput = true },
+                }).ResourceByteDumpArtifactCount == 1, "project manifest wrappers should accept workspace filters");
             }
             finally
             {

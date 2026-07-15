@@ -72,6 +72,34 @@ internal static class KarCliTextWriter
         Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
     }
 
+    public static void PrintProjectModManifest(KarProjectModManifest manifest)
+    {
+        Console.WriteLine("Mod manifest: " + manifest.Name);
+        Console.WriteLine("Output: " + manifest.OutputRoot);
+        Console.WriteLine("Policy: " + manifest.WritePolicy);
+        Console.WriteLine("Artifacts: " + manifest.ArtifactCount + " project-files=" + manifest.ProjectFileArtifactCount + " sidecars=" + manifest.A2DEntrySidecarArtifactCount + " resource-bytes=" + manifest.ResourceByteDumpArtifactCount + " modified=" + manifest.ModifiedArtifactCount + " needs-apply=" + manifest.NeedsApplyArtifactCount);
+
+        foreach (KarProjectModManifestArtifact artifact in manifest.Artifacts)
+            PrintProjectModManifestArtifact(artifact);
+    }
+
+    public static void PrintProjectModManifestArtifact(KarProjectModManifestArtifact artifact)
+    {
+        string resource = string.IsNullOrEmpty(artifact.ResourceAddress) ? "" : " resource=" + artifact.ResourceAddress;
+        string projectPath = string.IsNullOrEmpty(artifact.ProjectRelativePath) ? "" : " project=" + artifact.ProjectRelativePath;
+        string flags = "";
+        if (artifact.IsModified)
+            flags += " modified";
+        if (artifact.IsOutputOnly)
+            flags += " output-only";
+        if (artifact.IsSidecar)
+            flags += " sidecar";
+        if (artifact.NeedsApply)
+            flags += " needs-apply";
+
+        Console.WriteLine("  " + artifact.OutputRelativePath + " [" + artifact.Kind + ", " + artifact.Status + "] size=" + artifact.OutputLength + resource + projectPath + flags);
+    }
+
     private static string FormatFileKindTraits(KarFileKindDescriptor descriptor)
     {
         List<string> traits = new List<string>();

@@ -135,6 +135,15 @@ namespace KARToolkit.Core
             return GetRelativePath(OutputFilesRoot, fullOutputPath);
         }
 
+        public string GetRelativeOutputAssetPath(string outputPath)
+        {
+            string fullOutputPath = Path.GetFullPath(outputPath);
+            if (!IsSameOrChildPath(OutputRoot, fullOutputPath))
+                throw new InvalidOperationException("Output asset path escaped its project output root.");
+
+            return GetRelativePath(OutputRoot, fullOutputPath);
+        }
+
         public string PrepareOutputPath(string relativePath)
         {
             string outputPath = GetOutputPath(relativePath);

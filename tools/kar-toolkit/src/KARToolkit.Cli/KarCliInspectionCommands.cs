@@ -195,6 +195,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowModManifest(KarCliOptions options)
+    {
+        options.RequirePositionals("mod-manifest", 1);
+        KarProject project = OpenProject(options);
+        KarProjectModManifest manifest = project.ModWorkspaceService.CreateManifest(CreateModWorkspaceOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectModManifestDto(manifest));
+            return 0;
+        }
+
+        PrintProjectModManifest(manifest);
+        return 0;
+    }
+
     public static int ShowToolkitSnapshot(KarCliOptions options)
     {
         options.RequirePositionals("toolkit", 1);

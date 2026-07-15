@@ -21,6 +21,8 @@ namespace KARToolkit.Core
 
         public KarProjectModWorkspace ModWorkspace => Snapshot.ModWorkspace;
 
+        public KarProjectModManifest ModManifest => ModWorkspace == null ? null : new KarProjectModManifest(Project, ModWorkspace);
+
         public IReadOnlyList<KarProjectDomainContext> Domains => Surface.Domains;
 
         public IReadOnlyList<KarProjectToolkitWorkflow> Workflows => Surface.Workflows;
@@ -112,6 +114,14 @@ namespace KARToolkit.Core
         public KarProjectSession Refresh(KarProjectToolkitSnapshotOptions toolkitOptions = null)
         {
             return Create(Project, toolkitOptions);
+        }
+
+        public KarProjectModManifest CreateModManifest(KarProjectModWorkspaceOptions options = null)
+        {
+            if (options == null && ModWorkspace != null)
+                return new KarProjectModManifest(Project, ModWorkspace);
+
+            return Project.ModWorkspaceService.CreateManifest(options);
         }
     }
 }
