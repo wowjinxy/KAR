@@ -149,7 +149,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Write policy: " + session.WritePolicy);
         Console.WriteLine("Workspace safe: source/output=" + session.SourceAndOutputRootsAreSeparate + " files=" + session.SourceFilesAndOutputFilesRootsAreSeparate);
         Console.WriteLine("Project: files=" + session.FileCount + " maps=" + session.MapCount);
-        Console.WriteLine("Registries: file-kinds=" + session.FileKindCount + " file-handlers=" + session.FileHandlerCount + " resource-handlers=" + session.ResourceHandlerCount + " resource-adapters=" + session.ResourceAdapterProviderCount + " relationship-providers=" + session.RelationshipProviderCount + " actions=" + session.ResourceActionDefinitionCount + " operation-domains=" + session.OperationDomainRuleCount + " context-domains=" + session.DomainContextProviderCount + " workflow-providers=" + session.ToolkitWorkflowProviderCount + " presets=" + session.OperationPresetDefinitionCount);
+        Console.WriteLine("Registries: data-definition-providers=" + session.DataDefinitionProviderCount + " file-kinds=" + session.FileKindCount + " file-handlers=" + session.FileHandlerCount + " resource-handlers=" + session.ResourceHandlerCount + " resource-adapters=" + session.ResourceAdapterProviderCount + " relationship-providers=" + session.RelationshipProviderCount + " actions=" + session.ResourceActionDefinitionCount + " operation-domains=" + session.OperationDomainRuleCount + " context-domains=" + session.DomainContextProviderCount + " workflow-providers=" + session.ToolkitWorkflowProviderCount + " presets=" + session.OperationPresetDefinitionCount);
         Console.WriteLine("Toolkit: domains=" + session.DomainCount + " workflows=" + session.WorkflowCount + " available=" + session.AvailableWorkflowCount + " output=" + session.OutputWorkflowCount);
         Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
     }
@@ -158,7 +158,11 @@ internal static class KarCliTextWriter
     {
         string scope = catalog.HasProject ? catalog.ProjectName : "default";
         Console.WriteLine("KAR toolkit registries: " + scope);
-        Console.WriteLine("Registries: " + catalog.RegistryCount + " file-kinds=" + catalog.FileKindCount + " file-handlers=" + catalog.FileHandlerCount + " resource-handlers=" + catalog.ResourceHandlerCount + " resource-adapters=" + catalog.ResourceAdapterProviderCount + " relationship-providers=" + catalog.RelationshipProviderCount + " actions=" + catalog.ResourceActionDefinitionCount + " operation-domains=" + catalog.OperationDomainRuleCount + " context-domains=" + catalog.DomainContextProviderCount + " workflow-providers=" + catalog.ToolkitWorkflowProviderCount + " presets=" + catalog.OperationPresetDefinitionCount);
+        Console.WriteLine("Registries: " + catalog.RegistryCount + " data-definition-providers=" + catalog.DataDefinitionProviderCount + " file-kinds=" + catalog.FileKindCount + " file-handlers=" + catalog.FileHandlerCount + " resource-handlers=" + catalog.ResourceHandlerCount + " resource-adapters=" + catalog.ResourceAdapterProviderCount + " relationship-providers=" + catalog.RelationshipProviderCount + " actions=" + catalog.ResourceActionDefinitionCount + " operation-domains=" + catalog.OperationDomainRuleCount + " context-domains=" + catalog.DomainContextProviderCount + " workflow-providers=" + catalog.ToolkitWorkflowProviderCount + " presets=" + catalog.OperationPresetDefinitionCount);
+
+        Console.WriteLine("Data definition providers:");
+        foreach (KarDataDefinitionProvider provider in catalog.DataDefinitionProviders)
+            Console.WriteLine("  " + provider.Id + " definitions=" + provider.DefinitionCount + " - " + provider.DisplayName);
 
         Console.WriteLine("File kinds:");
         foreach (KarFileKindDescriptor descriptor in catalog.FileKinds)

@@ -18,6 +18,8 @@ namespace KARToolkit.Core
 
         public int RegistryCount { get; set; }
 
+        public int DataDefinitionProviderCount { get; set; }
+
         public int FileKindCount { get; set; }
 
         public int FileHandlerCount { get; set; }
@@ -38,6 +40,8 @@ namespace KARToolkit.Core
 
         public int OperationPresetDefinitionCount { get; set; }
 
+        public bool HasDataDefinitionProviders { get; set; }
+
         public bool HasFileKinds { get; set; }
 
         public bool HasFileHandlers { get; set; }
@@ -57,6 +61,8 @@ namespace KARToolkit.Core
         public bool HasToolkitWorkflowProviders { get; set; }
 
         public bool HasOperationPresetDefinitions { get; set; }
+
+        public IReadOnlyList<KarDataDefinitionProviderContract> DataDefinitionProviders { get; set; }
 
         public IReadOnlyList<KarFileKindDescriptorContract> FileKinds { get; set; }
 
@@ -91,6 +97,7 @@ namespace KARToolkit.Core
                 SourceRoot = catalog.SourceRoot,
                 OutputRoot = catalog.OutputRoot,
                 RegistryCount = catalog.RegistryCount,
+                DataDefinitionProviderCount = catalog.DataDefinitionProviderCount,
                 FileKindCount = catalog.FileKindCount,
                 FileHandlerCount = catalog.FileHandlerCount,
                 ResourceHandlerCount = catalog.ResourceHandlerCount,
@@ -101,6 +108,7 @@ namespace KARToolkit.Core
                 DomainContextProviderCount = catalog.DomainContextProviderCount,
                 ToolkitWorkflowProviderCount = catalog.ToolkitWorkflowProviderCount,
                 OperationPresetDefinitionCount = catalog.OperationPresetDefinitionCount,
+                HasDataDefinitionProviders = catalog.HasDataDefinitionProviders,
                 HasFileKinds = catalog.HasFileKinds,
                 HasFileHandlers = catalog.HasFileHandlers,
                 HasResourceHandlers = catalog.HasResourceHandlers,
@@ -111,6 +119,7 @@ namespace KARToolkit.Core
                 HasDomainContextProviders = catalog.HasDomainContextProviders,
                 HasToolkitWorkflowProviders = catalog.HasToolkitWorkflowProviders,
                 HasOperationPresetDefinitions = catalog.HasOperationPresetDefinitions,
+                DataDefinitionProviders = catalog.DataDefinitionProviders.Select(KarDataDefinitionProviderContract.Create).ToList().AsReadOnly(),
                 FileKinds = catalog.FileKinds.Select(KarFileKindDescriptorContract.Create).ToList().AsReadOnly(),
                 FileHandlers = catalog.FileHandlers.Select(KarProjectFileHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceHandlers = catalog.ResourceHandlers.Select(KarProjectResourceHandlerContract.Create).ToList().AsReadOnly(),
@@ -281,6 +290,31 @@ namespace KARToolkit.Core
                 IsMapBundlePart = descriptor.IsMapBundlePart,
                 MapBundleRole = descriptor.MapBundleRole,
                 IsContainer = descriptor.IsContainer,
+            };
+        }
+    }
+
+    public sealed class KarDataDefinitionProviderContract
+    {
+        public string Id { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string Description { get; set; }
+
+        public int DefinitionCount { get; set; }
+
+        public static KarDataDefinitionProviderContract Create(KarDataDefinitionProvider provider)
+        {
+            if (provider == null)
+                throw new ArgumentNullException(nameof(provider));
+
+            return new KarDataDefinitionProviderContract
+            {
+                Id = provider.Id,
+                DisplayName = provider.DisplayName,
+                Description = provider.Description,
+                DefinitionCount = provider.DefinitionCount,
             };
         }
     }

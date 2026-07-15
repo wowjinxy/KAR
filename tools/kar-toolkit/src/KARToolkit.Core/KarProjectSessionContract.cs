@@ -139,6 +139,8 @@ namespace KARToolkit.Core
 
         public int RegistryCount { get; set; }
 
+        public int DataDefinitionProviderCount { get; set; }
+
         public int FileKindCount { get; set; }
 
         public int FileHandlerCount { get; set; }
@@ -195,6 +197,7 @@ namespace KARToolkit.Core
                 AvailableWorkflowCount = session.AvailableWorkflowCount,
                 OutputWorkflowCount = session.OutputWorkflowCount,
                 RegistryCount = session.RegistryCount,
+                DataDefinitionProviderCount = session.DataDefinitionProviderCount,
                 FileKindCount = session.FileKindCount,
                 FileHandlerCount = session.FileHandlerCount,
                 ResourceHandlerCount = session.ResourceHandlerCount,

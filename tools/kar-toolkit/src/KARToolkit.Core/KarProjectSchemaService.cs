@@ -19,6 +19,8 @@ namespace KARToolkit.Core
 
         public KarArchiveDefinitionProvider ArchiveDefinitions => _project.FileCatalog.ArchiveDefinitions;
 
+        public IReadOnlyList<KarDataDefinitionProvider> DataDefinitionProviders => _project.DataDefinitionProviderRegistry.Providers;
+
         public IReadOnlyList<KarFileKindDescriptor> FileKinds => _project.FileCatalog.FileKindDescriptors;
 
         public IReadOnlyList<KarProjectFileHandler> FileHandlers => _project.FileCatalog.FileHandlers;
@@ -43,6 +45,7 @@ namespace KARToolkit.Core
         {
             return new KarProjectToolkitRegistryCatalog(
                 _project,
+                DataDefinitionProviders,
                 FileKinds,
                 FileHandlers,
                 ResourceHandlers,

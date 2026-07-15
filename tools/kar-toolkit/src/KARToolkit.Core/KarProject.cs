@@ -12,6 +12,7 @@ namespace KARToolkit.Core
             KarProjectWorkspace workspace,
             KarProjectIndex index,
             KarProjectFileCatalog fileCatalog,
+            KarDataDefinitionProviderRegistry dataDefinitionProviders,
             KarProjectResourceHandlerRegistry resourceHandlers,
             KarProjectResourceAdapterProviderRegistry resourceAdapterProviders,
             KarProjectRelationshipProviderRegistry relationshipProviders,
@@ -24,6 +25,7 @@ namespace KARToolkit.Core
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
+            DataDefinitionProviderRegistry = dataDefinitionProviders ?? throw new ArgumentNullException(nameof(dataDefinitionProviders));
             ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
             ResourceAdapterProviderRegistry = resourceAdapterProviders ?? throw new ArgumentNullException(nameof(resourceAdapterProviders));
             RelationshipProviderRegistry = relationshipProviders ?? throw new ArgumentNullException(nameof(relationshipProviders));
@@ -68,6 +70,8 @@ namespace KARToolkit.Core
         public KarProjectIndex Index { get; }
 
         public KarProjectFileCatalog FileCatalog { get; }
+
+        public KarDataDefinitionProviderRegistry DataDefinitionProviderRegistry { get; }
 
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; }
 
@@ -194,10 +198,12 @@ namespace KARToolkit.Core
             KarProjectWorkspace workspace = KarProjectWorkspace.Open(options.SourceRoot, options.OutputRoot);
             KarProjectIndexer indexer = options.ResolveIndexer();
             KarProjectIndex index = indexer.Build(workspace);
+            KarDataDefinitionProviderRegistry dataDefinitionProviders = options.ResolveDataDefinitionProviderRegistry();
             return new KarProject(
                 workspace,
                 index,
                 indexer.FileCatalog,
+                dataDefinitionProviders,
                 options.ResolveResourceHandlerRegistry(),
                 options.ResolveResourceAdapterProviderRegistry(),
                 options.ResolveRelationshipProviderRegistry(),
@@ -205,7 +211,7 @@ namespace KARToolkit.Core
                 options.ResolveDomainContextProviderRegistry(),
                 options.ResolveToolkitWorkflowProviderRegistry(),
                 options.ResolveOperationPresetRegistry(),
-                options.ResolveArchiveInspector());
+                options.ResolveArchiveInspector(dataDefinitionProviders));
         }
 
         public KarProjectFile GetFile(string relativePath)

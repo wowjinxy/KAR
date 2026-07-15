@@ -81,6 +81,11 @@ namespace KARToolkit.Core.Tests
         private static void BuiltInCatalogHasExpectedCoreSchemas()
         {
             KarDataDefinitionRegistry registry = KarDataDefinitionCatalog.BuiltIn;
+            KarDataDefinitionProviderRegistry providers = KarDataDefinitionCatalog.BuiltInProviders;
+            AssertTrue(object.ReferenceEquals(providers, KarDataDefinitionProviderRegistry.Default), "built-in catalog should expose the default data definition provider registry");
+            AssertTrue(providers.Providers.Count == 3, "built-in catalog should split schemas into provider-backed packs");
+            AssertTrue(providers.FindProvider("map-data-definitions").CreateDefinitions().Any(definition => definition.Id == "kar.gr.data"), "map schema provider should expose map data definitions");
+            AssertTrue(providers.CreateDefinitionRegistry().All.Count == KarDataDefinitionCatalog.All.Count, "data definition providers should compose the built-in schema registry");
             AssertTrue(KarDataDefinitionCatalog.All.Count >= 32, "built-in catalog should contain the current schema set");
             AssertResolves(registry, "kar.gr.data", "KAR_grData");
             AssertResolves(registry, "kar.gr.itemNode", "KAR_grItemNode");
@@ -212,25 +217,55 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(schema.Project, project), "schema service should retain project context");
                 AssertTrue(object.ReferenceEquals(schema.DataDefinitions, project.DataService.Definitions), "data service should expose the active project schema registry");
                 AssertTrue(schema.DataDefinitions.All.Count == 1, "schema service should expose custom project schema registries");
+                AssertTrue(schema.DataDefinitionProviders.Single().Id == "project-data-definitions" && schema.DataDefinitionProviders.Single().DefinitionCount == 1, "schema service should wrap direct project schema registries as data definition providers");
                 AssertTrue(schema.FileKinds.Count > 0 && schema.FileHandlers.Count > 0 && schema.ResourceHandlers.Count > 0 && schema.ResourceAdapterProviders.Count >= 3 && schema.RelationshipProviders.Count >= 3, "schema service should expose active handler, adapter, and relationship catalogs");
                 AssertTrue(schema.ResourceActionDefinitions.Count >= 8 && schema.OperationDomainRules.Count >= 6 && schema.DomainContextProviders.Count >= 7 && schema.ToolkitWorkflowProviders.Count >= 1 && schema.OperationPresetDefinitions.Count >= 6, "schema service should expose active toolkit registry catalogs");
                 KarProjectToolkitRegistryCatalog registryCatalog = schema.CreateToolkitRegistryCatalog();
                 AssertTrue(object.ReferenceEquals(registryCatalog.Project, project), "toolkit registry catalog should retain project context");
-                AssertTrue(registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count && registryCatalog.ResourceAdapterProviderCount == schema.ResourceAdapterProviders.Count && registryCatalog.RelationshipProviderCount == schema.RelationshipProviders.Count, "toolkit registry catalog should expose active handler, adapter, and relationship counts");
+                AssertTrue(registryCatalog.DataDefinitionProviderCount == schema.DataDefinitionProviders.Count && registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count && registryCatalog.ResourceAdapterProviderCount == schema.ResourceAdapterProviders.Count && registryCatalog.RelationshipProviderCount == schema.RelationshipProviders.Count, "toolkit registry catalog should expose active schema, handler, adapter, and relationship counts");
                 AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.DomainContextProviderCount == schema.DomainContextProviders.Count && registryCatalog.ToolkitWorkflowProviderCount == schema.ToolkitWorkflowProviders.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action, context, workflow, and operation counts");
                 KarProjectToolkitRegistryCatalogContract registryContract = registryCatalog.CreateContract();
                 AssertTrue(registryContract.Project.Name == project.Name && registryContract.Project.Workspace.WritesOnlyToOutput, "toolkit registry contracts should expose project and workspace metadata");
+                AssertTrue(registryContract.DataDefinitionProviderCount == registryCatalog.DataDefinitionProviderCount && registryContract.DataDefinitionProviders.Single().DefinitionCount == 1, "toolkit registry contracts should expose data definition provider metadata");
                 AssertTrue(registryContract.FileKindCount == registryCatalog.FileKindCount && registryContract.FileHandlers.Count == registryCatalog.FileHandlerCount, "toolkit registry contracts should preserve file registry counts");
                 AssertTrue(registryContract.ResourceAdapterProviderCount == registryCatalog.ResourceAdapterProviderCount && registryContract.ResourceAdapterProviders.Any(provider => provider.Kind == "File"), "toolkit registry contracts should expose resource adapter provider metadata");
                 AssertTrue(registryContract.RelationshipProviderCount == registryCatalog.RelationshipProviderCount && registryContract.RelationshipProviders.Any(provider => provider.Id == "map-bundle-relationships"), "toolkit registry contracts should expose relationship provider metadata");
                 AssertTrue(registryContract.ResourceHandlers.Any(handler => handler.Actions.Any(action => action.Id == "dump-bytes")), "toolkit registry contracts should expose nested resource action metadata");
                 AssertTrue(registryContract.DomainContextProviderCount == registryCatalog.DomainContextProviderCount && registryContract.DomainContextProviders.Any(provider => provider.Id == "maps" && provider.ContextCommand == "map-context"), "toolkit registry contracts should expose domain context provider metadata");
                 AssertTrue(registryContract.ToolkitWorkflowProviderCount == registryCatalog.ToolkitWorkflowProviderCount && registryContract.ToolkitWorkflowProviders.Any(provider => provider.Id == "built-in-workflows"), "toolkit registry contracts should expose workflow provider metadata");
-                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ResourceAdapterProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.RelationshipProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.DomainContextProviderCount >= 7 && KarProjectToolkitRegistryCatalog.Default.ToolkitWorkflowProviderCount >= 1 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in adapter, relationship, action, context, workflow, and preset registries");
+                AssertTrue(KarProjectToolkitRegistryCatalog.Default.DataDefinitionProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceAdapterProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.RelationshipProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.DomainContextProviderCount >= 7 && KarProjectToolkitRegistryCatalog.Default.ToolkitWorkflowProviderCount >= 1 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in schema, adapter, relationship, action, context, workflow, and preset registries");
                 AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Text = "scalar" }).Count == 1, "schema service should search data definition text");
                 AssertTrue(project.GetDataDefinition("KAR_vsLegendaryData").Id == "kar.test.custom", "project data definition lookup should resolve active accessor types");
+
+                KarDataDefinition providerDefinition = new KarDataDefinition(
+                    "kar.test.provider",
+                    "Provider Test Schema",
+                    "Tests",
+                    "KAR_vsLegendaryData",
+                    "Custom provider-backed scalar schema for project-level registry tests.",
+                    "tests",
+                    new[] { new KarDataFieldDefinition("x0C", 0x0C, "s32", "Custom scalar value from a provider.") },
+                    0x14);
+                KarDataDefinitionProviderRegistry customDefinitionProviders = new KarDataDefinitionProviderRegistry(new[]
+                {
+                    new KarDataDefinitionProvider(
+                        "custom-schema-pack",
+                        "Custom Schema Pack",
+                        "Caller-owned schema pack for tests.",
+                        () => new[] { providerDefinition }),
+                });
+                KarProject providerProject = KarProject.Open(new KarProjectOptions
+                {
+                    SourceRoot = tempRoot,
+                    DataDefinitionProviderRegistry = customDefinitionProviders,
+                    ArchiveDefinitions = new TestArchiveDefinitionProvider(),
+                });
+                AssertTrue(object.ReferenceEquals(providerProject.DataDefinitionProviderRegistry, customDefinitionProviders), "project options should expose custom data definition provider registries");
+                AssertTrue(providerProject.SchemaService.DataDefinitions.All.Single().Id == "kar.test.provider", "custom data definition providers should replace the built-in schema registry");
+                AssertTrue(providerProject.GetDataDefinition("KAR_vsLegendaryData").Id == "kar.test.provider", "custom data definition providers should feed project schema lookups");
+                AssertTrue(providerProject.CreateToolkitRegistryCatalog().DataDefinitionProviders.Single().Id == "custom-schema-pack", "toolkit registry catalog should expose custom data definition providers");
 
                 KarProjectArchiveSchemaInfo archiveSchema = schema.GetArchiveSchema("Custom.dat");
                 AssertTrue(archiveSchema.RelativePath == "Custom.dat", "archive schema info should keep file context");
@@ -2060,7 +2095,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
                 AssertTrue(session.Project.ToolkitService.CreateRegistryCatalogContract().ProjectName == session.Name, "toolkit service should expose reusable registry catalog contracts");
-                AssertTrue(session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0 && session.ResourceAdapterProviderCount > 0 && session.RelationshipProviderCount > 0, "project sessions should expose file and resource toolkit registries");
+                AssertTrue(session.DataDefinitionProviderCount > 0 && session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0 && session.ResourceAdapterProviderCount > 0 && session.RelationshipProviderCount > 0, "project sessions should expose schema, file, and resource toolkit registries");
                 AssertTrue(session.OperationDomainRuleCount >= 6 && session.DomainContextProviderCount >= 7 && session.ToolkitWorkflowProviderCount >= 1 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation, context, and workflow toolkit registries");
                 AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");
                 AssertTrue(session.WorkflowGroups.Count == session.Surface.WorkflowGroupCount, "project sessions should expose grouped workflows");

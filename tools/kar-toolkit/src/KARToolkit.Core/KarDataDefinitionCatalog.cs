@@ -4,8 +4,11 @@ namespace KARToolkit.Core
 {
     public static class KarDataDefinitionCatalog
     {
+        public static KarDataDefinitionProviderRegistry BuiltInProviders { get; } =
+            KarDataDefinitionProviderRegistry.Default;
+
         public static KarDataDefinitionRegistry BuiltIn { get; } =
-            new KarDataDefinitionRegistry(KarBuiltInDataDefinitions.All);
+            BuiltInProviders.CreateDefinitionRegistry();
 
         public static IReadOnlyList<KarDataDefinition> All => BuiltIn.All;
 

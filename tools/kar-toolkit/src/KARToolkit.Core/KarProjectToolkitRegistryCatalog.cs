@@ -10,6 +10,7 @@ namespace KARToolkit.Core
 
         internal KarProjectToolkitRegistryCatalog(
             KarProject project,
+            IEnumerable<KarDataDefinitionProvider> dataDefinitionProviders,
             IEnumerable<KarFileKindDescriptor> fileKinds,
             IEnumerable<KarProjectFileHandler> fileHandlers,
             IEnumerable<KarProjectResourceHandler> resourceHandlers,
@@ -22,6 +23,7 @@ namespace KARToolkit.Core
             IEnumerable<KarProjectOperationPresetDefinition> operationPresetDefinitions)
         {
             Project = project;
+            DataDefinitionProviders = OrderDataDefinitionProviders(dataDefinitionProviders);
             FileKinds = OrderFileKinds(fileKinds);
             FileHandlers = OrderFileHandlers(fileHandlers);
             ResourceHandlers = OrderResourceHandlers(resourceHandlers);
@@ -35,6 +37,8 @@ namespace KARToolkit.Core
         }
 
         public KarProject Project { get; }
+
+        public IReadOnlyList<KarDataDefinitionProvider> DataDefinitionProviders { get; }
 
         public IReadOnlyList<KarFileKindDescriptor> FileKinds { get; }
 
@@ -64,7 +68,9 @@ namespace KARToolkit.Core
 
         public string OutputRoot => Project == null ? null : Project.OutputRoot;
 
-        public int RegistryCount => 10;
+        public int RegistryCount => 11;
+
+        public int DataDefinitionProviderCount => DataDefinitionProviders.Count;
 
         public int FileKindCount => FileKinds.Count;
 
@@ -85,6 +91,8 @@ namespace KARToolkit.Core
         public int ToolkitWorkflowProviderCount => ToolkitWorkflowProviders.Count;
 
         public int OperationPresetDefinitionCount => OperationPresetDefinitions.Count;
+
+        public bool HasDataDefinitionProviders => DataDefinitionProviderCount != 0;
 
         public bool HasFileKinds => FileKindCount != 0;
 
@@ -115,6 +123,7 @@ namespace KARToolkit.Core
         {
             return new KarProjectToolkitRegistryCatalog(
                 null,
+                KarDataDefinitionProviderRegistry.Default.Providers,
                 KarFileKindRegistry.Default.Descriptors,
                 KarProjectFileHandlerRegistry.Default.Handlers,
                 KarProjectResourceHandlerRegistry.Default.Handlers,
@@ -125,6 +134,16 @@ namespace KARToolkit.Core
                 KarProjectDomainContextProviderRegistry.Default.Providers,
                 KarProjectToolkitWorkflowProviderRegistry.Default.Providers,
                 KarProjectOperationPresetRegistry.Default.Definitions);
+        }
+
+        private static IReadOnlyList<KarDataDefinitionProvider> OrderDataDefinitionProviders(IEnumerable<KarDataDefinitionProvider> providers)
+        {
+            if (providers == null)
+                throw new ArgumentNullException(nameof(providers));
+
+            return providers
+                .ToList()
+                .AsReadOnly();
         }
 
         private static IReadOnlyList<KarFileKindDescriptor> OrderFileKinds(IEnumerable<KarFileKindDescriptor> fileKinds)

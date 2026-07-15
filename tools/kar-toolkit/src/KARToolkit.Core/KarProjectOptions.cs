@@ -34,6 +34,8 @@ namespace KARToolkit.Core
 
         public KarArchiveInspector ArchiveInspector { get; set; }
 
+        public KarDataDefinitionProviderRegistry DataDefinitionProviderRegistry { get; set; }
+
         public KarDataDefinitionRegistry DataDefinitions { get; set; }
 
         public KarDataInspectionOptions DataInspection { get; set; }
@@ -64,7 +66,26 @@ namespace KARToolkit.Core
             return KarProjectIndexer.Default;
         }
 
-        internal KarArchiveInspector ResolveArchiveInspector()
+        internal KarDataDefinitionProviderRegistry ResolveDataDefinitionProviderRegistry()
+        {
+            if (ArchiveInspector != null)
+                return KarDataDefinitionProviderRegistry.FromDefinitions(
+                    "archive-inspector-data-definitions",
+                    "Archive Inspector Data Definitions",
+                    "Data definitions supplied by a caller-owned archive inspector.",
+                    ArchiveInspector.DataDefinitions.All);
+
+            if (DataDefinitions != null)
+                return KarDataDefinitionProviderRegistry.FromDefinitions(
+                    "project-data-definitions",
+                    "Project Data Definitions",
+                    "Data definitions supplied directly through project options.",
+                    DataDefinitions.All);
+
+            return DataDefinitionProviderRegistry ?? KarDataDefinitionProviderRegistry.Default;
+        }
+
+        internal KarArchiveInspector ResolveArchiveInspector(KarDataDefinitionProviderRegistry dataDefinitionProviders)
         {
             if (ArchiveInspector != null)
                 return ArchiveInspector;
@@ -72,8 +93,11 @@ namespace KARToolkit.Core
             if (DataDefinitions != null)
                 return new KarArchiveInspector(DataDefinitions, DataInspection);
 
+            if (DataDefinitionProviderRegistry != null)
+                return new KarArchiveInspector(dataDefinitionProviders.CreateDefinitionRegistry(), DataInspection);
+
             if (DataInspection != null)
-                return new KarArchiveInspector(KarDataDefinitionCatalog.BuiltIn, DataInspection);
+                return new KarArchiveInspector(dataDefinitionProviders.CreateDefinitionRegistry(), DataInspection);
 
             return KarArchiveInspector.Default;
         }

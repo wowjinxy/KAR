@@ -8,7 +8,7 @@ namespace KARToolkit.Core
     {
         public static KarDataDefinitionValidationReport ValidateBuiltIn()
         {
-            return Validate(KarBuiltInDataDefinitions.All);
+            return Validate(KarDataDefinitionCatalog.BuiltIn);
         }
 
         public static KarDataDefinitionValidationReport Validate(KarDataDefinitionRegistry registry)
