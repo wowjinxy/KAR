@@ -198,6 +198,16 @@ namespace KARToolkit.Core
             return ResourceService.TryGet(address, out resource);
         }
 
+        public byte[] ReadResourceBytes(string address)
+        {
+            return ResourceService.ReadBytes(address);
+        }
+
+        public KarProjectResourceExportResult ExportResourceToOutput(string address, bool overwrite = false)
+        {
+            return ResourceService.ExportToOutput(address, overwrite);
+        }
+
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)
         {
             return new KarProjectReport(this, options);

@@ -25,6 +25,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
+            Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -335,6 +336,61 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceInfo missing;
                 AssertTrue(!resources.TryGet("VsHydra.dat:missingRoot", out missing), "resource try-get should return false for missing roots");
                 AssertTrue(!project.TryGetResource("../bad.dat", out missing), "project resource try-get wrapper should reject invalid addresses");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceReadsAndExportsResourcesSafely()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-export-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            string archivePath = Path.Combine(tempRoot, "VsHydra.dat");
+            string packagePath = Path.Combine(tempRoot, "A2Info.dat");
+            WriteHsdFile(archivePath, "vsDataHydra", new KAR_vsLegendaryData());
+            WriteA2DPackage(packagePath, new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                byte[] packageBytes = File.ReadAllBytes(packagePath);
+                AssertTrue(resources.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource reads should return active file bytes");
+                AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "project resource read wrapper should return A2D entry bytes");
+                AssertThrows<NotSupportedException>(
+                    () => resources.ReadBytes("VsHydra.dat:vsDataHydra"),
+                    "resource reads should reject non-byte-addressable HSD roots");
+
+                KarProjectResourceExportResult fileExport = resources.ExportToOutput("A2Info.dat");
+                AssertTrue(fileExport.Address == "A2Info.dat", "resource file export should report resource address");
+                AssertTrue(fileExport.OutputKind == KarProjectResourceOutputKind.ProjectFile, "resource file export should write project file outputs");
+                AssertTrue(fileExport.OutputRelativePath == "A2Info.dat", "resource file export should report output-relative project path");
+                AssertTrue(fileExport.WroteOutput, "resource file export should write missing project outputs");
+                AssertTrue(File.ReadAllBytes(fileExport.OutputPath).SequenceEqual(packageBytes), "resource file export should copy source bytes to output");
+
+                KarProjectResourceExportResult skippedFileExport = resources.ExportToOutput("A2Info.dat");
+                AssertTrue(!skippedFileExport.WroteOutput, "resource file export should skip existing outputs unless overwrite is requested");
+
+                KarProjectResourceExportResult rootExport = project.ExportResourceToOutput("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootExport.Address == "VsHydra.dat:vsDataHydra", "project resource export wrapper should preserve root resource addresses");
+                AssertTrue(rootExport.OutputKind == KarProjectResourceOutputKind.ProjectFile, "HSD root resource export should stage its containing archive");
+                AssertTrue(File.Exists(rootExport.OutputPath), "HSD root resource export should create an output archive");
+                AssertTrue(project.OutputService.GetFile("VsHydra.dat").Status == KarProjectOutputFileStatus.MatchesSource, "HSD root resource export should register as an unchanged staged archive");
+
+                KarProjectResourceExportResult entryExport = resources.ExportToOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryExport.OutputKind == KarProjectResourceOutputKind.OutputAsset, "A2D resource export should write output assets");
+                AssertTrue(entryExport.OutputRelativePath == "a2d-entries/A2Info.dat/ScInfGo2D.tm", "A2D resource export should report stable sidecar paths");
+                AssertTrue(entryExport.WroteOutput, "A2D resource export should write missing sidecar outputs");
+                AssertTrue(File.ReadAllBytes(entryExport.OutputPath).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D resource export should extract entry bytes to output sidecars");
+                AssertTrue(!File.Exists(project.FileService.GetOutputPath("A2Info.dat")) || File.ReadAllBytes(project.FileService.GetOutputPath("A2Info.dat")).SequenceEqual(packageBytes), "A2D resource export should not mutate source packages");
             }
             finally
             {

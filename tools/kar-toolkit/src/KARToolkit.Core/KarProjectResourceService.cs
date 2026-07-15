@@ -103,6 +103,50 @@ namespace KARToolkit.Core
             }
         }
 
+        public byte[] ReadBytes(string address)
+        {
+            KarProjectResourceInfo resource = Get(address);
+            switch (resource.Kind)
+            {
+                case KarResourceKind.File:
+                    return _project.FileService.ReadBytes(resource.RelativePath);
+
+                case KarResourceKind.A2DEntry:
+                    return _project.A2DService.ReadEntryData(resource.RelativePath, resource.Reference.EntryName);
+
+                case KarResourceKind.HsdRoot:
+                    throw new NotSupportedException("HSD root resources do not have standalone byte ranges. Export the resource to stage its containing archive.");
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(address));
+            }
+        }
+
+        public KarProjectResourceExportResult ExportToOutput(string address, bool overwrite = false)
+        {
+            KarProjectResourceInfo resource = Get(address);
+            switch (resource.Kind)
+            {
+                case KarResourceKind.File:
+                case KarResourceKind.HsdRoot:
+                    return ExportContainingFile(resource, overwrite);
+
+                case KarResourceKind.A2DEntry:
+                    KarProjectA2DEntryExtractResult extract = _project.A2DService.ExtractEntryToOutput(resource.Address, overwrite);
+                    return new KarProjectResourceExportResult(
+                        resource,
+                        KarProjectResourceOutputKind.OutputAsset,
+                        extract.OutputRelativePath,
+                        extract.OutputPath,
+                        extract.WroteOutput,
+                        null,
+                        extract);
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(address));
+            }
+        }
+
         private KarProjectResourceInfo Resolve(KarResourceReference reference)
         {
             switch (reference.Kind)
@@ -127,6 +171,25 @@ namespace KARToolkit.Core
                 default:
                     throw new ArgumentOutOfRangeException(nameof(reference));
             }
+        }
+
+        private KarProjectResourceExportResult ExportContainingFile(KarProjectResourceInfo resource, bool overwrite)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (resource.File == null)
+                throw new InvalidOperationException("Resource does not have a containing project file: " + resource.Address);
+
+            bool wroteOutput = overwrite || !File.Exists(resource.File.OutputPath);
+            KarProjectFileCopyResult copy = _project.FileService.CopyFileToOutput(resource.File.RelativePath, overwrite);
+            return new KarProjectResourceExportResult(
+                resource,
+                KarProjectResourceOutputKind.ProjectFile,
+                resource.File.RelativePath,
+                copy.OutputPath,
+                wroteOutput,
+                copy,
+                null);
         }
     }
 }

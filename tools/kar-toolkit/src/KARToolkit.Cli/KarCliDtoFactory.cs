@@ -543,9 +543,35 @@ internal static class KarCliDtoFactory
             isFile = resource.IsFile,
             isHsdRoot = resource.IsHsdRoot,
             isA2DEntry = resource.IsA2DEntry,
+            canReadBytes = resource.CanReadBytes,
+            canExportToOutput = resource.CanExportToOutput,
             file = ToProjectFileDtoOrNull(resource.File),
             root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
             a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
+        };
+    }
+
+    public static object ToProjectResourceExportResultDto(KarProjectResourceExportResult result)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(result.Resource),
+            reference = ToResourceReferenceDto(result.Reference),
+            kind = result.Kind.ToString(),
+            address = result.Address,
+            outputKind = result.OutputKind.ToString(),
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
+            wroteOutput = result.WroteOutput,
+            isProjectFileOutput = result.IsProjectFileOutput,
+            isOutputAsset = result.IsOutputAsset,
+            fileCopy = result.FileCopyResult == null ? null : new
+            {
+                file = ToProjectFileDto(result.FileCopyResult.File),
+                outputPath = result.FileCopyResult.OutputPath,
+                sourceLastWriteTimeUtc = result.FileCopyResult.SourceLastWriteTimeUtc,
+            },
+            a2dExtract = result.A2DExtractResult == null ? null : ToA2DEntryExtractResultDto(result.A2DExtractResult),
         };
     }
 

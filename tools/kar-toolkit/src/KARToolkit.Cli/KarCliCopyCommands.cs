@@ -2,6 +2,7 @@ using KARToolkit.Core;
 using static KARToolkit.Cli.KarCliDtoFactory;
 using static KARToolkit.Cli.KarCliJsonWriter;
 using static KARToolkit.Cli.KarCliProjectFactory;
+using static KARToolkit.Cli.KarCliTextWriter;
 
 namespace KARToolkit.Cli;
 
@@ -55,6 +56,22 @@ internal static class KarCliCopyCommands
         foreach (KarProjectFileCopyResult result in results)
             Console.WriteLine("  " + result.File.RelativePath + " -> " + result.OutputPath);
 
+        return 0;
+    }
+
+    public static int ExportResource(KarCliOptions options)
+    {
+        options.RequirePositionals("export-resource", 2);
+        KarProject project = OpenProject(options);
+        KarProjectResourceExportResult result = project.ResourceService.ExportToOutput(options.Positionals[1], options.Overwrite);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceExportResultDto(result));
+            return 0;
+        }
+
+        PrintProjectResourceExportResult(result);
         return 0;
     }
 }
