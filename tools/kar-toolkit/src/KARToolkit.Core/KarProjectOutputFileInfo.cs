@@ -44,6 +44,10 @@ namespace KARToolkit.Core
 
         public string RelativePath { get; }
 
+        public KarResourceReference ResourceReference => KarResourceReference.File(RelativePath);
+
+        public string ResourceAddress => ResourceReference.Address;
+
         public string SourcePath => ProjectFile == null ? null : ProjectFile.SourcePath;
 
         public string OutputPath { get; }

@@ -34,7 +34,9 @@ namespace KARToolkit.Core
 
         public string PackageRelativePath => PackageFile.RelativePath;
 
-        public string EntryPath => PackageRelativePath + "#" + Name;
+        public KarResourceReference ResourceReference => KarResourceReference.A2DEntry(PackageRelativePath, Name);
+
+        public string EntryPath => ResourceReference.Address;
 
         public int Index { get; }
 

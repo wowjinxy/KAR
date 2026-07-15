@@ -18,6 +18,10 @@ namespace KARToolkit.Core
 
         public string RootName => Root.Name;
 
+        public KarResourceReference ResourceReference => KarResourceReference.HsdRoot(RelativePath, RootName);
+
+        public string RootPath => ResourceReference.Address;
+
         public bool IsKnown => Root.IsKnown;
 
         public string AccessorTypeName => Root.AccessorTypeName;

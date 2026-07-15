@@ -60,17 +60,25 @@ namespace KARToolkit.Core
 
         public bool IsPackageEntry => PackageFile != null && PackageEntryName != null;
 
-        public string RelativePath
+        public KarResourceReference ResourceReference
         {
             get
             {
                 if (File != null)
-                    return File.RelativePath;
+                    return File.ResourceReference;
 
                 if (IsPackageEntry)
-                    return PackageFile.RelativePath + "#" + PackageEntryName;
+                    return KarResourceReference.A2DEntry(PackageFile.RelativePath, PackageEntryName);
 
                 return null;
+            }
+        }
+
+        public string RelativePath
+        {
+            get
+            {
+                return ResourceReference == null ? null : ResourceReference.Address;
             }
         }
 

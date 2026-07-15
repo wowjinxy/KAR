@@ -23,6 +23,7 @@ namespace KARToolkit.Core.Tests
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
+            Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -209,6 +210,71 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(project.GetFile("GrCity1.dat"), files.Get("GrCity1.dat")), "project file get compatibility wrapper should delegate to file service");
                 AssertTrue(project.GetReadPath("A2Demo.dat") == files.GetReadPath("A2Demo.dat"), "project read path compatibility wrapper should delegate to file service");
                 AssertTrue(project.CopyToOutput("GrCity1.dat", true) == files.GetOutputPath("GrCity1.dat"), "project copy compatibility wrapper should delegate to file service");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ResourceReferencesAddressProjectObjects()
+        {
+            KarResourceReference fileReference = KarResourceReference.Parse("maps\\GrCity1.dat");
+            AssertTrue(fileReference.Kind == KarResourceKind.File, "resource reference parser should classify plain paths as files");
+            AssertTrue(fileReference.Address == "maps/GrCity1.dat", "resource reference parser should normalize project paths");
+            AssertTrue(fileReference.ParentAddress == null, "file resource references should not have parent addresses");
+
+            KarResourceReference rootReference = KarResourceReference.Parse("VsHydra.dat:vsDataHydra");
+            AssertTrue(rootReference.Kind == KarResourceKind.HsdRoot, "resource reference parser should classify root addresses");
+            AssertTrue(rootReference.RelativePath == "VsHydra.dat", "root resource references should expose archive paths");
+            AssertTrue(rootReference.RootName == "vsDataHydra", "root resource references should expose root names");
+            AssertTrue(rootReference.Address == "VsHydra.dat:vsDataHydra", "root resource references should preserve address syntax");
+
+            KarResourceReference entryReference = KarResourceReference.Parse("A2Info.dat#ScInfGo2D.tm");
+            AssertTrue(entryReference.Kind == KarResourceKind.A2DEntry, "resource reference parser should classify A2D entry addresses");
+            AssertTrue(entryReference.EntryName == "ScInfGo2D.tm", "A2D resource references should expose entry names");
+            AssertTrue(entryReference.ParentAddress == "A2Info.dat", "A2D resource references should expose package parent addresses");
+            AssertTrue(entryReference.Equals(KarResourceReference.A2DEntry("a2info.dat", "scinfgo2d.tm")), "A2D resource references should compare paths and entries case-insensitively");
+
+            KarResourceReference invalidReference;
+            AssertTrue(!KarResourceReference.TryParse("../bad.dat", out invalidReference), "resource references should reject path traversal");
+            AssertTrue(!KarResourceReference.TryParse("A2Info.dat#", out invalidReference), "resource references should reject missing subresource names");
+
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-reference-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+
+                KarProjectFile file = project.FileService.Get("VsHydra.dat");
+                AssertTrue(file.ResourceAddress == "VsHydra.dat", "project files should expose resource addresses");
+                AssertTrue(file.ResourceReference.Equals(KarResourceReference.File("VsHydra.dat")), "project files should expose file resource references");
+
+                KarProjectRootInfo root = project.DataService.QueryRoots(new KarProjectRootQueryOptions
+                {
+                    RootName = "vsDataHydra",
+                }).Single();
+                AssertTrue(root.RootPath == "VsHydra.dat:vsDataHydra", "project roots should expose archive-root resource addresses");
+                AssertTrue(root.ResourceReference.Equals(rootReference), "project roots should expose parse-compatible resource references");
+
+                KarProjectA2DEntryInfo entry = project.A2DService.GetEntry("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entry.EntryPath == "A2Info.dat#ScInfGo2D.tm", "A2D entries should expose package-entry resource addresses");
+                AssertTrue(entry.ResourceReference.Equals(entryReference), "A2D entries should expose parse-compatible resource references");
+
+                KarProjectRelationship relationship = project.RelationshipService.Query(new KarProjectRelationshipQueryOptions
+                {
+                    RelativePath = "A2Info.dat#ScInfGo2D.tm",
+                }).Single();
+                AssertTrue(relationship.ResourceReference.Equals(entryReference), "relationships should expose resource references for package entries");
+                AssertTrue(relationship.RelativePath == relationship.ResourceReference.Address, "relationship relative paths should mirror resource addresses");
             }
             finally
             {

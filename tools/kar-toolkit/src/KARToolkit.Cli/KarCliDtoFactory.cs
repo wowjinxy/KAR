@@ -99,7 +99,9 @@ internal static class KarCliDtoFactory
             files = group.Files
                 .Select(file => new
                 {
+                    resource = ToResourceReferenceDto(file.ResourceReference),
                     relativePath = file.RelativePath,
+                    resourceAddress = file.ResourceAddress,
                     kind = file.Kind.ToString(),
                     category = file.Category,
                     displayName = file.DisplayName,
@@ -129,7 +131,9 @@ internal static class KarCliDtoFactory
     {
         return new
         {
+            resource = ToResourceReferenceDto(file.ResourceReference),
             relativePath = file.RelativePath,
+            resourceAddress = file.ResourceAddress,
             sourcePath = file.SourcePath,
             outputPath = file.OutputPath,
             kind = file.Kind.ToString(),
@@ -191,6 +195,7 @@ internal static class KarCliDtoFactory
             category = relationship.Category,
             description = relationship.Description,
             mapName = relationship.MapName,
+            resource = ToResourceReferenceDtoOrNull(relationship.ResourceReference),
             relativePath = relationship.RelativePath,
             displayName = relationship.DisplayName,
             isMapScoped = relationship.IsMapScoped,
@@ -262,9 +267,13 @@ internal static class KarCliDtoFactory
     {
         return new
         {
+            resource = ToResourceReferenceDto(root.ResourceReference),
+            rootPath = root.RootPath,
             file = new
             {
+                resource = ToResourceReferenceDto(root.File.ResourceReference),
                 relativePath = root.File.RelativePath,
+                resourceAddress = root.File.ResourceAddress,
                 kind = root.File.Kind.ToString(),
                 category = root.File.Category,
                 displayName = root.File.DisplayName,
@@ -294,7 +303,9 @@ internal static class KarCliDtoFactory
             files = summary.Roots
                 .Select(root => new
                 {
+                    resource = ToResourceReferenceDto(root.File.ResourceReference),
                     relativePath = root.File.RelativePath,
+                    resourceAddress = root.File.ResourceAddress,
                     kind = root.File.Kind.ToString(),
                     category = root.File.Category,
                     displayName = root.File.DisplayName,
@@ -498,11 +509,31 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToResourceReferenceDto(KarResourceReference reference)
+    {
+        return new
+        {
+            kind = reference.Kind.ToString(),
+            address = reference.Address,
+            parentAddress = reference.ParentAddress,
+            relativePath = reference.RelativePath,
+            rootName = reference.RootName,
+            entryName = reference.EntryName,
+        };
+    }
+
+    public static object ToResourceReferenceDtoOrNull(KarResourceReference reference)
+    {
+        return reference == null ? null : ToResourceReferenceDto(reference);
+    }
+
     public static object ToProjectFileDto(KarProjectFile file)
     {
         return new
         {
+            resource = ToResourceReferenceDto(file.ResourceReference),
             relativePath = file.RelativePath,
+            resourceAddress = file.ResourceAddress,
             kind = file.Kind.ToString(),
             displayName = file.DisplayName,
             category = file.Category,
@@ -542,6 +573,7 @@ internal static class KarCliDtoFactory
     {
         return new
         {
+            resource = ToResourceReferenceDto(entry.ResourceReference),
             packageFile = ToProjectFileDto(entry.PackageFile),
             packageRelativePath = entry.PackageRelativePath,
             entryPath = entry.EntryPath,
