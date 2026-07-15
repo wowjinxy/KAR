@@ -2,12 +2,13 @@ namespace KARToolkit.Cli;
 
 internal sealed class KarCliOptions
 {
-    private KarCliOptions(List<string> positionals, string outputRoot, bool overwrite, bool noUnknownRoots, bool json)
+    private KarCliOptions(List<string> positionals, string outputRoot, bool overwrite, bool noUnknownRoots, bool schema, bool json)
     {
         Positionals = positionals;
         OutputRoot = outputRoot;
         Overwrite = overwrite;
         NoUnknownRoots = noUnknownRoots;
+        Schema = schema;
         Json = json;
     }
 
@@ -19,6 +20,8 @@ internal sealed class KarCliOptions
 
     public bool NoUnknownRoots { get; }
 
+    public bool Schema { get; }
+
     public bool Json { get; }
 
     public static KarCliOptions Parse(IEnumerable<string> args)
@@ -27,6 +30,7 @@ internal sealed class KarCliOptions
         string outputRoot = null;
         bool overwrite = false;
         bool noUnknownRoots = false;
+        bool schema = false;
         bool json = false;
         using IEnumerator<string> enumerator = args.GetEnumerator();
 
@@ -54,6 +58,12 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--schema" || arg == "--data-definition")
+            {
+                schema = true;
+                continue;
+            }
+
             if (arg == "--json")
             {
                 json = true;
@@ -63,7 +73,7 @@ internal sealed class KarCliOptions
             positionals.Add(arg);
         }
 
-        return new KarCliOptions(positionals, outputRoot, overwrite, noUnknownRoots, json);
+        return new KarCliOptions(positionals, outputRoot, overwrite, noUnknownRoots, schema, json);
     }
 
     public void RequirePositionals(string command, int count)

@@ -20,6 +20,7 @@ dotnet build .\tools\kar-toolkit\KARToolkit.slnx --no-restore /p:UseSharedCompil
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll set-scalar .\GKYE01 VsHydra.dat kar.vs.legendary x0C 1 --schema --output .\mod-output
 ```
 
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
@@ -47,6 +48,7 @@ Use `definitions` to list known KAR data schemas. Archive and map inspection att
 Known root schemas also include read-only field values for mapped scalar fields and pointer presence/length, which is useful for quick archive comparison before writing editor code.
 Archive, root, and schema results expose lookup helpers for roots by name/schema and field values by name, so tools do not need to hand-walk inspection lists.
 Schema-backed scalar fields can be edited in memory through `KarDataEditor` or `KarProjectHsdArchive.SetScalarField*`, then saved through the output-only project archive APIs.
+The `set-scalar` CLI command exposes that same safe output-only scalar edit path for quick mod experiments.
 `KarDataDefinitionRegistry` owns schema indexing by id and accessor type; `KarDataDefinitionCatalog` exposes the built-in KAR registry.
 `KarArchiveInspector` can be constructed with a custom `KarDataDefinitionRegistry`; `Default` uses the built-in KAR registry.
 Add new decomp-backed data schemas to the domain definition files (`KarMapDataDefinitions`, `KarVehicleDataDefinitions`, `KarVersusDataDefinitions`) and let `KarDataDefinitionCatalog` handle lookup/indexing.

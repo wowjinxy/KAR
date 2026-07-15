@@ -124,6 +124,8 @@ internal static class KarCliDtoFactory
             typeName = field.TypeName,
             description = field.Description,
             isPointer = field.IsPointer,
+            isScalar = field.IsScalar,
+            isFloatScalar = field.IsFloatScalar,
             dataDefinitionId = field.DataDefinitionId,
         };
     }

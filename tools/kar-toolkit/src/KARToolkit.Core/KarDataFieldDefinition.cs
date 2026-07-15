@@ -36,5 +36,27 @@ namespace KARToolkit.Core
         public bool IsPointer { get; }
 
         public string DataDefinitionId { get; }
+
+        public bool IsScalar
+        {
+            get
+            {
+                KarDataScalarKind kind;
+                int size;
+                return !IsPointer && KarDataScalarTypes.TryResolve(TypeName, out kind, out size);
+            }
+        }
+
+        public bool IsFloatScalar
+        {
+            get
+            {
+                KarDataScalarKind kind;
+                int size;
+                return !IsPointer &&
+                    KarDataScalarTypes.TryResolve(TypeName, out kind, out size) &&
+                    kind == KarDataScalarKind.Float;
+            }
+        }
     }
 }

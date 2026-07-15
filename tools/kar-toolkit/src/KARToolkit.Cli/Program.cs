@@ -24,6 +24,7 @@ internal static class Program
                 "a2d" => KarCliInspectionCommands.ShowA2D(options),
                 "copy" => KarCliCopyCommands.CopyFile(options),
                 "copy-map" => KarCliCopyCommands.CopyMap(options),
+                "set-scalar" => KarCliEditCommands.SetScalar(options),
                 "validate" => KarCliInspectionCommands.ValidateProject(options),
                 "definitions" => KarCliInspectionCommands.ShowDefinitions(options),
                 "definition" => KarCliInspectionCommands.ShowDefinition(options),
@@ -54,6 +55,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
+        Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots]");
         Console.WriteLine("  kar-toolkit definitions");
         Console.WriteLine("  kar-toolkit definition <definition-id-or-accessor-type>");
