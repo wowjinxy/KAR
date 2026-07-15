@@ -9,13 +9,14 @@ namespace KARToolkit.Core
     {
         private KarProject(
             KarProjectWorkspace workspace,
-            KarProjectIndex index)
+            KarProjectIndex index,
+            KarArchiveInspector archiveInspector)
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileStore = new KarProjectFileStore(Workspace, Index);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore);
-            Inspector = new KarProjectInspector(Index);
+            Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             Validator = new KarProjectValidator(this);
         }
 
@@ -62,9 +63,21 @@ namespace KARToolkit.Core
 
         public static KarProject Open(string sourceRoot, string outputRoot)
         {
-            KarProjectWorkspace workspace = KarProjectWorkspace.Open(sourceRoot, outputRoot);
-            KarProjectIndex index = KarProjectIndexer.Default.Build(workspace);
-            return new KarProject(workspace, index);
+            return Open(new KarProjectOptions
+            {
+                SourceRoot = sourceRoot,
+                OutputRoot = outputRoot,
+            });
+        }
+
+        public static KarProject Open(KarProjectOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+
+            KarProjectWorkspace workspace = KarProjectWorkspace.Open(options.SourceRoot, options.OutputRoot);
+            KarProjectIndex index = options.ResolveIndexer().Build(workspace);
+            return new KarProject(workspace, index, options.ResolveArchiveInspector());
         }
 
         public KarProjectFile GetFile(string relativePath)
