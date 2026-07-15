@@ -204,6 +204,51 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectFieldSummaryDto(KarProjectFieldSummary summary)
+    {
+        return new
+        {
+            dataDefinitionId = summary.DataDefinitionId,
+            displayName = summary.DisplayName,
+            category = summary.Category,
+            accessorTypeName = summary.AccessorTypeName,
+            field = ToDataFieldDto(summary.Field),
+            count = summary.Count,
+            fileCount = summary.FileCount,
+            availableCount = summary.AvailableCount,
+            unavailableCount = summary.UnavailableCount,
+            distinctValueCount = summary.DistinctValueCount,
+            hasValueVariation = summary.HasValueVariation,
+            distinctValues = summary.DistinctValues.Select(ToProjectFieldDistinctValueDto).ToList(),
+        };
+    }
+
+    public static object ToProjectFieldDistinctValueDto(KarProjectFieldDistinctValue value)
+    {
+        return new
+        {
+            valueKind = value.ValueKind,
+            displayValue = value.DisplayValue,
+            signedValue = value.SignedValue,
+            unsignedValue = value.UnsignedValue,
+            floatValue = value.FloatValue,
+            hasReference = value.HasReference,
+            referenceLength = value.ReferenceLength,
+            referenceLengthHex = value.ReferenceLengthHex,
+            referenceDataDefinitionId = value.ReferenceDataDefinitionId,
+            error = value.Error,
+            count = value.Count,
+            fileCount = value.FileCount,
+            occurrences = value.Fields
+                .Select(field => new
+                {
+                    relativePath = field.RelativePath,
+                    rootName = field.RootName,
+                })
+                .ToList(),
+        };
+    }
+
     public static object ToDataDefinitionDtoOrNull(KarDataDefinition definition)
     {
         return definition == null ? null : ToDataDefinitionDto(definition);

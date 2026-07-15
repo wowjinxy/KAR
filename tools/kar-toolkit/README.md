@@ -33,6 +33,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll r
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll roots .\GKYE01 --unknown --summary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll schema-usage .\GKYE01 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll fields .\GKYE01 kar.gr.data unknown1 --kind MapData --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll field-summary .\GKYE01 kar.gr.data --kind MapData
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate-schemas
@@ -48,6 +49,7 @@ Project-wide archive inventory goes through `KarProject.QueryArchives`, and the 
 Project-wide root discovery goes through `KarProject.QueryRoots`, grouped root discovery goes through `KarProject.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
 Project-wide schema usage goes through `KarProject.QueryDataDefinitionUsage`, and the `schema-usage` CLI command reports where known schemas appear.
 Project-wide labeled field discovery goes through `KarProject.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.
+Project-wide labeled field comparison goes through `KarProject.QueryFieldSummaries`, and the `field-summary` CLI command groups values by schema field.
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
 `KarProjectFileCatalog` is the replaceable service that connects file classification, HSD-kind checks, and map-name extraction.
 `KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.

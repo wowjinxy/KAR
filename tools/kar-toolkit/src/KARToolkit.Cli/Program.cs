@@ -26,6 +26,8 @@ internal static class Program
                 "data-definition-usage" => KarCliInspectionCommands.ShowSchemaUsage(options),
                 "fields" => KarCliInspectionCommands.ShowFields(options),
                 "field-values" => KarCliInspectionCommands.ShowFields(options),
+                "field-summary" => KarCliInspectionCommands.ShowFieldSummaries(options),
+                "field-summaries" => KarCliInspectionCommands.ShowFieldSummaries(options),
                 "maps" => KarCliInspectionCommands.ShowMaps(options),
                 "map" => KarCliInspectionCommands.ShowMap(options),
                 "archive" => KarCliInspectionCommands.ShowArchive(options),
@@ -64,6 +66,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-usage <source-folder> [--kind <file-kind>] [--category <category>] [--root-name <name>]");
         Console.WriteLine("  kar-toolkit fields <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");
+        Console.WriteLine("  kar-toolkit field-summary <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");

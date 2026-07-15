@@ -184,6 +184,18 @@ namespace KARToolkit.Core
             return fields.AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectFieldSummary> QueryFieldSummaries(KarProjectFieldQueryOptions options)
+        {
+            return QueryFieldValues(options)
+                .GroupBy(field => field.DataDefinitionId + "\u001F" + field.FieldName, StringComparer.OrdinalIgnoreCase)
+                .Select(group => new KarProjectFieldSummary(
+                    group.First().ArchiveRoot.DataDefinition,
+                    group.First().Field,
+                    group))
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

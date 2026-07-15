@@ -94,6 +94,26 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectFieldSummary(KarProjectFieldSummary summary)
+    {
+        string offset = summary.Field.OffsetHex ?? "n/a";
+        string variation = summary.HasValueVariation ? " varied" : "";
+        Console.WriteLine(
+            summary.DataDefinitionId + "." + summary.FieldName +
+            " " + offset + " " + summary.TypeName +
+            " roots=" + summary.Count +
+            " files=" + summary.FileCount +
+            " values=" + summary.DistinctValueCount +
+            " available=" + summary.AvailableCount + "/" + summary.Count +
+            variation);
+
+        foreach (KarProjectFieldDistinctValue value in summary.DistinctValues)
+        {
+            string error = string.IsNullOrEmpty(value.Error) ? "" : " (" + value.Error + ")";
+            Console.WriteLine("  " + value.DisplayValue + " x" + value.Count + error);
+        }
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");

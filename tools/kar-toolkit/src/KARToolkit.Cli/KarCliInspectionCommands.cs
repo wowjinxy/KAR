@@ -164,6 +164,9 @@ internal static class KarCliInspectionCommands
     public static int ShowFields(KarCliOptions options)
     {
         options.RequirePositionals("fields", 1);
+        if (options.RootSummary)
+            return ShowFieldSummaries(options);
+
         KarProject project = OpenProject(options);
         List<KarProjectFieldInfo> fields = project.QueryFieldValues(CreateFieldQuery(options))
             .OrderBy(field => field.RelativePath)
@@ -180,6 +183,30 @@ internal static class KarCliInspectionCommands
 
         foreach (KarProjectFieldInfo field in fields)
             PrintProjectFieldValue(field);
+
+        return 0;
+    }
+
+    public static int ShowFieldSummaries(KarCliOptions options)
+    {
+        options.RequirePositionals("field-summary", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectFieldSummary> summaries = project.QueryFieldSummaries(CreateFieldQuery(options))
+            .OrderByDescending(summary => summary.Count)
+            .ThenByDescending(summary => summary.DistinctValueCount)
+            .ThenBy(summary => summary.DataDefinitionId)
+            .ThenBy(summary => summary.Field.Offset ?? int.MaxValue)
+            .ThenBy(summary => summary.FieldName)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(summaries.Select(ToProjectFieldSummaryDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectFieldSummary summary in summaries)
+            PrintProjectFieldSummary(summary);
 
         return 0;
     }

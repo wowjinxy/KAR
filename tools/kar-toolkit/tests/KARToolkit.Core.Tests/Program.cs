@@ -23,6 +23,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
+            Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -266,6 +267,52 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(mapOnly.Count == 2, "field query should respect root file filters");
                 AssertTrue(mapOnly.All(field => field.File.Kind == KarFileKind.MapData), "field query file filters should keep map data only");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectFieldSummariesGroupDistinctValues()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-field-summary-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+
+                KarProject project = KarProject.Open(tempRoot);
+                IReadOnlyList<KarProjectFieldSummary> summaries = project.QueryFieldSummaries(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "kar.gr.data",
+                    FieldName = "unknown1",
+                });
+
+                AssertTrue(summaries.Count == 1, "field summary query should group matching schema fields");
+                KarProjectFieldSummary summary = summaries[0];
+                AssertTrue(summary.DataDefinitionId == "kar.gr.data", "field summary should keep schema id");
+                AssertTrue(summary.FieldName == "unknown1", "field summary should keep field name");
+                AssertTrue(summary.Count == 2, "field summary should count roots");
+                AssertTrue(summary.FileCount == 2, "field summary should count unique files");
+                AssertTrue(summary.AvailableCount == 2, "field summary should count available values");
+                AssertTrue(summary.UnavailableCount == 0, "field summary should count unavailable values");
+                AssertTrue(summary.DistinctValueCount == 2, "field summary should count distinct values");
+                AssertTrue(summary.HasValueVariation, "field summary should flag varying values");
+                AssertTrue(summary.DistinctValues.Any(value => value.SignedValue == 101 && value.Count == 1), "field summary should bucket GrCity1 value");
+                AssertTrue(summary.DistinctValues.Any(value => value.SignedValue == 202 && value.Count == 1), "field summary should bucket GrSimple value");
+
+                IReadOnlyList<KarProjectFieldSummary> hydraSummaries = project.QueryFieldSummaries(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "KAR_vsLegendaryData",
+                    FieldName = "x0C",
+                });
+
+                AssertTrue(hydraSummaries.Count == 1, "field summary should match schemas by accessor type");
+                AssertTrue(hydraSummaries[0].DistinctValueCount == 1, "field summary should group identical versus values");
+                AssertTrue(!hydraSummaries[0].HasValueVariation, "field summary should not flag single values as varying");
             }
             finally
             {
