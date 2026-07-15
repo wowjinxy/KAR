@@ -158,6 +158,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowDomainContexts(KarCliOptions options)
+    {
+        options.RequirePositionals("domains", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectDomainContext> contexts = project.ToolkitService.QueryDomainContexts(CreateToolkitSnapshotOptions(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectDomainContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectDomainContext context in contexts)
+            PrintProjectDomainContext(context);
+
+        return 0;
+    }
+
     public static int ShowMapOutputs(KarCliOptions options)
     {
         options.RequirePositionals("map-outputs", 1);

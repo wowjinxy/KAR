@@ -1390,6 +1390,17 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(snapshot.HasOutputs && snapshot.HasModifiedOutputs, "toolkit snapshots should summarize mod output state");
                 AssertTrue(snapshot.A2DPackageContexts.Single(context => context.RelativePath == "A2Info.dat").HasModifiedEntryOutputs, "toolkit snapshots should include package sidecar state");
 
+                IReadOnlyList<KarProjectDomainContext> domains = project.QueryDomainContexts();
+                AssertTrue(domains.Count == 7, "domain contexts should expose the current toolkit domain set");
+                KarProjectDomainContext mapDomain = domains.Single(domain => domain.Id == "maps");
+                AssertTrue(mapDomain.ItemCount == 1 && mapDomain.ResourceCount == 3 && mapDomain.ContextCommand == "map-context", "domain contexts should summarize map toolkit entry points");
+                KarProjectDomainContext a2dDomain = domains.Single(domain => domain.Id == "a2d-packages");
+                AssertTrue(a2dDomain.ItemCount == 2 && a2dDomain.ModifiedOutputCount == 1 && a2dDomain.HasInspectionIssues, "domain contexts should summarize A2D output and issue state");
+                KarProjectDomainContext scriptDomain = domains.Single(domain => domain.Id == "script-tables");
+                AssertTrue(scriptDomain.ItemCount == 2 && scriptDomain.ModifiedOutputCount == 1 && scriptDomain.ListCommand == "script-tables", "domain contexts should summarize script table outputs");
+                KarProjectDomainContext outputDomain = project.ToolkitService.QueryDomainContexts().Single(domain => domain.Id == "mod-output");
+                AssertTrue(outputDomain.HasOutputs && outputDomain.HasModifiedOutputs && outputDomain.ContextCommand == "mod-workspace", "domain contexts should summarize mod workspace state");
+
                 KarProjectToolkitSnapshot trimmed = project.ToolkitService.CreateSnapshot(new KarProjectToolkitSnapshotOptions
                 {
                     IncludeMapContexts = false,

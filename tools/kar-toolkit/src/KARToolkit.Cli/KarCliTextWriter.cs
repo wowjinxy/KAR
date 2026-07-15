@@ -463,6 +463,17 @@ internal static class KarCliTextWriter
         Console.WriteLine("Inspection issues: " + snapshot.DomainInspectionIssueCount + " maps=" + snapshot.MapInspectionErrorCount + " vehicles=" + snapshot.VehicleInspectionErrorCount + " a2d=" + snapshot.A2DPackageOpenErrorCount);
     }
 
+    public static void PrintProjectDomainContext(KarProjectDomainContext context)
+    {
+        string commands = "";
+        if (!string.IsNullOrWhiteSpace(context.ListCommand))
+            commands += " list=" + context.ListCommand;
+        if (!string.IsNullOrWhiteSpace(context.ContextCommand))
+            commands += " context=" + context.ContextCommand;
+
+        Console.WriteLine(context.Id + ": items=" + context.ItemCount + " resources=" + context.ResourceCount + " outputs=" + context.OutputCount + " modified=" + context.ModifiedOutputCount + " issues=" + context.InspectionIssueCount + commands);
+    }
+
     public static void PrintProjectOutputFile(KarProjectOutputFileInfo file)
     {
         string status = file.Status.ToString();

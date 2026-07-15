@@ -503,6 +503,11 @@ namespace KARToolkit.Core
             return ToolkitService.CreateSnapshot(options);
         }
 
+        public IReadOnlyList<KarProjectDomainContext> QueryDomainContexts(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return ToolkitService.QueryDomainContexts(options);
+        }
+
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)
         {
             return OutputService.QueryFiles(options);

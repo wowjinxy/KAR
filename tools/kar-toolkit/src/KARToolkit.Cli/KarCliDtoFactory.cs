@@ -238,6 +238,28 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectDomainContextDto(KarProjectDomainContext context)
+    {
+        return new
+        {
+            id = context.Id,
+            displayName = context.DisplayName,
+            description = context.Description,
+            listCommand = context.ListCommand,
+            contextCommand = context.ContextCommand,
+            itemCount = context.ItemCount,
+            resourceCount = context.ResourceCount,
+            outputCount = context.OutputCount,
+            modifiedOutputCount = context.ModifiedOutputCount,
+            inspectionIssueCount = context.InspectionIssueCount,
+            hasItems = context.HasItems,
+            hasResources = context.HasResources,
+            hasOutputs = context.HasOutputs,
+            hasModifiedOutputs = context.HasModifiedOutputs,
+            hasInspectionIssues = context.HasInspectionIssues,
+        };
+    }
+
     public static object ToProjectMapOutputDto(KarProjectMapOutputInfo map)
     {
         return new

@@ -30,6 +30,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll r
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll report .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll schema-gaps .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll toolkit .\GKYE01 --output .\mod-output --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll domains .\GKYE01 --output .\mod-output --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll outputs .\GKYE01 --output .\mod-output
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll mod-workspace .\GKYE01 --output .\mod-output --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map-outputs .\GKYE01 --output .\mod-output --modified
@@ -81,6 +82,7 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Toolkit resources use stable addresses across the CLI and JSON output: project files use `Relative/Path.dat`, HSD roots use `Archive.dat:rootName`, and A2D entries use `Package.dat#EntryName`.
 Project-level toolkit snapshots go through `KarProject.ToolkitService` or `KarProject.CreateToolkitSnapshot`, and the `toolkit` CLI command composes mod workspace status, map contexts, vehicle contexts, A2D package contexts, and script table contexts into one tolerant project view for callers that need a dashboard-style entry point.
+Project domain summaries go through `KarProject.ToolkitService.QueryDomainContexts` or `KarProject.QueryDomainContexts`, and the `domains` CLI command exposes small index-card summaries for files, resources, maps, vehicles, A2D packages, script tables, and mod output with command hints for deeper list/context queries.
 Project resource workflow capability discovery goes through `KarProjectResourceHandlerRegistry`, which maps file, HSD root, and A2D entry resources to supported operations such as byte reads, output export/import, scalar edits, field queries, and sidecar apply. `KarProjectResourceService` delegates those operations through per-kind `KarProjectResourceAdapter` instances, which are also exposed for lower-level toolkit callers. The `resource-handlers` CLI command exposes those resource handlers for tools and scripts.
 Project resource graph snapshots go through `KarProject.CreateResourceGraph`, and the `resource-graph` CLI command exposes one project-wide view of resource addresses, parent/child resources, and known relationships.
 Project script table workflows go through `KarProject.ScriptService`, and the `script-tables` CLI command lists loose `.tm` files and A2D-contained `.tm` entries as the same kind of script table resource.
