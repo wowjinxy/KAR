@@ -20,6 +20,7 @@ namespace KARToolkit.Core
             FileStore = new KarProjectFileStore(Workspace, Index);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
+            ArchiveService = new KarProjectArchiveService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
             Validator = new KarProjectValidator(this);
@@ -34,6 +35,8 @@ namespace KARToolkit.Core
         public KarProjectFileStore FileStore { get; }
 
         public KarProjectArchiveStore ArchiveStore { get; }
+
+        public KarProjectArchiveService ArchiveService { get; }
 
         public KarProjectOutputService OutputService { get; }
 
@@ -109,15 +112,7 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarArchiveInfo> QueryArchives(KarProjectFileQueryOptions options)
         {
-            List<KarArchiveInfo> archives = new List<KarArchiveInfo>();
-
-            foreach (KarProjectFile file in QueryFiles(options))
-            {
-                if (FileCatalog.IsHsdArchiveKind(file.Kind))
-                    archives.Add(Inspector.ArchiveInspector.Inspect(file));
-            }
-
-            return archives.AsReadOnly();
+            return ArchiveService.QueryHsdArchives(options);
         }
 
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)
@@ -304,12 +299,12 @@ namespace KARToolkit.Core
 
         public HSDRawFile OpenHsdFile(string relativePath)
         {
-            return ArchiveStore.OpenHsdFile(relativePath);
+            return ArchiveService.OpenHsdFile(relativePath);
         }
 
         public KarProjectHsdArchive OpenHsdArchive(string relativePath)
         {
-            return ArchiveStore.OpenHsdArchive(relativePath);
+            return ArchiveService.OpenHsdArchive(relativePath);
         }
 
         public KarProjectMapArchiveBundle OpenMapArchives(string mapNameOrPath)
@@ -324,12 +319,12 @@ namespace KARToolkit.Core
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
-            return Inspector.InspectHsdArchive(relativePath);
+            return ArchiveService.InspectHsdArchive(relativePath);
         }
 
         public bool TryInspectHsdArchive(string relativePath, out KarArchiveInfo info, out string error)
         {
-            return Inspector.TryInspectHsdArchive(relativePath, out info, out error);
+            return ArchiveService.TryInspectHsdArchive(relativePath, out info, out error);
         }
 
         public KarMapInfo InspectMap(string mapNameOrPath)
@@ -354,42 +349,42 @@ namespace KARToolkit.Core
 
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
-            return ArchiveStore.TryOpenA2DPackage(relativePath, out package, out error);
+            return ArchiveService.TryOpenA2DPackage(relativePath, out package, out error);
         }
 
         public bool TryOpenProjectA2DPackage(string relativePath, out KarProjectA2DPackage package, out string error)
         {
-            return ArchiveStore.TryOpenProjectA2DPackage(relativePath, out package, out error);
+            return ArchiveService.TryOpenProjectA2DPackage(relativePath, out package, out error);
         }
 
         public A2DPackage OpenA2DPackage(string relativePath)
         {
-            return ArchiveStore.OpenA2DPackage(relativePath);
+            return ArchiveService.OpenA2DPackage(relativePath);
         }
 
         public KarProjectA2DPackage OpenProjectA2DPackage(string relativePath)
         {
-            return ArchiveStore.OpenProjectA2DPackage(relativePath);
+            return ArchiveService.OpenProjectA2DPackage(relativePath);
         }
 
         public string SaveHsdFile(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
-            return ArchiveStore.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
+            return ArchiveService.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
         }
 
         public KarProjectFileWriteResult SaveHsdFileToOutput(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
-            return ArchiveStore.SaveHsdFileToOutput(relativePath, file, bufferAlign, optimize, trim);
+            return ArchiveService.SaveHsdFileToOutput(relativePath, file, bufferAlign, optimize, trim);
         }
 
         public string SaveA2DPackage(string relativePath, A2DPackage package)
         {
-            return ArchiveStore.SaveA2DPackage(relativePath, package);
+            return ArchiveService.SaveA2DPackage(relativePath, package);
         }
 
         public KarProjectFileWriteResult SaveA2DPackageToOutput(string relativePath, A2DPackage package)
         {
-            return ArchiveStore.SaveA2DPackageToOutput(relativePath, package);
+            return ArchiveService.SaveA2DPackageToOutput(relativePath, package);
         }
     }
 }

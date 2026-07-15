@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using HSDRaw;
 using HSDRaw.AirRide;
 using HSDRaw.AirRide.Gr.Data;
 using KARToolkit.Core;
+using KARToolkit.Core.AirRide;
 
 namespace KARToolkit.Core.Tests
 {
@@ -24,6 +26,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
+            Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
@@ -416,6 +419,70 @@ namespace KARToolkit.Core.Tests
             }
         }
 
+        private static void ProjectArchiveServiceCoordinatesArchiveWorkflows()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-archive-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Demo.dat"));
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectArchiveService archives = project.ArchiveService;
+
+                AssertTrue(object.ReferenceEquals(archives.Project, project), "archive service should retain project context");
+                AssertTrue(object.ReferenceEquals(archives.Inspector, project.ArchiveInspector), "archive service should expose the project archive inspector");
+
+                IReadOnlyList<KarArchiveInfo> hsdArchives = archives.QueryHsdArchives(null);
+                AssertTrue(hsdArchives.Count == 1, "archive service should query HSD archive files");
+                AssertTrue(hsdArchives[0].File.RelativePath == "GrCity1.dat", "archive service should keep HSD archive file context");
+                AssertTrue(project.QueryArchives(null).Count == 1, "project archive query compatibility wrapper should delegate to archive service");
+
+                KarArchiveInfo info = archives.InspectHsdArchive("GrCity1.dat");
+                AssertTrue(info.Roots.Count == 1, "archive service should inspect HSD roots");
+                AssertTrue(info.KnownRoots.Count == 1, "archive service should attach known root definitions");
+                AssertTrue(archives.Inspect(project.GetFile("GrCity1.dat")).Roots.Count == info.Roots.Count, "archive service should inspect project file handles");
+
+                KarArchiveInfo tryInfo;
+                string error;
+                AssertTrue(!archives.TryInspectHsdArchive("Missing.dat", out tryInfo, out error), "archive service should expose failed HSD inspections");
+                AssertTrue(tryInfo == null && !string.IsNullOrEmpty(error), "failed HSD inspection should include an error");
+
+                KarProjectHsdArchive hsdArchive = archives.OpenHsdArchive("GrCity1.dat");
+                AssertTrue(hsdArchive.RelativePath == "GrCity1.dat", "archive service should open editable HSD archive handles");
+                AssertTrue(hsdArchive.Inspect().Roots.Count == 1, "editable HSD archive handles should inspect through the project service setup");
+                AssertTrue(archives.OpenHsdFile("GrCity1.dat").Roots.Count == 1, "archive service should open raw HSD files");
+
+                KarProjectFileWriteResult hsdWrite = archives.SaveHsdFileToOutput("GrCity1.dat", hsdArchive.Archive);
+                AssertTrue(File.Exists(hsdWrite.OutputPath), "archive service should save HSD archives to output");
+                AssertTrue(project.OutputService.HasFile("GrCity1.dat"), "archive HSD saves should register as output files");
+                AssertTrue(project.OpenHsdArchive("GrCity1.dat").RelativePath == "GrCity1.dat", "project HSD open compatibility wrapper should delegate to archive service");
+
+                A2DPackage package;
+                AssertTrue(archives.TryOpenA2DPackage("A2Demo.dat", out package, out error), "archive service should try-open A2D packages");
+                AssertTrue(package.Entries.Count == 1, "archive service should parse A2D package entries");
+                AssertTrue(package.Entries[0].Name == "entry.bin", "archive service should preserve A2D package entry names");
+
+                KarProjectA2DPackage projectPackage = archives.OpenProjectA2DPackage("A2Demo.dat");
+                AssertTrue(projectPackage.RelativePath == "A2Demo.dat", "archive service should open editable project A2D package handles");
+                AssertTrue(project.OpenA2DPackage("A2Demo.dat").Entries.Count == 1, "project A2D open compatibility wrapper should delegate to archive service");
+
+                KarProjectFileWriteResult a2dWrite = archives.SaveA2DPackageToOutput("A2Demo.dat", package);
+                AssertTrue(File.Exists(a2dWrite.OutputPath), "archive service should save A2D packages to output");
+                AssertTrue(project.OutputService.HasFile("A2Demo.dat"), "archive A2D saves should register as output files");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
         private static void ProjectSchemaUsageGroupsKnownRoots()
         {
             string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-schema-usage-project-" + Guid.NewGuid().ToString("N"));
@@ -678,6 +745,32 @@ namespace KARToolkit.Core.Tests
                 Data = data,
             });
             file.Save(path);
+        }
+
+        private static void WriteA2DPackage(string path)
+        {
+            byte[] data = new byte[0x24];
+            WriteUInt32BigEndian(data, 0x00, 0);
+            WriteUInt32BigEndian(data, 0x04, 1);
+            WriteUInt32BigEndian(data, 0x08, 0x10);
+            WriteUInt32BigEndian(data, 0x0C, 0x20);
+
+            byte[] name = Encoding.ASCII.GetBytes("entry.bin");
+            Buffer.BlockCopy(name, 0, data, 0x10, name.Length);
+            data[0x20] = 0xAA;
+            data[0x21] = 0xBB;
+            data[0x22] = 0xCC;
+            data[0x23] = 0xDD;
+
+            File.WriteAllBytes(path, data);
+        }
+
+        private static void WriteUInt32BigEndian(byte[] data, int offset, uint value)
+        {
+            data[offset] = (byte)(value >> 24);
+            data[offset + 1] = (byte)(value >> 16);
+            data[offset + 2] = (byte)(value >> 8);
+            data[offset + 3] = (byte)value;
         }
 
         private static void AssertIssue(KarDataDefinitionValidationReport report, string code)

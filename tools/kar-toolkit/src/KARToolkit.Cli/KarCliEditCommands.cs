@@ -17,7 +17,7 @@ internal static class KarCliEditCommands
         string fieldName = options.Positionals[3];
         string rawValue = options.Positionals[4];
 
-        KarProjectHsdArchive archive = project.OpenHsdArchive(relativePath);
+        KarProjectHsdArchive archive = project.ArchiveService.OpenHsdArchive(relativePath);
         KarArchiveInfo archiveInfo = archive.Inspect();
         KarArchiveRootInfo rootInfo = options.Schema
             ? archiveInfo.GetRootByDataDefinition(rootOrSchema)

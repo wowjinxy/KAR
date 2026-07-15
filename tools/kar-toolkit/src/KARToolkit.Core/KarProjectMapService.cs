@@ -84,7 +84,7 @@ namespace KARToolkit.Core
 
         public KarProjectMapArchiveBundle OpenArchives(KarMapBundle map)
         {
-            return _project.ArchiveStore.OpenMapArchives(map);
+            return _project.ArchiveService.OpenMapArchives(map);
         }
 
         public KarMapInfo Inspect(string mapNameOrPath)

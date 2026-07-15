@@ -52,7 +52,7 @@ Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs`
 Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
-Project-wide archive inventory goes through `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
+Project-wide archive inventory goes through `KarProject.ArchiveService.QueryHsdArchives` or the compatibility wrapper `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
 Project-wide root discovery goes through `KarProject.QueryRoots`, grouped root discovery goes through `KarProject.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
 Project-wide schema usage goes through `KarProject.QueryDataDefinitionUsage`, and the `schema-usage` CLI command reports where known schemas appear.
 Project-wide labeled field discovery goes through `KarProject.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.
@@ -64,7 +64,7 @@ Project asset paths, byte reads/writes, and copies go through `KarProjectFileSto
 Copy operations can return `KarProjectFileCopyResult` when tools need both the copied file metadata and destination path.
 Write/save operations can return `KarProjectFileWriteResult` when tools need normalized project paths and output metadata.
 Map copy/save operations can return `KarProjectMapOutputResult` when tools need the output paths grouped by data, model, and event/script file.
-Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
+Typed HSD archive and A2D package opens/saves go through `KarProject.ArchiveService`, which wraps the lower-level `KarProjectArchiveStore`.
 Editable project archive handles (`KarProjectHsdArchive`, `KarProjectA2DPackage`) keep project metadata attached while saving through the safe output folder.
 Editable map archive bundles (`KarProjectMapArchiveBundle`) group a map's data, model, and event/script archives for project-level workflows.
 Project-level archive and map inspection goes through `KarProjectInspector`.

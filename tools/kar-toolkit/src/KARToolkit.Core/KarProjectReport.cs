@@ -120,7 +120,7 @@ namespace KARToolkit.Core
         {
             return files
                 .Where(file => project.FileCatalog.IsHsdArchiveKind(file.Kind))
-                .Select(file => project.ArchiveInspector.Inspect(file))
+                .Select(file => project.ArchiveService.Inspect(file))
                 .OrderBy(archive => archive.File.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();

@@ -162,7 +162,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("archives", 1);
         KarProject project = OpenProject(options);
-        List<KarArchiveInfo> archives = project.QueryArchives(CreateFileQuery(options))
+        List<KarArchiveInfo> archives = project.ArchiveService.QueryHsdArchives(CreateFileQuery(options))
             .OrderBy(archive => archive.File.Category)
             .ThenBy(archive => archive.File.RelativePath)
             .ToList();
@@ -398,7 +398,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("archive", 2);
         KarProject project = OpenProject(options);
-        KarArchiveInfo archive = project.Inspector.InspectHsdArchive(options.Positionals[1]);
+        KarArchiveInfo archive = project.ArchiveService.InspectHsdArchive(options.Positionals[1]);
 
         if (options.Json)
         {
@@ -414,7 +414,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("a2d", 2);
         KarProject project = OpenProject(options);
-        A2DPackage package = project.ArchiveStore.OpenA2DPackage(options.Positionals[1]);
+        A2DPackage package = project.ArchiveService.OpenA2DPackage(options.Positionals[1]);
 
         if (options.Json)
         {
