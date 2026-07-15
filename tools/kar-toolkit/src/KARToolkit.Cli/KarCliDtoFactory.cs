@@ -1282,6 +1282,37 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceActionPlanDto(KarProjectResourceActionPlan plan)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(plan.Resource),
+            action = ToProjectResourceActionDto(plan.Action),
+            reference = ToResourceReferenceDto(plan.Reference),
+            address = plan.Address,
+            kind = plan.Kind.ToString(),
+            actionId = plan.ActionId,
+            command = plan.Command,
+            overwrite = plan.Overwrite,
+            canRun = plan.CanRun,
+            wouldWriteOutput = plan.WouldWriteOutput,
+            isReadOnly = plan.IsReadOnly,
+            writesOutput = plan.WritesOutput,
+            requiresInputFile = plan.RequiresInputFile,
+            requiresFieldName = plan.RequiresFieldName,
+            requiresValue = plan.RequiresValue,
+            supportsBatch = plan.SupportsBatch,
+            outputKind = plan.OutputKind == null ? null : plan.OutputKind.ToString(),
+            outputStatus = plan.OutputStatus == null ? null : plan.OutputStatus.ToString(),
+            byteStatus = plan.ByteStatus == null ? null : plan.ByteStatus.ToString(),
+            outputRelativePath = plan.OutputRelativePath,
+            outputPath = plan.OutputPath,
+            output = plan.Output == null ? null : ToProjectResourceOutputDto(plan.Output),
+            byteInfo = plan.ByteInfo == null ? null : ToProjectResourceByteInfoDto(plan.ByteInfo),
+            reason = plan.Reason,
+        };
+    }
+
     public static object ToProjectResourceFieldValueDto(KarProjectResourceFieldInfo field)
     {
         return new

@@ -87,6 +87,46 @@ namespace KARToolkit.Core
             return CreateDetail(Get(address));
         }
 
+        public IReadOnlyList<KarProjectResourceActionPlan> QueryActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
+        {
+            options = options ?? new KarProjectResourceActionPlanQueryOptions();
+            List<KarProjectResourceActionPlan> plans = new List<KarProjectResourceActionPlan>();
+
+            foreach (KarProjectResourceInfo resource in Query(options.Resources))
+            {
+                foreach (KarProjectResourceAction action in resource.Actions)
+                {
+                    if (!options.Matches(action))
+                        continue;
+
+                    KarProjectResourceActionPlan plan = CreateActionPlan(resource, action, options.Overwrite);
+                    if (options.Matches(plan))
+                        plans.Add(plan);
+                }
+            }
+
+            return plans
+                .OrderBy(plan => plan.Resource.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(plan => plan.Kind)
+                .ThenBy(plan => plan.Address, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(plan => plan.ActionId, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceActionPlan GetActionPlan(string address, string actionId, bool overwrite = false)
+        {
+            return QueryActionPlans(new KarProjectResourceActionPlanQueryOptions
+            {
+                Resources = new KarProjectResourceQueryOptions
+                {
+                    Address = address,
+                },
+                ActionId = actionId,
+                Overwrite = overwrite,
+            }).Single();
+        }
+
         public IReadOnlyList<KarProjectResourceByteInfo> QueryByteInfo(KarProjectResourceByteQueryOptions options = null)
         {
             IEnumerable<KarProjectResourceByteInfo> query = Query(options == null ? null : options.Resources)
@@ -317,6 +357,86 @@ namespace KARToolkit.Core
                 _project.ResourceGraphService.QueryChildResources(resource.Address),
                 fields,
                 _project.ResourceGraphService.QueryResourceRelationships(resource.Address));
+        }
+
+        private KarProjectResourceActionPlan CreateActionPlan(KarProjectResourceInfo resource, KarProjectResourceAction action, bool overwrite)
+        {
+            KarProjectResourceOutputInfo output = NeedsOutputInfo(action) && resource.CanQueryOutput
+                ? CreateOutputInfo(resource)
+                : null;
+            KarProjectResourceByteInfo byteInfo = NeedsByteInfo(action) && resource.CanReadBytes
+                ? CreateByteInfo(resource)
+                : null;
+            bool canRun = true;
+            string reason = "";
+
+            if (action.RequiresInputFile)
+            {
+                canRun = false;
+                reason = "Requires an input file.";
+            }
+            else if (action.RequiresFieldName || action.RequiresValue)
+            {
+                canRun = false;
+                reason = "Requires a field name and value.";
+            }
+            else if (action.Id == "apply-output")
+            {
+                canRun = output != null && output.Status == KarProjectResourceOutputStatus.SidecarDiffersFromEntry;
+                if (!canRun)
+                    reason = "Requires a modified A2D sidecar output.";
+            }
+
+            bool wouldWriteOutput = GetWouldWriteOutput(action, output, byteInfo, overwrite, canRun);
+            if (string.IsNullOrEmpty(reason) && action.WritesOutput && !wouldWriteOutput)
+                reason = overwrite ? "No output write is required." : "Output already exists; use overwrite to write again.";
+
+            return new KarProjectResourceActionPlan(
+                resource,
+                action,
+                output,
+                byteInfo,
+                overwrite,
+                canRun,
+                wouldWriteOutput,
+                reason);
+        }
+
+        private static bool NeedsOutputInfo(KarProjectResourceAction action)
+        {
+            return action.Id == "output-status" ||
+                action.Id == "export-output" ||
+                action.Id == "import-file" ||
+                action.Id == "set-scalar" ||
+                action.Id == "apply-output";
+        }
+
+        private static bool NeedsByteInfo(KarProjectResourceAction action)
+        {
+            return action.Id == "byte-status" ||
+                action.Id == "dump-bytes";
+        }
+
+        private static bool GetWouldWriteOutput(
+            KarProjectResourceAction action,
+            KarProjectResourceOutputInfo output,
+            KarProjectResourceByteInfo byteInfo,
+            bool overwrite,
+            bool canRun)
+        {
+            if (!action.WritesOutput)
+                return false;
+
+            if (action.Id == "dump-bytes")
+                return byteInfo != null && (overwrite || !byteInfo.HasOutput);
+            if (action.Id == "export-output")
+                return output != null && (overwrite || !output.HasOutput);
+            if (action.Id == "apply-output")
+                return canRun;
+            if (action.Id == "import-file" || action.Id == "set-scalar")
+                return true;
+
+            return action.WritesOutput;
         }
 
         private KarProjectResourceOutputInfo CreateOutputInfo(KarProjectResourceInfo resource)

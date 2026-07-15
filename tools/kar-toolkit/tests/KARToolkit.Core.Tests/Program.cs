@@ -706,6 +706,10 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootDetail.FieldCount >= 5, "root resource details should include schema field values");
                 AssertTrue(rootDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing && rootDetail.ByteInfo.ActiveLength > 0, "root resource details should include root byte dump status");
                 AssertTrue(rootDetail.ChildResourceCount == 0, "root resource details should only include direct child resources");
+                KarProjectResourceActionPlan rootDumpPlan = resources.GetActionPlan("VsHydra.dat:vsDataHydra", "dump-bytes");
+                AssertTrue(rootDumpPlan.CanRun && rootDumpPlan.WouldWriteOutput && rootDumpPlan.ByteStatus == KarProjectResourceByteOutputStatus.Missing, "resource action plans should preview missing byte dumps");
+                KarProjectResourceActionPlan scalarPlan = project.GetResourceActionPlan("VsHydra.dat:vsDataHydra", "set-scalar");
+                AssertTrue(!scalarPlan.CanRun && scalarPlan.WouldWriteOutput && scalarPlan.RequiresFieldName && scalarPlan.RequiresValue, "resource action plans should flag required scalar edit inputs");
                 IReadOnlyList<KarProjectResourceDetail> rootDetails = project.QueryResourceDetails(new KarProjectResourceQueryOptions
                 {
                     Kind = KarResourceKind.HsdRoot,
@@ -868,6 +872,10 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootDump.WroteOutput && rootDump.Length == rootBytes.Length, "HSD root byte dumps should write root struct bytes");
                 AssertTrue(rootDump.Sha256.Length == 64, "resource byte dumps should include a content hash");
                 AssertTrue(File.ReadAllBytes(rootDump.OutputPath).SequenceEqual(rootBytes), "HSD root byte dumps should write the raw struct payload");
+                KarProjectResourceActionPlan skippedDumpPlan = resources.GetActionPlan("VsHydra.dat:vsDataHydra", "dump-bytes");
+                AssertTrue(skippedDumpPlan.CanRun && !skippedDumpPlan.WouldWriteOutput && skippedDumpPlan.Reason.Contains("overwrite"), "resource action plans should preview skipped existing byte dumps");
+                KarProjectResourceActionPlan overwriteDumpPlan = resources.GetActionPlan("VsHydra.dat:vsDataHydra", "dump-bytes", overwrite: true);
+                AssertTrue(overwriteDumpPlan.WouldWriteOutput && overwriteDumpPlan.Overwrite, "resource action plans should honor overwrite previews");
 
                 KarProjectResourceByteInfo matchingRootBytes = resources.GetByteInfo("VsHydra.dat:vsDataHydra");
                 AssertTrue(matchingRootBytes.Status == KarProjectResourceByteOutputStatus.MatchesActive, "resource byte info should compare dumps against active bytes");

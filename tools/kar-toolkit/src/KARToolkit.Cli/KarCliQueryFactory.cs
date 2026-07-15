@@ -83,6 +83,20 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectResourceActionPlanQueryOptions CreateResourceActionPlanQuery(KarCliOptions options)
+    {
+        return new KarProjectResourceActionPlanQueryOptions
+        {
+            Resources = CreateResourceQuery(options, includeOutputCopyFilter: false),
+            ActionId = options.ActionId,
+            IsReadOnly = options.ActionIsReadOnly,
+            WritesOutput = options.ActionWritesOutput,
+            CanRun = options.ActionCanRun,
+            WouldWriteOutput = options.ActionWouldWrite,
+            Overwrite = options.Overwrite,
+        };
+    }
+
     public static KarProjectResourceFieldQueryOptions CreateResourceFieldQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);

@@ -19,10 +19,15 @@ internal sealed class KarCliOptions
         string fileKind,
         string resourceKind,
         string domain,
+        string actionId,
         string searchText,
         string fileCategory,
         bool? fileHasOutputCopy,
         KarProjectOutputFileStatus? outputStatus,
+        bool? actionIsReadOnly,
+        bool? actionWritesOutput,
+        bool? actionCanRun,
+        bool? actionWouldWrite,
         bool? rootKnown,
         string rootName,
         bool rootSummary,
@@ -42,10 +47,15 @@ internal sealed class KarCliOptions
         FileKind = fileKind;
         ResourceKind = resourceKind;
         Domain = domain;
+        ActionId = actionId;
         SearchText = searchText;
         FileCategory = fileCategory;
         FileHasOutputCopy = fileHasOutputCopy;
         OutputStatus = outputStatus;
+        ActionIsReadOnly = actionIsReadOnly;
+        ActionWritesOutput = actionWritesOutput;
+        ActionCanRun = actionCanRun;
+        ActionWouldWrite = actionWouldWrite;
         RootKnown = rootKnown;
         RootName = rootName;
         RootSummary = rootSummary;
@@ -79,6 +89,8 @@ internal sealed class KarCliOptions
 
     public string Domain { get; }
 
+    public string ActionId { get; }
+
     public string SearchText { get; }
 
     public string FileCategory { get; }
@@ -86,6 +98,14 @@ internal sealed class KarCliOptions
     public bool? FileHasOutputCopy { get; }
 
     public KarProjectOutputFileStatus? OutputStatus { get; }
+
+    public bool? ActionIsReadOnly { get; }
+
+    public bool? ActionWritesOutput { get; }
+
+    public bool? ActionCanRun { get; }
+
+    public bool? ActionWouldWrite { get; }
 
     public bool? RootKnown { get; }
 
@@ -114,10 +134,15 @@ internal sealed class KarCliOptions
         string fileKind = null;
         string resourceKind = null;
         string domain = null;
+        string actionId = null;
         string searchText = null;
         string fileCategory = null;
         bool? fileHasOutputCopy = null;
         KarProjectOutputFileStatus? outputStatus = null;
+        bool? actionIsReadOnly = null;
+        bool? actionWritesOutput = null;
+        bool? actionCanRun = null;
+        bool? actionWouldWrite = null;
         bool? rootKnown = null;
         string rootName = null;
         bool rootSummary = false;
@@ -203,6 +228,12 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--action" || arg == "--resource-action")
+            {
+                actionId = ReadValue(enumerator, arg);
+                continue;
+            }
+
             if (arg == "--search" || arg == "--text")
             {
                 searchText = ReadValue(enumerator, arg);
@@ -242,6 +273,43 @@ internal sealed class KarCliOptions
             if (arg == "--orphan" || arg == "--orphan-output")
             {
                 outputStatus = KarProjectOutputFileStatus.Orphan;
+                continue;
+            }
+
+            if (arg == "--read-only" || arg == "--readonly")
+            {
+                actionIsReadOnly = true;
+                continue;
+            }
+
+            if (arg == "--write-action" || arg == "--writes-output")
+            {
+                actionWritesOutput = true;
+                actionIsReadOnly = false;
+                continue;
+            }
+
+            if (arg == "--can-run")
+            {
+                actionCanRun = true;
+                continue;
+            }
+
+            if (arg == "--cannot-run")
+            {
+                actionCanRun = false;
+                continue;
+            }
+
+            if (arg == "--would-write")
+            {
+                actionWouldWrite = true;
+                continue;
+            }
+
+            if (arg == "--would-skip")
+            {
+                actionWouldWrite = false;
                 continue;
             }
 
@@ -298,10 +366,15 @@ internal sealed class KarCliOptions
             fileKind,
             resourceKind,
             domain,
+            actionId,
             searchText,
             fileCategory,
             fileHasOutputCopy,
             outputStatus,
+            actionIsReadOnly,
+            actionWritesOutput,
+            actionCanRun,
+            actionWouldWrite,
             rootKnown,
             rootName,
             rootSummary,

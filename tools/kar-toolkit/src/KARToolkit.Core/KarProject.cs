@@ -318,6 +318,16 @@ namespace KARToolkit.Core
             return ResourceService.QueryDetails(options);
         }
 
+        public IReadOnlyList<KarProjectResourceActionPlan> QueryResourceActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
+        {
+            return ResourceService.QueryActionPlans(options);
+        }
+
+        public KarProjectResourceActionPlan GetResourceActionPlan(string address, string actionId, bool overwrite = false)
+        {
+            return ResourceService.GetActionPlan(address, actionId, overwrite);
+        }
+
         public KarProjectResourceDetail GetResourceDetail(string address)
         {
             return ResourceService.GetDetail(address);

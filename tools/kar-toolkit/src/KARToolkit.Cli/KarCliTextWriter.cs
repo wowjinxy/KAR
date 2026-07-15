@@ -136,6 +136,15 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResourceActionPlan(KarProjectResourceActionPlan plan)
+    {
+        string output = plan.OutputRelativePath == null ? "" : " output=" + plan.OutputRelativePath;
+        string outputStatus = plan.OutputStatus == null ? "" : " status=" + plan.OutputStatus;
+        string byteStatus = plan.ByteStatus == null ? "" : " bytes=" + plan.ByteStatus;
+        string reason = string.IsNullOrEmpty(plan.Reason) ? "" : " reason=\"" + plan.Reason + "\"";
+        Console.WriteLine(plan.Address + " " + plan.ActionId + " can-run=" + plan.CanRun + " would-write=" + plan.WouldWriteOutput + output + outputStatus + byteStatus + reason);
+    }
+
     public static void PrintProjectResolvedResource(KarProjectResolvedResource resolved)
     {
         Console.WriteLine("Resolved: " + resolved.Address);
