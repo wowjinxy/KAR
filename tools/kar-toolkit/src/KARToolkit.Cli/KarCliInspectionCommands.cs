@@ -101,7 +101,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("a2d", 2);
         KarProject project = OpenProject(options);
-        A2DPackage package = project.OpenA2DPackage(options.Positionals[1]);
+        A2DPackage package = project.ArchiveStore.OpenA2DPackage(options.Positionals[1]);
 
         if (options.Json)
         {

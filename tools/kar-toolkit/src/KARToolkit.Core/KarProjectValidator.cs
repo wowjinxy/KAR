@@ -9,7 +9,7 @@ namespace KARToolkit.Core
         private readonly KarProject _project;
         private readonly KarProjectIndex _index;
         private readonly KarProjectInspector _inspector;
-        private readonly KarProjectFileStore _fileStore;
+        private readonly KarProjectArchiveStore _archiveStore;
         private readonly KarValidationOptions _defaultOptions;
 
         public KarProjectValidator(KarProject project, KarValidationOptions options = null)
@@ -17,7 +17,7 @@ namespace KARToolkit.Core
             _project = project ?? throw new ArgumentNullException(nameof(project));
             _index = project.Index;
             _inspector = project.Inspector;
-            _fileStore = project.FileStore;
+            _archiveStore = project.ArchiveStore;
             _defaultOptions = options;
         }
 
@@ -32,7 +32,7 @@ namespace KARToolkit.Core
                 _project,
                 _index,
                 _inspector,
-                _fileStore,
+                _archiveStore,
                 options ?? _defaultOptions ?? new KarValidationOptions())
                 .Validate();
         }
@@ -42,7 +42,7 @@ namespace KARToolkit.Core
             private readonly KarProject _project;
             private readonly KarProjectIndex _index;
             private readonly KarProjectInspector _inspector;
-            private readonly KarProjectFileStore _fileStore;
+            private readonly KarProjectArchiveStore _archiveStore;
             private readonly KarValidationOptions _options;
             private readonly List<KarValidationIssue> _issues = new List<KarValidationIssue>();
             private int _hsdArchiveCount;
@@ -52,13 +52,13 @@ namespace KARToolkit.Core
                 KarProject project,
                 KarProjectIndex index,
                 KarProjectInspector inspector,
-                KarProjectFileStore fileStore,
+                KarProjectArchiveStore archiveStore,
                 KarValidationOptions options)
             {
                 _project = project ?? throw new ArgumentNullException(nameof(project));
                 _index = index ?? throw new ArgumentNullException(nameof(index));
                 _inspector = inspector ?? throw new ArgumentNullException(nameof(inspector));
-                _fileStore = fileStore ?? throw new ArgumentNullException(nameof(fileStore));
+                _archiveStore = archiveStore ?? throw new ArgumentNullException(nameof(archiveStore));
                 _options = options ?? throw new ArgumentNullException(nameof(options));
             }
 
@@ -116,7 +116,7 @@ namespace KARToolkit.Core
 
                 A2DPackage package;
                 string error;
-                if (!_fileStore.TryOpenA2DPackage(file.RelativePath, out package, out error))
+                if (!_archiveStore.TryOpenA2DPackage(file.RelativePath, out package, out error))
                 {
                     Add(KarValidationSeverity.Error, "a2d-open-failed", "Could not open A2D package: " + error, file.RelativePath, null, null);
                     return;

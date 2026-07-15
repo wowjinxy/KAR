@@ -14,6 +14,7 @@ namespace KARToolkit.Core
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileStore = new KarProjectFileStore(Workspace, Index);
+            ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore);
             Inspector = new KarProjectInspector(Index);
             Validator = new KarProjectValidator(this);
         }
@@ -23,6 +24,8 @@ namespace KARToolkit.Core
         public KarProjectIndex Index { get; }
 
         public KarProjectFileStore FileStore { get; }
+
+        public KarProjectArchiveStore ArchiveStore { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -126,7 +129,7 @@ namespace KARToolkit.Core
 
         public HSDRawFile OpenHsdFile(string relativePath)
         {
-            return FileStore.OpenHsdFile(relativePath);
+            return ArchiveStore.OpenHsdFile(relativePath);
         }
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
@@ -161,22 +164,22 @@ namespace KARToolkit.Core
 
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
-            return FileStore.TryOpenA2DPackage(relativePath, out package, out error);
+            return ArchiveStore.TryOpenA2DPackage(relativePath, out package, out error);
         }
 
         public A2DPackage OpenA2DPackage(string relativePath)
         {
-            return FileStore.OpenA2DPackage(relativePath);
+            return ArchiveStore.OpenA2DPackage(relativePath);
         }
 
         public string SaveHsdFile(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
-            return FileStore.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
+            return ArchiveStore.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
         }
 
         public string SaveA2DPackage(string relativePath, A2DPackage package)
         {
-            return FileStore.SaveA2DPackage(relativePath, package);
+            return ArchiveStore.SaveA2DPackage(relativePath, package);
         }
     }
 }

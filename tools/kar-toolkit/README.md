@@ -24,7 +24,8 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll d
 
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
-Project asset reads, copies, package opens, and saves go through `KarProjectFileStore`.
+Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
+Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
 Archive metadata lives in `KarArchiveCatalog`; live HSD root inspection goes through `KarArchiveInspector`.
