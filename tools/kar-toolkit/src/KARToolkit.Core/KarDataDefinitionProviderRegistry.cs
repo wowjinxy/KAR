@@ -102,10 +102,10 @@ namespace KARToolkit.Core
                     "Built-in schemas for vehicle data and common vehicle parameter structures.",
                     () => KarVehicleDataDefinitions.All),
                 new KarDataDefinitionProvider(
-                    "versus-data-definitions",
-                    "Versus Data Definitions",
-                    "Built-in schemas for versus-mode legendary machine data.",
-                    () => KarVersusDataDefinitions.All),
+                    "vehicle-special-data-definitions",
+                    "Vehicle Special Data Definitions",
+                    "Built-in schemas for vehicle special legendary machine data.",
+                    () => KarVehicleSpecialDataDefinitions.All),
             };
         }
     }

@@ -3,16 +3,16 @@ using static KARToolkit.Core.KarDataDefinitionFactory;
 
 namespace KARToolkit.Core
 {
-    internal static class KarVersusDataDefinitions
+    internal static class KarVehicleSpecialDataDefinitions
     {
         public static IReadOnlyList<KarDataDefinition> All { get; } = new[]
         {
             Define(
                 "kar.vs.legendary",
-                "Legendary Machine Versus Data",
-                "Versus",
+                "Legendary Machine Vehicle Special Data",
+                "Vehicle Special",
                 "KAR_vsLegendaryData",
-                "Hydra/Dragoon versus-mode data root. The first three pointers are model animation, alternate/secondary model animation, and assembly effect resources.",
+                "Hydra/Dragoon vehicle special data root. The first three pointers are model animation, alternate/secondary model animation, and assembly effect resources.",
                 "HSDRaw/AirRide/KAR_vsLegendaryData.cs; roots vsDataHydra/vsDataDragoon",
                 Field("primaryModelAnimation", 0x00, "KAR_vsLegendaryModelAnimation", "Primary model, spline, and material animation bundle.", true, "kar.vs.legendary.modelAnimation"),
                 Field("secondaryModelAnimation", 0x04, "KAR_vsLegendaryModelAnimation", "Secondary model, spline, and material animation bundle.", true, "kar.vs.legendary.modelAnimation"),
@@ -22,9 +22,9 @@ namespace KARToolkit.Core
             Define(
                 "kar.vs.legendary.modelAnimation",
                 "Legendary Model Animation",
-                "Versus",
+                "Vehicle Special",
                 "KAR_vsLegendaryModelAnimation",
-                "Model and animation bundle used by legendary machine versus data.",
+                "Model and animation bundle used by legendary machine vehicle special data.",
                 "HSDRaw/AirRide/KAR_vsLegendaryData.cs",
                 Field("rootJoint", 0x00, "HSD_JOBJ", "Root model joint.", true),
                 Field("splineAnimation", 0x04, "KAR_vsLegendarySplineAnimation", "Spline animation data.", true),
@@ -32,7 +32,7 @@ namespace KARToolkit.Core
             Define(
                 "kar.vs.legendary.effectResource",
                 "Legendary Effect Resource",
-                "Versus",
+                "Vehicle Special",
                 "KAR_vsLegendaryEffectResource",
                 "Pointer wrapper for legendary machine assembly effect data.",
                 "HSDRaw/AirRide/KAR_vsLegendaryData.cs",

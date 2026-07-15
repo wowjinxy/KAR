@@ -90,8 +90,8 @@ namespace KARToolkit.Core
                     request.Kind == KarFileKind.VehicleData ? KarVehicleArchiveDefinitions.DefineVehicle(request.Name, request.Kind) : null),
                 Rule("rider-archive-definitions", "Rider Archive Definitions", "Defines rider data archive roots.", request =>
                     request.Kind == KarFileKind.RiderData ? KarRiderArchiveDefinitions.DefineRider(request.Name, request.Kind) : null),
-                Rule("versus-archive-definitions", "Versus Archive Definitions", "Defines versus data archive roots.", request =>
-                    request.Kind == KarFileKind.VersusData ? KarVersusArchiveDefinitions.DefineVersus(request.Name, request.Kind) : null),
+                Rule("vehicle-special-archive-definitions", "Vehicle Special Archive Definitions", "Defines vehicle special data archive roots.", request =>
+                    request.Kind == KarFileKind.VehicleSpecialData ? KarVehicleSpecialArchiveDefinitions.DefineVehicleSpecial(request.Name, request.Kind) : null),
                 Rule("item-archive-definitions", "Item Archive Definitions", "Defines item data archive roots.", request =>
                     request.Kind == KarFileKind.ItemData ? KarItemArchiveDefinitions.DefineItem(request.Name, request.Kind) : null),
                 Rule("enemy-archive-definitions", "Enemy Archive Definitions", "Defines enemy data archive roots.", request =>

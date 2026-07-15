@@ -167,7 +167,7 @@ namespace KARToolkit.Core
                 Define(KarFileKind.ItemData, "item-data", "Item Data", "Items", "Item data archive.", isHsdArchive: true),
                 Define(KarFileKind.EnemyData, "enemy-data", "Enemy Data", "Enemies", "Enemy data archive.", isHsdArchive: true),
                 Define(KarFileKind.UiData, "ui-data", "UI Data", "UI", "User interface archive.", isHsdArchive: true),
-                Define(KarFileKind.VersusData, "versus-data", "Versus Data", "Versus", "Versus mode data archive.", isHsdArchive: true),
+                Define(KarFileKind.VehicleSpecialData, "vehicle-special-data", "Vehicle Special Data", "Vehicles", "Vehicle special data archive.", isHsdArchive: true),
                 Define(KarFileKind.ScriptTable, "script-table", "Script Table", "Scripts", "Loose 2D script/table resource.", isScriptTable: true),
                 Define(KarFileKind.Audio, "audio", "Audio", "Audio", "Audio stream or sound bank.", isMedia: true),
                 Define(KarFileKind.Movie, "movie", "Movie", "Movies", "Movie stream.", isMedia: true),

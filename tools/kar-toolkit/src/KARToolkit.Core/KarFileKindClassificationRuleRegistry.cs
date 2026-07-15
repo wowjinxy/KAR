@@ -123,8 +123,8 @@ namespace KARToolkit.Core
                     request.NameStartsWith("Em") || request.NameEquals("Enemy") ? Kind(KarFileKind.EnemyData) : null),
                 Rule("ui-data-classification", "UI Data Classification", "Classifies menu, interface, SIS, and ending DAT files as UI data.", request =>
                     request.NameStartsWith("Mn") || request.NameStartsWith("If") || request.NameStartsWith("Sis") || request.NameStartsWith("Ending") ? Kind(KarFileKind.UiData) : null),
-                Rule("versus-data-classification", "Versus Data Classification", "Classifies Vs DAT files as versus data.", request =>
-                    request.NameStartsWith("Vs") ? Kind(KarFileKind.VersusData) : null),
+                Rule("vehicle-special-data-classification", "Vehicle Special Data Classification", "Classifies Vs DAT files as vehicle special data.", request =>
+                    request.NameStartsWith("Vs") ? Kind(KarFileKind.VehicleSpecialData) : null),
                 Rule("hsd-archive-fallback-classification", "HSD Archive Fallback Classification", "Classifies unmatched DAT files as generic HSD archives.", request =>
                     Kind(KarFileKind.HsdArchive)),
             };

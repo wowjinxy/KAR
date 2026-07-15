@@ -727,7 +727,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(resolvedRoot.IsHsdRoot && resolvedRoot.Root.RootName == "vsDataHydra", "project resource address wrapper should resolve HSD roots");
                 AssertTrue(resolvedRoot.HasDataDefinition && resolvedRoot.DataDefinitionId == "kar.vs.legendary", "resolved HSD roots should expose data definitions");
                 KarProjectResolvedResourceDetail resolvedRootDetail = project.GetResolvedResourceDetail("VsHydra.dat:vsDataHydra");
-                AssertTrue(resolvedRootDetail.HasDataDefinition && resolvedRootDetail.DataDefinition.DisplayName == "Legendary Machine Versus Data", "resolved resource details should expose root schemas");
+                AssertTrue(resolvedRootDetail.HasDataDefinition && resolvedRootDetail.DataDefinition.DisplayName == "Legendary Machine Vehicle Special Data", "resolved resource details should expose root schemas");
                 AssertTrue(resolvedRootDetail.FieldCount >= 5, "resolved resource details should expose root fields");
                 AssertTrue(resolvedRootDetail.HasByteInfo && resolvedRootDetail.ByteInfo.ActiveLength > 0, "resolved resource details should expose active byte info");
                 IReadOnlyList<KarProjectResourceFieldInfo> resolvedFields = project.QueryResolvedResourceFieldValues("VsHydra.dat:vsDataHydra");
@@ -903,7 +903,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(fileDetail.FieldCount == 0, "file resource details should not report HSD fields directly");
 
                 KarProjectResourceDetail rootDetail = project.GetResourceDetail("VsHydra.dat:vsDataHydra");
-                AssertTrue(rootDetail.Resource.DisplayName == "Legendary Machine Versus Data", "project resource detail wrapper should expose labeled root resources");
+                AssertTrue(rootDetail.Resource.DisplayName == "Legendary Machine Vehicle Special Data", "project resource detail wrapper should expose labeled root resources");
                 AssertTrue(rootDetail.FieldCount >= 5, "root resource details should include schema field values");
                 AssertTrue(rootDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing && rootDetail.ByteInfo.ActiveLength > 0, "root resource details should include root byte dump status");
                 AssertTrue(rootDetail.ChildResourceCount == 0, "root resource details should only include direct child resources");
@@ -3358,7 +3358,7 @@ namespace KARToolkit.Core.Tests
 
                 IReadOnlyList<KarProjectDataDefinitionUsage> usages = data.QueryDataDefinitionUsage(null);
                 KarProjectDataDefinitionUsage mapUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.gr.data");
-                KarProjectDataDefinitionUsage versusUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.vs.legendary");
+                KarProjectDataDefinitionUsage vehicleSpecialUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.vs.legendary");
 
                 AssertTrue(mapUsage != null, "schema usage should include map data roots");
                 if (mapUsage != null)
@@ -3368,11 +3368,11 @@ namespace KARToolkit.Core.Tests
                     AssertTrue(mapUsage.Files[0].RelativePath == "GrCity1.dat", "schema usage files should be ordered by relative path");
                 }
 
-                AssertTrue(versusUsage != null, "schema usage should include versus legendary roots");
-                if (versusUsage != null)
+                AssertTrue(vehicleSpecialUsage != null, "schema usage should include vehicle special legendary roots");
+                if (vehicleSpecialUsage != null)
                 {
-                    AssertTrue(versusUsage.Count == 1, "schema usage should count versus roots");
-                    AssertTrue(versusUsage.FileCount == 1, "schema usage should count unique versus files");
+                    AssertTrue(vehicleSpecialUsage.Count == 1, "schema usage should count vehicle special roots");
+                    AssertTrue(vehicleSpecialUsage.FileCount == 1, "schema usage should count unique vehicle special files");
                 }
 
                 IReadOnlyList<KarProjectDataDefinitionUsage> mapOnly = project.QueryDataDefinitionUsage(new KarProjectRootQueryOptions
@@ -3384,12 +3384,12 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(mapOnly[0].DataDefinitionId == "kar.gr.data", "schema usage file-kind filter should keep map data");
                 IReadOnlyList<KarProjectRootInfo> legendaryRoots = data.QueryRoots(new KarProjectRootQueryOptions
                 {
-                    Text = "Legendary Machine Versus",
+                    Text = "Legendary Machine Vehicle Special",
                 });
                 AssertTrue(legendaryRoots.Count == 1 && legendaryRoots[0].RootPath == "VsHydra.dat:vsDataHydra", "root queries should search schema labels");
                 IReadOnlyList<KarProjectDataDefinitionUsage> legendaryOnly = project.QueryDataDefinitionUsage(new KarProjectRootQueryOptions
                 {
-                    Text = "Legendary Machine Versus",
+                    Text = "Legendary Machine Vehicle Special",
                 });
                 AssertTrue(legendaryOnly.Count == 1 && legendaryOnly[0].DataDefinitionId == "kar.vs.legendary", "schema usage should respect root text search");
                 AssertTrue(project.QueryDataDefinitionUsage(null).Count == usages.Count, "project schema usage compatibility wrapper should delegate to data service");
@@ -3433,7 +3433,7 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(hydraFields.Count == 1, "field query should match schemas by accessor type");
                 AssertTrue(hydraFields[0].RelativePath == "VsHydra.dat", "field query should keep file context");
-                AssertTrue(hydraFields[0].Value.SignedValue == 303, "field query should read versus scalar values");
+                AssertTrue(hydraFields[0].Value.SignedValue == 303, "field query should read vehicle special scalar values");
 
                 IReadOnlyList<KarProjectFieldInfo> spawnFields = data.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
@@ -3502,7 +3502,7 @@ namespace KARToolkit.Core.Tests
                 });
 
                 AssertTrue(hydraSummaries.Count == 1, "field summary should match schemas by accessor type");
-                AssertTrue(hydraSummaries[0].DistinctValueCount == 1, "field summary should group identical versus values");
+                AssertTrue(hydraSummaries[0].DistinctValueCount == 1, "field summary should group identical vehicle special values");
                 AssertTrue(!hydraSummaries[0].HasValueVariation, "field summary should not flag single values as varying");
                 AssertTrue(project.QueryFieldSummaries(null).Count == data.QueryFieldSummaries(null).Count, "project field summary compatibility wrapper should delegate to data service");
             }
@@ -3542,7 +3542,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(report.FieldSummaryCount == 1, "project report should include requested field summaries");
                 AssertTrue(report.FieldSummaries[0].HasValueVariation, "project report field summaries should retain value variation");
                 AssertTrue(report.FileCategories.Any(group => group.Name == "Maps" && group.Count == 2), "project report should summarize map files by category");
-                AssertTrue(report.FileKinds.Any(group => group.Name == KarFileKind.VersusData.ToString() && group.Count == 1), "project report should summarize files by kind");
+                AssertTrue(report.FileKinds.Any(group => group.Name == KarFileKind.VehicleSpecialData.ToString() && group.Count == 1), "project report should summarize files by kind");
                 AssertTrue(report.MapCount == 2, "project report should count map bundles");
                 AssertTrue(report.IncompleteMapCount == 2, "project report should count incomplete map bundles");
             }
