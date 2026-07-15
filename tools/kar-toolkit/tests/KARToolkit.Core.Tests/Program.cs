@@ -24,6 +24,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
+            Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -275,6 +276,65 @@ namespace KARToolkit.Core.Tests
                 }).Single();
                 AssertTrue(relationship.ResourceReference.Equals(entryReference), "relationships should expose resource references for package entries");
                 AssertTrue(relationship.RelativePath == relationship.ResourceReference.Address, "relationship relative paths should mirror resource addresses");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceQueriesAndResolvesAddresses()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                AssertTrue(object.ReferenceEquals(resources.Project, project), "resource service should retain project context");
+
+                IReadOnlyList<KarProjectResourceInfo> all = resources.Query();
+                AssertTrue(all.Any(resource => resource.Address == "VsHydra.dat" && resource.Kind == KarResourceKind.File), "resource query should include project files");
+                AssertTrue(all.Any(resource => resource.Address == "VsHydra.dat:vsDataHydra" && resource.Kind == KarResourceKind.HsdRoot), "resource query should include HSD roots");
+                AssertTrue(all.Any(resource => resource.Address == "A2Info.dat#ScInfGo2D.tm" && resource.Kind == KarResourceKind.A2DEntry), "resource query should include A2D package entries");
+
+                IReadOnlyList<KarProjectResourceInfo> fileResources = resources.Query(new KarProjectResourceQueryOptions
+                {
+                    Kind = KarResourceKind.File,
+                });
+                AssertTrue(fileResources.Count == 2 && fileResources.All(resource => resource.IsFile), "resource query should filter by resource kind");
+
+                IReadOnlyList<KarProjectResourceInfo> scriptResources = resources.Query(new KarProjectResourceQueryOptions
+                {
+                    Category = "Scripts",
+                });
+                AssertTrue(scriptResources.Count == 1 && scriptResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource query should filter by resource category");
+
+                KarProjectResourceInfo rootResource = resources.Get("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootResource.IsHsdRoot, "resource get should resolve HSD root addresses");
+                AssertTrue(rootResource.Root.RootName == "vsDataHydra", "resolved HSD root resources should expose root metadata");
+                AssertTrue(rootResource.File.RelativePath == "VsHydra.dat", "resolved HSD root resources should expose parent file metadata");
+
+                KarProjectResourceInfo entryResource = project.GetResource("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryResource.IsA2DEntry, "project resource wrapper should resolve A2D entry addresses");
+                AssertTrue(entryResource.A2DEntry.Index == 0, "resolved A2D resources should expose entry metadata");
+                AssertTrue(project.QueryResources(new KarProjectResourceQueryOptions
+                {
+                    Address = "A2Info.dat#ScInfGo2D.tm",
+                }).Single().Address == entryResource.Address, "project resource query wrapper should filter by address");
+
+                KarProjectResourceInfo missing;
+                AssertTrue(!resources.TryGet("VsHydra.dat:missingRoot", out missing), "resource try-get should return false for missing roots");
+                AssertTrue(!project.TryGetResource("../bad.dat", out missing), "project resource try-get wrapper should reject invalid addresses");
             }
             finally
             {

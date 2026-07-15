@@ -28,6 +28,7 @@ namespace KARToolkit.Core
             DataService = new KarProjectDataService(this);
             EditService = new KarProjectEditService(this);
             RelationshipService = new KarProjectRelationshipService(this);
+            ResourceService = new KarProjectResourceService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -56,6 +57,8 @@ namespace KARToolkit.Core
         public KarProjectEditService EditService { get; }
 
         public KarProjectRelationshipService RelationshipService { get; }
+
+        public KarProjectResourceService ResourceService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -178,6 +181,21 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectRelationship> QueryMapRelationships(string mapNameOrPath)
         {
             return RelationshipService.QueryMap(mapNameOrPath);
+        }
+
+        public IReadOnlyList<KarProjectResourceInfo> QueryResources(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceService.Query(options);
+        }
+
+        public KarProjectResourceInfo GetResource(string address)
+        {
+            return ResourceService.Get(address);
+        }
+
+        public bool TryGetResource(string address, out KarProjectResourceInfo resource)
+        {
+            return ResourceService.TryGet(address, out resource);
         }
 
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)

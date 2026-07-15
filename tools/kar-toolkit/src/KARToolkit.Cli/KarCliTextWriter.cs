@@ -37,6 +37,47 @@ internal static class KarCliTextWriter
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
     }
 
+    public static void PrintProjectResourceSummary(KarProjectResourceInfo resource)
+    {
+        string role = string.IsNullOrEmpty(resource.Role) ? "" : ", " + resource.Role;
+        Console.WriteLine(resource.Address + " [" + resource.Kind + ", " + resource.Category + role + "] - " + resource.DisplayName);
+    }
+
+    public static void PrintProjectResource(KarProjectResourceInfo resource)
+    {
+        Console.WriteLine("Resource: " + resource.Address);
+        Console.WriteLine("Kind: " + resource.Kind);
+        Console.WriteLine("Category: " + resource.Category);
+        Console.WriteLine("Role: " + resource.Role);
+        Console.WriteLine("Display: " + resource.DisplayName);
+        if (!string.IsNullOrEmpty(resource.Description))
+            Console.WriteLine("Description: " + resource.Description);
+        if (!string.IsNullOrEmpty(resource.ParentAddress))
+            Console.WriteLine("Parent: " + resource.ParentAddress);
+
+        if (resource.File != null)
+        {
+            Console.WriteLine("File: " + resource.File.RelativePath);
+            Console.WriteLine("Read: " + resource.File.ReadPath);
+            Console.WriteLine("Has output copy: " + resource.File.HasOutputCopy);
+        }
+
+        if (resource.Root != null)
+        {
+            Console.WriteLine("Root: " + resource.Root.RootName);
+            Console.WriteLine("Accessor: " + resource.Root.DisplayAccessorTypeName);
+            Console.WriteLine("Schema: " + (resource.Root.DataDefinitionId ?? "<none>"));
+        }
+
+        if (resource.A2DEntry != null)
+        {
+            Console.WriteLine("A2D entry: " + resource.A2DEntry.Name);
+            Console.WriteLine("Index: " + resource.A2DEntry.Index);
+            Console.WriteLine("Offset: " + resource.A2DEntry.DataOffsetHex);
+            Console.WriteLine("Size: " + resource.A2DEntry.SizeHex);
+        }
+    }
+
     public static void PrintProjectReport(KarProjectReport report)
     {
         Console.WriteLine("Project: " + report.Project.Name);

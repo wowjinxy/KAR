@@ -138,6 +138,41 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResources(KarCliOptions options)
+    {
+        options.RequirePositionals("resources", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceInfo> resources = project.ResourceService.Query(CreateResourceQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(resources.Select(ToProjectResourceDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceInfo resource in resources)
+            PrintProjectResourceSummary(resource);
+
+        return 0;
+    }
+
+    public static int ShowResource(KarCliOptions options)
+    {
+        options.RequirePositionals("resource", 2);
+        KarProject project = OpenProject(options);
+        KarProjectResourceInfo resource = project.ResourceService.Get(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceDto(resource));
+            return 0;
+        }
+
+        PrintProjectResource(resource);
+        return 0;
+    }
+
     public static int ShowA2DEntries(KarCliOptions options)
     {
         return ShowA2DEntriesCore(options, false);
@@ -363,6 +398,75 @@ internal static class KarCliInspectionCommands
         }
 
         return query;
+    }
+
+    private static KarProjectResourceQueryOptions CreateResourceQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
+        KarProjectResourceQueryOptions query = new KarProjectResourceQueryOptions
+        {
+            Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            Category = options.FileCategory,
+            Files = parentFiles,
+            Roots = new KarProjectRootQueryOptions
+            {
+                Files = parentFiles,
+                IsKnown = options.RootKnown,
+                RootName = options.RootName,
+            },
+            A2DEntries = new KarProjectA2DEntryQueryOptions
+            {
+                Packages = parentFiles,
+            },
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
+            query.Kind = ParseResourceKind(options.ResourceKind);
+
+        return query;
+    }
+
+    private static KarProjectFileQueryOptions CreateResourceParentFileQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
+        {
+            HasOutputCopy = options.FileHasOutputCopy,
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.FileKind))
+        {
+            KarFileKind kind;
+            if (!Enum.TryParse(options.FileKind, true, out kind))
+                throw new ArgumentException("Unknown file kind: " + options.FileKind);
+
+            query.Kind = kind;
+        }
+
+        return query;
+    }
+
+    private static KarResourceKind ParseResourceKind(string value)
+    {
+        KarResourceKind kind;
+        if (Enum.TryParse(value, true, out kind))
+            return kind;
+
+        string normalized = value.Replace("-", "").Replace("_", "").ToLowerInvariant();
+        switch (normalized)
+        {
+            case "file":
+                return KarResourceKind.File;
+            case "root":
+            case "hsd":
+            case "hsdroot":
+                return KarResourceKind.HsdRoot;
+            case "entry":
+            case "a2d":
+            case "a2dentry":
+                return KarResourceKind.A2DEntry;
+            default:
+                throw new ArgumentException("Unknown resource kind: " + value);
+        }
     }
 
     private static KarProjectRootQueryOptions CreateRootQuery(KarCliOptions options)

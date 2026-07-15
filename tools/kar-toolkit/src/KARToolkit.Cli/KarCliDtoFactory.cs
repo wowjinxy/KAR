@@ -527,6 +527,28 @@ internal static class KarCliDtoFactory
         return reference == null ? null : ToResourceReferenceDto(reference);
     }
 
+    public static object ToProjectResourceDto(KarProjectResourceInfo resource)
+    {
+        return new
+        {
+            resource = ToResourceReferenceDto(resource.Reference),
+            kind = resource.Kind.ToString(),
+            address = resource.Address,
+            parentAddress = resource.ParentAddress,
+            relativePath = resource.RelativePath,
+            displayName = resource.DisplayName,
+            role = resource.Role,
+            category = resource.Category,
+            description = resource.Description,
+            isFile = resource.IsFile,
+            isHsdRoot = resource.IsHsdRoot,
+            isA2DEntry = resource.IsA2DEntry,
+            file = ToProjectFileDtoOrNull(resource.File),
+            root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
+            a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
+        };
+    }
+
     public static object ToProjectFileDto(KarProjectFile file)
     {
         return new

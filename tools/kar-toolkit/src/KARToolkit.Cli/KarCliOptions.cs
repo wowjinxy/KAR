@@ -17,6 +17,7 @@ internal sealed class KarCliOptions
         bool schema,
         bool json,
         string fileKind,
+        string resourceKind,
         string fileCategory,
         bool? fileHasOutputCopy,
         KarProjectOutputFileStatus? outputStatus,
@@ -37,6 +38,7 @@ internal sealed class KarCliOptions
         Schema = schema;
         Json = json;
         FileKind = fileKind;
+        ResourceKind = resourceKind;
         FileCategory = fileCategory;
         FileHasOutputCopy = fileHasOutputCopy;
         OutputStatus = outputStatus;
@@ -69,6 +71,8 @@ internal sealed class KarCliOptions
 
     public string FileKind { get; }
 
+    public string ResourceKind { get; }
+
     public string FileCategory { get; }
 
     public bool? FileHasOutputCopy { get; }
@@ -100,6 +104,7 @@ internal sealed class KarCliOptions
         bool schema = false;
         bool json = false;
         string fileKind = null;
+        string resourceKind = null;
         string fileCategory = null;
         bool? fileHasOutputCopy = null;
         KarProjectOutputFileStatus? outputStatus = null;
@@ -173,6 +178,12 @@ internal sealed class KarCliOptions
             if (arg == "--kind" || arg == "--file-kind")
             {
                 fileKind = ReadValue(enumerator, arg);
+                continue;
+            }
+
+            if (arg == "--resource-kind" || arg == "--resource-type")
+            {
+                resourceKind = ReadValue(enumerator, arg);
                 continue;
             }
 
@@ -263,6 +274,7 @@ internal sealed class KarCliOptions
             schema,
             json,
             fileKind,
+            resourceKind,
             fileCategory,
             fileHasOutputCopy,
             outputStatus,
