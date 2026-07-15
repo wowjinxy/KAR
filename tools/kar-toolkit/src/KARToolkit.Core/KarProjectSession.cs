@@ -80,6 +80,8 @@ namespace KARToolkit.Core
 
         public int RegistryCount => RegistryCatalog.RegistryCount;
 
+        public int ArchiveDefinitionRuleCount => RegistryCatalog.ArchiveDefinitionRuleCount;
+
         public int DataDefinitionProviderCount => RegistryCatalog.DataDefinitionProviderCount;
 
         public int FileKindCount => RegistryCatalog.FileKindCount;

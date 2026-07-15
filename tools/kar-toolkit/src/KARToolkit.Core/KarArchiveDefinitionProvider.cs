@@ -1,10 +1,26 @@
-using System.IO;
+using System;
+using System.Collections.Generic;
 
 namespace KARToolkit.Core
 {
     public class KarArchiveDefinitionProvider
     {
-        public static KarArchiveDefinitionProvider Default { get; } = new KarArchiveDefinitionProvider();
+        public static KarArchiveDefinitionProvider Default { get; } =
+            new KarArchiveDefinitionProvider(KarArchiveDefinitionRuleRegistry.Default);
+
+        public KarArchiveDefinitionProvider()
+            : this(KarArchiveDefinitionRuleRegistry.Default)
+        {
+        }
+
+        public KarArchiveDefinitionProvider(KarArchiveDefinitionRuleRegistry ruleRegistry)
+        {
+            RuleRegistry = ruleRegistry ?? throw new ArgumentNullException(nameof(ruleRegistry));
+        }
+
+        public KarArchiveDefinitionRuleRegistry RuleRegistry { get; }
+
+        public IReadOnlyList<KarArchiveDefinitionRule> Rules => RuleRegistry.Rules;
 
         public KarArchiveDefinition GetDefinition(string relativePath)
         {
@@ -22,54 +38,7 @@ namespace KARToolkit.Core
 
         public virtual KarArchiveDefinition GetDefinition(string relativePath, KarFileKind kind, string mapName)
         {
-            string fileName = Path.GetFileName(relativePath);
-            string name = Path.GetFileNameWithoutExtension(fileName);
-
-            switch (kind)
-            {
-                case KarFileKind.StageTable:
-                    return KarMapArchiveDefinitions.DefineStageTable(kind);
-                case KarFileKind.MapCommon:
-                    return KarMapArchiveDefinitions.DefineMapCommon(kind);
-                case KarFileKind.MapData:
-                    return string.IsNullOrEmpty(mapName)
-                        ? KarGeneralArchiveDefinitions.DefineFallback(relativePath, kind)
-                        : KarMapArchiveDefinitions.DefineMapData(kind, mapName);
-                case KarFileKind.MapModel:
-                    return string.IsNullOrEmpty(mapName)
-                        ? KarGeneralArchiveDefinitions.DefineFallback(relativePath, kind)
-                        : KarMapArchiveDefinitions.DefineMapModel(kind, mapName);
-                case KarFileKind.MapEvent:
-                    return string.IsNullOrEmpty(mapName)
-                        ? KarGeneralArchiveDefinitions.DefineFallback(relativePath, kind)
-                        : KarMapArchiveDefinitions.DefineMapEvent(kind, mapName);
-                case KarFileKind.A2dPackage:
-                    return KarGeneralArchiveDefinitions.DefineA2dPackage(kind);
-                case KarFileKind.VehicleData:
-                    return KarVehicleArchiveDefinitions.DefineVehicle(name, kind);
-                case KarFileKind.RiderData:
-                    return KarRiderArchiveDefinitions.DefineRider(name, kind);
-                case KarFileKind.VersusData:
-                    return KarVersusArchiveDefinitions.DefineVersus(name, kind);
-                case KarFileKind.ItemData:
-                    return KarItemArchiveDefinitions.DefineItem(name, kind);
-                case KarFileKind.EnemyData:
-                    return KarEnemyArchiveDefinitions.DefineEnemy(name, kind);
-                case KarFileKind.EffectData:
-                    return KarGeneralArchiveDefinitions.DefineEffect(name, kind);
-                case KarFileKind.UiData:
-                    return KarGeneralArchiveDefinitions.DefineUi(name, kind);
-                case KarFileKind.ScriptTable:
-                    return KarGeneralArchiveDefinitions.DefineScriptTable(fileName, kind);
-                case KarFileKind.Audio:
-                    return KarGeneralArchiveDefinitions.DefineAudio(fileName, kind);
-                case KarFileKind.Movie:
-                    return KarGeneralArchiveDefinitions.DefineMovie(fileName, kind);
-                case KarFileKind.Config:
-                    return KarGeneralArchiveDefinitions.DefineConfig(fileName, kind);
-                default:
-                    return KarGeneralArchiveDefinitions.DefineFallback(relativePath, kind);
-            }
+            return RuleRegistry.ResolveDefinition(relativePath, kind, mapName);
         }
     }
 }

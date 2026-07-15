@@ -32,6 +32,8 @@ namespace KARToolkit.Core
 
         public KarArchiveDefinitionProvider ArchiveDefinitions { get; set; }
 
+        public KarArchiveDefinitionRuleRegistry ArchiveDefinitionRuleRegistry { get; set; }
+
         public KarArchiveInspector ArchiveInspector { get; set; }
 
         public KarDataDefinitionProviderRegistry DataDefinitionProviderRegistry { get; set; }
@@ -48,22 +50,35 @@ namespace KARToolkit.Core
             if (FileCatalog != null)
                 return new KarProjectIndexer(FileCatalog);
 
-            if (FileHandlerRegistry != null && ArchiveDefinitions != null)
-                return new KarProjectIndexer(new KarProjectFileCatalog(ArchiveDefinitions, FileHandlerRegistry));
+            KarArchiveDefinitionProvider archiveDefinitions = ResolveArchiveDefinitionProviderOrNull();
+
+            if (FileHandlerRegistry != null && archiveDefinitions != null)
+                return new KarProjectIndexer(new KarProjectFileCatalog(archiveDefinitions, FileHandlerRegistry));
 
             if (FileHandlerRegistry != null)
                 return new KarProjectIndexer(new KarProjectFileCatalog(FileHandlerRegistry));
 
-            if (FileKindRegistry != null && ArchiveDefinitions != null)
-                return new KarProjectIndexer(new KarProjectFileCatalog(ArchiveDefinitions, FileKindRegistry));
+            if (FileKindRegistry != null && archiveDefinitions != null)
+                return new KarProjectIndexer(new KarProjectFileCatalog(archiveDefinitions, FileKindRegistry));
 
             if (FileKindRegistry != null)
                 return new KarProjectIndexer(new KarProjectFileCatalog(FileKindRegistry));
 
-            if (ArchiveDefinitions != null)
-                return new KarProjectIndexer(new KarProjectFileCatalog(ArchiveDefinitions));
+            if (archiveDefinitions != null)
+                return new KarProjectIndexer(new KarProjectFileCatalog(archiveDefinitions));
 
             return KarProjectIndexer.Default;
+        }
+
+        internal KarArchiveDefinitionProvider ResolveArchiveDefinitionProviderOrNull()
+        {
+            if (ArchiveDefinitions != null)
+                return ArchiveDefinitions;
+
+            if (ArchiveDefinitionRuleRegistry != null)
+                return new KarArchiveDefinitionProvider(ArchiveDefinitionRuleRegistry);
+
+            return null;
         }
 
         internal KarDataDefinitionProviderRegistry ResolveDataDefinitionProviderRegistry()
