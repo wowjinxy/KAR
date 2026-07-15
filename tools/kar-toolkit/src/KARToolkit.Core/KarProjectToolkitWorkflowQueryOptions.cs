@@ -92,6 +92,9 @@ namespace KARToolkit.Core
                 KarProjectFileQueryOptions.Contains(workflow.Description, text) ||
                 KarProjectFileQueryOptions.Contains(workflow.Command, text) ||
                 KarProjectFileQueryOptions.Contains(workflow.ArgumentHint, text) ||
+                KarProjectFileQueryOptions.Contains(workflow.CommandLine, text) ||
+                KarProjectFileQueryOptions.Contains(workflow.Usage, text) ||
+                KarProjectFileQueryOptions.Contains(workflow.JsonUsage, text) ||
                 KarProjectFileQueryOptions.Contains(workflow.Mode, text);
         }
 

@@ -1686,6 +1686,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(resourceGroup.HasDomain && resourceGroup.Domain.ContextCommand == "resource-contexts" && resourceGroup.Workflows.Any(workflow => workflow.Id == "edit-resource-data-field"), "toolkit workflow groups should attach domain metadata to grouped workflows");
                 KarProjectToolkitWorkflow editWorkflow = surface.Workflows.Single(workflow => workflow.Id == "edit-resource-data-field");
                 AssertTrue(editWorkflow.Command == "resource-data-edit" && editWorkflow.WritesOutput && editWorkflow.RequiresValue && editWorkflow.TargetCount != 0, "toolkit workflows should expose resource data field edit commands");
+                AssertTrue(editWorkflow.CommandLine == "kar-toolkit resource-data-edit" && editWorkflow.Usage.Contains("<field-path-or-name>") && editWorkflow.JsonUsage.EndsWith("[--json]"), "toolkit workflows should expose assembled CLI usage strings");
                 KarProjectToolkitWorkflow dataFieldsWorkflow = surface.Workflows.Single(workflow => workflow.Id == "resource-data-fields");
                 AssertTrue(dataFieldsWorkflow.IsReadOnly && dataFieldsWorkflow.TargetCount >= editWorkflow.TargetCount, "toolkit workflows should pair editable field writes with field discovery");
                 KarProjectToolkitWorkflow importWorkflow = surface.Workflows.Single(workflow => workflow.Id == "import-resource-output");
@@ -1701,6 +1702,7 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(resourceWrites.Count >= 4 && resourceWrites.All(workflow => workflow.DomainId == "resources" && workflow.WritesOutput), "toolkit workflow queries should filter writable workflows by domain");
                 AssertTrue(project.ToolkitService.QueryWorkflows(new KarProjectToolkitWorkflowQueryOptions { Command = "resource-data-edit" }).Single().Id == "edit-resource-data-field", "toolkit workflow queries should filter by command");
+                AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { Text = "kar-toolkit resource-data-edit" }).Single().Id == "edit-resource-data-field", "toolkit workflow queries should search assembled CLI usage");
                 AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { RequiresInputFile = true }).All(workflow => workflow.RequiresInputFile), "toolkit workflow queries should filter input-file workflows");
                 AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { SupportsBatch = true, Text = "A2D" }).Any(workflow => workflow.Id == "apply-a2d-entry-outputs"), "toolkit workflow queries should combine batch filters and search text");
                 AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { RequiresValue = true, HasTargets = true }).Single().Id == "edit-resource-data-field", "toolkit workflow queries should filter value-taking available workflows");

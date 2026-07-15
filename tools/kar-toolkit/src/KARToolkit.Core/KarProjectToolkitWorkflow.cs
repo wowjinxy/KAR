@@ -57,6 +57,16 @@ namespace KARToolkit.Core
 
         public string ArgumentHint { get; }
 
+        public string ExecutableName => "kar-toolkit";
+
+        public string CommandLine => ExecutableName + " " + Command;
+
+        public string Usage => string.IsNullOrWhiteSpace(ArgumentHint)
+            ? CommandLine
+            : CommandLine + " " + ArgumentHint;
+
+        public string JsonUsage => Usage + " [--json]";
+
         public bool IsReadOnly { get; }
 
         public bool WritesOutput { get; }

@@ -576,7 +576,7 @@ internal static class KarCliTextWriter
             ? ""
             : " outputs=" + workflow.OutputCount + " modified=" + workflow.ModifiedOutputCount;
         string issues = workflow.InspectionIssueCount == 0 ? "" : " issues=" + workflow.InspectionIssueCount;
-        Console.WriteLine(indent + workflow.Id + " [" + workflow.DomainId + ", " + mode + batch + input + value + "] targets=" + workflow.TargetCount + outputs + issues + " command=" + workflow.Command + " " + workflow.ArgumentHint);
+        Console.WriteLine(indent + workflow.Id + " [" + workflow.DomainId + ", " + mode + batch + input + value + "] targets=" + workflow.TargetCount + outputs + issues + " usage=\"" + workflow.Usage + "\"");
     }
 
     public static void PrintProjectDomainContext(KarProjectDomainContext context)
