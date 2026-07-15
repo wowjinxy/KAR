@@ -38,18 +38,30 @@ namespace KARToolkit.Core
 
         public string SaveHsdFile(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
+            return SaveHsdFileToOutput(relativePath, file, bufferAlign, optimize, trim).OutputPath;
+        }
+
+        public KarProjectFileWriteResult SaveHsdFileToOutput(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
+        {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            return _workspace.SaveOutputFile(relativePath, tempPath => file.Save(tempPath, bufferAlign, optimize, trim));
+            string outputPath = _workspace.SaveOutputFile(relativePath, tempPath => file.Save(tempPath, bufferAlign, optimize, trim));
+            return _fileStore.CreateWriteResult(relativePath, outputPath);
         }
 
         public string SaveA2DPackage(string relativePath, A2DPackage package)
         {
+            return SaveA2DPackageToOutput(relativePath, package).OutputPath;
+        }
+
+        public KarProjectFileWriteResult SaveA2DPackageToOutput(string relativePath, A2DPackage package)
+        {
             if (package == null)
                 throw new ArgumentNullException(nameof(package));
 
-            return _workspace.SaveOutputFile(relativePath, package.Save);
+            string outputPath = _workspace.SaveOutputFile(relativePath, package.Save);
+            return _fileStore.CreateWriteResult(relativePath, outputPath);
         }
     }
 }

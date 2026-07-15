@@ -30,6 +30,7 @@ Project file kind classification and map-name extraction go through `KarProjectF
 `KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.
 Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
 Copy operations can return `KarProjectFileCopyResult` when tools need both the copied file metadata and destination path.
+Write/save operations can return `KarProjectFileWriteResult` when tools need normalized project paths and output metadata.
 Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.

@@ -160,6 +160,11 @@ namespace KARToolkit.Core
             FileStore.WriteBytes(relativePath, data);
         }
 
+        public KarProjectFileWriteResult WriteFileBytes(string relativePath, byte[] data)
+        {
+            return FileStore.WriteFileBytes(relativePath, data);
+        }
+
         public HSDRawFile OpenHsdFile(string relativePath)
         {
             return ArchiveStore.OpenHsdFile(relativePath);
@@ -210,9 +215,19 @@ namespace KARToolkit.Core
             return ArchiveStore.SaveHsdFile(relativePath, file, bufferAlign, optimize, trim);
         }
 
+        public KarProjectFileWriteResult SaveHsdFileToOutput(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)
+        {
+            return ArchiveStore.SaveHsdFileToOutput(relativePath, file, bufferAlign, optimize, trim);
+        }
+
         public string SaveA2DPackage(string relativePath, A2DPackage package)
         {
             return ArchiveStore.SaveA2DPackage(relativePath, package);
+        }
+
+        public KarProjectFileWriteResult SaveA2DPackageToOutput(string relativePath, A2DPackage package)
+        {
+            return ArchiveStore.SaveA2DPackageToOutput(relativePath, package);
         }
     }
 }

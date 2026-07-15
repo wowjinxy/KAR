@@ -87,10 +87,24 @@ namespace KARToolkit.Core
 
         public string WriteBytes(string relativePath, byte[] data)
         {
+            return WriteFileBytes(relativePath, data).OutputPath;
+        }
+
+        public KarProjectFileWriteResult WriteFileBytes(string relativePath, byte[] data)
+        {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            return _workspace.WriteBytes(relativePath, data);
+            string outputPath = _workspace.WriteBytes(relativePath, data);
+            return CreateWriteResult(relativePath, outputPath);
+        }
+
+        internal KarProjectFileWriteResult CreateWriteResult(string relativePath, string outputPath)
+        {
+            string normalized = KarProjectWorkspace.NormalizeRelativePath(relativePath);
+            KarProjectFile file;
+            _index.TryGetFile(normalized, out file);
+            return new KarProjectFileWriteResult(file, normalized, outputPath, File.GetLastWriteTimeUtc(outputPath));
         }
     }
 }
