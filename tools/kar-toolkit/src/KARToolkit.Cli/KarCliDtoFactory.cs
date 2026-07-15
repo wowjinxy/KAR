@@ -1215,6 +1215,37 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectA2DPackageContextDto(KarProjectA2DPackageContext context)
+    {
+        return new
+        {
+            packageFile = ToProjectFileDto(context.PackageFile),
+            relativePath = context.RelativePath,
+            readPath = context.ReadPath,
+            isOpen = context.IsOpen,
+            hasOpenError = context.HasOpenError,
+            openError = context.OpenError,
+            entryCount = context.EntryCount,
+            scriptTableCount = context.ScriptTableCount,
+            entryOutputCount = context.EntryOutputCount,
+            modifiedEntryOutputCount = context.ModifiedEntryOutputCount,
+            matchingEntryOutputCount = context.MatchingEntryOutputCount,
+            hasEntries = context.HasEntries,
+            hasScriptTables = context.HasScriptTables,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            hasEntryOutputs = context.HasEntryOutputs,
+            hasModifiedEntryOutputs = context.HasModifiedEntryOutputs,
+            outputStatus = context.OutputStatus == null ? null : context.OutputStatus.ToString(),
+            outputKind = context.OutputKind == null ? null : context.OutputKind.ToString(),
+            resource = context.Resource == null ? null : ToProjectResourceDto(context.Resource),
+            output = context.Output == null ? null : ToProjectResourceOutputDto(context.Output),
+            entries = context.Entries.Select(ToProjectA2DEntryDto).ToList(),
+            entryOutputs = context.EntryOutputs.Select(ToA2DEntryOutputDto).ToList(),
+            scriptContexts = context.ScriptContexts.Select(ToProjectScriptTableContextDto).ToList(),
+        };
+    }
+
     public static object ToA2DEntryExtractResultDto(KarProjectA2DEntryExtractResult result)
     {
         return new

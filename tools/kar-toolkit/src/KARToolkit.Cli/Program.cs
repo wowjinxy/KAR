@@ -69,6 +69,9 @@ internal static class Program
                 "resource-status" => KarCliInspectionCommands.ShowResourceOutput(options),
                 "resource-fields" => KarCliInspectionCommands.ShowResourceFields(options),
                 "resource-field-values" => KarCliInspectionCommands.ShowResourceFields(options),
+                "a2d-packages" => KarCliInspectionCommands.ShowA2DPackageContexts(options),
+                "a2d-package-context" => KarCliInspectionCommands.ShowA2DPackageContexts(options),
+                "a2d-package-status" => KarCliInspectionCommands.ShowA2DPackageContexts(options),
                 "a2d-entries" => KarCliInspectionCommands.ShowA2DEntries(options),
                 "a2d-entry-outputs" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
                 "a2d-output-status" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
@@ -151,6 +154,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-fields <source-folder> [archive:root] [field-name] [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>]");
+        Console.WriteLine("  kar-toolkit a2d-packages <source-folder> [package-relative-path] [--output <mod-folder>] [--search <text>] [--output-copy|--source-only] [--modified]");
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>]");
         Console.WriteLine("  kar-toolkit a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit script-tables <source-folder> [resource-address|package-relative-path] [table-name] [--output <mod-folder>] [--search <text>]");

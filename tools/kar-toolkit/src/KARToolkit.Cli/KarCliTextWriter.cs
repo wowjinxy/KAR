@@ -244,6 +244,14 @@ internal static class KarCliTextWriter
         Console.WriteLine(context.Address + " [" + context.Role + ", " + storage + "] relationships=" + context.RelationshipCount + " " + output + " - " + context.Description);
     }
 
+    public static void PrintProjectA2DPackageContext(KarProjectA2DPackageContext context)
+    {
+        string output = context.Output == null ? "output=<none>" : "output=" + context.Output.Status + "/" + context.Output.OutputKind;
+        Console.WriteLine(context.RelativePath + ": entries=" + context.EntryCount + " scripts=" + context.ScriptTableCount + " sidecars=" + context.EntryOutputCount + " modified-sidecars=" + context.ModifiedEntryOutputCount + " " + output);
+        if (context.HasOpenError)
+            Console.WriteLine("  open error: " + context.OpenError);
+    }
+
     public static void PrintProjectMapScriptBundle(KarProjectMapScriptBundle bundle)
     {
         Console.WriteLine("Map scripts: " + bundle.MapName);

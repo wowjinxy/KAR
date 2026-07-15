@@ -393,6 +393,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowA2DPackageContexts(KarCliOptions options)
+    {
+        options.RequirePositionals("a2d-packages", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectA2DPackageContext> contexts = project.A2DPackageContextService.Query(CreateA2DPackageContextQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectA2DPackageContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectA2DPackageContext context in contexts)
+            PrintProjectA2DPackageContext(context);
+
+        return 0;
+    }
+
     public static int ShowScriptTables(KarCliOptions options)
     {
         options.RequirePositionals("script-tables", 1);

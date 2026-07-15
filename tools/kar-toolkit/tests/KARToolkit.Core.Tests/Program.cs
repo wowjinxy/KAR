@@ -47,6 +47,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
             Run("ProjectScriptContextServiceReportsScriptOutputState", ProjectScriptContextServiceReportsScriptOutputState);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
+            Run("ProjectA2DPackageContextsSummarizePackages", ProjectA2DPackageContextsSummarizePackages);
             Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
             Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
@@ -1757,6 +1758,61 @@ namespace KARToolkit.Core.Tests
                     EntryName = "KIRBY.tm",
                 });
                 AssertTrue(namedEntries.Count == 1 && namedEntries[0].PackageRelativePath == "A2Kirby.dat", "A2D entry query should filter by entry name");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectA2DPackageContextsSummarizePackages()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-a2d-package-context-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+            File.WriteAllBytes(Path.Combine(tempRoot, "A2Broken.dat"), new byte[] { 0x10 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectA2DPackageContextService packages = project.A2DPackageContextService;
+
+                AssertTrue(object.ReferenceEquals(packages.Project, project), "A2D package context service should retain project context");
+
+                IReadOnlyList<KarProjectA2DPackageContext> contexts = packages.Query();
+                AssertTrue(contexts.Count == 3, "A2D package contexts should include every package file, even malformed packages");
+
+                KarProjectA2DPackageContext info = project.GetA2DPackageContext("A2Info.dat");
+                AssertTrue(info.IsOpen && !info.HasOpenError, "A2D package contexts should report successful package opens");
+                AssertTrue(info.EntryCount == 2, "A2D package contexts should expose package entries");
+                AssertTrue(info.ScriptTableCount == 1 && info.ScriptContexts[0].Address == "A2Info.dat#ScInfGo2D.tm", "A2D package contexts should include script table contexts for tm entries");
+                AssertTrue(info.EntryOutputs.Count == 2 && info.EntryOutputCount == 0, "A2D package contexts should include missing sidecar status for every entry");
+                AssertTrue(info.OutputStatus == KarProjectResourceOutputStatus.Missing, "A2D package contexts should include package output status");
+
+                KarProjectA2DPackageContext broken = packages.Get("A2Broken.dat");
+                AssertTrue(!broken.IsOpen && broken.HasOpenError, "A2D package contexts should preserve open errors without throwing");
+                AssertTrue(broken.EntryCount == 0 && broken.ScriptTableCount == 0, "malformed A2D package contexts should not invent entries");
+
+                KarProjectResourceExportResult export = project.ExportScriptTableToOutput("A2Info.dat#ScInfGo2D.tm");
+                KarProjectA2DPackageContext exported = packages.Get("A2Info.dat");
+                AssertTrue(exported.HasEntryOutputs && exported.MatchingEntryOutputCount == 1, "A2D package contexts should reflect exported sidecars");
+                AssertTrue(exported.ScriptContexts[0].OutputStatus == KarProjectResourceOutputStatus.SidecarMatchesEntry, "A2D package script contexts should share sidecar output status");
+
+                File.WriteAllBytes(export.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                KarProjectA2DPackageContext modified = packages.Get("A2Info.dat");
+                AssertTrue(modified.HasModifiedEntryOutputs && modified.ModifiedEntryOutputCount == 1, "A2D package contexts should detect modified sidecars");
+
+                IReadOnlyList<KarProjectA2DPackageContext> modifiedPackages = project.QueryA2DPackageContexts(new KarProjectA2DPackageContextQueryOptions
+                {
+                    HasModifiedEntryOutputs = true,
+                });
+                AssertTrue(modifiedPackages.Count == 1 && modifiedPackages[0].RelativePath == "A2Info.dat", "project A2D package context wrapper should filter modified packages");
             }
             finally
             {

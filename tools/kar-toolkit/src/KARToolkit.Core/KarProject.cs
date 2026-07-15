@@ -26,6 +26,7 @@ namespace KARToolkit.Core
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector, ResourceGraphService.Invalidate);
             ArchiveService = new KarProjectArchiveService(this);
             A2DService = new KarProjectA2DService(this);
+            A2DPackageContextService = new KarProjectA2DPackageContextService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
             VehicleService = new KarProjectVehicleService(this);
@@ -60,6 +61,8 @@ namespace KARToolkit.Core
         public KarProjectArchiveService ArchiveService { get; }
 
         public KarProjectA2DService A2DService { get; }
+
+        public KarProjectA2DPackageContextService A2DPackageContextService { get; }
 
         public KarProjectOutputService OutputService { get; }
 
@@ -232,6 +235,16 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectA2DEntryOutputInfo> QueryA2DEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)
         {
             return A2DService.QueryEntryOutputs(options);
+        }
+
+        public IReadOnlyList<KarProjectA2DPackageContext> QueryA2DPackageContexts(KarProjectA2DPackageContextQueryOptions options = null)
+        {
+            return A2DPackageContextService.Query(options);
+        }
+
+        public KarProjectA2DPackageContext GetA2DPackageContext(string packageRelativePath)
+        {
+            return A2DPackageContextService.Get(packageRelativePath);
         }
 
         public IReadOnlyList<KarProjectA2DEntryApplyResult> ApplyModifiedA2DEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)

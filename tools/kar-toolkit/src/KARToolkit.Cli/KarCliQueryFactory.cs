@@ -195,6 +195,18 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectA2DPackageContextQueryOptions CreateA2DPackageContextQuery(KarCliOptions options)
+    {
+        return new KarProjectA2DPackageContextQueryOptions
+        {
+            Packages = CreateFileQuery(options, includeSearch: false),
+            PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            Text = options.SearchText,
+            HasEntryOutputs = options.FileHasOutputCopy,
+            HasModifiedEntryOutputs = ToA2DEntryOutputStatus(options.OutputStatus) == KarProjectA2DEntryOutputStatus.DiffersFromEntry ? true : null,
+        };
+    }
+
     public static KarProjectA2DEntryOutputStatus? ToA2DEntryOutputStatus(KarProjectOutputFileStatus? status)
     {
         if (!status.HasValue)
