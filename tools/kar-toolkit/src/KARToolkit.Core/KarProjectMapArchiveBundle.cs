@@ -51,10 +51,16 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectFileWriteResult> SaveToOutput(bool bufferAlign = true, bool optimize = true, bool trim = false)
         {
-            return Archives
+            return SaveToOutputResult(bufferAlign, optimize, trim).WriteResults;
+        }
+
+        public KarProjectMapOutputResult SaveToOutputResult(bool bufferAlign = true, bool optimize = true, bool trim = false)
+        {
+            IReadOnlyList<KarProjectFileWriteResult> writeResults = Archives
                 .Select(archive => archive.SaveToOutput(bufferAlign, optimize, trim))
                 .ToList()
                 .AsReadOnly();
+            return new KarProjectMapOutputResult(Bundle, null, writeResults);
         }
     }
 }

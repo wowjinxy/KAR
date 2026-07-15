@@ -140,6 +140,16 @@ namespace KARToolkit.Core
             return FileStore.CopyMapToOutput(map, overwrite);
         }
 
+        public KarProjectMapOutputResult CopyMapToOutputResult(string mapNameOrPath, bool overwrite = false)
+        {
+            return FileStore.CopyMapToOutputResult(mapNameOrPath, overwrite);
+        }
+
+        public KarProjectMapOutputResult CopyMapToOutputResult(KarMapBundle map, bool overwrite = false)
+        {
+            return FileStore.CopyMapToOutputResult(map, overwrite);
+        }
+
         public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(string mapNameOrPath, bool overwrite = false)
         {
             return FileStore.CopyMapFilesToOutput(mapNameOrPath, overwrite);

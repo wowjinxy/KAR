@@ -31,6 +31,7 @@ Project file kind classification and map-name extraction go through `KarProjectF
 Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
 Copy operations can return `KarProjectFileCopyResult` when tools need both the copied file metadata and destination path.
 Write/save operations can return `KarProjectFileWriteResult` when tools need normalized project paths and output metadata.
+Map copy/save operations can return `KarProjectMapOutputResult` when tools need the output paths grouped by data, model, and event/script file.
 Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Editable project archive handles (`KarProjectHsdArchive`, `KarProjectA2DPackage`) keep project metadata attached while saving through the safe output folder.
 Editable map archive bundles (`KarProjectMapArchiveBundle`) group a map's data, model, and event/script archives for project-level workflows.

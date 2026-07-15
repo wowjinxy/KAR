@@ -60,26 +60,35 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return CopyMapFilesToOutput(mapNameOrPath, overwrite)
-                .Select(result => result.OutputPath)
-                .ToList()
-                .AsReadOnly();
+            return CopyMapToOutputResult(mapNameOrPath, overwrite).OutputPaths;
         }
 
         public IReadOnlyList<string> CopyMapToOutput(KarMapBundle map, bool overwrite = false)
         {
-            return CopyMapFilesToOutput(map, overwrite)
-                .Select(result => result.OutputPath)
-                .ToList()
-                .AsReadOnly();
+            return CopyMapToOutputResult(map, overwrite).OutputPaths;
+        }
+
+        public KarProjectMapOutputResult CopyMapToOutputResult(string mapNameOrPath, bool overwrite = false)
+        {
+            return CopyMapToOutputResult(_index.GetMap(mapNameOrPath), overwrite);
+        }
+
+        public KarProjectMapOutputResult CopyMapToOutputResult(KarMapBundle map, bool overwrite = false)
+        {
+            return new KarProjectMapOutputResult(map, CopyMapFilesToOutputCore(map, overwrite), null);
         }
 
         public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return CopyMapFilesToOutput(_index.GetMap(mapNameOrPath), overwrite);
+            return CopyMapToOutputResult(mapNameOrPath, overwrite).CopyResults;
         }
 
         public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(KarMapBundle map, bool overwrite = false)
+        {
+            return CopyMapToOutputResult(map, overwrite).CopyResults;
+        }
+
+        private IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutputCore(KarMapBundle map, bool overwrite)
         {
             if (map == null)
                 throw new ArgumentNullException(nameof(map));
