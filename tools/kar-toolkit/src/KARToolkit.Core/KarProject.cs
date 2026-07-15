@@ -203,6 +203,16 @@ namespace KARToolkit.Core
             return ResourceService.GetOutput(address);
         }
 
+        public KarProjectResourceOutputApplyResult ApplyResourceOutput(string address)
+        {
+            return ResourceService.ApplyOutput(address);
+        }
+
+        public IReadOnlyList<KarProjectResourceOutputApplyResult> ApplyModifiedResourceOutputs(KarProjectResourceOutputQueryOptions options = null)
+        {
+            return ResourceService.ApplyModifiedOutputs(options);
+        }
+
         public bool TryGetResource(string address, out KarProjectResourceInfo resource)
         {
             return ResourceService.TryGet(address, out resource);

@@ -83,6 +83,14 @@ internal static class KarCliTextWriter
         Console.WriteLine(output.Address + " [" + output.Status + ", " + output.OutputKind + "] " + output.OutputRelativePath);
     }
 
+    public static void PrintProjectResourceOutputApplyResult(KarProjectResourceOutputApplyResult result)
+    {
+        Console.WriteLine("Applied resource output: " + result.Address);
+        Console.WriteLine("Sidecar: " + result.SidecarOutputPath);
+        Console.WriteLine("Package output: " + result.PackageOutputPath);
+        Console.WriteLine("Replacement length: " + result.ReplacementLength);
+    }
+
     public static void PrintProjectResourceExportResult(KarProjectResourceExportResult result)
     {
         Console.WriteLine("Exported resource: " + result.Address);

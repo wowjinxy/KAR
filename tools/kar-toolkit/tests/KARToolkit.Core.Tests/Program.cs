@@ -29,6 +29,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
             Run("ProjectResourceServiceWritesScalarEditsToOutput", ProjectResourceServiceWritesScalarEditsToOutput);
             Run("ProjectResourceServiceReportsUnifiedOutputStatus", ProjectResourceServiceReportsUnifiedOutputStatus);
+            Run("ProjectResourceServiceAppliesModifiedResourceOutputs", ProjectResourceServiceAppliesModifiedResourceOutputs);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -591,6 +592,60 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(outputRoot, true);
                 if (Directory.Exists(inputRoot))
                     Directory.Delete(inputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceAppliesModifiedResourceOutputs()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-apply-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            string packagePath = Path.Combine(tempRoot, "A2Info.dat");
+            WriteA2DPackage(packagePath, new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                KarProjectResourceExportResult export = resources.ExportToOutput("A2Info.dat#ScInfGo2D.tm");
+                File.WriteAllBytes(export.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                AssertTrue(resources.GetOutput("A2Info.dat#ScInfGo2D.tm").Status == KarProjectResourceOutputStatus.SidecarDiffersFromEntry, "resource output status should find sidecars that need applying");
+
+                IReadOnlyList<KarProjectResourceOutputApplyResult> applyResults = resources.ApplyModifiedOutputs(new KarProjectResourceOutputQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "A2Info.dat#ScInfGo2D.tm",
+                    },
+                });
+                AssertTrue(applyResults.Count == 1, "resource output apply should process modified sidecars");
+                KarProjectResourceOutputApplyResult applied = applyResults[0];
+                AssertTrue(applied.Address == "A2Info.dat#ScInfGo2D.tm", "resource output apply should report resource addresses");
+                AssertTrue(applied.PackageRelativePath == "A2Info.dat", "resource output apply should report package paths");
+                AssertTrue(applied.ReplacementLength == 4, "resource output apply should report replacement lengths");
+                AssertTrue(File.Exists(applied.PackageOutputPath), "resource output apply should write output packages");
+                AssertTrue(resources.ReadBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0x11, 0x22, 0x33, 0x44 }), "resource reads should see applied sidecar bytes from output packages");
+                AssertTrue(resources.GetOutput("A2Info.dat#ScInfGo2D.tm").Status == KarProjectResourceOutputStatus.SidecarMatchesEntry, "resource output status should settle after sidecar apply");
+
+                File.WriteAllBytes(export.OutputPath, new byte[] { 0x21, 0x22, 0x23, 0x24 });
+                KarProjectResourceOutputApplyResult singleApply = project.ApplyResourceOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(singleApply.ReplacementLength == 4, "project resource output apply wrapper should delegate to resource service");
+                AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0x21, 0x22, 0x23, 0x24 }), "project resource reads should see single applied sidecar bytes");
+                AssertTrue(project.ApplyModifiedResourceOutputs().Count == 0, "resource output apply should find no modified sidecars after apply");
+
+                A2DPackage sourcePackage;
+                string error;
+                AssertTrue(A2DPackage.TryOpen(packagePath, out sourcePackage, out error), "source package should still parse after resource output apply");
+                AssertTrue(sourcePackage.GetEntryData(0).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "resource output apply should not mutate source packages");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
             }
         }
 

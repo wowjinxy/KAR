@@ -90,4 +90,30 @@ internal static class KarCliCopyCommands
         PrintProjectResourceImportResult(result);
         return 0;
     }
+
+    public static int ApplyResourceOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("apply-resource-outputs", 1);
+        KarProject project = OpenProject(options);
+        KarProjectResourceOutputQueryOptions query = new KarProjectResourceOutputQueryOptions
+        {
+            Resources = new KarProjectResourceQueryOptions
+            {
+                Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            },
+        };
+        IReadOnlyList<KarProjectResourceOutputApplyResult> results = project.ResourceService.ApplyModifiedOutputs(query);
+
+        if (options.Json)
+        {
+            WriteJson(results.Select(ToProjectResourceOutputApplyResultDto).ToList());
+            return 0;
+        }
+
+        Console.WriteLine("Applied resource outputs: " + results.Count);
+        foreach (KarProjectResourceOutputApplyResult result in results)
+            PrintProjectResourceOutputApplyResult(result);
+
+        return 0;
+    }
 }

@@ -61,6 +61,8 @@ internal static class Program
                 "resource-export" => KarCliCopyCommands.ExportResource(options),
                 "import-resource" => KarCliCopyCommands.ImportResource(options),
                 "resource-import" => KarCliCopyCommands.ImportResource(options),
+                "apply-resource-outputs" => KarCliCopyCommands.ApplyResourceOutputs(options),
+                "resource-apply" => KarCliCopyCommands.ApplyResourceOutputs(options),
                 "set-scalar" => KarCliEditCommands.SetScalar(options),
                 "set-resource-scalar" => KarCliEditCommands.SetResourceScalar(options),
                 "resource-set-scalar" => KarCliEditCommands.SetResourceScalar(options),
@@ -118,6 +120,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit export-resource <source-folder> <resource-address> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit import-resource <source-folder> <resource-address> <input-file> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit apply-resource-outputs <source-folder> [resource-address] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-resource-scalar <source-folder> <archive:root> <field-name> <value> [--output <mod-folder>]");

@@ -237,6 +237,27 @@ namespace KARToolkit.Core
             return new KarProjectResourceScalarEditResult(resource, edit);
         }
 
+        public KarProjectResourceOutputApplyResult ApplyOutput(string address)
+        {
+            KarProjectResourceOutputInfo output = GetOutput(address);
+            return ApplyOutput(output);
+        }
+
+        public IReadOnlyList<KarProjectResourceOutputApplyResult> ApplyModifiedOutputs(KarProjectResourceOutputQueryOptions options = null)
+        {
+            KarProjectResourceOutputQueryOptions query = new KarProjectResourceOutputQueryOptions
+            {
+                Resources = options == null ? null : options.Resources,
+                Status = KarProjectResourceOutputStatus.SidecarDiffersFromEntry,
+                HasOutput = true,
+            };
+
+            return QueryOutputs(query)
+                .Select(ApplyOutput)
+                .ToList()
+                .AsReadOnly();
+        }
+
         private KarProjectResourceInfo Resolve(KarResourceReference reference)
         {
             switch (reference.Kind)
@@ -261,6 +282,19 @@ namespace KARToolkit.Core
                 default:
                     throw new ArgumentOutOfRangeException(nameof(reference));
             }
+        }
+
+        private KarProjectResourceOutputApplyResult ApplyOutput(KarProjectResourceOutputInfo output)
+        {
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+            if (output.Kind != KarResourceKind.A2DEntry || output.OutputKind != KarProjectResourceOutputKind.OutputAsset)
+                throw new NotSupportedException("Only A2D entry sidecar output resources can be applied.");
+            if (output.A2DEntryOutput == null || !output.A2DEntryOutput.HasOutput)
+                throw new FileNotFoundException("A2D entry sidecar output was not found.", output.OutputPath);
+
+            KarProjectA2DEntryApplyResult apply = _project.A2DService.ApplyEntryOutput(output.Address);
+            return new KarProjectResourceOutputApplyResult(output, apply);
         }
 
         private KarProjectResourceOutputInfo CreateOutputInfo(KarProjectResourceInfo resource)
