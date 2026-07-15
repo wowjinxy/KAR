@@ -2,6 +2,7 @@ using KARToolkit.Core;
 using static KARToolkit.Cli.KarCliDtoFactory;
 using static KARToolkit.Cli.KarCliJsonWriter;
 using static KARToolkit.Cli.KarCliProjectFactory;
+using static KARToolkit.Cli.KarCliQueryFactory;
 
 namespace KARToolkit.Cli;
 
@@ -51,14 +52,7 @@ internal static class KarCliA2DCommands
     {
         options.RequirePositionals("apply-a2d-entry-outputs", 1);
         KarProject project = OpenProject(options);
-        KarProjectA2DEntryOutputQueryOptions query = new KarProjectA2DEntryOutputQueryOptions
-        {
-            Entries = new KarProjectA2DEntryQueryOptions
-            {
-                PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
-                EntryName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
-            },
-        };
+        KarProjectA2DEntryOutputQueryOptions query = CreateA2DEntryOutputQuery(options);
         IReadOnlyList<KarProjectA2DEntryApplyResult> results = project.A2DService.ApplyModifiedEntryOutputs(query);
 
         if (options.Json)

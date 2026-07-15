@@ -2,6 +2,7 @@ using KARToolkit.Core;
 using static KARToolkit.Cli.KarCliDtoFactory;
 using static KARToolkit.Cli.KarCliJsonWriter;
 using static KARToolkit.Cli.KarCliProjectFactory;
+using static KARToolkit.Cli.KarCliQueryFactory;
 using static KARToolkit.Cli.KarCliTextWriter;
 
 namespace KARToolkit.Cli;
@@ -95,14 +96,7 @@ internal static class KarCliCopyCommands
     {
         options.RequirePositionals("apply-resource-outputs", 1);
         KarProject project = OpenProject(options);
-        KarProjectResourceOutputQueryOptions query = new KarProjectResourceOutputQueryOptions
-        {
-            Resources = new KarProjectResourceQueryOptions
-            {
-                Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
-                Text = options.SearchText,
-            },
-        };
+        KarProjectResourceOutputQueryOptions query = CreateResourceOutputQuery(options);
         IReadOnlyList<KarProjectResourceOutputApplyResult> results = project.ResourceService.ApplyModifiedOutputs(query);
 
         if (options.Json)

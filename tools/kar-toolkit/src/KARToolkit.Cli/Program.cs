@@ -140,12 +140,12 @@ internal static class Program
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit extract-a2d-entry <source-folder> <package#entry> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit replace-a2d-entry <source-folder> <package#entry> <same-size-replacement-file> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit apply-a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit apply-a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>]");
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit export-resource <source-folder> <resource-address> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit import-resource <source-folder> <resource-address> <input-file> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit apply-resource-outputs <source-folder> [resource-address] [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit apply-resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-resource-scalar <source-folder> <archive:root> <field-name> <value> [--output <mod-folder>]");
