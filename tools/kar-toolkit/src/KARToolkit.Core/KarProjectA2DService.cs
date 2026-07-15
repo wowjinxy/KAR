@@ -61,6 +61,26 @@ namespace KARToolkit.Core
             return QueryEntries(query);
         }
 
+        public IReadOnlyList<KarProjectA2DEntryOutputInfo> QueryEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)
+        {
+            IEnumerable<KarProjectA2DEntryOutputInfo> query = QueryEntries(options == null ? null : options.Entries)
+                .Select(CreateEntryOutputInfo);
+
+            if (options != null)
+                query = query.Where(options.Matches);
+
+            return query
+                .OrderBy(output => output.PackageRelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(output => output.Entry.Index)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectA2DEntryOutputInfo GetEntryOutput(string packageEntryPath)
+        {
+            return CreateEntryOutputInfo(GetEntry(packageEntryPath));
+        }
+
         public KarProjectA2DEntryInfo GetEntry(string packageEntryPath)
         {
             ParsedEntryPath path = ParseEntryPath(packageEntryPath);
@@ -187,6 +207,14 @@ namespace KARToolkit.Core
                 throw new ArgumentException("A2D entry paths must use '<package-relative-path>#<entry-name-or-index>'.", nameof(packageEntryPath));
 
             return new ParsedEntryPath(value.Substring(0, separator), value.Substring(separator + 1));
+        }
+
+        private KarProjectA2DEntryOutputInfo CreateEntryOutputInfo(KarProjectA2DEntryInfo entry)
+        {
+            string outputRelativePath = GetEntryOutputRelativePath(entry);
+            string outputPath = _project.Workspace.GetOutputAssetPath(outputRelativePath);
+            byte[] entryData = ReadEntryData(entry.PackageRelativePath, entry.Name);
+            return new KarProjectA2DEntryOutputInfo(entry, outputRelativePath, outputPath, entryData);
         }
 
         private static string GetEntryOutputRelativePath(KarProjectA2DEntryInfo entry)

@@ -572,6 +572,26 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToA2DEntryOutputDto(KarProjectA2DEntryOutputInfo output)
+    {
+        return new
+        {
+            entry = ToProjectA2DEntryDto(output.Entry),
+            entryPath = output.EntryPath,
+            outputRelativePath = output.OutputRelativePath,
+            outputPath = output.OutputPath,
+            hasOutput = output.HasOutput,
+            status = output.Status.ToString(),
+            outputLength = output.OutputLength,
+            outputLastWriteTimeUtc = output.OutputLastWriteTimeUtc,
+            outputSha256 = output.OutputSha256,
+            entryLength = output.EntryLength,
+            entrySha256 = output.EntrySha256,
+            isSameLengthAsEntry = output.IsSameLengthAsEntry,
+            isSameContentAsEntry = output.IsSameContentAsEntry,
+        };
+    }
+
     public static object ToA2DEntryReplaceResultDto(KarProjectA2DEntryReplaceResult result)
     {
         return new

@@ -40,6 +40,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll f
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll relationships .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll a2d-entries .\GKYE01 A2Info.dat
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll a2d-entry-outputs .\GKYE01 A2Info.dat --output .\mod-output
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll script-tables .\GKYE01 A2Info.dat
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll extract-a2d-entry .\GKYE01 A2Info.dat#ScInfGo2D.tm --output .\mod-output
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
@@ -56,6 +57,7 @@ Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs`
 Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.
 Project relationship discovery goes through `KarProject.RelationshipService`, and the `relationships` CLI command lists map bundle files plus script-table resources found as loose `.tm` files or A2D package entries such as `A2Info.dat#ScInfGo2D.tm`.
 A2D entry inventory goes through `KarProject.A2DService.QueryEntries`, and the `a2d-entries` CLI command lists package entries across a project or inside one package.
+A2D sidecar output status goes through `KarProject.A2DService.QueryEntryOutputs`, and the `a2d-entry-outputs` CLI command compares output-side extracted entries against the current package entry bytes.
 A2D entry workflows go through `KarProject.A2DService`; `extract-a2d-entry` writes package entries to the output-side `a2d-entries` workspace, and `replace-a2d-entry` saves same-size replacements only through the configured output folder.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.

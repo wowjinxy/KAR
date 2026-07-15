@@ -143,6 +143,25 @@ internal static class KarCliInspectionCommands
         return ShowA2DEntriesCore(options, false);
     }
 
+    public static int ShowA2DEntryOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("a2d-entry-outputs", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectA2DEntryOutputInfo> outputs = project.A2DService.QueryEntryOutputs(CreateA2DEntryOutputQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(outputs.Select(ToA2DEntryOutputDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectA2DEntryOutputInfo output in outputs)
+            Console.WriteLine(output.EntryPath + " [" + output.Status + "] " + output.OutputRelativePath);
+
+        return 0;
+    }
+
     public static int ShowScriptTables(KarCliOptions options)
     {
         return ShowA2DEntriesCore(options, true);
@@ -364,6 +383,32 @@ internal static class KarCliInspectionCommands
             PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             EntryName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
         };
+    }
+
+    private static KarProjectA2DEntryOutputQueryOptions CreateA2DEntryOutputQuery(KarCliOptions options)
+    {
+        return new KarProjectA2DEntryOutputQueryOptions
+        {
+            Entries = CreateA2DEntryQuery(options),
+            Status = ToA2DEntryOutputStatus(options.OutputStatus),
+            HasOutput = options.FileHasOutputCopy,
+        };
+    }
+
+    private static KarProjectA2DEntryOutputStatus? ToA2DEntryOutputStatus(KarProjectOutputFileStatus? status)
+    {
+        if (!status.HasValue)
+            return null;
+
+        switch (status.Value)
+        {
+            case KarProjectOutputFileStatus.DiffersFromSource:
+                return KarProjectA2DEntryOutputStatus.DiffersFromEntry;
+            case KarProjectOutputFileStatus.MatchesSource:
+                return KarProjectA2DEntryOutputStatus.MatchesEntry;
+            default:
+                return null;
+        }
     }
 
     private static KarProjectFieldQueryOptions CreateFieldQuery(KarCliOptions options)

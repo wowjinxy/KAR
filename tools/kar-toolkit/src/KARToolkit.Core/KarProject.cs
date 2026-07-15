@@ -160,6 +160,11 @@ namespace KARToolkit.Core
             return A2DService.QueryEntries(options);
         }
 
+        public IReadOnlyList<KarProjectA2DEntryOutputInfo> QueryA2DEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)
+        {
+            return A2DService.QueryEntryOutputs(options);
+        }
+
         public IReadOnlyList<KarProjectRelationship> QueryRelationships(KarProjectRelationshipQueryOptions options = null)
         {
             return RelationshipService.Query(options);
