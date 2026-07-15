@@ -9,24 +9,19 @@ namespace KARToolkit.Core
 {
     public sealed class KarProject
     {
-        private readonly Dictionary<string, KarProjectFile> _filesByPath;
-        private readonly Dictionary<string, KarMapBundle> _mapsByName;
-
         private KarProject(
             KarProjectWorkspace workspace,
-            IReadOnlyList<KarProjectFile> files,
-            IReadOnlyList<KarMapBundle> maps)
+            KarProjectIndex index)
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
+            Index = index ?? throw new ArgumentNullException(nameof(index));
             ArchiveInspector = KarArchiveInspector.Default;
             MapInspector = new KarMapInspector(ArchiveInspector);
-            Files = files;
-            Maps = maps;
-            _filesByPath = files.ToDictionary(f => f.RelativePath, StringComparer.OrdinalIgnoreCase);
-            _mapsByName = maps.ToDictionary(map => map.Name, StringComparer.OrdinalIgnoreCase);
         }
 
         public KarProjectWorkspace Workspace { get; }
+
+        public KarProjectIndex Index { get; }
 
         public KarArchiveInspector ArchiveInspector { get; }
 
@@ -44,13 +39,13 @@ namespace KARToolkit.Core
 
         public bool SourceHasFilesDirectory => Workspace.SourceHasFilesDirectory;
 
-        public IReadOnlyList<KarProjectFile> Files { get; }
+        public IReadOnlyList<KarProjectFile> Files => Index.Files;
 
-        public IReadOnlyList<KarMapBundle> Maps { get; }
+        public IReadOnlyList<KarMapBundle> Maps => Index.Maps;
 
-        public IReadOnlyDictionary<string, KarProjectFile> FilesByPath => _filesByPath;
+        public IReadOnlyDictionary<string, KarProjectFile> FilesByPath => Index.FilesByPath;
 
-        public IReadOnlyDictionary<string, KarMapBundle> MapsByName => _mapsByName;
+        public IReadOnlyDictionary<string, KarMapBundle> MapsByName => Index.MapsByName;
 
         public static KarProject Open(string sourceRoot)
         {
@@ -60,44 +55,28 @@ namespace KARToolkit.Core
         public static KarProject Open(string sourceRoot, string outputRoot)
         {
             KarProjectWorkspace workspace = KarProjectWorkspace.Open(sourceRoot, outputRoot);
-            var files = BuildFileIndex(workspace);
-            var maps = BuildMapIndex(files);
-
-            return new KarProject(workspace, files, maps);
+            KarProjectIndex index = KarProjectIndexer.Default.Build(workspace);
+            return new KarProject(workspace, index);
         }
 
         public KarProjectFile GetFile(string relativePath)
         {
-            KarProjectFile file;
-            var normalized = KarProjectWorkspace.NormalizeRelativePath(relativePath);
-            if (!_filesByPath.TryGetValue(normalized, out file))
-                throw new FileNotFoundException("Project file was not found.", normalized);
-            return file;
+            return Index.GetFile(relativePath);
         }
 
         public bool TryGetFile(string relativePath, out KarProjectFile file)
         {
-            var normalized = KarProjectWorkspace.NormalizeRelativePath(relativePath);
-            return _filesByPath.TryGetValue(normalized, out file);
+            return Index.TryGetFile(relativePath, out file);
         }
 
         public KarMapBundle GetMap(string mapNameOrPath)
         {
-            KarMapBundle map;
-            if (!TryGetMap(mapNameOrPath, out map))
-                throw new KeyNotFoundException("Project map was not found: " + mapNameOrPath);
-
-            return map;
+            return Index.GetMap(mapNameOrPath);
         }
 
         public bool TryGetMap(string mapNameOrPath, out KarMapBundle map)
         {
-            map = null;
-            if (string.IsNullOrWhiteSpace(mapNameOrPath))
-                return false;
-
-            string normalized = NormalizeMapName(mapNameOrPath);
-            return _mapsByName.TryGetValue(normalized, out map);
+            return Index.TryGetMap(mapNameOrPath, out map);
         }
 
         public string GetReadPath(string relativePath)
@@ -235,111 +214,6 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(package));
 
             return Workspace.SaveOutputFile(relativePath, package.Save);
-        }
-
-        private static IReadOnlyList<KarProjectFile> BuildFileIndex(KarProjectWorkspace workspace)
-        {
-            return Directory
-                .EnumerateFiles(workspace.SourceFilesRoot, "*", SearchOption.AllDirectories)
-                .Select(path =>
-                {
-                    var relativePath = workspace.GetRelativeSourcePath(path);
-                    return new KarProjectFile(
-                        relativePath,
-                        path,
-                        workspace.GetOutputPath(relativePath),
-                        KarArchiveCatalog.ClassifyKind(relativePath));
-                })
-                .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
-                .ToList()
-                .AsReadOnly();
-        }
-
-        private static IReadOnlyList<KarMapBundle> BuildMapIndex(IReadOnlyList<KarProjectFile> files)
-        {
-            var builders = new Dictionary<string, MapBundleBuilder>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var file in files)
-            {
-                string mapName;
-                if (!TryGetMapName(file, out mapName))
-                    continue;
-
-                MapBundleBuilder builder;
-                if (!builders.TryGetValue(mapName, out builder))
-                {
-                    builder = new MapBundleBuilder(mapName);
-                    builders.Add(mapName, builder);
-                }
-
-                builder.Add(file);
-            }
-
-            return builders
-                .Values
-                .Select(builder => builder.Build())
-                .OrderBy(map => map.Name, StringComparer.OrdinalIgnoreCase)
-                .ToList()
-                .AsReadOnly();
-        }
-
-        private static bool TryGetMapName(KarProjectFile file, out string mapName)
-        {
-            return KarArchiveCatalog.TryGetMapName(file.RelativePath, file.Kind, out mapName);
-        }
-
-        private static string NormalizeMapName(string mapNameOrPath)
-        {
-            string name = Path.GetFileNameWithoutExtension(mapNameOrPath.Trim());
-            if (string.IsNullOrWhiteSpace(name))
-                return name;
-
-            if (name.StartsWith("Gr", StringComparison.OrdinalIgnoreCase))
-                name = name.Substring(2);
-
-            if (name.EndsWith("Model", StringComparison.OrdinalIgnoreCase))
-                name = name.Substring(0, name.Length - "Model".Length);
-            else if (name.EndsWith("Event", StringComparison.OrdinalIgnoreCase))
-                name = name.Substring(0, name.Length - "Event".Length);
-
-            return name;
-        }
-
-        private sealed class MapBundleBuilder
-        {
-            public MapBundleBuilder(string name)
-            {
-                Name = name;
-            }
-
-            public string Name { get; }
-
-            public KarProjectFile DataFile { get; private set; }
-
-            public KarProjectFile ModelFile { get; private set; }
-
-            public KarProjectFile EventFile { get; private set; }
-
-            public void Add(KarProjectFile file)
-            {
-                switch (file.Kind)
-                {
-                    case KarFileKind.MapData:
-                        DataFile = file;
-                        break;
-                    case KarFileKind.MapModel:
-                        ModelFile = file;
-                        break;
-                    case KarFileKind.MapEvent:
-                        EventFile = file;
-                        break;
-                }
-            }
-
-            public KarMapBundle Build()
-            {
-                return new KarMapBundle(Name, DataFile, ModelFile, EventFile);
-            }
         }
     }
 }
