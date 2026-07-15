@@ -57,6 +57,53 @@ internal static class KarCliTextWriter
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
     }
 
+    public static void PrintProjectFileInsightSummary(KarProjectFileInsight insight)
+    {
+        string flags = "";
+        if (insight.HasInspectionError)
+            flags += " issue";
+        if (insight.HasOutputCopy)
+            flags += insight.HasModifiedOutput ? " modified-output" : " output-copy";
+
+        Console.WriteLine(
+            insight.RelativePath +
+            " [" + insight.PrimaryDomainId + ", " + insight.Kind + ", " + insight.Category + "]" +
+            " domains=" + string.Join(",", insight.DomainIds) +
+            " resources=" + insight.ResourceCount +
+            " roots=" + insight.RootCount +
+            " a2d=" + insight.A2DEntryResourceCount +
+            " scripts=" + insight.ScriptTableResourceCount +
+            " relationships=" + insight.RelationshipCount +
+            flags +
+            " - " + insight.DisplayName);
+    }
+
+    public static void PrintProjectFileInsight(KarProjectFileInsight insight)
+    {
+        Console.WriteLine("File insight: " + insight.RelativePath);
+        Console.WriteLine("Display: " + insight.DisplayName);
+        Console.WriteLine("Kind: " + insight.Kind + " (" + insight.KindId + ")");
+        Console.WriteLine("Category: " + insight.Category);
+        Console.WriteLine("Primary domain: " + insight.PrimaryDomainId);
+        Console.WriteLine("Domains: " + string.Join(",", insight.DomainIds));
+        Console.WriteLine("Resource: " + insight.ResourceAddress + " present=" + insight.HasResource);
+        Console.WriteLine("Resources: total=" + insight.ResourceCount + " child=" + insight.ChildResourceCount + " roots=" + insight.RootResourceCount + " a2d-entries=" + insight.A2DEntryResourceCount + " script-tables=" + insight.ScriptTableResourceCount);
+        Console.WriteLine("Relationships: " + insight.RelationshipCount);
+        Console.WriteLine("Inspection: present=" + insight.HasInspection + " error=" + insight.HasInspectionError + " roots=" + insight.RootCount + " known=" + insight.KnownRootCount + " unknown=" + insight.UnknownRootCount + " missing-required=" + insight.MissingRequiredRootCount);
+        if (!string.IsNullOrEmpty(insight.InspectionError))
+            Console.WriteLine("Inspection error: " + insight.InspectionError);
+        if (insight.HasMaps)
+            Console.WriteLine("Map: " + insight.MapName + " role=" + insight.MapBundleRole + " memberships=" + insight.MapCount);
+        if (insight.HasVehicles)
+            Console.WriteLine("Vehicle: " + insight.VehicleName + " family=" + insight.VehicleFamily + " role=" + insight.VehicleRole + " memberships=" + insight.VehicleBundleCount);
+        Console.WriteLine("Output copy: " + insight.HasOutputCopy);
+        if (insight.HasOutputInfo)
+            Console.WriteLine("Output status: " + insight.OutputStatus + " path=" + insight.OutputPath);
+        Console.WriteLine("Source: " + insight.File.SourcePath);
+        Console.WriteLine("Output: " + insight.File.OutputPath);
+        Console.WriteLine("Read: " + insight.File.ReadPath);
+    }
+
     public static void PrintProjectSession(KarProjectSession session)
     {
         Console.WriteLine("KAR project session: " + session.Name);

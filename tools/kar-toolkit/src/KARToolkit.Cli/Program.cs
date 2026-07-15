@@ -84,6 +84,10 @@ internal static class Program
                 "map-output-status" => KarCliInspectionCommands.ShowMapOutputs(options),
                 "files" => KarCliInspectionCommands.ShowFiles(options),
                 "file" => KarCliInspectionCommands.ShowFile(options),
+                "file-insights" => KarCliInspectionCommands.ShowFileInsights(options),
+                "file-insight" => KarCliInspectionCommands.ShowFileInsight(options),
+                "file-toolkits" => KarCliInspectionCommands.ShowFileInsights(options),
+                "file-toolkit" => KarCliInspectionCommands.ShowFileInsight(options),
                 "archives" => KarCliInspectionCommands.ShowArchives(options),
                 "archive-contexts" => KarCliInspectionCommands.ShowArchiveContexts(options),
                 "archive-context" => KarCliInspectionCommands.ShowArchiveContexts(options),
@@ -226,6 +230,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit map-outputs <source-folder> [map-name-or-file] [--output <mod-folder>] [--modified|--unchanged]");
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--domain <domain>] [--kind <file-kind>] [--category <category>] [--search <text>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit file-insights <source-folder> [--output <mod-folder>] [--domain <domain>] [--kind <file-kind>] [--category <category>] [--search <text>] [--output-copy|--source-only] [--json]");
+        Console.WriteLine("  kar-toolkit file-insight <source-folder> <relative-path> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit archives <source-folder> [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit archive-contexts <source-folder> [relative-path] [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit archive-schemas <source-folder> [--kind <file-kind>] [--category <category>] [--search <text>]");

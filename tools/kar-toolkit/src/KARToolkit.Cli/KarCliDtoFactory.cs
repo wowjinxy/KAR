@@ -1951,6 +1951,11 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectFileInsightDto(KarProjectFileInsight insight)
+    {
+        return insight.CreateContract();
+    }
+
     public static object ToProjectFileDtoOrNull(KarProjectFile file)
     {
         return file == null ? null : ToProjectFileDto(file);

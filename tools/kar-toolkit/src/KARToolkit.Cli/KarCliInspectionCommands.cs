@@ -873,6 +873,28 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowFileInsights(KarCliOptions options)
+    {
+        options.RequirePositionals("file-insights", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectFileInsight> insights = project.FileInsightService.Query(CreateFileQuery(options))
+            .OrderBy(insight => insight.PrimaryDomainId)
+            .ThenBy(insight => insight.Category)
+            .ThenBy(insight => insight.RelativePath)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(insights.Select(ToProjectFileInsightDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectFileInsight insight in insights)
+            PrintProjectFileInsightSummary(insight);
+
+        return 0;
+    }
+
     public static int ShowRoots(KarCliOptions options)
     {
         options.RequirePositionals("roots", 1);
@@ -1062,6 +1084,22 @@ internal static class KarCliInspectionCommands
         }
 
         PrintProjectFile(file);
+        return 0;
+    }
+
+    public static int ShowFileInsight(KarCliOptions options)
+    {
+        options.RequirePositionals("file-insight", 2);
+        KarProject project = OpenProject(options);
+        KarProjectFileInsight insight = project.FileInsightService.Get(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectFileInsightDto(insight));
+            return 0;
+        }
+
+        PrintProjectFileInsight(insight);
         return 0;
     }
 
