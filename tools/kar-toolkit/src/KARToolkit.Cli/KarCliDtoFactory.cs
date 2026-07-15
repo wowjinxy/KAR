@@ -211,6 +211,21 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceGraphDto(KarProjectResourceGraph graph)
+    {
+        return new
+        {
+            project = ToProjectDto(graph.Project),
+            resourceCount = graph.ResourceCount,
+            fileCount = graph.FileCount,
+            hsdRootCount = graph.HsdRootCount,
+            a2dEntryCount = graph.A2DEntryCount,
+            relationshipCount = graph.RelationshipCount,
+            resources = graph.Resources.Select(ToProjectResourceDto).ToList(),
+            relationships = graph.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
     public static object ToArchiveDtoOrNull(KarArchiveInfo archive)
     {
         return archive == null ? null : ToArchiveDto(archive);

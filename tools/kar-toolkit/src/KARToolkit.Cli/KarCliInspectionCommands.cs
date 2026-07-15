@@ -138,6 +138,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceGraph(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-graph", 1);
+        KarProject project = OpenProject(options);
+        KarProjectResourceGraph graph = project.CreateResourceGraph();
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceGraphDto(graph));
+            return 0;
+        }
+
+        PrintProjectResourceGraph(graph);
+        return 0;
+    }
+
     public static int ShowResources(KarCliOptions options)
     {
         options.RequirePositionals("resources", 1);

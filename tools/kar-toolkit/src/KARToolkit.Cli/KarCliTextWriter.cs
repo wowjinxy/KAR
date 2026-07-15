@@ -78,6 +78,25 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResourceGraph(KarProjectResourceGraph graph)
+    {
+        Console.WriteLine("Resource graph: resources=" + graph.ResourceCount + " files=" + graph.FileCount + " roots=" + graph.HsdRootCount + " a2d-entries=" + graph.A2DEntryCount + " relationships=" + graph.RelationshipCount);
+
+        Console.WriteLine("Resources:");
+        foreach (KarProjectResourceInfo resource in graph.Resources)
+            Console.WriteLine("  " + resource.Address + " [" + resource.Kind + ", " + resource.Category + "] " + resource.DisplayName);
+
+        Console.WriteLine("Relationships:");
+        foreach (KarProjectRelationship relationship in graph.Relationships)
+        {
+            string map = relationship.MapName == null ? "project" : relationship.MapName;
+            string package = relationship.PackageFile == null ? "" : " package=" + relationship.PackageFile.RelativePath;
+            string entry = relationship.PackageEntryName == null ? "" : " entry=" + relationship.PackageEntryName;
+            string size = relationship.PackageEntrySizeHex == null ? "" : " size=" + relationship.PackageEntrySizeHex;
+            Console.WriteLine("  " + map + ": " + relationship.Kind + "/" + relationship.Role + " " + relationship.RelativePath + package + entry + size);
+        }
+    }
+
     public static void PrintProjectResourceOutput(KarProjectResourceOutputInfo output)
     {
         Console.WriteLine(output.Address + " [" + output.Status + ", " + output.OutputKind + "] " + output.OutputRelativePath);

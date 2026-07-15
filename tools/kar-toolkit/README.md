@@ -39,6 +39,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll f
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll field-summary .\GKYE01 kar.gr.data --kind MapData
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll relationships .\GKYE01 --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resource-graph .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resources .\GKYE01 --resource-kind a2d-entry --category Scripts --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resource .\GKYE01 VsHydra.dat:vsDataHydra --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resource-fields .\GKYE01 VsHydra.dat:vsDataHydra x0C --json
@@ -61,6 +62,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll s
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Toolkit resources use stable addresses across the CLI and JSON output: project files use `Relative/Path.dat`, HSD roots use `Archive.dat:rootName`, and A2D entries use `Package.dat#EntryName`.
+Project resource graph snapshots go through `KarProject.CreateResourceGraph`, and the `resource-graph` CLI command exposes one project-wide view of resource addresses, parent/child resources, and known relationships.
 Project-wide resource inventory, address resolution, field inspection, output status, byte reads, safe output exports, safe imports, output-side applies, and resource-address scalar edits go through `KarProject.ResourceService`; the `resources`/`resource` CLI commands expose mixed file, HSD root, and A2D entry resources, `resource-fields` reads labeled HSD root fields by resource address, `resource-outputs` reports file/root package outputs and A2D sidecar or package-entry status, `export-resource` stages file/root archives or A2D sidecars under the configured output folder, `apply-resource-outputs` packs modified A2D sidecars into output packages, `import-resource` writes file replacements or same-size A2D entry replacements only into output packages, and `set-resource-scalar` edits HSD root resources by address.
 Project-wide report snapshots go through `KarProject.CreateReport`, and the `report` CLI command aggregates file groups, map completeness, archive/root health, schema usage, and optional field summaries.
 Project output/mod-state inventory goes through `KarProject.OutputService` or the compatibility wrappers `KarProject.CreateOutputInventory` and `KarProject.QueryOutputFiles`, and the `outputs` CLI command reports staged project files, modified/unchanged source matches, and output-only orphan files.

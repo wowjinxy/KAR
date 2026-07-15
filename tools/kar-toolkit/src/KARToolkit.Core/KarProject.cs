@@ -183,6 +183,11 @@ namespace KARToolkit.Core
             return RelationshipService.QueryMap(mapNameOrPath);
         }
 
+        public KarProjectResourceGraph CreateResourceGraph()
+        {
+            return KarProjectResourceGraph.Build(this);
+        }
+
         public IReadOnlyList<KarProjectResourceInfo> QueryResources(KarProjectResourceQueryOptions options = null)
         {
             return ResourceService.Query(options);

@@ -24,6 +24,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
+            Run("ProjectResourceGraphIndexesResourcesAndRelationships", ProjectResourceGraphIndexesResourcesAndRelationships);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectResourceServiceQueriesFieldValues", ProjectResourceServiceQueriesFieldValues);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
@@ -282,6 +283,72 @@ namespace KARToolkit.Core.Tests
                 }).Single();
                 AssertTrue(relationship.ResourceReference.Equals(entryReference), "relationships should expose resource references for package entries");
                 AssertTrue(relationship.RelativePath == relationship.ResourceReference.Address, "relationship relative paths should mirror resource addresses");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceGraphIndexesResourcesAndRelationships()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-graph-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            KAR_grData city = new KAR_grData();
+            city.Unknown1 = 101;
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", city);
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Model.dat"), new byte[] { 0x20 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Event.dat"), new byte[] { 0x30 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceGraph graph = project.CreateResourceGraph();
+
+                AssertTrue(object.ReferenceEquals(graph.Project, project), "resource graphs should retain project context");
+                AssertTrue(graph.FileCount == project.FileService.Files.Count, "resource graphs should index project files");
+                AssertTrue(graph.HsdRootCount == 1, "resource graphs should index inspectable HSD roots");
+                AssertTrue(graph.A2DEntryCount == 2, "resource graphs should index A2D package entries");
+                AssertTrue(graph.ResourceCount == graph.FileCount + graph.HsdRootCount + graph.A2DEntryCount, "resource graph counts should describe indexed resources");
+                AssertTrue(graph.ResourcesByAddress.ContainsKey("GrCity1.dat:grDataCity1"), "resource graphs should expose address lookup dictionaries");
+                AssertTrue(graph.GetResource("A2Info.dat#ScInfGo2D.tm").IsA2DEntry, "resource graphs should resolve A2D entry addresses");
+
+                IReadOnlyList<KarProjectResourceInfo> packageChildren = graph.QueryChildResources("A2Info.dat");
+                AssertTrue(packageChildren.Count == 2 && packageChildren.All(resource => resource.IsA2DEntry), "resource graphs should expose package child resources");
+                AssertTrue(graph.QueryChildResources("GrCity1.dat").Single().Address == "GrCity1.dat:grDataCity1", "resource graphs should expose HSD root child resources");
+
+                IReadOnlyList<KarProjectResourceInfo> scriptResources = graph.QueryResources(new KarProjectResourceQueryOptions
+                {
+                    Kind = KarResourceKind.A2DEntry,
+                    Category = "Scripts",
+                });
+                AssertTrue(scriptResources.Count == 1 && scriptResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource graph queries should filter resources");
+                AssertTrue(project.ResourceService.Query(new KarProjectResourceQueryOptions
+                {
+                    Address = "A2Info.dat#ScInfGo2D.tm",
+                    Kind = KarResourceKind.A2DEntry,
+                }).Single().Address == "A2Info.dat#ScInfGo2D.tm", "resource services should query through the resource graph");
+
+                IReadOnlyList<KarProjectRelationship> mapRelationships = graph.QueryRelationships(new KarProjectRelationshipQueryOptions
+                {
+                    MapName = "City1",
+                });
+                AssertTrue(mapRelationships.Count == 3, "resource graphs should retain map bundle relationships");
+
+                IReadOnlyList<KarProjectRelationship> screenInfoTables = graph.QueryRelationships(new KarProjectRelationshipQueryOptions
+                {
+                    Role = "ScreenInfoTable",
+                });
+                AssertTrue(screenInfoTables.Count == 2, "resource graphs should retain loose and packaged script table relationships");
+                AssertTrue(graph.QueryResourceRelationships("A2Info.dat#ScInfGo2D.tm").Single().Role == "ScreenInfoTable", "resource graphs should query relationships by resource address");
+                AssertTrue(project.RelationshipService.QueryMap("City1").Count == 3, "relationship services should query through the resource graph");
             }
             finally
             {
