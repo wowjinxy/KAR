@@ -111,5 +111,10 @@ namespace KARToolkit.Core
         public string OutputRelativePath => Output == null ? null : Output.OutputRelativePath;
 
         public string OutputPath => Output == null ? null : Output.OutputPath;
+
+        public KarProjectArchiveContextSummaryContract CreateContract()
+        {
+            return KarProjectArchiveContextSummaryContract.Create(this);
+        }
     }
 }

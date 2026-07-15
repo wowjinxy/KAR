@@ -36,12 +36,25 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectArchiveContextSummaryContract> QueryContracts(KarProjectArchiveContextQueryOptions options = null)
+        {
+            return Query(options)
+                .Select(context => context.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectArchiveContext Get(string relativePath)
         {
             return Query(new KarProjectArchiveContextQueryOptions
             {
                 RelativePath = relativePath,
             }).Single();
+        }
+
+        public KarProjectArchiveContextSummaryContract GetContract(string relativePath)
+        {
+            return Get(relativePath).CreateContract();
         }
 
         public bool TryGet(string relativePath, out KarProjectArchiveContext context)

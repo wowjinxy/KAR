@@ -92,5 +92,10 @@ namespace KARToolkit.Core
         public bool HasScriptArchive => Scripts.HasScriptArchive;
 
         public bool HasScriptTables => Scripts.HasScriptTables;
+
+        public KarProjectMapContextSummaryContract CreateContract()
+        {
+            return KarProjectMapContextSummaryContract.Create(this);
+        }
     }
 }

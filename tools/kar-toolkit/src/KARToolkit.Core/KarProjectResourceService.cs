@@ -82,9 +82,22 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectResourceDetailSummaryContract> QueryDetailContracts(KarProjectResourceQueryOptions options = null)
+        {
+            return QueryDetails(options)
+                .Select(detail => detail.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectResourceDetail GetDetail(string address)
         {
             return CreateDetail(Get(address));
+        }
+
+        public KarProjectResourceDetailSummaryContract GetDetailContract(string address)
+        {
+            return GetDetail(address).CreateContract();
         }
 
         public IReadOnlyList<KarProjectResourceDataView> QueryDataViews(KarProjectResourceQueryOptions options = null)

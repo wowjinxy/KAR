@@ -112,9 +112,22 @@ namespace KARToolkit.Core
             return contexts.AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectVehicleContextSummaryContract> QueryContextContracts(KarProjectVehicleQueryOptions options = null)
+        {
+            return QueryContexts(options)
+                .Select(context => context.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectVehicleContext GetContext(string vehicleNameOrPath)
         {
             return CreateContext(Get(vehicleNameOrPath), null);
+        }
+
+        public KarProjectVehicleContextSummaryContract GetContextContract(string vehicleNameOrPath)
+        {
+            return GetContext(vehicleNameOrPath).CreateContract();
         }
 
         public IReadOnlyList<KarProjectFileCopyResult> CopyFilesToOutput(string vehicleNameOrPath, bool overwrite = false)

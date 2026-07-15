@@ -72,5 +72,10 @@ namespace KARToolkit.Core
         public int RelationshipCount => Relationships.Count;
 
         public bool HasRelationships => RelationshipCount != 0;
+
+        public KarProjectResourceDetailSummaryContract CreateContract()
+        {
+            return KarProjectResourceDetailSummaryContract.Create(this);
+        }
     }
 }

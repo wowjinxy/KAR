@@ -34,12 +34,25 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectA2DPackageContextSummaryContract> QueryContracts(KarProjectA2DPackageContextQueryOptions options = null)
+        {
+            return Query(options)
+                .Select(context => context.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectA2DPackageContext Get(string packageRelativePath)
         {
             return Query(new KarProjectA2DPackageContextQueryOptions
             {
                 PackagePath = packageRelativePath,
             }).Single();
+        }
+
+        public KarProjectA2DPackageContextSummaryContract GetContract(string packageRelativePath)
+        {
+            return Get(packageRelativePath).CreateContract();
         }
 
         private KarProjectA2DPackageContext CreateContext(KarProjectFile file)

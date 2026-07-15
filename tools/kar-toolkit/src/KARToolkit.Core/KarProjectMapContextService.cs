@@ -38,9 +38,22 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectMapContextSummaryContract> QueryContracts(KarProjectMapScriptQueryOptions options = null)
+        {
+            return Query(options)
+                .Select(context => context.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectMapContext Get(string mapNameOrPath, KarProjectScriptTableQueryOptions scriptTables = null)
         {
             return CreateContext(_project.MapService.Get(mapNameOrPath), scriptTables, null);
+        }
+
+        public KarProjectMapContextSummaryContract GetContract(string mapNameOrPath, KarProjectScriptTableQueryOptions scriptTables = null)
+        {
+            return Get(mapNameOrPath, scriptTables).CreateContract();
         }
 
         private KarProjectMapContext CreateContext(

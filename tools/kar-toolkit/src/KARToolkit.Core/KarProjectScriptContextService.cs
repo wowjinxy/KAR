@@ -34,6 +34,14 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectScriptTableContextSummaryContract> QueryContracts(KarProjectScriptTableContextQueryOptions options = null)
+        {
+            return Query(options)
+                .Select(context => context.CreateContract())
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectScriptTableContext Get(string address)
         {
             return Query(new KarProjectScriptTableContextQueryOptions
@@ -43,6 +51,11 @@ namespace KARToolkit.Core
                     Address = address,
                 },
             }).Single();
+        }
+
+        public KarProjectScriptTableContextSummaryContract GetContract(string address)
+        {
+            return Get(address).CreateContract();
         }
 
         private KarProjectScriptTableContext CreateContext(KarProjectScriptTable table)

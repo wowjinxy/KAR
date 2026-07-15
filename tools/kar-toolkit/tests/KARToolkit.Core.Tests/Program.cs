@@ -2155,15 +2155,23 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(project.FileService.QueryInsightContracts(new KarProjectFileQueryOptions { Domain = "script-tables" }).Any(insight => insight.RelativePath == "ScInfPause.tm"), "file services should expose reusable file insight contracts");
                 KarProjectFileToolkitContext mapFileContext = project.GetFileToolkitContext("GrCity1.dat");
                 AssertTrue(mapFileContext.HasArchiveContext && mapFileContext.MapContextCount == 1 && mapFileContext.ScriptTableContextCount >= 1 && mapFileContext.ResourceDetail != null, "file toolkit contexts should compose archive, map, script, and resource detail contexts");
+                AssertTrue(mapFileContext.ArchiveContext.CreateContract().RootCount == mapFileContext.ArchiveContext.RootCount, "archive context contracts should preserve archive summary counts");
+                AssertTrue(project.GetArchiveContextContract("GrCity1.dat").RelativePath == "GrCity1.dat", "project wrappers should expose archive context contracts");
+                AssertTrue(project.QueryArchiveContextContracts(new KarProjectArchiveContextQueryOptions { RelativePath = "GrCity1.dat" }).Single().RootCount == mapFileContext.ArchiveContext.RootCount, "project wrappers should expose archive context contract queries");
                 KarProjectFileToolkitContext a2dFileContext = project.FileService.GetToolkitContext("A2Info.dat");
                 AssertTrue(a2dFileContext.HasA2DPackageContext && a2dFileContext.A2DPackageContext.EntryCount == 2 && a2dFileContext.ScriptTableContextCount == 1, "file toolkit contexts should compose A2D package and packaged script contexts");
                 AssertTrue(a2dFileContext.CreateContract().A2DPackageContext.EntryCount == 2 && a2dFileContext.CreateContract().ScriptTableContexts.Any(script => script.Address == "A2Info.dat#ScInfGo2D.tm"), "file toolkit context contracts should expose compact A2D and script summaries");
+                AssertTrue(project.GetA2DPackageContextContract("A2Info.dat").ScriptTableCount == 1 && project.QueryA2DPackageContextContracts().Any(context => context.RelativePath == "A2Info.dat"), "project wrappers should expose A2D package context contracts");
                 KarProjectFileToolkitContext brokenA2DContext = project.GetFileToolkitContext("A2Broken.dat");
                 AssertTrue(brokenA2DContext.HasA2DPackageContext && brokenA2DContext.HasInspectionIssues && brokenA2DContext.A2DPackageContext.EntryCount == 0, "file toolkit contexts should keep broken A2D package context errors visible");
                 KarProjectFileToolkitContext scriptFileContext = project.GetFileToolkitContext("ScInfPause.tm");
                 AssertTrue(scriptFileContext.ScriptTableContextCount == 1 && scriptFileContext.ScriptTableContexts.Single().IsLooseFile, "file toolkit contexts should compose loose script table contexts");
+                AssertTrue(project.GetScriptTableContextContract("ScInfPause.tm").IsLooseFile && project.QueryScriptTableContextContracts().Any(context => context.Address == "ScInfPause.tm"), "project wrappers should expose script table context contracts");
                 KarProjectFileToolkitContext vehicleFileContext = project.GetFileToolkitContext("VcCommon.dat");
                 AssertTrue(vehicleFileContext.HasArchiveContext && vehicleFileContext.VehicleContextCount >= 2 && vehicleFileContext.CreateContract().VehicleContexts.Any(vehicle => vehicle.Name == "Common"), "file toolkit contexts should compose shared vehicle contexts");
+                AssertTrue(project.GetMapContextContract("City1").MapName == "City1" && project.QueryMapContextContracts().Any(context => context.MapName == "City1"), "project wrappers should expose map context contracts");
+                AssertTrue(project.GetVehicleContextContract("Common").Name == "Common" && project.QueryVehicleContextContracts().Any(context => context.Name == "Common"), "project wrappers should expose vehicle context contracts");
+                AssertTrue(project.GetResourceDetailContract("ScInfPause.tm").Resource.Address == "ScInfPause.tm" && project.QueryResourceDetailContracts(new KarProjectResourceQueryOptions { Address = "ScInfPause.tm" }).Single().ActionCount != 0, "project wrappers should expose resource detail contracts");
 
                 KarProjectToolkitSurface surface = project.CreateToolkitSurface();
                 AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");

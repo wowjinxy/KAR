@@ -243,9 +243,19 @@ namespace KARToolkit.Core
             return ArchiveContextService.Query(options);
         }
 
+        public IReadOnlyList<KarProjectArchiveContextSummaryContract> QueryArchiveContextContracts(KarProjectArchiveContextQueryOptions options = null)
+        {
+            return ArchiveContextService.QueryContracts(options);
+        }
+
         public KarProjectArchiveContext GetArchiveContext(string relativePath)
         {
             return ArchiveContextService.Get(relativePath);
+        }
+
+        public KarProjectArchiveContextSummaryContract GetArchiveContextContract(string relativePath)
+        {
+            return ArchiveContextService.GetContract(relativePath);
         }
 
         public KarProjectToolkitRegistryCatalog CreateToolkitRegistryCatalog()
@@ -328,9 +338,19 @@ namespace KARToolkit.Core
             return A2DPackageContextService.Query(options);
         }
 
+        public IReadOnlyList<KarProjectA2DPackageContextSummaryContract> QueryA2DPackageContextContracts(KarProjectA2DPackageContextQueryOptions options = null)
+        {
+            return A2DPackageContextService.QueryContracts(options);
+        }
+
         public KarProjectA2DPackageContext GetA2DPackageContext(string packageRelativePath)
         {
             return A2DPackageContextService.Get(packageRelativePath);
+        }
+
+        public KarProjectA2DPackageContextSummaryContract GetA2DPackageContextContract(string packageRelativePath)
+        {
+            return A2DPackageContextService.GetContract(packageRelativePath);
         }
 
         public IReadOnlyList<KarProjectA2DEntryApplyResult> ApplyModifiedA2DEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)
@@ -383,6 +403,11 @@ namespace KARToolkit.Core
             return ResourceService.QueryDetails(options);
         }
 
+        public IReadOnlyList<KarProjectResourceDetailSummaryContract> QueryResourceDetailContracts(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceService.QueryDetailContracts(options);
+        }
+
         public IReadOnlyList<KarProjectResourceActionPlan> QueryResourceActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
         {
             return ResourceService.QueryActionPlans(options);
@@ -418,6 +443,11 @@ namespace KARToolkit.Core
         public KarProjectResourceDetail GetResourceDetail(string address)
         {
             return ResourceService.GetDetail(address);
+        }
+
+        public KarProjectResourceDetailSummaryContract GetResourceDetailContract(string address)
+        {
+            return ResourceService.GetDetailContract(address);
         }
 
         public IReadOnlyList<KarProjectResourceDataView> QueryResourceDataViews(KarProjectResourceQueryOptions options = null)
@@ -548,9 +578,19 @@ namespace KARToolkit.Core
             return ScriptContextService.Query(options);
         }
 
+        public IReadOnlyList<KarProjectScriptTableContextSummaryContract> QueryScriptTableContextContracts(KarProjectScriptTableContextQueryOptions options = null)
+        {
+            return ScriptContextService.QueryContracts(options);
+        }
+
         public KarProjectScriptTableContext GetScriptTableContext(string address)
         {
             return ScriptContextService.Get(address);
+        }
+
+        public KarProjectScriptTableContextSummaryContract GetScriptTableContextContract(string address)
+        {
+            return ScriptContextService.GetContract(address);
         }
 
         public IReadOnlyList<KarProjectMapScriptBundle> QueryMapScripts(KarProjectMapScriptQueryOptions options = null)
@@ -568,9 +608,19 @@ namespace KARToolkit.Core
             return MapContextService.Query(options);
         }
 
+        public IReadOnlyList<KarProjectMapContextSummaryContract> QueryMapContextContracts(KarProjectMapScriptQueryOptions options = null)
+        {
+            return MapContextService.QueryContracts(options);
+        }
+
         public KarProjectMapContext GetMapContext(string mapNameOrPath, KarProjectScriptTableQueryOptions scriptTables = null)
         {
             return MapContextService.Get(mapNameOrPath, scriptTables);
+        }
+
+        public KarProjectMapContextSummaryContract GetMapContextContract(string mapNameOrPath, KarProjectScriptTableQueryOptions scriptTables = null)
+        {
+            return MapContextService.GetContract(mapNameOrPath, scriptTables);
         }
 
         public byte[] ReadScriptTableBytes(string address)
@@ -797,9 +847,19 @@ namespace KARToolkit.Core
             return VehicleService.QueryContexts(options);
         }
 
+        public IReadOnlyList<KarProjectVehicleContextSummaryContract> QueryVehicleContextContracts(KarProjectVehicleQueryOptions options = null)
+        {
+            return VehicleService.QueryContextContracts(options);
+        }
+
         public KarProjectVehicleContext GetVehicleContext(string vehicleNameOrPath)
         {
             return VehicleService.GetContext(vehicleNameOrPath);
+        }
+
+        public KarProjectVehicleContextSummaryContract GetVehicleContextContract(string vehicleNameOrPath)
+        {
+            return VehicleService.GetContextContract(vehicleNameOrPath);
         }
 
         public string GetReadPath(string relativePath)

@@ -88,5 +88,10 @@ namespace KARToolkit.Core
             KarProjectA2DEntryOutputInfo output;
             return _entryOutputsByEntryPath.TryGetValue(entry.EntryPath, out output) ? output : null;
         }
+
+        public KarProjectA2DPackageContextSummaryContract CreateContract()
+        {
+            return KarProjectA2DPackageContextSummaryContract.Create(this);
+        }
     }
 }

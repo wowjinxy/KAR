@@ -125,6 +125,11 @@ namespace KARToolkit.Core
             return _outputsByRelativePath.TryGetValue(file.RelativePath, out output) ? output : null;
         }
 
+        public KarProjectVehicleContextSummaryContract CreateContract()
+        {
+            return KarProjectVehicleContextSummaryContract.Create(this);
+        }
+
         private static void AddUnique(List<KarArchiveInfo> archives, KarArchiveInfo archive)
         {
             if (archive == null)
