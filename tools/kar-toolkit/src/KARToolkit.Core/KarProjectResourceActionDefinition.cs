@@ -2,26 +2,9 @@ using System;
 
 namespace KARToolkit.Core
 {
-    public sealed class KarProjectResourceAction
+    public sealed class KarProjectResourceActionDefinition
     {
-        internal KarProjectResourceAction(KarProjectResourceActionDefinition definition)
-            : this(
-                RequireDefinition(definition).Id,
-                definition.DisplayName,
-                definition.Description,
-                definition.Capability,
-                definition.Command,
-                definition.ArgumentHint,
-                definition.IsReadOnly,
-                definition.WritesOutput,
-                definition.RequiresInputFile,
-                definition.RequiresFieldName,
-                definition.RequiresValue,
-                definition.SupportsBatch)
-        {
-        }
-
-        internal KarProjectResourceAction(
+        public KarProjectResourceActionDefinition(
             string id,
             string displayName,
             string description,
@@ -82,12 +65,9 @@ namespace KARToolkit.Core
 
         public bool SupportsBatch { get; }
 
-        private static KarProjectResourceActionDefinition RequireDefinition(KarProjectResourceActionDefinition definition)
+        internal KarProjectResourceAction CreateAction()
         {
-            if (definition == null)
-                throw new ArgumentNullException(nameof(definition));
-
-            return definition;
+            return new KarProjectResourceAction(this);
         }
     }
 }

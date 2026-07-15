@@ -14,6 +14,8 @@ namespace KARToolkit.Core
 
         public KarProjectFileHandlerRegistry FileHandlerRegistry { get; set; }
 
+        public KarProjectResourceActionRegistry ResourceActionRegistry { get; set; }
+
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; set; }
 
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; set; }
@@ -70,7 +72,13 @@ namespace KARToolkit.Core
 
         internal KarProjectResourceHandlerRegistry ResolveResourceHandlerRegistry()
         {
-            return ResourceHandlerRegistry ?? KarProjectResourceHandlerRegistry.Default;
+            if (ResourceHandlerRegistry != null)
+                return ResourceHandlerRegistry;
+
+            if (ResourceActionRegistry != null)
+                return KarProjectResourceHandlerRegistry.CreateDefault(ResourceActionRegistry);
+
+            return KarProjectResourceHandlerRegistry.Default;
         }
 
         internal KarProjectOperationDomainRegistry ResolveOperationDomainRegistry()

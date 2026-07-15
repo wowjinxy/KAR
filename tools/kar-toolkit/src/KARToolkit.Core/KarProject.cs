@@ -21,6 +21,7 @@ namespace KARToolkit.Core
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
             ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
+            ResourceActionRegistry = ResourceHandlerRegistry.ActionRegistry;
             OperationDomainRegistry = operationDomains ?? throw new ArgumentNullException(nameof(operationDomains));
             OperationPresetRegistry = operationPresets ?? throw new ArgumentNullException(nameof(operationPresets));
             FileStore = new KarProjectFileStore(Workspace, Index);
@@ -59,6 +60,8 @@ namespace KARToolkit.Core
         public KarProjectFileCatalog FileCatalog { get; }
 
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; }
+
+        public KarProjectResourceActionRegistry ResourceActionRegistry { get; }
 
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; }
 

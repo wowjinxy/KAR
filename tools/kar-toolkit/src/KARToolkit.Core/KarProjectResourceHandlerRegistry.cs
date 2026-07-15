@@ -9,15 +9,29 @@ namespace KARToolkit.Core
         public static KarProjectResourceHandlerRegistry Default { get; } =
             new KarProjectResourceHandlerRegistry(CreateDefaultHandlers());
 
+        public static KarProjectResourceHandlerRegistry CreateDefault(KarProjectResourceActionRegistry actionRegistry)
+        {
+            actionRegistry = actionRegistry ?? KarProjectResourceActionRegistry.Default;
+            return new KarProjectResourceHandlerRegistry(CreateDefaultHandlers(actionRegistry), actionRegistry);
+        }
+
         private readonly IReadOnlyList<KarProjectResourceHandler> _handlers;
         private readonly Dictionary<KarResourceKind, KarProjectResourceHandler> _handlersByKind;
         private readonly Dictionary<string, KarProjectResourceHandler> _handlersById;
 
         public KarProjectResourceHandlerRegistry(IEnumerable<KarProjectResourceHandler> handlers)
+            : this(handlers, null)
+        {
+        }
+
+        public KarProjectResourceHandlerRegistry(
+            IEnumerable<KarProjectResourceHandler> handlers,
+            KarProjectResourceActionRegistry actionRegistry)
         {
             if (handlers == null)
                 throw new ArgumentNullException(nameof(handlers));
 
+            ActionRegistry = actionRegistry ?? KarProjectResourceActionRegistry.Default;
             _handlers = handlers
                 .ToList()
                 .AsReadOnly();
@@ -45,6 +59,8 @@ namespace KARToolkit.Core
         }
 
         public IReadOnlyList<KarProjectResourceHandler> Handlers => _handlers;
+
+        public KarProjectResourceActionRegistry ActionRegistry { get; }
 
         public KarProjectResourceHandler GetHandler(KarResourceKind kind)
         {
@@ -84,6 +100,11 @@ namespace KARToolkit.Core
 
         private static IReadOnlyList<KarProjectResourceHandler> CreateDefaultHandlers()
         {
+            return CreateDefaultHandlers(KarProjectResourceActionRegistry.Default);
+        }
+
+        private static IReadOnlyList<KarProjectResourceHandler> CreateDefaultHandlers(KarProjectResourceActionRegistry actionRegistry)
+        {
             return new[]
             {
                 Define(
@@ -94,7 +115,8 @@ namespace KARToolkit.Core
                     KarProjectResourceCapability.QueryOutput |
                     KarProjectResourceCapability.ReadBytes |
                     KarProjectResourceCapability.ExportToOutput |
-                    KarProjectResourceCapability.ImportFromFile),
+                    KarProjectResourceCapability.ImportFromFile,
+                    actionRegistry),
 
                 Define(
                     KarResourceKind.HsdRoot,
@@ -105,7 +127,8 @@ namespace KARToolkit.Core
                     KarProjectResourceCapability.ReadBytes |
                     KarProjectResourceCapability.ExportToOutput |
                     KarProjectResourceCapability.QueryFieldValues |
-                    KarProjectResourceCapability.SetScalarFields),
+                    KarProjectResourceCapability.SetScalarFields,
+                    actionRegistry),
 
                 Define(
                     KarResourceKind.A2DEntry,
@@ -116,7 +139,8 @@ namespace KARToolkit.Core
                     KarProjectResourceCapability.ReadBytes |
                     KarProjectResourceCapability.ExportToOutput |
                     KarProjectResourceCapability.ImportFromFile |
-                    KarProjectResourceCapability.ApplyOutput),
+                    KarProjectResourceCapability.ApplyOutput,
+                    actionRegistry),
             };
         }
 
@@ -125,9 +149,10 @@ namespace KARToolkit.Core
             string id,
             string displayName,
             string description,
-            KarProjectResourceCapability capabilities)
+            KarProjectResourceCapability capabilities,
+            KarProjectResourceActionRegistry actionRegistry)
         {
-            return new KarProjectResourceHandler(kind, id, displayName, description, capabilities);
+            return new KarProjectResourceHandler(kind, id, displayName, description, capabilities, actionRegistry);
         }
     }
 }

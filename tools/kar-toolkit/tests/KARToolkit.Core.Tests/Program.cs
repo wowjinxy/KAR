@@ -387,6 +387,49 @@ namespace KARToolkit.Core.Tests
             KarProjectResourceHandler found;
             AssertTrue(registry.TryFindHandler("a2d-entry", out found) && found.Kind == KarResourceKind.A2DEntry, "resource handlers should resolve by stable id");
             AssertTrue(registry.TryFindHandler("HsdRoot", out found) && found.Id == "hsd-root", "resource handlers should resolve by enum name");
+
+            KarProjectResourceActionDefinition dumpDefinition = registry.ActionRegistry.FindDefinition("dump-bytes");
+            AssertTrue(dumpDefinition.Command == "dump-resource-bytes" && dumpDefinition.SupportsBatch, "resource action registries should expose reusable action definitions");
+
+            KarProjectResourceActionRegistry customActions = new KarProjectResourceActionRegistry(
+                KarProjectResourceActionRegistry.BuiltInDefinitions.Select(definition =>
+                    definition.Id == "dump-bytes"
+                        ? new KarProjectResourceActionDefinition(
+                            definition.Id,
+                            "Custom Dump Bytes",
+                            definition.Description,
+                            definition.Capability,
+                            definition.Command,
+                            definition.ArgumentHint,
+                            definition.IsReadOnly,
+                            definition.WritesOutput,
+                            definition.RequiresInputFile,
+                            definition.RequiresFieldName,
+                            definition.RequiresValue,
+                            definition.SupportsBatch)
+                        : definition));
+            KarProjectResourceHandlerRegistry customHandlers = KarProjectResourceHandlerRegistry.CreateDefault(customActions);
+            AssertTrue(customHandlers.GetHandler(KarResourceKind.File).Actions.Any(action => action.Id == "dump-bytes" && action.DisplayName == "Custom Dump Bytes"), "resource handler registries should use caller-provided action metadata");
+
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-custom-action-registry-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+            try
+            {
+                File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40 });
+                KarProject project = KarProject.Open(new KarProjectOptions
+                {
+                    SourceRoot = tempRoot,
+                    ResourceActionRegistry = customActions,
+                });
+                KarProjectResourceActionPlan plan = project.GetResourceActionPlan("ScInfPause.tm", "dump-bytes");
+                AssertTrue(object.ReferenceEquals(project.ResourceActionRegistry, customActions), "project options should expose custom resource action registries");
+                AssertTrue(plan.Action.DisplayName == "Custom Dump Bytes" && plan.CanRun, "custom resource action metadata should flow into project action plans");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+            }
         }
 
         private static void ProjectFileQueryFiltersFiles()
