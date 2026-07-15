@@ -267,6 +267,11 @@ namespace KARToolkit.Core
             return ResourceService.Get(address);
         }
 
+        public KarProjectResourceDetail GetResourceDetail(string address)
+        {
+            return ResourceService.GetDetail(address);
+        }
+
         public KarProjectResourceOutputInfo GetResourceOutput(string address)
         {
             return ResourceService.GetOutput(address);

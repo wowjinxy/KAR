@@ -776,6 +776,25 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceDetailDto(KarProjectResourceDetail detail)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(detail.Resource),
+            reference = ToResourceReferenceDto(detail.Reference),
+            kind = detail.Kind.ToString(),
+            address = detail.Address,
+            parentAddress = detail.ParentAddress,
+            output = detail.Output == null ? null : ToProjectResourceOutputDto(detail.Output),
+            childResourceCount = detail.ChildResourceCount,
+            fieldCount = detail.FieldCount,
+            relationshipCount = detail.RelationshipCount,
+            childResources = detail.ChildResources.Select(ToProjectResourceDto).ToList(),
+            fields = detail.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
+            relationships = detail.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
     public static object ToProjectResourceFieldValueDto(KarProjectResourceFieldInfo field)
     {
         return new

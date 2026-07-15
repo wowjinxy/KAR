@@ -120,6 +120,26 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResourceDetail(KarProjectResourceDetail detail)
+    {
+        PrintProjectResource(detail.Resource);
+
+        if (detail.Output != null)
+            Console.WriteLine("Output: " + detail.Output.Status + " [" + detail.Output.OutputKind + "] " + detail.Output.OutputRelativePath);
+
+        Console.WriteLine("Children: " + detail.ChildResourceCount);
+        foreach (KarProjectResourceInfo child in detail.ChildResources)
+            Console.WriteLine("  " + child.Address + " [" + child.Kind + ", " + child.Category + "] - " + child.DisplayName);
+
+        Console.WriteLine("Fields: " + detail.FieldCount);
+        foreach (KarProjectResourceFieldInfo field in detail.Fields)
+            PrintProjectResourceFieldValueIndented(field, "  ");
+
+        Console.WriteLine("Relationships: " + detail.RelationshipCount);
+        foreach (KarProjectRelationship relationship in detail.Relationships)
+            Console.WriteLine("  " + relationship.Kind + "/" + relationship.Role + " " + relationship.RelativePath);
+    }
+
     public static void PrintProjectResourceGraph(KarProjectResourceGraph graph)
     {
         Console.WriteLine("Resource graph: resources=" + graph.ResourceCount + " files=" + graph.FileCount + " roots=" + graph.HsdRootCount + " a2d-entries=" + graph.A2DEntryCount + " relationships=" + graph.RelationshipCount);
@@ -146,10 +166,15 @@ internal static class KarCliTextWriter
 
     public static void PrintProjectResourceFieldValue(KarProjectResourceFieldInfo field)
     {
+        PrintProjectResourceFieldValueIndented(field, "");
+    }
+
+    private static void PrintProjectResourceFieldValueIndented(KarProjectResourceFieldInfo field, string indent)
+    {
         string offset = field.Field.OffsetHex ?? "n/a";
         string schema = string.IsNullOrEmpty(field.DataDefinitionId) ? "<unschematized>" : field.DataDefinitionId;
         string error = string.IsNullOrEmpty(field.Value.Error) ? "" : " (" + field.Value.Error + ")";
-        Console.WriteLine(field.Address + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
+        Console.WriteLine(indent + field.Address + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
     }
 
     public static void PrintProjectScriptTable(KarProjectScriptTable table)

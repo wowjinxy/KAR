@@ -74,6 +74,11 @@ namespace KARToolkit.Core
             return CreateOutputInfo(Get(address));
         }
 
+        public KarProjectResourceDetail GetDetail(string address)
+        {
+            return CreateDetail(Get(address));
+        }
+
         public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(KarProjectResourceFieldQueryOptions options = null)
         {
             IEnumerable<KarProjectResourceInfo> resources = Query(options == null ? null : options.Resources)
@@ -220,6 +225,30 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(output));
 
             return GetAdapter(output.Resource).ApplyOutput(output);
+        }
+
+        private KarProjectResourceDetail CreateDetail(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+
+            IReadOnlyList<KarProjectResourceFieldInfo> fields = resource.CanQueryFieldValues
+                ? QueryFieldValues(new KarProjectResourceFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = resource.Address,
+                        Kind = resource.Kind,
+                    },
+                })
+                : Array.Empty<KarProjectResourceFieldInfo>();
+
+            return new KarProjectResourceDetail(
+                resource,
+                resource.CanQueryOutput ? CreateOutputInfo(resource) : null,
+                _project.ResourceGraphService.QueryChildResources(resource.Address),
+                fields,
+                _project.ResourceGraphService.QueryResourceRelationships(resource.Address));
         }
 
         private KarProjectResourceOutputInfo CreateOutputInfo(KarProjectResourceInfo resource)

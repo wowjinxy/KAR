@@ -244,6 +244,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceDetail(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-detail", 2);
+        KarProject project = OpenProject(options);
+        KarProjectResourceDetail detail = project.ResourceService.GetDetail(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceDetailDto(detail));
+            return 0;
+        }
+
+        PrintProjectResourceDetail(detail);
+        return 0;
+    }
+
     public static int ShowResourceOutputs(KarCliOptions options)
     {
         options.RequirePositionals("resource-outputs", 1);

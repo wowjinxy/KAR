@@ -569,9 +569,22 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootResource.Root.RootName == "vsDataHydra", "resolved HSD root resources should expose root metadata");
                 AssertTrue(rootResource.File.RelativePath == "VsHydra.dat", "resolved HSD root resources should expose parent file metadata");
 
+                KarProjectResourceDetail fileDetail = resources.GetDetail("VsHydra.dat");
+                AssertTrue(fileDetail.Address == "VsHydra.dat" && fileDetail.Kind == KarResourceKind.File, "resource details should retain resource identity");
+                AssertTrue(fileDetail.Output.Status == KarProjectResourceOutputStatus.Missing, "resource details should include output status");
+                AssertTrue(fileDetail.ChildResourceCount == 1 && fileDetail.ChildResources[0].Address == "VsHydra.dat:vsDataHydra", "resource details should include child resources");
+                AssertTrue(fileDetail.FieldCount == 0, "file resource details should not report HSD fields directly");
+
+                KarProjectResourceDetail rootDetail = project.GetResourceDetail("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootDetail.Resource.DisplayName == "Legendary Machine Versus Data", "project resource detail wrapper should expose labeled root resources");
+                AssertTrue(rootDetail.FieldCount >= 5, "root resource details should include schema field values");
+                AssertTrue(rootDetail.ChildResourceCount == 0, "root resource details should only include direct child resources");
+
                 KarProjectResourceInfo entryResource = project.GetResource("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryResource.IsA2DEntry, "project resource wrapper should resolve A2D entry addresses");
                 AssertTrue(entryResource.A2DEntry.Index == 0, "resolved A2D resources should expose entry metadata");
+                KarProjectResourceDetail entryDetail = resources.GetDetail("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryDetail.RelationshipCount == 1 && entryDetail.Relationships[0].Role == "ScreenInfoTable", "resource details should include graph relationships");
                 AssertTrue(project.QueryResources(new KarProjectResourceQueryOptions
                 {
                     Address = "A2Info.dat#ScInfGo2D.tm",
