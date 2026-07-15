@@ -119,7 +119,6 @@ namespace KARToolkit.Core
                 Resources = new KarProjectResourceQueryOptions
                 {
                     Address = ResourceAddress,
-                    Domain = DomainId,
                     Kind = ResourceKind,
                 },
                 ActionId = ActionId,
@@ -136,7 +135,7 @@ namespace KARToolkit.Core
             if (string.IsNullOrWhiteSpace(domainId))
                 return true;
 
-            string normalized = KarProjectFileQueryOptions.NormalizeDomain(domainId);
+            string normalized = NormalizeDomainId(domainId);
             return normalized == "all" ||
                 normalized == NormalizeOperationDomain(operation.DomainId) ||
                 normalized == NormalizeOperationDomain(operation.TargetDomainId);
@@ -146,7 +145,22 @@ namespace KARToolkit.Core
         {
             return string.IsNullOrWhiteSpace(domainId)
                 ? null
-                : KarProjectFileQueryOptions.NormalizeDomain(domainId);
+                : NormalizeDomainId(domainId);
+        }
+
+        internal static string NormalizeDomainId(string domainId)
+        {
+            if (string.IsNullOrWhiteSpace(domainId))
+                return null;
+
+            try
+            {
+                return KarProjectFileQueryOptions.NormalizeDomain(domainId);
+            }
+            catch (ArgumentException)
+            {
+                return domainId.Replace("-", "").Replace("_", "").ToLowerInvariant();
+            }
         }
 
         private static bool MatchesSearchText(KarProjectOperation operation, string text)

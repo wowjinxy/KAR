@@ -74,9 +74,9 @@ namespace KARToolkit.Core
             if (string.IsNullOrWhiteSpace(domainId))
                 return true;
 
-            string normalized = KarProjectFileQueryOptions.NormalizeDomain(domainId);
+            string normalized = KarProjectOperationQueryOptions.NormalizeDomainId(domainId);
             return normalized == "all" ||
-                normalized == KarProjectFileQueryOptions.NormalizeDomain(preset.DomainId);
+                normalized == KarProjectOperationQueryOptions.NormalizeDomainId(preset.DomainId);
         }
 
         private static bool MatchesSearchText(KarProjectOperationPreset preset, string text)

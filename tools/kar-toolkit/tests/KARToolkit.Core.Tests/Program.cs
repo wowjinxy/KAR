@@ -466,6 +466,8 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(tempRoot, true);
                 if (Directory.Exists(outputRoot))
                     Directory.Delete(outputRoot, true);
+                if (Directory.Exists(outputRoot + "_custom"))
+                    Directory.Delete(outputRoot + "_custom", true);
             }
         }
 
@@ -1059,6 +1061,45 @@ namespace KARToolkit.Core.Tests
                 KarProjectOperationPreset statusPreset = project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions { Id = "script-byte-status" }).Single();
                 KarProjectOperationBatchResult presetStatusBatch = project.ExecuteOperationBatch(statusPreset.CreateQueryOptions());
                 AssertTrue(presetStatusBatch.ResultCount == statusPreset.OperationCount && presetStatusBatch.ReadOnlyCount == statusPreset.OperationCount, "operation preset queries should be executable through operation batches");
+
+                KarProject customOperationProject = KarProject.Open(new KarProjectOptions
+                {
+                    SourceRoot = tempRoot,
+                    OutputRoot = outputRoot + "_custom",
+                    OperationDomainRegistry = new KarProjectOperationDomainRegistry(
+                        new[]
+                        {
+                            new KarProjectOperationDomainRule(
+                                "custom-scripts",
+                                "Custom Scripts",
+                                "Custom caller-owned script resource grouping.",
+                                resource => resource.File != null && resource.File.IsScriptTable),
+                        },
+                        "custom-resources"),
+                    OperationPresetRegistry = new KarProjectOperationPresetRegistry(new[]
+                    {
+                        new KarProjectOperationPresetDefinition(
+                            "custom-script-status",
+                            "custom-scripts",
+                            "Custom Script Status",
+                            "Caller-owned reusable script status query.",
+                            "byte-status",
+                            null,
+                            isReadOnly: true,
+                            writesOutput: false,
+                            supportsBatch: true,
+                            requiresInputFile: false,
+                            requiresFieldName: false,
+                            requiresValue: false,
+                            canRun: true,
+                            wouldWriteOutput: false,
+                            hasModifiedOutputs: null),
+                    }),
+                });
+                AssertTrue(customOperationProject.OperationDomainRegistry.ResolveTargetDomain(customOperationProject.ResourceService.Get("ScInfPause.tm")) == "custom-scripts", "project options should allow custom operation domain rules");
+                KarProjectOperationPreset customPreset = customOperationProject.QueryOperationPresets(null).Single();
+                AssertTrue(customPreset.Id == "custom-script-status" && customPreset.OperationCount == 1, "project options should allow custom operation preset registries with live counts");
+                AssertTrue(customOperationProject.QueryOperations(customPreset.CreateQueryOptions()).Single().ResourceAddress == "ScInfPause.tm", "custom preset queries should use custom operation domain rules");
 
                 AssertThrows<NotSupportedException>(
                     () => project.ExecuteOperationBatch(new KarProjectOperationQueryOptions

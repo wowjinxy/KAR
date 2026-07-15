@@ -5,6 +5,29 @@ namespace KARToolkit.Core
     public sealed class KarProjectOperationPreset
     {
         internal KarProjectOperationPreset(
+            KarProjectOperationPresetDefinition definition,
+            KarProjectOperationCatalog operations)
+            : this(
+                RequireDefinition(definition).Id,
+                definition.DomainId,
+                definition.DisplayName,
+                definition.Description,
+                definition.ActionId,
+                definition.ResourceKind,
+                definition.IsReadOnly,
+                definition.WritesOutput,
+                definition.SupportsBatch,
+                definition.RequiresInputFile,
+                definition.RequiresFieldName,
+                definition.RequiresValue,
+                definition.CanRun,
+                definition.WouldWriteOutput,
+                definition.HasModifiedOutputs,
+                operations)
+        {
+        }
+
+        internal KarProjectOperationPreset(
             string id,
             string domainId,
             string displayName,
@@ -109,24 +132,23 @@ namespace KARToolkit.Core
 
         public KarProjectOperationQueryOptions CreateQueryOptions()
         {
-            return new KarProjectOperationQueryOptions
-            {
-                IncludeWorkflows = false,
-                IncludeResourceActions = true,
-                Kind = KarProjectOperationKind.ResourceAction,
-                DomainId = DomainId,
-                ActionId = ActionId,
-                ResourceKind = ResourceKind,
-                IsReadOnly = IsReadOnly,
-                WritesOutput = WritesOutput,
-                SupportsBatch = SupportsBatch,
-                RequiresInputFile = RequiresInputFile,
-                RequiresFieldName = RequiresFieldName,
-                RequiresValue = RequiresValue,
-                CanRun = CanRun,
-                WouldWriteOutput = WouldWriteOutput,
-                HasModifiedOutputs = HasModifiedOutputs,
-            };
+            return new KarProjectOperationPresetDefinition(
+                Id,
+                DomainId,
+                DisplayName,
+                Description,
+                ActionId,
+                ResourceKind,
+                IsReadOnly,
+                WritesOutput,
+                SupportsBatch,
+                RequiresInputFile,
+                RequiresFieldName,
+                RequiresValue,
+                CanRun,
+                WouldWriteOutput,
+                HasModifiedOutputs)
+                .CreateQueryOptions();
         }
 
         private string CreateOperationUsage()
@@ -171,6 +193,14 @@ namespace KARToolkit.Core
                 usage += " --modified";
 
             return usage;
+        }
+
+        private static KarProjectOperationPresetDefinition RequireDefinition(KarProjectOperationPresetDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return definition;
         }
     }
 }
