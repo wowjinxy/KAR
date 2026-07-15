@@ -14,6 +14,18 @@ internal static class KarCliProjectFactory
         });
     }
 
+    public static KarProjectSession OpenProjectSession(KarCliOptions options, KarProjectToolkitSnapshotOptions toolkitOptions)
+    {
+        return KarProjectSession.Open(
+            new KarProjectOptions
+            {
+                SourceRoot = options.Positionals[0],
+                OutputRoot = options.OutputRoot,
+                DataInspection = CreateDataInspectionOptions(options),
+            },
+            toolkitOptions);
+    }
+
     private static KarDataInspectionOptions CreateDataInspectionOptions(KarCliOptions options)
     {
         if (!options.HasDataInspectionOptions)

@@ -57,6 +57,21 @@ internal static class KarCliTextWriter
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
     }
 
+    public static void PrintProjectSession(KarProjectSession session)
+    {
+        Console.WriteLine("KAR project session: " + session.Name);
+        Console.WriteLine("Source: " + session.SourceRoot);
+        Console.WriteLine("Source files: " + session.SourceFilesRoot);
+        Console.WriteLine("Output: " + session.OutputRoot);
+        Console.WriteLine("Output files: " + session.OutputFilesRoot);
+        Console.WriteLine("Read policy: " + session.ReadPolicy);
+        Console.WriteLine("Write policy: " + session.WritePolicy);
+        Console.WriteLine("Workspace safe: source/output=" + session.SourceAndOutputRootsAreSeparate + " files=" + session.SourceFilesAndOutputFilesRootsAreSeparate);
+        Console.WriteLine("Project: files=" + session.FileCount + " maps=" + session.MapCount);
+        Console.WriteLine("Toolkit: domains=" + session.DomainCount + " workflows=" + session.WorkflowCount + " available=" + session.AvailableWorkflowCount + " output=" + session.OutputWorkflowCount);
+        Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
+    }
+
     private static string FormatFileKindTraits(KarFileKindDescriptor descriptor)
     {
         List<string> traits = new List<string>();

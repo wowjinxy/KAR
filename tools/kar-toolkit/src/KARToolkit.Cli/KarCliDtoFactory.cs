@@ -10,6 +10,7 @@ internal static class KarCliDtoFactory
         return new
         {
             name = project.Name,
+            workspace = ToProjectWorkspaceDto(project.Workspace),
             sourceRoot = project.SourceRoot,
             sourceFilesRoot = project.SourceFilesRoot,
             outputRoot = project.OutputRoot,
@@ -26,6 +27,54 @@ internal static class KarCliDtoFactory
                     count = group.Count(),
                 })
                 .ToList(),
+        };
+    }
+
+    public static object ToProjectWorkspaceDto(KarProjectWorkspace workspace)
+    {
+        return new
+        {
+            name = workspace.Name,
+            sourceRoot = workspace.SourceRoot,
+            sourceFilesRoot = workspace.SourceFilesRoot,
+            outputRoot = workspace.OutputRoot,
+            outputFilesRoot = workspace.OutputFilesRoot,
+            sourceHasFilesDirectory = workspace.SourceHasFilesDirectory,
+            readPolicy = workspace.ReadPolicy,
+            writePolicy = workspace.WritePolicy,
+            readsPreferOutputCopies = workspace.ReadsPreferOutputCopies,
+            writesOnlyToOutput = workspace.WritesOnlyToOutput,
+            sourceAndOutputRootsAreSeparate = workspace.SourceAndOutputRootsAreSeparate,
+            sourceFilesAndOutputFilesRootsAreSeparate = workspace.SourceFilesAndOutputFilesRootsAreSeparate,
+        };
+    }
+
+    public static object ToProjectSessionDto(KarProjectSession session)
+    {
+        return new
+        {
+            name = session.Name,
+            project = ToProjectDto(session.Project),
+            workspace = ToProjectWorkspaceDto(session.Workspace),
+            sourceRoot = session.SourceRoot,
+            sourceFilesRoot = session.SourceFilesRoot,
+            outputRoot = session.OutputRoot,
+            outputFilesRoot = session.OutputFilesRoot,
+            readPolicy = session.ReadPolicy,
+            writePolicy = session.WritePolicy,
+            readsPreferOutputCopies = session.ReadsPreferOutputCopies,
+            writesOnlyToOutput = session.WritesOnlyToOutput,
+            sourceAndOutputRootsAreSeparate = session.SourceAndOutputRootsAreSeparate,
+            sourceFilesAndOutputFilesRootsAreSeparate = session.SourceFilesAndOutputFilesRootsAreSeparate,
+            fileCount = session.FileCount,
+            mapCount = session.MapCount,
+            domainCount = session.DomainCount,
+            workflowCount = session.WorkflowCount,
+            availableWorkflowCount = session.AvailableWorkflowCount,
+            outputWorkflowCount = session.OutputWorkflowCount,
+            hasOutputs = session.HasOutputs,
+            hasModifiedOutputs = session.HasModifiedOutputs,
+            surface = ToProjectToolkitSurfaceDto(session.Surface),
         };
     }
 

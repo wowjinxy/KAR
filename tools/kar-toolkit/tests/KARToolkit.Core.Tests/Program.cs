@@ -41,6 +41,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceAppliesModifiedResourceOutputs", ProjectResourceServiceAppliesModifiedResourceOutputs);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectModWorkspaceSummarizesOutputState", ProjectModWorkspaceSummarizesOutputState);
+            Run("ProjectSessionExposesToolkitWorkspaceBoundary", ProjectSessionExposesToolkitWorkspaceBoundary);
             Run("ProjectToolkitSnapshotAggregatesDomainContexts", ProjectToolkitSnapshotAggregatesDomainContexts);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -1618,6 +1619,59 @@ namespace KARToolkit.Core.Tests
                     },
                 });
                 AssertTrue(wrapper.OutputFileCount == 1, "project mod workspace wrapper should delegate filtered output inventories");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectSessionExposesToolkitWorkspaceBoundary()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-session-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            byte[] sourceBytes = new byte[] { 0x10, 0x20, 0x30 };
+            File.WriteAllBytes(Path.Combine(tempRoot, "Loose.bin"), sourceBytes);
+
+            try
+            {
+                KarProjectSession session = KarProjectSession.Open(tempRoot, outputRoot);
+                AssertTrue(session.Name == Path.GetFileName(tempRoot), "project sessions should expose project identity");
+                AssertTrue(session.WritesOnlyToOutput && session.ReadsPreferOutputCopies, "project sessions should expose workspace read/write policy flags");
+                AssertTrue(session.SourceAndOutputRootsAreSeparate && session.SourceFilesAndOutputFilesRootsAreSeparate, "project sessions should expose separated source/output roots");
+                AssertTrue(session.WritePolicy.Contains("only under the configured output folder"), "project sessions should describe output-only writes");
+                AssertTrue(object.ReferenceEquals(session.Surface.Project, session.Project), "project sessions should attach a toolkit surface for the same project");
+                AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");
+                AssertTrue(session.WorkflowGroups.Count == session.Surface.WorkflowGroupCount, "project sessions should expose grouped workflows");
+
+                session.Project.WriteFileBytes("Loose.bin", new byte[] { 0x99 });
+
+                AssertTrue(File.ReadAllBytes(Path.Combine(tempRoot, "Loose.bin")).SequenceEqual(sourceBytes), "project session writes should not mutate source files");
+                AssertTrue(File.ReadAllBytes(Path.Combine(outputRoot, "Loose.bin")).SequenceEqual(new byte[] { 0x99 }), "project session writes should stage changed copies under output");
+
+                KarProjectSession refreshed = session.Refresh();
+                AssertTrue(refreshed.HasOutputs && refreshed.HasModifiedOutputs, "refreshed project sessions should report output state");
+
+                KarProjectSession wrapper = session.Project.CreateSession(new KarProjectToolkitSnapshotOptions
+                {
+                    IncludeModWorkspace = false,
+                });
+                AssertTrue(object.ReferenceEquals(wrapper.Project, session.Project), "project session wrappers should reuse the existing project");
+                AssertTrue(!wrapper.Snapshot.HasModWorkspace, "project session wrappers should honor snapshot options");
+
+                KarProjectSession openedByProject = KarProject.OpenSession(tempRoot, outputRoot, new KarProjectToolkitSnapshotOptions
+                {
+                    IncludeMapContexts = false,
+                    IncludeVehicleContexts = false,
+                    IncludeA2DPackageContexts = false,
+                    IncludeScriptTableContexts = false,
+                });
+                AssertTrue(openedByProject.SourceRoot == session.SourceRoot && openedByProject.OutputRoot == session.OutputRoot, "project session open wrappers should preserve workspace roots");
             }
             finally
             {

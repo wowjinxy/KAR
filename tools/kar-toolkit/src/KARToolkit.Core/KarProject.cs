@@ -581,6 +581,36 @@ namespace KARToolkit.Core
             return ToolkitService.CreateSurface(options);
         }
 
+        public KarProjectSession CreateSession(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return KarProjectSession.Create(this, options);
+        }
+
+        public static KarProjectSession OpenSession(string sourceRoot)
+        {
+            return KarProjectSession.Open(sourceRoot);
+        }
+
+        public static KarProjectSession OpenSession(string sourceRoot, string outputRoot)
+        {
+            return KarProjectSession.Open(sourceRoot, outputRoot);
+        }
+
+        public static KarProjectSession OpenSession(
+            string sourceRoot,
+            string outputRoot,
+            KarProjectToolkitSnapshotOptions toolkitOptions)
+        {
+            return KarProjectSession.Open(sourceRoot, outputRoot, toolkitOptions);
+        }
+
+        public static KarProjectSession OpenSession(
+            KarProjectOptions projectOptions,
+            KarProjectToolkitSnapshotOptions toolkitOptions = null)
+        {
+            return KarProjectSession.Open(projectOptions, toolkitOptions);
+        }
+
         public IReadOnlyList<KarProjectDomainContext> QueryDomainContexts(KarProjectToolkitSnapshotOptions options = null)
         {
             return ToolkitService.QueryDomainContexts(options);

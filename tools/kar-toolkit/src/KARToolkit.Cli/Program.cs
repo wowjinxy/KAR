@@ -18,6 +18,8 @@ internal static class Program
             return command switch
             {
                 "project" => KarCliInspectionCommands.ShowProject(options),
+                "session" => KarCliInspectionCommands.ShowProjectSession(options),
+                "project-session" => KarCliInspectionCommands.ShowProjectSession(options),
                 "file-kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "resource-handlers" => KarCliInspectionCommands.ShowResourceHandlers(options),
@@ -173,6 +175,7 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("Usage:");
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit session <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit file-kinds");
         Console.WriteLine("  kar-toolkit resource-handlers");
         Console.WriteLine("  kar-toolkit resource-actions <source-folder> [resource-address] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--json]");

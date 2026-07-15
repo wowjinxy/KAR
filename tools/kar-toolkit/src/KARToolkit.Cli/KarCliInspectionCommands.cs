@@ -35,6 +35,21 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowProjectSession(KarCliOptions options)
+    {
+        options.RequirePositionals("session", 1);
+        KarProjectSession session = OpenProjectSession(options, CreateToolkitSnapshotOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectSessionDto(session));
+            return 0;
+        }
+
+        PrintProjectSession(session);
+        return 0;
+    }
+
     public static int ShowFileKinds(KarCliOptions options)
     {
         options.RequirePositionals("file-kinds", 0);
@@ -199,8 +214,8 @@ internal static class KarCliInspectionCommands
     public static int ShowToolkitSurface(KarCliOptions options)
     {
         options.RequirePositionals("toolkit-surface", 1);
-        KarProject project = OpenProject(options);
-        KarProjectToolkitSurface surface = project.ToolkitService.CreateSurface(CreateToolkitSnapshotOptions(options));
+        KarProjectSession session = OpenProjectSession(options, CreateToolkitSnapshotOptions(options));
+        KarProjectToolkitSurface surface = session.Surface;
 
         if (options.Json)
         {

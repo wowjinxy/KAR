@@ -33,6 +33,22 @@ namespace KARToolkit.Core
 
         public bool SourceHasFilesDirectory { get; }
 
+        public string ReadPolicy => "Read active project files from output copies when present; otherwise read the extracted source files.";
+
+        public string WritePolicy => "Write project files and generated assets only under the configured output folder.";
+
+        public bool ReadsPreferOutputCopies => true;
+
+        public bool WritesOnlyToOutput => true;
+
+        public bool SourceAndOutputRootsAreSeparate =>
+            !IsSameOrChildPath(SourceRoot, OutputRoot) &&
+            !IsSameOrChildPath(OutputRoot, SourceRoot);
+
+        public bool SourceFilesAndOutputFilesRootsAreSeparate =>
+            !IsSameOrChildPath(SourceFilesRoot, OutputFilesRoot) &&
+            !IsSameOrChildPath(OutputFilesRoot, SourceFilesRoot);
+
         public static KarProjectWorkspace Open(string sourceRoot)
         {
             return Open(sourceRoot, null);
