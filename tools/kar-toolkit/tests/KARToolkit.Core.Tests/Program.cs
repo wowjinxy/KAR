@@ -2106,6 +2106,8 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(domains.Count == 7, "domain contexts should expose the current toolkit domain set");
                 KarProjectDomainContext mapDomain = domains.Single(domain => domain.Id == "maps");
                 AssertTrue(mapDomain.ItemCount == 1 && mapDomain.ResourceCount == 3 && mapDomain.ContextCommand == "map-context", "domain contexts should summarize map toolkit entry points");
+                KarProjectDomainContextContract mapDomainContract = mapDomain.CreateContract();
+                AssertTrue(mapDomainContract.Id == "maps" && mapDomainContract.ResourceCount == mapDomain.ResourceCount && mapDomainContract.ContextCommand == "map-context", "domain context contracts should preserve frontend-facing domain metadata");
                 KarProjectDomainContext a2dDomain = domains.Single(domain => domain.Id == "a2d-packages");
                 AssertTrue(a2dDomain.ItemCount == 2 && a2dDomain.ModifiedOutputCount == 1 && a2dDomain.HasInspectionIssues, "domain contexts should summarize A2D output and issue state");
                 KarProjectDomainContext scriptDomain = domains.Single(domain => domain.Id == "script-tables");
@@ -2121,9 +2123,13 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(projectGroup.DomainId == "project" && !projectGroup.HasDomain && projectGroup.WorkflowCount >= 3, "toolkit workflow groups should expose project-level commands separately");
                 KarProjectToolkitWorkflowGroup resourceGroup = surface.WorkflowGroups.Single(group => group.DomainId == "resources");
                 AssertTrue(resourceGroup.HasDomain && resourceGroup.Domain.ContextCommand == "resource-contexts" && resourceGroup.Workflows.Any(workflow => workflow.Id == "edit-resource-data-field"), "toolkit workflow groups should attach domain metadata to grouped workflows");
+                KarProjectToolkitWorkflowGroupContract resourceGroupContract = resourceGroup.CreateContract();
+                AssertTrue(resourceGroupContract.Domain.Id == "resources" && resourceGroupContract.WorkflowCount == resourceGroup.WorkflowCount && resourceGroupContract.Workflows.Any(workflow => workflow.Id == "edit-resource-data-field"), "toolkit workflow group contracts should preserve domain and nested workflow metadata");
                 KarProjectToolkitWorkflow editWorkflow = surface.Workflows.Single(workflow => workflow.Id == "edit-resource-data-field");
                 AssertTrue(editWorkflow.Command == "resource-data-edit" && editWorkflow.WritesOutput && editWorkflow.RequiresValue && editWorkflow.TargetCount != 0, "toolkit workflows should expose resource data field edit commands");
                 AssertTrue(editWorkflow.CommandLine == "kar-toolkit resource-data-edit" && editWorkflow.Usage.Contains("<field-path-or-name>") && editWorkflow.JsonUsage.EndsWith("[--json]"), "toolkit workflows should expose assembled CLI usage strings");
+                KarProjectToolkitWorkflowContract editWorkflowContract = editWorkflow.CreateContract();
+                AssertTrue(editWorkflowContract.CommandLine == editWorkflow.CommandLine && editWorkflowContract.JsonUsage == editWorkflow.JsonUsage && editWorkflowContract.RequiresValue, "toolkit workflow contracts should preserve assembled usage and argument metadata");
                 KarProjectToolkitWorkflow dataFieldsWorkflow = surface.Workflows.Single(workflow => workflow.Id == "resource-data-fields");
                 AssertTrue(dataFieldsWorkflow.IsReadOnly && dataFieldsWorkflow.TargetCount >= editWorkflow.TargetCount, "toolkit workflows should pair editable field writes with field discovery");
                 KarProjectToolkitWorkflow importWorkflow = surface.Workflows.Single(workflow => workflow.Id == "import-resource-output");

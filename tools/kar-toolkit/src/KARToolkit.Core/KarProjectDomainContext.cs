@@ -62,5 +62,10 @@ namespace KARToolkit.Core
         public bool HasModifiedOutputs => ModifiedOutputCount != 0;
 
         public bool HasInspectionIssues => InspectionIssueCount != 0;
+
+        public KarProjectDomainContextContract CreateContract()
+        {
+            return KarProjectDomainContextContract.Create(this);
+        }
     }
 }

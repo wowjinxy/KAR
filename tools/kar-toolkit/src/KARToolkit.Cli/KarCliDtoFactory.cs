@@ -458,63 +458,12 @@ internal static class KarCliDtoFactory
 
     public static object ToProjectToolkitWorkflowGroupDto(KarProjectToolkitWorkflowGroup group)
     {
-        return new
-        {
-            domainId = group.DomainId,
-            displayName = group.DisplayName,
-            description = group.Description,
-            listCommand = group.ListCommand,
-            contextCommand = group.ContextCommand,
-            hasDomain = group.HasDomain,
-            domain = group.Domain == null ? null : ToProjectDomainContextDto(group.Domain),
-            workflowCount = group.WorkflowCount,
-            availableWorkflowCount = group.AvailableWorkflowCount,
-            readOnlyWorkflowCount = group.ReadOnlyWorkflowCount,
-            writeWorkflowCount = group.WriteWorkflowCount,
-            outputWorkflowCount = group.OutputWorkflowCount,
-            batchWorkflowCount = group.BatchWorkflowCount,
-            inputWorkflowCount = group.InputWorkflowCount,
-            valueWorkflowCount = group.ValueWorkflowCount,
-            modifiedOutputWorkflowCount = group.ModifiedOutputWorkflowCount,
-            inspectionIssueWorkflowCount = group.InspectionIssueWorkflowCount,
-            hasWorkflows = group.HasWorkflows,
-            hasWriteWorkflows = group.HasWriteWorkflows,
-            hasOutputWorkflows = group.HasOutputWorkflows,
-            hasModifiedOutputWorkflows = group.HasModifiedOutputWorkflows,
-            hasInspectionIssueWorkflows = group.HasInspectionIssueWorkflows,
-            workflows = group.Workflows.Select(ToProjectToolkitWorkflowDto).ToList(),
-        };
+        return group.CreateContract();
     }
 
     public static object ToProjectToolkitWorkflowDto(KarProjectToolkitWorkflow workflow)
     {
-        return new
-        {
-            id = workflow.Id,
-            domainId = workflow.DomainId,
-            displayName = workflow.DisplayName,
-            description = workflow.Description,
-            command = workflow.Command,
-            argumentHint = workflow.ArgumentHint,
-            executableName = workflow.ExecutableName,
-            commandLine = workflow.CommandLine,
-            usage = workflow.Usage,
-            jsonUsage = workflow.JsonUsage,
-            mode = workflow.Mode,
-            isReadOnly = workflow.IsReadOnly,
-            writesOutput = workflow.WritesOutput,
-            supportsBatch = workflow.SupportsBatch,
-            requiresInputFile = workflow.RequiresInputFile,
-            requiresValue = workflow.RequiresValue,
-            targetCount = workflow.TargetCount,
-            outputCount = workflow.OutputCount,
-            modifiedOutputCount = workflow.ModifiedOutputCount,
-            inspectionIssueCount = workflow.InspectionIssueCount,
-            hasTargets = workflow.HasTargets,
-            hasOutputs = workflow.HasOutputs,
-            hasModifiedOutputs = workflow.HasModifiedOutputs,
-            hasInspectionIssues = workflow.HasInspectionIssues,
-        };
+        return workflow.CreateContract();
     }
 
     public static object ToProjectOperationCatalogDto(KarProjectOperationCatalog catalog)
@@ -640,24 +589,7 @@ internal static class KarCliDtoFactory
 
     public static object ToProjectDomainContextDto(KarProjectDomainContext context)
     {
-        return new
-        {
-            id = context.Id,
-            displayName = context.DisplayName,
-            description = context.Description,
-            listCommand = context.ListCommand,
-            contextCommand = context.ContextCommand,
-            itemCount = context.ItemCount,
-            resourceCount = context.ResourceCount,
-            outputCount = context.OutputCount,
-            modifiedOutputCount = context.ModifiedOutputCount,
-            inspectionIssueCount = context.InspectionIssueCount,
-            hasItems = context.HasItems,
-            hasResources = context.HasResources,
-            hasOutputs = context.HasOutputs,
-            hasModifiedOutputs = context.HasModifiedOutputs,
-            hasInspectionIssues = context.HasInspectionIssues,
-        };
+        return context.CreateContract();
     }
 
     public static object ToProjectMapOutputDto(KarProjectMapOutputInfo map)

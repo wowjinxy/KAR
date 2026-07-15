@@ -74,5 +74,10 @@ namespace KARToolkit.Core
         public bool HasModifiedOutputWorkflows => ModifiedOutputWorkflowCount != 0;
 
         public bool HasInspectionIssueWorkflows => InspectionIssueWorkflowCount != 0;
+
+        public KarProjectToolkitWorkflowGroupContract CreateContract()
+        {
+            return KarProjectToolkitWorkflowGroupContract.Create(this);
+        }
     }
 }
