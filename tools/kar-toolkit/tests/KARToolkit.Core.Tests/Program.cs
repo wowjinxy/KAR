@@ -219,23 +219,25 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(schema.DataDefinitions.All.Count == 1, "schema service should expose custom project schema registries");
                 AssertTrue(schema.ArchiveDefinitionRules.Single().Id == "custom-archive-definitions", "schema service should expose active archive definition rules");
                 AssertTrue(schema.DataDefinitionProviders.Single().Id == "project-data-definitions" && schema.DataDefinitionProviders.Single().DefinitionCount == 1, "schema service should wrap direct project schema registries as data definition providers");
+                AssertTrue(schema.FileKindClassificationRules.Count >= 18 && schema.FileKindClassificationRules.Any(rule => rule.Id == "map-bundle-classification"), "schema service should expose active file kind classification rules");
                 AssertTrue(schema.FileKinds.Count > 0 && schema.FileHandlers.Count > 0 && schema.ResourceHandlers.Count > 0 && schema.ResourceAdapterProviders.Count >= 3 && schema.RelationshipProviders.Count >= 3, "schema service should expose active handler, adapter, and relationship catalogs");
                 AssertTrue(schema.ResourceActionDefinitions.Count >= 8 && schema.OperationDomainRules.Count >= 6 && schema.DomainContextProviders.Count >= 7 && schema.ToolkitWorkflowProviders.Count >= 1 && schema.OperationPresetDefinitions.Count >= 6, "schema service should expose active toolkit registry catalogs");
                 KarProjectToolkitRegistryCatalog registryCatalog = schema.CreateToolkitRegistryCatalog();
                 AssertTrue(object.ReferenceEquals(registryCatalog.Project, project), "toolkit registry catalog should retain project context");
-                AssertTrue(registryCatalog.ArchiveDefinitionRuleCount == schema.ArchiveDefinitionRules.Count && registryCatalog.DataDefinitionProviderCount == schema.DataDefinitionProviders.Count && registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count && registryCatalog.ResourceAdapterProviderCount == schema.ResourceAdapterProviders.Count && registryCatalog.RelationshipProviderCount == schema.RelationshipProviders.Count, "toolkit registry catalog should expose active archive, schema, handler, adapter, and relationship counts");
+                AssertTrue(registryCatalog.ArchiveDefinitionRuleCount == schema.ArchiveDefinitionRules.Count && registryCatalog.DataDefinitionProviderCount == schema.DataDefinitionProviders.Count && registryCatalog.FileKindClassificationRuleCount == schema.FileKindClassificationRules.Count && registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count && registryCatalog.ResourceAdapterProviderCount == schema.ResourceAdapterProviders.Count && registryCatalog.RelationshipProviderCount == schema.RelationshipProviders.Count, "toolkit registry catalog should expose active archive, schema, file classification, handler, adapter, and relationship counts");
                 AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.DomainContextProviderCount == schema.DomainContextProviders.Count && registryCatalog.ToolkitWorkflowProviderCount == schema.ToolkitWorkflowProviders.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action, context, workflow, and operation counts");
                 KarProjectToolkitRegistryCatalogContract registryContract = registryCatalog.CreateContract();
                 AssertTrue(registryContract.Project.Name == project.Name && registryContract.Project.Workspace.WritesOnlyToOutput, "toolkit registry contracts should expose project and workspace metadata");
                 AssertTrue(registryContract.ArchiveDefinitionRuleCount == registryCatalog.ArchiveDefinitionRuleCount && registryContract.ArchiveDefinitionRules.Single().Id == "custom-archive-definitions", "toolkit registry contracts should expose archive definition rule metadata");
                 AssertTrue(registryContract.DataDefinitionProviderCount == registryCatalog.DataDefinitionProviderCount && registryContract.DataDefinitionProviders.Single().DefinitionCount == 1, "toolkit registry contracts should expose data definition provider metadata");
+                AssertTrue(registryContract.FileKindClassificationRuleCount == registryCatalog.FileKindClassificationRuleCount && registryContract.FileKindClassificationRules.Any(rule => rule.Id == "map-bundle-classification"), "toolkit registry contracts should expose file kind classification rule metadata");
                 AssertTrue(registryContract.FileKindCount == registryCatalog.FileKindCount && registryContract.FileHandlers.Count == registryCatalog.FileHandlerCount, "toolkit registry contracts should preserve file registry counts");
                 AssertTrue(registryContract.ResourceAdapterProviderCount == registryCatalog.ResourceAdapterProviderCount && registryContract.ResourceAdapterProviders.Any(provider => provider.Kind == "File"), "toolkit registry contracts should expose resource adapter provider metadata");
                 AssertTrue(registryContract.RelationshipProviderCount == registryCatalog.RelationshipProviderCount && registryContract.RelationshipProviders.Any(provider => provider.Id == "map-bundle-relationships"), "toolkit registry contracts should expose relationship provider metadata");
                 AssertTrue(registryContract.ResourceHandlers.Any(handler => handler.Actions.Any(action => action.Id == "dump-bytes")), "toolkit registry contracts should expose nested resource action metadata");
                 AssertTrue(registryContract.DomainContextProviderCount == registryCatalog.DomainContextProviderCount && registryContract.DomainContextProviders.Any(provider => provider.Id == "maps" && provider.ContextCommand == "map-context"), "toolkit registry contracts should expose domain context provider metadata");
                 AssertTrue(registryContract.ToolkitWorkflowProviderCount == registryCatalog.ToolkitWorkflowProviderCount && registryContract.ToolkitWorkflowProviders.Any(provider => provider.Id == "built-in-workflows"), "toolkit registry contracts should expose workflow provider metadata");
-                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ArchiveDefinitionRuleCount >= 18 && KarProjectToolkitRegistryCatalog.Default.DataDefinitionProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceAdapterProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.RelationshipProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.DomainContextProviderCount >= 7 && KarProjectToolkitRegistryCatalog.Default.ToolkitWorkflowProviderCount >= 1 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in archive, schema, adapter, relationship, action, context, workflow, and preset registries");
+                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ArchiveDefinitionRuleCount >= 18 && KarProjectToolkitRegistryCatalog.Default.DataDefinitionProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.FileKindClassificationRuleCount >= 18 && KarProjectToolkitRegistryCatalog.Default.ResourceAdapterProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.RelationshipProviderCount >= 3 && KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.DomainContextProviderCount >= 7 && KarProjectToolkitRegistryCatalog.Default.ToolkitWorkflowProviderCount >= 1 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in archive, schema, file classification, adapter, relationship, action, context, workflow, and preset registries");
                 AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Text = "scalar" }).Count == 1, "schema service should search data definition text");
@@ -394,6 +396,9 @@ namespace KARToolkit.Core.Tests
             KarProjectFileHandlerRegistry handlers = KarProjectFileHandlerRegistry.Default;
             int enumCount = Enum.GetValues(typeof(KarFileKind)).Length;
             AssertTrue(registry.Descriptors.Count == enumCount, "file kind registry should describe every public file kind");
+            AssertTrue(registry.ClassificationRules.Rules.Count >= 18, "file kind registry should expose built-in classification rules");
+            KarFileKindClassificationResult mapRuleResult = registry.ClassificationRules.FindRule("map-bundle-classification").Classify(new KarFileKindClassificationRequest("GrCity1Model.dat"));
+            AssertTrue(mapRuleResult.Kind == KarFileKind.MapModel && mapRuleResult.MapName == "City1", "map classification rules should expose map bundle kind and map name logic");
             AssertTrue(handlers.Handlers.Count == enumCount, "file handler registry should provide every public file kind handler");
 
             KarFileKindMatch mapData = registry.Classify("GrCity1.dat");
@@ -434,6 +439,22 @@ namespace KARToolkit.Core.Tests
             AssertTrue(!registry.TryGetMapName("A2Info.dat", KarFileKind.A2dPackage, out mapName), "non-map file kinds should not expose map names");
             AssertTrue(KarProjectFileClassifier.Classify("GrCity1.dat").Descriptor.Id == "map-data", "compatibility classifier should delegate to the registry");
             AssertTrue(KarArchiveCatalog.GetHandler(KarFileKind.MapData).Id == "map-data", "archive catalog compatibility wrappers should expose file handlers");
+
+            KarFileKindClassificationRuleRegistry customRules = new KarFileKindClassificationRuleRegistry(new[]
+            {
+                new KarFileKindClassificationRule(
+                    "custom-map-classification",
+                    "Custom Map Classification",
+                    "Caller-owned classification rule for tests.",
+                    request => request.HasExtension(".kar")
+                        ? new KarFileKindClassificationResult(KarFileKind.MapData, request.Name)
+                        : null),
+            });
+            KarFileKindRegistry customRegistry = new KarFileKindRegistry(KarFileKindRegistry.Default.Descriptors, customRules);
+            KarFileKindMatch customMap = customRegistry.Classify("CustomTrack.kar");
+            AssertTrue(object.ReferenceEquals(customRegistry.ClassificationRules, customRules), "file kind registries should expose custom classification rule registries");
+            AssertTrue(customMap.Kind == KarFileKind.MapData && customMap.MapName == "CustomTrack", "custom file kind classification rules should feed file kind matches");
+            AssertTrue(customRegistry.TryGetMapName("CustomTrack.kar", KarFileKind.MapData, out mapName) && mapName == "CustomTrack", "custom file kind classification rules should feed map name lookup");
         }
 
         private static void ResourceHandlerRegistryDescribesResourceOperations()
@@ -2120,7 +2141,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
                 AssertTrue(session.Project.ToolkitService.CreateRegistryCatalogContract().ProjectName == session.Name, "toolkit service should expose reusable registry catalog contracts");
-                AssertTrue(session.ArchiveDefinitionRuleCount > 0 && session.DataDefinitionProviderCount > 0 && session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0 && session.ResourceAdapterProviderCount > 0 && session.RelationshipProviderCount > 0, "project sessions should expose archive, schema, file, and resource toolkit registries");
+                AssertTrue(session.ArchiveDefinitionRuleCount > 0 && session.DataDefinitionProviderCount > 0 && session.FileKindClassificationRuleCount > 0 && session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0 && session.ResourceAdapterProviderCount > 0 && session.RelationshipProviderCount > 0, "project sessions should expose archive, schema, file, and resource toolkit registries");
                 AssertTrue(session.OperationDomainRuleCount >= 6 && session.DomainContextProviderCount >= 7 && session.ToolkitWorkflowProviderCount >= 1 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation, context, and workflow toolkit registries");
                 AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");
                 AssertTrue(session.WorkflowGroups.Count == session.Surface.WorkflowGroupCount, "project sessions should expose grouped workflows");

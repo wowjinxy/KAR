@@ -22,6 +22,8 @@ namespace KARToolkit.Core
 
         public int DataDefinitionProviderCount { get; set; }
 
+        public int FileKindClassificationRuleCount { get; set; }
+
         public int FileKindCount { get; set; }
 
         public int FileHandlerCount { get; set; }
@@ -46,6 +48,8 @@ namespace KARToolkit.Core
 
         public bool HasDataDefinitionProviders { get; set; }
 
+        public bool HasFileKindClassificationRules { get; set; }
+
         public bool HasFileKinds { get; set; }
 
         public bool HasFileHandlers { get; set; }
@@ -69,6 +73,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarArchiveDefinitionRuleContract> ArchiveDefinitionRules { get; set; }
 
         public IReadOnlyList<KarDataDefinitionProviderContract> DataDefinitionProviders { get; set; }
+
+        public IReadOnlyList<KarFileKindClassificationRuleContract> FileKindClassificationRules { get; set; }
 
         public IReadOnlyList<KarFileKindDescriptorContract> FileKinds { get; set; }
 
@@ -105,6 +111,7 @@ namespace KARToolkit.Core
                 RegistryCount = catalog.RegistryCount,
                 ArchiveDefinitionRuleCount = catalog.ArchiveDefinitionRuleCount,
                 DataDefinitionProviderCount = catalog.DataDefinitionProviderCount,
+                FileKindClassificationRuleCount = catalog.FileKindClassificationRuleCount,
                 FileKindCount = catalog.FileKindCount,
                 FileHandlerCount = catalog.FileHandlerCount,
                 ResourceHandlerCount = catalog.ResourceHandlerCount,
@@ -117,6 +124,7 @@ namespace KARToolkit.Core
                 OperationPresetDefinitionCount = catalog.OperationPresetDefinitionCount,
                 HasArchiveDefinitionRules = catalog.HasArchiveDefinitionRules,
                 HasDataDefinitionProviders = catalog.HasDataDefinitionProviders,
+                HasFileKindClassificationRules = catalog.HasFileKindClassificationRules,
                 HasFileKinds = catalog.HasFileKinds,
                 HasFileHandlers = catalog.HasFileHandlers,
                 HasResourceHandlers = catalog.HasResourceHandlers,
@@ -129,6 +137,7 @@ namespace KARToolkit.Core
                 HasOperationPresetDefinitions = catalog.HasOperationPresetDefinitions,
                 ArchiveDefinitionRules = catalog.ArchiveDefinitionRules.Select(KarArchiveDefinitionRuleContract.Create).ToList().AsReadOnly(),
                 DataDefinitionProviders = catalog.DataDefinitionProviders.Select(KarDataDefinitionProviderContract.Create).ToList().AsReadOnly(),
+                FileKindClassificationRules = catalog.FileKindClassificationRules.Select(KarFileKindClassificationRuleContract.Create).ToList().AsReadOnly(),
                 FileKinds = catalog.FileKinds.Select(KarFileKindDescriptorContract.Create).ToList().AsReadOnly(),
                 FileHandlers = catalog.FileHandlers.Select(KarProjectFileHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceHandlers = catalog.ResourceHandlers.Select(KarProjectResourceHandlerContract.Create).ToList().AsReadOnly(),
@@ -317,6 +326,28 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(rule));
 
             return new KarArchiveDefinitionRuleContract
+            {
+                Id = rule.Id,
+                DisplayName = rule.DisplayName,
+                Description = rule.Description,
+            };
+        }
+    }
+
+    public sealed class KarFileKindClassificationRuleContract
+    {
+        public string Id { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string Description { get; set; }
+
+        public static KarFileKindClassificationRuleContract Create(KarFileKindClassificationRule rule)
+        {
+            if (rule == null)
+                throw new ArgumentNullException(nameof(rule));
+
+            return new KarFileKindClassificationRuleContract
             {
                 Id = rule.Id,
                 DisplayName = rule.DisplayName,

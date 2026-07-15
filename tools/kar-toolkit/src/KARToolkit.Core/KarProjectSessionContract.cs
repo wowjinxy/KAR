@@ -143,6 +143,8 @@ namespace KARToolkit.Core
 
         public int DataDefinitionProviderCount { get; set; }
 
+        public int FileKindClassificationRuleCount { get; set; }
+
         public int FileKindCount { get; set; }
 
         public int FileHandlerCount { get; set; }
@@ -201,6 +203,7 @@ namespace KARToolkit.Core
                 RegistryCount = session.RegistryCount,
                 ArchiveDefinitionRuleCount = session.ArchiveDefinitionRuleCount,
                 DataDefinitionProviderCount = session.DataDefinitionProviderCount,
+                FileKindClassificationRuleCount = session.FileKindClassificationRuleCount,
                 FileKindCount = session.FileKindCount,
                 FileHandlerCount = session.FileHandlerCount,
                 ResourceHandlerCount = session.ResourceHandlerCount,

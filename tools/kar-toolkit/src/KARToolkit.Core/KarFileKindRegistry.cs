@@ -1,23 +1,31 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace KARToolkit.Core
 {
     public sealed class KarFileKindRegistry
     {
-        public static KarFileKindRegistry Default { get; } = new KarFileKindRegistry(CreateDefaultDescriptors());
+        public static KarFileKindRegistry Default { get; } =
+            new KarFileKindRegistry(CreateDefaultDescriptors(), KarFileKindClassificationRuleRegistry.Default);
 
         private readonly IReadOnlyList<KarFileKindDescriptor> _descriptors;
         private readonly Dictionary<KarFileKind, KarFileKindDescriptor> _descriptorsByKind;
         private readonly Dictionary<string, KarFileKindDescriptor> _descriptorsById;
 
         public KarFileKindRegistry(IEnumerable<KarFileKindDescriptor> descriptors)
+            : this(descriptors, KarFileKindClassificationRuleRegistry.Default)
+        {
+        }
+
+        public KarFileKindRegistry(
+            IEnumerable<KarFileKindDescriptor> descriptors,
+            KarFileKindClassificationRuleRegistry classificationRules)
         {
             if (descriptors == null)
                 throw new ArgumentNullException(nameof(descriptors));
 
+            ClassificationRules = classificationRules ?? throw new ArgumentNullException(nameof(classificationRules));
             _descriptors = descriptors
                 .ToList()
                 .AsReadOnly();
@@ -43,6 +51,8 @@ namespace KARToolkit.Core
         }
 
         public IReadOnlyList<KarFileKindDescriptor> Descriptors => _descriptors;
+
+        public KarFileKindClassificationRuleRegistry ClassificationRules { get; }
 
         public KarFileKindDescriptor GetDescriptor(KarFileKind kind)
         {
@@ -85,69 +95,13 @@ namespace KARToolkit.Core
             if (relativePath == null)
                 throw new ArgumentNullException(nameof(relativePath));
 
-            KarFileKind kind = ClassifyKind(relativePath);
-            string mapName;
-            TryGetMapName(relativePath, kind, out mapName);
-            return new KarFileKindMatch(relativePath, GetDescriptor(kind), mapName);
+            KarFileKindClassificationResult classification = ClassificationRules.Classify(relativePath);
+            return new KarFileKindMatch(relativePath, GetDescriptor(classification.Kind), classification.MapName);
         }
 
         public KarFileKind ClassifyKind(string relativePath)
         {
-            if (relativePath == null)
-                throw new ArgumentNullException(nameof(relativePath));
-
-            string fileName = Path.GetFileName(relativePath);
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            string extension = Path.GetExtension(fileName);
-
-            if (extension.Equals(".ini", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.Config;
-            if (extension.Equals(".tm", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.ScriptTable;
-            if (extension.Equals(".h4m", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.Movie;
-            if (IsAudioExtension(extension))
-                return KarFileKind.Audio;
-            if (!extension.Equals(".dat", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.Unknown;
-
-            if (fileName.Equals("Stage.dat", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.StageTable;
-            if (name.StartsWith("A2Ef", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.EffectData;
-            if (name.StartsWith("A2", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.A2dPackage;
-            if (name.Equals("GrCommon", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.MapCommon;
-            if (name.StartsWith("Gr", StringComparison.OrdinalIgnoreCase))
-            {
-                if (name.EndsWith("Model", StringComparison.OrdinalIgnoreCase))
-                    return KarFileKind.MapModel;
-                if (name.EndsWith("Event", StringComparison.OrdinalIgnoreCase))
-                    return KarFileKind.MapEvent;
-                return KarFileKind.MapData;
-            }
-            if (name.StartsWith("Rd", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.RiderData;
-            if (name.StartsWith("Vc", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.VehicleData;
-            if (name.StartsWith("Ef", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.EffectData;
-            if (name.StartsWith("It", StringComparison.OrdinalIgnoreCase) || name.Equals("Item", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.ItemData;
-            if (name.StartsWith("Em", StringComparison.OrdinalIgnoreCase) || name.Equals("Enemy", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.EnemyData;
-            if (name.StartsWith("Mn", StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("If", StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("Sis", StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("Ending", StringComparison.OrdinalIgnoreCase))
-            {
-                return KarFileKind.UiData;
-            }
-            if (name.StartsWith("Vs", StringComparison.OrdinalIgnoreCase))
-                return KarFileKind.VersusData;
-
-            return KarFileKind.HsdArchive;
+            return Classify(relativePath).Kind;
         }
 
         public bool IsHsdArchiveKind(KarFileKind kind)
@@ -169,18 +123,27 @@ namespace KARToolkit.Core
         {
             mapName = null;
 
+            KarFileKindClassificationRequest request = new KarFileKindClassificationRequest(relativePath);
+            KarFileKindClassificationResult classification;
+            if (ClassificationRules.TryClassify(request, out classification) &&
+                classification.Kind == kind &&
+                classification.HasMapName)
+            {
+                mapName = classification.MapName;
+                return true;
+            }
+
             if (!GetDescriptor(kind).IsMapBundlePart)
                 return false;
 
-            string name = Path.GetFileNameWithoutExtension(relativePath);
-            if (!name.StartsWith("Gr", StringComparison.OrdinalIgnoreCase))
+            if (!request.NameStartsWith("Gr"))
                 return false;
 
-            mapName = name.Substring(2);
+            mapName = request.Name.Substring(2);
 
-            if (kind == KarFileKind.MapModel && mapName.EndsWith("Model", StringComparison.OrdinalIgnoreCase))
+            if (kind == KarFileKind.MapModel && request.NameEndsWith("Model"))
                 mapName = mapName.Substring(0, mapName.Length - "Model".Length);
-            else if (kind == KarFileKind.MapEvent && mapName.EndsWith("Event", StringComparison.OrdinalIgnoreCase))
+            else if (kind == KarFileKind.MapEvent && request.NameEndsWith("Event"))
                 mapName = mapName.Substring(0, mapName.Length - "Event".Length);
 
             return mapName.Length > 0;
@@ -237,13 +200,6 @@ namespace KARToolkit.Core
                 isMedia,
                 isConfig,
                 mapBundleRole);
-        }
-
-        private static bool IsAudioExtension(string extension)
-        {
-            return extension.Equals(".hps", StringComparison.OrdinalIgnoreCase) ||
-                extension.Equals(".ssm", StringComparison.OrdinalIgnoreCase) ||
-                extension.Equals(".aw", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

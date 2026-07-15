@@ -84,6 +84,8 @@ namespace KARToolkit.Core
 
         public int DataDefinitionProviderCount => RegistryCatalog.DataDefinitionProviderCount;
 
+        public int FileKindClassificationRuleCount => RegistryCatalog.FileKindClassificationRuleCount;
+
         public int FileKindCount => RegistryCatalog.FileKindCount;
 
         public int FileHandlerCount => RegistryCatalog.FileHandlerCount;

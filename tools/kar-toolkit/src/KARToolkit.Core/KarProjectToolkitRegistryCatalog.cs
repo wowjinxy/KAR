@@ -12,6 +12,7 @@ namespace KARToolkit.Core
             KarProject project,
             IEnumerable<KarArchiveDefinitionRule> archiveDefinitionRules,
             IEnumerable<KarDataDefinitionProvider> dataDefinitionProviders,
+            IEnumerable<KarFileKindClassificationRule> fileKindClassificationRules,
             IEnumerable<KarFileKindDescriptor> fileKinds,
             IEnumerable<KarProjectFileHandler> fileHandlers,
             IEnumerable<KarProjectResourceHandler> resourceHandlers,
@@ -26,6 +27,7 @@ namespace KARToolkit.Core
             Project = project;
             ArchiveDefinitionRules = OrderArchiveDefinitionRules(archiveDefinitionRules);
             DataDefinitionProviders = OrderDataDefinitionProviders(dataDefinitionProviders);
+            FileKindClassificationRules = OrderFileKindClassificationRules(fileKindClassificationRules);
             FileKinds = OrderFileKinds(fileKinds);
             FileHandlers = OrderFileHandlers(fileHandlers);
             ResourceHandlers = OrderResourceHandlers(resourceHandlers);
@@ -43,6 +45,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarArchiveDefinitionRule> ArchiveDefinitionRules { get; }
 
         public IReadOnlyList<KarDataDefinitionProvider> DataDefinitionProviders { get; }
+
+        public IReadOnlyList<KarFileKindClassificationRule> FileKindClassificationRules { get; }
 
         public IReadOnlyList<KarFileKindDescriptor> FileKinds { get; }
 
@@ -72,11 +76,13 @@ namespace KARToolkit.Core
 
         public string OutputRoot => Project == null ? null : Project.OutputRoot;
 
-        public int RegistryCount => 12;
+        public int RegistryCount => 13;
 
         public int ArchiveDefinitionRuleCount => ArchiveDefinitionRules.Count;
 
         public int DataDefinitionProviderCount => DataDefinitionProviders.Count;
+
+        public int FileKindClassificationRuleCount => FileKindClassificationRules.Count;
 
         public int FileKindCount => FileKinds.Count;
 
@@ -101,6 +107,8 @@ namespace KARToolkit.Core
         public bool HasArchiveDefinitionRules => ArchiveDefinitionRuleCount != 0;
 
         public bool HasDataDefinitionProviders => DataDefinitionProviderCount != 0;
+
+        public bool HasFileKindClassificationRules => FileKindClassificationRuleCount != 0;
 
         public bool HasFileKinds => FileKindCount != 0;
 
@@ -133,6 +141,7 @@ namespace KARToolkit.Core
                 null,
                 KarArchiveDefinitionRuleRegistry.Default.Rules,
                 KarDataDefinitionProviderRegistry.Default.Providers,
+                KarFileKindClassificationRuleRegistry.Default.Rules,
                 KarFileKindRegistry.Default.Descriptors,
                 KarProjectFileHandlerRegistry.Default.Handlers,
                 KarProjectResourceHandlerRegistry.Default.Handlers,
@@ -161,6 +170,16 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(providers));
 
             return providers
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private static IReadOnlyList<KarFileKindClassificationRule> OrderFileKindClassificationRules(IEnumerable<KarFileKindClassificationRule> rules)
+        {
+            if (rules == null)
+                throw new ArgumentNullException(nameof(rules));
+
+            return rules
                 .ToList()
                 .AsReadOnly();
         }

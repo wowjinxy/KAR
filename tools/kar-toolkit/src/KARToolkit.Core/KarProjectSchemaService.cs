@@ -23,6 +23,8 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarDataDefinitionProvider> DataDefinitionProviders => _project.DataDefinitionProviderRegistry.Providers;
 
+        public IReadOnlyList<KarFileKindClassificationRule> FileKindClassificationRules => _project.FileCatalog.FileKindRegistry.ClassificationRules.Rules;
+
         public IReadOnlyList<KarFileKindDescriptor> FileKinds => _project.FileCatalog.FileKindDescriptors;
 
         public IReadOnlyList<KarProjectFileHandler> FileHandlers => _project.FileCatalog.FileHandlers;
@@ -49,6 +51,7 @@ namespace KARToolkit.Core
                 _project,
                 ArchiveDefinitionRules,
                 DataDefinitionProviders,
+                FileKindClassificationRules,
                 FileKinds,
                 FileHandlers,
                 ResourceHandlers,
