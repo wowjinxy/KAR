@@ -215,6 +215,12 @@ internal static class KarCliTextWriter
         Console.WriteLine(output.Address + " [" + output.Status + ", " + output.OutputKind + "] " + output.OutputRelativePath);
     }
 
+    public static void PrintProjectResourceByteInfo(KarProjectResourceByteInfo info)
+    {
+        string output = info.HasOutput ? info.OutputRelativePath : "<missing>";
+        Console.WriteLine(info.Address + " [" + info.Status + "] active=" + info.ActiveLength + " output=" + output);
+    }
+
     public static void PrintProjectResourceFieldValue(KarProjectResourceFieldInfo field)
     {
         PrintProjectResourceFieldValueIndented(field, "");

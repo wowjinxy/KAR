@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace KARToolkit.Core
 {
@@ -78,6 +77,28 @@ namespace KARToolkit.Core
         public KarProjectResourceDetail GetDetail(string address)
         {
             return CreateDetail(Get(address));
+        }
+
+        public IReadOnlyList<KarProjectResourceByteInfo> QueryByteInfo(KarProjectResourceByteQueryOptions options = null)
+        {
+            IEnumerable<KarProjectResourceByteInfo> query = Query(options == null ? null : options.Resources)
+                .Where(resource => resource.CanReadBytes)
+                .Select(CreateByteInfo);
+
+            if (options != null)
+                query = query.Where(options.Matches);
+
+            return query
+                .OrderBy(info => info.Resource.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(info => info.Kind)
+                .ThenBy(info => info.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceByteInfo GetByteInfo(string address)
+        {
+            return CreateByteInfo(Get(address));
         }
 
         public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(KarProjectResourceFieldQueryOptions options = null)
@@ -180,18 +201,18 @@ namespace KARToolkit.Core
                 throw new NotSupportedException("Resource " + resource.Address + " does not support byte dumps.");
 
             byte[] data = GetAdapter(resource).ReadBytes(resource);
-            string outputRelativePath = CreateByteDumpRelativePath(resource);
-            string outputPath = _project.Workspace.GetOutputAssetPath(outputRelativePath);
-            bool wroteOutput = overwrite || !File.Exists(outputPath);
+            KarProjectResourceByteInfo info = CreateByteInfo(resource, data);
+            bool wroteOutput = overwrite || !info.HasOutput;
+            string outputPath = info.OutputPath;
             if (wroteOutput)
-                outputPath = _project.Workspace.SaveOutputAsset(outputRelativePath, tempPath => File.WriteAllBytes(tempPath, data));
+                outputPath = _project.Workspace.SaveOutputAsset(info.OutputRelativePath, tempPath => File.WriteAllBytes(tempPath, data));
 
             return new KarProjectResourceByteDumpResult(
                 resource,
-                outputRelativePath,
+                info.OutputRelativePath,
                 outputPath,
                 data.Length,
-                ComputeSha256(data),
+                info.ActiveSha256,
                 wroteOutput);
         }
 
@@ -289,6 +310,26 @@ namespace KARToolkit.Core
             return GetAdapter(resource).CreateOutputInfo(resource);
         }
 
+        private KarProjectResourceByteInfo CreateByteInfo(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (!resource.CanReadBytes)
+                throw new NotSupportedException("Resource " + resource.Address + " does not support byte info.");
+
+            return CreateByteInfo(resource, GetAdapter(resource).ReadBytes(resource));
+        }
+
+        private KarProjectResourceByteInfo CreateByteInfo(KarProjectResourceInfo resource, byte[] data)
+        {
+            string outputRelativePath = CreateByteDumpRelativePath(resource);
+            return new KarProjectResourceByteInfo(
+                resource,
+                outputRelativePath,
+                _project.Workspace.GetOutputAssetPath(outputRelativePath),
+                data);
+        }
+
         private static string CreateByteDumpRelativePath(KarProjectResourceInfo resource)
         {
             List<string> parts = new List<string> { "resource-bytes" };
@@ -324,10 +365,5 @@ namespace KARToolkit.Core
             return sanitized.Length == 0 ? "_" : sanitized;
         }
 
-        private static string ComputeSha256(byte[] data)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-                return string.Concat(sha256.ComputeHash(data).Select(value => value.ToString("x2")));
-        }
     }
 }

@@ -1272,6 +1272,31 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceByteInfoDto(KarProjectResourceByteInfo info)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(info.Resource),
+            reference = ToResourceReferenceDto(info.Reference),
+            kind = info.Kind.ToString(),
+            address = info.Address,
+            outputRelativePath = info.OutputRelativePath,
+            outputPath = info.OutputPath,
+            activeLength = info.ActiveLength,
+            activeSha256 = info.ActiveSha256,
+            hasOutput = info.HasOutput,
+            outputLength = info.OutputLength,
+            outputLastWriteTimeUtc = info.OutputLastWriteTimeUtc,
+            outputSha256 = info.OutputSha256,
+            isSameLengthAsActive = info.IsSameLengthAsActive,
+            isSameContentAsActive = info.IsSameContentAsActive,
+            status = info.Status.ToString(),
+            isMissing = info.IsMissing,
+            matchesActive = info.MatchesActive,
+            differsFromActive = info.DiffersFromActive,
+        };
+    }
+
     public static object ToProjectResourceExportResultDto(KarProjectResourceExportResult result)
     {
         return new

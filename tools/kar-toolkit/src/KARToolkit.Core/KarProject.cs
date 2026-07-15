@@ -323,6 +323,16 @@ namespace KARToolkit.Core
             return ResourceService.GetOutput(address);
         }
 
+        public IReadOnlyList<KarProjectResourceByteInfo> QueryResourceByteInfo(KarProjectResourceByteQueryOptions options = null)
+        {
+            return ResourceService.QueryByteInfo(options);
+        }
+
+        public KarProjectResourceByteInfo GetResourceByteInfo(string address)
+        {
+            return ResourceService.GetByteInfo(address);
+        }
+
         public IReadOnlyList<KarProjectResourceFieldInfo> QueryResourceFieldValues(KarProjectResourceFieldQueryOptions options = null)
         {
             return ResourceService.QueryFieldValues(options);

@@ -88,6 +88,16 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectResourceByteQueryOptions CreateResourceByteQuery(KarCliOptions options)
+    {
+        return new KarProjectResourceByteQueryOptions
+        {
+            Resources = CreateResourceQuery(options),
+            Status = ToResourceByteOutputStatus(options.OutputStatus),
+            HasOutput = options.FileHasOutputCopy,
+        };
+    }
+
     public static KarProjectResourceFieldQueryOptions CreateResourceFieldQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
@@ -257,6 +267,22 @@ internal static class KarCliQueryFactory
                 return KarProjectResourceOutputStatus.MatchesSource;
             case KarProjectOutputFileStatus.SourceMissing:
                 return KarProjectResourceOutputStatus.SourceMissing;
+            default:
+                return null;
+        }
+    }
+
+    public static KarProjectResourceByteOutputStatus? ToResourceByteOutputStatus(KarProjectOutputFileStatus? status)
+    {
+        if (!status.HasValue)
+            return null;
+
+        switch (status.Value)
+        {
+            case KarProjectOutputFileStatus.DiffersFromSource:
+                return KarProjectResourceByteOutputStatus.DiffersFromActive;
+            case KarProjectOutputFileStatus.MatchesSource:
+                return KarProjectResourceByteOutputStatus.MatchesActive;
             default:
                 return null;
         }

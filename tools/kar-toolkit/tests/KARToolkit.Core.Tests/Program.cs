@@ -819,6 +819,10 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(resources.ReadBytes("VsHydra.dat:vsDataHydra")[0] == originalFirstByte, "HSD root byte reads should return a defensive copy");
                 rootBytes[0] = originalFirstByte;
 
+                KarProjectResourceByteInfo missingRootBytes = project.GetResourceByteInfo("VsHydra.dat:vsDataHydra");
+                AssertTrue(missingRootBytes.Status == KarProjectResourceByteOutputStatus.Missing, "resource byte info should report missing dump outputs");
+                AssertTrue(missingRootBytes.ActiveLength == rootBytes.Length && missingRootBytes.ActiveSha256.Length == 64, "resource byte info should expose active byte length and hash");
+
                 KarProjectResourceByteDumpResult rootDump = project.DumpResourceBytesToOutput("VsHydra.dat:vsDataHydra");
                 AssertTrue(rootDump.Address == "VsHydra.dat:vsDataHydra", "project resource byte dumps should preserve root resource addresses");
                 AssertTrue(rootDump.OutputRelativePath == "resource-bytes/VsHydra.dat/vsDataHydra.bin", "HSD root byte dumps should use stable output asset paths");
@@ -826,14 +830,36 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootDump.Sha256.Length == 64, "resource byte dumps should include a content hash");
                 AssertTrue(File.ReadAllBytes(rootDump.OutputPath).SequenceEqual(rootBytes), "HSD root byte dumps should write the raw struct payload");
 
+                KarProjectResourceByteInfo matchingRootBytes = resources.GetByteInfo("VsHydra.dat:vsDataHydra");
+                AssertTrue(matchingRootBytes.Status == KarProjectResourceByteOutputStatus.MatchesActive, "resource byte info should compare dumps against active bytes");
+                AssertTrue(matchingRootBytes.HasOutput && matchingRootBytes.OutputSha256 == matchingRootBytes.ActiveSha256, "resource byte info should expose matching output hashes");
+
+                File.WriteAllBytes(rootDump.OutputPath, new byte[] { 0x99 });
+                KarProjectResourceByteInfo staleRootBytes = resources.GetByteInfo("VsHydra.dat:vsDataHydra");
+                AssertTrue(staleRootBytes.Status == KarProjectResourceByteOutputStatus.DiffersFromActive, "resource byte info should detect stale dump outputs");
+                IReadOnlyList<KarProjectResourceByteInfo> staleDumps = project.QueryResourceByteInfo(new KarProjectResourceByteQueryOptions
+                {
+                    Status = KarProjectResourceByteOutputStatus.DiffersFromActive,
+                });
+                AssertTrue(staleDumps.Count == 1 && staleDumps[0].Address == "VsHydra.dat:vsDataHydra", "resource byte info queries should filter stale dump outputs");
+
                 KarProjectResourceByteDumpResult skippedRootDump = resources.DumpBytesToOutput("VsHydra.dat:vsDataHydra");
                 AssertTrue(!skippedRootDump.WroteOutput, "resource byte dumps should skip existing outputs unless overwrite is requested");
                 KarProjectResourceByteDumpResult overwrittenRootDump = resources.DumpBytesToOutput("VsHydra.dat:vsDataHydra", overwrite: true);
                 AssertTrue(overwrittenRootDump.WroteOutput, "resource byte dumps should overwrite outputs when requested");
+                AssertTrue(resources.GetByteInfo("VsHydra.dat:vsDataHydra").Status == KarProjectResourceByteOutputStatus.MatchesActive, "overwritten byte dumps should match active bytes");
 
                 KarProjectResourceByteDumpResult entryDump = resources.DumpBytesToOutput("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryDump.OutputRelativePath == "resource-bytes/A2Info.dat/ScInfGo2D.tm.bin", "A2D entry byte dumps should use stable output asset paths");
                 AssertTrue(File.ReadAllBytes(entryDump.OutputPath).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D entry byte dumps should write the selected entry bytes");
+                AssertTrue(resources.QueryByteInfo(new KarProjectResourceByteQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Kind = KarResourceKind.A2DEntry,
+                    },
+                    HasOutput = true,
+                }).Count == 1, "resource byte info queries should filter dump outputs by resource kind and output presence");
 
                 KarProjectResourceExportResult fileExport = resources.ExportToOutput("A2Info.dat");
                 AssertTrue(fileExport.Address == "A2Info.dat", "resource file export should report resource address");

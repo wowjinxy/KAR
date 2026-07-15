@@ -76,6 +76,9 @@ internal static class Program
                 "resource-outputs" => KarCliInspectionCommands.ShowResourceOutputs(options),
                 "resource-output" => KarCliInspectionCommands.ShowResourceOutput(options),
                 "resource-status" => KarCliInspectionCommands.ShowResourceOutput(options),
+                "resource-bytes" => KarCliInspectionCommands.ShowResourceBytes(options),
+                "resource-byte-dumps" => KarCliInspectionCommands.ShowResourceBytes(options),
+                "resource-byte-status" => KarCliInspectionCommands.ShowResourceBytes(options),
                 "resource-fields" => KarCliInspectionCommands.ShowResourceFields(options),
                 "resource-field-values" => KarCliInspectionCommands.ShowResourceFields(options),
                 "a2d-packages" => KarCliInspectionCommands.ShowA2DPackageContexts(options),
@@ -168,6 +171,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-detail <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit resource-bytes <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-fields <source-folder> [archive:root] [field-name] [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit a2d-packages <source-folder> [package-relative-path] [--output <mod-folder>] [--search <text>] [--output-copy|--source-only] [--modified]");
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>]");

@@ -382,6 +382,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceBytes(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-bytes", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceByteInfo> infos = project.ResourceService.QueryByteInfo(CreateResourceByteQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(infos.Select(ToProjectResourceByteInfoDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceByteInfo info in infos)
+            PrintProjectResourceByteInfo(info);
+
+        return 0;
+    }
+
     public static int ShowResourceFields(KarCliOptions options)
     {
         options.RequirePositionals("resource-fields", 1);
