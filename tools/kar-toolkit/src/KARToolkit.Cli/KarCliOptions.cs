@@ -18,6 +18,7 @@ internal sealed class KarCliOptions
         bool json,
         string fileKind,
         string resourceKind,
+        string domain,
         string searchText,
         string fileCategory,
         bool? fileHasOutputCopy,
@@ -40,6 +41,7 @@ internal sealed class KarCliOptions
         Json = json;
         FileKind = fileKind;
         ResourceKind = resourceKind;
+        Domain = domain;
         SearchText = searchText;
         FileCategory = fileCategory;
         FileHasOutputCopy = fileHasOutputCopy;
@@ -75,6 +77,8 @@ internal sealed class KarCliOptions
 
     public string ResourceKind { get; }
 
+    public string Domain { get; }
+
     public string SearchText { get; }
 
     public string FileCategory { get; }
@@ -109,6 +113,7 @@ internal sealed class KarCliOptions
         bool json = false;
         string fileKind = null;
         string resourceKind = null;
+        string domain = null;
         string searchText = null;
         string fileCategory = null;
         bool? fileHasOutputCopy = null;
@@ -189,6 +194,12 @@ internal sealed class KarCliOptions
             if (arg == "--resource-kind" || arg == "--resource-type")
             {
                 resourceKind = ReadValue(enumerator, arg);
+                continue;
+            }
+
+            if (arg == "--domain" || arg == "--toolkit-domain")
+            {
+                domain = ReadValue(enumerator, arg);
                 continue;
             }
 
@@ -286,6 +297,7 @@ internal sealed class KarCliOptions
             json,
             fileKind,
             resourceKind,
+            domain,
             searchText,
             fileCategory,
             fileHasOutputCopy,

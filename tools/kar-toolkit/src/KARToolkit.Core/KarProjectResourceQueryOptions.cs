@@ -6,6 +6,8 @@ namespace KARToolkit.Core
     {
         public KarResourceKind? Kind { get; set; }
 
+        public string Domain { get; set; }
+
         public string Address { get; set; }
 
         public string RelativePath { get; set; }
@@ -30,6 +32,9 @@ namespace KARToolkit.Core
             if (Kind.HasValue && resource.Kind != Kind.Value)
                 return false;
 
+            if (!MatchesDomain(resource, Domain))
+                return false;
+
             if (!string.IsNullOrWhiteSpace(Address))
             {
                 KarResourceReference reference;
@@ -51,6 +56,37 @@ namespace KARToolkit.Core
                 return false;
 
             return true;
+        }
+
+        public static bool MatchesDomain(KarProjectResourceInfo resource, string domain)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (string.IsNullOrWhiteSpace(domain))
+                return true;
+
+            switch (KarProjectFileQueryOptions.NormalizeDomain(domain))
+            {
+                case "all":
+                case "resources":
+                    return true;
+                case "files":
+                    return resource.IsFile;
+                case "archives":
+                case "maps":
+                case "vehicles":
+                    return resource.File != null && KarProjectFileQueryOptions.MatchesDomain(resource.File, domain);
+                case "a2d-packages":
+                    return resource.IsA2DEntry || (resource.File != null && resource.File.IsA2DPackage);
+                case "script-tables":
+                    return string.Equals(resource.Category, "Scripts", StringComparison.OrdinalIgnoreCase) ||
+                        (resource.File != null && resource.File.IsScriptTable) ||
+                        (resource.A2DEntry != null && resource.A2DEntry.IsScriptTable);
+                case "mod-output":
+                    return resource.CanQueryOutput || resource.CanReadBytes;
+                default:
+                    throw new ArgumentException("Unknown KAR project domain: " + domain);
+            }
         }
 
         private static bool MatchesText(string expected, string actual)

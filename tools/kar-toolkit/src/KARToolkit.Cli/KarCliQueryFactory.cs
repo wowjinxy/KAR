@@ -13,6 +13,7 @@ internal static class KarCliQueryFactory
     {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
         {
+            Domain = options.Domain,
             Category = options.FileCategory,
             Text = includeSearch ? options.SearchText : null,
             HasOutputCopy = options.FileHasOutputCopy,
@@ -41,6 +42,7 @@ internal static class KarCliQueryFactory
         KarProjectResourceQueryOptions query = new KarProjectResourceQueryOptions
         {
             Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            Domain = options.Domain,
             Category = options.FileCategory,
             Text = options.SearchText,
             Files = parentFiles,
@@ -90,6 +92,7 @@ internal static class KarCliQueryFactory
             {
                 Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
                 Kind = KarResourceKind.HsdRoot,
+                Domain = options.Domain,
                 Category = options.FileCategory,
                 Files = parentFiles,
                 Roots = new KarProjectRootQueryOptions
@@ -276,6 +279,7 @@ internal static class KarCliQueryFactory
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
+            Domain = options.Domain,
             Category = options.FileCategory,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions
@@ -335,6 +339,7 @@ internal static class KarCliQueryFactory
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
+            Domain = options.Domain,
             Category = options.FileCategory,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions

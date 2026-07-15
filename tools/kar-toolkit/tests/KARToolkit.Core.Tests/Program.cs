@@ -417,6 +417,10 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "file query should filter by kind");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { Category = "maps" }).Count == 1, "file query should filter by category case-insensitively");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Domain = "maps" }).Single().RelativePath == "GrCity1.dat", "file query should filter by toolkit domain");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Domain = "a2d" }).Single().RelativePath == "A2Demo.dat", "file query should normalize toolkit domain aliases");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Domain = "archives" }).Single().RelativePath == "GrCity1.dat", "file query should filter HSD archive domains");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Domain = "script-tables" }).Count == 0, "file query should return empty domain matches safely");
                 IReadOnlyList<KarProjectFile> mapDescriptionFiles = files.Query(new KarProjectFileQueryOptions { Text = "map gameplay" });
                 AssertTrue(mapDescriptionFiles.Count == 1 && mapDescriptionFiles[0].RelativePath == "GrCity1.dat", "file query should search metadata text");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 0, "file query should filter files with output copies");
@@ -427,6 +431,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(File.Exists(copyResult.OutputPath), "file service should copy project files to output");
                 AssertTrue(files.GetReadPath("GrCity1.dat") == files.GetOutputPath("GrCity1.dat"), "file service should read from output after copies exist");
                 AssertTrue(project.OutputService.GetFile("GrCity1.dat").CanInspectMapArchive, "output file records should expose handler capabilities");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Domain = "mod-output" }).Single().RelativePath == "GrCity1.dat", "file query should filter output-domain files");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 1, "file query should see newly created output copies");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = false }).Count == project.Files.Count - 1, "file query should filter source-only files");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions
@@ -660,6 +665,11 @@ namespace KARToolkit.Core.Tests
                     Category = "Scripts",
                 });
                 AssertTrue(scriptResources.Count == 1 && scriptResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource query should filter by resource category");
+                AssertTrue(resources.Query(new KarProjectResourceQueryOptions { Domain = "files" }).Count == 2, "resource query should filter file-domain resources");
+                IReadOnlyList<KarProjectResourceInfo> a2dDomainResources = resources.Query(new KarProjectResourceQueryOptions { Domain = "a2d" });
+                AssertTrue(a2dDomainResources.Count == 3 && a2dDomainResources.Any(resource => resource.Address == "A2Info.dat#ScInfGo2D.tm"), "resource query should filter A2D package domains");
+                IReadOnlyList<KarProjectResourceInfo> scriptDomainResources = resources.Query(new KarProjectResourceQueryOptions { Domain = "scripts" });
+                AssertTrue(scriptDomainResources.Count == 1 && scriptDomainResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource query should filter script-table domains");
 
                 IReadOnlyList<KarProjectResourceInfo> legendaryResources = resources.Query(new KarProjectResourceQueryOptions
                 {
