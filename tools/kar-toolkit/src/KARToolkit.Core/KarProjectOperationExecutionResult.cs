@@ -16,7 +16,7 @@ namespace KARToolkit.Core
 
         public KarProjectResourceActionExecutionResult ResourceActionResult { get; }
 
-        public KarProjectResourceActionExecutionSummary Summary => ResourceActionResult.Summary;
+        public KarProjectOperationExecutionSummary Summary => new KarProjectOperationExecutionSummary(this);
 
         public bool Succeeded => ResourceActionResult.Succeeded;
 

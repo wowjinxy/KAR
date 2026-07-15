@@ -214,7 +214,7 @@ internal static class KarCliResourceActionCommands
         return new
         {
             operation = ToProjectOperationDto(result.Operation),
-            summary = ToResourceActionExecutionSummaryDto(result.Summary),
+            summary = ToProjectOperationExecutionSummaryDto(result.Summary),
             succeeded = result.Succeeded,
             resultKind = result.ResultKind,
             isReadOnly = result.IsReadOnly,
@@ -245,7 +245,7 @@ internal static class KarCliResourceActionCommands
             wroteOutputCount = batch.WroteOutputCount,
             skippedOutputWriteCount = batch.SkippedOutputWriteCount,
             hasFailures = batch.HasFailures,
-            summaries = batch.Results.Select(result => ToResourceActionExecutionSummaryDto(result.Summary)).ToList(),
+            summaries = batch.Results.Select(result => ToProjectOperationExecutionSummaryDto(result.Summary)).ToList(),
             results = batch.Results.Select(ToProjectOperationExecutionResultDto).ToList(),
         };
     }
@@ -292,6 +292,35 @@ internal static class KarCliResourceActionCommands
             outputPath = summary.OutputPath,
             errorType = summary.ErrorType,
             errorMessage = summary.ErrorMessage,
+        };
+    }
+
+    private static object ToProjectOperationExecutionSummaryDto(KarProjectOperationExecutionSummary summary)
+    {
+        return new
+        {
+            operationId = summary.OperationId,
+            operationKind = summary.OperationKindName,
+            domainId = summary.DomainId,
+            targetDomainId = summary.TargetDomainId,
+            displayName = summary.DisplayName,
+            command = summary.Command,
+            resourceAddress = summary.ResourceAddress,
+            actionId = summary.ActionId,
+            executionKind = summary.ExecutionKindName,
+            resultKind = summary.ResultKind,
+            succeeded = summary.Succeeded,
+            failed = summary.Failed,
+            isReadOnly = summary.IsReadOnly,
+            writesOutput = summary.WritesOutput,
+            wouldWriteOutput = summary.WouldWriteOutput,
+            wroteOutput = summary.WroteOutput,
+            skippedOutputWrite = summary.SkippedOutputWrite,
+            outputRelativePath = summary.OutputRelativePath,
+            outputPath = summary.OutputPath,
+            errorType = summary.ErrorType,
+            errorMessage = summary.ErrorMessage,
+            resourceAction = ToResourceActionExecutionSummaryDto(summary.ResourceActionSummary),
         };
     }
 

@@ -1091,7 +1091,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectOperationExecutionResult dumpResult = project.ExecuteOperation(looseDump);
                 AssertTrue(dumpResult.Operation.Id == looseDump.Id, "operation execution results should retain the requested operation");
                 AssertTrue(dumpResult.Succeeded && dumpResult.ResultKind == "byte-dump", "operation execution should run resource-action operations through the existing executor");
-                AssertTrue(dumpResult.Summary.ActionId == "dump-bytes" && dumpResult.Summary.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes, "operation execution summaries should expose underlying resource action metadata");
+                AssertTrue(dumpResult.Summary.OperationId == looseDump.Id && dumpResult.Summary.TargetDomainId == "script-tables" && dumpResult.Summary.ActionId == "dump-bytes" && dumpResult.Summary.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes, "operation execution summaries should expose operation and underlying resource action metadata");
                 AssertTrue(dumpResult.WroteOutput && File.Exists(dumpResult.OutputPath), "operation execution should write outputs through safe resource actions");
                 AssertTrue(File.ReadAllBytes(dumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "operation execution should write active resource bytes");
 
