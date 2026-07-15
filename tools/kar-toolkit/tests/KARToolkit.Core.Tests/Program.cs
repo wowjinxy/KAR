@@ -807,6 +807,18 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(scriptDumps.Count == 2, "resource action batch execution should run batch-safe actions over filtered resource sets");
                 AssertTrue(scriptDumps.Any(result => result.Address == "ScInfPause.tm" && !result.ByteDumpResult.WroteOutput), "resource action batch execution should include skipped existing outputs");
                 AssertTrue(scriptDumps.Any(result => result.Address == "A2Info.dat#ScInfGo2D.tm" && result.ByteDumpResult.WroteOutput), "resource action batch execution should write missing outputs");
+                KarProjectResourceActionBatchResult scriptDumpReport = project.ExecuteResourceActionBatch(new KarProjectResourceActionPlanQueryOptions
+                {
+                    ActionId = "dump-bytes",
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Domain = "script-tables",
+                    },
+                    Overwrite = true,
+                });
+                AssertTrue(scriptDumpReport.ActionId == "dump-bytes" && scriptDumpReport.Overwrite, "resource action batch reports should keep execution metadata");
+                AssertTrue(scriptDumpReport.ResultCount == 2 && scriptDumpReport.SucceededCount == 2 && !scriptDumpReport.HasFailures, "resource action batch reports should summarize successful batches");
+                AssertTrue(scriptDumpReport.Results.All(result => result.Succeeded), "resource action batch reports should retain ordered execution results");
 
                 KarProjectResourceActionExecutionResult fields = executor.Execute("VsHydra.dat:vsDataHydra", "field-values");
                 AssertTrue(fields.FieldValues.Any(field => field.FieldName == "x0C" && field.Value.SignedValue == 303), "resource action executors should return field-list results");
@@ -872,13 +884,17 @@ namespace KARToolkit.Core.Tests
                         Resources = new KarProjectResourceQueryOptions { Kind = KarResourceKind.File },
                     }),
                     "resource action batch execution should reject actions that are not marked batch-safe");
-                IReadOnlyList<KarProjectResourceActionExecutionResult> tolerantFailures = executor.ExecuteBatch(
+                KarProjectResourceActionBatchResult tolerantFailureReport = executor.ExecuteBatchResult(
                     new KarProjectResourceActionPlanQueryOptions
                     {
                         ActionId = "export-output",
                         Resources = new KarProjectResourceQueryOptions { Kind = KarResourceKind.File },
                     },
                     new KarProjectResourceActionExecutionOptions { ContinueOnError = true });
+                IReadOnlyList<KarProjectResourceActionExecutionResult> tolerantFailures = tolerantFailureReport.Results;
+                AssertTrue(tolerantFailureReport.ContinueOnError && tolerantFailureReport.HasFailures, "tolerant resource action batch reports should expose failure summary state");
+                AssertTrue(tolerantFailureReport.ResultCount == 5 && tolerantFailureReport.SucceededCount == 0 && tolerantFailureReport.FailedCount == 5, "tolerant resource action batch reports should count failed executions");
+                AssertTrue(tolerantFailureReport.FailedResults.Count == 5 && tolerantFailureReport.SucceededResults.Count == 0, "tolerant resource action batch reports should group failed executions");
                 AssertTrue(tolerantFailures.Count == 5, "tolerant resource action batches should keep per-resource failures");
                 AssertTrue(tolerantFailures.All(result => result.Failed && result.ErrorType == "NotSupportedException"), "tolerant resource action batches should expose failure metadata");
                 AssertTrue(tolerantFailures.All(result => result.Result == null), "failed resource action results should not expose success payloads");

@@ -73,6 +73,13 @@ namespace KARToolkit.Core
             KarProjectResourceActionPlanQueryOptions options,
             KarProjectResourceActionExecutionOptions executionOptions = null)
         {
+            return ExecuteBatchResult(options, executionOptions).Results;
+        }
+
+        public KarProjectResourceActionBatchResult ExecuteBatchResult(
+            KarProjectResourceActionPlanQueryOptions options,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
             if (string.IsNullOrWhiteSpace(options.ActionId))
@@ -129,12 +136,18 @@ namespace KARToolkit.Core
                 }
             }
 
-            return results
+            IReadOnlyList<KarProjectResourceActionExecutionResult> orderedResults = results
                 .OrderBy(result => result.Resource.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(result => result.Kind)
                 .ThenBy(result => result.Address, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
+
+            return new KarProjectResourceActionBatchResult(
+                effectiveOptions.ActionId,
+                overwrite,
+                executionOptions.ContinueOnError,
+                orderedResults);
         }
     }
 }

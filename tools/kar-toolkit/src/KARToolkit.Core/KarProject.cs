@@ -346,6 +346,13 @@ namespace KARToolkit.Core
             return ResourceActionExecutor.ExecuteBatch(options, executionOptions);
         }
 
+        public KarProjectResourceActionBatchResult ExecuteResourceActionBatch(
+            KarProjectResourceActionPlanQueryOptions options,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return ResourceActionExecutor.ExecuteBatchResult(options, executionOptions);
+        }
+
         public KarProjectResourceDetail GetResourceDetail(string address)
         {
             return ResourceService.GetDetail(address);

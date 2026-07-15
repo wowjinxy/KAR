@@ -28,22 +28,22 @@ internal static class KarCliResourceActionCommands
         string actionId = options.Positionals[1];
         KarProjectResourceActionExecutionOptions executionOptions = CreateBatchExecutionOptions(options, actionId);
         KarProjectResourceActionPlanQueryOptions query = CreateResourceActionBatchPlanQuery(options, actionId);
-        IReadOnlyList<KarProjectResourceActionExecutionResult> results = project.ResourceActionExecutor.ExecuteBatch(query, executionOptions);
+        KarProjectResourceActionBatchResult batch = project.ResourceActionExecutor.ExecuteBatchResult(query, executionOptions);
 
         if (options.Json)
         {
-            WriteJson(results.Select(ToResourceActionExecutionResultDto).ToList());
-            return results.Any(result => result.Failed) ? 1 : 0;
+            WriteJson(ToResourceActionBatchResultDto(batch));
+            return batch.HasFailures ? 1 : 0;
         }
 
-        Console.WriteLine("Executed resource actions: " + results.Count);
-        foreach (KarProjectResourceActionExecutionResult result in results)
+        Console.WriteLine("Executed resource actions: " + batch.ResultCount + " succeeded=" + batch.SucceededCount + " failed=" + batch.FailedCount);
+        foreach (KarProjectResourceActionExecutionResult result in batch.Results)
         {
             PrintProjectResourceActionPlan(result.Plan);
             PrintResourceActionResult(result);
         }
 
-        return results.Any(result => result.Failed) ? 1 : 0;
+        return batch.HasFailures ? 1 : 0;
     }
 
     private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
@@ -114,6 +114,21 @@ internal static class KarCliResourceActionCommands
             errorType = result.ErrorType,
             errorMessage = result.ErrorMessage,
             result = result.Failed ? null : ToResourceActionResultDto(result),
+        };
+    }
+
+    private static object ToResourceActionBatchResultDto(KarProjectResourceActionBatchResult batch)
+    {
+        return new
+        {
+            actionId = batch.ActionId,
+            overwrite = batch.Overwrite,
+            continueOnError = batch.ContinueOnError,
+            resultCount = batch.ResultCount,
+            succeededCount = batch.SucceededCount,
+            failedCount = batch.FailedCount,
+            hasFailures = batch.HasFailures,
+            results = batch.Results.Select(ToResourceActionExecutionResultDto).ToList(),
         };
     }
 
