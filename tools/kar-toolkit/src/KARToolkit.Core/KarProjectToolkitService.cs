@@ -20,6 +20,11 @@ namespace KARToolkit.Core
             return _project.SchemaService.CreateToolkitRegistryCatalog();
         }
 
+        public KarProjectToolkitRegistryCatalogContract CreateRegistryCatalogContract()
+        {
+            return CreateRegistryCatalog().CreateContract();
+        }
+
         public KarProjectToolkitSnapshot CreateSnapshot(KarProjectToolkitSnapshotOptions options = null)
         {
             options = options ?? new KarProjectToolkitSnapshotOptions();

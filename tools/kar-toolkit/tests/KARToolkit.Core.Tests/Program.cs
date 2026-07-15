@@ -218,6 +218,10 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(registryCatalog.Project, project), "toolkit registry catalog should retain project context");
                 AssertTrue(registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count, "toolkit registry catalog should expose active handler counts");
                 AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action and operation counts");
+                KarProjectToolkitRegistryCatalogContract registryContract = registryCatalog.CreateContract();
+                AssertTrue(registryContract.Project.Name == project.Name && registryContract.Project.Workspace.WritesOnlyToOutput, "toolkit registry contracts should expose project and workspace metadata");
+                AssertTrue(registryContract.FileKindCount == registryCatalog.FileKindCount && registryContract.FileHandlers.Count == registryCatalog.FileHandlerCount, "toolkit registry contracts should preserve file registry counts");
+                AssertTrue(registryContract.ResourceHandlers.Any(handler => handler.Actions.Any(action => action.Id == "dump-bytes")), "toolkit registry contracts should expose nested resource action metadata");
                 AssertTrue(KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in action and preset registries");
                 AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
@@ -1955,6 +1959,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(session.Surface.Project, session.Project), "project sessions should attach a toolkit surface for the same project");
                 AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
+                AssertTrue(session.Project.ToolkitService.CreateRegistryCatalogContract().ProjectName == session.Name, "toolkit service should expose reusable registry catalog contracts");
                 AssertTrue(session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0, "project sessions should expose file and resource toolkit registries");
                 AssertTrue(session.OperationDomainRuleCount >= 6 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation toolkit registries");
                 AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");

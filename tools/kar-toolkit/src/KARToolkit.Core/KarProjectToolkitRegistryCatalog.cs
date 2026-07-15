@@ -74,6 +74,11 @@ namespace KARToolkit.Core
 
         public bool HasOperationPresetDefinitions => OperationPresetDefinitionCount != 0;
 
+        public KarProjectToolkitRegistryCatalogContract CreateContract()
+        {
+            return KarProjectToolkitRegistryCatalogContract.Create(this);
+        }
+
         public static KarProjectToolkitRegistryCatalog CreateDefault()
         {
             return new KarProjectToolkitRegistryCatalog(

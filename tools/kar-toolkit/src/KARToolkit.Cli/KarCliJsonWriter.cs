@@ -9,6 +9,7 @@ internal static class KarCliJsonWriter
     {
         WriteIndented = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
     public static void WriteJson(object value)
