@@ -34,8 +34,8 @@ internal static class KarCliCopyCommands
     {
         options.RequirePositionals("copy-map", 2);
         KarProject project = OpenProject(options);
-        KarMapBundle map = project.GetMap(options.Positionals[1]);
-        IReadOnlyList<KarProjectFileCopyResult> results = project.CopyMapFilesToOutput(map, options.Overwrite);
+        KarMapBundle map = project.MapService.Get(options.Positionals[1]);
+        IReadOnlyList<KarProjectFileCopyResult> results = project.MapService.CopyFilesToOutput(map, options.Overwrite);
 
         if (options.Json)
         {

@@ -23,6 +23,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
+            Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
@@ -320,6 +321,72 @@ namespace KARToolkit.Core.Tests
                 });
 
                 AssertTrue(namedMaps.Count == 1, "map output query should filter map names case-insensitively");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectMapServiceCoordinatesMapWorkflows()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-map-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Model.dat"), "grModelCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Event.dat"), "grEventDataAllCity1", new KAR_grData());
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectMapService maps = project.MapService;
+
+                AssertTrue(object.ReferenceEquals(maps.Project, project), "map service should retain project context");
+                AssertTrue(maps.Bundles.Count == 1, "map service should expose indexed map bundles");
+                AssertTrue(maps.ByName.ContainsKey("City1"), "map service should expose map lookup index");
+
+                KarMapBundle map = maps.Get("GrCity1Event.dat");
+                AssertTrue(map.Name == "City1", "map service should resolve maps from event/script filenames");
+                AssertTrue(object.ReferenceEquals(project.GetMap("City1"), map), "project map compatibility wrapper should use the same map bundle");
+
+                KarMapBundle tryMap;
+                AssertTrue(maps.TryGet("GrCity1Model.dat", out tryMap), "map service should try-resolve maps from model filenames");
+                AssertTrue(object.ReferenceEquals(tryMap, map), "map service try-get should return the indexed map bundle");
+
+                KarProjectMapOutputResult copyResult = maps.CopyToOutputResult("GrCity1.dat", true);
+                AssertTrue(copyResult.FileCount == 3, "map service should copy every file in a map bundle");
+                AssertTrue(copyResult.DataCopyResult != null, "map service copy result should expose data output");
+                AssertTrue(copyResult.ModelCopyResult != null, "map service copy result should expose model output");
+                AssertTrue(copyResult.ScriptCopyResult != null, "map service copy result should expose script output");
+                AssertTrue(copyResult.OutputPaths.All(File.Exists), "map service copy result should point at written output files");
+
+                KarProjectMapOutputInfo output = maps.GetOutput("City1");
+                AssertTrue(output.HasCompleteOutputSet, "map service output lookup should detect complete staged map bundles");
+                AssertTrue(output.UnchangedOutputFileCount == 3, "map service output lookup should compare copied files to source files");
+
+                IReadOnlyList<KarProjectMapOutputInfo> wrapperOutputs = project.QueryMapOutputs(new KarProjectMapOutputQueryOptions { HasOutput = true });
+                AssertTrue(wrapperOutputs.Count == 1 && wrapperOutputs[0].HasCompleteOutputSet, "project map output compatibility wrapper should delegate to map service");
+
+                KarProjectMapArchiveBundle archives = maps.OpenArchives("City1");
+                AssertTrue(archives.HasDataArchive, "map service should open map data archives");
+                AssertTrue(archives.HasModelArchive, "map service should open map model archives");
+                AssertTrue(archives.HasScriptArchive, "map service should open map script archives");
+                AssertTrue(archives.Archives.Count == 3, "map service archive bundle should include every available map archive");
+
+                KarMapInfo info = maps.Inspect("GrCity1.dat");
+                AssertTrue(info.Name == "City1", "map service should inspect maps by file path");
+                AssertTrue(info.HasScriptArchive, "map service inspection should include event/script archives");
+                AssertTrue(info.Archives.Count == 3, "map service inspection should include every available archive");
+
+                KarMapInfo tryInfo;
+                string error;
+                AssertTrue(maps.TryInspect("City1", out tryInfo, out error), "map service should expose try-inspection");
+                AssertTrue(tryInfo != null && error == null, "successful map service try-inspection should return info without an error");
             }
             finally
             {

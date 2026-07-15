@@ -74,7 +74,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("map-outputs", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectMapOutputInfo> mapOutputs = project.QueryMapOutputs(CreateMapOutputQuery(options, project))
+        List<KarProjectMapOutputInfo> mapOutputs = project.MapService.QueryOutputs(CreateMapOutputQuery(options, project))
             .OrderBy(map => map.Name)
             .ToList();
 
@@ -99,11 +99,11 @@ internal static class KarCliInspectionCommands
 
         if (options.Json)
         {
-            WriteJson(project.Maps.Select(ToMapBundleDto).ToList());
+            WriteJson(project.MapService.Bundles.Select(ToMapBundleDto).ToList());
             return 0;
         }
 
-        foreach (KarMapBundle map in project.Maps)
+        foreach (KarMapBundle map in project.MapService.Bundles)
         {
             string pieces = string.Join(", ", map.Files.Select(file => file.RelativePath));
             Console.WriteLine(map.Name + ": " + pieces);
@@ -346,7 +346,7 @@ internal static class KarCliInspectionCommands
         return new KarProjectMapOutputQueryOptions
         {
             Outputs = CreateOutputQuery(options),
-            MapName = options.Positionals.Count >= 2 ? project.GetMap(options.Positionals[1]).Name : null,
+            MapName = options.Positionals.Count >= 2 ? project.MapService.Get(options.Positionals[1]).Name : null,
             HasOutput = true,
         };
     }
@@ -371,7 +371,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("map", 2);
         KarProject project = OpenProject(options);
-        KarMapInfo map = project.Inspector.InspectMap(options.Positionals[1]);
+        KarMapInfo map = project.MapService.Inspect(options.Positionals[1]);
 
         if (options.Json)
         {

@@ -20,6 +20,7 @@ namespace KARToolkit.Core
             FileStore = new KarProjectFileStore(Workspace, Index);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
+            MapService = new KarProjectMapService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -32,6 +33,8 @@ namespace KARToolkit.Core
         public KarProjectFileStore FileStore { get; }
 
         public KarProjectArchiveStore ArchiveStore { get; }
+
+        public KarProjectMapService MapService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -241,18 +244,17 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectMapOutputInfo> QueryMapOutputs(KarProjectMapOutputQueryOptions options)
         {
-            IReadOnlyList<KarProjectOutputFileInfo> outputFiles = QueryOutputFiles(options == null ? null : options.Outputs);
-            return KarProjectMapOutputInfo.BuildMany(Maps, outputFiles, options);
+            return MapService.QueryOutputs(options);
         }
 
         public KarMapBundle GetMap(string mapNameOrPath)
         {
-            return Index.GetMap(mapNameOrPath);
+            return MapService.Get(mapNameOrPath);
         }
 
         public bool TryGetMap(string mapNameOrPath, out KarMapBundle map)
         {
-            return Index.TryGetMap(mapNameOrPath, out map);
+            return MapService.TryGet(mapNameOrPath, out map);
         }
 
         public string GetReadPath(string relativePath)
@@ -282,32 +284,32 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return FileStore.CopyMapToOutput(mapNameOrPath, overwrite);
+            return MapService.CopyToOutput(mapNameOrPath, overwrite);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(KarMapBundle map, bool overwrite = false)
         {
-            return FileStore.CopyMapToOutput(map, overwrite);
+            return MapService.CopyToOutput(map, overwrite);
         }
 
         public KarProjectMapOutputResult CopyMapToOutputResult(string mapNameOrPath, bool overwrite = false)
         {
-            return FileStore.CopyMapToOutputResult(mapNameOrPath, overwrite);
+            return MapService.CopyToOutputResult(mapNameOrPath, overwrite);
         }
 
         public KarProjectMapOutputResult CopyMapToOutputResult(KarMapBundle map, bool overwrite = false)
         {
-            return FileStore.CopyMapToOutputResult(map, overwrite);
+            return MapService.CopyToOutputResult(map, overwrite);
         }
 
         public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(string mapNameOrPath, bool overwrite = false)
         {
-            return FileStore.CopyMapFilesToOutput(mapNameOrPath, overwrite);
+            return MapService.CopyFilesToOutput(mapNameOrPath, overwrite);
         }
 
         public IReadOnlyList<KarProjectFileCopyResult> CopyMapFilesToOutput(KarMapBundle map, bool overwrite = false)
         {
-            return FileStore.CopyMapFilesToOutput(map, overwrite);
+            return MapService.CopyFilesToOutput(map, overwrite);
         }
 
         public byte[] ReadBytes(string relativePath)
@@ -337,12 +339,12 @@ namespace KARToolkit.Core
 
         public KarProjectMapArchiveBundle OpenMapArchives(string mapNameOrPath)
         {
-            return OpenMapArchives(Index.GetMap(mapNameOrPath));
+            return MapService.OpenArchives(mapNameOrPath);
         }
 
         public KarProjectMapArchiveBundle OpenMapArchives(KarMapBundle map)
         {
-            return ArchiveStore.OpenMapArchives(map);
+            return MapService.OpenArchives(map);
         }
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
@@ -357,17 +359,17 @@ namespace KARToolkit.Core
 
         public KarMapInfo InspectMap(string mapNameOrPath)
         {
-            return Inspector.InspectMap(mapNameOrPath);
+            return MapService.Inspect(mapNameOrPath);
         }
 
         public KarMapInfo InspectMap(KarMapBundle map)
         {
-            return Inspector.InspectMap(map);
+            return MapService.Inspect(map);
         }
 
         public bool TryInspectMap(string mapNameOrPath, out KarMapInfo info, out string error)
         {
-            return Inspector.TryInspectMap(mapNameOrPath, out info, out error);
+            return MapService.TryInspect(mapNameOrPath, out info, out error);
         }
 
         public KarValidationReport Validate(KarValidationOptions options = null)

@@ -48,7 +48,8 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Project-wide report snapshots go through `KarProject.CreateReport`, and the `report` CLI command aggregates file groups, map completeness, archive/root health, schema usage, and optional field summaries.
 Project output/mod-state inventory goes through `KarProject.CreateOutputInventory` or `KarProject.QueryOutputFiles`, and the `outputs` CLI command reports staged project files, modified/unchanged source matches, and output-only orphan files.
-Map output/mod-state inventory goes through `KarProject.QueryMapOutputs`, and the `map-outputs` CLI command groups staged output files by map data/model/event-script bundles.
+Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs` or the compatibility wrapper `KarProject.QueryMapOutputs`, and the `map-outputs` CLI command groups staged output files by map data/model/event-script bundles.
+Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
