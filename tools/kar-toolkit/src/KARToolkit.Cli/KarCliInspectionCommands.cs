@@ -173,6 +173,42 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-outputs", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceOutputInfo> outputs = project.ResourceService.QueryOutputs(CreateResourceOutputQuery(options))
+            .Where(output => MatchesResourceOutputStatusOption(output, options.OutputStatus))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(outputs.Select(ToProjectResourceOutputDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceOutputInfo output in outputs)
+            PrintProjectResourceOutput(output);
+
+        return 0;
+    }
+
+    public static int ShowResourceOutput(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-output", 2);
+        KarProject project = OpenProject(options);
+        KarProjectResourceOutputInfo output = project.ResourceService.GetOutput(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceOutputDto(output));
+            return 0;
+        }
+
+        PrintProjectResourceOutput(output);
+        return 0;
+    }
+
     public static int ShowA2DEntries(KarCliOptions options)
     {
         return ShowA2DEntriesCore(options, false);
@@ -426,11 +462,46 @@ internal static class KarCliInspectionCommands
         return query;
     }
 
+    private static KarProjectResourceOutputQueryOptions CreateResourceOutputQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options, includeOutputCopyFilter: false);
+        KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
+        {
+            Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            Category = options.FileCategory,
+            Files = parentFiles,
+            Roots = new KarProjectRootQueryOptions
+            {
+                Files = parentFiles,
+                IsKnown = options.RootKnown,
+                RootName = options.RootName,
+            },
+            A2DEntries = new KarProjectA2DEntryQueryOptions
+            {
+                Packages = parentFiles,
+            },
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
+            resources.Kind = ParseResourceKind(options.ResourceKind);
+
+        return new KarProjectResourceOutputQueryOptions
+        {
+            Resources = resources,
+            HasOutput = options.FileHasOutputCopy,
+        };
+    }
+
     private static KarProjectFileQueryOptions CreateResourceParentFileQuery(KarCliOptions options)
+    {
+        return CreateResourceParentFileQuery(options, includeOutputCopyFilter: true);
+    }
+
+    private static KarProjectFileQueryOptions CreateResourceParentFileQuery(KarCliOptions options, bool includeOutputCopyFilter)
     {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
         {
-            HasOutputCopy = options.FileHasOutputCopy,
+            HasOutputCopy = includeOutputCopyFilter ? options.FileHasOutputCopy : null,
         };
 
         if (!string.IsNullOrWhiteSpace(options.FileKind))
@@ -443,6 +514,24 @@ internal static class KarCliInspectionCommands
         }
 
         return query;
+    }
+
+    private static bool MatchesResourceOutputStatusOption(KarProjectResourceOutputInfo output, KarProjectOutputFileStatus? status)
+    {
+        if (!status.HasValue)
+            return true;
+
+        switch (status.Value)
+        {
+            case KarProjectOutputFileStatus.DiffersFromSource:
+                return output.IsModified;
+            case KarProjectOutputFileStatus.MatchesSource:
+                return output.IsUnchanged;
+            case KarProjectOutputFileStatus.SourceMissing:
+                return output.Status == KarProjectResourceOutputStatus.SourceMissing;
+            default:
+                return false;
+        }
     }
 
     private static KarResourceKind ParseResourceKind(string value)

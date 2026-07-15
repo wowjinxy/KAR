@@ -553,6 +553,31 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceOutputDto(KarProjectResourceOutputInfo output)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(output.Resource),
+            reference = ToResourceReferenceDto(output.Reference),
+            kind = output.Kind.ToString(),
+            address = output.Address,
+            outputKind = output.OutputKind.ToString(),
+            status = output.Status.ToString(),
+            outputRelativePath = output.OutputRelativePath,
+            outputPath = output.OutputPath,
+            hasOutput = output.HasOutput,
+            hasProjectFileOutput = output.HasProjectFileOutput,
+            hasOutputAsset = output.HasOutputAsset,
+            isMissing = output.IsMissing,
+            isModified = output.IsModified,
+            isUnchanged = output.IsUnchanged,
+            isProjectFileOutput = output.IsProjectFileOutput,
+            isOutputAsset = output.IsOutputAsset,
+            projectFileOutput = output.ProjectFileOutput == null ? null : ToProjectOutputFileDto(output.ProjectFileOutput),
+            a2dEntryOutput = output.A2DEntryOutput == null ? null : ToA2DEntryOutputDto(output.A2DEntryOutput),
+        };
+    }
+
     public static object ToProjectResourceExportResultDto(KarProjectResourceExportResult result)
     {
         return new

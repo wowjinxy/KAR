@@ -188,9 +188,19 @@ namespace KARToolkit.Core
             return ResourceService.Query(options);
         }
 
+        public IReadOnlyList<KarProjectResourceOutputInfo> QueryResourceOutputs(KarProjectResourceOutputQueryOptions options = null)
+        {
+            return ResourceService.QueryOutputs(options);
+        }
+
         public KarProjectResourceInfo GetResource(string address)
         {
             return ResourceService.Get(address);
+        }
+
+        public KarProjectResourceOutputInfo GetResourceOutput(string address)
+        {
+            return ResourceService.GetOutput(address);
         }
 
         public bool TryGetResource(string address, out KarProjectResourceInfo resource)

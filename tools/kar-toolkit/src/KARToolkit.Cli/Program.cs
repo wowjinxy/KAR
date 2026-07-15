@@ -40,6 +40,9 @@ internal static class Program
                 "links" => KarCliInspectionCommands.ShowRelationships(options),
                 "resources" => KarCliInspectionCommands.ShowResources(options),
                 "resource" => KarCliInspectionCommands.ShowResource(options),
+                "resource-outputs" => KarCliInspectionCommands.ShowResourceOutputs(options),
+                "resource-output" => KarCliInspectionCommands.ShowResourceOutput(options),
+                "resource-status" => KarCliInspectionCommands.ShowResourceOutput(options),
                 "a2d-entries" => KarCliInspectionCommands.ShowA2DEntries(options),
                 "a2d-entry-outputs" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
                 "a2d-output-status" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
@@ -101,6 +104,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit relationships <source-folder> [map-name-or-file] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resources <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--kind <file-kind>] [--category <category>]");
         Console.WriteLine("  kar-toolkit resource <source-folder> <resource-address> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--modified|--unchanged|--source-only]");
+        Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit script-tables <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");

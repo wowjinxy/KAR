@@ -28,6 +28,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
             Run("ProjectResourceServiceWritesScalarEditsToOutput", ProjectResourceServiceWritesScalarEditsToOutput);
+            Run("ProjectResourceServiceReportsUnifiedOutputStatus", ProjectResourceServiceReportsUnifiedOutputStatus);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -516,6 +517,80 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(tempRoot, true);
                 if (Directory.Exists(outputRoot))
                     Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceReportsUnifiedOutputStatus()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-output-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            string inputRoot = tempRoot + "_inputs";
+            Directory.CreateDirectory(tempRoot);
+            Directory.CreateDirectory(inputRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            File.WriteAllBytes(Path.Combine(tempRoot, "Loose.bin"), new byte[] { 0x44, 0x55 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                KarProjectResourceOutputInfo missingFile = resources.GetOutput("Loose.bin");
+                AssertTrue(missingFile.Status == KarProjectResourceOutputStatus.Missing, "resource output status should report missing file outputs");
+                AssertTrue(!missingFile.HasOutput, "resource output status should flag missing outputs");
+
+                KarProjectResourceExportResult fileExport = resources.ExportToOutput("Loose.bin");
+                KarProjectResourceOutputInfo copiedFile = resources.GetOutput("Loose.bin");
+                AssertTrue(copiedFile.Status == KarProjectResourceOutputStatus.MatchesSource, "resource output status should report copied files as unchanged");
+                AssertTrue(copiedFile.ProjectFileOutput.OutputPath == fileExport.OutputPath, "resource output status should include project file output metadata");
+
+                string looseReplacementPath = Path.Combine(inputRoot, "Loose.bin");
+                File.WriteAllBytes(looseReplacementPath, new byte[] { 0x66, 0x77, 0x88 });
+                resources.ImportFromFile("Loose.bin", looseReplacementPath);
+                AssertTrue(project.GetResourceOutput("Loose.bin").Status == KarProjectResourceOutputStatus.DiffersFromSource, "project resource output wrapper should report file imports as modified");
+
+                KarProjectResourceOutputInfo missingEntry = resources.GetOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(missingEntry.Status == KarProjectResourceOutputStatus.Missing, "resource output status should report missing A2D sidecars and package edits");
+
+                KarProjectResourceExportResult entryExport = resources.ExportToOutput("A2Info.dat#ScInfGo2D.tm");
+                KarProjectResourceOutputInfo extractedEntry = resources.GetOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(extractedEntry.Status == KarProjectResourceOutputStatus.SidecarMatchesEntry, "resource output status should report extracted A2D sidecars that match active entries");
+                AssertTrue(extractedEntry.OutputKind == KarProjectResourceOutputKind.OutputAsset, "resource output status should report A2D sidecars as output assets");
+                AssertTrue(extractedEntry.A2DEntryOutput.OutputPath == entryExport.OutputPath, "resource output status should include A2D sidecar output metadata");
+
+                File.WriteAllBytes(entryExport.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                AssertTrue(resources.GetOutput("A2Info.dat#ScInfGo2D.tm").Status == KarProjectResourceOutputStatus.SidecarDiffersFromEntry, "resource output status should detect modified A2D sidecars");
+
+                File.Delete(entryExport.OutputPath);
+                string entryReplacementPath = Path.Combine(inputRoot, "ScInfGo2D.tm");
+                File.WriteAllBytes(entryReplacementPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                resources.ImportFromFile("A2Info.dat#ScInfGo2D.tm", entryReplacementPath);
+                KarProjectResourceOutputInfo importedEntry = resources.GetOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(importedEntry.Status == KarProjectResourceOutputStatus.DiffersFromSource, "resource output status should compare A2D output package entries against source entries");
+                AssertTrue(importedEntry.OutputKind == KarProjectResourceOutputKind.ProjectFile, "resource output status should report imported A2D entries as package outputs");
+                AssertTrue(importedEntry.HasProjectFileOutput, "resource output status should include containing package output metadata");
+
+                resources.ExportToOutput("VsHydra.dat:vsDataHydra");
+                KarProjectResourceOutputInfo rootOutput = resources.GetOutput("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootOutput.Status == KarProjectResourceOutputStatus.MatchesSource, "resource output status should report exported HSD root archives through their containing file");
+
+                IReadOnlyList<KarProjectResourceOutputInfo> modified = resources.QueryOutputs(new KarProjectResourceOutputQueryOptions
+                {
+                    Status = KarProjectResourceOutputStatus.DiffersFromSource,
+                });
+                AssertTrue(modified.Any(output => output.Address == "Loose.bin"), "resource output queries should filter modified file resources");
+                AssertTrue(modified.Any(output => output.Address == "A2Info.dat#ScInfGo2D.tm"), "resource output queries should filter modified A2D entry resources");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+                if (Directory.Exists(inputRoot))
+                    Directory.Delete(inputRoot, true);
             }
         }
 

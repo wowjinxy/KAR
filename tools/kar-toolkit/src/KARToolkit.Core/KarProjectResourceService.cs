@@ -1,3 +1,4 @@
+using KARToolkit.Core.AirRide;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,6 +67,27 @@ namespace KARToolkit.Core
                 throw new KeyNotFoundException("KAR project resource was not found: " + address);
 
             return resource;
+        }
+
+        public IReadOnlyList<KarProjectResourceOutputInfo> QueryOutputs(KarProjectResourceOutputQueryOptions options = null)
+        {
+            IEnumerable<KarProjectResourceOutputInfo> query = Query(options == null ? null : options.Resources)
+                .Select(CreateOutputInfo);
+
+            if (options != null)
+                query = query.Where(options.Matches);
+
+            return query
+                .OrderBy(output => output.Resource.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(output => output.Kind)
+                .ThenBy(output => output.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceOutputInfo GetOutput(string address)
+        {
+            return CreateOutputInfo(Get(address));
         }
 
         public bool TryGet(string address, out KarProjectResourceInfo resource)
@@ -238,6 +260,132 @@ namespace KARToolkit.Core
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(reference));
+            }
+        }
+
+        private KarProjectResourceOutputInfo CreateOutputInfo(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+
+            switch (resource.Kind)
+            {
+                case KarResourceKind.File:
+                case KarResourceKind.HsdRoot:
+                    return CreateProjectFileOutputInfo(resource);
+
+                case KarResourceKind.A2DEntry:
+                    return CreateA2DEntryResourceOutputInfo(resource);
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(resource));
+            }
+        }
+
+        private KarProjectResourceOutputInfo CreateProjectFileOutputInfo(KarProjectResourceInfo resource)
+        {
+            KarProjectOutputFileInfo output = GetProjectFileOutputOrNull(resource.File);
+            return new KarProjectResourceOutputInfo(
+                resource,
+                KarProjectResourceOutputKind.ProjectFile,
+                output == null ? KarProjectResourceOutputStatus.Missing : ToResourceStatus(output.Status),
+                resource.File.RelativePath,
+                resource.File.OutputPath,
+                output,
+                null);
+        }
+
+        private KarProjectResourceOutputInfo CreateA2DEntryResourceOutputInfo(KarProjectResourceInfo resource)
+        {
+            KarProjectA2DEntryOutputInfo sidecar = _project.A2DService.GetEntryOutput(resource.Address);
+            KarProjectOutputFileInfo packageOutput = GetProjectFileOutputOrNull(resource.File);
+
+            if (sidecar.HasOutput)
+            {
+                return new KarProjectResourceOutputInfo(
+                    resource,
+                    KarProjectResourceOutputKind.OutputAsset,
+                    sidecar.Status == KarProjectA2DEntryOutputStatus.MatchesEntry
+                        ? KarProjectResourceOutputStatus.SidecarMatchesEntry
+                        : KarProjectResourceOutputStatus.SidecarDiffersFromEntry,
+                    sidecar.OutputRelativePath,
+                    sidecar.OutputPath,
+                    packageOutput,
+                    sidecar);
+            }
+
+            if (packageOutput != null)
+            {
+                return new KarProjectResourceOutputInfo(
+                    resource,
+                    KarProjectResourceOutputKind.ProjectFile,
+                    GetA2DEntryPackageOutputStatus(resource),
+                    resource.File.RelativePath,
+                    resource.File.OutputPath,
+                    packageOutput,
+                    sidecar);
+            }
+
+            return new KarProjectResourceOutputInfo(
+                resource,
+                KarProjectResourceOutputKind.OutputAsset,
+                KarProjectResourceOutputStatus.Missing,
+                sidecar.OutputRelativePath,
+                sidecar.OutputPath,
+                null,
+                sidecar);
+        }
+
+        private KarProjectOutputFileInfo GetProjectFileOutputOrNull(KarProjectFile file)
+        {
+            if (file == null || !File.Exists(file.OutputPath))
+                return null;
+
+            return _project.OutputService.GetFile(file.RelativePath);
+        }
+
+        private KarProjectResourceOutputStatus GetA2DEntryPackageOutputStatus(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+
+            if (!File.Exists(resource.File.SourcePath))
+                return KarProjectResourceOutputStatus.SourceMissing;
+
+            byte[] active = _project.A2DService.ReadEntryData(resource.RelativePath, resource.Reference.EntryName);
+            byte[] source = ReadSourceA2DEntryData(resource.RelativePath, resource.Reference.EntryName);
+            return active.SequenceEqual(source)
+                ? KarProjectResourceOutputStatus.MatchesSource
+                : KarProjectResourceOutputStatus.DiffersFromSource;
+        }
+
+        private byte[] ReadSourceA2DEntryData(string packageRelativePath, string entryName)
+        {
+            A2DPackage package;
+            string error;
+            if (!A2DPackage.TryOpen(_project.FileService.GetSourcePath(packageRelativePath), out package, out error))
+                throw new InvalidDataException(error);
+
+            A2DPackageEntry entry = package.Entries.FirstOrDefault(candidate =>
+                string.Equals(candidate.Name, entryName, StringComparison.OrdinalIgnoreCase));
+            if (entry == null)
+                throw new FileNotFoundException("Source A2D package entry was not found.", entryName);
+
+            return package.GetEntryData(entry.Index);
+        }
+
+        private static KarProjectResourceOutputStatus ToResourceStatus(KarProjectOutputFileStatus status)
+        {
+            switch (status)
+            {
+                case KarProjectOutputFileStatus.MatchesSource:
+                    return KarProjectResourceOutputStatus.MatchesSource;
+                case KarProjectOutputFileStatus.DiffersFromSource:
+                    return KarProjectResourceOutputStatus.DiffersFromSource;
+                case KarProjectOutputFileStatus.SourceMissing:
+                    return KarProjectResourceOutputStatus.SourceMissing;
+                default:
+                    return KarProjectResourceOutputStatus.Missing;
             }
         }
 
