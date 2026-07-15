@@ -520,6 +520,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectResolvedResourceDetail resolvedRootDetail = project.GetResolvedResourceDetail("VsHydra.dat:vsDataHydra");
                 AssertTrue(resolvedRootDetail.HasDataDefinition && resolvedRootDetail.DataDefinition.DisplayName == "Legendary Machine Versus Data", "resolved resource details should expose root schemas");
                 AssertTrue(resolvedRootDetail.FieldCount >= 5, "resolved resource details should expose root fields");
+                AssertTrue(resolvedRootDetail.HasByteInfo && resolvedRootDetail.ByteInfo.ActiveLength > 0, "resolved resource details should expose active byte info");
                 IReadOnlyList<KarProjectResourceFieldInfo> resolvedFields = project.QueryResolvedResourceFieldValues("VsHydra.dat:vsDataHydra");
                 AssertTrue(resolvedFields.Count == resolvedRootDetail.FieldCount, "resolved resource field queries should match resolved detail fields");
                 AssertTrue(project.GetResolvedResourceFieldValue("VsHydra.dat:vsDataHydra", "x0C").FieldName == "x0C", "resolved resource field lookups should find root fields");
@@ -529,6 +530,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectResolvedResourceDetail resolvedScriptDetail = project.ResourceAddressService.GetDetail("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(resolvedScriptDetail.Resolved.IsScriptTable && !resolvedScriptDetail.HasDataDefinition, "resolved script table details should keep script metadata separate from root schemas");
                 AssertTrue(resolvedScriptDetail.RelationshipCount == 1 && resolvedScriptDetail.FieldCount == 0, "resolved script table details should expose relationships without root fields");
+                AssertTrue(resolvedScriptDetail.ByteInfo.ActiveLength == 4, "resolved script table details should expose packaged entry bytes");
                 AssertTrue(project.QueryResolvedResourceFieldValues("A2Info.dat#ScInfGo2D.tm").Count == 0, "resolved non-root field queries should be empty");
                 IReadOnlyList<KarProjectResolvedResource> scriptResolved = project.QueryResolvedResources(new KarProjectResourceQueryOptions
                 {
@@ -680,18 +682,21 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceDetail fileDetail = resources.GetDetail("VsHydra.dat");
                 AssertTrue(fileDetail.Address == "VsHydra.dat" && fileDetail.Kind == KarResourceKind.File, "resource details should retain resource identity");
                 AssertTrue(fileDetail.Output.Status == KarProjectResourceOutputStatus.Missing, "resource details should include output status");
+                AssertTrue(fileDetail.HasByteInfo && fileDetail.ByteInfo.ActiveLength == File.ReadAllBytes(fileDetail.Resource.File.SourcePath).Length, "resource details should include active file byte info");
                 AssertTrue(fileDetail.ChildResourceCount == 1 && fileDetail.ChildResources[0].Address == "VsHydra.dat:vsDataHydra", "resource details should include child resources");
                 AssertTrue(fileDetail.FieldCount == 0, "file resource details should not report HSD fields directly");
 
                 KarProjectResourceDetail rootDetail = project.GetResourceDetail("VsHydra.dat:vsDataHydra");
                 AssertTrue(rootDetail.Resource.DisplayName == "Legendary Machine Versus Data", "project resource detail wrapper should expose labeled root resources");
                 AssertTrue(rootDetail.FieldCount >= 5, "root resource details should include schema field values");
+                AssertTrue(rootDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing && rootDetail.ByteInfo.ActiveLength > 0, "root resource details should include root byte dump status");
                 AssertTrue(rootDetail.ChildResourceCount == 0, "root resource details should only include direct child resources");
 
                 KarProjectResourceInfo entryResource = project.GetResource("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryResource.IsA2DEntry, "project resource wrapper should resolve A2D entry addresses");
                 AssertTrue(entryResource.A2DEntry.Index == 0, "resolved A2D resources should expose entry metadata");
                 KarProjectResourceDetail entryDetail = resources.GetDetail("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryDetail.ByteInfo.ActiveLength == 4 && entryDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing, "A2D entry resource details should include entry byte dump status");
                 AssertTrue(entryDetail.RelationshipCount == 1 && entryDetail.Relationships[0].Role == "ScreenInfoTable", "resource details should include graph relationships");
                 AssertTrue(project.QueryResources(new KarProjectResourceQueryOptions
                 {

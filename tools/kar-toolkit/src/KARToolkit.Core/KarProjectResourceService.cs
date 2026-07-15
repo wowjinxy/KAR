@@ -297,6 +297,7 @@ namespace KARToolkit.Core
             return new KarProjectResourceDetail(
                 resource,
                 resource.CanQueryOutput ? CreateOutputInfo(resource) : null,
+                resource.CanReadBytes ? CreateByteInfo(resource) : null,
                 _project.ResourceGraphService.QueryChildResources(resource.Address),
                 fields,
                 _project.ResourceGraphService.QueryResourceRelationships(resource.Address));

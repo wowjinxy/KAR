@@ -9,12 +9,14 @@ namespace KARToolkit.Core
         internal KarProjectResourceDetail(
             KarProjectResourceInfo resource,
             KarProjectResourceOutputInfo output,
+            KarProjectResourceByteInfo byteInfo,
             IEnumerable<KarProjectResourceInfo> childResources,
             IEnumerable<KarProjectResourceFieldInfo> fields,
             IEnumerable<KarProjectRelationship> relationships)
         {
             Resource = resource ?? throw new ArgumentNullException(nameof(resource));
             Output = output;
+            ByteInfo = byteInfo;
             ChildResources = (childResources ?? Enumerable.Empty<KarProjectResourceInfo>())
                 .ToList()
                 .AsReadOnly();
@@ -39,6 +41,10 @@ namespace KARToolkit.Core
         public KarProjectResourceOutputInfo Output { get; }
 
         public bool HasOutputInfo => Output != null;
+
+        public KarProjectResourceByteInfo ByteInfo { get; }
+
+        public bool HasByteInfo => ByteInfo != null;
 
         public IReadOnlyList<KarProjectResourceInfo> ChildResources { get; }
 

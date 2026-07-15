@@ -37,6 +37,10 @@ namespace KARToolkit.Core
 
         public bool HasOutputInfo => Detail.HasOutputInfo;
 
+        public KarProjectResourceByteInfo ByteInfo => Detail.ByteInfo;
+
+        public bool HasByteInfo => Detail.HasByteInfo;
+
         public IReadOnlyList<KarProjectResourceInfo> ChildResources => Detail.ChildResources;
 
         public int ChildResourceCount => Detail.ChildResourceCount;

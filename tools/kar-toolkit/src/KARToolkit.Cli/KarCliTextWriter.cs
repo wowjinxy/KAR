@@ -157,6 +157,8 @@ internal static class KarCliTextWriter
 
         if (detail.Output != null)
             Console.WriteLine("Output: " + detail.Output.Status + " [" + detail.Output.OutputKind + "] " + detail.Output.OutputRelativePath);
+        if (detail.ByteInfo != null)
+            PrintProjectResourceByteInfo("Bytes", detail.ByteInfo);
 
         Console.WriteLine("Children: " + detail.ChildResourceCount);
         foreach (KarProjectResourceInfo child in detail.ChildResources)
@@ -177,6 +179,8 @@ internal static class KarCliTextWriter
 
         if (detail.Output != null)
             Console.WriteLine("Output: " + detail.Output.Status + " [" + detail.Output.OutputKind + "] " + detail.Output.OutputRelativePath);
+        if (detail.ByteInfo != null)
+            PrintProjectResourceByteInfo("Bytes", detail.ByteInfo);
 
         Console.WriteLine("Children: " + detail.ChildResourceCount);
         foreach (KarProjectResourceInfo child in detail.ChildResources)
@@ -217,8 +221,13 @@ internal static class KarCliTextWriter
 
     public static void PrintProjectResourceByteInfo(KarProjectResourceByteInfo info)
     {
+        PrintProjectResourceByteInfo(info.Address, info);
+    }
+
+    private static void PrintProjectResourceByteInfo(string label, KarProjectResourceByteInfo info)
+    {
         string output = info.HasOutput ? info.OutputRelativePath : "<missing>";
-        Console.WriteLine(info.Address + " [" + info.Status + "] active=" + info.ActiveLength + " output=" + output);
+        Console.WriteLine(label + ": [" + info.Status + "] active=" + info.ActiveLength + " output=" + output);
     }
 
     public static void PrintProjectResourceFieldValue(KarProjectResourceFieldInfo field)
