@@ -41,6 +41,7 @@ internal static class KarCliDtoFactory
             fileHandlerCount = session.FileHandlerCount,
             resourceHandlerCount = session.ResourceHandlerCount,
             resourceAdapterProviderCount = session.ResourceAdapterProviderCount,
+            relationshipProviderCount = session.RelationshipProviderCount,
             resourceActionDefinitionCount = session.ResourceActionDefinitionCount,
             operationDomainRuleCount = session.OperationDomainRuleCount,
             domainContextProviderCount = session.DomainContextProviderCount,

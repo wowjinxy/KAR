@@ -27,6 +27,8 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectResourceAdapterProvider> ResourceAdapterProviders => _project.ResourceAdapterProviderRegistry.Providers;
 
+        public IReadOnlyList<KarProjectRelationshipProvider> RelationshipProviders => _project.RelationshipProviderRegistry.Providers;
+
         public IReadOnlyList<KarProjectResourceActionDefinition> ResourceActionDefinitions => _project.ResourceActionRegistry.Definitions;
 
         public IReadOnlyList<KarProjectOperationDomainRule> OperationDomainRules => _project.OperationDomainRegistry.Rules;
@@ -45,6 +47,7 @@ namespace KARToolkit.Core
                 FileHandlers,
                 ResourceHandlers,
                 ResourceAdapterProviders,
+                RelationshipProviders,
                 ResourceActionDefinitions,
                 OperationDomainRules,
                 DomainContextProviders,

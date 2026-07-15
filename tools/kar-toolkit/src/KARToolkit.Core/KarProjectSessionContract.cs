@@ -147,6 +147,8 @@ namespace KARToolkit.Core
 
         public int ResourceAdapterProviderCount { get; set; }
 
+        public int RelationshipProviderCount { get; set; }
+
         public int ResourceActionDefinitionCount { get; set; }
 
         public int OperationDomainRuleCount { get; set; }
@@ -197,6 +199,7 @@ namespace KARToolkit.Core
                 FileHandlerCount = session.FileHandlerCount,
                 ResourceHandlerCount = session.ResourceHandlerCount,
                 ResourceAdapterProviderCount = session.ResourceAdapterProviderCount,
+                RelationshipProviderCount = session.RelationshipProviderCount,
                 ResourceActionDefinitionCount = session.ResourceActionDefinitionCount,
                 OperationDomainRuleCount = session.OperationDomainRuleCount,
                 DomainContextProviderCount = session.DomainContextProviderCount,

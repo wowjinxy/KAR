@@ -26,6 +26,8 @@ namespace KARToolkit.Core
 
         public int ResourceAdapterProviderCount { get; set; }
 
+        public int RelationshipProviderCount { get; set; }
+
         public int ResourceActionDefinitionCount { get; set; }
 
         public int OperationDomainRuleCount { get; set; }
@@ -44,6 +46,8 @@ namespace KARToolkit.Core
 
         public bool HasResourceAdapterProviders { get; set; }
 
+        public bool HasRelationshipProviders { get; set; }
+
         public bool HasResourceActionDefinitions { get; set; }
 
         public bool HasOperationDomainRules { get; set; }
@@ -61,6 +65,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResourceHandlerContract> ResourceHandlers { get; set; }
 
         public IReadOnlyList<KarProjectResourceAdapterProviderContract> ResourceAdapterProviders { get; set; }
+
+        public IReadOnlyList<KarProjectRelationshipProviderContract> RelationshipProviders { get; set; }
 
         public IReadOnlyList<KarProjectResourceActionDefinitionContract> ResourceActionDefinitions { get; set; }
 
@@ -89,6 +95,7 @@ namespace KARToolkit.Core
                 FileHandlerCount = catalog.FileHandlerCount,
                 ResourceHandlerCount = catalog.ResourceHandlerCount,
                 ResourceAdapterProviderCount = catalog.ResourceAdapterProviderCount,
+                RelationshipProviderCount = catalog.RelationshipProviderCount,
                 ResourceActionDefinitionCount = catalog.ResourceActionDefinitionCount,
                 OperationDomainRuleCount = catalog.OperationDomainRuleCount,
                 DomainContextProviderCount = catalog.DomainContextProviderCount,
@@ -98,6 +105,7 @@ namespace KARToolkit.Core
                 HasFileHandlers = catalog.HasFileHandlers,
                 HasResourceHandlers = catalog.HasResourceHandlers,
                 HasResourceAdapterProviders = catalog.HasResourceAdapterProviders,
+                HasRelationshipProviders = catalog.HasRelationshipProviders,
                 HasResourceActionDefinitions = catalog.HasResourceActionDefinitions,
                 HasOperationDomainRules = catalog.HasOperationDomainRules,
                 HasDomainContextProviders = catalog.HasDomainContextProviders,
@@ -107,6 +115,7 @@ namespace KARToolkit.Core
                 FileHandlers = catalog.FileHandlers.Select(KarProjectFileHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceHandlers = catalog.ResourceHandlers.Select(KarProjectResourceHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceAdapterProviders = catalog.ResourceAdapterProviders.Select(KarProjectResourceAdapterProviderContract.Create).ToList().AsReadOnly(),
+                RelationshipProviders = catalog.RelationshipProviders.Select(KarProjectRelationshipProviderContract.Create).ToList().AsReadOnly(),
                 ResourceActionDefinitions = catalog.ResourceActionDefinitions.Select(KarProjectResourceActionDefinitionContract.Create).ToList().AsReadOnly(),
                 OperationDomainRules = catalog.OperationDomainRules.Select(KarProjectOperationDomainRuleContract.Create).ToList().AsReadOnly(),
                 DomainContextProviders = catalog.DomainContextProviders.Select(KarProjectDomainContextProviderContract.Create).ToList().AsReadOnly(),
@@ -483,6 +492,28 @@ namespace KARToolkit.Core
             return new KarProjectResourceAdapterProviderContract
             {
                 Kind = provider.Kind.ToString(),
+                Id = provider.Id,
+                DisplayName = provider.DisplayName,
+                Description = provider.Description,
+            };
+        }
+    }
+
+    public sealed class KarProjectRelationshipProviderContract
+    {
+        public string Id { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string Description { get; set; }
+
+        public static KarProjectRelationshipProviderContract Create(KarProjectRelationshipProvider provider)
+        {
+            if (provider == null)
+                throw new ArgumentNullException(nameof(provider));
+
+            return new KarProjectRelationshipProviderContract
+            {
                 Id = provider.Id,
                 DisplayName = provider.DisplayName,
                 Description = provider.Description,

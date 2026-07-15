@@ -2,7 +2,7 @@ namespace KARToolkit.Core
 {
     public sealed class KarProjectRelationship
     {
-        internal KarProjectRelationship(
+        public KarProjectRelationship(
             string kind,
             string role,
             string category,

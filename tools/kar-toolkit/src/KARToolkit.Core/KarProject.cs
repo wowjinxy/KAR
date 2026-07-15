@@ -14,6 +14,7 @@ namespace KARToolkit.Core
             KarProjectFileCatalog fileCatalog,
             KarProjectResourceHandlerRegistry resourceHandlers,
             KarProjectResourceAdapterProviderRegistry resourceAdapterProviders,
+            KarProjectRelationshipProviderRegistry relationshipProviders,
             KarProjectOperationDomainRegistry operationDomains,
             KarProjectDomainContextProviderRegistry domainContextProviders,
             KarProjectToolkitWorkflowProviderRegistry toolkitWorkflowProviders,
@@ -25,6 +26,7 @@ namespace KARToolkit.Core
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
             ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
             ResourceAdapterProviderRegistry = resourceAdapterProviders ?? throw new ArgumentNullException(nameof(resourceAdapterProviders));
+            RelationshipProviderRegistry = relationshipProviders ?? throw new ArgumentNullException(nameof(relationshipProviders));
             ResourceActionRegistry = ResourceHandlerRegistry.ActionRegistry;
             OperationDomainRegistry = operationDomains ?? throw new ArgumentNullException(nameof(operationDomains));
             DomainContextProviderRegistry = domainContextProviders ?? throw new ArgumentNullException(nameof(domainContextProviders));
@@ -70,6 +72,8 @@ namespace KARToolkit.Core
         public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; }
 
         public KarProjectResourceAdapterProviderRegistry ResourceAdapterProviderRegistry { get; }
+
+        public KarProjectRelationshipProviderRegistry RelationshipProviderRegistry { get; }
 
         public KarProjectResourceActionRegistry ResourceActionRegistry { get; }
 
@@ -196,6 +200,7 @@ namespace KARToolkit.Core
                 indexer.FileCatalog,
                 options.ResolveResourceHandlerRegistry(),
                 options.ResolveResourceAdapterProviderRegistry(),
+                options.ResolveRelationshipProviderRegistry(),
                 options.ResolveOperationDomainRegistry(),
                 options.ResolveDomainContextProviderRegistry(),
                 options.ResolveToolkitWorkflowProviderRegistry(),
