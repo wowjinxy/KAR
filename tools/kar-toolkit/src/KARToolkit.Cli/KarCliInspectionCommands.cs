@@ -161,6 +161,29 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowFields(KarCliOptions options)
+    {
+        options.RequirePositionals("fields", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectFieldInfo> fields = project.QueryFieldValues(CreateFieldQuery(options))
+            .OrderBy(field => field.RelativePath)
+            .ThenBy(field => field.RootName)
+            .ThenBy(field => field.Field.Offset ?? int.MaxValue)
+            .ThenBy(field => field.FieldName)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(fields.Select(ToProjectFieldValueDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectFieldInfo field in fields)
+            PrintProjectFieldValue(field);
+
+        return 0;
+    }
+
     private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
@@ -188,6 +211,16 @@ internal static class KarCliInspectionCommands
             Files = CreateFileQuery(options),
             IsKnown = options.RootKnown,
             RootName = options.RootName,
+        };
+    }
+
+    private static KarProjectFieldQueryOptions CreateFieldQuery(KarCliOptions options)
+    {
+        return new KarProjectFieldQueryOptions
+        {
+            Roots = CreateRootQuery(options),
+            DataDefinitionIdOrAccessorTypeName = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
         };
     }
 

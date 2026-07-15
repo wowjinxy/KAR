@@ -164,6 +164,26 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectFieldInfo> QueryFieldValues(KarProjectFieldQueryOptions options)
+        {
+            List<KarProjectFieldInfo> fields = new List<KarProjectFieldInfo>();
+
+            foreach (KarProjectRootInfo root in QueryRoots(options == null ? null : options.Roots))
+            {
+                if (root.Root.DataDefinition == null || !root.Root.HasFieldValues)
+                    continue;
+
+                foreach (KarDataFieldValue value in root.Root.FieldValues)
+                {
+                    KarProjectFieldInfo field = new KarProjectFieldInfo(root, value);
+                    if (options == null || options.Matches(field))
+                        fields.Add(field);
+                }
+            }
+
+            return fields.AsReadOnly();
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

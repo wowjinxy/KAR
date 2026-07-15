@@ -22,6 +22,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
+            Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -186,9 +187,7 @@ namespace KARToolkit.Core.Tests
 
             try
             {
-                WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
-                WriteHsdFile(Path.Combine(tempRoot, "GrSimple.dat"), "grDataSimple", new KAR_grData());
-                WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+                WriteFieldQueryFixture(tempRoot);
 
                 KarProject project = KarProject.Open(tempRoot);
                 IReadOnlyList<KarProjectDataDefinitionUsage> usages = project.QueryDataDefinitionUsage(null);
@@ -217,6 +216,56 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(mapOnly.Count == 1, "schema usage should respect file-kind filters");
                 AssertTrue(mapOnly[0].DataDefinitionId == "kar.gr.data", "schema usage file-kind filter should keep map data");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectFieldQueryReturnsLabeledValues()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-field-query-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+
+                KarProject project = KarProject.Open(tempRoot);
+                IReadOnlyList<KarProjectFieldInfo> mapUnknowns = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "kar.gr.data",
+                    FieldName = "unknown1",
+                });
+
+                AssertTrue(mapUnknowns.Count == 2, "field query should find map unknown1 values across project files");
+                AssertTrue(mapUnknowns.All(field => field.FieldName == "unknown1"), "field query should filter by field name");
+                AssertTrue(mapUnknowns.Any(field => field.RelativePath == "GrCity1.dat" && field.Value.SignedValue == 101), "field query should read GrCity1 scalar values");
+                AssertTrue(mapUnknowns.Any(field => field.RelativePath == "GrSimple.dat" && field.Value.SignedValue == 202), "field query should read GrSimple scalar values");
+
+                IReadOnlyList<KarProjectFieldInfo> hydraFields = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "KAR_vsLegendaryData",
+                    FieldName = "x0C",
+                });
+
+                AssertTrue(hydraFields.Count == 1, "field query should match schemas by accessor type");
+                AssertTrue(hydraFields[0].RelativePath == "VsHydra.dat", "field query should keep file context");
+                AssertTrue(hydraFields[0].Value.SignedValue == 303, "field query should read versus scalar values");
+
+                IReadOnlyList<KarProjectFieldInfo> mapOnly = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    Roots = new KarProjectRootQueryOptions
+                    {
+                        Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                    },
+                    FieldName = "unknown1",
+                });
+
+                AssertTrue(mapOnly.Count == 2, "field query should respect root file filters");
+                AssertTrue(mapOnly.All(field => field.File.Kind == KarFileKind.MapData), "field query file filters should keep map data only");
             }
             finally
             {
@@ -281,6 +330,21 @@ namespace KARToolkit.Core.Tests
                 "tests",
                 new[] { new KarDataFieldDefinition("x00", 0, "s32", "Test field.") },
                 4);
+        }
+
+        private static void WriteFieldQueryFixture(string tempRoot)
+        {
+            KAR_grData city = new KAR_grData();
+            city.Unknown1 = 101;
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", city);
+
+            KAR_grData simple = new KAR_grData();
+            simple.Unknown1 = 202;
+            WriteHsdFile(Path.Combine(tempRoot, "GrSimple.dat"), "grDataSimple", simple);
+
+            KAR_vsLegendaryData hydra = new KAR_vsLegendaryData();
+            hydra.x0C = 303;
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", hydra);
         }
 
         private static void WriteHsdFile(string path, string rootName, HSDAccessor data)

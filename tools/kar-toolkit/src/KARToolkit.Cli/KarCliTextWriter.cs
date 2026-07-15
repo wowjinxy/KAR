@@ -76,6 +76,24 @@ internal static class KarCliTextWriter
             Console.WriteLine("  " + root.RelativePath + ":" + root.RootName);
     }
 
+    public static void PrintProjectFieldValue(KarProjectFieldInfo field)
+    {
+        string offset = field.Field.OffsetHex ?? "n/a";
+        string schema = string.IsNullOrEmpty(field.DataDefinitionId) ? "<unschematized>" : field.DataDefinitionId;
+        string error = string.IsNullOrEmpty(field.Value.Error) ? "" : " (" + field.Value.Error + ")";
+        Console.WriteLine(field.RelativePath + ":" + field.RootName + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
+
+        if (field.Value.ReferenceDataDefinition != null)
+            Console.WriteLine("  ref schema: " + field.Value.ReferenceDataDefinition.Id + " (" + field.Value.ReferenceDataDefinition.DisplayName + ")");
+        if (field.Value.HasReferenceEntries)
+        {
+            string total = field.Value.ReferenceEntryTotalCount.HasValue
+                ? "/" + field.Value.ReferenceEntryTotalCount.Value
+                : "";
+            Console.WriteLine("  ref entries: " + field.Value.ReferenceEntryCount + total);
+        }
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");

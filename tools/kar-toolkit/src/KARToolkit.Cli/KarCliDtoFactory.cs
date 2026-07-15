@@ -181,6 +181,29 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectFieldValueDto(KarProjectFieldInfo field)
+    {
+        return new
+        {
+            file = new
+            {
+                relativePath = field.File.RelativePath,
+                kind = field.File.Kind.ToString(),
+                category = field.File.Category,
+                displayName = field.File.DisplayName,
+            },
+            root = new
+            {
+                name = field.RootName,
+                accessorTypeName = field.ArchiveRoot.AccessorTypeName,
+                displayAccessorTypeName = field.ArchiveRoot.DisplayAccessorTypeName,
+                dataDefinitionId = field.DataDefinitionId,
+            },
+            fieldName = field.FieldName,
+            fieldValue = ToFieldValueDto(field.Value),
+        };
+    }
+
     public static object ToDataDefinitionDtoOrNull(KarDataDefinition definition)
     {
         return definition == null ? null : ToDataDefinitionDto(definition);
