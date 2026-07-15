@@ -358,10 +358,24 @@ internal static class KarCliTextWriter
         Console.WriteLine("Data coverage: " + report.Project.Name);
         Console.WriteLine("Archives: " + report.ArchiveCount + " inspected=" + report.InspectableArchiveCount + " errors=" + report.InspectionErrorCount);
         Console.WriteLine("Roots: " + report.RootCount + " known=" + report.KnownRootCount + " unknown=" + report.UnknownRootCount + " data-definitions=" + report.DataDefinitionRootCount + " field-backed=" + report.FieldBackedRootCount);
-        Console.WriteLine("Gaps: " + report.IssueCount + " inspect=" + report.ArchiveInspectionIssueCount + " missing-required=" + report.MissingRequiredRootIssueCount + " unknown=" + report.UnknownRootIssueCount + " no-schema=" + report.MissingDataDefinitionIssueCount + " no-fields=" + report.MissingFieldValueIssueCount);
+        Console.WriteLine("Gaps: " + report.IssueCount + " groups=" + report.IssueGroupCount + " inspect=" + report.ArchiveInspectionIssueCount + " missing-required=" + report.MissingRequiredRootIssueCount + " unknown=" + report.UnknownRootIssueCount + " no-schema=" + report.MissingDataDefinitionIssueCount + " no-fields=" + report.MissingFieldValueIssueCount);
+
+        if (report.IssueGroups.Count != 0)
+        {
+            Console.WriteLine("Gap groups:");
+            foreach (KarProjectDataCoverageIssueGroup group in report.IssueGroups)
+                PrintProjectDataCoverageIssueGroup(group);
+        }
 
         foreach (KarProjectDataCoverageIssue issue in report.Issues)
             PrintProjectDataCoverageIssue(issue);
+    }
+
+    public static void PrintProjectDataCoverageIssueGroup(KarProjectDataCoverageIssueGroup group)
+    {
+        string schema = string.IsNullOrEmpty(group.DataDefinitionId) ? "" : " schema=" + group.DataDefinitionId;
+        string accessor = string.IsNullOrEmpty(group.DisplayAccessorTypeName) ? "" : " accessor=" + group.DisplayAccessorTypeName;
+        Console.WriteLine("  " + group.DisplayName + " [" + group.Kind + "] files=" + group.FileCount + " issues=" + group.Count + schema + accessor);
     }
 
     public static void PrintProjectDataCoverageIssue(KarProjectDataCoverageIssue issue)

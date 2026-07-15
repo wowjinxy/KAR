@@ -22,6 +22,12 @@ namespace KARToolkit.Core
                 .ThenBy(issue => issue.Kind)
                 .ToList()
                 .AsReadOnly();
+            IssueGroups = BuildIssueGroups(Issues)
+                .OrderByDescending(group => group.Count)
+                .ThenBy(group => group.Kind)
+                .ThenBy(group => group.DisplayName, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
         }
 
         public KarProject Project { get; }
@@ -31,6 +37,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectArchiveContext> ArchiveContexts { get; }
 
         public IReadOnlyList<KarProjectDataCoverageIssue> Issues { get; }
+
+        public IReadOnlyList<KarProjectDataCoverageIssueGroup> IssueGroups { get; }
 
         public int ArchiveCount => ArchiveContexts.Count;
 
@@ -56,6 +64,8 @@ namespace KARToolkit.Core
 
         public int IssueCount => Issues.Count;
 
+        public int IssueGroupCount => IssueGroups.Count;
+
         public int ArchiveInspectionIssueCount => CountIssues(KarProjectDataCoverageIssueKind.ArchiveInspectionFailed);
 
         public int MissingRequiredRootIssueCount => CountIssues(KarProjectDataCoverageIssueKind.MissingRequiredRoot);
@@ -77,6 +87,83 @@ namespace KARToolkit.Core
         private int CountIssues(KarProjectDataCoverageIssueKind kind)
         {
             return Issues.Count(issue => issue.Kind == kind);
+        }
+
+        private static IReadOnlyList<KarProjectDataCoverageIssueGroup> BuildIssueGroups(IEnumerable<KarProjectDataCoverageIssue> issues)
+        {
+            return issues
+                .GroupBy(GetIssueGroupKey, StringComparer.OrdinalIgnoreCase)
+                .Select(group => CreateIssueGroup(group.Key, group))
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private static KarProjectDataCoverageIssueGroup CreateIssueGroup(
+            string key,
+            IEnumerable<KarProjectDataCoverageIssue> issues)
+        {
+            List<KarProjectDataCoverageIssue> issueList = issues.ToList();
+            KarProjectDataCoverageIssue first = issueList[0];
+            string displayName = GetIssueGroupDisplayName(first);
+
+            return new KarProjectDataCoverageIssueGroup(
+                first.Kind,
+                key,
+                displayName,
+                first.Category,
+                first.AccessorTypeName,
+                first.ExpectedAccessorTypeName,
+                first.DisplayAccessorTypeName,
+                first.DataDefinitionId,
+                issueList);
+        }
+
+        private static string GetIssueGroupKey(KarProjectDataCoverageIssue issue)
+        {
+            switch (issue.Kind)
+            {
+                case KarProjectDataCoverageIssueKind.ArchiveInspectionFailed:
+                    return JoinKey(issue.Kind, issue.Category, issue.Message);
+                case KarProjectDataCoverageIssueKind.MissingRequiredRoot:
+                    return JoinKey(issue.Kind, issue.MissingRootPattern, issue.ExpectedAccessorTypeName, issue.DataDefinitionId);
+                case KarProjectDataCoverageIssueKind.UnknownRoot:
+                    return JoinKey(issue.Kind, issue.RootName, issue.DisplayAccessorTypeName);
+                case KarProjectDataCoverageIssueKind.MissingDataDefinition:
+                    return JoinKey(issue.Kind, issue.DisplayAccessorTypeName, issue.ExpectedAccessorTypeName);
+                case KarProjectDataCoverageIssueKind.MissingFieldValues:
+                    return JoinKey(issue.Kind, issue.DataDefinitionId, issue.DisplayAccessorTypeName);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(issue));
+            }
+        }
+
+        private static string GetIssueGroupDisplayName(KarProjectDataCoverageIssue issue)
+        {
+            switch (issue.Kind)
+            {
+                case KarProjectDataCoverageIssueKind.ArchiveInspectionFailed:
+                    return issue.Message;
+                case KarProjectDataCoverageIssueKind.MissingRequiredRoot:
+                    return issue.MissingRootPattern;
+                case KarProjectDataCoverageIssueKind.UnknownRoot:
+                    return issue.RootName;
+                case KarProjectDataCoverageIssueKind.MissingDataDefinition:
+                    return Coalesce(issue.DisplayAccessorTypeName, issue.ExpectedAccessorTypeName, issue.RootName);
+                case KarProjectDataCoverageIssueKind.MissingFieldValues:
+                    return Coalesce(issue.DataDefinitionId, issue.DisplayAccessorTypeName, issue.RootName);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(issue));
+            }
+        }
+
+        private static string JoinKey(params object[] parts)
+        {
+            return string.Join("\u001F", parts.Select(part => part == null ? "" : part.ToString()));
+        }
+
+        private static string Coalesce(params string[] values)
+        {
+            return values.FirstOrDefault(value => !string.IsNullOrEmpty(value)) ?? "<unknown>";
         }
 
         private static IReadOnlyList<KarProjectDataCoverageIssue> BuildIssues(

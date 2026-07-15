@@ -152,9 +152,11 @@ internal static class KarCliDtoFactory
             unknownRootIssueCount = report.UnknownRootIssueCount,
             missingDataDefinitionIssueCount = report.MissingDataDefinitionIssueCount,
             missingFieldValueIssueCount = report.MissingFieldValueIssueCount,
+            issueGroupCount = report.IssueGroupCount,
             hasIssues = report.HasIssues,
             hasCompleteFieldCoverage = report.HasCompleteFieldCoverage,
             archives = report.ArchiveContexts.Select(ToProjectDataCoverageArchiveDto).ToList(),
+            issueGroups = report.IssueGroups.Select(ToProjectDataCoverageIssueGroupDto).ToList(),
             issues = report.Issues.Select(ToProjectDataCoverageIssueDto).ToList(),
         };
     }
@@ -783,6 +785,39 @@ internal static class KarCliDtoFactory
                 dataDefinitionId = issue.MissingRoot.DataDefinitionId,
                 isRequired = issue.MissingRoot.IsRequired,
             },
+        };
+    }
+
+    public static object ToProjectDataCoverageIssueGroupDto(KarProjectDataCoverageIssueGroup group)
+    {
+        return new
+        {
+            kind = group.Kind.ToString(),
+            code = group.Code,
+            key = group.Key,
+            displayName = group.DisplayName,
+            category = group.Category,
+            accessorTypeName = group.AccessorTypeName,
+            expectedAccessorTypeName = group.ExpectedAccessorTypeName,
+            displayAccessorTypeName = group.DisplayAccessorTypeName,
+            dataDefinitionId = group.DataDefinitionId,
+            count = group.Count,
+            fileCount = group.FileCount,
+            rootNameCount = group.RootNameCount,
+            missingRootPatternCount = group.MissingRootPatternCount,
+            rootNames = group.RootNames.ToList(),
+            missingRootPatterns = group.MissingRootPatterns.ToList(),
+            files = group.Files
+                .Select(file => new
+                {
+                    relativePath = file.RelativePath,
+                    kind = file.Kind.ToString(),
+                    kindId = file.KindId,
+                    category = file.Category,
+                    displayName = file.DisplayName,
+                })
+                .ToList(),
+            issues = group.Issues.Select(ToProjectDataCoverageIssueDto).ToList(),
         };
     }
 
