@@ -34,6 +34,7 @@ namespace KARToolkit.Core
             RelationshipService = new KarProjectRelationshipService(this);
             ResourceService = new KarProjectResourceService(this);
             ScriptService = new KarProjectScriptService(this);
+            ResourceAddressService = new KarProjectResourceAddressService(this);
             MapScriptService = new KarProjectMapScriptService(this);
             ModWorkspaceService = new KarProjectModWorkspaceService(this);
             Validator = new KarProjectValidator(this);
@@ -74,6 +75,8 @@ namespace KARToolkit.Core
         public KarProjectResourceService ResourceService { get; }
 
         public KarProjectScriptService ScriptService { get; }
+
+        public KarProjectResourceAddressService ResourceAddressService { get; }
 
         public KarProjectMapScriptService MapScriptService { get; }
 
@@ -300,6 +303,21 @@ namespace KARToolkit.Core
         public bool TryGetResource(string address, out KarProjectResourceInfo resource)
         {
             return ResourceService.TryGet(address, out resource);
+        }
+
+        public IReadOnlyList<KarProjectResolvedResource> QueryResolvedResources(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceAddressService.Query(options);
+        }
+
+        public KarProjectResolvedResource ResolveResourceAddress(string address)
+        {
+            return ResourceAddressService.Resolve(address);
+        }
+
+        public bool TryResolveResourceAddress(string address, out KarProjectResolvedResource resolved)
+        {
+            return ResourceAddressService.TryResolve(address, out resolved);
         }
 
         public IReadOnlyList<KarProjectScriptTable> QueryScriptTables(KarProjectScriptTableQueryOptions options = null)

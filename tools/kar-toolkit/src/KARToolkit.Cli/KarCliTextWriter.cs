@@ -120,6 +120,32 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResolvedResource(KarProjectResolvedResource resolved)
+    {
+        Console.WriteLine("Resolved: " + resolved.Address);
+        PrintProjectResource(resolved.Resource);
+
+        if (resolved.ScriptTable != null)
+        {
+            Console.WriteLine("Script table: yes");
+            Console.WriteLine("Script name: " + resolved.ScriptTable.Name);
+            Console.WriteLine("Script role: " + resolved.ScriptTable.Role);
+            Console.WriteLine("Script category: " + resolved.ScriptTable.Category);
+            Console.WriteLine("Script storage: " + (resolved.ScriptTable.IsPackageEntry ? "a2d-entry" : "file"));
+            if (resolved.ScriptTable.IsPackageEntry)
+            {
+                Console.WriteLine("Script package: " + resolved.ScriptTable.PackageRelativePath);
+                Console.WriteLine("Script index: " + resolved.ScriptTable.PackageEntryIndex);
+                Console.WriteLine("Script offset: " + resolved.ScriptTable.PackageEntryOffsetHex);
+                Console.WriteLine("Script size: " + resolved.ScriptTable.PackageEntrySizeHex);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Script table: no");
+        }
+    }
+
     public static void PrintProjectResourceDetail(KarProjectResourceDetail detail)
     {
         PrintProjectResource(detail.Resource);

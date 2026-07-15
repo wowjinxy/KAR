@@ -52,6 +52,9 @@ internal static class Program
                 "graph" => KarCliInspectionCommands.ShowResourceGraph(options),
                 "resources" => KarCliInspectionCommands.ShowResources(options),
                 "resource" => KarCliInspectionCommands.ShowResource(options),
+                "resolve" => KarCliInspectionCommands.ShowResolvedResource(options),
+                "resolve-resource" => KarCliInspectionCommands.ShowResolvedResource(options),
+                "resource-resolve" => KarCliInspectionCommands.ShowResolvedResource(options),
                 "resource-detail" => KarCliInspectionCommands.ShowResourceDetail(options),
                 "resource-info" => KarCliInspectionCommands.ShowResourceDetail(options),
                 "resource-outputs" => KarCliInspectionCommands.ShowResourceOutputs(options),
@@ -129,6 +132,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-graph <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resources <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit resource <source-folder> <resource-address> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit resolve <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-detail <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");

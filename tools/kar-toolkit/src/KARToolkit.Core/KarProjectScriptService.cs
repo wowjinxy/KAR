@@ -60,6 +60,16 @@ namespace KARToolkit.Core
             return table;
         }
 
+        public bool TryGetTable(string address, out KarProjectScriptTable table)
+        {
+            table = QueryTables(new KarProjectScriptTableQueryOptions
+            {
+                Address = address,
+            }).FirstOrDefault();
+
+            return table != null;
+        }
+
         public byte[] ReadTableBytes(string address)
         {
             return _project.ResourceService.ReadBytes(GetTable(address).Address);

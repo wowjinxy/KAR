@@ -361,6 +361,48 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResolvedResourceDto(KarProjectResolvedResource resolved)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(resolved.Resource),
+            reference = ToResourceReferenceDto(resolved.Reference),
+            kind = resolved.Kind.ToString(),
+            address = resolved.Address,
+            parentAddress = resolved.ParentAddress,
+            relativePath = resolved.RelativePath,
+            displayName = resolved.DisplayName,
+            role = resolved.Role,
+            category = resolved.Category,
+            description = resolved.Description,
+            isFile = resolved.IsFile,
+            isHsdRoot = resolved.IsHsdRoot,
+            isA2DEntry = resolved.IsA2DEntry,
+            isScriptTable = resolved.IsScriptTable,
+            isLooseScriptTable = resolved.IsLooseScriptTable,
+            isPackageScriptTable = resolved.IsPackageScriptTable,
+            file = ToProjectFileDtoOrNull(resolved.File),
+            root = resolved.Root == null ? null : ToProjectRootDto(resolved.Root),
+            a2dEntry = resolved.A2DEntry == null ? null : ToProjectA2DEntryDto(resolved.A2DEntry),
+            scriptTable = resolved.ScriptTable == null ? null : new
+            {
+                address = resolved.ScriptTable.Address,
+                name = resolved.ScriptTable.Name,
+                role = resolved.ScriptTable.Role,
+                category = resolved.ScriptTable.Category,
+                description = resolved.ScriptTable.Description,
+                isLooseFile = resolved.ScriptTable.IsLooseFile,
+                isPackageEntry = resolved.ScriptTable.IsPackageEntry,
+                packageRelativePath = resolved.ScriptTable.PackageRelativePath,
+                packageEntryIndex = resolved.ScriptTable.PackageEntryIndex,
+                packageEntryOffset = resolved.ScriptTable.PackageEntryOffset,
+                packageEntryOffsetHex = resolved.ScriptTable.PackageEntryOffsetHex,
+                packageEntrySize = resolved.ScriptTable.PackageEntrySize,
+                packageEntrySizeHex = resolved.ScriptTable.PackageEntrySizeHex,
+            },
+        };
+    }
+
     public static object ToProjectMapScriptBundleDto(KarProjectMapScriptBundle bundle)
     {
         return new

@@ -445,6 +445,21 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceInfo entryResource = project.ResourceService.Get("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryResource.HandlerId == "a2d-entry" && entryResource.CanReadBytes && entryResource.CanApplyOutput, "A2D entry resources should expose entry handler capabilities");
 
+                KarProjectResolvedResource resolvedFile = project.ResourceAddressService.Resolve("VsHydra.dat");
+                AssertTrue(resolvedFile.IsFile && !resolvedFile.IsScriptTable && resolvedFile.Resource.Address == fileResource.Address, "resource address service should resolve file addresses");
+                KarProjectResolvedResource resolvedRoot = project.ResolveResourceAddress("VsHydra.dat:vsDataHydra");
+                AssertTrue(resolvedRoot.IsHsdRoot && resolvedRoot.Root.RootName == "vsDataHydra", "project resource address wrapper should resolve HSD roots");
+                KarProjectResolvedResource resolvedScript = project.ResolveResourceAddress("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(resolvedScript.IsA2DEntry && resolvedScript.IsScriptTable, "resource address resolution should identify script-table entries");
+                AssertTrue(resolvedScript.ScriptTable.Role == "ScreenInfoTable" && resolvedScript.IsPackageScriptTable, "resolved script tables should expose script metadata");
+                IReadOnlyList<KarProjectResolvedResource> scriptResolved = project.QueryResolvedResources(new KarProjectResourceQueryOptions
+                {
+                    Category = "Scripts",
+                });
+                AssertTrue(scriptResolved.Count == 1 && scriptResolved[0].IsScriptTable, "resolved resource queries should enrich script table resources");
+                KarProjectResolvedResource missingResolved;
+                AssertTrue(!project.TryResolveResourceAddress("../bad.dat", out missingResolved), "project resource address try-resolve should reject invalid addresses");
+
                 KarProjectRelationship relationship = project.RelationshipService.Query(new KarProjectRelationshipQueryOptions
                 {
                     RelativePath = "A2Info.dat#ScInfGo2D.tm",
@@ -1440,6 +1455,9 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(packageTable.PackageRelativePath == "A2Info.dat", "packaged script tables should expose package paths");
                 AssertTrue(packageTable.PackageEntrySize == 4, "packaged script tables should expose entry sizes");
                 AssertTrue(scripts.ReadTableBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "script service should read A2D table bytes");
+                KarProjectScriptTable tryTable;
+                AssertTrue(scripts.TryGetTable("A2Info.dat#ScInfGo2D.tm", out tryTable) && tryTable.Address == packageTable.Address, "script service should try-resolve script table addresses");
+                AssertTrue(!scripts.TryGetTable("A2Info.dat#readme.bin", out tryTable), "script service try-get should reject non-script A2D entries");
 
                 IReadOnlyList<KarProjectScriptTable> screenInfoTables = scripts.QueryTables(new KarProjectScriptTableQueryOptions
                 {
