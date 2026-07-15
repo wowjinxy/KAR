@@ -1103,6 +1103,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowFileToolkitContext(KarCliOptions options)
+    {
+        options.RequirePositionals("file-context", 2);
+        KarProject project = OpenProject(options);
+        KarProjectFileToolkitContext context = project.FileToolkitContextService.Get(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectFileToolkitContextDto(context));
+            return 0;
+        }
+
+        PrintProjectFileToolkitContext(context);
+        return 0;
+    }
+
     public static int ShowMap(KarCliOptions options)
     {
         options.RequirePositionals("map", 2);

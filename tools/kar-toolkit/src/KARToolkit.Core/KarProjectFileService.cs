@@ -53,6 +53,16 @@ namespace KARToolkit.Core
             return _project.FileInsightService.QueryContracts(options);
         }
 
+        public KarProjectFileToolkitContext GetToolkitContext(string relativePath)
+        {
+            return _project.FileToolkitContextService.Get(relativePath);
+        }
+
+        public KarProjectFileToolkitContextContract GetToolkitContextContract(string relativePath)
+        {
+            return _project.FileToolkitContextService.GetContract(relativePath);
+        }
+
         public string GetReadPath(string relativePath)
         {
             return _project.FileStore.GetReadPath(relativePath);

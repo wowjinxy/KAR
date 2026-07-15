@@ -104,6 +104,40 @@ internal static class KarCliTextWriter
         Console.WriteLine("Read: " + insight.File.ReadPath);
     }
 
+    public static void PrintProjectFileToolkitContext(KarProjectFileToolkitContext context)
+    {
+        PrintProjectFileInsight(context.Insight);
+        Console.WriteLine("Toolkit contexts: total=" + context.ContextCount + " archive=" + context.ArchiveContextCount + " a2d=" + context.A2DPackageContextCount + " maps=" + context.MapContextCount + " vehicles=" + context.VehicleContextCount + " scripts=" + context.ScriptTableContextCount + " resource-detail=" + context.ResourceDetailCount);
+        Console.WriteLine("Has domain contexts: " + context.HasDomainContexts);
+        Console.WriteLine("Has inspection issues: " + context.HasInspectionIssues);
+
+        if (context.ArchiveContext != null)
+        {
+            Console.WriteLine("Archive context: roots=" + context.ArchiveContext.RootCount + " known=" + context.ArchiveContext.KnownRootCount + " unknown=" + context.ArchiveContext.UnknownRootCount + " fields=" + context.ArchiveContext.FieldCount + " relationships=" + context.ArchiveContext.RelationshipCount);
+            if (context.ArchiveContext.HasInspectionError)
+                Console.WriteLine("Archive issue: " + context.ArchiveContext.InspectionError);
+        }
+
+        if (context.A2DPackageContext != null)
+        {
+            Console.WriteLine("A2D context: open=" + context.A2DPackageContext.IsOpen + " entries=" + context.A2DPackageContext.EntryCount + " scripts=" + context.A2DPackageContext.ScriptTableCount + " sidecars=" + context.A2DPackageContext.EntryOutputCount + " modified-sidecars=" + context.A2DPackageContext.ModifiedEntryOutputCount);
+            if (context.A2DPackageContext.HasOpenError)
+                Console.WriteLine("A2D issue: " + context.A2DPackageContext.OpenError);
+        }
+
+        foreach (KarProjectMapContext map in context.MapContexts)
+            Console.WriteLine("Map context: " + map.MapName + " archives=" + map.ArchiveCount + " resources=" + map.MapResourceCount + " scripts=" + map.ScriptTableCount + " relationships=" + map.RelationshipCount + " modified-output=" + map.ModifiedOutputFileCount);
+
+        foreach (KarProjectVehicleContext vehicle in context.VehicleContexts)
+            Console.WriteLine("Vehicle context: " + vehicle.Name + " [" + vehicle.Family + ", " + vehicle.Role + "] files=" + vehicle.FileCount + " resources=" + vehicle.ResourceCount + " roots=" + vehicle.RootCount + " issues=" + vehicle.InspectionErrorCount);
+
+        foreach (KarProjectScriptTableContext script in context.ScriptTableContexts)
+            Console.WriteLine("Script context: " + script.Address + " [" + script.Role + "] relationships=" + script.RelationshipCount + " modified-output=" + script.HasModifiedOutput);
+
+        if (context.ResourceDetail != null)
+            Console.WriteLine("Resource detail: " + context.ResourceDetail.Address + " actions=" + context.ResourceDetail.ActionCount + " children=" + context.ResourceDetail.ChildResourceCount + " fields=" + context.ResourceDetail.FieldCount + " relationships=" + context.ResourceDetail.RelationshipCount);
+    }
+
     public static void PrintProjectSession(KarProjectSession session)
     {
         Console.WriteLine("KAR project session: " + session.Name);

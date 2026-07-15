@@ -2153,6 +2153,17 @@ namespace KARToolkit.Core.Tests
                 KarProjectFileInsightContract a2dInsightContract = a2dInsight.CreateContract();
                 AssertTrue(a2dInsightContract.File.KindInfo.IsA2DPackage && a2dInsightContract.A2DEntryResourceCount == 2 && a2dInsightContract.DomainIds.Contains("script-tables"), "file insight contracts should preserve domain labels and file-kind metadata");
                 AssertTrue(project.FileService.QueryInsightContracts(new KarProjectFileQueryOptions { Domain = "script-tables" }).Any(insight => insight.RelativePath == "ScInfPause.tm"), "file services should expose reusable file insight contracts");
+                KarProjectFileToolkitContext mapFileContext = project.GetFileToolkitContext("GrCity1.dat");
+                AssertTrue(mapFileContext.HasArchiveContext && mapFileContext.MapContextCount == 1 && mapFileContext.ScriptTableContextCount >= 1 && mapFileContext.ResourceDetail != null, "file toolkit contexts should compose archive, map, script, and resource detail contexts");
+                KarProjectFileToolkitContext a2dFileContext = project.FileService.GetToolkitContext("A2Info.dat");
+                AssertTrue(a2dFileContext.HasA2DPackageContext && a2dFileContext.A2DPackageContext.EntryCount == 2 && a2dFileContext.ScriptTableContextCount == 1, "file toolkit contexts should compose A2D package and packaged script contexts");
+                AssertTrue(a2dFileContext.CreateContract().A2DPackageContext.EntryCount == 2 && a2dFileContext.CreateContract().ScriptTableContexts.Any(script => script.Address == "A2Info.dat#ScInfGo2D.tm"), "file toolkit context contracts should expose compact A2D and script summaries");
+                KarProjectFileToolkitContext brokenA2DContext = project.GetFileToolkitContext("A2Broken.dat");
+                AssertTrue(brokenA2DContext.HasA2DPackageContext && brokenA2DContext.HasInspectionIssues && brokenA2DContext.A2DPackageContext.EntryCount == 0, "file toolkit contexts should keep broken A2D package context errors visible");
+                KarProjectFileToolkitContext scriptFileContext = project.GetFileToolkitContext("ScInfPause.tm");
+                AssertTrue(scriptFileContext.ScriptTableContextCount == 1 && scriptFileContext.ScriptTableContexts.Single().IsLooseFile, "file toolkit contexts should compose loose script table contexts");
+                KarProjectFileToolkitContext vehicleFileContext = project.GetFileToolkitContext("VcCommon.dat");
+                AssertTrue(vehicleFileContext.HasArchiveContext && vehicleFileContext.VehicleContextCount >= 2 && vehicleFileContext.CreateContract().VehicleContexts.Any(vehicle => vehicle.Name == "Common"), "file toolkit contexts should compose shared vehicle contexts");
 
                 KarProjectToolkitSurface surface = project.CreateToolkitSurface();
                 AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");

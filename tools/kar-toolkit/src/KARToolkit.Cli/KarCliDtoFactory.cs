@@ -1956,6 +1956,35 @@ internal static class KarCliDtoFactory
         return insight.CreateContract();
     }
 
+    public static object ToProjectFileToolkitContextDto(KarProjectFileToolkitContext context)
+    {
+        return new
+        {
+            summary = context.CreateContract(),
+            insight = ToProjectFileInsightDto(context.Insight),
+            relativePath = context.RelativePath,
+            resourceAddress = context.ResourceAddress,
+            primaryDomainId = context.PrimaryDomainId,
+            domainIds = context.DomainIds.ToList(),
+            contextCount = context.ContextCount,
+            archiveContextCount = context.ArchiveContextCount,
+            a2dPackageContextCount = context.A2DPackageContextCount,
+            mapContextCount = context.MapContextCount,
+            vehicleContextCount = context.VehicleContextCount,
+            scriptTableContextCount = context.ScriptTableContextCount,
+            resourceDetailCount = context.ResourceDetailCount,
+            hasToolkitContext = context.HasToolkitContext,
+            hasDomainContexts = context.HasDomainContexts,
+            hasInspectionIssues = context.HasInspectionIssues,
+            archiveContext = context.ArchiveContext == null ? null : ToProjectArchiveContextDto(context.ArchiveContext),
+            a2dPackageContext = context.A2DPackageContext == null ? null : ToProjectA2DPackageContextDto(context.A2DPackageContext),
+            mapContexts = context.MapContexts.Select(ToProjectMapContextDto).ToList(),
+            vehicleContexts = context.VehicleContexts.Select(ToProjectVehicleContextDto).ToList(),
+            scriptTableContexts = context.ScriptTableContexts.Select(ToProjectScriptTableContextDto).ToList(),
+            resourceDetail = context.ResourceDetail == null ? null : ToProjectResourceDetailDto(context.ResourceDetail),
+        };
+    }
+
     public static object ToProjectFileDtoOrNull(KarProjectFile file)
     {
         return file == null ? null : ToProjectFileDto(file);
