@@ -9,6 +9,10 @@ internal sealed class KarCliOptions
         string outputRoot,
         bool overwrite,
         bool noUnknownRoots,
+        bool noHsdArchives,
+        bool noA2DPackages,
+        bool noMissingMapModels,
+        bool noSchemaValidation,
         bool schema,
         bool json,
         int? maxReferenceDepth,
@@ -18,6 +22,10 @@ internal sealed class KarCliOptions
         OutputRoot = outputRoot;
         Overwrite = overwrite;
         NoUnknownRoots = noUnknownRoots;
+        NoHsdArchives = noHsdArchives;
+        NoA2DPackages = noA2DPackages;
+        NoMissingMapModels = noMissingMapModels;
+        NoSchemaValidation = noSchemaValidation;
         Schema = schema;
         Json = json;
         MaxReferenceDepth = maxReferenceDepth;
@@ -31,6 +39,14 @@ internal sealed class KarCliOptions
     public bool Overwrite { get; }
 
     public bool NoUnknownRoots { get; }
+
+    public bool NoHsdArchives { get; }
+
+    public bool NoA2DPackages { get; }
+
+    public bool NoMissingMapModels { get; }
+
+    public bool NoSchemaValidation { get; }
 
     public bool Schema { get; }
 
@@ -48,6 +64,10 @@ internal sealed class KarCliOptions
         string outputRoot = null;
         bool overwrite = false;
         bool noUnknownRoots = false;
+        bool noHsdArchives = false;
+        bool noA2DPackages = false;
+        bool noMissingMapModels = false;
+        bool noSchemaValidation = false;
         bool schema = false;
         bool json = false;
         int? maxReferenceDepth = null;
@@ -75,6 +95,30 @@ internal sealed class KarCliOptions
             if (arg == "--no-unknown-roots")
             {
                 noUnknownRoots = true;
+                continue;
+            }
+
+            if (arg == "--no-hsd-archives" || arg == "--skip-hsd-archives")
+            {
+                noHsdArchives = true;
+                continue;
+            }
+
+            if (arg == "--no-a2d-packages" || arg == "--skip-a2d-packages")
+            {
+                noA2DPackages = true;
+                continue;
+            }
+
+            if (arg == "--no-missing-map-models")
+            {
+                noMissingMapModels = true;
+                continue;
+            }
+
+            if (arg == "--no-schema-validation" || arg == "--no-data-definition-validation")
+            {
+                noSchemaValidation = true;
                 continue;
             }
 
@@ -110,6 +154,10 @@ internal sealed class KarCliOptions
             outputRoot,
             overwrite,
             noUnknownRoots,
+            noHsdArchives,
+            noA2DPackages,
+            noMissingMapModels,
+            noSchemaValidation,
             schema,
             json,
             maxReferenceDepth,

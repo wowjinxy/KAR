@@ -128,7 +128,11 @@ internal static class KarCliInspectionCommands
         KarProject project = OpenProject(options);
         KarValidationReport report = project.Validator.Validate(new KarValidationOptions
         {
+            InspectHsdArchives = !options.NoHsdArchives,
+            InspectA2DPackages = !options.NoA2DPackages,
             ReportUnknownRoots = !options.NoUnknownRoots,
+            ReportMissingMapModels = !options.NoMissingMapModels,
+            ValidateDataDefinitions = !options.NoSchemaValidation,
         });
 
         if (options.Json)

@@ -127,6 +127,7 @@ namespace KARToolkit.Core.Tests
                 });
 
                 AssertTrue(!reportWithoutSchemas.HasDataDefinitionValidation, "schema preflight should be optional for focused callers");
+                AssertTrue(reportWithoutSchemas.ErrorCount == reportWithoutSchemas.Errors.Count, "focused validation error count should omit skipped schema validation");
             }
             finally
             {

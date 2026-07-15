@@ -24,6 +24,7 @@ dotnet run --project .\tools\kar-toolkit\tests\KARToolkit.Core.Tests\KARToolkit.
 
 ```powershell
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-hsd-archives --no-a2d-packages --no-schema-validation
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate-schemas
@@ -47,6 +48,7 @@ Editable map archive bundles (`KarProjectMapArchiveBundle`) group a map's data, 
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
 Project validation includes schema integrity preflight through `KarDataDefinitionValidator`, and the schema report is included in validation output.
+The `validate` CLI command can skip HSD archive scans, A2D package scans, missing map-model warnings, unknown-root reports, or schema validation for narrower batch checks.
 Archive metadata lookup lives in `KarArchiveDefinitionProvider`; `KarArchiveCatalog` provides static compatibility wrappers; live HSD root inspection goes through `KarArchiveInspector`.
 Map archive/root definitions are grouped in `KarMapArchiveDefinitions`; `KarArchiveDefinitionProvider` handles lookup.
 Vehicle, rider, versus, item, and enemy archive/root definitions live in their matching domain definition modules.

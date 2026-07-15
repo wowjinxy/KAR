@@ -58,7 +58,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots]");
+        Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots] [--no-hsd-archives] [--no-a2d-packages] [--no-schema-validation]");
         Console.WriteLine("  kar-toolkit validate-schemas");
         Console.WriteLine("  kar-toolkit definitions");
         Console.WriteLine("  kar-toolkit definition <definition-id-or-accessor-type>");
@@ -67,6 +67,10 @@ internal static class Program
         Console.WriteLine("  --json");
         Console.WriteLine("  --max-reference-depth <count>");
         Console.WriteLine("  --max-reference-entries <count>");
+        Console.WriteLine("  --no-hsd-archives");
+        Console.WriteLine("  --no-a2d-packages");
+        Console.WriteLine("  --no-missing-map-models");
+        Console.WriteLine("  --no-schema-validation");
     }
 
     private static int Fail(string message)
