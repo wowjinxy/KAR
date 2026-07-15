@@ -412,6 +412,26 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowScriptContexts(KarCliOptions options)
+    {
+        options.RequirePositionals("script-contexts", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectScriptTableContext> contexts = project.ScriptContextService.Query(CreateScriptTableContextQuery(options))
+            .Where(context => !options.OutputStatus.HasValue || (context.Output != null && MatchesResourceOutputStatusOption(context.Output, options.OutputStatus)))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectScriptTableContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectScriptTableContext context in contexts)
+            PrintProjectScriptTableContext(context);
+
+        return 0;
+    }
+
     private static int ShowA2DEntriesCore(KarCliOptions options, bool scriptTablesOnly)
     {
         options.RequirePositionals(scriptTablesOnly ? "script-tables" : "a2d-entries", 1);

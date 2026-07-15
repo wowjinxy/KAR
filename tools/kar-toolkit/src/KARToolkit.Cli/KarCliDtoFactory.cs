@@ -384,6 +384,35 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectScriptTableContextDto(KarProjectScriptTableContext context)
+    {
+        return new
+        {
+            table = ToProjectScriptTableDto(context.Table),
+            address = context.Address,
+            parentAddress = context.ParentAddress,
+            relativePath = context.RelativePath,
+            name = context.Name,
+            role = context.Role,
+            category = context.Category,
+            description = context.Description,
+            isLooseFile = context.IsLooseFile,
+            isPackageEntry = context.IsPackageEntry,
+            relationshipCount = context.RelationshipCount,
+            hasRelationships = context.HasRelationships,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            hasUnchangedOutput = context.HasUnchangedOutput,
+            outputKind = context.OutputKind == null ? null : context.OutputKind.ToString(),
+            outputStatus = context.OutputStatus == null ? null : context.OutputStatus.ToString(),
+            outputRelativePath = context.OutputRelativePath,
+            outputPath = context.OutputPath,
+            output = context.Output == null ? null : ToProjectResourceOutputDto(context.Output),
+            primaryRelationship = context.PrimaryRelationship == null ? null : ToProjectRelationshipDto(context.PrimaryRelationship),
+            relationships = context.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
     public static object ToProjectResolvedResourceDto(KarProjectResolvedResource resolved)
     {
         return new
@@ -466,6 +495,7 @@ internal static class KarCliDtoFactory
             scriptArchiveResource = bundle.ScriptArchiveResource == null ? null : ToProjectResourceDto(bundle.ScriptArchiveResource),
             mapResources = bundle.MapResources.Select(ToProjectResourceDto).ToList(),
             mapRelationships = bundle.MapRelationships.Select(ToProjectRelationshipDto).ToList(),
+            scriptContexts = bundle.ScriptContexts.Select(ToProjectScriptTableContextDto).ToList(),
             scriptTables = bundle.ScriptTables.Select(ToProjectScriptTableDto).ToList(),
         };
     }

@@ -36,6 +36,7 @@ namespace KARToolkit.Core
             ResourceService = new KarProjectResourceService(this);
             ScriptService = new KarProjectScriptService(this);
             ResourceAddressService = new KarProjectResourceAddressService(this);
+            ScriptContextService = new KarProjectScriptContextService(this);
             MapScriptService = new KarProjectMapScriptService(this);
             MapContextService = new KarProjectMapContextService(this);
             ModWorkspaceService = new KarProjectModWorkspaceService(this);
@@ -81,6 +82,8 @@ namespace KARToolkit.Core
         public KarProjectScriptService ScriptService { get; }
 
         public KarProjectResourceAddressService ResourceAddressService { get; }
+
+        public KarProjectScriptContextService ScriptContextService { get; }
 
         public KarProjectMapScriptService MapScriptService { get; }
 
@@ -349,6 +352,16 @@ namespace KARToolkit.Core
         public KarProjectScriptTable GetScriptTable(string address)
         {
             return ScriptService.GetTable(address);
+        }
+
+        public IReadOnlyList<KarProjectScriptTableContext> QueryScriptTableContexts(KarProjectScriptTableContextQueryOptions options = null)
+        {
+            return ScriptContextService.Query(options);
+        }
+
+        public KarProjectScriptTableContext GetScriptTableContext(string address)
+        {
+            return ScriptContextService.Get(address);
         }
 
         public IReadOnlyList<KarProjectMapScriptBundle> QueryMapScripts(KarProjectMapScriptQueryOptions options = null)

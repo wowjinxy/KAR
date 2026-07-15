@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -11,14 +12,18 @@ namespace KARToolkit.Core
             KarProjectResourceInfo modelResource,
             KarProjectResourceInfo scriptArchiveResource,
             IReadOnlyList<KarProjectRelationship> mapRelationships,
-            IReadOnlyList<KarProjectScriptTable> scriptTables)
+            IReadOnlyList<KarProjectScriptTableContext> scriptContexts)
         {
             Map = map ?? throw new ArgumentNullException(nameof(map));
             DataResource = dataResource;
             ModelResource = modelResource;
             ScriptArchiveResource = scriptArchiveResource;
             MapRelationships = mapRelationships ?? throw new ArgumentNullException(nameof(mapRelationships));
-            ScriptTables = scriptTables ?? throw new ArgumentNullException(nameof(scriptTables));
+            ScriptContexts = scriptContexts ?? throw new ArgumentNullException(nameof(scriptContexts));
+            ScriptTables = ScriptContexts
+                .Select(context => context.Table)
+                .ToList()
+                .AsReadOnly();
 
             List<KarProjectResourceInfo> resources = new List<KarProjectResourceInfo>();
             if (DataResource != null)
@@ -49,6 +54,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResourceInfo> MapResources { get; }
 
         public IReadOnlyList<KarProjectRelationship> MapRelationships { get; }
+
+        public IReadOnlyList<KarProjectScriptTableContext> ScriptContexts { get; }
 
         public IReadOnlyList<KarProjectScriptTable> ScriptTables { get; }
 

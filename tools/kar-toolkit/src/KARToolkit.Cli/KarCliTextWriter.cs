@@ -237,6 +237,13 @@ internal static class KarCliTextWriter
         Console.WriteLine(table.Address + " [" + table.Role + ", " + storage + "]" + details + " - " + table.Description);
     }
 
+    public static void PrintProjectScriptTableContext(KarProjectScriptTableContext context)
+    {
+        string storage = context.IsPackageEntry ? "a2d-entry" : "file";
+        string output = context.Output == null ? "output=<none>" : "output=" + context.Output.Status + "/" + context.Output.OutputKind;
+        Console.WriteLine(context.Address + " [" + context.Role + ", " + storage + "] relationships=" + context.RelationshipCount + " " + output + " - " + context.Description);
+    }
+
     public static void PrintProjectMapScriptBundle(KarProjectMapScriptBundle bundle)
     {
         Console.WriteLine("Map scripts: " + bundle.MapName);
@@ -245,8 +252,11 @@ internal static class KarCliTextWriter
         PrintProjectMapScriptResourceSlot("Model", bundle.ModelResource);
         PrintProjectMapScriptResourceSlot("Script", bundle.ScriptArchiveResource);
         Console.WriteLine("  Script tables: " + bundle.ScriptTableCount);
-        foreach (KarProjectScriptTable table in bundle.ScriptTables)
-            Console.WriteLine("    " + table.Address + " [" + table.Role + "]");
+        foreach (KarProjectScriptTableContext context in bundle.ScriptContexts)
+        {
+            string output = context.OutputStatus == null ? "" : " output=" + context.OutputStatus;
+            Console.WriteLine("    " + context.Address + " [" + context.Role + "] relationships=" + context.RelationshipCount + output);
+        }
     }
 
     public static void PrintProjectMapContext(KarProjectMapContext context)

@@ -74,6 +74,9 @@ internal static class Program
                 "a2d-output-status" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
                 "script-tables" => KarCliInspectionCommands.ShowScriptTables(options),
                 "scripts" => KarCliInspectionCommands.ShowScriptTables(options),
+                "script-contexts" => KarCliInspectionCommands.ShowScriptContexts(options),
+                "script-context" => KarCliInspectionCommands.ShowScriptContexts(options),
+                "script-status" => KarCliInspectionCommands.ShowScriptContexts(options),
                 "archive" => KarCliInspectionCommands.ShowArchive(options),
                 "a2d" => KarCliInspectionCommands.ShowA2D(options),
                 "extract-a2d-entry" => KarCliA2DCommands.ExtractEntry(options),
@@ -151,6 +154,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>]");
         Console.WriteLine("  kar-toolkit a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit script-tables <source-folder> [resource-address|package-relative-path] [table-name] [--output <mod-folder>] [--search <text>]");
+        Console.WriteLine("  kar-toolkit script-contexts <source-folder> [resource-address|package-relative-path] [table-name] [--output <mod-folder>] [--search <text>] [--modified|--unchanged]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit extract-a2d-entry <source-folder> <package#entry> [--output <mod-folder>] [--overwrite]");

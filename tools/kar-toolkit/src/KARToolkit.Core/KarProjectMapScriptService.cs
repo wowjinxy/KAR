@@ -62,7 +62,10 @@ namespace KARToolkit.Core
                 GetFileResourceOrNull(map.ModelFile),
                 GetFileResourceOrNull(map.ScriptFile),
                 relationships,
-                _project.ScriptService.QueryTables(scriptTableOptions));
+                _project.ScriptContextService.Query(new KarProjectScriptTableContextQueryOptions
+                {
+                    Tables = scriptTableOptions,
+                }));
         }
 
         private KarProjectResourceInfo GetFileResourceOrNull(KarProjectFile file)

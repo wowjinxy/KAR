@@ -45,6 +45,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectVehicleServiceCombinesVehicleToolkitState", ProjectVehicleServiceCombinesVehicleToolkitState);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
             Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
+            Run("ProjectScriptContextServiceReportsScriptOutputState", ProjectScriptContextServiceReportsScriptOutputState);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
             Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
@@ -1366,6 +1367,8 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(city.ScriptTableCount == 4, "map script bundles should include project script table resources");
                 AssertTrue(city.ScriptTables.Any(table => table.Address == "ScInfPause.tm" && table.IsLooseFile), "map script bundles should include loose script table files");
                 AssertTrue(city.ScriptTables.Any(table => table.Address == "A2Info.dat#ScInfGo2D.tm" && table.IsPackageEntry), "map script bundles should include packaged script table entries");
+                AssertTrue(city.ScriptContexts.Count == city.ScriptTableCount, "map script bundles should expose script table contexts alongside table metadata");
+                AssertTrue(city.ScriptContexts.Any(context => context.Address == "A2Info.dat#ScInfGo2D.tm" && context.OutputKind == KarProjectResourceOutputKind.OutputAsset), "map script contexts should include output-kind information for packaged scripts");
 
                 KarProjectMapScriptBundle filtered = project.GetMapScripts("GrCity1Event.dat", new KarProjectScriptTableQueryOptions
                 {
@@ -1636,6 +1639,69 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(export.OutputKind == KarProjectResourceOutputKind.OutputAsset, "script table exports should use safe resource output workflows");
                 AssertTrue(File.Exists(export.OutputPath), "script table exports should write output-side files");
                 AssertTrue(!File.Exists(project.FileService.GetOutputPath("A2Info.dat")), "script table sidecar exports should not rewrite source packages");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectScriptContextServiceReportsScriptOutputState()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-script-context-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40, 0x41 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectScriptContextService contexts = project.ScriptContextService;
+
+                AssertTrue(object.ReferenceEquals(contexts.Project, project), "script context service should retain project context");
+
+                IReadOnlyList<KarProjectScriptTableContext> screenInfo = contexts.Query(new KarProjectScriptTableContextQueryOptions
+                {
+                    Tables = new KarProjectScriptTableQueryOptions
+                    {
+                        Role = "ScreenInfoTable",
+                    },
+                });
+                AssertTrue(screenInfo.Count == 2, "script contexts should filter by script table metadata");
+
+                KarProjectScriptTableContext loose = contexts.Get("ScInfPause.tm");
+                AssertTrue(loose.IsLooseFile && loose.OutputKind == KarProjectResourceOutputKind.ProjectFile, "script contexts should include loose-file output kind");
+                AssertTrue(loose.OutputStatus == KarProjectResourceOutputStatus.Missing, "script contexts should report missing loose-file outputs");
+                AssertTrue(loose.RelationshipCount == 1 && loose.PrimaryRelationship.Role == "ScreenInfoTable", "script contexts should include graph relationships");
+
+                KarProjectScriptTableContext package = project.GetScriptTableContext("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(package.IsPackageEntry && package.OutputKind == KarProjectResourceOutputKind.OutputAsset, "project script context wrapper should resolve packaged scripts");
+                AssertTrue(package.OutputStatus == KarProjectResourceOutputStatus.Missing, "script contexts should report missing A2D sidecars");
+
+                KarProjectResourceExportResult export = project.ExportScriptTableToOutput("A2Info.dat#ScInfGo2D.tm");
+                KarProjectScriptTableContext exported = contexts.Get("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(exported.HasOutput && exported.HasUnchangedOutput, "script contexts should reflect exported sidecars");
+                AssertTrue(exported.OutputStatus == KarProjectResourceOutputStatus.SidecarMatchesEntry, "script contexts should compare sidecars to active package entries");
+
+                File.WriteAllBytes(export.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                KarProjectScriptTableContext modified = contexts.Get("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(modified.HasModifiedOutput && modified.OutputStatus == KarProjectResourceOutputStatus.SidecarDiffersFromEntry, "script contexts should detect modified sidecar outputs");
+
+                IReadOnlyList<KarProjectScriptTableContext> modifiedContexts = project.QueryScriptTableContexts(new KarProjectScriptTableContextQueryOptions
+                {
+                    Tables = new KarProjectScriptTableQueryOptions
+                    {
+                        PackagePath = "A2Info.dat",
+                    },
+                    HasModifiedOutput = true,
+                });
+                AssertTrue(modifiedContexts.Count == 1 && modifiedContexts[0].Address == "A2Info.dat#ScInfGo2D.tm", "project script context queries should combine script and output filters");
             }
             finally
             {

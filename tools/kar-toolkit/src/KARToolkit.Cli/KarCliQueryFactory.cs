@@ -262,6 +262,14 @@ internal static class KarCliQueryFactory
         return query;
     }
 
+    public static KarProjectScriptTableContextQueryOptions CreateScriptTableContextQuery(KarCliOptions options)
+    {
+        return new KarProjectScriptTableContextQueryOptions
+        {
+            Tables = CreateScriptTableQuery(options),
+        };
+    }
+
     public static KarProjectMapScriptQueryOptions CreateMapScriptQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
