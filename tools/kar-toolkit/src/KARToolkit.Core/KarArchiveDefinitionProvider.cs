@@ -59,6 +59,8 @@ namespace KARToolkit.Core
                     return KarGeneralArchiveDefinitions.DefineEffect(name, kind);
                 case KarFileKind.UiData:
                     return KarGeneralArchiveDefinitions.DefineUi(name, kind);
+                case KarFileKind.ScriptTable:
+                    return KarGeneralArchiveDefinitions.DefineScriptTable(fileName, kind);
                 case KarFileKind.Audio:
                     return KarGeneralArchiveDefinitions.DefineAudio(fileName, kind);
                 case KarFileKind.Movie:

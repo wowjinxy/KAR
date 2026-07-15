@@ -112,6 +112,32 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowRelationships(KarCliOptions options)
+    {
+        options.RequirePositionals("relationships", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectRelationship> relationships = options.Positionals.Count >= 2
+            ? project.RelationshipService.QueryMap(options.Positionals[1]).ToList()
+            : project.RelationshipService.Query().ToList();
+
+        if (options.Json)
+        {
+            WriteJson(relationships.Select(ToProjectRelationshipDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectRelationship relationship in relationships)
+        {
+            string map = relationship.MapName == null ? "project" : relationship.MapName;
+            string package = relationship.PackageFile == null ? "" : " package=" + relationship.PackageFile.RelativePath;
+            string entry = relationship.PackageEntryName == null ? "" : " entry=" + relationship.PackageEntryName;
+            string size = relationship.PackageEntrySizeHex == null ? "" : " size=" + relationship.PackageEntrySizeHex;
+            Console.WriteLine(map + ": " + relationship.Kind + "/" + relationship.Role + " " + relationship.RelativePath + package + entry + size);
+        }
+
+        return 0;
+    }
+
     public static int ShowFiles(KarCliOptions options)
     {
         options.RequirePositionals("files", 1);

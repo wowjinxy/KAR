@@ -26,6 +26,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
+            Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
             Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
@@ -447,6 +448,59 @@ namespace KARToolkit.Core.Tests
             }
         }
 
+        private static void ProjectRelationshipServiceConnectsMapsAndScriptTables()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-relationship-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1.dat"), new byte[] { 0x10 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Model.dat"), new byte[] { 0x20 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Event.dat"), new byte[] { 0x30 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectRelationshipService relationships = project.RelationshipService;
+
+                AssertTrue(object.ReferenceEquals(relationships.Project, project), "relationship service should retain project context");
+                AssertTrue(project.FileService.Get("ScInfPause.tm").Kind == KarFileKind.ScriptTable, "project files should classify loose tm resources as script tables");
+
+                IReadOnlyList<KarProjectRelationship> mapRelationships = relationships.QueryMap("City1");
+                AssertTrue(mapRelationships.Count == 3, "map relationships should expose data, model, and event/script files");
+                AssertTrue(mapRelationships.Any(relationship => relationship.Role == "MapEventScript" && relationship.RelativePath == "GrCity1Event.dat"), "map relationships should label event archives as scripts");
+
+                IReadOnlyList<KarProjectRelationship> allRelationships = relationships.Query();
+                KarProjectRelationship looseTable = allRelationships.Single(relationship => relationship.RelativePath == "ScInfPause.tm");
+                AssertTrue(looseTable.Kind == "ScriptTableFile", "relationship service should expose loose script table files");
+                AssertTrue(looseTable.Role == "ScreenInfoTable", "relationship service should classify ScInf loose table roles");
+
+                KarProjectRelationship packageTable = allRelationships.Single(relationship => relationship.PackageEntryName == "ScInfGo2D.tm");
+                AssertTrue(packageTable.Kind == "A2DPackageEntry", "relationship service should expose A2D-contained script table entries");
+                AssertTrue(packageTable.PackageFile.RelativePath == "A2Info.dat", "A2D script table relationships should retain their package file");
+                AssertTrue(packageTable.RelativePath == "A2Info.dat#ScInfGo2D.tm", "A2D script table relationships should expose stable package entry paths");
+                AssertTrue(packageTable.PackageEntryIndex == 0, "A2D script table relationships should expose entry indexes");
+                AssertTrue(packageTable.PackageEntrySize == 4, "A2D script table relationships should expose entry sizes");
+                AssertTrue(packageTable.Role == "ScreenInfoTable", "A2D script table relationships should use script table metadata");
+
+                IReadOnlyList<KarProjectRelationship> screenInfoTables = project.QueryRelationships(new KarProjectRelationshipQueryOptions
+                {
+                    Role = "ScreenInfoTable",
+                });
+                AssertTrue(screenInfoTables.Count == 2, "project relationship compatibility wrapper should support role filtering");
+                AssertTrue(project.QueryMapRelationships("GrCity1Event.dat").Count == 3, "project map relationship wrapper should resolve maps by file path");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
         private static void ProjectArchiveServiceCoordinatesArchiveWorkflows()
         {
             string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-archive-service-project-" + Guid.NewGuid().ToString("N"));
@@ -849,18 +903,43 @@ namespace KARToolkit.Core.Tests
 
         private static void WriteA2DPackage(string path)
         {
-            byte[] data = new byte[0x24];
-            WriteUInt32BigEndian(data, 0x00, 0);
-            WriteUInt32BigEndian(data, 0x04, 1);
-            WriteUInt32BigEndian(data, 0x08, 0x10);
-            WriteUInt32BigEndian(data, 0x0C, 0x20);
+            WriteA2DPackage(path, new[] { "entry.bin" });
+        }
 
-            byte[] name = Encoding.ASCII.GetBytes("entry.bin");
-            Buffer.BlockCopy(name, 0, data, 0x10, name.Length);
-            data[0x20] = 0xAA;
-            data[0x21] = 0xBB;
-            data[0x22] = 0xCC;
-            data[0x23] = 0xDD;
+        private static void WriteA2DPackage(string path, string[] entryNames)
+        {
+            if (entryNames == null || entryNames.Length == 0)
+                throw new ArgumentException("A2D test package needs at least one entry.", nameof(entryNames));
+
+            List<byte> bytes = new List<byte>(new byte[8 + entryNames.Length * 8]);
+            int[] nameOffsets = new int[entryNames.Length];
+            int[] dataOffsets = new int[entryNames.Length];
+
+            for (int i = 0; i < entryNames.Length; i++)
+            {
+                nameOffsets[i] = bytes.Count;
+                bytes.AddRange(Encoding.ASCII.GetBytes(entryNames[i]));
+                bytes.Add(0);
+            }
+
+            for (int i = 0; i < entryNames.Length; i++)
+            {
+                dataOffsets[i] = bytes.Count;
+                bytes.Add((byte)(0xA0 + i));
+                bytes.Add((byte)(0xB0 + i));
+                bytes.Add((byte)(0xC0 + i));
+                bytes.Add((byte)(0xD0 + i));
+            }
+
+            byte[] data = bytes.ToArray();
+            WriteUInt32BigEndian(data, 0x00, 0);
+            WriteUInt32BigEndian(data, 0x04, (uint)entryNames.Length);
+            for (int i = 0; i < entryNames.Length; i++)
+            {
+                int pairOffset = 8 + i * 8;
+                WriteUInt32BigEndian(data, pairOffset, (uint)nameOffsets[i]);
+                WriteUInt32BigEndian(data, pairOffset + 4, (uint)dataOffsets[i]);
+            }
 
             File.WriteAllBytes(path, data);
         }

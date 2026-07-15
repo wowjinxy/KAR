@@ -36,6 +36,8 @@ internal static class Program
                 "field-summaries" => KarCliInspectionCommands.ShowFieldSummaries(options),
                 "maps" => KarCliInspectionCommands.ShowMaps(options),
                 "map" => KarCliInspectionCommands.ShowMap(options),
+                "relationships" => KarCliInspectionCommands.ShowRelationships(options),
+                "links" => KarCliInspectionCommands.ShowRelationships(options),
                 "archive" => KarCliInspectionCommands.ShowArchive(options),
                 "a2d" => KarCliInspectionCommands.ShowA2D(options),
                 "copy" => KarCliCopyCommands.CopyFile(options),
@@ -78,6 +80,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit field-summary <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit relationships <source-folder> [map-name-or-file] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");

@@ -38,6 +38,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll s
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll fields .\GKYE01 kar.gr.data unknown1 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll field-summary .\GKYE01 kar.gr.data --kind MapData
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll relationships .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate-schemas
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archive .\GKYE01 VcCommon.dat --json --max-reference-depth 2 --max-reference-entries 16
@@ -50,6 +51,7 @@ Project-wide report snapshots go through `KarProject.CreateReport`, and the `rep
 Project output/mod-state inventory goes through `KarProject.OutputService` or the compatibility wrappers `KarProject.CreateOutputInventory` and `KarProject.QueryOutputFiles`, and the `outputs` CLI command reports staged project files, modified/unchanged source matches, and output-only orphan files.
 Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs` or the compatibility wrapper `KarProject.QueryMapOutputs`, and the `map-outputs` CLI command groups staged output files by map data/model/event-script bundles.
 Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.
+Project relationship discovery goes through `KarProject.RelationshipService`, and the `relationships` CLI command lists map bundle files plus script-table resources found as loose `.tm` files or A2D package entries such as `A2Info.dat#ScInfGo2D.tm`.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.ArchiveService.QueryHsdArchives` or the compatibility wrapper `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.

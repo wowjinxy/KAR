@@ -17,6 +17,7 @@ namespace KARToolkit.Core
         EnemyData,
         UiData,
         VersusData,
+        ScriptTable,
         Audio,
         Movie,
         Config,

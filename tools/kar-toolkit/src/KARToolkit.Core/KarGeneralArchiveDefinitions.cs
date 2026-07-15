@@ -32,6 +32,12 @@ namespace KARToolkit.Core
                 KarRootDefinition.Suffix("_scene_data", "Scene object", "HSD_SOBJ"));
         }
 
+        public static KarArchiveDefinition DefineScriptTable(string fileName, KarFileKind kind)
+        {
+            KarScriptTableInfo info = KarScriptTableCatalog.Describe(fileName);
+            return Define(kind, info.Name, info.Category, info.Description);
+        }
+
         public static KarArchiveDefinition DefineAudio(string fileName, KarFileKind kind)
         {
             return Define(kind, fileName, "Audio", "Audio stream or sound bank.");

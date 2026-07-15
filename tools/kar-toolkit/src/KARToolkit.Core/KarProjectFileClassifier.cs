@@ -13,6 +13,8 @@ namespace KARToolkit.Core
 
             if (extension.Equals(".ini", StringComparison.OrdinalIgnoreCase))
                 return KarFileKind.Config;
+            if (extension.Equals(".tm", StringComparison.OrdinalIgnoreCase))
+                return KarFileKind.ScriptTable;
             if (extension.Equals(".h4m", StringComparison.OrdinalIgnoreCase))
                 return KarFileKind.Movie;
             if (IsAudioExtension(extension))

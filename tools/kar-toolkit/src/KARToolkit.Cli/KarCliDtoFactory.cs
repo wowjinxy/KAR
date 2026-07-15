@@ -182,6 +182,30 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectRelationshipDto(KarProjectRelationship relationship)
+    {
+        return new
+        {
+            kind = relationship.Kind,
+            role = relationship.Role,
+            category = relationship.Category,
+            description = relationship.Description,
+            mapName = relationship.MapName,
+            relativePath = relationship.RelativePath,
+            displayName = relationship.DisplayName,
+            isMapScoped = relationship.IsMapScoped,
+            isPackageEntry = relationship.IsPackageEntry,
+            file = ToProjectFileDtoOrNull(relationship.File),
+            packageFile = ToProjectFileDtoOrNull(relationship.PackageFile),
+            packageEntryName = relationship.PackageEntryName,
+            packageEntryIndex = relationship.PackageEntryIndex,
+            packageEntryOffset = relationship.PackageEntryOffset,
+            packageEntryOffsetHex = relationship.PackageEntryOffsetHex,
+            packageEntrySize = relationship.PackageEntrySize,
+            packageEntrySizeHex = relationship.PackageEntrySizeHex,
+        };
+    }
+
     public static object ToArchiveDtoOrNull(KarArchiveInfo archive)
     {
         return archive == null ? null : ToArchiveDto(archive);
