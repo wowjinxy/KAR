@@ -179,6 +179,31 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResourceActionDefinition(KarProjectResourceActionDefinition definition)
+    {
+        string mode = definition.IsReadOnly ? "read" : "write";
+        string planning = " execution=" + definition.ExecutionKindName + " state=" + definition.PlanStateKindName + " write-policy=" + definition.WritePolicyName;
+        Console.WriteLine(definition.Id + " [" + definition.CapabilityName + ", " + mode + "] command=" + definition.Command + planning);
+        if (!string.IsNullOrEmpty(definition.Description))
+            Console.WriteLine("  " + definition.Description);
+    }
+
+    public static void PrintProjectOperationDomainRule(KarProjectOperationDomainRule rule)
+    {
+        Console.WriteLine(rule.Id + " - " + rule.DisplayName);
+        if (!string.IsNullOrEmpty(rule.Description))
+            Console.WriteLine("  " + rule.Description);
+    }
+
+    public static void PrintProjectOperationPresetDefinition(KarProjectOperationPresetDefinition definition)
+    {
+        string mode = definition.IsReadOnly ? "read" : "write";
+        string resourceKind = definition.ResourceKind == null ? "" : " resource-kind=" + definition.ResourceKind;
+        Console.WriteLine(definition.Id + " [" + definition.DomainId + ", " + mode + "] action=" + definition.ActionId + resourceKind);
+        if (!string.IsNullOrEmpty(definition.Description))
+            Console.WriteLine("  " + definition.Description);
+    }
+
     public static void PrintProjectResourceActionPlan(KarProjectResourceActionPlan plan)
     {
         string output = plan.OutputRelativePath == null ? "" : " output=" + plan.OutputRelativePath;

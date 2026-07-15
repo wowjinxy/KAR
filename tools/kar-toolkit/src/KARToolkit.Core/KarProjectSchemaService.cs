@@ -25,6 +25,12 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectResourceHandler> ResourceHandlers => _project.ResourceHandlerRegistry.Handlers;
 
+        public IReadOnlyList<KarProjectResourceActionDefinition> ResourceActionDefinitions => _project.ResourceActionRegistry.Definitions;
+
+        public IReadOnlyList<KarProjectOperationDomainRule> OperationDomainRules => _project.OperationDomainRegistry.Rules;
+
+        public IReadOnlyList<KarProjectOperationPresetDefinition> OperationPresetDefinitions => _project.OperationPresetRegistry.Definitions;
+
         public IReadOnlyList<KarDataDefinition> QueryDataDefinitions(KarDataDefinitionQueryOptions options = null)
         {
             IEnumerable<KarDataDefinition> definitions = DataDefinitions.All;

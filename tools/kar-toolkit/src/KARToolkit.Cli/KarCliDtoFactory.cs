@@ -172,6 +172,62 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceActionDefinitionDto(KarProjectResourceActionDefinition definition)
+    {
+        return new
+        {
+            id = definition.Id,
+            displayName = definition.DisplayName,
+            description = definition.Description,
+            capability = definition.CapabilityName,
+            command = definition.Command,
+            argumentHint = definition.ArgumentHint,
+            isReadOnly = definition.IsReadOnly,
+            writesOutput = definition.WritesOutput,
+            requiresInputFile = definition.RequiresInputFile,
+            requiresFieldName = definition.RequiresFieldName,
+            requiresValue = definition.RequiresValue,
+            supportsBatch = definition.SupportsBatch,
+            executionKind = definition.ExecutionKindName,
+            planStateKind = definition.PlanStateKindName,
+            requiresOutputInfo = definition.RequiresOutputInfo,
+            requiresByteInfo = definition.RequiresByteInfo,
+            writePolicy = definition.WritePolicyName,
+        };
+    }
+
+    public static object ToProjectOperationDomainRuleDto(KarProjectOperationDomainRule rule)
+    {
+        return new
+        {
+            id = rule.Id,
+            displayName = rule.DisplayName,
+            description = rule.Description,
+        };
+    }
+
+    public static object ToProjectOperationPresetDefinitionDto(KarProjectOperationPresetDefinition definition)
+    {
+        return new
+        {
+            id = definition.Id,
+            domainId = definition.DomainId,
+            displayName = definition.DisplayName,
+            description = definition.Description,
+            actionId = definition.ActionId,
+            resourceKind = definition.ResourceKind == null ? null : definition.ResourceKind.ToString(),
+            isReadOnly = definition.IsReadOnly,
+            writesOutput = definition.WritesOutput,
+            supportsBatch = definition.SupportsBatch,
+            requiresInputFile = definition.RequiresInputFile,
+            requiresFieldName = definition.RequiresFieldName,
+            requiresValue = definition.RequiresValue,
+            canRun = definition.CanRun,
+            wouldWriteOutput = definition.WouldWriteOutput,
+            hasModifiedOutputs = definition.HasModifiedOutputs,
+        };
+    }
+
     public static object ToProjectReportDto(KarProjectReport report)
     {
         return new

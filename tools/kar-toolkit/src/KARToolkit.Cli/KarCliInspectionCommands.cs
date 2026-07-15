@@ -89,6 +89,74 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceActionDefinitions(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-action-definitions", 0);
+        IReadOnlyList<KarProjectResourceActionDefinition> definitions = options.Positionals.Count == 0
+            ? KarProjectResourceActionRegistry.Default.Definitions
+            : OpenProject(options).SchemaService.ResourceActionDefinitions;
+        List<KarProjectResourceActionDefinition> orderedDefinitions = definitions
+            .OrderBy(definition => definition.Capability)
+            .ThenBy(definition => definition.Id, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(orderedDefinitions.Select(ToProjectResourceActionDefinitionDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceActionDefinition definition in orderedDefinitions)
+            PrintProjectResourceActionDefinition(definition);
+
+        return 0;
+    }
+
+    public static int ShowOperationDomains(KarCliOptions options)
+    {
+        options.RequirePositionals("operation-domains", 0);
+        IReadOnlyList<KarProjectOperationDomainRule> rules = options.Positionals.Count == 0
+            ? KarProjectOperationDomainRegistry.Default.Rules
+            : OpenProject(options).SchemaService.OperationDomainRules;
+        List<KarProjectOperationDomainRule> orderedRules = rules
+            .OrderBy(rule => rule.Id, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(orderedRules.Select(ToProjectOperationDomainRuleDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectOperationDomainRule rule in orderedRules)
+            PrintProjectOperationDomainRule(rule);
+
+        return 0;
+    }
+
+    public static int ShowOperationPresetDefinitions(KarCliOptions options)
+    {
+        options.RequirePositionals("operation-preset-definitions", 0);
+        IReadOnlyList<KarProjectOperationPresetDefinition> definitions = options.Positionals.Count == 0
+            ? KarProjectOperationPresetRegistry.Default.Definitions
+            : OpenProject(options).SchemaService.OperationPresetDefinitions;
+        List<KarProjectOperationPresetDefinition> orderedDefinitions = definitions
+            .OrderBy(definition => definition.DomainId, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(definition => definition.Id, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(orderedDefinitions.Select(ToProjectOperationPresetDefinitionDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectOperationPresetDefinition definition in orderedDefinitions)
+            PrintProjectOperationPresetDefinition(definition);
+
+        return 0;
+    }
+
     public static int ShowResourceActions(KarCliOptions options)
     {
         options.RequirePositionals("resource-actions", 1);

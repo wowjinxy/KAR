@@ -24,6 +24,12 @@ internal static class Program
                 "kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "resource-handlers" => KarCliInspectionCommands.ShowResourceHandlers(options),
                 "resource-kinds" => KarCliInspectionCommands.ShowResourceHandlers(options),
+                "resource-action-definitions" => KarCliInspectionCommands.ShowResourceActionDefinitions(options),
+                "action-definitions" => KarCliInspectionCommands.ShowResourceActionDefinitions(options),
+                "operation-domains" => KarCliInspectionCommands.ShowOperationDomains(options),
+                "operation-domain-rules" => KarCliInspectionCommands.ShowOperationDomains(options),
+                "operation-preset-definitions" => KarCliInspectionCommands.ShowOperationPresetDefinitions(options),
+                "preset-definitions" => KarCliInspectionCommands.ShowOperationPresetDefinitions(options),
                 "resource-actions" => KarCliInspectionCommands.ShowResourceActions(options),
                 "actions" => KarCliInspectionCommands.ShowResourceActions(options),
                 "resource-action" => KarCliResourceActionCommands.Execute(options),
@@ -193,6 +199,9 @@ internal static class Program
         Console.WriteLine("  kar-toolkit session <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit file-kinds");
         Console.WriteLine("  kar-toolkit resource-handlers");
+        Console.WriteLine("  kar-toolkit resource-action-definitions [source-folder] [--json]");
+        Console.WriteLine("  kar-toolkit operation-domains [source-folder] [--json]");
+        Console.WriteLine("  kar-toolkit operation-preset-definitions [source-folder] [--json]");
         Console.WriteLine("  kar-toolkit resource-actions <source-folder> [resource-address] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--json]");
         Console.WriteLine("  kar-toolkit resource-action <source-folder> <resource-address> <action-id> [action-args...] [--output <mod-folder>] [--overwrite] [--json]");
         Console.WriteLine("  kar-toolkit resource-action-batch <source-folder> <action-id> [action-args...] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--output <mod-folder>] [--overwrite] [--continue-on-error] [--json]");
