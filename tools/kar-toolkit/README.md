@@ -24,6 +24,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll d
 
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
 Archive metadata lives in `KarArchiveCatalog`; live HSD root inspection goes through `KarArchiveInspector`.
+Map bundle inspection goes through `KarMapInspector`, which ties each map's data, model, and event/script archives together.
 
 Use `definitions` to list known KAR data schemas. Archive and map inspection attach schema details to known roots when the toolkit has decomp-backed field information.
 Known root schemas also include read-only field values for mapped scalar fields and pointer presence/length, which is useful for quick archive comparison before writing editor code.

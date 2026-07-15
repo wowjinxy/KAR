@@ -19,6 +19,7 @@ namespace KARToolkit.Core
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             ArchiveInspector = KarArchiveInspector.Default;
+            MapInspector = new KarMapInspector(ArchiveInspector);
             Files = files;
             Maps = maps;
             _filesByPath = files.ToDictionary(f => f.RelativePath, StringComparer.OrdinalIgnoreCase);
@@ -28,6 +29,8 @@ namespace KARToolkit.Core
         public KarProjectWorkspace Workspace { get; }
 
         public KarArchiveInspector ArchiveInspector { get; }
+
+        public KarMapInspector MapInspector { get; }
 
         public string SourceRoot => Workspace.SourceRoot;
 
@@ -155,7 +158,7 @@ namespace KARToolkit.Core
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
             KarProjectFile file = GetFile(relativePath);
-            return ArchiveInspector.Inspect(file, OpenHsdFile(file.RelativePath));
+            return ArchiveInspector.Inspect(file);
         }
 
         public bool TryInspectHsdArchive(string relativePath, out KarArchiveInfo info, out string error)
@@ -181,14 +184,7 @@ namespace KARToolkit.Core
 
         public KarMapInfo InspectMap(KarMapBundle map)
         {
-            if (map == null)
-                throw new ArgumentNullException(nameof(map));
-
-            return new KarMapInfo(
-                map,
-                InspectOptionalArchive(map.DataFile),
-                InspectOptionalArchive(map.ModelFile),
-                InspectOptionalArchive(map.EventFile));
+            return MapInspector.Inspect(map);
         }
 
         public bool TryInspectMap(string mapNameOrPath, out KarMapInfo info, out string error)
@@ -290,14 +286,6 @@ namespace KARToolkit.Core
         private static bool TryGetMapName(KarProjectFile file, out string mapName)
         {
             return KarArchiveCatalog.TryGetMapName(file.RelativePath, file.Kind, out mapName);
-        }
-
-        private KarArchiveInfo InspectOptionalArchive(KarProjectFile file)
-        {
-            if (file == null)
-                return null;
-
-            return InspectHsdArchive(file.RelativePath);
         }
 
         private static string NormalizeMapName(string mapNameOrPath)

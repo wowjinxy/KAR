@@ -9,6 +9,14 @@ namespace KARToolkit.Core
     {
         public static KarArchiveInspector Default { get; } = new KarArchiveInspector();
 
+        public KarArchiveInfo Inspect(KarProjectFile file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            return Inspect(file, new HSDRawFile(file.ReadPath));
+        }
+
         public KarArchiveInfo Inspect(KarProjectFile file, HSDRawFile hsdFile)
         {
             if (file == null)
