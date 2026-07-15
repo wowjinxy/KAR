@@ -7,46 +7,12 @@ internal static class KarCliDtoFactory
 {
     public static object ToProjectDto(KarProject project)
     {
-        return new
-        {
-            name = project.Name,
-            workspace = ToProjectWorkspaceDto(project.Workspace),
-            sourceRoot = project.SourceRoot,
-            sourceFilesRoot = project.SourceFilesRoot,
-            outputRoot = project.OutputRoot,
-            outputFilesRoot = project.OutputFilesRoot,
-            sourceHasFilesDirectory = project.SourceHasFilesDirectory,
-            fileCount = project.FileService.Files.Count,
-            mapCount = project.Maps.Count,
-            categories = project.FileService.Files
-                .GroupBy(file => file.Category)
-                .OrderBy(group => group.Key)
-                .Select(group => new
-                {
-                    category = group.Key,
-                    count = group.Count(),
-                })
-                .ToList(),
-        };
+        return project.CreateContract();
     }
 
     public static object ToProjectWorkspaceDto(KarProjectWorkspace workspace)
     {
-        return new
-        {
-            name = workspace.Name,
-            sourceRoot = workspace.SourceRoot,
-            sourceFilesRoot = workspace.SourceFilesRoot,
-            outputRoot = workspace.OutputRoot,
-            outputFilesRoot = workspace.OutputFilesRoot,
-            sourceHasFilesDirectory = workspace.SourceHasFilesDirectory,
-            readPolicy = workspace.ReadPolicy,
-            writePolicy = workspace.WritePolicy,
-            readsPreferOutputCopies = workspace.ReadsPreferOutputCopies,
-            writesOnlyToOutput = workspace.WritesOnlyToOutput,
-            sourceAndOutputRootsAreSeparate = workspace.SourceAndOutputRootsAreSeparate,
-            sourceFilesAndOutputFilesRootsAreSeparate = workspace.SourceFilesAndOutputFilesRootsAreSeparate,
-        };
+        return workspace.CreateContract();
     }
 
     public static object ToProjectSessionDto(KarProjectSession session)

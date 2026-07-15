@@ -49,6 +49,11 @@ namespace KARToolkit.Core
             !IsSameOrChildPath(SourceFilesRoot, OutputFilesRoot) &&
             !IsSameOrChildPath(OutputFilesRoot, SourceFilesRoot);
 
+        public KarProjectWorkspaceContract CreateContract()
+        {
+            return KarProjectWorkspaceContract.Create(this);
+        }
+
         public static KarProjectWorkspace Open(string sourceRoot)
         {
             return Open(sourceRoot, null);

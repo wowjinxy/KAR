@@ -1956,6 +1956,9 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(session.WritesOnlyToOutput && session.ReadsPreferOutputCopies, "project sessions should expose workspace read/write policy flags");
                 AssertTrue(session.SourceAndOutputRootsAreSeparate && session.SourceFilesAndOutputFilesRootsAreSeparate, "project sessions should expose separated source/output roots");
                 AssertTrue(session.WritePolicy.Contains("only under the configured output folder"), "project sessions should describe output-only writes");
+                KarProjectContract projectContract = session.Project.CreateContract();
+                AssertTrue(projectContract.Name == session.Name && projectContract.FileCount == session.FileCount && projectContract.Workspace.WritesOnlyToOutput, "project contracts should expose reusable project and workspace metadata");
+                AssertTrue(session.Workspace.CreateContract().OutputRoot == session.OutputRoot, "workspace contracts should expose reusable workspace roots");
                 AssertTrue(object.ReferenceEquals(session.Surface.Project, session.Project), "project sessions should attach a toolkit surface for the same project");
                 AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");

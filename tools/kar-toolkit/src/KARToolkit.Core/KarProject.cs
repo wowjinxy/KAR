@@ -145,6 +145,11 @@ namespace KARToolkit.Core
 
         public IReadOnlyDictionary<string, KarMapBundle> MapsByName => Index.MapsByName;
 
+        public KarProjectContract CreateContract()
+        {
+            return KarProjectContract.Create(this);
+        }
+
         public static KarProject Open(string sourceRoot)
         {
             return Open(sourceRoot, null);
