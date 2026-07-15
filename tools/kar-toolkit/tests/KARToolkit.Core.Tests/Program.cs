@@ -586,6 +586,12 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceService resources = project.ResourceService;
 
                 byte[] packageBytes = File.ReadAllBytes(packagePath);
+                AssertTrue(resources.Adapters.Count == Enum.GetValues(typeof(KarResourceKind)).Length, "resource services should expose default resource adapters");
+                KarProjectResourceInfo packageResource = resources.Get("A2Info.dat");
+                AssertTrue(resources.GetAdapter(packageResource).ReadBytes(packageResource).SequenceEqual(packageBytes), "resource adapters should expose file byte reads");
+                AssertThrows<NotSupportedException>(
+                    () => resources.GetAdapter(KarResourceKind.HsdRoot).ReadBytes(resources.Get("VsHydra.dat:vsDataHydra")),
+                    "resource adapters should reject unsupported root byte reads");
                 AssertTrue(resources.ReadBytes("A2Info.dat").SequenceEqual(packageBytes), "resource reads should return active file bytes");
                 AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "project resource read wrapper should return A2D entry bytes");
                 AssertThrows<NotSupportedException>(
