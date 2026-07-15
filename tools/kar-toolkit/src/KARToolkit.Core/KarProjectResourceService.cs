@@ -147,6 +147,30 @@ namespace KARToolkit.Core
             return field;
         }
 
+        public KarProjectResourceActionPlan GetDataFieldEditPlan(
+            string address,
+            string fieldPathOrName,
+            string value = null,
+            bool overwrite = false)
+        {
+            KarProjectResourceDataFieldView field = GetEditableDataField(address, fieldPathOrName);
+            KarProjectResourceActionExecutionOptions options = field.ScalarEdit.CreateExecutionOptions(value);
+            options.Overwrite = overwrite;
+            return GetActionPlan(address, field.ScalarEdit.ActionId, options);
+        }
+
+        public KarProjectResourceActionExecutionResult ExecuteDataFieldEdit(
+            string address,
+            string fieldPathOrName,
+            string value)
+        {
+            KarProjectResourceDataFieldView field = GetEditableDataField(address, fieldPathOrName);
+            return _project.ResourceActionExecutor.Execute(
+                address,
+                field.ScalarEdit.ActionId,
+                field.ScalarEdit.CreateExecutionOptions(value));
+        }
+
         public IReadOnlyList<KarProjectResourceActionPlan> QueryActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
         {
             options = options ?? new KarProjectResourceActionPlanQueryOptions();
@@ -488,6 +512,15 @@ namespace KARToolkit.Core
             }
 
             return fields.AsReadOnly();
+        }
+
+        private KarProjectResourceDataFieldView GetEditableDataField(string address, string fieldPathOrName)
+        {
+            KarProjectResourceDataFieldView field = GetDataField(address, fieldPathOrName);
+            if (!field.HasScalarEdit)
+                throw new NotSupportedException("KAR project resource data field does not support scalar edits: " + address + " " + fieldPathOrName);
+
+            return field;
         }
 
         private KarProjectResourceActionPlan CreateActionPlan(KarProjectResourceInfo resource, KarProjectResourceAction action, bool overwrite)

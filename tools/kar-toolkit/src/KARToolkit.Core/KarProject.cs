@@ -379,6 +379,23 @@ namespace KARToolkit.Core
             return ResourceService.GetDataField(address, fieldPathOrName);
         }
 
+        public KarProjectResourceActionPlan GetResourceDataFieldEditPlan(
+            string address,
+            string fieldPathOrName,
+            string value = null,
+            bool overwrite = false)
+        {
+            return ResourceService.GetDataFieldEditPlan(address, fieldPathOrName, value, overwrite);
+        }
+
+        public KarProjectResourceActionExecutionResult ExecuteResourceDataFieldEdit(
+            string address,
+            string fieldPathOrName,
+            string value)
+        {
+            return ResourceService.ExecuteDataFieldEdit(address, fieldPathOrName, value);
+        }
+
         public KarProjectResourceOutputInfo GetResourceOutput(string address)
         {
             return ResourceService.GetOutput(address);

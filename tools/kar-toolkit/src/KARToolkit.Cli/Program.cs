@@ -141,6 +141,9 @@ internal static class Program
                 "set-scalar" => KarCliEditCommands.SetScalar(options),
                 "set-resource-scalar" => KarCliEditCommands.SetResourceScalar(options),
                 "resource-set-scalar" => KarCliEditCommands.SetResourceScalar(options),
+                "resource-data-edit" => KarCliEditCommands.SetResourceDataField(options),
+                "set-resource-data" => KarCliEditCommands.SetResourceDataField(options),
+                "set-resource-data-field" => KarCliEditCommands.SetResourceDataField(options),
                 "validate" => KarCliInspectionCommands.ValidateProject(options),
                 "validate-schemas" => KarCliInspectionCommands.ValidateSchemas(options),
                 "definitions" => KarCliInspectionCommands.ShowDefinitions(options),
@@ -229,6 +232,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-resource-scalar <source-folder> <archive:root> <field-name> <value> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit resource-data-edit <source-folder> <archive:root> <field-path-or-name> <value> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots] [--no-hsd-archives] [--no-a2d-packages] [--no-schema-validation]");
         Console.WriteLine("  kar-toolkit validate-schemas");
         Console.WriteLine("  kar-toolkit definitions");

@@ -1017,9 +1017,20 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceActionExecutionOptions editOptions = x0C.ScalarEdit.CreateExecutionOptions("0x200");
                 AssertTrue(editOptions.FieldName == "x0C" && editOptions.Value == "0x200", "scalar edit metadata should create resource action execution options");
                 AssertTrue(project.GetResourceDataField("VsHydra.dat:vsDataHydra", "x0C").SignedValue == 303, "project resource data field wrappers should look up fields by path or name");
+                KarProjectResourceActionPlan missingValuePlan = project.GetResourceDataFieldEditPlan("VsHydra.dat:vsDataHydra", "x0C");
+                AssertTrue(!missingValuePlan.CanRun && missingValuePlan.Reason == "Requires a value.", "resource data field edit plans should require edit values");
+                KarProjectResourceActionPlan editPlan = project.ResourceService.GetDataFieldEditPlan("VsHydra.dat:vsDataHydra", "x0C", "0x210");
+                AssertTrue(editPlan.CanRun && editPlan.ActionId == "set-scalar" && editPlan.WouldWriteOutput, "resource data field edit plans should preview executable scalar writes");
+                KarProjectResourceActionExecutionResult editResult = project.ExecuteResourceDataFieldEdit("VsHydra.dat:vsDataHydra", "x0C", "0x210");
+                AssertTrue(editResult.ResultKind == "scalar-edit" && editResult.WroteOutput && File.Exists(editResult.OutputPath), "resource data field edit execution should write through the resource action executor");
+                AssertTrue(editResult.ScalarEditResult.Edit.NewValue.SignedValue == 528, "resource data field edit execution should parse scalar values through existing edit rules");
+                AssertTrue(project.GetResourceDataField("VsHydra.dat:vsDataHydra", "x0C").SignedValue == 528, "resource data field queries should read edits from output copies");
 
                 KarProjectResourceDataFieldView pointer = hydra.Fields.Single(field => field.FieldName == "primaryModelAnimation");
                 AssertTrue(pointer.IsPointer && !pointer.CanSetScalar && !pointer.HasScalarEdit && pointer.DataDefinitionId == "kar.vs.legendary.modelAnimation", "resource data fields should retain pointer target schema ids");
+                AssertThrows<NotSupportedException>(
+                    () => project.GetResourceDataFieldEditPlan("VsHydra.dat:vsDataHydra", "primaryModelAnimation", "1"),
+                    "resource data field edit plans should reject non-scalar field selectors");
                 AssertTrue(hydra.EditableScalarFieldCount >= 2 && hydra.PointerFieldCount >= 3, "resource data views should summarize scalar and pointer fields");
 
                 IReadOnlyList<KarProjectResourceDataFieldView> editable = project.QueryResourceDataFields(new KarProjectResourceDataFieldQueryOptions

@@ -90,7 +90,7 @@ internal static class KarCliResourceActionCommands
         return executionOptions;
     }
 
-    private static int WriteActionResult(
+    internal static int WriteActionResult(
         KarCliOptions options,
         KarProjectResourceActionExecutionResult result)
     {

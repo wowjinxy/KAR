@@ -68,4 +68,20 @@ internal static class KarCliEditCommands
         Console.WriteLine("Output: " + result.OutputPath);
         return 0;
     }
+
+    public static int SetResourceDataField(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-data-edit", 4);
+        KarProject project = OpenProject(options);
+        string address = options.Positionals[1];
+        string fieldPathOrName = options.Positionals[2];
+        string value = options.Positionals[3];
+
+        KarProjectResourceActionExecutionResult result = project.ExecuteResourceDataFieldEdit(
+            address,
+            fieldPathOrName,
+            value);
+
+        return KarCliResourceActionCommands.WriteActionResult(options, result);
+    }
 }
