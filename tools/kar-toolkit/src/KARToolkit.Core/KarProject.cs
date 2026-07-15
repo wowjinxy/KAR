@@ -14,8 +14,7 @@ namespace KARToolkit.Core
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileStore = new KarProjectFileStore(Workspace, Index);
-            ArchiveInspector = KarArchiveInspector.Default;
-            MapInspector = new KarMapInspector(ArchiveInspector);
+            Inspector = new KarProjectInspector(Index);
         }
 
         public KarProjectWorkspace Workspace { get; }
@@ -24,9 +23,11 @@ namespace KARToolkit.Core
 
         public KarProjectFileStore FileStore { get; }
 
-        public KarArchiveInspector ArchiveInspector { get; }
+        public KarProjectInspector Inspector { get; }
 
-        public KarMapInspector MapInspector { get; }
+        public KarArchiveInspector ArchiveInspector => Inspector.ArchiveInspector;
+
+        public KarMapInspector MapInspector => Inspector.MapInspector;
 
         public string SourceRoot => Workspace.SourceRoot;
 
@@ -127,50 +128,27 @@ namespace KARToolkit.Core
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
-            KarProjectFile file = GetFile(relativePath);
-            return ArchiveInspector.Inspect(file);
+            return Inspector.InspectHsdArchive(relativePath);
         }
 
         public bool TryInspectHsdArchive(string relativePath, out KarArchiveInfo info, out string error)
         {
-            try
-            {
-                info = InspectHsdArchive(relativePath);
-                error = null;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                info = null;
-                error = ex.Message;
-                return false;
-            }
+            return Inspector.TryInspectHsdArchive(relativePath, out info, out error);
         }
 
         public KarMapInfo InspectMap(string mapNameOrPath)
         {
-            return InspectMap(GetMap(mapNameOrPath));
+            return Inspector.InspectMap(mapNameOrPath);
         }
 
         public KarMapInfo InspectMap(KarMapBundle map)
         {
-            return MapInspector.Inspect(map);
+            return Inspector.InspectMap(map);
         }
 
         public bool TryInspectMap(string mapNameOrPath, out KarMapInfo info, out string error)
         {
-            try
-            {
-                info = InspectMap(mapNameOrPath);
-                error = null;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                info = null;
-                error = ex.Message;
-                return false;
-            }
+            return Inspector.TryInspectMap(mapNameOrPath, out info, out error);
         }
 
         public KarValidationReport Validate(KarValidationOptions options = null)

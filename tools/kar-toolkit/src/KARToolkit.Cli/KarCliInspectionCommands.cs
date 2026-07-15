@@ -58,7 +58,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("map", 2);
         KarProject project = OpenProject(options);
-        KarMapInfo map = project.InspectMap(options.Positionals[1]);
+        KarMapInfo map = project.Inspector.InspectMap(options.Positionals[1]);
 
         if (options.Json)
         {
@@ -85,7 +85,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("archive", 2);
         KarProject project = OpenProject(options);
-        KarArchiveInfo archive = project.InspectHsdArchive(options.Positionals[1]);
+        KarArchiveInfo archive = project.Inspector.InspectHsdArchive(options.Positionals[1]);
 
         if (options.Json)
         {

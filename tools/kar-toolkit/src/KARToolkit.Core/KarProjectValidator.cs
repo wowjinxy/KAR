@@ -50,7 +50,7 @@ namespace KARToolkit.Core
 
             KarArchiveInfo info;
             string error;
-            if (!_project.TryInspectHsdArchive(file.RelativePath, out info, out error))
+            if (!_project.Inspector.TryInspectHsdArchive(file.RelativePath, out info, out error))
             {
                 Add(KarValidationSeverity.Error, "hsd-open-failed", "Could not open HSD archive: " + error, file.RelativePath, null, null);
                 return;
