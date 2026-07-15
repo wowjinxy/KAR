@@ -67,6 +67,11 @@ namespace KARToolkit.Core
 
         public bool HasInspectionIssueWorkflows => InspectionIssueWorkflowCount != 0;
 
+        public KarProjectToolkitSurfaceContract CreateContract()
+        {
+            return KarProjectToolkitSurfaceContract.Create(this);
+        }
+
         private static IReadOnlyList<KarProjectToolkitWorkflowGroup> CreateWorkflowGroups(
             IReadOnlyList<KarProjectDomainContext> domains,
             IReadOnlyList<KarProjectToolkitWorkflow> workflows)

@@ -612,9 +612,19 @@ namespace KARToolkit.Core
             return ToolkitService.CreateSurface(options);
         }
 
+        public KarProjectToolkitSurfaceContract CreateToolkitSurfaceContract(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return ToolkitService.CreateSurfaceContract(options);
+        }
+
         public KarProjectSession CreateSession(KarProjectToolkitSnapshotOptions options = null)
         {
             return KarProjectSession.Create(this, options);
+        }
+
+        public KarProjectSessionContract CreateSessionContract(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return CreateSession(options).CreateContract();
         }
 
         public static KarProjectSession OpenSession(string sourceRoot)

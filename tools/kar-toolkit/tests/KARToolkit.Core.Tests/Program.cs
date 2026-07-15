@@ -1972,6 +1972,11 @@ namespace KARToolkit.Core.Tests
                 KarProjectContract projectContract = session.Project.CreateContract();
                 AssertTrue(projectContract.Name == session.Name && projectContract.FileCount == session.FileCount && projectContract.Workspace.WritesOnlyToOutput, "project contracts should expose reusable project and workspace metadata");
                 AssertTrue(session.Workspace.CreateContract().OutputRoot == session.OutputRoot, "workspace contracts should expose reusable workspace roots");
+                KarProjectSessionContract sessionContract = session.CreateContract();
+                AssertTrue(sessionContract.Name == session.Name && sessionContract.Project.Name == session.Name && sessionContract.Workspace.WritesOnlyToOutput, "project session contracts should expose reusable session and workspace metadata");
+                AssertTrue(sessionContract.RegistryCatalog.ResourceActionDefinitionCount == session.ResourceActionDefinitionCount && sessionContract.Surface.WorkflowCount == session.WorkflowCount, "project session contracts should include registry and toolkit surface contracts");
+                AssertTrue(sessionContract.Surface.WorkflowGroups.Count == session.Surface.WorkflowGroupCount && sessionContract.Surface.Domains.Any(domain => domain.Id == "files"), "project session contracts should preserve grouped toolkit workflows and domains");
+                AssertTrue(session.Project.CreateSessionContract().Surface.WorkflowGroupCount == session.Surface.WorkflowGroupCount, "project wrappers should expose session contracts");
                 AssertTrue(object.ReferenceEquals(session.Surface.Project, session.Project), "project sessions should attach a toolkit surface for the same project");
                 AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
@@ -2132,6 +2137,12 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");
                 AssertTrue(surface.WriteWorkflowCount != 0 && surface.OutputWorkflowCount >= surface.WriteWorkflowCount, "toolkit surfaces should summarize write-capable workflows");
                 AssertTrue(surface.WorkflowGroupCount == surface.DomainCount + 1 && surface.WorkflowGroups.Sum(group => group.WorkflowCount) == surface.WorkflowCount, "toolkit surfaces should group workflows by domain plus project-level commands");
+                KarProjectToolkitSurfaceContract surfaceContract = surface.CreateContract();
+                AssertTrue(surfaceContract.Project.Name == project.Name && surfaceContract.WorkflowCount == surface.WorkflowCount && surfaceContract.WorkflowGroups.Count == surface.WorkflowGroupCount, "toolkit surface contracts should preserve project and grouped workflow metadata");
+                AssertTrue(surfaceContract.HasOutputs && surfaceContract.HasModifiedOutputs && surfaceContract.HasDomainInspectionIssues, "toolkit surface contracts should expose compact output and issue state");
+                AssertTrue(surfaceContract.Domains.Any(domain => domain.Id == "a2d-packages") && surfaceContract.Workflows.Any(workflow => workflow.Id == "apply-a2d-entry-outputs"), "toolkit surface contracts should include domain and workflow launcher metadata");
+                AssertTrue(project.ToolkitService.CreateSurfaceContract().WorkflowCount == surface.WorkflowCount, "toolkit services should expose surface contracts");
+                AssertTrue(project.CreateToolkitSurfaceContract().WorkflowGroupCount == surface.WorkflowGroupCount, "project wrappers should expose toolkit surface contracts");
                 KarProjectToolkitWorkflowGroup projectGroup = surface.WorkflowGroups.First();
                 AssertTrue(projectGroup.DomainId == "project" && !projectGroup.HasDomain && projectGroup.WorkflowCount >= 3, "toolkit workflow groups should expose project-level commands separately");
                 KarProjectToolkitWorkflowGroup resourceGroup = surface.WorkflowGroups.Single(group => group.DomainId == "resources");

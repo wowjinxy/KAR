@@ -47,6 +47,11 @@ namespace KARToolkit.Core
             return new KarProjectToolkitSurface(_project, snapshot, domains, workflows);
         }
 
+        public KarProjectToolkitSurfaceContract CreateSurfaceContract(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return CreateSurface(options).CreateContract();
+        }
+
         public IReadOnlyList<KarProjectDomainContext> QueryDomainContexts(KarProjectToolkitSnapshotOptions options = null)
         {
             KarProjectToolkitSnapshot snapshot = CreateSnapshot(options);

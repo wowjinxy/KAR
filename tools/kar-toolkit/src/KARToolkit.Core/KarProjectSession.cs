@@ -145,6 +145,11 @@ namespace KARToolkit.Core
             return Create(Project, toolkitOptions);
         }
 
+        public KarProjectSessionContract CreateContract()
+        {
+            return KarProjectSessionContract.Create(this);
+        }
+
         public KarProjectModManifest CreateModManifest(KarProjectModWorkspaceOptions options = null)
         {
             if (options == null && ModWorkspace != null)
