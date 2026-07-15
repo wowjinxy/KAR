@@ -55,7 +55,9 @@ namespace KARToolkit.Core
 
         public KarProjectFileCopyResult CopyFileToOutput(string relativePath, bool overwrite = false)
         {
-            return _project.FileStore.CopyFileToOutput(relativePath, overwrite);
+            KarProjectFileCopyResult result = _project.FileStore.CopyFileToOutput(relativePath, overwrite);
+            _project.ResourceGraphService.Invalidate();
+            return result;
         }
 
         public byte[] ReadBytes(string relativePath)
@@ -70,7 +72,9 @@ namespace KARToolkit.Core
 
         public KarProjectFileWriteResult WriteFileBytes(string relativePath, byte[] data)
         {
-            return _project.FileStore.WriteFileBytes(relativePath, data);
+            KarProjectFileWriteResult result = _project.FileStore.WriteFileBytes(relativePath, data);
+            _project.ResourceGraphService.Invalidate();
+            return result;
         }
     }
 }

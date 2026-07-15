@@ -10,15 +10,18 @@ namespace KARToolkit.Core
         private readonly KarProjectWorkspace _workspace;
         private readonly KarProjectFileStore _fileStore;
         private readonly KarArchiveInspector _archiveInspector;
+        private readonly Action _onOutputWrite;
 
         public KarProjectArchiveStore(
             KarProjectWorkspace workspace,
             KarProjectFileStore fileStore,
-            KarArchiveInspector archiveInspector)
+            KarArchiveInspector archiveInspector,
+            Action onOutputWrite = null)
         {
             _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             _fileStore = fileStore ?? throw new ArgumentNullException(nameof(fileStore));
             _archiveInspector = archiveInspector ?? throw new ArgumentNullException(nameof(archiveInspector));
+            _onOutputWrite = onOutputWrite;
         }
 
         public HSDRawFile OpenHsdFile(string relativePath)
@@ -106,6 +109,7 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(file));
 
             string outputPath = _workspace.SaveOutputFile(relativePath, tempPath => file.Save(tempPath, bufferAlign, optimize, trim));
+            _onOutputWrite?.Invoke();
             return _fileStore.CreateWriteResult(relativePath, outputPath);
         }
 
@@ -120,6 +124,7 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(package));
 
             string outputPath = _workspace.SaveOutputFile(relativePath, package.Save);
+            _onOutputWrite?.Invoke();
             return _fileStore.CreateWriteResult(relativePath, outputPath);
         }
     }

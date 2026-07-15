@@ -22,7 +22,8 @@ namespace KARToolkit.Core
             FileStore = new KarProjectFileStore(Workspace, Index);
             FileService = new KarProjectFileService(this);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
-            ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
+            ResourceGraphService = new KarProjectResourceGraphService(this);
+            ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector, ResourceGraphService.Invalidate);
             ArchiveService = new KarProjectArchiveService(this);
             A2DService = new KarProjectA2DService(this);
             OutputService = new KarProjectOutputService(this);
@@ -62,6 +63,8 @@ namespace KARToolkit.Core
         public KarProjectDataService DataService { get; }
 
         public KarProjectEditService EditService { get; }
+
+        public KarProjectResourceGraphService ResourceGraphService { get; }
 
         public KarProjectRelationshipService RelationshipService { get; }
 
@@ -203,7 +206,17 @@ namespace KARToolkit.Core
 
         public KarProjectResourceGraph CreateResourceGraph()
         {
-            return KarProjectResourceGraph.Build(this);
+            return ResourceGraphService.Snapshot;
+        }
+
+        public KarProjectResourceGraph RefreshResourceGraph()
+        {
+            return ResourceGraphService.Refresh();
+        }
+
+        public void InvalidateResourceGraph()
+        {
+            ResourceGraphService.Invalidate();
         }
 
         public IReadOnlyList<KarProjectResourceInfo> QueryResources(KarProjectResourceQueryOptions options = null)

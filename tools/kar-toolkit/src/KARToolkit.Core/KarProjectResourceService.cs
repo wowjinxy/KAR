@@ -41,7 +41,7 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectResourceInfo> Query(KarProjectResourceQueryOptions options = null)
         {
-            return _project.CreateResourceGraph().QueryResources(options);
+            return _project.ResourceGraphService.QueryResources(options);
         }
 
         public KarProjectResourceInfo Get(string address)
@@ -130,7 +130,7 @@ namespace KARToolkit.Core
 
             try
             {
-                return _project.CreateResourceGraph().TryGetResource(reference.Address, out resource);
+                return _project.ResourceGraphService.TryGetResource(reference.Address, out resource);
             }
             catch (ArgumentException)
             {

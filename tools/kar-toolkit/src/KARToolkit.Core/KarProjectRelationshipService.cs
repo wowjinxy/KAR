@@ -16,13 +16,13 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectRelationship> Query(KarProjectRelationshipQueryOptions options = null)
         {
-            return _project.CreateResourceGraph().QueryRelationships(options);
+            return _project.ResourceGraphService.QueryRelationships(options);
         }
 
         public IReadOnlyList<KarProjectRelationship> QueryMap(string mapNameOrPath)
         {
             KarMapBundle map = _project.MapService.Get(mapNameOrPath);
-            return _project.CreateResourceGraph().QueryRelationships(new KarProjectRelationshipQueryOptions
+            return _project.ResourceGraphService.QueryRelationships(new KarProjectRelationshipQueryOptions
             {
                 MapName = map.Name,
             });

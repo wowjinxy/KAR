@@ -401,7 +401,13 @@ namespace KARToolkit.Core.Tests
             try
             {
                 KarProject project = KarProject.Open(tempRoot, outputRoot);
-                KarProjectResourceGraph graph = project.CreateResourceGraph();
+                AssertTrue(!project.ResourceGraphService.HasSnapshot, "resource graph services should start without a cached snapshot");
+                KarProjectResourceGraph graph = project.ResourceGraphService.Snapshot;
+                AssertTrue(project.ResourceGraphService.HasSnapshot, "resource graph services should cache the first snapshot");
+                AssertTrue(object.ReferenceEquals(graph, project.CreateResourceGraph()), "project resource graph compatibility wrapper should return the cached snapshot");
+                AssertTrue(object.ReferenceEquals(graph, project.ResourceGraphService.Snapshot), "resource graph services should reuse cached snapshots");
+                AssertTrue(!object.ReferenceEquals(graph, project.RefreshResourceGraph()), "resource graph services should refresh snapshots on request");
+                graph = project.ResourceGraphService.Snapshot;
 
                 AssertTrue(object.ReferenceEquals(graph.Project, project), "resource graphs should retain project context");
                 AssertTrue(graph.FileCount == project.FileService.Files.Count, "resource graphs should index project files");
@@ -557,8 +563,11 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(fileFields.Count == 0, "resource field query should ignore non-root resources");
 
+                KarProjectResourceGraph cachedGraph = project.ResourceGraphService.Snapshot;
                 resources.SetScalarFieldFromText("VsHydra.dat:vsDataHydra", "x0C", "0x1F4");
+                AssertTrue(!project.ResourceGraphService.HasSnapshot, "resource graph services should invalidate after scalar edits write output archives");
                 AssertTrue(resources.GetFieldValue("VsHydra.dat:vsDataHydra", "x0C").Value.SignedValue == 500, "resource field query should read edited values from output copies");
+                AssertTrue(project.ResourceGraphService.HasSnapshot && !object.ReferenceEquals(cachedGraph, project.ResourceGraphService.Snapshot), "resource graph services should rebuild after invalidation");
             }
             finally
             {

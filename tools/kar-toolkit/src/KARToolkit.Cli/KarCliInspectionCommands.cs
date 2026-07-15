@@ -197,7 +197,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("resource-graph", 1);
         KarProject project = OpenProject(options);
-        KarProjectResourceGraph graph = project.CreateResourceGraph();
+        KarProjectResourceGraph graph = project.ResourceGraphService.Snapshot;
 
         if (options.Json)
         {

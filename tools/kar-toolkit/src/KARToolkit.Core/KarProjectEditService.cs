@@ -152,7 +152,7 @@ namespace KARToolkit.Core
             return long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
         }
 
-        private static KarProjectScalarEditResult SaveResult(
+        private KarProjectScalarEditResult SaveResult(
             KarProjectHsdArchive archive,
             KarDataFieldEditResult edit,
             bool bufferAlign,

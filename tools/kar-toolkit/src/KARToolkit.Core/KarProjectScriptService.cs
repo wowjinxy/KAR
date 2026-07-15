@@ -18,7 +18,7 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectScriptTable> QueryTables(KarProjectScriptTableQueryOptions options = null)
         {
-            KarProjectResourceGraph graph = _project.CreateResourceGraph();
+            KarProjectResourceGraph graph = _project.ResourceGraphService.Snapshot;
             IEnumerable<KarProjectResourceInfo> resources = graph.QueryResources(options == null ? null : options.Resources)
                 .Where(IsScriptTableResource);
             Dictionary<string, KarProjectRelationship> relationshipsByAddress = graph.Relationships
