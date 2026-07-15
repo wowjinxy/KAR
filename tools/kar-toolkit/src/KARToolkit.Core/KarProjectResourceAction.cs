@@ -107,6 +107,11 @@ namespace KARToolkit.Core
 
         public bool RequiresByteInfo => PlanStateKind == KarProjectResourceActionPlanStateKind.Bytes;
 
+        public KarProjectResourceActionContract CreateContract()
+        {
+            return KarProjectResourceActionContract.Create(this);
+        }
+
         private static KarProjectResourceActionDefinition RequireDefinition(KarProjectResourceActionDefinition definition)
         {
             if (definition == null)

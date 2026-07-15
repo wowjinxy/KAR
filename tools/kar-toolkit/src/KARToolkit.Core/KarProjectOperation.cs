@@ -153,6 +153,11 @@ namespace KARToolkit.Core
 
         public bool HasReason => !string.IsNullOrWhiteSpace(Reason);
 
+        public KarProjectOperationContract CreateContract()
+        {
+            return KarProjectOperationContract.Create(this);
+        }
+
         internal static KarProjectOperation FromWorkflow(KarProjectToolkitWorkflow workflow)
         {
             if (workflow == null)

@@ -42,6 +42,11 @@ namespace KARToolkit.Core
             return new KarProjectOperationCatalog(_project, surface, operations);
         }
 
+        public KarProjectOperationCatalogContract CreateCatalogContract(KarProjectOperationQueryOptions options = null)
+        {
+            return CreateCatalog(options).CreateContract();
+        }
+
         public IReadOnlyList<KarProjectOperation> Query(KarProjectOperationQueryOptions options = null)
         {
             return CreateCatalog(options).Operations;

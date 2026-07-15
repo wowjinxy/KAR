@@ -79,5 +79,10 @@ namespace KARToolkit.Core
         public bool HasOutputOperations => OutputOperationCount != 0;
 
         public bool HasModifiedOutputOperations => ModifiedOutputOperationCount != 0;
+
+        public KarProjectOperationCatalogContract CreateContract()
+        {
+            return KarProjectOperationCatalogContract.Create(this);
+        }
     }
 }

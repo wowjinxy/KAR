@@ -659,6 +659,11 @@ namespace KARToolkit.Core
             return OperationService.CreateCatalog(options);
         }
 
+        public KarProjectOperationCatalogContract CreateOperationCatalogContract(KarProjectOperationQueryOptions options = null)
+        {
+            return OperationService.CreateCatalogContract(options);
+        }
+
         public IReadOnlyList<KarProjectOperation> QueryOperations(KarProjectOperationQueryOptions options = null)
         {
             return OperationService.Query(options);

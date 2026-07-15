@@ -1031,11 +1031,16 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(catalog.ResourceActionOperationCount > 0, "operation catalogs should include resource action operations");
                 AssertTrue(catalog.OperationCount == catalog.WorkflowOperationCount + catalog.ResourceActionOperationCount, "operation catalogs should count all operation kinds");
                 AssertTrue(catalog.OutputOperationCount != 0 && catalog.RunnableOperationCount != 0, "operation catalogs should summarize writable and runnable operations");
+                KarProjectOperationCatalogContract catalogContract = catalog.CreateContract();
+                AssertTrue(catalogContract.OperationCount == catalog.OperationCount && catalogContract.Operations.Count == catalog.OperationCount, "operation catalog contracts should preserve operation counts");
+                AssertTrue(project.CreateOperationCatalogContract(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project wrappers should expose operation catalog contracts");
 
                 KarProjectOperation workflow = catalog.WorkflowOperations.Single(operation => operation.Id == "workflow:edit-resource-data-field");
                 AssertTrue(workflow.Workflow != null && workflow.ResourceActionPlan == null, "workflow operations should keep workflow payloads only");
                 AssertTrue(workflow.DomainId == "resources" && workflow.RequiresValue && workflow.WritesOutput, "workflow operations should expose workflow metadata");
                 AssertTrue(workflow.Usage.Contains("kar-toolkit resource-data-edit"), "workflow operations should expose CLI usage");
+                KarProjectOperationContract workflowContract = workflow.CreateContract();
+                AssertTrue(workflowContract.Workflow.Id == workflow.Workflow.Id && workflowContract.ResourceActionPlan == null && workflowContract.JsonUsage.EndsWith("[--json]"), "workflow operation contracts should preserve workflow metadata and usage");
 
                 IReadOnlyList<KarProjectOperation> workflowOnly = project.QueryOperations(new KarProjectOperationQueryOptions
                 {
@@ -1056,6 +1061,9 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(scriptDumps.Any(operation => operation.ResourceAddress == "ScInfPause.tm"), "operation queries should include loose script table actions");
                 AssertTrue(scriptDumps.Any(operation => operation.ResourceAddress == "A2Info.dat#ScInfGo2D.tm"), "operation queries should include A2D script table actions");
                 AssertTrue(scriptDumps.All(operation => operation.Usage.Contains(operation.ResourceAddress)), "resource action operations should expose target-specific usage");
+                KarProjectOperationContract scriptDumpContract = scriptDumps.Single(operation => operation.ResourceAddress == "ScInfPause.tm").CreateContract();
+                AssertTrue(scriptDumpContract.ResourceActionPlan.Address == "ScInfPause.tm" && scriptDumpContract.ResourceActionPlan.ActionId == "dump-bytes" && scriptDumpContract.ResourceActionPlan.CanRun, "resource action operation contracts should preserve compact action plan metadata");
+                AssertTrue(scriptDumpContract.ResourceActionPlan.Resource.Address == "ScInfPause.tm" && scriptDumpContract.ResourceActionPlan.Reference.Address == "ScInfPause.tm", "resource action operation contracts should preserve resource references");
 
                 KarProjectOperationPresetCatalog presetCatalog = project.CreateOperationPresetCatalog();
                 AssertTrue(presetCatalog.PresetCount >= 6, "operation preset catalogs should expose reusable toolkit operation queries");
@@ -1103,6 +1111,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectSession session = project.CreateSession();
                 AssertTrue(session.RegistryCatalog.ResourceActionDefinitions.Any(definition => definition.Id == "dump-bytes"), "project sessions should expose resource action registry metadata alongside operations");
                 AssertTrue(session.CreateOperationCatalog(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project sessions should expose operation catalog creation");
+                AssertTrue(session.CreateOperationCatalogContract(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project sessions should expose operation catalog contract creation");
 
                 KarProjectOperation looseDump = scriptDumps.Single(operation => operation.ResourceAddress == "ScInfPause.tm");
                 KarProjectOperationExecutionResult dumpResult = project.ExecuteOperation(looseDump);

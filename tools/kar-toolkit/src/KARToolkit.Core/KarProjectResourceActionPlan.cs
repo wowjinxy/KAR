@@ -75,5 +75,10 @@ namespace KARToolkit.Core
         public string OutputPath => Output != null ? Output.OutputPath : ByteInfo == null ? null : ByteInfo.OutputPath;
 
         public string Reason { get; }
+
+        public KarProjectResourceActionPlanContract CreateContract()
+        {
+            return KarProjectResourceActionPlanContract.Create(this);
+        }
     }
 }
