@@ -20,6 +20,7 @@ dotnet build .\tools\kar-toolkit\KARToolkit.slnx --no-restore /p:UseSharedCompil
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archive .\GKYE01 VcCommon.dat --json --max-reference-depth 2 --max-reference-entries 16
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll set-scalar .\GKYE01 VsHydra.dat kar.vs.legendary x0C 1 --schema --output .\mod-output
 ```
 
@@ -49,6 +50,7 @@ Known root schemas also include read-only field values for mapped scalar fields 
 Archive, root, and schema results expose lookup helpers for roots by name/schema and field values by name, so tools do not need to hand-walk inspection lists.
 Pointer fields with a known nested schema expose reference definitions and one bounded level of nested field values for quick table navigation.
 Pointer fields whose nested schema has a fixed size can also expose bounded `ReferenceEntries`, which split flat referenced tables into labeled rows for text/JSON inspection.
+Use `--max-reference-depth` and `--max-reference-entries` with archive/map inspection when a command needs deeper nested fields or more table rows.
 Schema-backed scalar fields can be edited in memory through `KarDataEditor` or `KarProjectHsdArchive.SetScalarField*`, then saved through the output-only project archive APIs.
 The `set-scalar` CLI command exposes that same safe output-only scalar edit path for quick mod experiments.
 `KarDataDefinitionRegistry` owns schema indexing by id and accessor type; `KarDataDefinitionCatalog` exposes the built-in KAR registry.

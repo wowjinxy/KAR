@@ -1,8 +1,18 @@
+using System.Globalization;
+
 namespace KARToolkit.Cli;
 
 internal sealed class KarCliOptions
 {
-    private KarCliOptions(List<string> positionals, string outputRoot, bool overwrite, bool noUnknownRoots, bool schema, bool json)
+    private KarCliOptions(
+        List<string> positionals,
+        string outputRoot,
+        bool overwrite,
+        bool noUnknownRoots,
+        bool schema,
+        bool json,
+        int? maxReferenceDepth,
+        int? maxReferenceEntries)
     {
         Positionals = positionals;
         OutputRoot = outputRoot;
@@ -10,6 +20,8 @@ internal sealed class KarCliOptions
         NoUnknownRoots = noUnknownRoots;
         Schema = schema;
         Json = json;
+        MaxReferenceDepth = maxReferenceDepth;
+        MaxReferenceEntries = maxReferenceEntries;
     }
 
     public List<string> Positionals { get; }
@@ -24,6 +36,12 @@ internal sealed class KarCliOptions
 
     public bool Json { get; }
 
+    public int? MaxReferenceDepth { get; }
+
+    public int? MaxReferenceEntries { get; }
+
+    public bool HasDataInspectionOptions => MaxReferenceDepth.HasValue || MaxReferenceEntries.HasValue;
+
     public static KarCliOptions Parse(IEnumerable<string> args)
     {
         List<string> positionals = new();
@@ -32,6 +50,8 @@ internal sealed class KarCliOptions
         bool noUnknownRoots = false;
         bool schema = false;
         bool json = false;
+        int? maxReferenceDepth = null;
+        int? maxReferenceEntries = null;
         using IEnumerator<string> enumerator = args.GetEnumerator();
 
         while (enumerator.MoveNext())
@@ -70,10 +90,43 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--max-reference-depth" || arg == "--reference-depth" || arg == "--ref-depth")
+            {
+                maxReferenceDepth = ReadNonNegativeInt(enumerator, arg);
+                continue;
+            }
+
+            if (arg == "--max-reference-entries" || arg == "--reference-entries" || arg == "--ref-entries")
+            {
+                maxReferenceEntries = ReadNonNegativeInt(enumerator, arg);
+                continue;
+            }
+
             positionals.Add(arg);
         }
 
-        return new KarCliOptions(positionals, outputRoot, overwrite, noUnknownRoots, schema, json);
+        return new KarCliOptions(
+            positionals,
+            outputRoot,
+            overwrite,
+            noUnknownRoots,
+            schema,
+            json,
+            maxReferenceDepth,
+            maxReferenceEntries);
+    }
+
+    private static int ReadNonNegativeInt(IEnumerator<string> enumerator, string optionName)
+    {
+        if (!enumerator.MoveNext())
+            throw new ArgumentException(optionName + " requires a non-negative integer.");
+
+        string rawValue = enumerator.Current;
+        int value;
+        if (!int.TryParse(rawValue, NumberStyles.None, CultureInfo.InvariantCulture, out value) || value < 0)
+            throw new ArgumentException(optionName + " requires a non-negative integer.");
+
+        return value;
     }
 
     public void RequirePositionals(string command, int count)

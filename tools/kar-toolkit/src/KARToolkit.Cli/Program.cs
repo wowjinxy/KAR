@@ -63,6 +63,8 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("Global options:");
         Console.WriteLine("  --json");
+        Console.WriteLine("  --max-reference-depth <count>");
+        Console.WriteLine("  --max-reference-entries <count>");
     }
 
     private static int Fail(string message)
