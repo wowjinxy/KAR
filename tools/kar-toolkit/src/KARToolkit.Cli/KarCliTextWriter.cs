@@ -110,6 +110,15 @@ internal static class KarCliTextWriter
         Console.WriteLine(field.Address + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
     }
 
+    public static void PrintProjectScriptTable(KarProjectScriptTable table)
+    {
+        string storage = table.IsPackageEntry ? "a2d-entry" : "file";
+        string details = table.IsPackageEntry
+            ? " index=" + table.PackageEntryIndex + " offset=" + table.PackageEntryOffsetHex + " size=" + table.PackageEntrySizeHex
+            : "";
+        Console.WriteLine(table.Address + " [" + table.Role + ", " + storage + "]" + details + " - " + table.Description);
+    }
+
     public static void PrintProjectResourceOutputApplyResult(KarProjectResourceOutputApplyResult result)
     {
         Console.WriteLine("Applied resource output: " + result.Address);

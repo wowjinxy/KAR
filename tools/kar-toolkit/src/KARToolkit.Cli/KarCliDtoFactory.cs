@@ -226,6 +226,34 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectScriptTableDto(KarProjectScriptTable table)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(table.Resource),
+            reference = ToResourceReferenceDto(table.Reference),
+            address = table.Address,
+            parentAddress = table.ParentAddress,
+            relativePath = table.RelativePath,
+            name = table.Name,
+            role = table.Role,
+            category = table.Category,
+            description = table.Description,
+            isLooseFile = table.IsLooseFile,
+            isPackageEntry = table.IsPackageEntry,
+            file = ToProjectFileDtoOrNull(table.File),
+            packageFile = ToProjectFileDtoOrNull(table.PackageFile),
+            packageRelativePath = table.PackageRelativePath,
+            packageEntryIndex = table.PackageEntryIndex,
+            packageEntryOffset = table.PackageEntryOffset,
+            packageEntryOffsetHex = table.PackageEntryOffsetHex,
+            packageEntrySize = table.PackageEntrySize,
+            packageEntrySizeHex = table.PackageEntrySizeHex,
+            a2dEntry = table.A2DEntry == null ? null : ToProjectA2DEntryDto(table.A2DEntry),
+            relationship = table.Relationship == null ? null : ToProjectRelationshipDto(table.Relationship),
+        };
+    }
+
     public static object ToArchiveDtoOrNull(KarArchiveInfo archive)
     {
         return archive == null ? null : ToArchiveDto(archive);

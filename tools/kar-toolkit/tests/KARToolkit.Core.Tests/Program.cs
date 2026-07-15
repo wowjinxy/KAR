@@ -36,6 +36,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
+            Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
             Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
@@ -1051,6 +1052,70 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(screenInfoTables.Count == 2, "project relationship compatibility wrapper should support role filtering");
                 AssertTrue(project.QueryMapRelationships("GrCity1Event.dat").Count == 3, "project map relationship wrapper should resolve maps by file path");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectScriptServiceQueriesScriptTables()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-script-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40, 0x41 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectScriptService scripts = project.ScriptService;
+
+                AssertTrue(object.ReferenceEquals(scripts.Project, project), "script service should retain project context");
+
+                IReadOnlyList<KarProjectScriptTable> allTables = scripts.QueryTables();
+                AssertTrue(allTables.Count == 4, "script service should include loose tm files and A2D-contained tm entries");
+                AssertTrue(allTables.All(table => table.Category == "Scripts"), "script tables should expose script categories");
+
+                KarProjectScriptTable looseTable = scripts.GetTable("ScInfPause.tm");
+                AssertTrue(looseTable.IsLooseFile && !looseTable.IsPackageEntry, "script service should identify loose script table files");
+                AssertTrue(looseTable.Role == "ScreenInfoTable", "script service should attach script table metadata to loose files");
+                AssertTrue(scripts.ReadTableBytes("ScInfPause.tm").SequenceEqual(new byte[] { 0x40, 0x41 }), "script service should read loose table bytes");
+
+                KarProjectScriptTable packageTable = scripts.GetTable("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(packageTable.IsPackageEntry && !packageTable.IsLooseFile, "script service should identify packaged script table entries");
+                AssertTrue(packageTable.PackageRelativePath == "A2Info.dat", "packaged script tables should expose package paths");
+                AssertTrue(packageTable.PackageEntrySize == 4, "packaged script tables should expose entry sizes");
+                AssertTrue(scripts.ReadTableBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "script service should read A2D table bytes");
+
+                IReadOnlyList<KarProjectScriptTable> screenInfoTables = scripts.QueryTables(new KarProjectScriptTableQueryOptions
+                {
+                    Role = "ScreenInfoTable",
+                });
+                AssertTrue(screenInfoTables.Count == 2, "script service should filter script tables by role");
+
+                IReadOnlyList<KarProjectScriptTable> infoPackageTables = scripts.QueryTables(new KarProjectScriptTableQueryOptions
+                {
+                    PackagePath = "A2Info.dat",
+                });
+                AssertTrue(infoPackageTables.Count == 1 && infoPackageTables[0].Address == "A2Info.dat#ScInfGo2D.tm", "script service should filter script tables by package path");
+
+                KarProjectScriptTable kirbyTable = project.QueryScriptTables(new KarProjectScriptTableQueryOptions
+                {
+                    Name = "KIRBY.tm",
+                }).Single();
+                AssertTrue(kirbyTable.Role == "KirbyTable", "project script table wrapper should delegate to the script service");
+
+                KarProjectResourceExportResult export = project.ExportScriptTableToOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(export.OutputKind == KarProjectResourceOutputKind.OutputAsset, "script table exports should use safe resource output workflows");
+                AssertTrue(File.Exists(export.OutputPath), "script table exports should write output-side files");
+                AssertTrue(!File.Exists(project.FileService.GetOutputPath("A2Info.dat")), "script table sidecar exports should not rewrite source packages");
             }
             finally
             {

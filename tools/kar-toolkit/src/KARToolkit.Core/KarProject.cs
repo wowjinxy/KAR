@@ -29,6 +29,7 @@ namespace KARToolkit.Core
             EditService = new KarProjectEditService(this);
             RelationshipService = new KarProjectRelationshipService(this);
             ResourceService = new KarProjectResourceService(this);
+            ScriptService = new KarProjectScriptService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -59,6 +60,8 @@ namespace KARToolkit.Core
         public KarProjectRelationshipService RelationshipService { get; }
 
         public KarProjectResourceService ResourceService { get; }
+
+        public KarProjectScriptService ScriptService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -233,6 +236,21 @@ namespace KARToolkit.Core
             return ResourceService.TryGet(address, out resource);
         }
 
+        public IReadOnlyList<KarProjectScriptTable> QueryScriptTables(KarProjectScriptTableQueryOptions options = null)
+        {
+            return ScriptService.QueryTables(options);
+        }
+
+        public KarProjectScriptTable GetScriptTable(string address)
+        {
+            return ScriptService.GetTable(address);
+        }
+
+        public byte[] ReadScriptTableBytes(string address)
+        {
+            return ScriptService.ReadTableBytes(address);
+        }
+
         public byte[] ReadResourceBytes(string address)
         {
             return ResourceService.ReadBytes(address);
@@ -243,9 +261,19 @@ namespace KARToolkit.Core
             return ResourceService.ExportToOutput(address, overwrite);
         }
 
+        public KarProjectResourceExportResult ExportScriptTableToOutput(string address, bool overwrite = false)
+        {
+            return ScriptService.ExportTableToOutput(address, overwrite);
+        }
+
         public KarProjectResourceImportResult ImportResourceFromFile(string address, string inputPath)
         {
             return ResourceService.ImportFromFile(address, inputPath);
+        }
+
+        public KarProjectResourceImportResult ImportScriptTableFromFile(string address, string inputPath)
+        {
+            return ScriptService.ImportTableFromFile(address, inputPath);
         }
 
         public KarProjectResourceScalarEditResult SetResourceScalarFieldFromText(string rootAddress, string fieldName, string rawValue)

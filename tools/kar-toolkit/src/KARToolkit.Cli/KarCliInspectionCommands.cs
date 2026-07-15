@@ -270,7 +270,21 @@ internal static class KarCliInspectionCommands
 
     public static int ShowScriptTables(KarCliOptions options)
     {
-        return ShowA2DEntriesCore(options, true);
+        options.RequirePositionals("script-tables", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectScriptTable> tables = project.ScriptService.QueryTables(CreateScriptTableQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(tables.Select(ToProjectScriptTableDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectScriptTable table in tables)
+            PrintProjectScriptTable(table);
+
+        return 0;
     }
 
     private static int ShowA2DEntriesCore(KarCliOptions options, bool scriptTablesOnly)
@@ -659,6 +673,56 @@ internal static class KarCliInspectionCommands
             default:
                 return null;
         }
+    }
+
+    private static KarProjectScriptTableQueryOptions CreateScriptTableQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
+        KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
+        {
+            Category = options.FileCategory,
+            Files = parentFiles,
+            A2DEntries = new KarProjectA2DEntryQueryOptions
+            {
+                Packages = parentFiles,
+            },
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
+            resources.Kind = ParseResourceKind(options.ResourceKind);
+
+        KarProjectScriptTableQueryOptions query = new KarProjectScriptTableQueryOptions
+        {
+            Resources = resources,
+        };
+
+        if (options.Positionals.Count >= 2)
+        {
+            string selector = options.Positionals[1];
+            if (selector.IndexOf('#') >= 0)
+            {
+                query.Address = selector;
+                resources.Address = selector;
+            }
+            else if (options.Positionals.Count >= 3)
+            {
+                query.PackagePath = selector;
+                query.Name = options.Positionals[2];
+                resources.A2DEntries.PackagePath = selector;
+                resources.A2DEntries.EntryName = options.Positionals[2];
+            }
+            else if (selector.EndsWith(".tm", StringComparison.OrdinalIgnoreCase))
+            {
+                query.Name = selector;
+            }
+            else
+            {
+                query.PackagePath = selector;
+                resources.A2DEntries.PackagePath = selector;
+            }
+        }
+
+        return query;
     }
 
     private static KarProjectFieldQueryOptions CreateFieldQuery(KarCliOptions options)
