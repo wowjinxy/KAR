@@ -293,6 +293,29 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToVehicleBundleDto(KarVehicleBundle vehicle)
+    {
+        return new
+        {
+            name = vehicle.Name,
+            family = vehicle.Family,
+            role = vehicle.Role,
+            fileCount = vehicle.Files.Count,
+            sharedFileCount = vehicle.SharedFiles.Count,
+            hasCommonFile = vehicle.HasCommonFile,
+            hasKindTableFile = vehicle.HasKindTableFile,
+            hasSharedFiles = vehicle.HasSharedFiles,
+            isCommonData = vehicle.IsCommonData,
+            isKindTable = vehicle.IsKindTable,
+            isMachineData = vehicle.IsMachineData,
+            dataFile = ToProjectFileDto(vehicle.DataFile),
+            commonFile = ToProjectFileDtoOrNull(vehicle.CommonFile),
+            kindTableFile = ToProjectFileDtoOrNull(vehicle.KindTableFile),
+            files = vehicle.Files.Select(ToProjectFileDto).ToList(),
+            sharedFiles = vehicle.SharedFiles.Select(ToProjectFileDto).ToList(),
+        };
+    }
+
     public static object ToProjectRelationshipDto(KarProjectRelationship relationship)
     {
         return new
@@ -474,6 +497,45 @@ internal static class KarCliDtoFactory
             inspection = context.Inspection == null ? null : ToMapInfoDto(context.Inspection),
             output = context.Output == null ? null : ToProjectMapOutputDto(context.Output),
             scripts = ToProjectMapScriptBundleDto(context.Scripts),
+        };
+    }
+
+    public static object ToProjectVehicleContextDto(KarProjectVehicleContext context)
+    {
+        return new
+        {
+            vehicle = ToVehicleBundleDto(context.Bundle),
+            name = context.Name,
+            family = context.Family,
+            role = context.Role,
+            fileCount = context.FileCount,
+            sharedFileCount = context.SharedFileCount,
+            archiveCount = context.ArchiveCount,
+            resourceCount = context.ResourceCount,
+            rootCount = context.RootCount,
+            knownRootCount = context.KnownRootCount,
+            unknownRootCount = context.UnknownRootCount,
+            missingRequiredRootCount = context.MissingRequiredRootCount,
+            inspectionErrorCount = context.InspectionErrorCount,
+            expectedOutputFileCount = context.ExpectedOutputFileCount,
+            outputFileCount = context.OutputFileCount,
+            modifiedOutputFileCount = context.ModifiedOutputFileCount,
+            missingOutputFileCount = context.MissingOutputFileCount,
+            hasSharedFiles = context.HasSharedFiles,
+            hasInspectionErrors = context.HasInspectionErrors,
+            hasMissingRequiredRoots = context.HasMissingRequiredRoots,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            hasCompleteOutputSet = context.HasCompleteOutputSet,
+            inspectionErrors = context.InspectionErrors.ToList(),
+            dataArchive = ToArchiveDtoOrNull(context.DataArchive),
+            commonArchive = ToArchiveDtoOrNull(context.CommonArchive),
+            kindTableArchive = ToArchiveDtoOrNull(context.KindTableArchive),
+            resources = context.Resources.Select(ToProjectResourceDto).ToList(),
+            outputs = context.OutputFiles.Select(ToProjectOutputFileDto).ToList(),
+            dataOutput = ToProjectOutputFileDtoOrNull(context.DataOutput),
+            commonOutput = ToProjectOutputFileDtoOrNull(context.CommonOutput),
+            kindTableOutput = ToProjectOutputFileDtoOrNull(context.KindTableOutput),
         };
     }
 

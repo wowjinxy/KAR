@@ -368,6 +368,27 @@ internal static class KarCliTextWriter
         PrintProjectMapOutputSlot("Event/Script", map.EventFile, map.EventOutput);
     }
 
+    public static void PrintVehicleBundle(KarVehicleBundle vehicle)
+    {
+        string shared = vehicle.HasSharedFiles ? " shared=" + string.Join(",", vehicle.SharedFiles.Select(file => file.RelativePath)) : "";
+        Console.WriteLine(vehicle.Name + " [" + vehicle.Family + ", " + vehicle.Role + "] " + vehicle.DataFile.RelativePath + shared);
+    }
+
+    public static void PrintProjectVehicleContext(KarProjectVehicleContext context)
+    {
+        Console.WriteLine("Vehicle context: " + context.Name + " [" + context.Family + ", " + context.Role + "]");
+        Console.WriteLine("  Files: " + string.Join(", ", context.Files.Select(file => file.RelativePath)));
+        Console.WriteLine("  Archives: " + context.ArchiveCount + " roots=" + context.KnownRootCount + "/" + context.RootCount + " missing-required=" + context.MissingRequiredRootCount);
+        if (context.HasInspectionErrors)
+        {
+            Console.WriteLine("  Inspection errors:");
+            foreach (string error in context.InspectionErrors)
+                Console.WriteLine("    " + error);
+        }
+        Console.WriteLine("  Resources: " + context.ResourceCount);
+        Console.WriteLine("  Output: " + context.OutputFileCount + "/" + context.ExpectedOutputFileCount + " modified=" + context.ModifiedOutputFileCount + " missing=" + context.MissingOutputFileCount);
+    }
+
     private static void PrintProjectMapOutputSlot(string label, KarProjectFile file, KarProjectOutputFileInfo output)
     {
         if (file == null)

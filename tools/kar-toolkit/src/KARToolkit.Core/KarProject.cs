@@ -28,6 +28,7 @@ namespace KARToolkit.Core
             A2DService = new KarProjectA2DService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
+            VehicleService = new KarProjectVehicleService(this);
             SchemaService = new KarProjectSchemaService(this);
             DataService = new KarProjectDataService(this);
             EditService = new KarProjectEditService(this);
@@ -62,6 +63,8 @@ namespace KARToolkit.Core
         public KarProjectOutputService OutputService { get; }
 
         public KarProjectMapService MapService { get; }
+
+        public KarProjectVehicleService VehicleService { get; }
 
         public KarProjectSchemaService SchemaService { get; }
 
@@ -441,6 +444,31 @@ namespace KARToolkit.Core
         public bool TryGetMap(string mapNameOrPath, out KarMapBundle map)
         {
             return MapService.TryGet(mapNameOrPath, out map);
+        }
+
+        public IReadOnlyList<KarVehicleBundle> QueryVehicles(KarProjectVehicleQueryOptions options = null)
+        {
+            return VehicleService.Query(options);
+        }
+
+        public KarVehicleBundle GetVehicle(string vehicleNameOrPath)
+        {
+            return VehicleService.Get(vehicleNameOrPath);
+        }
+
+        public bool TryGetVehicle(string vehicleNameOrPath, out KarVehicleBundle vehicle)
+        {
+            return VehicleService.TryGet(vehicleNameOrPath, out vehicle);
+        }
+
+        public IReadOnlyList<KarProjectVehicleContext> QueryVehicleContexts(KarProjectVehicleQueryOptions options = null)
+        {
+            return VehicleService.QueryContexts(options);
+        }
+
+        public KarProjectVehicleContext GetVehicleContext(string vehicleNameOrPath)
+        {
+            return VehicleService.GetContext(vehicleNameOrPath);
         }
 
         public string GetReadPath(string relativePath)

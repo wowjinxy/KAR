@@ -6,6 +6,7 @@ using System.Text;
 using HSDRaw;
 using HSDRaw.AirRide;
 using HSDRaw.AirRide.Gr.Data;
+using HSDRaw.AirRide.Vc;
 using KARToolkit.Core;
 using KARToolkit.Core.AirRide;
 
@@ -41,6 +42,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectMapScriptServiceGroupsMapAndScriptResources", ProjectMapScriptServiceGroupsMapAndScriptResources);
             Run("ProjectMapContextServiceCombinesMapToolkitState", ProjectMapContextServiceCombinesMapToolkitState);
+            Run("ProjectVehicleServiceCombinesVehicleToolkitState", ProjectVehicleServiceCombinesVehicleToolkitState);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
             Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
@@ -1442,6 +1444,68 @@ namespace KARToolkit.Core.Tests
                 KarProjectMapContext staged = project.GetMapContext("City1");
                 AssertTrue(staged.HasOutput && staged.HasCompleteOutputSet, "map contexts should reflect staged map output copies");
                 AssertTrue(staged.OutputFileCount == 3 && staged.ModifiedOutputFileCount == 0, "map contexts should summarize staged output state");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectVehicleServiceCombinesVehicleToolkitState()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-vehicle-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VcCommon.dat"), "vcDataCommon", new KAR_vcDataCommon());
+            WriteHsdFile(Path.Combine(tempRoot, "VcStar.dat"), "vcDataKindStar", new KAR_vcDataKindStar());
+            WriteHsdFile(Path.Combine(tempRoot, "VcWheel.dat"), "vcDataKindWheel", new KAR_vcDataKindWheel());
+            WriteHsdFile(Path.Combine(tempRoot, "VcStarWarp.dat"), "vcDataStarWarp", new KAR_vcDataStar());
+            WriteHsdFile(Path.Combine(tempRoot, "VcWheelieBike.dat"), "vcDataWheelieBike", new KAR_vcDataWheel());
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectVehicleService vehicles = project.VehicleService;
+
+                AssertTrue(object.ReferenceEquals(vehicles.Project, project), "vehicle service should retain project context");
+                AssertTrue(vehicles.Bundles.Count == 5, "vehicle service should expose indexed vehicle bundles");
+                AssertTrue(vehicles.ByName.ContainsKey("Warp"), "vehicle service should expose vehicle lookup by machine name");
+
+                KarVehicleBundle warp = vehicles.Get("VcStarWarp.dat");
+                AssertTrue(warp.Name == "Warp" && warp.Family == "Star", "vehicle service should resolve star machine files");
+                AssertTrue(warp.DataFile.RelativePath == "VcStarWarp.dat", "vehicle bundles should expose machine data files");
+                AssertTrue(warp.CommonFile.RelativePath == "VcCommon.dat", "vehicle bundles should link shared common data");
+                AssertTrue(warp.KindTableFile.RelativePath == "VcStar.dat", "vehicle bundles should link star kind tables");
+                AssertTrue(warp.Files.Count == 3 && warp.SharedFileCount == 2, "vehicle bundles should include machine and shared vehicle files");
+                AssertTrue(project.GetVehicle("Warp").DataFile.RelativePath == "VcStarWarp.dat", "project vehicle wrapper should resolve by machine name");
+                AssertTrue(project.QueryVehicles(new KarProjectVehicleQueryOptions { VehicleNameOrPath = "Warp" }).Single().DataFile.RelativePath == "VcStarWarp.dat", "vehicle queries should filter by machine name or file path");
+
+                KarProjectVehicleContext context = vehicles.GetContext("Warp");
+                AssertTrue(context.Name == "Warp" && context.Family == "Star", "vehicle contexts should retain vehicle identity");
+                AssertTrue(context.ArchiveCount == 3, "vehicle contexts should inspect machine, common, and kind table archives");
+                AssertTrue(context.ResourceCount == 3, "vehicle contexts should include vehicle file resources");
+                AssertTrue(context.KnownRootCount == 3 && context.RootCount == 3, "vehicle contexts should include known roots from every vehicle archive");
+                AssertTrue(!context.HasInspectionErrors, "vehicle contexts should keep inspection errors separate from successful context creation");
+                AssertTrue(!context.HasOutput && context.OutputFileCount == 0, "vehicle contexts should expose missing output state before staging files");
+
+                IReadOnlyList<KarProjectVehicleContext> queried = project.QueryVehicleContexts(new KarProjectVehicleQueryOptions
+                {
+                    VehicleNameOrPath = "WheelieBike",
+                    HasCompleteOutputSet = false,
+                });
+                AssertTrue(queried.Count == 1 && queried[0].DataFile.RelativePath == "VcWheelieBike.dat", "project vehicle context wrapper should combine vehicle and output filters");
+
+                IReadOnlyList<KarProjectFileCopyResult> copies = vehicles.CopyFilesToOutput("Warp", true);
+                AssertTrue(copies.Count == 3 && copies.All(copy => File.Exists(copy.OutputPath)), "vehicle service should copy machine bundles only to output files");
+
+                KarProjectVehicleContext staged = project.GetVehicleContext("Warp");
+                AssertTrue(staged.HasOutput && staged.HasCompleteOutputSet, "vehicle contexts should reflect staged vehicle bundle outputs");
+                AssertTrue(staged.OutputFileCount == 3 && staged.ModifiedOutputFileCount == 0, "vehicle contexts should summarize staged vehicle output state");
+                AssertTrue(!File.Exists(Path.Combine(tempRoot, "files", "VcStarWarp.dat")), "vehicle output copies should not write into the source folder");
             }
             finally
             {

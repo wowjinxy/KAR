@@ -305,6 +305,15 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectVehicleQueryOptions CreateVehicleQuery(KarCliOptions options)
+    {
+        return new KarProjectVehicleQueryOptions
+        {
+            VehicleNameOrPath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            Text = options.SearchText,
+        };
+    }
+
     public static KarProjectFieldQueryOptions CreateFieldQuery(KarCliOptions options)
     {
         return new KarProjectFieldQueryOptions

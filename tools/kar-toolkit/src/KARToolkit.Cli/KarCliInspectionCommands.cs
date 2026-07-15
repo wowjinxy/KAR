@@ -168,6 +168,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowVehicles(KarCliOptions options)
+    {
+        options.RequirePositionals("vehicles", 1);
+        KarProject project = OpenProject(options);
+        List<KarVehicleBundle> vehicles = project.VehicleService.Query(CreateVehicleQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(vehicles.Select(ToVehicleBundleDto).ToList());
+            return 0;
+        }
+
+        foreach (KarVehicleBundle vehicle in vehicles)
+            PrintVehicleBundle(vehicle);
+
+        return 0;
+    }
+
     public static int ShowRelationships(KarCliOptions options)
     {
         options.RequirePositionals("relationships", 1);
@@ -669,6 +688,25 @@ internal static class KarCliInspectionCommands
 
         foreach (KarProjectMapContext context in contexts)
             PrintProjectMapContext(context);
+
+        return 0;
+    }
+
+    public static int ShowVehicleContext(KarCliOptions options)
+    {
+        options.RequirePositionals("vehicle-context", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectVehicleContext> contexts = project.VehicleService.QueryContexts(CreateVehicleQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectVehicleContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectVehicleContext context in contexts)
+            PrintProjectVehicleContext(context);
 
         return 0;
     }
