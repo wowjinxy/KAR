@@ -47,6 +47,7 @@ Map bundle inspection goes through `KarMapInspector`, which ties each map's data
 Use `definitions` to list known KAR data schemas. Archive and map inspection attach schema details to known roots when the toolkit has decomp-backed field information.
 Known root schemas also include read-only field values for mapped scalar fields and pointer presence/length, which is useful for quick archive comparison before writing editor code.
 Archive, root, and schema results expose lookup helpers for roots by name/schema and field values by name, so tools do not need to hand-walk inspection lists.
+Pointer fields with a known nested schema expose reference definitions and one bounded level of nested field values for quick table navigation.
 Schema-backed scalar fields can be edited in memory through `KarDataEditor` or `KarProjectHsdArchive.SetScalarField*`, then saved through the output-only project archive APIs.
 The `set-scalar` CLI command exposes that same safe output-only scalar edit path for quick mod experiments.
 `KarDataDefinitionRegistry` owns schema indexing by id and accessor type; `KarDataDefinitionCatalog` exposes the built-in KAR registry.

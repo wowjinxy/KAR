@@ -80,6 +80,11 @@ internal static class KarCliTextWriter
             string offset = value.Field.OffsetHex ?? "n/a";
             string error = string.IsNullOrEmpty(value.Error) ? "" : " (" + value.Error + ")";
             Console.WriteLine(indent + "  " + offset + " " + value.Field.Name + " = " + value.DisplayValue + error);
+
+            if (value.ReferenceDataDefinition != null)
+                Console.WriteLine(indent + "    ref schema: " + value.ReferenceDataDefinition.Id + " (" + value.ReferenceDataDefinition.DisplayName + ")");
+            if (value.HasReferenceFieldValues)
+                PrintFieldValues(value.ReferenceFieldValues, indent + "    ");
         }
     }
 }

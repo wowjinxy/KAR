@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -14,6 +16,8 @@ namespace KARToolkit.Core
             double? floatValue = null,
             bool? hasReference = null,
             int? referenceLength = null,
+            KarDataDefinition referenceDataDefinition = null,
+            IEnumerable<KarDataFieldValue> referenceFieldValues = null,
             string error = null)
         {
             Field = field ?? throw new ArgumentNullException(nameof(field));
@@ -25,6 +29,10 @@ namespace KARToolkit.Core
             FloatValue = floatValue;
             HasReference = hasReference;
             ReferenceLength = referenceLength;
+            ReferenceDataDefinition = referenceDataDefinition;
+            ReferenceFieldValues = (referenceFieldValues ?? Enumerable.Empty<KarDataFieldValue>())
+                .ToList()
+                .AsReadOnly();
             Error = error;
         }
 
@@ -48,6 +56,36 @@ namespace KARToolkit.Core
 
         public string ReferenceLengthHex => ReferenceLength.HasValue ? "0x" + ReferenceLength.Value.ToString("X") : null;
 
+        public KarDataDefinition ReferenceDataDefinition { get; }
+
+        public string ReferenceDataDefinitionId => ReferenceDataDefinition == null ? null : ReferenceDataDefinition.Id;
+
+        public IReadOnlyList<KarDataFieldValue> ReferenceFieldValues { get; }
+
+        public bool HasReferenceDataDefinition => ReferenceDataDefinition != null;
+
+        public bool HasReferenceFieldValues => ReferenceFieldValues.Count != 0;
+
         public string Error { get; }
+
+        public KarDataFieldValue GetReferenceFieldValue(string fieldName)
+        {
+            KarDataFieldValue value;
+            if (!TryGetReferenceFieldValue(fieldName, out value))
+                throw new KeyNotFoundException("KAR referenced data field value was not found: " + fieldName);
+
+            return value;
+        }
+
+        public bool TryGetReferenceFieldValue(string fieldName, out KarDataFieldValue value)
+        {
+            value = null;
+            if (string.IsNullOrWhiteSpace(fieldName))
+                return false;
+
+            value = ReferenceFieldValues.FirstOrDefault(candidate =>
+                string.Equals(candidate.Field.Name, fieldName, StringComparison.OrdinalIgnoreCase));
+            return value != null;
+        }
     }
 }

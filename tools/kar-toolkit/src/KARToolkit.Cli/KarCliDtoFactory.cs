@@ -144,6 +144,8 @@ internal static class KarCliDtoFactory
             hasReference = value.HasReference,
             referenceLength = value.ReferenceLength,
             referenceLengthHex = value.ReferenceLengthHex,
+            referenceDataDefinition = ToDataDefinitionDtoOrNull(value.ReferenceDataDefinition),
+            referenceFieldValues = value.ReferenceFieldValues.Select(ToFieldValueDto).ToList(),
             error = value.Error,
         };
     }

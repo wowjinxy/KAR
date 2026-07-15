@@ -10,18 +10,27 @@ namespace KARToolkit.Core
         public static KarArchiveInspector Default { get; } = new KarArchiveInspector();
 
         private readonly KarDataDefinitionRegistry _dataDefinitions;
+        private readonly KarDataInspectionOptions _dataInspectionOptions;
 
         public KarArchiveInspector()
-            : this(KarDataDefinitionCatalog.BuiltIn)
+            : this(KarDataDefinitionCatalog.BuiltIn, null)
         {
         }
 
         public KarArchiveInspector(KarDataDefinitionRegistry dataDefinitions)
+            : this(dataDefinitions, null)
+        {
+        }
+
+        public KarArchiveInspector(KarDataDefinitionRegistry dataDefinitions, KarDataInspectionOptions dataInspectionOptions)
         {
             _dataDefinitions = dataDefinitions ?? throw new ArgumentNullException(nameof(dataDefinitions));
+            _dataInspectionOptions = dataInspectionOptions ?? new KarDataInspectionOptions();
         }
 
         public KarDataDefinitionRegistry DataDefinitions => _dataDefinitions;
+
+        public KarDataInspectionOptions DataInspectionOptions => _dataInspectionOptions;
 
         public KarArchiveInfo Inspect(KarProjectFile file)
         {
@@ -50,7 +59,7 @@ namespace KARToolkit.Core
                         accessorTypeName,
                         rootDefinition,
                         dataDefinition,
-                        KarDataInspector.InspectFields(root.Data, dataDefinition));
+                        KarDataInspector.InspectFields(root.Data, dataDefinition, _dataDefinitions, _dataInspectionOptions));
                 })
                 .ToList();
 

@@ -16,6 +16,8 @@ namespace KARToolkit.Core
 
         public KarDataDefinitionRegistry DataDefinitions { get; set; }
 
+        public KarDataInspectionOptions DataInspection { get; set; }
+
         internal KarProjectIndexer ResolveIndexer()
         {
             if (Indexer != null)
@@ -36,7 +38,10 @@ namespace KARToolkit.Core
                 return ArchiveInspector;
 
             if (DataDefinitions != null)
-                return new KarArchiveInspector(DataDefinitions);
+                return new KarArchiveInspector(DataDefinitions, DataInspection);
+
+            if (DataInspection != null)
+                return new KarArchiveInspector(KarDataDefinitionCatalog.BuiltIn, DataInspection);
 
             return KarArchiveInspector.Default;
         }
