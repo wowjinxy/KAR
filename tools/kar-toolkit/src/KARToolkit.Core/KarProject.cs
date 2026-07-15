@@ -208,6 +208,11 @@ namespace KARToolkit.Core
             return ResourceService.ExportToOutput(address, overwrite);
         }
 
+        public KarProjectResourceImportResult ImportResourceFromFile(string address, string inputPath)
+        {
+            return ResourceService.ImportFromFile(address, inputPath);
+        }
+
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)
         {
             return new KarProjectReport(this, options);

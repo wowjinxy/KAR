@@ -56,6 +56,8 @@ internal static class Program
                 "copy-map" => KarCliCopyCommands.CopyMap(options),
                 "export-resource" => KarCliCopyCommands.ExportResource(options),
                 "resource-export" => KarCliCopyCommands.ExportResource(options),
+                "import-resource" => KarCliCopyCommands.ImportResource(options),
+                "resource-import" => KarCliCopyCommands.ImportResource(options),
                 "set-scalar" => KarCliEditCommands.SetScalar(options),
                 "validate" => KarCliInspectionCommands.ValidateProject(options),
                 "validate-schemas" => KarCliInspectionCommands.ValidateSchemas(options),
@@ -108,6 +110,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit export-resource <source-folder> <resource-address> [--output <mod-folder>] [--overwrite]");
+        Console.WriteLine("  kar-toolkit import-resource <source-folder> <resource-address> <input-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots] [--no-hsd-archives] [--no-a2d-packages] [--no-schema-validation]");

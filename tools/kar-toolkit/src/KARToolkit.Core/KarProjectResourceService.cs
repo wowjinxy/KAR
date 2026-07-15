@@ -147,6 +147,50 @@ namespace KARToolkit.Core
             }
         }
 
+        public KarProjectResourceImportResult ImportFromFile(string address, string inputPath)
+        {
+            if (string.IsNullOrWhiteSpace(inputPath))
+                throw new ArgumentException("Input path cannot be empty.", nameof(inputPath));
+
+            KarProjectResourceInfo resource = Get(address);
+            switch (resource.Kind)
+            {
+                case KarResourceKind.File:
+                    byte[] data = File.ReadAllBytes(inputPath);
+                    KarProjectFileWriteResult write = _project.FileService.WriteFileBytes(resource.RelativePath, data);
+                    return new KarProjectResourceImportResult(
+                        resource,
+                        inputPath,
+                        KarProjectResourceOutputKind.ProjectFile,
+                        write.RelativePath,
+                        write.OutputPath,
+                        data.Length,
+                        write,
+                        null);
+
+                case KarResourceKind.A2DEntry:
+                    KarProjectA2DEntryReplaceResult replace = _project.A2DService.ReplaceEntryFromFile(
+                        resource.RelativePath,
+                        resource.Reference.EntryName,
+                        inputPath);
+                    return new KarProjectResourceImportResult(
+                        resource,
+                        inputPath,
+                        KarProjectResourceOutputKind.ProjectFile,
+                        replace.PackageRelativePath,
+                        replace.OutputPath,
+                        replace.ReplacementLength,
+                        replace.WriteResult,
+                        replace);
+
+                case KarResourceKind.HsdRoot:
+                    throw new NotSupportedException("HSD root imports require structured archive editing. Import a whole file resource or use a typed edit command.");
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(address));
+            }
+        }
+
         private KarProjectResourceInfo Resolve(KarResourceReference reference)
         {
             switch (reference.Kind)

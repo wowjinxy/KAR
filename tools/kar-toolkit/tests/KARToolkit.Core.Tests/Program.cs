@@ -26,6 +26,7 @@ namespace KARToolkit.Core.Tests
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
+            Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -398,6 +399,63 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(tempRoot, true);
                 if (Directory.Exists(outputRoot))
                     Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceImportsResourcesSafely()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-import-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            string inputRoot = tempRoot + "_inputs";
+            Directory.CreateDirectory(tempRoot);
+            Directory.CreateDirectory(inputRoot);
+
+            string packagePath = Path.Combine(tempRoot, "A2Info.dat");
+            string loosePath = Path.Combine(tempRoot, "Loose.bin");
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            WriteA2DPackage(packagePath, new[] { "ScInfGo2D.tm", "readme.bin" });
+            File.WriteAllBytes(loosePath, new byte[] { 0x44, 0x55 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                string fileReplacementPath = Path.Combine(inputRoot, "loose-replacement.bin");
+                File.WriteAllBytes(fileReplacementPath, new byte[] { 0x66, 0x77, 0x88 });
+                KarProjectResourceImportResult fileImport = resources.ImportFromFile("Loose.bin", fileReplacementPath);
+                AssertTrue(fileImport.OutputKind == KarProjectResourceOutputKind.ProjectFile, "file resource imports should write project file outputs");
+                AssertTrue(fileImport.OutputRelativePath == "Loose.bin", "file resource imports should report output-relative file paths");
+                AssertTrue(fileImport.InputLength == 3, "file resource imports should report input lengths");
+                AssertTrue(File.ReadAllBytes(fileImport.OutputPath).SequenceEqual(new byte[] { 0x66, 0x77, 0x88 }), "file resource imports should write replacement bytes to output");
+                AssertTrue(File.ReadAllBytes(loosePath).SequenceEqual(new byte[] { 0x44, 0x55 }), "file resource imports should not mutate source files");
+
+                string entryReplacementPath = Path.Combine(inputRoot, "ScInfGo2D.tm");
+                File.WriteAllBytes(entryReplacementPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                KarProjectResourceImportResult entryImport = project.ImportResourceFromFile("A2Info.dat#ScInfGo2D.tm", entryReplacementPath);
+                AssertTrue(entryImport.Address == "A2Info.dat#ScInfGo2D.tm", "project resource import wrapper should preserve resource addresses");
+                AssertTrue(entryImport.OutputKind == KarProjectResourceOutputKind.ProjectFile, "A2D resource imports should write output packages");
+                AssertTrue(entryImport.OutputRelativePath == "A2Info.dat", "A2D resource imports should report package output paths");
+                AssertTrue(entryImport.A2DReplaceResult.ReplacementLength == 4, "A2D resource imports should report replacement lengths");
+                AssertTrue(resources.ReadBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0x11, 0x22, 0x33, 0x44 }), "A2D resource reads should see imported output package bytes");
+
+                A2DPackage sourceOnlyPackage;
+                string error;
+                AssertTrue(A2DPackage.TryOpen(packagePath, out sourceOnlyPackage, out error), "source A2D package should still parse after resource import");
+                AssertTrue(sourceOnlyPackage.GetEntryData(0).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D resource imports should not mutate source packages");
+
+                AssertThrows<NotSupportedException>(
+                    () => resources.ImportFromFile("VsHydra.dat:vsDataHydra", entryReplacementPath),
+                    "HSD root resource imports should require structured editing");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+                if (Directory.Exists(inputRoot))
+                    Directory.Delete(inputRoot, true);
             }
         }
 

@@ -58,6 +58,8 @@ namespace KARToolkit.Core
 
         public bool CanExportToOutput => true;
 
+        public bool CanImportFromFile => Kind == KarResourceKind.File || Kind == KarResourceKind.A2DEntry;
+
         internal static KarProjectResourceInfo FromFile(KarProjectFile file)
         {
             if (file == null)

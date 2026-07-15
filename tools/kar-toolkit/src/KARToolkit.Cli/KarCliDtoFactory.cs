@@ -545,6 +545,7 @@ internal static class KarCliDtoFactory
             isA2DEntry = resource.IsA2DEntry,
             canReadBytes = resource.CanReadBytes,
             canExportToOutput = resource.CanExportToOutput,
+            canImportFromFile = resource.CanImportFromFile,
             file = ToProjectFileDtoOrNull(resource.File),
             root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
             a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
@@ -572,6 +573,33 @@ internal static class KarCliDtoFactory
                 sourceLastWriteTimeUtc = result.FileCopyResult.SourceLastWriteTimeUtc,
             },
             a2dExtract = result.A2DExtractResult == null ? null : ToA2DEntryExtractResultDto(result.A2DExtractResult),
+        };
+    }
+
+    public static object ToProjectResourceImportResultDto(KarProjectResourceImportResult result)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(result.Resource),
+            reference = ToResourceReferenceDto(result.Reference),
+            kind = result.Kind.ToString(),
+            address = result.Address,
+            inputPath = result.InputPath,
+            inputLength = result.InputLength,
+            outputKind = result.OutputKind.ToString(),
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
+            isProjectFileOutput = result.IsProjectFileOutput,
+            isOutputAsset = result.IsOutputAsset,
+            fileWrite = result.FileWriteResult == null ? null : new
+            {
+                file = ToProjectFileDtoOrNull(result.FileWriteResult.File),
+                hasProjectFile = result.FileWriteResult.HasProjectFile,
+                relativePath = result.FileWriteResult.RelativePath,
+                outputPath = result.FileWriteResult.OutputPath,
+                outputLastWriteTimeUtc = result.FileWriteResult.OutputLastWriteTimeUtc,
+            },
+            a2dReplace = result.A2DReplaceResult == null ? null : ToA2DEntryReplaceResultDto(result.A2DReplaceResult),
         };
     }
 

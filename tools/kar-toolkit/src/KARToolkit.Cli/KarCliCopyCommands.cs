@@ -74,4 +74,20 @@ internal static class KarCliCopyCommands
         PrintProjectResourceExportResult(result);
         return 0;
     }
+
+    public static int ImportResource(KarCliOptions options)
+    {
+        options.RequirePositionals("import-resource", 3);
+        KarProject project = OpenProject(options);
+        KarProjectResourceImportResult result = project.ResourceService.ImportFromFile(options.Positionals[1], options.Positionals[2]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceImportResultDto(result));
+            return 0;
+        }
+
+        PrintProjectResourceImportResult(result);
+        return 0;
+    }
 }
