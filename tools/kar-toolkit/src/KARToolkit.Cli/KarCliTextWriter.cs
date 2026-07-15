@@ -541,14 +541,32 @@ internal static class KarCliTextWriter
     public static void PrintProjectToolkitSurface(KarProjectToolkitSurface surface)
     {
         Console.WriteLine("KAR toolkit surface: " + surface.Name);
-        Console.WriteLine("Domains: " + surface.DomainCount);
+        Console.WriteLine("Domains: " + surface.DomainCount + " workflow-groups=" + surface.WorkflowGroupCount);
         Console.WriteLine("Workflows: " + surface.WorkflowCount + " read=" + surface.ReadOnlyWorkflowCount + " write=" + surface.WriteWorkflowCount + " output=" + surface.OutputWorkflowCount + " batch=" + surface.BatchWorkflowCount);
         Console.WriteLine("Workflow issues: modified-output=" + surface.ModifiedOutputWorkflowCount + " inspection=" + surface.InspectionIssueWorkflowCount);
-        foreach (KarProjectToolkitWorkflow workflow in surface.Workflows)
-            PrintProjectToolkitWorkflow(workflow);
+        foreach (KarProjectToolkitWorkflowGroup group in surface.WorkflowGroups)
+            PrintProjectToolkitWorkflowGroup(group);
+    }
+
+    public static void PrintProjectToolkitWorkflowGroup(KarProjectToolkitWorkflowGroup group)
+    {
+        string commands = "";
+        if (!string.IsNullOrWhiteSpace(group.ListCommand))
+            commands += " list=" + group.ListCommand;
+        if (!string.IsNullOrWhiteSpace(group.ContextCommand))
+            commands += " context=" + group.ContextCommand;
+
+        Console.WriteLine(group.DomainId + ": workflows=" + group.WorkflowCount + " read=" + group.ReadOnlyWorkflowCount + " write=" + group.WriteWorkflowCount + " output=" + group.OutputWorkflowCount + " batch=" + group.BatchWorkflowCount + commands);
+        foreach (KarProjectToolkitWorkflow workflow in group.Workflows)
+            PrintProjectToolkitWorkflow("  ", workflow);
     }
 
     public static void PrintProjectToolkitWorkflow(KarProjectToolkitWorkflow workflow)
+    {
+        PrintProjectToolkitWorkflow("", workflow);
+    }
+
+    private static void PrintProjectToolkitWorkflow(string indent, KarProjectToolkitWorkflow workflow)
     {
         string mode = workflow.IsReadOnly ? "read" : "write";
         string batch = workflow.SupportsBatch ? " batch" : "";
@@ -558,7 +576,7 @@ internal static class KarCliTextWriter
             ? ""
             : " outputs=" + workflow.OutputCount + " modified=" + workflow.ModifiedOutputCount;
         string issues = workflow.InspectionIssueCount == 0 ? "" : " issues=" + workflow.InspectionIssueCount;
-        Console.WriteLine(workflow.Id + " [" + workflow.DomainId + ", " + mode + batch + input + value + "] targets=" + workflow.TargetCount + outputs + issues + " command=" + workflow.Command + " " + workflow.ArgumentHint);
+        Console.WriteLine(indent + workflow.Id + " [" + workflow.DomainId + ", " + mode + batch + input + value + "] targets=" + workflow.TargetCount + outputs + issues + " command=" + workflow.Command + " " + workflow.ArgumentHint);
     }
 
     public static void PrintProjectDomainContext(KarProjectDomainContext context)

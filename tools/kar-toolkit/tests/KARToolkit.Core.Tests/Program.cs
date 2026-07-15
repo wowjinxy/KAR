@@ -1679,6 +1679,11 @@ namespace KARToolkit.Core.Tests
                 KarProjectToolkitSurface surface = project.CreateToolkitSurface();
                 AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");
                 AssertTrue(surface.WriteWorkflowCount != 0 && surface.OutputWorkflowCount >= surface.WriteWorkflowCount, "toolkit surfaces should summarize write-capable workflows");
+                AssertTrue(surface.WorkflowGroupCount == surface.DomainCount + 1 && surface.WorkflowGroups.Sum(group => group.WorkflowCount) == surface.WorkflowCount, "toolkit surfaces should group workflows by domain plus project-level commands");
+                KarProjectToolkitWorkflowGroup projectGroup = surface.WorkflowGroups.First();
+                AssertTrue(projectGroup.DomainId == "project" && !projectGroup.HasDomain && projectGroup.WorkflowCount >= 3, "toolkit workflow groups should expose project-level commands separately");
+                KarProjectToolkitWorkflowGroup resourceGroup = surface.WorkflowGroups.Single(group => group.DomainId == "resources");
+                AssertTrue(resourceGroup.HasDomain && resourceGroup.Domain.ContextCommand == "resource-contexts" && resourceGroup.Workflows.Any(workflow => workflow.Id == "edit-resource-data-field"), "toolkit workflow groups should attach domain metadata to grouped workflows");
                 KarProjectToolkitWorkflow editWorkflow = surface.Workflows.Single(workflow => workflow.Id == "edit-resource-data-field");
                 AssertTrue(editWorkflow.Command == "resource-data-edit" && editWorkflow.WritesOutput && editWorkflow.RequiresValue && editWorkflow.TargetCount != 0, "toolkit workflows should expose resource data field edit commands");
                 KarProjectToolkitWorkflow dataFieldsWorkflow = surface.Workflows.Single(workflow => workflow.Id == "resource-data-fields");

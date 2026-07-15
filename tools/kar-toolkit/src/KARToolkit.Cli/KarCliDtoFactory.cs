@@ -268,6 +268,7 @@ internal static class KarCliDtoFactory
             outputRoot = surface.OutputRoot,
             domainCount = surface.DomainCount,
             workflowCount = surface.WorkflowCount,
+            workflowGroupCount = surface.WorkflowGroupCount,
             availableWorkflowCount = surface.AvailableWorkflowCount,
             readOnlyWorkflowCount = surface.ReadOnlyWorkflowCount,
             writeWorkflowCount = surface.WriteWorkflowCount,
@@ -284,6 +285,37 @@ internal static class KarCliDtoFactory
             snapshot = ToProjectToolkitSnapshotDto(surface.Snapshot),
             domains = surface.Domains.Select(ToProjectDomainContextDto).ToList(),
             workflows = surface.Workflows.Select(ToProjectToolkitWorkflowDto).ToList(),
+            workflowGroups = surface.WorkflowGroups.Select(ToProjectToolkitWorkflowGroupDto).ToList(),
+        };
+    }
+
+    public static object ToProjectToolkitWorkflowGroupDto(KarProjectToolkitWorkflowGroup group)
+    {
+        return new
+        {
+            domainId = group.DomainId,
+            displayName = group.DisplayName,
+            description = group.Description,
+            listCommand = group.ListCommand,
+            contextCommand = group.ContextCommand,
+            hasDomain = group.HasDomain,
+            domain = group.Domain == null ? null : ToProjectDomainContextDto(group.Domain),
+            workflowCount = group.WorkflowCount,
+            availableWorkflowCount = group.AvailableWorkflowCount,
+            readOnlyWorkflowCount = group.ReadOnlyWorkflowCount,
+            writeWorkflowCount = group.WriteWorkflowCount,
+            outputWorkflowCount = group.OutputWorkflowCount,
+            batchWorkflowCount = group.BatchWorkflowCount,
+            inputWorkflowCount = group.InputWorkflowCount,
+            valueWorkflowCount = group.ValueWorkflowCount,
+            modifiedOutputWorkflowCount = group.ModifiedOutputWorkflowCount,
+            inspectionIssueWorkflowCount = group.InspectionIssueWorkflowCount,
+            hasWorkflows = group.HasWorkflows,
+            hasWriteWorkflows = group.HasWriteWorkflows,
+            hasOutputWorkflows = group.HasOutputWorkflows,
+            hasModifiedOutputWorkflows = group.HasModifiedOutputWorkflows,
+            hasInspectionIssueWorkflows = group.HasInspectionIssueWorkflows,
+            workflows = group.Workflows.Select(ToProjectToolkitWorkflowDto).ToList(),
         };
     }
 
