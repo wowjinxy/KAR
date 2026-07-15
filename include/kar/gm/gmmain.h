@@ -11,8 +11,8 @@
 
 u32 kar_gmmain__near_80005ce0(void);
 void* kar_gmmain__near_80005cbc(void);
-u32 kar_gmmain__near_80005d04(s32 bit);
-u8 kar_gmmain__near_80005d54(void);
+s32 kar_gmmain__near_80005d04(s32 bit);
+s32 kar_gmmain__near_80005d54(void);
 void kar_gmmain__near_80005d78(s32 bit);
 void kar_gmmain__near_80005dcc(s32 bit);
 s32 kar_gmmain__near_80005f14(void);

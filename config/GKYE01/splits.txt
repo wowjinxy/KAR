@@ -23,13 +23,14 @@ gmmain.c:
 
 gmglobal.c:
 	.text       start:0x8000714C end:0x800081FC
-	.data       start:0x80495010 end:0x80495C00
+	.data       start:0x80495010 end:0x80495740
 	.bss        start:0x805359D8 end:0x80536EF0
 	.sdata      start:0x805D5110 end:0x805D5140
 
 gmautodemo.c:
 	.text       start:0x800081FC end:0x80012E84
-	.data       start:0x80495C00 end:0x80496178
+	.rodata     start:0x80489480 end:0x80489530
+	.data       start:0x80495740 end:0x80496178
 	.bss        start:0x80536EF0 end:0x80537400
 	.sdata      start:0x805D5140 end:0x805D5148
 	.sbss       start:0x805DD570 end:0x805DD578
@@ -81,7 +82,7 @@ gmclearchecker_8004db74.c:
 
 gmviconfigure.c:
 	.text       start:0x8004F5B0 end:0x8004F85C
-	.rodata     start:0x80489480 end:0x80489618
+	.rodata     start:0x80489530 end:0x80489618
 	.data       start:0x80497AE8 end:0x80497BB8
 	.bss        start:0x80537430 end:0x80537470
 	.sdata      start:0x805D51D8 end:0x805D51E0

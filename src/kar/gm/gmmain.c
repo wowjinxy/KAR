@@ -164,7 +164,7 @@ u32 kar_gmmain__near_80005ce0(void)
     return GMMAIN_FIELD_U32(0x7E4);
 }
 
-u32 kar_gmmain__near_80005d04(s32 bit)
+s32 kar_gmmain__near_80005d04(s32 bit)
 {
     u8* base = kar_gmmain__near_80006c14();
     u64 mask = 1;
@@ -172,7 +172,7 @@ u32 kar_gmmain__near_80005d04(s32 bit)
     return base[0x7F0] & (u32) (mask << bit);
 }
 
-u8 kar_gmmain__near_80005d54(void)
+s32 kar_gmmain__near_80005d54(void)
 {
     return GMMAIN_FIELD_U8(0x7F0);
 }

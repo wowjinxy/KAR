@@ -18,5 +18,10 @@ void kar_lbfile_read_entrynum_async(s32 entrynum, void* dest, u32* size_out,
                                     s32 pri, HSD_DevComCallback callback,
                                     void* args);
 void kar_lbfile_read_path_blocking(char* path, void* dest, u32* size_out);
+void kar_lbfile_wait_for_group6_loads(void);
+void kar_lbfile_queue_resource_set_mode1(void);
+void kar_lbfile_queue_resource_set_mode3(void);
+s32* kar_lbfile_get_resource_load_config(void);
+void kar_lbfile_queue_startup_resource_loads(void);
 
 #endif
