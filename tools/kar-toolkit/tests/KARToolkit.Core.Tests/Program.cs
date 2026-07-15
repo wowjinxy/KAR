@@ -27,6 +27,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
+            Run("ProjectResourceServiceWritesScalarEditsToOutput", ProjectResourceServiceWritesScalarEditsToOutput);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
@@ -456,6 +457,65 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(outputRoot, true);
                 if (Directory.Exists(inputRoot))
                     Directory.Delete(inputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceWritesScalarEditsToOutput()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-edit-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                KarProjectResourceScalarEditResult result = resources.SetScalarFieldFromText(
+                    "VsHydra.dat:vsDataHydra",
+                    "x0C",
+                    "0x1F4");
+
+                AssertTrue(result.Address == "VsHydra.dat:vsDataHydra", "resource scalar edits should report resource addresses");
+                AssertTrue(result.Resource.IsHsdRoot, "resource scalar edits should retain HSD root resources");
+                AssertTrue(result.Edit.RootName == "vsDataHydra", "resource scalar edits should edit the addressed root");
+                AssertTrue(result.Edit.Field.Name == "x0C", "resource scalar edits should retain edited field metadata");
+                AssertTrue(result.Edit.PreviousValue.SignedValue == 303, "resource scalar edits should report previous values");
+                AssertTrue(result.Edit.NewValue.SignedValue == 500, "resource scalar edits should parse text values through the edit service");
+                AssertTrue(File.Exists(result.OutputPath), "resource scalar edits should save edited archives to output");
+                AssertTrue(project.OutputService.GetFile("VsHydra.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "resource scalar edits should register modified output archives");
+
+                KarProjectFieldInfo editedField = project.DataService.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "kar.vs.legendary",
+                    FieldName = "x0C",
+                }).Single(field => field.RelativePath == "VsHydra.dat");
+                AssertTrue(editedField.Value.SignedValue == 500, "project data queries should read resource scalar edits from output copies");
+
+                KarArchiveInfo sourceInfo = project.ArchiveInspector.Inspect(
+                    project.FileService.Get("VsHydra.dat"),
+                    new HSDRawFile(project.FileService.GetSourcePath("VsHydra.dat")));
+                AssertTrue(sourceInfo.GetRootByDataDefinition("kar.vs.legendary").GetFieldValue("x0C").SignedValue == 303, "resource scalar edits should not mutate source files");
+
+                KarProjectResourceScalarEditResult wrapperResult = project.SetResourceScalarFieldFromText(
+                    "GrCity1.dat:grDataCity1",
+                    "unknown1",
+                    "808");
+                AssertTrue(wrapperResult.Edit.NewValue.SignedValue == 808, "project resource scalar edit wrapper should delegate to resource service");
+                AssertTrue(project.OutputService.GetFile("GrCity1.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "resource scalar edits by root address should save modified output files");
+
+                AssertThrows<NotSupportedException>(
+                    () => resources.SetScalarFieldFromText("VsHydra.dat", "x0C", "1"),
+                    "resource scalar edits should reject non-root resource addresses");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
             }
         }
 

@@ -546,6 +546,7 @@ internal static class KarCliDtoFactory
             canReadBytes = resource.CanReadBytes,
             canExportToOutput = resource.CanExportToOutput,
             canImportFromFile = resource.CanImportFromFile,
+            canSetScalarFields = resource.CanSetScalarFields,
             file = ToProjectFileDtoOrNull(resource.File),
             root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
             a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
@@ -600,6 +601,42 @@ internal static class KarCliDtoFactory
                 outputLastWriteTimeUtc = result.FileWriteResult.OutputLastWriteTimeUtc,
             },
             a2dReplace = result.A2DReplaceResult == null ? null : ToA2DEntryReplaceResultDto(result.A2DReplaceResult),
+        };
+    }
+
+    public static object ToProjectScalarEditResultDto(KarProjectScalarEditResult result)
+    {
+        KarDataFieldEditResult edit = result.Edit;
+        KarProjectFileWriteResult write = result.WriteResult;
+        return new
+        {
+            file = ToProjectFileDto(result.File),
+            relativePath = result.RelativePath,
+            rootName = edit.RootName,
+            dataDefinitionId = edit.DataDefinitionId,
+            field = ToDataFieldDto(edit.Field),
+            previousValue = ToFieldValueDto(edit.PreviousValue),
+            newValue = ToFieldValueDto(edit.NewValue),
+            isChanged = edit.IsChanged,
+            writeResult = new
+            {
+                relativePath = write.RelativePath,
+                outputPath = write.OutputPath,
+                outputLastWriteTimeUtc = write.OutputLastWriteTimeUtc,
+            },
+            outputPath = write.OutputPath,
+        };
+    }
+
+    public static object ToProjectResourceScalarEditResultDto(KarProjectResourceScalarEditResult result)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(result.Resource),
+            reference = ToResourceReferenceDto(result.Reference),
+            address = result.Address,
+            scalarEdit = ToProjectScalarEditResultDto(result.ScalarEditResult),
+            outputPath = result.OutputPath,
         };
     }
 

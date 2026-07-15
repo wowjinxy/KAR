@@ -27,16 +27,7 @@ internal static class KarCliEditCommands
 
         if (options.Json)
         {
-            WriteJson(new
-            {
-                file = ToProjectFileDto(result.File),
-                rootName = edit.RootName,
-                dataDefinitionId = edit.DataDefinitionId,
-                field = ToDataFieldDto(edit.Field),
-                previousValue = ToFieldValueDto(edit.PreviousValue),
-                newValue = ToFieldValueDto(edit.NewValue),
-                outputPath = write.OutputPath,
-            });
+            WriteJson(ToProjectScalarEditResultDto(result));
             return 0;
         }
 
@@ -46,6 +37,35 @@ internal static class KarCliEditCommands
         Console.WriteLine("Previous: " + edit.PreviousValue.DisplayValue);
         Console.WriteLine("New: " + edit.NewValue.DisplayValue);
         Console.WriteLine("Output: " + write.OutputPath);
+        return 0;
+    }
+
+    public static int SetResourceScalar(KarCliOptions options)
+    {
+        options.RequirePositionals("set-resource-scalar", 4);
+        KarProject project = OpenProject(options);
+        string rootAddress = options.Positionals[1];
+        string fieldName = options.Positionals[2];
+        string rawValue = options.Positionals[3];
+
+        KarProjectResourceScalarEditResult result = project.ResourceService.SetScalarFieldFromText(
+            rootAddress,
+            fieldName,
+            rawValue);
+        KarDataFieldEditResult edit = result.Edit;
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceScalarEditResultDto(result));
+            return 0;
+        }
+
+        Console.WriteLine("Edited resource scalar: " + result.Address);
+        Console.WriteLine("Root: " + edit.RootName);
+        Console.WriteLine("Field: " + edit.Field.Name);
+        Console.WriteLine("Previous: " + edit.PreviousValue.DisplayValue);
+        Console.WriteLine("New: " + edit.NewValue.DisplayValue);
+        Console.WriteLine("Output: " + result.OutputPath);
         return 0;
     }
 }

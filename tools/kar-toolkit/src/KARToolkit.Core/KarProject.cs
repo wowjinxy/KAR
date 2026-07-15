@@ -213,6 +213,11 @@ namespace KARToolkit.Core
             return ResourceService.ImportFromFile(address, inputPath);
         }
 
+        public KarProjectResourceScalarEditResult SetResourceScalarFieldFromText(string rootAddress, string fieldName, string rawValue)
+        {
+            return ResourceService.SetScalarFieldFromText(rootAddress, fieldName, rawValue);
+        }
+
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)
         {
             return new KarProjectReport(this, options);

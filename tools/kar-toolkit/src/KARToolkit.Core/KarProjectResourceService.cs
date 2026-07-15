@@ -191,6 +191,30 @@ namespace KARToolkit.Core
             }
         }
 
+        public KarProjectResourceScalarEditResult SetScalarFieldFromText(
+            string rootAddress,
+            string fieldName,
+            string rawValue,
+            bool bufferAlign = true,
+            bool optimize = true,
+            bool trim = false)
+        {
+            KarProjectResourceInfo resource = Get(rootAddress);
+            if (resource.Kind != KarResourceKind.HsdRoot)
+                throw new NotSupportedException("Scalar edits require an HSD root resource address.");
+
+            KarProjectScalarEditResult edit = _project.EditService.SetScalarFieldFromText(
+                resource.RelativePath,
+                resource.Reference.RootName,
+                fieldName,
+                rawValue,
+                byDataDefinition: false,
+                bufferAlign: bufferAlign,
+                optimize: optimize,
+                trim: trim);
+            return new KarProjectResourceScalarEditResult(resource, edit);
+        }
+
         private KarProjectResourceInfo Resolve(KarResourceReference reference)
         {
             switch (reference.Kind)

@@ -60,6 +60,8 @@ namespace KARToolkit.Core
 
         public bool CanImportFromFile => Kind == KarResourceKind.File || Kind == KarResourceKind.A2DEntry;
 
+        public bool CanSetScalarFields => Kind == KarResourceKind.HsdRoot;
+
         internal static KarProjectResourceInfo FromFile(KarProjectFile file)
         {
             if (file == null)
