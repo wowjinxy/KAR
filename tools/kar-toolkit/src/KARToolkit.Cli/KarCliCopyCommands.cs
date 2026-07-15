@@ -11,7 +11,7 @@ internal static class KarCliCopyCommands
     {
         options.RequirePositionals("copy", 2);
         KarProject project = OpenProject(options);
-        KarProjectFileCopyResult result = project.CopyFileToOutput(options.Positionals[1], options.Overwrite);
+        KarProjectFileCopyResult result = project.FileService.CopyFileToOutput(options.Positionals[1], options.Overwrite);
         KarProjectFile file = result.File;
 
         if (options.Json)

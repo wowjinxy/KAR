@@ -115,7 +115,7 @@ namespace KARToolkit.Core
         private KarProjectOutputFileInfo CreateFileInfo(string relativePath)
         {
             KarProjectFile projectFile;
-            _project.Index.TryGetFile(relativePath, out projectFile);
+            _project.FileService.TryGet(relativePath, out projectFile);
 
             KarFileKind kind = projectFile == null
                 ? _project.FileCatalog.ClassifyKind(relativePath)

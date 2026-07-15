@@ -15,9 +15,9 @@ internal static class KarCliDtoFactory
             outputRoot = project.OutputRoot,
             outputFilesRoot = project.OutputFilesRoot,
             sourceHasFilesDirectory = project.SourceHasFilesDirectory,
-            fileCount = project.Files.Count,
+            fileCount = project.FileService.Files.Count,
             mapCount = project.Maps.Count,
-            categories = project.Files
+            categories = project.FileService.Files
                 .GroupBy(file => file.Category)
                 .OrderBy(group => group.Key)
                 .Select(group => new

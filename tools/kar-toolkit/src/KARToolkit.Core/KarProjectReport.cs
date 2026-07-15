@@ -11,7 +11,7 @@ namespace KARToolkit.Core
             Project = project ?? throw new ArgumentNullException(nameof(project));
             options = options ?? new KarProjectReportOptions();
 
-            Files = project.QueryFiles(options.Files)
+            Files = project.FileService.Query(options.Files)
                 .OrderBy(file => file.Category, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()

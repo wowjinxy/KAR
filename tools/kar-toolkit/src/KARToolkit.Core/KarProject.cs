@@ -18,6 +18,7 @@ namespace KARToolkit.Core
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
             FileStore = new KarProjectFileStore(Workspace, Index);
+            FileService = new KarProjectFileService(this);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
             ArchiveService = new KarProjectArchiveService(this);
@@ -34,6 +35,8 @@ namespace KARToolkit.Core
         public KarProjectFileCatalog FileCatalog { get; }
 
         public KarProjectFileStore FileStore { get; }
+
+        public KarProjectFileService FileService { get; }
 
         public KarProjectArchiveStore ArchiveStore { get; }
 
@@ -100,17 +103,17 @@ namespace KARToolkit.Core
 
         public KarProjectFile GetFile(string relativePath)
         {
-            return Index.GetFile(relativePath);
+            return FileService.Get(relativePath);
         }
 
         public bool TryGetFile(string relativePath, out KarProjectFile file)
         {
-            return Index.TryGetFile(relativePath, out file);
+            return FileService.TryGet(relativePath, out file);
         }
 
         public IReadOnlyList<KarProjectFile> QueryFiles(KarProjectFileQueryOptions options)
         {
-            return Index.QueryFiles(options);
+            return FileService.Query(options);
         }
 
         public IReadOnlyList<KarArchiveInfo> QueryArchives(KarProjectFileQueryOptions options)
@@ -175,27 +178,27 @@ namespace KARToolkit.Core
 
         public string GetReadPath(string relativePath)
         {
-            return FileStore.GetReadPath(relativePath);
+            return FileService.GetReadPath(relativePath);
         }
 
         public string GetSourcePath(string relativePath)
         {
-            return FileStore.GetSourcePath(relativePath);
+            return FileService.GetSourcePath(relativePath);
         }
 
         public string GetOutputPath(string relativePath)
         {
-            return FileStore.GetOutputPath(relativePath);
+            return FileService.GetOutputPath(relativePath);
         }
 
         public string CopyToOutput(string relativePath, bool overwrite = false)
         {
-            return FileStore.CopyToOutput(relativePath, overwrite);
+            return FileService.CopyToOutput(relativePath, overwrite);
         }
 
         public KarProjectFileCopyResult CopyFileToOutput(string relativePath, bool overwrite = false)
         {
-            return FileStore.CopyFileToOutput(relativePath, overwrite);
+            return FileService.CopyFileToOutput(relativePath, overwrite);
         }
 
         public IReadOnlyList<string> CopyMapToOutput(string mapNameOrPath, bool overwrite = false)
@@ -230,17 +233,17 @@ namespace KARToolkit.Core
 
         public byte[] ReadBytes(string relativePath)
         {
-            return FileStore.ReadBytes(relativePath);
+            return FileService.ReadBytes(relativePath);
         }
 
         public void WriteBytes(string relativePath, byte[] data)
         {
-            FileStore.WriteBytes(relativePath, data);
+            FileService.WriteBytes(relativePath, data);
         }
 
         public KarProjectFileWriteResult WriteFileBytes(string relativePath, byte[] data)
         {
-            return FileStore.WriteFileBytes(relativePath, data);
+            return FileService.WriteFileBytes(relativePath, data);
         }
 
         public HSDRawFile OpenHsdFile(string relativePath)

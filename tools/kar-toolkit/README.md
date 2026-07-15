@@ -60,7 +60,7 @@ Project-wide labeled field comparison goes through `KarProject.DataService.Query
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
 `KarProjectFileCatalog` is the replaceable service that connects file classification, HSD-kind checks, and map-name extraction.
 `KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.
-Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
+Project file lookup, filtering, asset paths, byte reads/writes, and single-file copies go through `KarProject.FileService`, which wraps the lower-level `KarProjectFileStore`.
 Copy operations can return `KarProjectFileCopyResult` when tools need both the copied file metadata and destination path.
 Write/save operations can return `KarProjectFileWriteResult` when tools need normalized project paths and output metadata.
 Map copy/save operations can return `KarProjectMapOutputResult` when tools need the output paths grouped by data, model, and event/script file.

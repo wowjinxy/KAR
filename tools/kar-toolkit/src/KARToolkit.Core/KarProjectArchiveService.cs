@@ -27,7 +27,7 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarArchiveInfo> QueryHsdArchives(KarProjectFileQueryOptions options = null)
         {
-            return _project.QueryFiles(options)
+            return _project.FileService.Query(options)
                 .Where(file => _project.FileCatalog.IsHsdArchiveKind(file.Kind))
                 .Select(Inspect)
                 .ToList()
@@ -44,7 +44,7 @@ namespace KARToolkit.Core
 
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
-            return Inspect(_project.Index.GetFile(relativePath));
+            return Inspect(_project.FileService.Get(relativePath));
         }
 
         public bool TryInspectHsdArchive(string relativePath, out KarArchiveInfo info, out string error)

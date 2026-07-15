@@ -164,20 +164,47 @@ namespace KARToolkit.Core.Tests
             try
             {
                 KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectFileService files = project.FileService;
 
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "file query should filter by kind");
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { Category = "maps" }).Count == 1, "file query should filter by category case-insensitively");
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 0, "file query should filter files with output copies");
+                AssertTrue(object.ReferenceEquals(files.Project, project), "file service should retain project context");
+                AssertTrue(files.Files.Count == project.Files.Count, "file service should expose indexed project files");
+                AssertTrue(files.ByPath.ContainsKey("GrCity1.dat"), "file service should expose file lookup index");
+                AssertTrue(files.Get("GrCity1.dat").Kind == KarFileKind.MapData, "file service should resolve project files by path");
+                KarProjectFile tryFile;
+                AssertTrue(files.TryGet("A2Demo.dat", out tryFile), "file service should try-resolve project files by path");
+                AssertTrue(tryFile.Kind == KarFileKind.A2dPackage, "file service try-get should return project file metadata");
+                AssertTrue(files.GetSourcePath("GrCity1.dat") == Path.Combine(filesRoot, "GrCity1.dat"), "file service should resolve source paths");
+                AssertTrue(files.GetOutputPath("GrCity1.dat") == Path.Combine(outputRoot, "files", "GrCity1.dat"), "file service should resolve output paths");
+                AssertTrue(files.GetReadPath("GrCity1.dat") == files.GetSourcePath("GrCity1.dat"), "file service should read from source before output copies exist");
 
-                project.CopyToOutput("GrCity1.dat", true);
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "file query should filter by kind");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { Category = "maps" }).Count == 1, "file query should filter by category case-insensitively");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 0, "file query should filter files with output copies");
 
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 1, "file query should see newly created output copies");
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = false }).Count == project.Files.Count - 1, "file query should filter source-only files");
-                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions
+                KarProjectFileCopyResult copyResult = files.CopyFileToOutput("GrCity1.dat", true);
+
+                AssertTrue(copyResult.File.RelativePath == "GrCity1.dat", "file service should return copied file metadata");
+                AssertTrue(File.Exists(copyResult.OutputPath), "file service should copy project files to output");
+                AssertTrue(files.GetReadPath("GrCity1.dat") == files.GetOutputPath("GrCity1.dat"), "file service should read from output after copies exist");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 1, "file query should see newly created output copies");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = false }).Count == project.Files.Count - 1, "file query should filter source-only files");
+                AssertTrue(files.Query(new KarProjectFileQueryOptions
                 {
                     Kind = KarFileKind.MapData,
                     HasOutputCopy = true,
                 }).Count == 1, "file query should combine filters");
+
+                byte[] sourceBytes = files.ReadBytes("GrCity1.dat");
+                AssertTrue(sourceBytes.Length == 1 && sourceBytes[0] == 0, "file service should read bytes through the active read path");
+                KarProjectFileWriteResult writeResult = files.WriteFileBytes("A2Demo.dat", new byte[] { 0x44, 0x55 });
+                AssertTrue(writeResult.RelativePath == "A2Demo.dat", "file service should return write metadata");
+                AssertTrue(File.Exists(writeResult.OutputPath), "file service should write bytes to output");
+                AssertTrue(files.ReadBytes("A2Demo.dat").SequenceEqual(new byte[] { 0x44, 0x55 }), "file service reads should prefer newly written output bytes");
+
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == files.Query(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count, "project file query compatibility wrapper should delegate to file service");
+                AssertTrue(object.ReferenceEquals(project.GetFile("GrCity1.dat"), files.Get("GrCity1.dat")), "project file get compatibility wrapper should delegate to file service");
+                AssertTrue(project.GetReadPath("A2Demo.dat") == files.GetReadPath("A2Demo.dat"), "project read path compatibility wrapper should delegate to file service");
+                AssertTrue(project.CopyToOutput("GrCity1.dat", true) == files.GetOutputPath("GrCity1.dat"), "project copy compatibility wrapper should delegate to file service");
             }
             finally
             {

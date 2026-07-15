@@ -25,10 +25,10 @@ internal static class KarCliInspectionCommands
         Console.WriteLine("Source files: " + project.SourceFilesRoot);
         Console.WriteLine("Output: " + project.OutputRoot);
         Console.WriteLine("Output files: " + project.OutputFilesRoot);
-        Console.WriteLine("Files: " + project.Files.Count);
+        Console.WriteLine("Files: " + project.FileService.Files.Count);
         Console.WriteLine("Maps: " + project.Maps.Count);
 
-        foreach (IGrouping<string, KarProjectFile> group in project.Files.GroupBy(file => file.Category).OrderBy(group => group.Key))
+        foreach (IGrouping<string, KarProjectFile> group in project.FileService.Files.GroupBy(file => file.Category).OrderBy(group => group.Key))
             Console.WriteLine("  " + group.Key + ": " + group.Count());
 
         return 0;
@@ -116,7 +116,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("files", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectFile> files = project.QueryFiles(CreateFileQuery(options))
+        List<KarProjectFile> files = project.FileService.Query(CreateFileQuery(options))
             .OrderBy(file => file.Category)
             .ThenBy(file => file.RelativePath)
             .ToList();
@@ -355,7 +355,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("file", 2);
         KarProject project = OpenProject(options);
-        KarProjectFile file = project.GetFile(options.Positionals[1]);
+        KarProjectFile file = project.FileService.Get(options.Positionals[1]);
 
         if (options.Json)
         {
