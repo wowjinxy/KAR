@@ -46,4 +46,31 @@ internal static class KarCliA2DCommands
         Console.WriteLine("Output package: " + result.OutputPath);
         return 0;
     }
+
+    public static int ApplyEntryOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("apply-a2d-entry-outputs", 1);
+        KarProject project = OpenProject(options);
+        KarProjectA2DEntryOutputQueryOptions query = new KarProjectA2DEntryOutputQueryOptions
+        {
+            Entries = new KarProjectA2DEntryQueryOptions
+            {
+                PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+                EntryName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            },
+        };
+        IReadOnlyList<KarProjectA2DEntryApplyResult> results = project.A2DService.ApplyModifiedEntryOutputs(query);
+
+        if (options.Json)
+        {
+            WriteJson(results.Select(ToA2DEntryApplyResultDto).ToList());
+            return 0;
+        }
+
+        Console.WriteLine("Applied A2D entry outputs: " + results.Count);
+        foreach (KarProjectA2DEntryApplyResult result in results)
+            Console.WriteLine("  " + result.EntryPath + " -> " + result.PackageOutputPath);
+
+        return 0;
+    }
 }

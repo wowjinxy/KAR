@@ -171,6 +171,41 @@ namespace KARToolkit.Core
             return new KarProjectA2DEntryReplaceResult(info, write, replacement.Length);
         }
 
+        public KarProjectA2DEntryApplyResult ApplyEntryOutput(string packageEntryPath)
+        {
+            KarProjectA2DEntryOutputInfo output = GetEntryOutput(packageEntryPath);
+            return ApplyEntryOutput(output);
+        }
+
+        public IReadOnlyList<KarProjectA2DEntryApplyResult> ApplyModifiedEntryOutputs(KarProjectA2DEntryOutputQueryOptions options = null)
+        {
+            KarProjectA2DEntryOutputQueryOptions query = new KarProjectA2DEntryOutputQueryOptions
+            {
+                Entries = options == null ? null : options.Entries,
+                Status = KarProjectA2DEntryOutputStatus.DiffersFromEntry,
+                HasOutput = true,
+            };
+
+            return QueryEntryOutputs(query)
+                .Select(ApplyEntryOutput)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private KarProjectA2DEntryApplyResult ApplyEntryOutput(KarProjectA2DEntryOutputInfo output)
+        {
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+            if (!output.HasOutput)
+                throw new FileNotFoundException("A2D entry sidecar output was not found.", output.OutputPath);
+
+            KarProjectA2DEntryReplaceResult replace = ReplaceEntryFromFile(
+                output.PackageRelativePath,
+                output.EntryName,
+                output.OutputPath);
+            return new KarProjectA2DEntryApplyResult(output, replace);
+        }
+
         private static A2DPackageEntry ResolveEntry(A2DPackage package, string entryNameOrIndex)
         {
             if (package == null)

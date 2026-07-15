@@ -48,6 +48,8 @@ internal static class Program
                 "a2d-extract" => KarCliA2DCommands.ExtractEntry(options),
                 "replace-a2d-entry" => KarCliA2DCommands.ReplaceEntry(options),
                 "a2d-replace" => KarCliA2DCommands.ReplaceEntry(options),
+                "apply-a2d-entry-outputs" => KarCliA2DCommands.ApplyEntryOutputs(options),
+                "a2d-apply" => KarCliA2DCommands.ApplyEntryOutputs(options),
                 "copy" => KarCliCopyCommands.CopyFile(options),
                 "copy-map" => KarCliCopyCommands.CopyMap(options),
                 "set-scalar" => KarCliEditCommands.SetScalar(options),
@@ -96,6 +98,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit extract-a2d-entry <source-folder> <package#entry> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit replace-a2d-entry <source-folder> <package#entry> <same-size-replacement-file> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit apply-a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");

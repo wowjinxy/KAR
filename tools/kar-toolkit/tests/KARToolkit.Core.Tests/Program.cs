@@ -605,12 +605,23 @@ namespace KARToolkit.Core.Tests
                     HasOutput = true,
                 }).Count == 1, "project A2D entry output wrapper should delegate to A2D service");
 
-                KarProjectA2DEntryReplaceResult replace = a2d.ReplaceEntryFromFile("A2Info.dat#ScInfGo2D.tm", extract.OutputPath);
-                AssertTrue(replace.PackageRelativePath == "A2Info.dat", "A2D entry replacement should report the package path");
-                AssertTrue(replace.ReplacementLength == 4, "A2D entry replacement should report replacement length");
-                AssertTrue(File.Exists(replace.OutputPath), "A2D entry replacement should save the modified package to output");
+                IReadOnlyList<KarProjectA2DEntryApplyResult> applyResults = a2d.ApplyModifiedEntryOutputs(new KarProjectA2DEntryOutputQueryOptions
+                {
+                    Entries = new KarProjectA2DEntryQueryOptions
+                    {
+                        PackagePath = "A2Info.dat",
+                    },
+                });
+                AssertTrue(applyResults.Count == 1, "A2D entry apply should process modified sidecar assets");
+                KarProjectA2DEntryApplyResult apply = applyResults[0];
+                AssertTrue(apply.EntryPath == "A2Info.dat#ScInfGo2D.tm", "A2D entry apply should report the sidecar entry path");
+                AssertTrue(apply.PackageRelativePath == "A2Info.dat", "A2D entry apply should report the package path");
+                AssertTrue(apply.SidecarOutputPath == extract.OutputPath, "A2D entry apply should report the sidecar path");
+                AssertTrue(apply.ReplacementLength == 4, "A2D entry apply should report replacement length");
+                AssertTrue(File.Exists(apply.PackageOutputPath), "A2D entry apply should save the modified package to output");
                 AssertTrue(project.OutputService.GetFile("A2Info.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "A2D entry replacement should register as a modified project output");
                 AssertTrue(a2d.GetEntryOutput("A2Info.dat#ScInfGo2D.tm").Status == KarProjectA2DEntryOutputStatus.MatchesEntry, "A2D entry output status should compare sidecars to staged package edits");
+                AssertTrue(project.ApplyModifiedA2DEntryOutputs().Count == 0, "project A2D entry apply wrapper should find no modified sidecars after apply");
 
                 KarProjectA2DPackage sourcePackage = project.ArchiveService.OpenProjectA2DPackage("A2Info.dat");
                 AssertTrue(sourcePackage.ReadPath == project.FileService.GetOutputPath("A2Info.dat"), "project A2D opens should prefer modified output packages after replacement");

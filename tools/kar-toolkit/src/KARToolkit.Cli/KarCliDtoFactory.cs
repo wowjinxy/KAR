@@ -610,6 +610,26 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToA2DEntryApplyResultDto(KarProjectA2DEntryApplyResult result)
+    {
+        return new
+        {
+            entry = ToProjectA2DEntryDto(result.Entry),
+            output = ToA2DEntryOutputDto(result.Output),
+            packageFile = ToProjectFileDto(result.PackageFile),
+            packageRelativePath = result.PackageRelativePath,
+            sidecarOutputPath = result.SidecarOutputPath,
+            replacementLength = result.ReplacementLength,
+            writeResult = new
+            {
+                relativePath = result.WriteResult.RelativePath,
+                outputPath = result.WriteResult.OutputPath,
+                outputLastWriteTimeUtc = result.WriteResult.OutputLastWriteTimeUtc,
+            },
+            packageOutputPath = result.PackageOutputPath,
+        };
+    }
+
     public static object ToValidationReportDto(KarValidationReport report)
     {
         return new
