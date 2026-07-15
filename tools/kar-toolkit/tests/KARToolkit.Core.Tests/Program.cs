@@ -40,6 +40,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectMapScriptServiceGroupsMapAndScriptResources", ProjectMapScriptServiceGroupsMapAndScriptResources);
+            Run("ProjectMapContextServiceCombinesMapToolkitState", ProjectMapContextServiceCombinesMapToolkitState);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
             Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
@@ -1386,6 +1387,61 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(export.OutputKind == KarProjectResourceOutputKind.ProjectFile, "map script archive exports should stage project file outputs");
                 AssertTrue(File.Exists(export.OutputPath), "map script archive exports should write output-side files");
                 AssertTrue(File.Exists(project.FileService.GetOutputPath("GrCity1Event.dat")), "map script archive exports should not write outside the configured output folder");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectMapContextServiceCombinesMapToolkitState()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-map-context-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Model.dat"), "grModelCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Event.dat"), "grEventDataAllCity1", new KAR_grData());
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectMapContextService contexts = project.MapContextService;
+
+                AssertTrue(object.ReferenceEquals(contexts.Project, project), "map context service should retain project context");
+
+                KarProjectMapContext city = contexts.Get("GrCity1Event.dat");
+                AssertTrue(city.MapName == "City1", "map contexts should resolve by map file names");
+                AssertTrue(city.HasInspection && !city.HasInspectionError, "map contexts should include successful archive inspection state");
+                AssertTrue(city.ArchiveCount == 3, "map contexts should include data, model, and event/script archives");
+                AssertTrue(city.MapResourceCount == 3, "map contexts should include map file resources");
+                AssertTrue(city.RelationshipCount == 3, "map contexts should include map-scoped relationships");
+                AssertTrue(city.ScriptTableCount == 4, "map contexts should include loose and packaged project script tables");
+                AssertTrue(city.HasScriptArchive && city.ScriptArchive.File.RelativePath == "GrCity1Event.dat", "map contexts should expose event archives as script archives");
+                AssertTrue(!city.HasOutput && city.OutputFileCount == 0, "map contexts should include missing output state before staging files");
+
+                IReadOnlyList<KarProjectMapContext> objectContexts = project.QueryMapContexts(new KarProjectMapScriptQueryOptions
+                {
+                    MapNameOrPath = "City1",
+                    ScriptTables = new KarProjectScriptTableQueryOptions
+                    {
+                        Role = "ObjectTable",
+                    },
+                    HasScriptTables = true,
+                });
+                AssertTrue(objectContexts.Count == 1 && objectContexts[0].ScriptTables.Single().Address == "A2Kirby.dat#OB1800.tm", "project map context wrapper should combine map and script-table filters");
+
+                project.CopyMapToOutputResult("City1", true);
+                KarProjectMapContext staged = project.GetMapContext("City1");
+                AssertTrue(staged.HasOutput && staged.HasCompleteOutputSet, "map contexts should reflect staged map output copies");
+                AssertTrue(staged.OutputFileCount == 3 && staged.ModifiedOutputFileCount == 0, "map contexts should summarize staged output state");
             }
             finally
             {

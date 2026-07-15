@@ -447,6 +447,36 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectMapContextDto(KarProjectMapContext context)
+    {
+        return new
+        {
+            map = ToMapBundleDto(context.Map),
+            mapName = context.MapName,
+            archiveCount = context.ArchiveCount,
+            missingRequiredRootCount = context.MissingRequiredRootCount,
+            mapResourceCount = context.MapResourceCount,
+            relationshipCount = context.RelationshipCount,
+            scriptTableCount = context.ScriptTableCount,
+            expectedOutputFileCount = context.ExpectedOutputFileCount,
+            outputFileCount = context.OutputFileCount,
+            modifiedOutputFileCount = context.ModifiedOutputFileCount,
+            missingOutputFileCount = context.MissingOutputFileCount,
+            hasInspection = context.HasInspection,
+            hasInspectionError = context.HasInspectionError,
+            inspectionError = context.InspectionError,
+            hasMissingRequiredRoots = context.HasMissingRequiredRoots,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            hasCompleteOutputSet = context.HasCompleteOutputSet,
+            hasScriptArchive = context.HasScriptArchive,
+            hasScriptTables = context.HasScriptTables,
+            inspection = context.Inspection == null ? null : ToMapInfoDto(context.Inspection),
+            output = context.Output == null ? null : ToProjectMapOutputDto(context.Output),
+            scripts = ToProjectMapScriptBundleDto(context.Scripts),
+        };
+    }
+
     public static object ToArchiveDtoOrNull(KarArchiveInfo archive)
     {
         return archive == null ? null : ToArchiveDto(archive);

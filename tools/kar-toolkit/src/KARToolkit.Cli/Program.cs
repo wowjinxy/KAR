@@ -45,7 +45,9 @@ internal static class Program
                 "maps" => KarCliInspectionCommands.ShowMaps(options),
                 "map" => KarCliInspectionCommands.ShowMap(options),
                 "map-scripts" => KarCliInspectionCommands.ShowMapScripts(options),
-                "map-script-context" => KarCliInspectionCommands.ShowMapScripts(options),
+                "map-context" => KarCliInspectionCommands.ShowMapContext(options),
+                "map-toolkit" => KarCliInspectionCommands.ShowMapContext(options),
+                "map-script-context" => KarCliInspectionCommands.ShowMapContext(options),
                 "relationships" => KarCliInspectionCommands.ShowRelationships(options),
                 "links" => KarCliInspectionCommands.ShowRelationships(options),
                 "resource-graph" => KarCliInspectionCommands.ShowResourceGraph(options),
@@ -130,6 +132,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map-scripts <source-folder> [map-name-or-file] [script-table-name-or-address] [--output <mod-folder>] [--search <text>]");
+        Console.WriteLine("  kar-toolkit map-context <source-folder> [map-name-or-file] [script-table-name-or-address] [--output <mod-folder>] [--search <text>]");
         Console.WriteLine("  kar-toolkit relationships <source-folder> [map-name-or-file] [--output <mod-folder>] [--search <text>]");
         Console.WriteLine("  kar-toolkit resource-graph <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resources <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--kind <file-kind>] [--category <category>] [--search <text>]");

@@ -249,6 +249,17 @@ internal static class KarCliTextWriter
             Console.WriteLine("    " + table.Address + " [" + table.Role + "]");
     }
 
+    public static void PrintProjectMapContext(KarProjectMapContext context)
+    {
+        Console.WriteLine("Map context: " + context.MapName);
+        Console.WriteLine("  Files: " + string.Join(", ", context.Map.Files.Select(file => file.RelativePath)));
+        Console.WriteLine("  Archives: " + context.ArchiveCount + " missing-required=" + context.MissingRequiredRootCount);
+        if (context.HasInspectionError)
+            Console.WriteLine("  Inspection error: " + context.InspectionError);
+        Console.WriteLine("  Output: " + context.OutputFileCount + "/" + context.ExpectedOutputFileCount + " modified=" + context.ModifiedOutputFileCount + " missing=" + context.MissingOutputFileCount);
+        PrintProjectMapScriptBundle(context.Scripts);
+    }
+
     private static void PrintProjectMapScriptResourceSlot(string label, KarProjectResourceInfo resource)
     {
         if (resource == null)

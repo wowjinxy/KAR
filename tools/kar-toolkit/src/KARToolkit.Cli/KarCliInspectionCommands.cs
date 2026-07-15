@@ -654,6 +654,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowMapContext(KarCliOptions options)
+    {
+        options.RequirePositionals("map-context", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectMapContext> contexts = project.MapContextService.Query(CreateMapScriptQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectMapContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectMapContext context in contexts)
+            PrintProjectMapContext(context);
+
+        return 0;
+    }
+
     public static int ShowArchive(KarCliOptions options)
     {
         options.RequirePositionals("archive", 2);
