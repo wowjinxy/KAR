@@ -6,6 +6,8 @@ namespace KARToolkit.Core
     {
         public bool Overwrite { get; set; }
 
+        public bool ContinueOnError { get; set; }
+
         public string InputPath { get; set; }
 
         public string FieldName { get; set; }

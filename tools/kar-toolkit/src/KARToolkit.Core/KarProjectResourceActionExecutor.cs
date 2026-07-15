@@ -97,11 +97,36 @@ namespace KARToolkit.Core
             foreach (KarProjectResourceActionPlan plan in _project.ResourceService.QueryActionPlans(effectiveOptions))
             {
                 if (!plan.SupportsBatch)
-                    throw new NotSupportedException("KAR resource action does not support batch execution: " + plan.ActionId);
-                if (!plan.CanRun)
-                    throw new InvalidOperationException("KAR resource action cannot run: " + plan.Address + " " + plan.ActionId + ". " + plan.Reason);
+                {
+                    NotSupportedException error = new NotSupportedException("KAR resource action does not support batch execution: " + plan.ActionId);
+                    if (!executionOptions.ContinueOnError)
+                        throw error;
 
-                results.Add(Execute(plan.Address, plan.ActionId, executionOptions));
+                    results.Add(new KarProjectResourceActionExecutionResult(plan, null, error));
+                    continue;
+                }
+
+                if (!plan.CanRun)
+                {
+                    InvalidOperationException error = new InvalidOperationException("KAR resource action cannot run: " + plan.Address + " " + plan.ActionId + ". " + plan.Reason);
+                    if (!executionOptions.ContinueOnError)
+                        throw error;
+
+                    results.Add(new KarProjectResourceActionExecutionResult(plan, null, error));
+                    continue;
+                }
+
+                try
+                {
+                    results.Add(Execute(plan.Address, plan.ActionId, executionOptions));
+                }
+                catch (Exception ex)
+                {
+                    if (!executionOptions.ContinueOnError)
+                        throw;
+
+                    results.Add(new KarProjectResourceActionExecutionResult(plan, null, ex));
+                }
             }
 
             return results

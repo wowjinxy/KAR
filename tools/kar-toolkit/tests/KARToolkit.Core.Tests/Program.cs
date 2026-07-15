@@ -872,6 +872,16 @@ namespace KARToolkit.Core.Tests
                         Resources = new KarProjectResourceQueryOptions { Kind = KarResourceKind.File },
                     }),
                     "resource action batch execution should reject actions that are not marked batch-safe");
+                IReadOnlyList<KarProjectResourceActionExecutionResult> tolerantFailures = executor.ExecuteBatch(
+                    new KarProjectResourceActionPlanQueryOptions
+                    {
+                        ActionId = "export-output",
+                        Resources = new KarProjectResourceQueryOptions { Kind = KarResourceKind.File },
+                    },
+                    new KarProjectResourceActionExecutionOptions { ContinueOnError = true });
+                AssertTrue(tolerantFailures.Count == 5, "tolerant resource action batches should keep per-resource failures");
+                AssertTrue(tolerantFailures.All(result => result.Failed && result.ErrorType == "NotSupportedException"), "tolerant resource action batches should expose failure metadata");
+                AssertTrue(tolerantFailures.All(result => result.Result == null), "failed resource action results should not expose success payloads");
             }
             finally
             {

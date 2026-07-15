@@ -15,6 +15,7 @@ internal sealed class KarCliOptions
         bool noMissingMapModels,
         bool noSchemaValidation,
         bool schema,
+        bool continueOnError,
         bool json,
         string fileKind,
         string resourceKind,
@@ -43,6 +44,7 @@ internal sealed class KarCliOptions
         NoMissingMapModels = noMissingMapModels;
         NoSchemaValidation = noSchemaValidation;
         Schema = schema;
+        ContinueOnError = continueOnError;
         Json = json;
         FileKind = fileKind;
         ResourceKind = resourceKind;
@@ -80,6 +82,8 @@ internal sealed class KarCliOptions
     public bool NoSchemaValidation { get; }
 
     public bool Schema { get; }
+
+    public bool ContinueOnError { get; }
 
     public bool Json { get; }
 
@@ -130,6 +134,7 @@ internal sealed class KarCliOptions
         bool noMissingMapModels = false;
         bool noSchemaValidation = false;
         bool schema = false;
+        bool continueOnError = false;
         bool json = false;
         string fileKind = null;
         string resourceKind = null;
@@ -201,6 +206,12 @@ internal sealed class KarCliOptions
             if (arg == "--schema" || arg == "--data-definition")
             {
                 schema = true;
+                continue;
+            }
+
+            if (arg == "--continue-on-error" || arg == "--keep-going")
+            {
+                continueOnError = true;
                 continue;
             }
 
@@ -362,6 +373,7 @@ internal sealed class KarCliOptions
             noMissingMapModels,
             noSchemaValidation,
             schema,
+            continueOnError,
             json,
             fileKind,
             resourceKind,

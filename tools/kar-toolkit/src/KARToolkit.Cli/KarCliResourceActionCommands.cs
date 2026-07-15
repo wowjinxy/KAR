@@ -33,7 +33,7 @@ internal static class KarCliResourceActionCommands
         if (options.Json)
         {
             WriteJson(results.Select(ToResourceActionExecutionResultDto).ToList());
-            return 0;
+            return results.Any(result => result.Failed) ? 1 : 0;
         }
 
         Console.WriteLine("Executed resource actions: " + results.Count);
@@ -43,7 +43,7 @@ internal static class KarCliResourceActionCommands
             PrintResourceActionResult(result);
         }
 
-        return 0;
+        return results.Any(result => result.Failed) ? 1 : 0;
     }
 
     private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
@@ -51,6 +51,7 @@ internal static class KarCliResourceActionCommands
         KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
         {
             Overwrite = options.Overwrite,
+            ContinueOnError = options.ContinueOnError,
         };
 
         switch (actionId.ToLowerInvariant())
@@ -80,6 +81,7 @@ internal static class KarCliResourceActionCommands
         KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
         {
             Overwrite = options.Overwrite,
+            ContinueOnError = options.ContinueOnError,
         };
 
         if (actionId.Equals("field-values", StringComparison.OrdinalIgnoreCase) && options.Positionals.Count >= 3)
@@ -107,13 +109,18 @@ internal static class KarCliResourceActionCommands
     {
         return new
         {
+            succeeded = result.Succeeded,
             plan = ToProjectResourceActionPlanDto(result.Plan),
-            result = ToResourceActionResultDto(result),
+            errorType = result.ErrorType,
+            errorMessage = result.ErrorMessage,
+            result = result.Failed ? null : ToResourceActionResultDto(result),
         };
     }
 
     private static object ToResourceActionResultDto(KarProjectResourceActionExecutionResult result)
     {
+        if (result.Failed)
+            return null;
         if (result.OutputInfo != null)
             return ToProjectResourceOutputDto(result.OutputInfo);
         if (result.ByteInfo != null)
@@ -138,7 +145,11 @@ internal static class KarCliResourceActionCommands
 
     private static void PrintResourceActionResult(KarProjectResourceActionExecutionResult result)
     {
-        if (result.OutputInfo != null)
+        if (result.Failed)
+        {
+            Console.WriteLine("Error: " + result.ErrorType + " - " + result.ErrorMessage);
+        }
+        else if (result.OutputInfo != null)
             PrintProjectResourceOutput(result.OutputInfo);
         else if (result.ByteInfo != null)
             PrintProjectResourceByteInfo(result.ByteInfo);

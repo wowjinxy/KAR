@@ -8,14 +8,25 @@ namespace KARToolkit.Core
         internal KarProjectResourceActionExecutionResult(
             KarProjectResourceActionPlan plan,
             object result)
+            : this(plan, result, null)
+        {
+        }
+
+        internal KarProjectResourceActionExecutionResult(
+            KarProjectResourceActionPlan plan,
+            object result,
+            Exception error)
         {
             Plan = plan ?? throw new ArgumentNullException(nameof(plan));
             Result = result;
+            Error = error;
         }
 
         public KarProjectResourceActionPlan Plan { get; }
 
         public object Result { get; }
+
+        public Exception Error { get; }
 
         public KarProjectResourceInfo Resource => Plan.Resource;
 
@@ -29,7 +40,15 @@ namespace KARToolkit.Core
 
         public string ActionId => Plan.ActionId;
 
+        public bool Succeeded => Error == null;
+
+        public bool Failed => Error != null;
+
         public bool HasResult => Result != null;
+
+        public string ErrorType => Error == null ? null : Error.GetType().Name;
+
+        public string ErrorMessage => Error == null ? null : Error.Message;
 
         public KarProjectResourceOutputInfo OutputInfo => Result as KarProjectResourceOutputInfo;
 
