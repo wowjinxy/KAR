@@ -18,6 +18,7 @@ namespace KARToolkit.Core
                 definition.RequiresFieldName,
                 definition.RequiresValue,
                 definition.SupportsBatch,
+                definition.ExecutionKind,
                 definition.PlanStateKind,
                 definition.WritePolicy)
         {
@@ -36,6 +37,7 @@ namespace KARToolkit.Core
             bool requiresFieldName,
             bool requiresValue,
             bool supportsBatch,
+            KarProjectResourceActionExecutionKind executionKind = KarProjectResourceActionExecutionKind.None,
             KarProjectResourceActionPlanStateKind planStateKind = KarProjectResourceActionPlanStateKind.None,
             KarProjectResourceActionWritePolicy writePolicy = KarProjectResourceActionWritePolicy.None)
         {
@@ -58,6 +60,7 @@ namespace KARToolkit.Core
             RequiresFieldName = requiresFieldName;
             RequiresValue = requiresValue;
             SupportsBatch = supportsBatch;
+            ExecutionKind = executionKind;
             PlanStateKind = planStateKind;
             WritePolicy = writePolicy;
         }
@@ -87,6 +90,10 @@ namespace KARToolkit.Core
         public bool RequiresValue { get; }
 
         public bool SupportsBatch { get; }
+
+        public KarProjectResourceActionExecutionKind ExecutionKind { get; }
+
+        public string ExecutionKindName => ExecutionKind.ToString();
 
         public KarProjectResourceActionPlanStateKind PlanStateKind { get; }
 

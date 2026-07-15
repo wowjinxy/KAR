@@ -26,44 +26,44 @@ namespace KARToolkit.Core
                 throw new InvalidOperationException("KAR resource action cannot run: " + plan.Address + " " + plan.ActionId + ". " + plan.Reason);
 
             object result;
-            switch (plan.ActionId)
+            switch (plan.Action.ExecutionKind)
             {
-                case "output-status":
+                case KarProjectResourceActionExecutionKind.OutputStatus:
                     result = _project.ResourceService.GetOutput(address);
                     break;
 
-                case "byte-status":
+                case KarProjectResourceActionExecutionKind.ByteStatus:
                     result = _project.ResourceService.GetByteInfo(address);
                     break;
 
-                case "dump-bytes":
+                case KarProjectResourceActionExecutionKind.DumpBytes:
                     result = _project.ResourceService.DumpBytesToOutput(address, options.Overwrite);
                     break;
 
-                case "export-output":
+                case KarProjectResourceActionExecutionKind.ExportOutput:
                     result = _project.ResourceAddressService.ExportToOutput(address, options.Overwrite);
                     break;
 
-                case "import-file":
+                case KarProjectResourceActionExecutionKind.ImportFile:
                     result = _project.ResourceAddressService.ImportFromFile(address, options.InputPath);
                     break;
 
-                case "field-values":
+                case KarProjectResourceActionExecutionKind.FieldValues:
                     result = options.HasFieldName
                         ? (object)_project.ResourceAddressService.GetFieldValue(address, options.FieldName)
                         : _project.ResourceAddressService.QueryFieldValues(address);
                     break;
 
-                case "set-scalar":
+                case KarProjectResourceActionExecutionKind.SetScalar:
                     result = _project.ResourceAddressService.SetScalarFieldFromText(address, options.FieldName, options.Value);
                     break;
 
-                case "apply-output":
+                case KarProjectResourceActionExecutionKind.ApplyOutput:
                     result = _project.ResourceService.ApplyOutput(address);
                     break;
 
                 default:
-                    throw new ArgumentException("Unsupported KAR resource action: " + plan.ActionId, nameof(actionId));
+                    throw new ArgumentException("Unsupported KAR resource action execution kind: " + plan.Action.ExecutionKindName + " (" + plan.ActionId + ")", nameof(actionId));
             }
 
             return new KarProjectResourceActionExecutionResult(plan, result);

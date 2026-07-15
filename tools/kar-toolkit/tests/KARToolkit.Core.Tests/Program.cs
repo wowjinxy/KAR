@@ -390,7 +390,7 @@ namespace KARToolkit.Core.Tests
 
             KarProjectResourceActionDefinition dumpDefinition = registry.ActionRegistry.FindDefinition("dump-bytes");
             AssertTrue(dumpDefinition.Command == "dump-resource-bytes" && dumpDefinition.SupportsBatch, "resource action registries should expose reusable action definitions");
-            AssertTrue(dumpDefinition.RequiresByteInfo && dumpDefinition.WritePolicy == KarProjectResourceActionWritePolicy.MissingByteDump, "resource action definitions should describe planning state and write policy");
+            AssertTrue(dumpDefinition.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes && dumpDefinition.RequiresByteInfo && dumpDefinition.WritePolicy == KarProjectResourceActionWritePolicy.MissingByteDump, "resource action definitions should describe execution, planning state, and write policy");
 
             KarProjectResourceActionRegistry customActions = new KarProjectResourceActionRegistry(
                 KarProjectResourceActionRegistry.BuiltInDefinitions.Select(definition =>
@@ -408,13 +408,35 @@ namespace KARToolkit.Core.Tests
                             definition.RequiresFieldName,
                             definition.RequiresValue,
                             definition.SupportsBatch,
+                            definition.ExecutionKind,
                             definition.PlanStateKind,
                             definition.WritePolicy)
-                        : definition));
+                        : definition)
+                    .Concat(new[]
+                    {
+                        new KarProjectResourceActionDefinition(
+                            "custom-dump-bytes",
+                            "Custom Dump Alias",
+                            "Caller-owned byte dump action id.",
+                            KarProjectResourceCapability.ReadBytes,
+                            "custom-dump-resource-bytes",
+                            "[resource-address]",
+                            isReadOnly: false,
+                            writesOutput: true,
+                            requiresInputFile: false,
+                            requiresFieldName: false,
+                            requiresValue: false,
+                            supportsBatch: true,
+                            executionKind: KarProjectResourceActionExecutionKind.DumpBytes,
+                            planStateKind: KarProjectResourceActionPlanStateKind.Bytes,
+                            writePolicy: KarProjectResourceActionWritePolicy.MissingByteDump),
+                    }));
             KarProjectResourceHandlerRegistry customHandlers = KarProjectResourceHandlerRegistry.CreateDefault(customActions);
             AssertTrue(customHandlers.GetHandler(KarResourceKind.File).Actions.Any(action => action.Id == "dump-bytes" && action.DisplayName == "Custom Dump Bytes"), "resource handler registries should use caller-provided action metadata");
+            AssertTrue(customHandlers.GetHandler(KarResourceKind.File).Actions.Any(action => action.Id == "custom-dump-bytes" && action.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes), "resource handler registries should support caller-owned action ids with known execution kinds");
 
             string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-custom-action-registry-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
             Directory.CreateDirectory(tempRoot);
             try
             {
@@ -422,16 +444,21 @@ namespace KARToolkit.Core.Tests
                 KarProject project = KarProject.Open(new KarProjectOptions
                 {
                     SourceRoot = tempRoot,
+                    OutputRoot = outputRoot,
                     ResourceActionRegistry = customActions,
                 });
                 KarProjectResourceActionPlan plan = project.GetResourceActionPlan("ScInfPause.tm", "dump-bytes");
                 AssertTrue(object.ReferenceEquals(project.ResourceActionRegistry, customActions), "project options should expose custom resource action registries");
                 AssertTrue(plan.Action.DisplayName == "Custom Dump Bytes" && plan.Action.RequiresByteInfo && plan.Action.WritePolicy == KarProjectResourceActionWritePolicy.MissingByteDump && plan.CanRun && plan.WouldWriteOutput, "custom resource action metadata should flow into project action plans");
+                KarProjectResourceActionExecutionResult aliasResult = project.ExecuteResourceAction("ScInfPause.tm", "custom-dump-bytes");
+                AssertTrue(aliasResult.ActionId == "custom-dump-bytes" && aliasResult.ResultKind == "byte-dump" && aliasResult.WroteOutput, "custom resource action ids should execute through their declared execution kind");
             }
             finally
             {
                 if (Directory.Exists(tempRoot))
                     Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
             }
         }
 

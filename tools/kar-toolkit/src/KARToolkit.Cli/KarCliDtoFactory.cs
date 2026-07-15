@@ -164,6 +164,7 @@ internal static class KarCliDtoFactory
             requiresFieldName = action.RequiresFieldName,
             requiresValue = action.RequiresValue,
             supportsBatch = action.SupportsBatch,
+            executionKind = action.ExecutionKindName,
             planStateKind = action.PlanStateKindName,
             requiresOutputInfo = action.RequiresOutputInfo,
             requiresByteInfo = action.RequiresByteInfo,

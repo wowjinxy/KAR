@@ -86,6 +86,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: true,
+                    executionKind: KarProjectResourceActionExecutionKind.OutputStatus,
                     planStateKind: KarProjectResourceActionPlanStateKind.Output,
                     writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
@@ -101,6 +102,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: true,
+                    executionKind: KarProjectResourceActionExecutionKind.ByteStatus,
                     planStateKind: KarProjectResourceActionPlanStateKind.Bytes,
                     writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
@@ -116,6 +118,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: true,
+                    executionKind: KarProjectResourceActionExecutionKind.DumpBytes,
                     planStateKind: KarProjectResourceActionPlanStateKind.Bytes,
                     writePolicy: KarProjectResourceActionWritePolicy.MissingByteDump),
                 Define(
@@ -131,6 +134,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: false,
+                    executionKind: KarProjectResourceActionExecutionKind.ExportOutput,
                     planStateKind: KarProjectResourceActionPlanStateKind.Output,
                     writePolicy: KarProjectResourceActionWritePolicy.MissingResourceOutput),
                 Define(
@@ -146,6 +150,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: false,
+                    executionKind: KarProjectResourceActionExecutionKind.ImportFile,
                     planStateKind: KarProjectResourceActionPlanStateKind.Output,
                     writePolicy: KarProjectResourceActionWritePolicy.Always),
                 Define(
@@ -161,6 +166,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: true,
+                    executionKind: KarProjectResourceActionExecutionKind.FieldValues,
                     planStateKind: KarProjectResourceActionPlanStateKind.None,
                     writePolicy: KarProjectResourceActionWritePolicy.None),
                 Define(
@@ -176,6 +182,7 @@ namespace KARToolkit.Core
                     requiresFieldName: true,
                     requiresValue: true,
                     supportsBatch: false,
+                    executionKind: KarProjectResourceActionExecutionKind.SetScalar,
                     planStateKind: KarProjectResourceActionPlanStateKind.Output,
                     writePolicy: KarProjectResourceActionWritePolicy.Always),
                 Define(
@@ -191,6 +198,7 @@ namespace KARToolkit.Core
                     requiresFieldName: false,
                     requiresValue: false,
                     supportsBatch: true,
+                    executionKind: KarProjectResourceActionExecutionKind.ApplyOutput,
                     planStateKind: KarProjectResourceActionPlanStateKind.Output,
                     writePolicy: KarProjectResourceActionWritePolicy.ModifiedResourceOutput),
             };
@@ -209,6 +217,7 @@ namespace KARToolkit.Core
             bool requiresFieldName,
             bool requiresValue,
             bool supportsBatch,
+            KarProjectResourceActionExecutionKind executionKind,
             KarProjectResourceActionPlanStateKind planStateKind,
             KarProjectResourceActionWritePolicy writePolicy)
         {
@@ -225,6 +234,7 @@ namespace KARToolkit.Core
                 requiresFieldName,
                 requiresValue,
                 supportsBatch,
+                executionKind,
                 planStateKind,
                 writePolicy);
         }
