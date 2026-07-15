@@ -28,10 +28,31 @@ namespace KARToolkit.Core
                 options.IncludeScriptTableContexts ? _project.ScriptContextService.Query(options.ScriptTableContexts) : Array.Empty<KarProjectScriptTableContext>());
         }
 
+        public KarProjectToolkitSurface CreateSurface(KarProjectToolkitSnapshotOptions options = null)
+        {
+            KarProjectToolkitSnapshot snapshot = CreateSnapshot(options);
+            KarProjectResourceGraph graph = _project.ResourceGraphService.Snapshot;
+            IReadOnlyList<KarProjectDomainContext> domains = CreateDomainContexts(snapshot, graph);
+            IReadOnlyList<KarProjectToolkitWorkflow> workflows = KarProjectToolkitWorkflowCatalog.Create(_project, snapshot, graph, domains);
+            return new KarProjectToolkitSurface(_project, snapshot, domains, workflows);
+        }
+
         public IReadOnlyList<KarProjectDomainContext> QueryDomainContexts(KarProjectToolkitSnapshotOptions options = null)
         {
             KarProjectToolkitSnapshot snapshot = CreateSnapshot(options);
             KarProjectResourceGraph graph = _project.ResourceGraphService.Snapshot;
+            return CreateDomainContexts(snapshot, graph);
+        }
+
+        public IReadOnlyList<KarProjectToolkitWorkflow> QueryWorkflows(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return CreateSurface(options).Workflows;
+        }
+
+        private IReadOnlyList<KarProjectDomainContext> CreateDomainContexts(
+            KarProjectToolkitSnapshot snapshot,
+            KarProjectResourceGraph graph)
+        {
             List<KarProjectDomainContext> domains = new List<KarProjectDomainContext>
             {
                 new KarProjectDomainContext(

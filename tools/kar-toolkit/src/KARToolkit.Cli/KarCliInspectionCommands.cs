@@ -196,6 +196,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowToolkitSurface(KarCliOptions options)
+    {
+        options.RequirePositionals("toolkit-surface", 1);
+        KarProject project = OpenProject(options);
+        KarProjectToolkitSurface surface = project.ToolkitService.CreateSurface(CreateToolkitSnapshotOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectToolkitSurfaceDto(surface));
+            return 0;
+        }
+
+        PrintProjectToolkitSurface(surface);
+        return 0;
+    }
+
     public static int ShowDomainContexts(KarCliOptions options)
     {
         options.RequirePositionals("domains", 1);

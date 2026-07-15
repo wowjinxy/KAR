@@ -576,9 +576,19 @@ namespace KARToolkit.Core
             return ToolkitService.CreateSnapshot(options);
         }
 
+        public KarProjectToolkitSurface CreateToolkitSurface(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return ToolkitService.CreateSurface(options);
+        }
+
         public IReadOnlyList<KarProjectDomainContext> QueryDomainContexts(KarProjectToolkitSnapshotOptions options = null)
         {
             return ToolkitService.QueryDomainContexts(options);
+        }
+
+        public IReadOnlyList<KarProjectToolkitWorkflow> QueryToolkitWorkflows(KarProjectToolkitSnapshotOptions options = null)
+        {
+            return ToolkitService.QueryWorkflows(options);
         }
 
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)

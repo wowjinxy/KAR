@@ -259,6 +259,61 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectToolkitSurfaceDto(KarProjectToolkitSurface surface)
+    {
+        return new
+        {
+            project = ToProjectDto(surface.Project),
+            sourceRoot = surface.SourceRoot,
+            outputRoot = surface.OutputRoot,
+            domainCount = surface.DomainCount,
+            workflowCount = surface.WorkflowCount,
+            availableWorkflowCount = surface.AvailableWorkflowCount,
+            readOnlyWorkflowCount = surface.ReadOnlyWorkflowCount,
+            writeWorkflowCount = surface.WriteWorkflowCount,
+            outputWorkflowCount = surface.OutputWorkflowCount,
+            batchWorkflowCount = surface.BatchWorkflowCount,
+            inputWorkflowCount = surface.InputWorkflowCount,
+            valueWorkflowCount = surface.ValueWorkflowCount,
+            modifiedOutputWorkflowCount = surface.ModifiedOutputWorkflowCount,
+            inspectionIssueWorkflowCount = surface.InspectionIssueWorkflowCount,
+            hasWriteWorkflows = surface.HasWriteWorkflows,
+            hasOutputWorkflows = surface.HasOutputWorkflows,
+            hasModifiedOutputWorkflows = surface.HasModifiedOutputWorkflows,
+            hasInspectionIssueWorkflows = surface.HasInspectionIssueWorkflows,
+            snapshot = ToProjectToolkitSnapshotDto(surface.Snapshot),
+            domains = surface.Domains.Select(ToProjectDomainContextDto).ToList(),
+            workflows = surface.Workflows.Select(ToProjectToolkitWorkflowDto).ToList(),
+        };
+    }
+
+    public static object ToProjectToolkitWorkflowDto(KarProjectToolkitWorkflow workflow)
+    {
+        return new
+        {
+            id = workflow.Id,
+            domainId = workflow.DomainId,
+            displayName = workflow.DisplayName,
+            description = workflow.Description,
+            command = workflow.Command,
+            argumentHint = workflow.ArgumentHint,
+            mode = workflow.Mode,
+            isReadOnly = workflow.IsReadOnly,
+            writesOutput = workflow.WritesOutput,
+            supportsBatch = workflow.SupportsBatch,
+            requiresInputFile = workflow.RequiresInputFile,
+            requiresValue = workflow.RequiresValue,
+            targetCount = workflow.TargetCount,
+            outputCount = workflow.OutputCount,
+            modifiedOutputCount = workflow.ModifiedOutputCount,
+            inspectionIssueCount = workflow.InspectionIssueCount,
+            hasTargets = workflow.HasTargets,
+            hasOutputs = workflow.HasOutputs,
+            hasModifiedOutputs = workflow.HasModifiedOutputs,
+            hasInspectionIssues = workflow.HasInspectionIssues,
+        };
+    }
+
     public static object ToProjectDomainContextDto(KarProjectDomainContext context)
     {
         return new

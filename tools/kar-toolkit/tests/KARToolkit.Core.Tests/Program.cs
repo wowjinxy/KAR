@@ -1676,6 +1676,20 @@ namespace KARToolkit.Core.Tests
                 KarProjectDomainContext outputDomain = project.ToolkitService.QueryDomainContexts().Single(domain => domain.Id == "mod-output");
                 AssertTrue(outputDomain.HasOutputs && outputDomain.HasModifiedOutputs && outputDomain.ContextCommand == "mod-workspace", "domain contexts should summarize mod workspace state");
 
+                KarProjectToolkitSurface surface = project.CreateToolkitSurface();
+                AssertTrue(surface.DomainCount == domains.Count && surface.WorkflowCount >= 20, "toolkit surfaces should combine domains with a workflow catalog");
+                AssertTrue(surface.WriteWorkflowCount != 0 && surface.OutputWorkflowCount >= surface.WriteWorkflowCount, "toolkit surfaces should summarize write-capable workflows");
+                KarProjectToolkitWorkflow editWorkflow = surface.Workflows.Single(workflow => workflow.Id == "edit-resource-data-field");
+                AssertTrue(editWorkflow.Command == "resource-data-edit" && editWorkflow.WritesOutput && editWorkflow.RequiresValue && editWorkflow.TargetCount != 0, "toolkit workflows should expose resource data field edit commands");
+                KarProjectToolkitWorkflow dataFieldsWorkflow = surface.Workflows.Single(workflow => workflow.Id == "resource-data-fields");
+                AssertTrue(dataFieldsWorkflow.IsReadOnly && dataFieldsWorkflow.TargetCount >= editWorkflow.TargetCount, "toolkit workflows should pair editable field writes with field discovery");
+                KarProjectToolkitWorkflow importWorkflow = surface.Workflows.Single(workflow => workflow.Id == "import-resource-output");
+                AssertTrue(importWorkflow.RequiresInputFile && importWorkflow.WritesOutput, "toolkit workflows should expose input-file requirements for import commands");
+                KarProjectToolkitWorkflow applyA2DWorkflow = surface.Workflows.Single(workflow => workflow.Id == "apply-a2d-entry-outputs");
+                AssertTrue(applyA2DWorkflow.SupportsBatch && applyA2DWorkflow.TargetCount == snapshot.ModifiedA2DEntryOutputCount, "toolkit workflows should surface batch apply targets for modified A2D sidecars");
+                IReadOnlyList<KarProjectToolkitWorkflow> workflows = project.QueryToolkitWorkflows();
+                AssertTrue(workflows.Count == surface.WorkflowCount && workflows.Any(workflow => workflow.Id == "map-context"), "project toolkit workflow wrappers should delegate to the toolkit service");
+
                 KarProjectToolkitSnapshot trimmed = project.ToolkitService.CreateSnapshot(new KarProjectToolkitSnapshotOptions
                 {
                     IncludeMapContexts = false,

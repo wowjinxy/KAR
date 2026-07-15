@@ -538,6 +538,29 @@ internal static class KarCliTextWriter
         Console.WriteLine("Inspection issues: " + snapshot.DomainInspectionIssueCount + " maps=" + snapshot.MapInspectionErrorCount + " vehicles=" + snapshot.VehicleInspectionErrorCount + " a2d=" + snapshot.A2DPackageOpenErrorCount);
     }
 
+    public static void PrintProjectToolkitSurface(KarProjectToolkitSurface surface)
+    {
+        Console.WriteLine("KAR toolkit surface: " + surface.Name);
+        Console.WriteLine("Domains: " + surface.DomainCount);
+        Console.WriteLine("Workflows: " + surface.WorkflowCount + " read=" + surface.ReadOnlyWorkflowCount + " write=" + surface.WriteWorkflowCount + " output=" + surface.OutputWorkflowCount + " batch=" + surface.BatchWorkflowCount);
+        Console.WriteLine("Workflow issues: modified-output=" + surface.ModifiedOutputWorkflowCount + " inspection=" + surface.InspectionIssueWorkflowCount);
+        foreach (KarProjectToolkitWorkflow workflow in surface.Workflows)
+            PrintProjectToolkitWorkflow(workflow);
+    }
+
+    public static void PrintProjectToolkitWorkflow(KarProjectToolkitWorkflow workflow)
+    {
+        string mode = workflow.IsReadOnly ? "read" : "write";
+        string batch = workflow.SupportsBatch ? " batch" : "";
+        string input = workflow.RequiresInputFile ? " input" : "";
+        string value = workflow.RequiresValue ? " value" : "";
+        string outputs = workflow.OutputCount == 0 && workflow.ModifiedOutputCount == 0
+            ? ""
+            : " outputs=" + workflow.OutputCount + " modified=" + workflow.ModifiedOutputCount;
+        string issues = workflow.InspectionIssueCount == 0 ? "" : " issues=" + workflow.InspectionIssueCount;
+        Console.WriteLine(workflow.Id + " [" + workflow.DomainId + ", " + mode + batch + input + value + "] targets=" + workflow.TargetCount + outputs + issues + " command=" + workflow.Command + " " + workflow.ArgumentHint);
+    }
+
     public static void PrintProjectDomainContext(KarProjectDomainContext context)
     {
         string commands = "";
