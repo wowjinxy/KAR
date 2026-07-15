@@ -163,6 +163,44 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectToolkitSnapshotDto(KarProjectToolkitSnapshot snapshot)
+    {
+        return new
+        {
+            project = ToProjectDto(snapshot.Project),
+            sourceRoot = snapshot.SourceRoot,
+            outputRoot = snapshot.OutputRoot,
+            fileCount = snapshot.FileCount,
+            mapCount = snapshot.MapCount,
+            mapContextCount = snapshot.MapContextCount,
+            vehicleContextCount = snapshot.VehicleContextCount,
+            a2dPackageContextCount = snapshot.A2DPackageContextCount,
+            scriptTableContextCount = snapshot.ScriptTableContextCount,
+            scriptTableOutputCount = snapshot.ScriptTableOutputCount,
+            modifiedScriptTableOutputCount = snapshot.ModifiedScriptTableOutputCount,
+            a2dPackageOpenErrorCount = snapshot.A2DPackageOpenErrorCount,
+            mapInspectionErrorCount = snapshot.MapInspectionErrorCount,
+            vehicleInspectionErrorCount = snapshot.VehicleInspectionErrorCount,
+            domainInspectionIssueCount = snapshot.DomainInspectionIssueCount,
+            outputFileCount = snapshot.OutputFileCount,
+            modifiedProjectOutputFileCount = snapshot.ModifiedProjectOutputFileCount,
+            resourceOutputCount = snapshot.ResourceOutputCount,
+            modifiedResourceOutputCount = snapshot.ModifiedResourceOutputCount,
+            a2dEntryOutputCount = snapshot.A2DEntryOutputCount,
+            modifiedA2DEntryOutputCount = snapshot.ModifiedA2DEntryOutputCount,
+            completeMapOutputCount = snapshot.CompleteMapOutputCount,
+            hasModWorkspace = snapshot.HasModWorkspace,
+            hasDomainInspectionIssues = snapshot.HasDomainInspectionIssues,
+            hasOutputs = snapshot.HasOutputs,
+            hasModifiedOutputs = snapshot.HasModifiedOutputs,
+            modWorkspace = snapshot.ModWorkspace == null ? null : ToProjectModWorkspaceDto(snapshot.ModWorkspace),
+            maps = snapshot.MapContexts.Select(ToProjectMapContextDto).ToList(),
+            vehicles = snapshot.VehicleContexts.Select(ToProjectVehicleContextDto).ToList(),
+            a2dPackages = snapshot.A2DPackageContexts.Select(ToProjectA2DPackageContextDto).ToList(),
+            scriptTables = snapshot.ScriptTableContexts.Select(ToProjectScriptTableContextDto).ToList(),
+        };
+    }
+
     public static object ToProjectMapOutputDto(KarProjectMapOutputInfo map)
     {
         return new

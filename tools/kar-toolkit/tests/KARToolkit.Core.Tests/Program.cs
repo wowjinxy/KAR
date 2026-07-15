@@ -38,6 +38,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceAppliesModifiedResourceOutputs", ProjectResourceServiceAppliesModifiedResourceOutputs);
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectModWorkspaceSummarizesOutputState", ProjectModWorkspaceSummarizesOutputState);
+            Run("ProjectToolkitSnapshotAggregatesDomainContexts", ProjectToolkitSnapshotAggregatesDomainContexts);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectMapScriptServiceGroupsMapAndScriptResources", ProjectMapScriptServiceGroupsMapAndScriptResources);
@@ -1188,6 +1189,60 @@ namespace KARToolkit.Core.Tests
                     },
                 });
                 AssertTrue(wrapper.OutputFileCount == 1, "project mod workspace wrapper should delegate filtered output inventories");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectToolkitSnapshotAggregatesDomainContexts()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-snapshot-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Model.dat"), "grModelCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1Event.dat"), "grEventDataAllCity1", new KAR_grData());
+            WriteHsdFile(Path.Combine(tempRoot, "VcCommon.dat"), "vcDataCommon", new KAR_vcDataCommon());
+            WriteHsdFile(Path.Combine(tempRoot, "VcStar.dat"), "vcDataKindStar", new KAR_vcDataKindStar());
+            WriteHsdFile(Path.Combine(tempRoot, "VcStarWarp.dat"), "vcDataStarWarp", new KAR_vcDataStar());
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40, 0x41 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            File.WriteAllBytes(Path.Combine(tempRoot, "A2Broken.dat"), new byte[] { 0x10 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                AssertTrue(object.ReferenceEquals(project.ToolkitService.Project, project), "toolkit service should retain project context");
+
+                KarProjectResourceExportResult export = project.ExportScriptTableToOutput("A2Info.dat#ScInfGo2D.tm");
+                File.WriteAllBytes(export.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+
+                KarProjectToolkitSnapshot snapshot = project.CreateToolkitSnapshot();
+                AssertTrue(snapshot.FileCount == 9, "toolkit snapshots should expose project file counts");
+                AssertTrue(snapshot.MapContextCount == 1, "toolkit snapshots should include map contexts");
+                AssertTrue(snapshot.VehicleContextCount == 3, "toolkit snapshots should include vehicle contexts");
+                AssertTrue(snapshot.A2DPackageContextCount == 2, "toolkit snapshots should include A2D package contexts");
+                AssertTrue(snapshot.ScriptTableContextCount == 2, "toolkit snapshots should include script table contexts");
+                AssertTrue(snapshot.A2DPackageOpenErrorCount == 1 && snapshot.HasDomainInspectionIssues, "toolkit snapshots should preserve domain inspection issues");
+                AssertTrue(snapshot.ScriptTableOutputCount == 1 && snapshot.ModifiedScriptTableOutputCount == 1, "toolkit snapshots should summarize script output state");
+                AssertTrue(snapshot.HasOutputs && snapshot.HasModifiedOutputs, "toolkit snapshots should summarize mod output state");
+                AssertTrue(snapshot.A2DPackageContexts.Single(context => context.RelativePath == "A2Info.dat").HasModifiedEntryOutputs, "toolkit snapshots should include package sidecar state");
+
+                KarProjectToolkitSnapshot trimmed = project.ToolkitService.CreateSnapshot(new KarProjectToolkitSnapshotOptions
+                {
+                    IncludeMapContexts = false,
+                    IncludeVehicleContexts = false,
+                    IncludeA2DPackageContexts = false,
+                    IncludeScriptTableContexts = false,
+                    IncludeModWorkspace = false,
+                });
+                AssertTrue(!trimmed.HasModWorkspace && trimmed.MapContextCount == 0 && trimmed.ScriptTableContextCount == 0, "toolkit snapshot options should allow narrower snapshots");
             }
             finally
             {

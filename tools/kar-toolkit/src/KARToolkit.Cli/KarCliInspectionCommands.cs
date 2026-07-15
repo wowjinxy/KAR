@@ -126,6 +126,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowToolkitSnapshot(KarCliOptions options)
+    {
+        options.RequirePositionals("toolkit", 1);
+        KarProject project = OpenProject(options);
+        KarProjectToolkitSnapshot snapshot = project.ToolkitService.CreateSnapshot(CreateToolkitSnapshotOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectToolkitSnapshotDto(snapshot));
+            return 0;
+        }
+
+        PrintProjectToolkitSnapshot(snapshot);
+        return 0;
+    }
+
     public static int ShowMapOutputs(KarCliOptions options)
     {
         options.RequirePositionals("map-outputs", 1);

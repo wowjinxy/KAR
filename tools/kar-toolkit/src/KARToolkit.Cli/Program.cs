@@ -26,6 +26,9 @@ internal static class Program
                 "project-report" => KarCliInspectionCommands.ShowReport(options),
                 "outputs" => KarCliInspectionCommands.ShowOutputs(options),
                 "output-files" => KarCliInspectionCommands.ShowOutputs(options),
+                "toolkit" => KarCliInspectionCommands.ShowToolkitSnapshot(options),
+                "project-toolkit" => KarCliInspectionCommands.ShowToolkitSnapshot(options),
+                "toolkit-context" => KarCliInspectionCommands.ShowToolkitSnapshot(options),
                 "mod-workspace" => KarCliInspectionCommands.ShowModWorkspace(options),
                 "mod-status" => KarCliInspectionCommands.ShowModWorkspace(options),
                 "map-outputs" => KarCliInspectionCommands.ShowMapOutputs(options),
@@ -128,6 +131,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-handlers");
         Console.WriteLine("  kar-toolkit report <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>] [--summary]");
         Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--modified|--unchanged|--orphan]");
+        Console.WriteLine("  kar-toolkit toolkit <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit mod-workspace <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map-outputs <source-folder> [map-name-or-file] [--output <mod-folder>] [--modified|--unchanged]");
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>] [--output-copy|--source-only]");

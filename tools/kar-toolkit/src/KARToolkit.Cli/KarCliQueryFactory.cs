@@ -387,6 +387,18 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectToolkitSnapshotOptions CreateToolkitSnapshotOptions(KarCliOptions options)
+    {
+        return new KarProjectToolkitSnapshotOptions
+        {
+            ModWorkspace = CreateModWorkspaceOptions(options),
+            MapContexts = CreateMapScriptQuery(options),
+            VehicleContexts = CreateVehicleQuery(options),
+            A2DPackageContexts = CreateA2DPackageContextQuery(options),
+            ScriptTableContexts = CreateScriptTableContextQuery(options),
+        };
+    }
+
     public static KarProjectOutputFileQueryOptions CreateOutputQuery(KarCliOptions options)
     {
         KarProjectOutputFileQueryOptions query = new KarProjectOutputFileQueryOptions

@@ -369,6 +369,17 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectToolkitSnapshot(KarProjectToolkitSnapshot snapshot)
+    {
+        Console.WriteLine("KAR toolkit: " + snapshot.Name);
+        Console.WriteLine("Source: " + snapshot.SourceRoot);
+        Console.WriteLine("Output: " + snapshot.OutputRoot);
+        Console.WriteLine("Files: " + snapshot.FileCount);
+        Console.WriteLine("Domains: maps=" + snapshot.MapContextCount + " vehicles=" + snapshot.VehicleContextCount + " a2d-packages=" + snapshot.A2DPackageContextCount + " script-tables=" + snapshot.ScriptTableContextCount);
+        Console.WriteLine("Outputs: files=" + snapshot.OutputFileCount + " resources=" + snapshot.ResourceOutputCount + " a2d-sidecars=" + snapshot.A2DEntryOutputCount + " modified=" + snapshot.HasModifiedOutputs);
+        Console.WriteLine("Inspection issues: " + snapshot.DomainInspectionIssueCount + " maps=" + snapshot.MapInspectionErrorCount + " vehicles=" + snapshot.VehicleInspectionErrorCount + " a2d=" + snapshot.A2DPackageOpenErrorCount);
+    }
+
     public static void PrintProjectOutputFile(KarProjectOutputFileInfo file)
     {
         string status = file.Status.ToString();
