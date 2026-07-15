@@ -26,7 +26,7 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
-`KarProjectFileCatalog` is the replaceable service that connects file classification, archive metadata, HSD-kind checks, and map-name extraction.
+`KarProjectFileCatalog` is the replaceable service that connects file classification, archive metadata, HSD-kind checks, and map-name extraction, including map-specific archive root names.
 Project asset paths, byte reads/writes, and copies go through `KarProjectFileStore`.
 Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Project-level archive and map inspection goes through `KarProjectInspector`.

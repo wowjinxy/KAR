@@ -20,6 +20,11 @@ namespace KARToolkit.Core
             if (!KarProjectFileClassifier.TryGetMapName(relativePath, kind, out string mapName))
                 return DefineFallback(relativePath, kind);
 
+            return DefineMapData(kind, mapName);
+        }
+
+        public static KarArchiveDefinition DefineMapData(KarFileKind kind, string mapName)
+        {
             return Define(kind, "Map Data: " + mapName, "Maps", "Map gameplay data and stage setup.", Root("grData" + mapName, "Map gameplay data", "KAR_grData", dataDefinitionId: "kar.gr.data"));
         }
 
@@ -28,6 +33,11 @@ namespace KARToolkit.Core
             if (!KarProjectFileClassifier.TryGetMapName(relativePath, kind, out string mapName))
                 return DefineFallback(relativePath, kind);
 
+            return DefineMapModel(kind, mapName);
+        }
+
+        public static KarArchiveDefinition DefineMapModel(KarFileKind kind, string mapName)
+        {
             return Define(
                 kind,
                 "Map Model: " + mapName,
@@ -42,6 +52,11 @@ namespace KARToolkit.Core
             if (!KarProjectFileClassifier.TryGetMapName(relativePath, kind, out string mapName))
                 return DefineFallback(relativePath, kind);
 
+            return DefineMapEvent(kind, mapName);
+        }
+
+        public static KarArchiveDefinition DefineMapEvent(KarFileKind kind, string mapName)
+        {
             return Define(kind, "Map Events: " + mapName, "Maps", "Map event/script archive tied to the map bundle.", Root("grEventDataAll" + mapName, "Map event/script data", null, dataDefinitionId: "kar.gr.eventDataAll"));
         }
 

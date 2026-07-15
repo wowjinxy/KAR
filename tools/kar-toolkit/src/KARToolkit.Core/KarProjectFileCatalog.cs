@@ -16,6 +16,23 @@ namespace KARToolkit.Core
 
         public virtual KarArchiveDefinition GetArchiveDefinition(string relativePath, KarFileKind kind)
         {
+            string mapName;
+            switch (kind)
+            {
+                case KarFileKind.MapData:
+                    if (TryGetMapName(relativePath, kind, out mapName))
+                        return KarMapArchiveDefinitions.DefineMapData(kind, mapName);
+                    break;
+                case KarFileKind.MapModel:
+                    if (TryGetMapName(relativePath, kind, out mapName))
+                        return KarMapArchiveDefinitions.DefineMapModel(kind, mapName);
+                    break;
+                case KarFileKind.MapEvent:
+                    if (TryGetMapName(relativePath, kind, out mapName))
+                        return KarMapArchiveDefinitions.DefineMapEvent(kind, mapName);
+                    break;
+            }
+
             return KarArchiveCatalog.GetDefinition(relativePath, kind);
         }
 
