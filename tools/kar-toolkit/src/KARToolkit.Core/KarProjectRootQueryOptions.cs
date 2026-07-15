@@ -10,6 +10,8 @@ namespace KARToolkit.Core
 
         public string RootName { get; set; }
 
+        public string Text { get; set; }
+
         public bool Matches(KarProjectRootInfo root)
         {
             if (root == null)
@@ -24,7 +26,27 @@ namespace KARToolkit.Core
                 return false;
             }
 
+            if (!string.IsNullOrWhiteSpace(Text) && !MatchesSearchText(root, Text))
+                return false;
+
             return true;
+        }
+
+        internal static bool MatchesSearchText(KarProjectRootInfo root, string text)
+        {
+            return root != null &&
+                (KarProjectFileQueryOptions.MatchesSearchText(root.File, text) ||
+                KarProjectFileQueryOptions.Contains(root.RootName, text) ||
+                KarProjectFileQueryOptions.Contains(root.RootPath, text) ||
+                KarProjectFileQueryOptions.Contains(root.DisplayName, text) ||
+                KarProjectFileQueryOptions.Contains(root.Role, text) ||
+                KarProjectFileQueryOptions.Contains(root.Category, text) ||
+                KarProjectFileQueryOptions.Contains(root.Description, text) ||
+                KarProjectFileQueryOptions.Contains(root.AccessorTypeName, text) ||
+                KarProjectFileQueryOptions.Contains(root.DisplayAccessorTypeName, text) ||
+                KarProjectFileQueryOptions.Contains(root.DataDefinitionId, text) ||
+                KarProjectFileQueryOptions.Contains(root.SchemaDisplayName, text) ||
+                KarProjectFileQueryOptions.Contains(root.SchemaDescription, text));
         }
     }
 }

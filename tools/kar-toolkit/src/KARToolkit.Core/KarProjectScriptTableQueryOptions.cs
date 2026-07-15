@@ -16,6 +16,8 @@ namespace KARToolkit.Core
 
         public string PackagePath { get; set; }
 
+        public string Text { get; set; }
+
         public bool? IsLooseFile { get; set; }
 
         public bool? IsPackageEntry { get; set; }
@@ -44,6 +46,8 @@ namespace KARToolkit.Core
                 return false;
             if (IsPackageEntry.HasValue && table.IsPackageEntry != IsPackageEntry.Value)
                 return false;
+            if (!string.IsNullOrWhiteSpace(Text) && !MatchesSearchText(table, Text))
+                return false;
 
             return true;
         }
@@ -52,6 +56,22 @@ namespace KARToolkit.Core
         {
             return string.IsNullOrWhiteSpace(expected) ||
                 string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase);
+        }
+
+        internal static bool MatchesSearchText(KarProjectScriptTable table, string text)
+        {
+            return table != null &&
+                (KarProjectResourceQueryOptions.MatchesSearchText(table.Resource, text) ||
+                KarProjectFileQueryOptions.Contains(table.Address, text) ||
+                KarProjectFileQueryOptions.Contains(table.ParentAddress, text) ||
+                KarProjectFileQueryOptions.Contains(table.RelativePath, text) ||
+                KarProjectFileQueryOptions.Contains(table.Name, text) ||
+                KarProjectFileQueryOptions.Contains(table.Role, text) ||
+                KarProjectFileQueryOptions.Contains(table.Category, text) ||
+                KarProjectFileQueryOptions.Contains(table.Description, text) ||
+                KarProjectFileQueryOptions.Contains(table.PackageRelativePath, text) ||
+                KarProjectFileQueryOptions.Contains(table.PackageEntryOffsetHex, text) ||
+                KarProjectFileQueryOptions.Contains(table.PackageEntrySizeHex, text));
         }
     }
 }

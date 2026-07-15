@@ -174,6 +174,8 @@ internal static class KarCliInspectionCommands
         List<KarProjectRelationship> relationships = options.Positionals.Count >= 2
             ? project.RelationshipService.QueryMap(options.Positionals[1]).ToList()
             : project.RelationshipService.Query().ToList();
+        KarProjectRelationshipQueryOptions query = CreateRelationshipQuery(options);
+        relationships = relationships.Where(query.Matches).ToList();
 
         if (options.Json)
         {
@@ -559,9 +561,15 @@ internal static class KarCliInspectionCommands
 
     private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options)
     {
+        return CreateFileQuery(options, includeSearch: true);
+    }
+
+    private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options, bool includeSearch)
+    {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
         {
             Category = options.FileCategory,
+            Text = includeSearch ? options.SearchText : null,
             HasOutputCopy = options.FileHasOutputCopy,
         };
 
@@ -645,7 +653,6 @@ internal static class KarCliInspectionCommands
                 Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
                 Kind = KarResourceKind.HsdRoot,
                 Category = options.FileCategory,
-                Text = options.SearchText,
                 Files = parentFiles,
                 Roots = new KarProjectRootQueryOptions
                 {
@@ -727,21 +734,33 @@ internal static class KarCliInspectionCommands
 
     private static KarProjectRootQueryOptions CreateRootQuery(KarCliOptions options)
     {
+        return CreateRootQuery(options, includeSearch: true);
+    }
+
+    private static KarProjectRootQueryOptions CreateRootQuery(KarCliOptions options, bool includeSearch)
+    {
         return new KarProjectRootQueryOptions
         {
-            Files = CreateFileQuery(options),
+            Files = CreateFileQuery(options, includeSearch: false),
             IsKnown = options.RootKnown,
             RootName = options.RootName,
+            Text = includeSearch ? options.SearchText : null,
         };
     }
 
     private static KarProjectA2DEntryQueryOptions CreateA2DEntryQuery(KarCliOptions options)
     {
+        return CreateA2DEntryQuery(options, includeSearch: true);
+    }
+
+    private static KarProjectA2DEntryQueryOptions CreateA2DEntryQuery(KarCliOptions options, bool includeSearch)
+    {
         return new KarProjectA2DEntryQueryOptions
         {
-            Packages = CreateFileQuery(options),
+            Packages = CreateFileQuery(options, includeSearch: false),
             PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             EntryName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            Text = includeSearch ? options.SearchText : null,
         };
     }
 
@@ -777,7 +796,6 @@ internal static class KarCliInspectionCommands
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
             Category = options.FileCategory,
-            Text = options.SearchText,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions
             {
@@ -791,6 +809,7 @@ internal static class KarCliInspectionCommands
         KarProjectScriptTableQueryOptions query = new KarProjectScriptTableQueryOptions
         {
             Resources = resources,
+            Text = options.SearchText,
         };
 
         if (options.Positionals.Count >= 2)
@@ -828,7 +847,6 @@ internal static class KarCliInspectionCommands
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
             Category = options.FileCategory,
-            Text = options.SearchText,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions
             {
@@ -842,6 +860,7 @@ internal static class KarCliInspectionCommands
         KarProjectScriptTableQueryOptions scriptTables = new KarProjectScriptTableQueryOptions
         {
             Resources = resources,
+            Text = options.SearchText,
         };
 
         if (options.Positionals.Count >= 3)
@@ -869,9 +888,17 @@ internal static class KarCliInspectionCommands
     {
         return new KarProjectFieldQueryOptions
         {
-            Roots = CreateRootQuery(options),
+            Roots = CreateRootQuery(options, includeSearch: false),
             DataDefinitionIdOrAccessorTypeName = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            Text = options.SearchText,
+        };
+    }
+
+    private static KarProjectRelationshipQueryOptions CreateRelationshipQuery(KarCliOptions options)
+    {
+        return new KarProjectRelationshipQueryOptions
+        {
             Text = options.SearchText,
         };
     }

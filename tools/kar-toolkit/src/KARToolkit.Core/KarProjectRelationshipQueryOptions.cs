@@ -18,6 +18,8 @@ namespace KARToolkit.Core
 
         public string PackageEntryName { get; set; }
 
+        public string Text { get; set; }
+
         public bool? IsMapScoped { get; set; }
 
         public bool? IsPackageEntry { get; set; }
@@ -45,6 +47,8 @@ namespace KARToolkit.Core
                 return false;
             if (IsPackageEntry.HasValue && relationship.IsPackageEntry != IsPackageEntry.Value)
                 return false;
+            if (!string.IsNullOrWhiteSpace(Text) && !MatchesSearchText(relationship, Text))
+                return false;
 
             return true;
         }
@@ -53,6 +57,23 @@ namespace KARToolkit.Core
         {
             return string.IsNullOrWhiteSpace(expected) ||
                 string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase);
+        }
+
+        internal static bool MatchesSearchText(KarProjectRelationship relationship, string text)
+        {
+            return relationship != null &&
+                (KarProjectFileQueryOptions.MatchesSearchText(relationship.File, text) ||
+                KarProjectFileQueryOptions.MatchesSearchText(relationship.PackageFile, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.Kind, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.Role, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.Category, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.Description, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.MapName, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.RelativePath, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.DisplayName, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.PackageEntryName, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.PackageEntryOffsetHex, text) ||
+                KarProjectFileQueryOptions.Contains(relationship.PackageEntrySizeHex, text));
         }
     }
 }

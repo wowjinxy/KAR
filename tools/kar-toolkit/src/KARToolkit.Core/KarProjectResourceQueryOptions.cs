@@ -59,7 +59,7 @@ namespace KARToolkit.Core
                 string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static bool MatchesSearchText(KarProjectResourceInfo resource, string text)
+        internal static bool MatchesSearchText(KarProjectResourceInfo resource, string text)
         {
             return Contains(resource.Address, text) ||
                 Contains(resource.RelativePath, text) ||
@@ -76,42 +76,17 @@ namespace KARToolkit.Core
 
         private static bool MatchesFile(KarProjectFile file, string text)
         {
-            return file != null &&
-                (Contains(file.RelativePath, text) ||
-                Contains(file.Kind.ToString(), text) ||
-                Contains(file.KindId, text) ||
-                Contains(file.DisplayName, text) ||
-                Contains(file.Category, text) ||
-                Contains(file.MapName, text) ||
-                Contains(file.MapBundleRole, text));
+            return KarProjectFileQueryOptions.MatchesSearchText(file, text);
         }
 
         private static bool MatchesRoot(KarProjectRootInfo root, string text)
         {
-            return root != null &&
-                (Contains(root.RootName, text) ||
-                Contains(root.RootPath, text) ||
-                Contains(root.DisplayName, text) ||
-                Contains(root.Role, text) ||
-                Contains(root.Category, text) ||
-                Contains(root.Description, text) ||
-                Contains(root.AccessorTypeName, text) ||
-                Contains(root.DisplayAccessorTypeName, text) ||
-                Contains(root.DataDefinitionId, text) ||
-                Contains(root.SchemaDisplayName, text) ||
-                Contains(root.SchemaDescription, text));
+            return KarProjectRootQueryOptions.MatchesSearchText(root, text);
         }
 
         private static bool MatchesA2DEntry(KarProjectA2DEntryInfo entry, string text)
         {
-            return entry != null &&
-                (Contains(entry.EntryPath, text) ||
-                Contains(entry.Name, text) ||
-                Contains(entry.Kind, text) ||
-                Contains(entry.Role, text) ||
-                Contains(entry.Category, text) ||
-                Contains(entry.Description, text) ||
-                Contains(entry.PackageRelativePath, text));
+            return KarProjectA2DEntryQueryOptions.MatchesSearchText(entry, text);
         }
 
         private static bool Contains(string value, string text)

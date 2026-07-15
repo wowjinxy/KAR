@@ -350,6 +350,8 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "file query should filter by kind");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { Category = "maps" }).Count == 1, "file query should filter by category case-insensitively");
+                IReadOnlyList<KarProjectFile> mapDescriptionFiles = files.Query(new KarProjectFileQueryOptions { Text = "map gameplay" });
+                AssertTrue(mapDescriptionFiles.Count == 1 && mapDescriptionFiles[0].RelativePath == "GrCity1.dat", "file query should search metadata text");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 0, "file query should filter files with output copies");
 
                 KarProjectFileCopyResult copyResult = files.CopyFileToOutput("GrCity1.dat", true);
@@ -1391,6 +1393,11 @@ namespace KARToolkit.Core.Tests
                     Role = "ScreenInfoTable",
                 });
                 AssertTrue(screenInfoTables.Count == 2, "project relationship compatibility wrapper should support role filtering");
+                IReadOnlyList<KarProjectRelationship> screenInfoText = relationships.Query(new KarProjectRelationshipQueryOptions
+                {
+                    Text = "screen information",
+                });
+                AssertTrue(screenInfoText.Count == 2, "relationship queries should search script table metadata text");
                 AssertTrue(project.QueryMapRelationships("GrCity1Event.dat").Count == 3, "project map relationship wrapper should resolve maps by file path");
             }
             finally
@@ -1439,6 +1446,11 @@ namespace KARToolkit.Core.Tests
                     Role = "ScreenInfoTable",
                 });
                 AssertTrue(screenInfoTables.Count == 2, "script service should filter script tables by role");
+                IReadOnlyList<KarProjectScriptTable> screenInfoText = scripts.QueryTables(new KarProjectScriptTableQueryOptions
+                {
+                    Text = "screen information",
+                });
+                AssertTrue(screenInfoText.Count == 2, "script service should search script table metadata text");
 
                 IReadOnlyList<KarProjectScriptTable> infoPackageTables = scripts.QueryTables(new KarProjectScriptTableQueryOptions
                 {
@@ -1500,6 +1512,11 @@ namespace KARToolkit.Core.Tests
                     Role = "ScreenInfoTable",
                 });
                 AssertTrue(screenInfoTables.Count == 1 && screenInfoTables[0].Name == "ScInfGo2D.tm", "project A2D entry wrapper should support role filters");
+                IReadOnlyList<KarProjectA2DEntryInfo> screenInfoText = a2d.QueryEntries(new KarProjectA2DEntryQueryOptions
+                {
+                    Text = "screen information",
+                });
+                AssertTrue(screenInfoText.Count == 1 && screenInfoText[0].Name == "ScInfGo2D.tm", "A2D entry query should search entry metadata text");
 
                 IReadOnlyList<KarProjectA2DEntryInfo> namedEntries = a2d.QueryEntries(new KarProjectA2DEntryQueryOptions
                 {
@@ -1781,6 +1798,16 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(mapOnly.Count == 1, "schema usage should respect file-kind filters");
                 AssertTrue(mapOnly[0].DataDefinitionId == "kar.gr.data", "schema usage file-kind filter should keep map data");
+                IReadOnlyList<KarProjectRootInfo> legendaryRoots = data.QueryRoots(new KarProjectRootQueryOptions
+                {
+                    Text = "Legendary Machine Versus",
+                });
+                AssertTrue(legendaryRoots.Count == 1 && legendaryRoots[0].RootPath == "VsHydra.dat:vsDataHydra", "root queries should search schema labels");
+                IReadOnlyList<KarProjectDataDefinitionUsage> legendaryOnly = project.QueryDataDefinitionUsage(new KarProjectRootQueryOptions
+                {
+                    Text = "Legendary Machine Versus",
+                });
+                AssertTrue(legendaryOnly.Count == 1 && legendaryOnly[0].DataDefinitionId == "kar.vs.legendary", "schema usage should respect root text search");
                 AssertTrue(project.QueryDataDefinitionUsage(null).Count == usages.Count, "project schema usage compatibility wrapper should delegate to data service");
                 AssertTrue(project.QueryRoots(null).Count == data.QueryRoots(null).Count, "project root compatibility wrapper should delegate to data service");
                 AssertTrue(project.QueryRootSummaries(null).Count == data.QueryRootSummaries(null).Count, "project root summary compatibility wrapper should delegate to data service");
