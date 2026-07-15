@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HSDRaw;
+using HSDRaw.AirRide;
+using HSDRaw.AirRide.Gr.Data;
 using KARToolkit.Core;
 
 namespace KARToolkit.Core.Tests
@@ -18,6 +21,7 @@ namespace KARToolkit.Core.Tests
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
+            Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -175,6 +179,52 @@ namespace KARToolkit.Core.Tests
             }
         }
 
+        private static void ProjectSchemaUsageGroupsKnownRoots()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-schema-usage-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+                WriteHsdFile(Path.Combine(tempRoot, "GrSimple.dat"), "grDataSimple", new KAR_grData());
+                WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+
+                KarProject project = KarProject.Open(tempRoot);
+                IReadOnlyList<KarProjectDataDefinitionUsage> usages = project.QueryDataDefinitionUsage(null);
+                KarProjectDataDefinitionUsage mapUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.gr.data");
+                KarProjectDataDefinitionUsage versusUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.vs.legendary");
+
+                AssertTrue(mapUsage != null, "schema usage should include map data roots");
+                if (mapUsage != null)
+                {
+                    AssertTrue(mapUsage.Count == 2, "schema usage should count each map data root");
+                    AssertTrue(mapUsage.FileCount == 2, "schema usage should count unique map data files");
+                    AssertTrue(mapUsage.Files[0].RelativePath == "GrCity1.dat", "schema usage files should be ordered by relative path");
+                }
+
+                AssertTrue(versusUsage != null, "schema usage should include versus legendary roots");
+                if (versusUsage != null)
+                {
+                    AssertTrue(versusUsage.Count == 1, "schema usage should count versus roots");
+                    AssertTrue(versusUsage.FileCount == 1, "schema usage should count unique versus files");
+                }
+
+                IReadOnlyList<KarProjectDataDefinitionUsage> mapOnly = project.QueryDataDefinitionUsage(new KarProjectRootQueryOptions
+                {
+                    Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                });
+
+                AssertTrue(mapOnly.Count == 1, "schema usage should respect file-kind filters");
+                AssertTrue(mapOnly[0].DataDefinitionId == "kar.gr.data", "schema usage file-kind filter should keep map data");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+            }
+        }
+
         private static void RegistryRejectsAmbiguousDefinitions()
         {
             KarDataDefinition first = MakeDefinition("kar.test.first", "TestAccessor");
@@ -231,6 +281,17 @@ namespace KARToolkit.Core.Tests
                 "tests",
                 new[] { new KarDataFieldDefinition("x00", 0, "s32", "Test field.") },
                 4);
+        }
+
+        private static void WriteHsdFile(string path, string rootName, HSDAccessor data)
+        {
+            HSDRawFile file = new HSDRawFile();
+            file.Roots.Add(new HSDRootNode
+            {
+                Name = rootName,
+                Data = data,
+            });
+            file.Save(path);
         }
 
         private static void AssertIssue(KarDataDefinitionValidationReport report, string code)

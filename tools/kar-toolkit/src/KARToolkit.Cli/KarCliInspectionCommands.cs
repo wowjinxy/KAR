@@ -140,6 +140,27 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowSchemaUsage(KarCliOptions options)
+    {
+        options.RequirePositionals("schema-usage", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectDataDefinitionUsage> usages = project.QueryDataDefinitionUsage(CreateRootQuery(options))
+            .OrderByDescending(usage => usage.Count)
+            .ThenBy(usage => usage.DataDefinitionId)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(usages.Select(ToDataDefinitionUsageDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectDataDefinitionUsage usage in usages)
+            PrintDataDefinitionUsage(usage);
+
+        return 0;
+    }
+
     private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions

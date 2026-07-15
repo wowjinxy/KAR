@@ -151,6 +151,19 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public IReadOnlyList<KarProjectDataDefinitionUsage> QueryDataDefinitionUsage(KarProjectRootQueryOptions options)
+        {
+            return QueryRoots(options)
+                .Where(root => root.Root.DataDefinition != null)
+                .GroupBy(root => root.Root.DataDefinition.Id, StringComparer.OrdinalIgnoreCase)
+                .Select(group => new KarProjectDataDefinitionUsage(
+                    group.First().Root.DataDefinition,
+                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)
+                        .ThenBy(root => root.RootName, StringComparer.Ordinal)))
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

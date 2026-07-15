@@ -68,6 +68,14 @@ internal static class KarCliTextWriter
             Console.WriteLine("  missing " + missing.Pattern);
     }
 
+    public static void PrintDataDefinitionUsage(KarProjectDataDefinitionUsage usage)
+    {
+        string accessor = string.IsNullOrEmpty(usage.AccessorTypeName) ? "<untyped>" : usage.AccessorTypeName;
+        Console.WriteLine(usage.DataDefinitionId + " [" + usage.Category + ", " + accessor + "] roots=" + usage.Count + " files=" + usage.FileCount + " - " + usage.DisplayName);
+        foreach (KarProjectRootInfo root in usage.Roots)
+            Console.WriteLine("  " + root.RelativePath + ":" + root.RootName);
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");
