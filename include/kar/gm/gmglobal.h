@@ -91,7 +91,7 @@ s32 kar_gmglobal__near_80008038(s32 arg0);
 void kar_gmglobal__near_800080c0(s32 arg0, s32 arg1);
 s32 kar_gmglobal__near_8000818c(void);
 void kar_gmglobal__near_800082d0(void);
-void kar_gmglobal__near_800088c8(s32 value);
+void kar_gmglobal__near_800088c8(s8 value);
 kar_gmglobal__near_8000774c_s *kar_gmglobal__near_8000774c();
 void* kar_gmglobal__near_800077e0(void);
 

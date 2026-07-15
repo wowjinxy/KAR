@@ -718,7 +718,7 @@ void kar_gmglobal__near_80008898(void)
 }
 
 #pragma dont_inline on
-void kar_gmglobal__near_800088c8(s32 value)
+void kar_gmglobal__near_800088c8(s8 value)
 {
     volatile u8* work = kar_gmmain__near_80006c14();
 
@@ -2186,7 +2186,7 @@ u8 kar_gmracenormal__near_8000ae74(void)
 }
 
 #pragma dont_inline on
-u8 kar_gmracenormal__8000aea8(void)
+s8 kar_gmracenormal__8000aea8(void)
 {
     return *(u8*) kar_gmracenormal__800081fc();
 }

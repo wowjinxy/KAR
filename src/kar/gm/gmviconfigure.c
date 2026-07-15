@@ -54,6 +54,30 @@ struct GmViConfigState {
     s32 field_14;
 };
 
+const u64 lbl_80489480[] = {
+    0xFFAABD00FFE85200ull,
+    0x5AC9FF00A8FA8200ull,
+    0xFFFFFF00E260FF00ull,
+    0x5E3D2500FF293600ull,
+};
+
+const u32 lbl_804894A0[] = {
+    0x3FEF5C29, 0x3FEF5C29, 0x3FEF5C29, 0x3FEF5C29, 0x40666666,
+    0x40933333, 0x400CCCCD, 0x4019999A, 0x40C00000, 0x41066666,
+    0x3FEF5C29, 0x40400000, 0x3FEF5C29, 0x403A5E35, 0x3FEF5C29,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000,
+};
+
+const u32 lbl_804894EC[] = {
+    0x00000000, 0x00000000, 0x40E66666, 0x41499999,
+    0x40A66666, 0x00000000, 0x00000000,
+};
+
+const u32 lbl_80489508[] = {
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000,
+};
+
 const u32 lbl_80489530[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000,
@@ -79,6 +103,7 @@ const u32 lbl_804895D8[] = {
 char kar_srcfile_gmviconfigure_c_80497ba8[] = "gmviconfigure.c";
 u64 lbl_80537430[8];
 char lbl_805D51D8[] = "0";
+__declspec(section ".sdata") u8 gap_805D51DA_sdata[6] = { 0 };
 
 void HSD_VISetConfigure(void* configure);
 void fn_801390E0(void);

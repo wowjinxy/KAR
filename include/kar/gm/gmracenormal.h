@@ -5,6 +5,6 @@
 
 s32 kar_gmracenormal__800092fc(void);
 s32 kar_gmracenormal__8000ae50(void);
-u8 kar_gmracenormal__8000aea8(void);
+s8 kar_gmracenormal__8000aea8(void);
 
 #endif

@@ -74,7 +74,7 @@ void HSD_PadInit(u8 qnum, HSD_PadData* queue, HSD_PadData* queue2, u16 nb_list,
                  HSD_PadRumbleListData* listdatap);
 void* memset(void* dst, int val, unsigned long n);
 s8 fn_8000AAC4(void);
-u8 kar_gmracenormal__8000aea8(void);
+s8 kar_gmracenormal__8000aea8(void);
 void HSD_PadReset(void);
 void HSD_PadFlushQueue(s32 arg0);
 void HSD_VIWaitXFBFlush(void);
