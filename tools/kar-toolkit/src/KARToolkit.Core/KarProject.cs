@@ -201,6 +201,44 @@ namespace KARToolkit.Core
             return new KarProjectReport(this, options);
         }
 
+        public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)
+        {
+            List<KarProjectOutputFileInfo> outputFiles = new List<KarProjectOutputFileInfo>();
+
+            foreach (string relativePath in Workspace.EnumerateOutputRelativePaths())
+            {
+                KarProjectFile projectFile;
+                TryGetFile(relativePath, out projectFile);
+
+                KarFileKind kind = projectFile == null
+                    ? FileCatalog.ClassifyKind(relativePath)
+                    : projectFile.Kind;
+                KarArchiveDefinition archiveDefinition = projectFile == null
+                    ? FileCatalog.GetArchiveDefinition(relativePath, kind)
+                    : projectFile.ArchiveDefinition;
+
+                KarProjectOutputFileInfo outputFile = new KarProjectOutputFileInfo(
+                    projectFile,
+                    relativePath,
+                    Workspace.GetOutputPath(relativePath),
+                    kind,
+                    archiveDefinition);
+
+                if (options == null || options.Matches(outputFile))
+                    outputFiles.Add(outputFile);
+            }
+
+            return outputFiles
+                .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectOutputInventory CreateOutputInventory(KarProjectOutputFileQueryOptions options = null)
+        {
+            return new KarProjectOutputInventory(this, QueryOutputFiles(options));
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

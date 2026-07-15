@@ -43,6 +43,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Source: " + report.Project.SourceRoot);
         Console.WriteLine("Output: " + report.Project.OutputRoot);
         Console.WriteLine("Files: " + report.FileCount);
+        Console.WriteLine("Output files: " + report.OutputFileCount + " project=" + report.ProjectOutputFileCount + " orphan=" + report.OrphanOutputFileCount);
         Console.WriteLine("Maps: " + report.MapCount + " complete=" + report.CompleteMapCount + " incomplete=" + report.IncompleteMapCount);
         Console.WriteLine("HSD archives: " + report.HsdArchiveCount);
         Console.WriteLine("A2D packages: " + report.A2DPackageCount);
@@ -70,6 +71,15 @@ internal static class KarCliTextWriter
             foreach (KarProjectFieldSummary summary in report.FieldSummaries)
                 PrintProjectFieldSummary(summary);
         }
+    }
+
+    public static void PrintProjectOutputFile(KarProjectOutputFileInfo file)
+    {
+        string source = file.IsProjectFile ? "project-file" : "orphan";
+        string length = file.HasSourceFile && file.IsSameLengthAsSource.HasValue
+            ? " size=" + file.OutputLength + "/" + file.SourceLength.Value
+            : " size=" + file.OutputLength;
+        Console.WriteLine(file.RelativePath + " [" + file.Kind + ", " + file.Category + ", " + source + "]" + length + " -> " + file.OutputPath);
     }
 
     public static void PrintProjectRootSummary(KarProjectRootInfo root)

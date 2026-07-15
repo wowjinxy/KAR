@@ -18,6 +18,8 @@ namespace KARToolkit.Core
                 .AsReadOnly();
             FileCategories = BuildFileGroups(Files, file => file.Category);
             FileKinds = BuildFileGroups(Files, file => file.Kind.ToString());
+            OutputFiles = project.QueryOutputFiles(options.OutputFiles);
+            OutputInventory = new KarProjectOutputInventory(project, OutputFiles);
             Maps = project.Maps
                 .OrderBy(map => map.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList()
@@ -39,6 +41,10 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectFileGroupSummary> FileKinds { get; }
 
+        public IReadOnlyList<KarProjectOutputFileInfo> OutputFiles { get; }
+
+        public KarProjectOutputInventory OutputInventory { get; }
+
         public IReadOnlyList<KarMapBundle> Maps { get; }
 
         public IReadOnlyList<KarArchiveInfo> Archives { get; }
@@ -52,6 +58,12 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectFieldSummary> FieldSummaries { get; }
 
         public int FileCount => Files.Count;
+
+        public int OutputFileCount => OutputInventory.Count;
+
+        public int ProjectOutputFileCount => OutputInventory.ProjectFileCount;
+
+        public int OrphanOutputFileCount => OutputInventory.OrphanFileCount;
 
         public int MapCount => Maps.Count;
 

@@ -21,6 +21,7 @@ namespace KARToolkit.Core.Tests
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
+            Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
@@ -172,6 +173,58 @@ namespace KARToolkit.Core.Tests
                     Kind = KarFileKind.MapData,
                     HasOutputCopy = true,
                 }).Count == 1, "file query should combine filters");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectOutputInventoryTracksModFiles()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-output-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "GrCity1.dat"), "grDataCity1", new KAR_grData());
+            File.WriteAllBytes(Path.Combine(tempRoot, "A2Demo.dat"), new byte[] { 0x22 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                project.CopyToOutput("GrCity1.dat", true);
+                project.WriteFileBytes("Loose.dat", new byte[] { 0x33, 0x44, 0x55 });
+
+                KarProjectOutputInventory inventory = project.CreateOutputInventory();
+
+                AssertTrue(inventory.Count == 2, "output inventory should count staged output files");
+                AssertTrue(inventory.ProjectFileCount == 1, "output inventory should count output files tied to source project files");
+                AssertTrue(inventory.OrphanFileCount == 1, "output inventory should count output-only files");
+
+                KarProjectOutputFileInfo projectOutput = inventory.ProjectFiles.Single(file => file.RelativePath == "GrCity1.dat");
+                AssertTrue(projectOutput.Kind == KarFileKind.MapData, "output inventory should keep source file kind for project files");
+                AssertTrue(projectOutput.HasSourceFile, "output inventory should attach source metadata for project files");
+                AssertTrue(projectOutput.IsSameLengthAsSource == true, "output inventory should compare source/output lengths");
+
+                KarProjectOutputFileInfo orphan = inventory.OrphanFiles.Single(file => file.RelativePath == "Loose.dat");
+                AssertTrue(orphan.Kind == KarFileKind.HsdArchive, "output inventory should classify output-only files");
+                AssertTrue(!orphan.HasSourceFile, "output inventory should leave source metadata empty for orphan files");
+                AssertTrue(inventory.TotalOutputLength == projectOutput.OutputLength + orphan.OutputLength, "output inventory should sum output file lengths");
+
+                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "output query should filter by kind");
+                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { IsProjectFile = false }).Count == 1, "output query should filter orphan files");
+
+                KarProjectReport report = project.CreateReport(new KarProjectReportOptions
+                {
+                    OutputFiles = new KarProjectOutputFileQueryOptions { Kind = KarFileKind.MapData },
+                });
+
+                AssertTrue(report.OutputFileCount == 1, "project report should include filtered output inventory counts");
+                AssertTrue(report.ProjectOutputFileCount == 1, "project report should count filtered project output files");
+                AssertTrue(report.OrphanOutputFileCount == 0, "project report should count filtered orphan output files");
             }
             finally
             {

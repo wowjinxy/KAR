@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -82,6 +84,18 @@ namespace KARToolkit.Core
             return File.Exists(outputPath) ? outputPath : GetSourcePath(relativePath);
         }
 
+        public IReadOnlyList<string> EnumerateOutputRelativePaths()
+        {
+            if (!Directory.Exists(OutputFilesRoot))
+                return Array.Empty<string>();
+
+            return Directory.GetFiles(OutputFilesRoot, "*", SearchOption.AllDirectories)
+                .Select(GetRelativeOutputPath)
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
         public string GetRelativeSourcePath(string sourcePath)
         {
             string fullSourcePath = Path.GetFullPath(sourcePath);
@@ -89,6 +103,15 @@ namespace KARToolkit.Core
                 throw new InvalidOperationException("Source path escaped its project source root.");
 
             return GetRelativePath(SourceFilesRoot, fullSourcePath);
+        }
+
+        public string GetRelativeOutputPath(string outputPath)
+        {
+            string fullOutputPath = Path.GetFullPath(outputPath);
+            if (!IsSameOrChildPath(OutputFilesRoot, fullOutputPath))
+                throw new InvalidOperationException("Output path escaped its project output root.");
+
+            return GetRelativePath(OutputFilesRoot, fullOutputPath);
         }
 
         public string PrepareOutputPath(string relativePath)

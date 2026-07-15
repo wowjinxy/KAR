@@ -35,6 +35,9 @@ internal static class KarCliDtoFactory
         {
             project = ToProjectDto(report.Project),
             fileCount = report.FileCount,
+            outputFileCount = report.OutputFileCount,
+            projectOutputFileCount = report.ProjectOutputFileCount,
+            orphanOutputFileCount = report.OrphanOutputFileCount,
             mapCount = report.MapCount,
             completeMapCount = report.CompleteMapCount,
             incompleteMapCount = report.IncompleteMapCount,
@@ -48,6 +51,7 @@ internal static class KarCliDtoFactory
             fieldSummaryCount = report.FieldSummaryCount,
             fileCategories = report.FileCategories.Select(ToProjectFileGroupSummaryDto).ToList(),
             fileKinds = report.FileKinds.Select(ToProjectFileGroupSummaryDto).ToList(),
+            outputs = ToProjectOutputInventoryDto(report.OutputInventory),
             rootSummaries = report.RootSummaries.Select(ToProjectRootSummaryDto).ToList(),
             dataDefinitionUsage = report.DataDefinitionUsage.Select(ToDataDefinitionUsageDto).ToList(),
             fieldSummaries = report.FieldSummaries.Select(ToProjectFieldSummaryDto).ToList(),
@@ -69,6 +73,40 @@ internal static class KarCliDtoFactory
                     displayName = file.DisplayName,
                 })
                 .ToList(),
+        };
+    }
+
+    public static object ToProjectOutputInventoryDto(KarProjectOutputInventory inventory)
+    {
+        return new
+        {
+            outputRoot = inventory.Project.OutputRoot,
+            outputFilesRoot = inventory.Project.OutputFilesRoot,
+            count = inventory.Count,
+            projectFileCount = inventory.ProjectFileCount,
+            orphanFileCount = inventory.OrphanFileCount,
+            totalOutputLength = inventory.TotalOutputLength,
+            files = inventory.Files.Select(ToProjectOutputFileDto).ToList(),
+        };
+    }
+
+    public static object ToProjectOutputFileDto(KarProjectOutputFileInfo file)
+    {
+        return new
+        {
+            relativePath = file.RelativePath,
+            sourcePath = file.SourcePath,
+            outputPath = file.OutputPath,
+            kind = file.Kind.ToString(),
+            displayName = file.DisplayName,
+            category = file.Category,
+            isProjectFile = file.IsProjectFile,
+            isOrphan = file.IsOrphan,
+            outputLength = file.OutputLength,
+            outputLastWriteTimeUtc = file.OutputLastWriteTimeUtc,
+            sourceLength = file.SourceLength,
+            sourceLastWriteTimeUtc = file.SourceLastWriteTimeUtc,
+            isSameLengthAsSource = file.IsSameLengthAsSource,
         };
     }
 

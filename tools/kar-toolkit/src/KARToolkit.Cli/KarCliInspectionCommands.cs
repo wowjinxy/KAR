@@ -50,6 +50,26 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowOutputs(KarCliOptions options)
+    {
+        options.RequirePositionals("outputs", 1);
+        KarProject project = OpenProject(options);
+        KarProjectOutputInventory inventory = project.CreateOutputInventory(CreateOutputQuery(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectOutputInventoryDto(inventory));
+            return 0;
+        }
+
+        Console.WriteLine("Output: " + project.OutputRoot);
+        Console.WriteLine("Output files: " + inventory.Count + " project=" + inventory.ProjectFileCount + " orphan=" + inventory.OrphanFileCount);
+        foreach (KarProjectOutputFileInfo file in inventory.Files)
+            PrintProjectOutputFile(file);
+
+        return 0;
+    }
+
     public static int ShowMaps(KarCliOptions options)
     {
         options.RequirePositionals("maps", 1);
@@ -272,10 +292,30 @@ internal static class KarCliInspectionCommands
         return new KarProjectReportOptions
         {
             Files = CreateFileQuery(options),
+            OutputFiles = CreateOutputQuery(options),
             Roots = CreateRootQuery(options),
             Fields = CreateFieldQuery(options),
             IncludeFieldSummaries = options.RootSummary,
         };
+    }
+
+    private static KarProjectOutputFileQueryOptions CreateOutputQuery(KarCliOptions options)
+    {
+        KarProjectOutputFileQueryOptions query = new KarProjectOutputFileQueryOptions
+        {
+            Category = options.FileCategory,
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.FileKind))
+        {
+            KarFileKind kind;
+            if (!Enum.TryParse(options.FileKind, true, out kind))
+                throw new ArgumentException("Unknown file kind: " + options.FileKind);
+
+            query.Kind = kind;
+        }
+
+        return query;
     }
 
     public static int ShowFile(KarCliOptions options)
