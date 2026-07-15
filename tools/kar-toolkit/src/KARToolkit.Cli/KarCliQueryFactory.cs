@@ -129,6 +129,29 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectResourceQueryOptions CreateResourceDataViewQuery(KarCliOptions options)
+    {
+        KarProjectResourceQueryOptions query = CreateResourceQuery(options, includeOutputCopyFilter: true);
+        if (options.Positionals.Count < 2 && string.IsNullOrWhiteSpace(options.ResourceKind))
+            query.Kind = KarResourceKind.HsdRoot;
+
+        return query;
+    }
+
+    public static KarProjectResourceDataFieldQueryOptions CreateResourceDataFieldQuery(KarCliOptions options)
+    {
+        KarProjectResourceQueryOptions resources = CreateResourceDataViewQuery(options);
+        if (string.IsNullOrWhiteSpace(options.ResourceKind))
+            resources.Kind = KarResourceKind.HsdRoot;
+
+        return new KarProjectResourceDataFieldQueryOptions
+        {
+            Resources = resources,
+            FieldPathOrName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            Text = options.SearchText,
+        };
+    }
+
     public static bool MatchesResourceOutputStatusOption(KarProjectResourceOutputInfo output, KarProjectOutputFileStatus? status)
     {
         if (!status.HasValue)

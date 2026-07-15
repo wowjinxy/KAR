@@ -1012,10 +1012,34 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceDataFieldView x0C = hydra.Fields.Single(field => field.FieldName == "x0C");
                 AssertTrue(x0C.FieldPath == "x0C" && x0C.OffsetHex == "0x0C", "resource data fields should expose stable field paths and offsets");
                 AssertTrue(x0C.IsScalar && x0C.CanSetScalar && x0C.SignedValue == 303, "resource data fields should expose editable scalar metadata and values");
+                AssertTrue(project.GetResourceDataField("VsHydra.dat:vsDataHydra", "x0C").SignedValue == 303, "project resource data field wrappers should look up fields by path or name");
 
                 KarProjectResourceDataFieldView pointer = hydra.Fields.Single(field => field.FieldName == "primaryModelAnimation");
                 AssertTrue(pointer.IsPointer && !pointer.CanSetScalar && pointer.DataDefinitionId == "kar.vs.legendary.modelAnimation", "resource data fields should retain pointer target schema ids");
                 AssertTrue(hydra.EditableScalarFieldCount >= 2 && hydra.PointerFieldCount >= 3, "resource data views should summarize scalar and pointer fields");
+
+                IReadOnlyList<KarProjectResourceDataFieldView> editable = project.QueryResourceDataFields(new KarProjectResourceDataFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "VsHydra.dat:vsDataHydra",
+                        Kind = KarResourceKind.HsdRoot,
+                    },
+                    CanSetScalar = true,
+                });
+                AssertTrue(editable.Count >= 2 && editable.All(field => field.CanSetScalar), "resource data field queries should filter editable scalar fields");
+
+                IReadOnlyList<KarProjectResourceDataFieldView> selected = project.ResourceService.QueryDataFields(new KarProjectResourceDataFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "VsHydra.dat:vsDataHydra",
+                        Kind = KarResourceKind.HsdRoot,
+                    },
+                    FieldPathOrName = "primaryModelAnimation",
+                    Text = "model",
+                });
+                AssertTrue(selected.Count == 1 && selected[0].FieldPath == "primaryModelAnimation", "resource data field queries should select by field path or name and search text");
 
                 KarProjectResourceDetail detail = project.GetResourceDetail("VsHydra.dat:vsDataHydra");
                 AssertTrue(detail.HasDataView && object.ReferenceEquals(detail.DataView.Resource, detail.Resource), "resource details should carry a data view for the detailed resource");

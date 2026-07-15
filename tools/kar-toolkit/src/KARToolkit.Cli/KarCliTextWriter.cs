@@ -268,6 +268,45 @@ internal static class KarCliTextWriter
         Console.WriteLine(indent + field.Address + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
     }
 
+    public static void PrintProjectResourceDataView(KarProjectResourceDataView view)
+    {
+        string schema = string.IsNullOrEmpty(view.DataDefinitionId) ? "<unschematized>" : view.DataDefinitionId;
+        Console.WriteLine(view.Address + " [" + schema + "] fields=" + view.FieldCount + " total=" + view.TotalFieldCount + " editable=" + view.EditableScalarFieldCount + " pointers=" + view.PointerFieldCount);
+        foreach (KarProjectResourceDataFieldView field in view.Fields)
+            PrintProjectResourceDataFieldIndented(field, "  ");
+    }
+
+    public static void PrintProjectResourceDataField(KarProjectResourceDataFieldView field)
+    {
+        PrintProjectResourceDataFieldIndented(field, "");
+    }
+
+    private static void PrintProjectResourceDataFieldIndented(KarProjectResourceDataFieldView field, string indent)
+    {
+        string offset = field.OffsetHex ?? "n/a";
+        string schema = field.Resource.Root == null || string.IsNullOrEmpty(field.Resource.Root.DataDefinitionId)
+            ? "<unschematized>"
+            : field.Resource.Root.DataDefinitionId;
+        string flags = "";
+        if (field.CanSetScalar)
+            flags += " editable";
+        if (field.IsPointer)
+            flags += " pointer";
+        if (field.HasReferenceEntries)
+            flags += " entries=" + field.ReferenceEntryCount;
+        string error = string.IsNullOrEmpty(field.Error) ? "" : " (" + field.Error + ")";
+        Console.WriteLine(indent + field.Address + " " + schema + "." + field.FieldPath + " " + offset + " " + field.TypeName + " = " + field.DisplayValue + flags + error);
+
+        foreach (KarProjectResourceDataFieldView child in field.ReferenceFields)
+            PrintProjectResourceDataFieldIndented(child, indent + "  ");
+        foreach (KarProjectResourceDataEntryView entry in field.ReferenceEntries)
+        {
+            Console.WriteLine(indent + "  " + entry.EntryPath + " offset=" + entry.OffsetHex + " fields=" + entry.FieldCount);
+            foreach (KarProjectResourceDataFieldView child in entry.Fields)
+                PrintProjectResourceDataFieldIndented(child, indent + "    ");
+        }
+    }
+
     public static void PrintProjectScriptTable(KarProjectScriptTable table)
     {
         string storage = table.IsPackageEntry ? "a2d-entry" : "file";

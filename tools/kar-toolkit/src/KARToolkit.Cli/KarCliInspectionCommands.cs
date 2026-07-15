@@ -449,6 +449,48 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceDataViews(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-data", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceDataView> views = project.ResourceService.QueryDataViews(CreateResourceDataViewQuery(options))
+            .Where(view => options.Positionals.Count >= 2 || view.HasFields)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(views.Select(ToProjectResourceDataViewDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceDataView view in views)
+        {
+            PrintProjectResourceDataView(view);
+            Console.WriteLine();
+        }
+
+        return 0;
+    }
+
+    public static int ShowResourceDataFields(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-data-fields", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceDataFieldView> fields = project.ResourceService.QueryDataFields(CreateResourceDataFieldQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(fields.Select(ToProjectResourceDataFieldSummaryDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceDataFieldView field in fields)
+            PrintProjectResourceDataField(field);
+
+        return 0;
+    }
+
     public static int ShowResourceOutputs(KarCliOptions options)
     {
         options.RequirePositionals("resource-outputs", 1);

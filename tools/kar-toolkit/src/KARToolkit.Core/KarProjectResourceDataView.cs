@@ -7,11 +7,20 @@ namespace KARToolkit.Core
     public sealed class KarProjectResourceDataView
     {
         internal KarProjectResourceDataView(KarProjectResourceDetail detail)
+            : this(
+                detail == null ? null : detail.Resource,
+                detail == null ? null : detail.Fields)
         {
             Detail = detail ?? throw new ArgumentNullException(nameof(detail));
-            Resource = detail.Resource;
+        }
+
+        internal KarProjectResourceDataView(
+            KarProjectResourceInfo resource,
+            IEnumerable<KarProjectResourceFieldInfo> fields)
+        {
+            Resource = resource ?? throw new ArgumentNullException(nameof(resource));
             DataDefinition = Resource.Root == null ? null : Resource.Root.DataDefinition;
-            Fields = detail.Fields
+            Fields = (fields ?? Enumerable.Empty<KarProjectResourceFieldInfo>())
                 .Select(field => new KarProjectResourceDataFieldView(
                     field.Resource,
                     field.Value,
@@ -27,6 +36,8 @@ namespace KARToolkit.Core
         }
 
         public KarProjectResourceDetail Detail { get; }
+
+        public bool HasDetail => Detail != null;
 
         public KarProjectResourceInfo Resource { get; }
 

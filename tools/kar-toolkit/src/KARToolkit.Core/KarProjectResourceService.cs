@@ -89,15 +89,62 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectResourceDataView> QueryDataViews(KarProjectResourceQueryOptions options = null)
         {
-            return QueryDetails(options)
-                .Select(detail => detail.DataView)
+            return Query(options)
+                .Select(CreateDataView)
                 .ToList()
                 .AsReadOnly();
         }
 
         public KarProjectResourceDataView GetDataView(string address)
         {
-            return GetDetail(address).DataView;
+            return CreateDataView(Get(address));
+        }
+
+        public IReadOnlyList<KarProjectResourceDataFieldView> QueryDataFields(
+            KarProjectResourceDataFieldQueryOptions options = null)
+        {
+            options = options ?? new KarProjectResourceDataFieldQueryOptions();
+            List<KarProjectResourceDataFieldView> fields = new List<KarProjectResourceDataFieldView>();
+
+            foreach (KarProjectResourceDataView view in QueryDataViews(options.Resources))
+            {
+                foreach (KarProjectResourceDataFieldView field in view.FlattenedFields)
+                {
+                    if (options.Matches(view, field))
+                        fields.Add(field);
+                }
+            }
+
+            return fields
+                .OrderBy(field => field.Address, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(field => field.Depth)
+                .ThenBy(field => field.FieldPath, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceDataFieldView GetDataField(string address, string fieldPathOrName)
+        {
+            if (string.IsNullOrWhiteSpace(fieldPathOrName))
+                throw new ArgumentException("KAR project resource data field path or name cannot be empty.", nameof(fieldPathOrName));
+
+            KarProjectResourceDataView view = GetDataView(address);
+            KarProjectResourceDataFieldView field = view.FlattenedFields
+                .FirstOrDefault(candidate => string.Equals(candidate.FieldPath, fieldPathOrName, StringComparison.OrdinalIgnoreCase));
+            if (field == null)
+            {
+                field = view.Fields
+                    .FirstOrDefault(candidate => string.Equals(candidate.FieldName, fieldPathOrName, StringComparison.OrdinalIgnoreCase));
+            }
+            if (field == null)
+            {
+                field = view.FlattenedFields
+                    .FirstOrDefault(candidate => string.Equals(candidate.FieldName, fieldPathOrName, StringComparison.OrdinalIgnoreCase));
+            }
+            if (field == null)
+                throw new KeyNotFoundException("KAR project resource data field was not found: " + address + " " + fieldPathOrName);
+
+            return field;
         }
 
         public IReadOnlyList<KarProjectResourceActionPlan> QueryActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
@@ -411,6 +458,36 @@ namespace KARToolkit.Core
                 _project.ResourceGraphService.QueryChildResources(resource.Address),
                 fields,
                 _project.ResourceGraphService.QueryResourceRelationships(resource.Address));
+        }
+
+        private KarProjectResourceDataView CreateDataView(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+
+            return new KarProjectResourceDataView(resource, CreateDataFields(resource));
+        }
+
+        private static IReadOnlyList<KarProjectResourceFieldInfo> CreateDataFields(KarProjectResourceInfo resource)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (!resource.CanQueryFieldValues ||
+                resource.Root == null ||
+                resource.Root.Root.DataDefinition == null ||
+                !resource.Root.Root.HasFieldValues)
+            {
+                return Array.Empty<KarProjectResourceFieldInfo>();
+            }
+
+            List<KarProjectResourceFieldInfo> fields = new List<KarProjectResourceFieldInfo>();
+            foreach (KarDataFieldValue value in resource.Root.Root.FieldValues)
+            {
+                KarProjectFieldInfo fieldInfo = new KarProjectFieldInfo(resource.Root, value);
+                fields.Add(new KarProjectResourceFieldInfo(resource, fieldInfo));
+            }
+
+            return fields.AsReadOnly();
         }
 
         private KarProjectResourceActionPlan CreateActionPlan(KarProjectResourceInfo resource, KarProjectResourceAction action, bool overwrite)

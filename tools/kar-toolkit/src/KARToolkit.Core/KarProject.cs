@@ -368,6 +368,17 @@ namespace KARToolkit.Core
             return ResourceService.GetDataView(address);
         }
 
+        public IReadOnlyList<KarProjectResourceDataFieldView> QueryResourceDataFields(
+            KarProjectResourceDataFieldQueryOptions options = null)
+        {
+            return ResourceService.QueryDataFields(options);
+        }
+
+        public KarProjectResourceDataFieldView GetResourceDataField(string address, string fieldPathOrName)
+        {
+            return ResourceService.GetDataField(address, fieldPathOrName);
+        }
+
         public KarProjectResourceOutputInfo GetResourceOutput(string address)
         {
             return ResourceService.GetOutput(address);

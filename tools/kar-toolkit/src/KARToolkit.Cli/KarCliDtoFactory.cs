@@ -1284,6 +1284,7 @@ internal static class KarCliDtoFactory
             displayName = view.DisplayName,
             category = view.Category,
             description = view.Description,
+            hasDetail = view.HasDetail,
             hasDataDefinition = view.HasDataDefinition,
             fieldCount = view.FieldCount,
             totalFieldCount = view.TotalFieldCount,
