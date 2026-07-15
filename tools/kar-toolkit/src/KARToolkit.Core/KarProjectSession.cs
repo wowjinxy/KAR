@@ -90,6 +90,8 @@ namespace KARToolkit.Core
 
         public int OperationDomainRuleCount => RegistryCatalog.OperationDomainRuleCount;
 
+        public int DomainContextProviderCount => RegistryCatalog.DomainContextProviderCount;
+
         public int OperationPresetDefinitionCount => RegistryCatalog.OperationPresetDefinitionCount;
 
         public bool HasOutputs => Snapshot.HasOutputs;

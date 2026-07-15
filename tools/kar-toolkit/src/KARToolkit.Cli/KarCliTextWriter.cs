@@ -149,7 +149,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Write policy: " + session.WritePolicy);
         Console.WriteLine("Workspace safe: source/output=" + session.SourceAndOutputRootsAreSeparate + " files=" + session.SourceFilesAndOutputFilesRootsAreSeparate);
         Console.WriteLine("Project: files=" + session.FileCount + " maps=" + session.MapCount);
-        Console.WriteLine("Registries: file-kinds=" + session.FileKindCount + " file-handlers=" + session.FileHandlerCount + " resource-handlers=" + session.ResourceHandlerCount + " actions=" + session.ResourceActionDefinitionCount + " domains=" + session.OperationDomainRuleCount + " presets=" + session.OperationPresetDefinitionCount);
+        Console.WriteLine("Registries: file-kinds=" + session.FileKindCount + " file-handlers=" + session.FileHandlerCount + " resource-handlers=" + session.ResourceHandlerCount + " actions=" + session.ResourceActionDefinitionCount + " operation-domains=" + session.OperationDomainRuleCount + " context-domains=" + session.DomainContextProviderCount + " presets=" + session.OperationPresetDefinitionCount);
         Console.WriteLine("Toolkit: domains=" + session.DomainCount + " workflows=" + session.WorkflowCount + " available=" + session.AvailableWorkflowCount + " output=" + session.OutputWorkflowCount);
         Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
     }
@@ -158,7 +158,7 @@ internal static class KarCliTextWriter
     {
         string scope = catalog.HasProject ? catalog.ProjectName : "default";
         Console.WriteLine("KAR toolkit registries: " + scope);
-        Console.WriteLine("Registries: " + catalog.RegistryCount + " file-kinds=" + catalog.FileKindCount + " file-handlers=" + catalog.FileHandlerCount + " resource-handlers=" + catalog.ResourceHandlerCount + " actions=" + catalog.ResourceActionDefinitionCount + " domains=" + catalog.OperationDomainRuleCount + " presets=" + catalog.OperationPresetDefinitionCount);
+        Console.WriteLine("Registries: " + catalog.RegistryCount + " file-kinds=" + catalog.FileKindCount + " file-handlers=" + catalog.FileHandlerCount + " resource-handlers=" + catalog.ResourceHandlerCount + " actions=" + catalog.ResourceActionDefinitionCount + " operation-domains=" + catalog.OperationDomainRuleCount + " context-domains=" + catalog.DomainContextProviderCount + " presets=" + catalog.OperationPresetDefinitionCount);
 
         Console.WriteLine("File kinds:");
         foreach (KarFileKindDescriptor descriptor in catalog.FileKinds)
@@ -179,6 +179,10 @@ internal static class KarCliTextWriter
         Console.WriteLine("Operation domain rules:");
         foreach (KarProjectOperationDomainRule rule in catalog.OperationDomainRules)
             PrintProjectOperationDomainRule(rule);
+
+        Console.WriteLine("Domain context providers:");
+        foreach (KarProjectDomainContextProvider provider in catalog.DomainContextProviders)
+            Console.WriteLine("  " + provider.Id + " list=" + provider.ListCommand + " context=" + provider.ContextCommand + " - " + provider.DisplayName);
 
         Console.WriteLine("Operation preset definitions:");
         foreach (KarProjectOperationPresetDefinition definition in catalog.OperationPresetDefinitions)

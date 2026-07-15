@@ -213,16 +213,17 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(object.ReferenceEquals(schema.DataDefinitions, project.DataService.Definitions), "data service should expose the active project schema registry");
                 AssertTrue(schema.DataDefinitions.All.Count == 1, "schema service should expose custom project schema registries");
                 AssertTrue(schema.FileKinds.Count > 0 && schema.FileHandlers.Count > 0 && schema.ResourceHandlers.Count > 0, "schema service should expose active handler catalogs");
-                AssertTrue(schema.ResourceActionDefinitions.Count >= 8 && schema.OperationDomainRules.Count >= 6 && schema.OperationPresetDefinitions.Count >= 6, "schema service should expose active toolkit registry catalogs");
+                AssertTrue(schema.ResourceActionDefinitions.Count >= 8 && schema.OperationDomainRules.Count >= 6 && schema.DomainContextProviders.Count >= 7 && schema.OperationPresetDefinitions.Count >= 6, "schema service should expose active toolkit registry catalogs");
                 KarProjectToolkitRegistryCatalog registryCatalog = schema.CreateToolkitRegistryCatalog();
                 AssertTrue(object.ReferenceEquals(registryCatalog.Project, project), "toolkit registry catalog should retain project context");
                 AssertTrue(registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count, "toolkit registry catalog should expose active handler counts");
-                AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action and operation counts");
+                AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.DomainContextProviderCount == schema.DomainContextProviders.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action, context, and operation counts");
                 KarProjectToolkitRegistryCatalogContract registryContract = registryCatalog.CreateContract();
                 AssertTrue(registryContract.Project.Name == project.Name && registryContract.Project.Workspace.WritesOnlyToOutput, "toolkit registry contracts should expose project and workspace metadata");
                 AssertTrue(registryContract.FileKindCount == registryCatalog.FileKindCount && registryContract.FileHandlers.Count == registryCatalog.FileHandlerCount, "toolkit registry contracts should preserve file registry counts");
                 AssertTrue(registryContract.ResourceHandlers.Any(handler => handler.Actions.Any(action => action.Id == "dump-bytes")), "toolkit registry contracts should expose nested resource action metadata");
-                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in action and preset registries");
+                AssertTrue(registryContract.DomainContextProviderCount == registryCatalog.DomainContextProviderCount && registryContract.DomainContextProviders.Any(provider => provider.Id == "maps" && provider.ContextCommand == "map-context"), "toolkit registry contracts should expose domain context provider metadata");
+                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.DomainContextProviderCount >= 7 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in action, context, and preset registries");
                 AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Text = "scalar" }).Count == 1, "schema service should search data definition text");
@@ -1207,6 +1208,29 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(customPreset.Id == "custom-script-status" && customPreset.OperationCount == 1, "project options should allow custom operation preset registries with live counts");
                 AssertTrue(customOperationProject.QueryOperations(customPreset.CreateQueryOptions()).Single().ResourceAddress == "ScInfPause.tm", "custom preset queries should use custom operation domain rules");
 
+                KarProject customDomainProject = KarProject.Open(new KarProjectOptions
+                {
+                    SourceRoot = tempRoot,
+                    DomainContextProviderRegistry = new KarProjectDomainContextProviderRegistry(new[]
+                    {
+                        new KarProjectDomainContextProvider(
+                            "custom-domain",
+                            "Custom Domain",
+                            "Custom domain context provider for toolkit tests.",
+                            "files",
+                            "file-context",
+                            (snapshot, graph) => snapshot.FileCount,
+                            (snapshot, graph) => graph.ResourceCount,
+                            (snapshot, graph) => snapshot.OutputFileCount,
+                            (snapshot, graph) => snapshot.ModifiedProjectOutputFileCount,
+                            (snapshot, graph) => snapshot.DomainInspectionIssueCount),
+                    }),
+                });
+                KarProjectDomainContext customDomain = customDomainProject.QueryDomainContexts().Single();
+                AssertTrue(customDomain.Id == "custom-domain" && customDomain.ItemCount == customDomainProject.Files.Count, "project options should allow custom domain context providers");
+                AssertTrue(customDomainProject.SchemaService.DomainContextProviders.Single().Id == "custom-domain", "schema service should expose custom domain context providers");
+                AssertTrue(customDomainProject.CreateToolkitRegistryCatalog().DomainContextProviders.Single().Id == "custom-domain", "toolkit registry catalog should expose custom domain context providers");
+
                 AssertThrows<NotSupportedException>(
                     () => project.ExecuteOperationBatch(new KarProjectOperationQueryOptions
                     {
@@ -1982,7 +2006,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
                 AssertTrue(session.Project.ToolkitService.CreateRegistryCatalogContract().ProjectName == session.Name, "toolkit service should expose reusable registry catalog contracts");
                 AssertTrue(session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0, "project sessions should expose file and resource toolkit registries");
-                AssertTrue(session.OperationDomainRuleCount >= 6 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation toolkit registries");
+                AssertTrue(session.OperationDomainRuleCount >= 6 && session.DomainContextProviderCount >= 7 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation and context toolkit registries");
                 AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");
                 AssertTrue(session.WorkflowGroups.Count == session.Surface.WorkflowGroupCount, "project sessions should expose grouped workflows");
 
@@ -2126,6 +2150,8 @@ namespace KARToolkit.Core.Tests
 
                 IReadOnlyList<KarProjectDomainContext> domains = project.QueryDomainContexts();
                 AssertTrue(domains.Count == 7, "domain contexts should expose the current toolkit domain set");
+                AssertTrue(project.DomainContextProviderRegistry.Providers.Select(provider => provider.Id).SequenceEqual(domains.Select(domain => domain.Id)), "domain context provider order should drive toolkit domain order");
+                AssertTrue(project.DomainContextProviderRegistry.FindProvider("maps").CreateContract().ContextCommand == "map-context", "domain context providers should expose reusable provider contracts");
                 KarProjectDomainContext mapDomain = domains.Single(domain => domain.Id == "maps");
                 AssertTrue(mapDomain.ItemCount == 1 && mapDomain.ResourceCount == 3 && mapDomain.ContextCommand == "map-context", "domain contexts should summarize map toolkit entry points");
                 KarProjectDomainContextContract mapDomainContract = mapDomain.CreateContract();

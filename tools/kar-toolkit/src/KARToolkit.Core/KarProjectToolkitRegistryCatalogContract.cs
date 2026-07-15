@@ -28,6 +28,8 @@ namespace KARToolkit.Core
 
         public int OperationDomainRuleCount { get; set; }
 
+        public int DomainContextProviderCount { get; set; }
+
         public int OperationPresetDefinitionCount { get; set; }
 
         public bool HasFileKinds { get; set; }
@@ -40,6 +42,8 @@ namespace KARToolkit.Core
 
         public bool HasOperationDomainRules { get; set; }
 
+        public bool HasDomainContextProviders { get; set; }
+
         public bool HasOperationPresetDefinitions { get; set; }
 
         public IReadOnlyList<KarFileKindDescriptorContract> FileKinds { get; set; }
@@ -51,6 +55,8 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResourceActionDefinitionContract> ResourceActionDefinitions { get; set; }
 
         public IReadOnlyList<KarProjectOperationDomainRuleContract> OperationDomainRules { get; set; }
+
+        public IReadOnlyList<KarProjectDomainContextProviderContract> DomainContextProviders { get; set; }
 
         public IReadOnlyList<KarProjectOperationPresetDefinitionContract> OperationPresetDefinitions { get; set; }
 
@@ -72,18 +78,21 @@ namespace KARToolkit.Core
                 ResourceHandlerCount = catalog.ResourceHandlerCount,
                 ResourceActionDefinitionCount = catalog.ResourceActionDefinitionCount,
                 OperationDomainRuleCount = catalog.OperationDomainRuleCount,
+                DomainContextProviderCount = catalog.DomainContextProviderCount,
                 OperationPresetDefinitionCount = catalog.OperationPresetDefinitionCount,
                 HasFileKinds = catalog.HasFileKinds,
                 HasFileHandlers = catalog.HasFileHandlers,
                 HasResourceHandlers = catalog.HasResourceHandlers,
                 HasResourceActionDefinitions = catalog.HasResourceActionDefinitions,
                 HasOperationDomainRules = catalog.HasOperationDomainRules,
+                HasDomainContextProviders = catalog.HasDomainContextProviders,
                 HasOperationPresetDefinitions = catalog.HasOperationPresetDefinitions,
                 FileKinds = catalog.FileKinds.Select(KarFileKindDescriptorContract.Create).ToList().AsReadOnly(),
                 FileHandlers = catalog.FileHandlers.Select(KarProjectFileHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceHandlers = catalog.ResourceHandlers.Select(KarProjectResourceHandlerContract.Create).ToList().AsReadOnly(),
                 ResourceActionDefinitions = catalog.ResourceActionDefinitions.Select(KarProjectResourceActionDefinitionContract.Create).ToList().AsReadOnly(),
                 OperationDomainRules = catalog.OperationDomainRules.Select(KarProjectOperationDomainRuleContract.Create).ToList().AsReadOnly(),
+                DomainContextProviders = catalog.DomainContextProviders.Select(KarProjectDomainContextProviderContract.Create).ToList().AsReadOnly(),
                 OperationPresetDefinitions = catalog.OperationPresetDefinitions.Select(KarProjectOperationPresetDefinitionContract.Create).ToList().AsReadOnly(),
             };
         }
@@ -520,6 +529,34 @@ namespace KARToolkit.Core
                 Id = rule.Id,
                 DisplayName = rule.DisplayName,
                 Description = rule.Description,
+            };
+        }
+    }
+
+    public sealed class KarProjectDomainContextProviderContract
+    {
+        public string Id { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string Description { get; set; }
+
+        public string ListCommand { get; set; }
+
+        public string ContextCommand { get; set; }
+
+        public static KarProjectDomainContextProviderContract Create(KarProjectDomainContextProvider provider)
+        {
+            if (provider == null)
+                throw new ArgumentNullException(nameof(provider));
+
+            return new KarProjectDomainContextProviderContract
+            {
+                Id = provider.Id,
+                DisplayName = provider.DisplayName,
+                Description = provider.Description,
+                ListCommand = provider.ListCommand,
+                ContextCommand = provider.ContextCommand,
             };
         }
     }

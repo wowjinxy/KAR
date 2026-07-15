@@ -20,6 +20,8 @@ namespace KARToolkit.Core
 
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; set; }
 
+        public KarProjectDomainContextProviderRegistry DomainContextProviderRegistry { get; set; }
+
         public KarProjectOperationPresetRegistry OperationPresetRegistry { get; set; }
 
         public KarArchiveDefinitionProvider ArchiveDefinitions { get; set; }
@@ -84,6 +86,11 @@ namespace KARToolkit.Core
         internal KarProjectOperationDomainRegistry ResolveOperationDomainRegistry()
         {
             return OperationDomainRegistry ?? KarProjectOperationDomainRegistry.Default;
+        }
+
+        internal KarProjectDomainContextProviderRegistry ResolveDomainContextProviderRegistry()
+        {
+            return DomainContextProviderRegistry ?? KarProjectDomainContextProviderRegistry.Default;
         }
 
         internal KarProjectOperationPresetRegistry ResolveOperationPresetRegistry()

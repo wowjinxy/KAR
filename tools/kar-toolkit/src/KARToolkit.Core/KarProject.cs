@@ -14,6 +14,7 @@ namespace KARToolkit.Core
             KarProjectFileCatalog fileCatalog,
             KarProjectResourceHandlerRegistry resourceHandlers,
             KarProjectOperationDomainRegistry operationDomains,
+            KarProjectDomainContextProviderRegistry domainContextProviders,
             KarProjectOperationPresetRegistry operationPresets,
             KarArchiveInspector archiveInspector)
         {
@@ -23,6 +24,7 @@ namespace KARToolkit.Core
             ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
             ResourceActionRegistry = ResourceHandlerRegistry.ActionRegistry;
             OperationDomainRegistry = operationDomains ?? throw new ArgumentNullException(nameof(operationDomains));
+            DomainContextProviderRegistry = domainContextProviders ?? throw new ArgumentNullException(nameof(domainContextProviders));
             OperationPresetRegistry = operationPresets ?? throw new ArgumentNullException(nameof(operationPresets));
             FileStore = new KarProjectFileStore(Workspace, Index);
             FileService = new KarProjectFileService(this);
@@ -66,6 +68,8 @@ namespace KARToolkit.Core
         public KarProjectResourceActionRegistry ResourceActionRegistry { get; }
 
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; }
+
+        public KarProjectDomainContextProviderRegistry DomainContextProviderRegistry { get; }
 
         public KarProjectOperationPresetRegistry OperationPresetRegistry { get; }
 
@@ -184,6 +188,7 @@ namespace KARToolkit.Core
                 indexer.FileCatalog,
                 options.ResolveResourceHandlerRegistry(),
                 options.ResolveOperationDomainRegistry(),
+                options.ResolveDomainContextProviderRegistry(),
                 options.ResolveOperationPresetRegistry(),
                 options.ResolveArchiveInspector());
         }
