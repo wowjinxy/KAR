@@ -32,7 +32,12 @@ internal static class KarCliQueryFactory
 
     public static KarProjectResourceQueryOptions CreateResourceQuery(KarCliOptions options)
     {
-        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
+        return CreateResourceQuery(options, includeOutputCopyFilter: true);
+    }
+
+    private static KarProjectResourceQueryOptions CreateResourceQuery(KarCliOptions options, bool includeOutputCopyFilter)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options, includeOutputCopyFilter);
         KarProjectResourceQueryOptions query = new KarProjectResourceQueryOptions
         {
             Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
@@ -59,31 +64,9 @@ internal static class KarCliQueryFactory
 
     public static KarProjectResourceOutputQueryOptions CreateResourceOutputQuery(KarCliOptions options)
     {
-        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options, includeOutputCopyFilter: false);
-        KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
-        {
-            Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
-            Category = options.FileCategory,
-            Text = options.SearchText,
-            Files = parentFiles,
-            Roots = new KarProjectRootQueryOptions
-            {
-                Files = parentFiles,
-                IsKnown = options.RootKnown,
-                RootName = options.RootName,
-            },
-            A2DEntries = new KarProjectA2DEntryQueryOptions
-            {
-                Packages = parentFiles,
-            },
-        };
-
-        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
-            resources.Kind = ParseResourceKind(options.ResourceKind);
-
         return new KarProjectResourceOutputQueryOptions
         {
-            Resources = resources,
+            Resources = CreateResourceQuery(options, includeOutputCopyFilter: false),
             HasOutput = options.FileHasOutputCopy,
         };
     }
@@ -92,7 +75,7 @@ internal static class KarCliQueryFactory
     {
         return new KarProjectResourceByteQueryOptions
         {
-            Resources = CreateResourceQuery(options),
+            Resources = CreateResourceQuery(options, includeOutputCopyFilter: false),
             Status = ToResourceByteOutputStatus(options.OutputStatus),
             HasOutput = options.FileHasOutputCopy,
         };

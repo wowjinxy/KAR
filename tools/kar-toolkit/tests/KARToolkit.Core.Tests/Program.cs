@@ -866,6 +866,26 @@ namespace KARToolkit.Core.Tests
                     HasOutput = true,
                 }).Count == 1, "resource byte info queries should filter dump outputs by resource kind and output presence");
 
+                IReadOnlyList<KarProjectResourceByteDumpResult> fileByteDumps = resources.DumpBytesToOutput(new KarProjectResourceByteQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Kind = KarResourceKind.File,
+                    },
+                    HasOutput = false,
+                });
+                AssertTrue(fileByteDumps.Count == 2 && fileByteDumps.All(result => result.WroteOutput), "resource byte dump batches should write missing file byte outputs");
+                AssertTrue(fileByteDumps.Any(result => result.OutputRelativePath == "resource-bytes/A2Info.dat.bin"), "resource byte dump batches should preserve file resource paths without colliding with child resources");
+
+                IReadOnlyList<KarProjectResourceByteDumpResult> entryByteDumps = project.DumpResourceBytesToOutput(new KarProjectResourceByteQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Kind = KarResourceKind.A2DEntry,
+                    },
+                }, overwrite: true);
+                AssertTrue(entryByteDumps.Count == 2 && entryByteDumps.All(result => result.WroteOutput), "project resource byte dump batches should overwrite selected resource kinds");
+
                 KarProjectResourceExportResult fileExport = resources.ExportToOutput("A2Info.dat");
                 AssertTrue(fileExport.Address == "A2Info.dat", "resource file export should report resource address");
                 AssertTrue(fileExport.OutputKind == KarProjectResourceOutputKind.ProjectFile, "resource file export should write project file outputs");

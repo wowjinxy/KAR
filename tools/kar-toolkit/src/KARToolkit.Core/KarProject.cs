@@ -443,6 +443,11 @@ namespace KARToolkit.Core
             return ResourceService.DumpBytesToOutput(address, overwrite);
         }
 
+        public IReadOnlyList<KarProjectResourceByteDumpResult> DumpResourceBytesToOutput(KarProjectResourceByteQueryOptions options, bool overwrite = false)
+        {
+            return ResourceService.DumpBytesToOutput(options, overwrite);
+        }
+
         public KarProjectResourceExportResult ExportResourceToOutput(string address, bool overwrite = false)
         {
             return ResourceAddressService.ExportToOutput(address, overwrite);

@@ -193,6 +193,14 @@ namespace KARToolkit.Core
             return DumpBytesToOutput(resource, overwrite);
         }
 
+        public IReadOnlyList<KarProjectResourceByteDumpResult> DumpBytesToOutput(KarProjectResourceByteQueryOptions options, bool overwrite = false)
+        {
+            return QueryByteInfo(options)
+                .Select(info => DumpBytesToOutput(info.Resource, overwrite))
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectResourceByteDumpResult DumpBytesToOutput(KarProjectResourceInfo resource, bool overwrite = false)
         {
             if (resource == null)
@@ -334,9 +342,20 @@ namespace KARToolkit.Core
         private static string CreateByteDumpRelativePath(KarProjectResourceInfo resource)
         {
             List<string> parts = new List<string> { "resource-bytes" };
-            parts.AddRange(KarProjectWorkspace.NormalizeRelativePath(resource.RelativePath)
+            List<string> resourcePathParts = KarProjectWorkspace.NormalizeRelativePath(resource.RelativePath)
                 .Split('/')
-                .Select(SanitizePathSegment));
+                .Select(SanitizePathSegment)
+                .ToList();
+
+            if (resource.Kind == KarResourceKind.File)
+            {
+                resourcePathParts[resourcePathParts.Count - 1] += ".bin";
+                parts.AddRange(resourcePathParts);
+            }
+            else
+            {
+                parts.AddRange(resourcePathParts);
+            }
 
             if (resource.Kind == KarResourceKind.HsdRoot)
                 parts.Add(SanitizePathSegment(resource.Reference.RootName) + ".bin");

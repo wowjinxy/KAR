@@ -189,7 +189,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit copy <source-folder> <relative-path> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit copy-map <source-folder> <map-name-or-file> [--output <mod-folder>] [--overwrite]");
         Console.WriteLine("  kar-toolkit export-resource <source-folder> <resource-address> [--output <mod-folder>] [--overwrite]");
-        Console.WriteLine("  kar-toolkit dump-resource-bytes <source-folder> <resource-address> [--output <mod-folder>] [--overwrite]");
+        Console.WriteLine("  kar-toolkit dump-resource-bytes <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>] [--modified|--unchanged|--source-only] [--overwrite]");
         Console.WriteLine("  kar-toolkit import-resource <source-folder> <resource-address> <input-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit apply-resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--search <text>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");

@@ -331,6 +331,12 @@ internal static class KarCliTextWriter
         Console.WriteLine("Wrote: " + result.WroteOutput);
     }
 
+    public static void PrintProjectResourceByteDumpResultSummary(KarProjectResourceByteDumpResult result)
+    {
+        string action = result.WroteOutput ? "wrote" : "skipped";
+        Console.WriteLine(result.Address + " -> " + result.OutputRelativePath + " [" + action + ", length=" + result.Length + "]");
+    }
+
     public static void PrintProjectResourceImportResult(KarProjectResourceImportResult result)
     {
         Console.WriteLine("Imported resource: " + result.Address);

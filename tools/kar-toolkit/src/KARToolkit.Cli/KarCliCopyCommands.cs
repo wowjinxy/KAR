@@ -78,17 +78,32 @@ internal static class KarCliCopyCommands
 
     public static int DumpResourceBytes(KarCliOptions options)
     {
-        options.RequirePositionals("dump-resource-bytes", 2);
+        options.RequirePositionals("dump-resource-bytes", 1);
         KarProject project = OpenProject(options);
-        KarProjectResourceByteDumpResult result = project.DumpResourceBytesToOutput(options.Positionals[1], options.Overwrite);
-
-        if (options.Json)
+        if (options.Positionals.Count >= 2)
         {
-            WriteJson(ToProjectResourceByteDumpResultDto(result));
+            KarProjectResourceByteDumpResult result = project.DumpResourceBytesToOutput(options.Positionals[1], options.Overwrite);
+
+            if (options.Json)
+            {
+                WriteJson(ToProjectResourceByteDumpResultDto(result));
+                return 0;
+            }
+
+            PrintProjectResourceByteDumpResult(result);
             return 0;
         }
 
-        PrintProjectResourceByteDumpResult(result);
+        IReadOnlyList<KarProjectResourceByteDumpResult> results = project.DumpResourceBytesToOutput(CreateResourceByteQuery(options), options.Overwrite);
+        if (options.Json)
+        {
+            WriteJson(results.Select(ToProjectResourceByteDumpResultDto).ToList());
+            return 0;
+        }
+
+        Console.WriteLine("Dumped resource bytes: " + results.Count);
+        foreach (KarProjectResourceByteDumpResult result in results)
+            PrintProjectResourceByteDumpResultSummary(result);
         return 0;
     }
 
