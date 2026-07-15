@@ -54,6 +54,43 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowFiles(KarCliOptions options)
+    {
+        options.RequirePositionals("files", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectFile> files = project.Files
+            .OrderBy(file => file.Category)
+            .ThenBy(file => file.RelativePath)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(files.Select(ToProjectFileDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectFile file in files)
+            PrintProjectFileSummary(file);
+
+        return 0;
+    }
+
+    public static int ShowFile(KarCliOptions options)
+    {
+        options.RequirePositionals("file", 2);
+        KarProject project = OpenProject(options);
+        KarProjectFile file = project.GetFile(options.Positionals[1]);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectFileDto(file));
+            return 0;
+        }
+
+        PrintProjectFile(file);
+        return 0;
+    }
+
     public static int ShowMap(KarCliOptions options)
     {
         options.RequirePositionals("map", 2);

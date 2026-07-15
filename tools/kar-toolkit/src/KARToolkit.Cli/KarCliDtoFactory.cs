@@ -200,7 +200,17 @@ internal static class KarCliDtoFactory
             kind = file.Kind.ToString(),
             displayName = file.DisplayName,
             category = file.Category,
+            sourcePath = file.SourcePath,
+            outputPath = file.OutputPath,
+            readPath = file.ReadPath,
             hasOutputCopy = file.HasOutputCopy,
+            archiveDefinition = new
+            {
+                displayName = file.ArchiveDefinition.DisplayName,
+                category = file.ArchiveDefinition.Category,
+                description = file.ArchiveDefinition.Description,
+                rootCount = file.ArchiveDefinition.Roots.Count,
+            },
         };
     }
 

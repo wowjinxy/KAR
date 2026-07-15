@@ -18,6 +18,8 @@ internal static class Program
             return command switch
             {
                 "project" => KarCliInspectionCommands.ShowProject(options),
+                "files" => KarCliInspectionCommands.ShowFiles(options),
+                "file" => KarCliInspectionCommands.ShowFile(options),
                 "maps" => KarCliInspectionCommands.ShowMaps(options),
                 "map" => KarCliInspectionCommands.ShowMap(options),
                 "archive" => KarCliInspectionCommands.ShowArchive(options),
@@ -50,6 +52,8 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("Usage:");
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");

@@ -16,6 +16,27 @@ internal static class KarCliTextWriter
         PrintArchive(archive, "  ");
     }
 
+    public static void PrintProjectFileSummary(KarProjectFile file)
+    {
+        string output = file.HasOutputCopy ? " output-copy" : "";
+        Console.WriteLine(file.RelativePath + " [" + file.Kind + ", " + file.Category + "]" + output + " - " + file.DisplayName);
+    }
+
+    public static void PrintProjectFile(KarProjectFile file)
+    {
+        Console.WriteLine("File: " + file.RelativePath);
+        Console.WriteLine("Kind: " + file.Kind);
+        Console.WriteLine("Category: " + file.Category);
+        Console.WriteLine("Display: " + file.DisplayName);
+        if (!string.IsNullOrEmpty(file.ArchiveDefinition.Description))
+            Console.WriteLine("Description: " + file.ArchiveDefinition.Description);
+        Console.WriteLine("Source: " + file.SourcePath);
+        Console.WriteLine("Output: " + file.OutputPath);
+        Console.WriteLine("Read: " + file.ReadPath);
+        Console.WriteLine("Has output copy: " + file.HasOutputCopy);
+        Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");
