@@ -29,6 +29,26 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToFileKindDescriptorDto(KarFileKindDescriptor descriptor)
+    {
+        return new
+        {
+            kind = descriptor.Kind.ToString(),
+            id = descriptor.Id,
+            displayName = descriptor.DisplayName,
+            category = descriptor.Category,
+            description = descriptor.Description,
+            isHsdArchive = descriptor.IsHsdArchive,
+            isA2DPackage = descriptor.IsA2DPackage,
+            isScriptTable = descriptor.IsScriptTable,
+            isMedia = descriptor.IsMedia,
+            isConfig = descriptor.IsConfig,
+            isMapBundlePart = descriptor.IsMapBundlePart,
+            mapBundleRole = descriptor.MapBundleRole,
+            isContainer = descriptor.IsContainer,
+        };
+    }
+
     public static object ToProjectReportDto(KarProjectReport report)
     {
         return new
@@ -136,6 +156,9 @@ internal static class KarCliDtoFactory
                     relativePath = file.RelativePath,
                     resourceAddress = file.ResourceAddress,
                     kind = file.Kind.ToString(),
+                    kindId = file.KindId,
+                    mapName = file.MapName,
+                    mapBundleRole = file.MapBundleRole,
                     category = file.Category,
                     displayName = file.DisplayName,
                 })
@@ -170,6 +193,10 @@ internal static class KarCliDtoFactory
             sourcePath = file.SourcePath,
             outputPath = file.OutputPath,
             kind = file.Kind.ToString(),
+            kindId = file.KindId,
+            kindInfo = ToFileKindDescriptorDto(file.KindDescriptor),
+            mapName = file.MapName,
+            mapBundleRole = file.MapBundleRole,
             displayName = file.DisplayName,
             category = file.Category,
             status = file.Status.ToString(),
@@ -425,6 +452,9 @@ internal static class KarCliDtoFactory
                 {
                     relativePath = file.RelativePath,
                     kind = file.Kind.ToString(),
+                    kindId = file.KindId,
+                    mapName = file.MapName,
+                    mapBundleRole = file.MapBundleRole,
                     category = file.Category,
                     displayName = file.DisplayName,
                 })
@@ -804,6 +834,10 @@ internal static class KarCliDtoFactory
             relativePath = file.RelativePath,
             resourceAddress = file.ResourceAddress,
             kind = file.Kind.ToString(),
+            kindId = file.KindId,
+            kindInfo = ToFileKindDescriptorDto(file.KindDescriptor),
+            mapName = file.MapName,
+            mapBundleRole = file.MapBundleRole,
             displayName = file.DisplayName,
             category = file.Category,
             sourcePath = file.SourcePath,

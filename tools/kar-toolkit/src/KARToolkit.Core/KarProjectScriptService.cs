@@ -81,7 +81,7 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(resource));
 
             if (resource.Kind == KarResourceKind.File)
-                return resource.File != null && resource.File.Kind == KarFileKind.ScriptTable;
+                return resource.File != null && resource.File.IsScriptTable;
 
             return resource.Kind == KarResourceKind.A2DEntry &&
                 resource.A2DEntry != null &&

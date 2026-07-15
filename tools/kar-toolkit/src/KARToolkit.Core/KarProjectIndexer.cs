@@ -40,13 +40,15 @@ namespace KARToolkit.Core
                 .Select(path =>
                 {
                     string relativePath = workspace.GetRelativeSourcePath(path);
-                    KarFileKind kind = _fileCatalog.ClassifyKind(relativePath);
+                    KarFileKindMatch match = _fileCatalog.Classify(relativePath);
                     return new KarProjectFile(
                         relativePath,
                         path,
                         workspace.GetOutputPath(relativePath),
-                        kind,
-                        _fileCatalog.GetArchiveDefinition(relativePath, kind));
+                        match.Kind,
+                        match.Descriptor,
+                        match.MapName,
+                        _fileCatalog.GetArchiveDefinition(match));
                 })
                 .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()
@@ -83,7 +85,8 @@ namespace KARToolkit.Core
 
         private bool TryGetMapName(KarProjectFile file, out string mapName)
         {
-            return _fileCatalog.TryGetMapName(file.RelativePath, file.Kind, out mapName);
+            mapName = file.MapName;
+            return file.HasMapName;
         }
 
         private sealed class MapBundleBuilder

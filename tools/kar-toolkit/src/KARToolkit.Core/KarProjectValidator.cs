@@ -8,7 +8,6 @@ namespace KARToolkit.Core
     {
         private readonly KarProject _project;
         private readonly KarProjectIndex _index;
-        private readonly KarProjectFileCatalog _fileCatalog;
         private readonly KarProjectInspector _inspector;
         private readonly KarProjectArchiveStore _archiveStore;
         private readonly KarValidationOptions _defaultOptions;
@@ -17,7 +16,6 @@ namespace KARToolkit.Core
         {
             _project = project ?? throw new ArgumentNullException(nameof(project));
             _index = project.Index;
-            _fileCatalog = project.FileCatalog;
             _inspector = project.Inspector;
             _archiveStore = project.ArchiveStore;
             _defaultOptions = options;
@@ -33,7 +31,6 @@ namespace KARToolkit.Core
             return new ValidationRun(
                 _project,
                 _index,
-                _fileCatalog,
                 _inspector,
                 _archiveStore,
                 options ?? _defaultOptions ?? new KarValidationOptions())
@@ -44,7 +41,6 @@ namespace KARToolkit.Core
         {
             private readonly KarProject _project;
             private readonly KarProjectIndex _index;
-            private readonly KarProjectFileCatalog _fileCatalog;
             private readonly KarProjectInspector _inspector;
             private readonly KarProjectArchiveStore _archiveStore;
             private readonly KarValidationOptions _options;
@@ -56,14 +52,12 @@ namespace KARToolkit.Core
             public ValidationRun(
                 KarProject project,
                 KarProjectIndex index,
-                KarProjectFileCatalog fileCatalog,
                 KarProjectInspector inspector,
                 KarProjectArchiveStore archiveStore,
                 KarValidationOptions options)
             {
                 _project = project ?? throw new ArgumentNullException(nameof(project));
                 _index = index ?? throw new ArgumentNullException(nameof(index));
-                _fileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
                 _inspector = inspector ?? throw new ArgumentNullException(nameof(inspector));
                 _archiveStore = archiveStore ?? throw new ArgumentNullException(nameof(archiveStore));
                 _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -76,9 +70,9 @@ namespace KARToolkit.Core
 
                 foreach (KarProjectFile file in _index.Files)
                 {
-                    if (_options.InspectHsdArchives && _fileCatalog.IsHsdArchiveKind(file.Kind))
+                    if (_options.InspectHsdArchives && file.IsHsdArchive)
                         ValidateHsdArchive(file);
-                    else if (_options.InspectA2DPackages && file.Kind == KarFileKind.A2dPackage)
+                    else if (_options.InspectA2DPackages && file.IsA2DPackage)
                         ValidateA2DPackage(file);
                 }
 

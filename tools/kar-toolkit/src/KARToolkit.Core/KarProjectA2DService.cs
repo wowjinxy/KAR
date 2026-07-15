@@ -20,7 +20,7 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectA2DEntryInfo> QueryEntries(KarProjectA2DEntryQueryOptions options = null)
         {
             IEnumerable<KarProjectFile> packageFiles = _project.FileService.Query(options == null ? null : options.Packages)
-                .Where(file => file.Kind == KarFileKind.A2dPackage);
+                .Where(file => file.IsA2DPackage);
 
             List<KarProjectA2DEntryInfo> entries = new List<KarProjectA2DEntryInfo>();
             foreach (KarProjectFile file in packageFiles)

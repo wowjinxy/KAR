@@ -117,11 +117,14 @@ namespace KARToolkit.Core
             KarProjectFile projectFile;
             _project.FileService.TryGet(relativePath, out projectFile);
 
-            KarFileKind kind = projectFile == null
-                ? _project.FileCatalog.ClassifyKind(relativePath)
-                : projectFile.Kind;
+            KarFileKindMatch match = projectFile == null
+                ? _project.FileCatalog.Classify(relativePath)
+                : null;
+            KarFileKind kind = projectFile == null ? match.Kind : projectFile.Kind;
+            KarFileKindDescriptor kindDescriptor = projectFile == null ? match.Descriptor : projectFile.KindDescriptor;
+            string mapName = projectFile == null ? match.MapName : projectFile.MapName;
             KarArchiveDefinition archiveDefinition = projectFile == null
-                ? _project.FileCatalog.GetArchiveDefinition(relativePath, kind)
+                ? _project.FileCatalog.GetArchiveDefinition(match)
                 : projectFile.ArchiveDefinition;
 
             return new KarProjectOutputFileInfo(
@@ -129,6 +132,8 @@ namespace KARToolkit.Core
                 relativePath,
                 _project.Workspace.GetOutputPath(relativePath),
                 kind,
+                kindDescriptor,
+                mapName,
                 archiveDefinition);
         }
     }

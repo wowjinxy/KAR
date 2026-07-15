@@ -28,7 +28,7 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarArchiveInfo> QueryHsdArchives(KarProjectFileQueryOptions options = null)
         {
             return _project.FileService.Query(options)
-                .Where(file => _project.FileCatalog.IsHsdArchiveKind(file.Kind))
+                .Where(file => file.IsHsdArchive)
                 .Select(Inspect)
                 .ToList()
                 .AsReadOnly();

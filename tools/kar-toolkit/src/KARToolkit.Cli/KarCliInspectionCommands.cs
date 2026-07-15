@@ -34,6 +34,26 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowFileKinds(KarCliOptions options)
+    {
+        options.RequirePositionals("file-kinds", 0);
+        List<KarFileKindDescriptor> descriptors = KarFileKindRegistry.Default.Descriptors
+            .OrderBy(descriptor => descriptor.Category)
+            .ThenBy(descriptor => descriptor.DisplayName)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(descriptors.Select(ToFileKindDescriptorDto).ToList());
+            return 0;
+        }
+
+        foreach (KarFileKindDescriptor descriptor in descriptors)
+            PrintFileKindDescriptor(descriptor);
+
+        return 0;
+    }
+
     public static int ShowReport(KarCliOptions options)
     {
         options.RequirePositionals("report", 1);

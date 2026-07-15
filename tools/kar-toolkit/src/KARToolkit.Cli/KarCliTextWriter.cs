@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using KARToolkit.Core;
 
 namespace KARToolkit.Cli;
@@ -22,10 +23,20 @@ internal static class KarCliTextWriter
         Console.WriteLine(file.RelativePath + " [" + file.Kind + ", " + file.Category + "]" + output + " - " + file.DisplayName);
     }
 
+    public static void PrintFileKindDescriptor(KarFileKindDescriptor descriptor)
+    {
+        string traits = FormatFileKindTraits(descriptor);
+        Console.WriteLine(descriptor.Id + " [" + descriptor.Kind + ", " + descriptor.Category + "] " + traits + " - " + descriptor.DisplayName);
+    }
+
     public static void PrintProjectFile(KarProjectFile file)
     {
         Console.WriteLine("File: " + file.RelativePath);
         Console.WriteLine("Kind: " + file.Kind);
+        Console.WriteLine("Kind id: " + file.KindId);
+        Console.WriteLine("Kind traits: " + FormatFileKindTraits(file.KindDescriptor));
+        if (file.HasMapName)
+            Console.WriteLine("Map: " + file.MapName + " (" + file.MapBundleRole + ")");
         Console.WriteLine("Category: " + file.Category);
         Console.WriteLine("Display: " + file.DisplayName);
         if (!string.IsNullOrEmpty(file.ArchiveDefinition.Description))
@@ -35,6 +46,25 @@ internal static class KarCliTextWriter
         Console.WriteLine("Read: " + file.ReadPath);
         Console.WriteLine("Has output copy: " + file.HasOutputCopy);
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
+    }
+
+    private static string FormatFileKindTraits(KarFileKindDescriptor descriptor)
+    {
+        List<string> traits = new List<string>();
+        if (descriptor.IsHsdArchive)
+            traits.Add("hsd");
+        if (descriptor.IsA2DPackage)
+            traits.Add("a2d");
+        if (descriptor.IsScriptTable)
+            traits.Add("script-table");
+        if (descriptor.IsMedia)
+            traits.Add("media");
+        if (descriptor.IsConfig)
+            traits.Add("config");
+        if (descriptor.IsMapBundlePart)
+            traits.Add("map-" + descriptor.MapBundleRole);
+
+        return traits.Count == 0 ? "plain" : string.Join(",", traits);
     }
 
     public static void PrintProjectResourceSummary(KarProjectResourceInfo resource)

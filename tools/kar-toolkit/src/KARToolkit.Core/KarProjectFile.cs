@@ -10,12 +10,18 @@ namespace KARToolkit.Core
             string sourcePath,
             string outputPath,
             KarFileKind kind,
+            KarFileKindDescriptor kindDescriptor,
+            string mapName,
             KarArchiveDefinition archiveDefinition)
         {
             RelativePath = relativePath;
             SourcePath = sourcePath;
             OutputPath = outputPath;
             Kind = kind;
+            KindDescriptor = kindDescriptor ?? throw new ArgumentNullException(nameof(kindDescriptor));
+            if (KindDescriptor.Kind != Kind)
+                throw new ArgumentException("File kind descriptor does not match file kind.", nameof(kindDescriptor));
+            MapName = string.IsNullOrWhiteSpace(mapName) ? null : mapName;
             ArchiveDefinition = archiveDefinition ?? throw new ArgumentNullException(nameof(archiveDefinition));
         }
 
@@ -30,6 +36,24 @@ namespace KARToolkit.Core
         public string OutputPath { get; }
 
         public KarFileKind Kind { get; }
+
+        public KarFileKindDescriptor KindDescriptor { get; }
+
+        public string KindId => KindDescriptor.Id;
+
+        public bool IsHsdArchive => KindDescriptor.IsHsdArchive;
+
+        public bool IsA2DPackage => KindDescriptor.IsA2DPackage;
+
+        public bool IsScriptTable => KindDescriptor.IsScriptTable;
+
+        public bool IsMapBundlePart => KindDescriptor.IsMapBundlePart;
+
+        public string MapBundleRole => KindDescriptor.MapBundleRole;
+
+        public string MapName { get; }
+
+        public bool HasMapName => MapName != null;
 
         public KarArchiveDefinition ArchiveDefinition { get; }
 

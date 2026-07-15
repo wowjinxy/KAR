@@ -1,7 +1,21 @@
+using System.Collections.Generic;
+
 namespace KARToolkit.Core
 {
     public static class KarArchiveCatalog
     {
+        public static IReadOnlyList<KarFileKindDescriptor> FileKinds => KarFileKindRegistry.Default.Descriptors;
+
+        public static KarFileKindMatch Classify(string relativePath)
+        {
+            return KarProjectFileClassifier.Classify(relativePath);
+        }
+
+        public static KarFileKindDescriptor DescribeKind(KarFileKind kind)
+        {
+            return KarFileKindRegistry.Default.GetDescriptor(kind);
+        }
+
         public static KarFileKind ClassifyKind(string relativePath)
         {
             return KarProjectFileClassifier.ClassifyKind(relativePath);

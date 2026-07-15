@@ -88,7 +88,7 @@ namespace KARToolkit.Core
 
         public int HsdArchiveCount => Archives.Count;
 
-        public int A2DPackageCount => Files.Count(file => file.Kind == KarFileKind.A2dPackage);
+        public int A2DPackageCount => Files.Count(file => file.IsA2DPackage);
 
         public int RootCount => Roots.Count;
 
@@ -119,7 +119,7 @@ namespace KARToolkit.Core
         private static IReadOnlyList<KarArchiveInfo> BuildArchives(KarProject project, IEnumerable<KarProjectFile> files)
         {
             return files
-                .Where(file => project.FileCatalog.IsHsdArchiveKind(file.Kind))
+                .Where(file => file.IsHsdArchive)
                 .Select(file => project.ArchiveService.Inspect(file))
                 .OrderBy(archive => archive.File.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()

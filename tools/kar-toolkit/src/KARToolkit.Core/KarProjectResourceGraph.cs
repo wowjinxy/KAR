@@ -127,7 +127,7 @@ namespace KARToolkit.Core
             foreach (KarProjectFile file in project.FileService.Files)
                 resources.Add(KarProjectResourceInfo.FromFile(file));
 
-            foreach (KarProjectFile file in project.FileService.Files.Where(file => project.FileCatalog.IsHsdArchiveKind(file.Kind)))
+            foreach (KarProjectFile file in project.FileService.Files.Where(file => file.IsHsdArchive))
             {
                 KarArchiveInfo archive;
                 string error;
