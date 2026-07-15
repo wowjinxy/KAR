@@ -57,6 +57,7 @@ namespace KARToolkit.Core
                     return new KarArchiveRootInfo(
                         root.Name,
                         accessorTypeName,
+                        root.Data == null || root.Data._s == null ? (int?)null : root.Data._s.Length,
                         rootDefinition,
                         dataDefinition,
                         KarDataInspector.InspectFields(root.Data, dataDefinition, _dataDefinitions, _dataInspectionOptions));

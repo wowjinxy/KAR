@@ -50,6 +50,14 @@ namespace KARToolkit.Core
                 .OrderBy(value => value, StringComparer.Ordinal)
                 .ToList()
                 .AsReadOnly();
+            StructLengths = Issues
+                .Select(issue => issue.StructLength)
+                .Where(value => value.HasValue)
+                .Select(value => value.Value)
+                .Distinct()
+                .OrderBy(value => value)
+                .ToList()
+                .AsReadOnly();
         }
 
         public KarProjectDataCoverageIssueKind Kind { get; }
@@ -78,6 +86,13 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<string> MissingRootPatterns { get; }
 
+        public IReadOnlyList<int> StructLengths { get; }
+
+        public IReadOnlyList<string> StructLengthHexes => StructLengths
+            .Select(value => "0x" + value.ToString("X"))
+            .ToList()
+            .AsReadOnly();
+
         public int Count => Issues.Count;
 
         public int FileCount => Files.Count;
@@ -85,5 +100,15 @@ namespace KARToolkit.Core
         public int RootNameCount => RootNames.Count;
 
         public int MissingRootPatternCount => MissingRootPatterns.Count;
+
+        public int StructLengthCount => StructLengths.Count;
+
+        public int? MinStructLength => StructLengths.Count == 0 ? (int?)null : StructLengths[0];
+
+        public int? MaxStructLength => StructLengths.Count == 0 ? (int?)null : StructLengths[StructLengths.Count - 1];
+
+        public string MinStructLengthHex => MinStructLength.HasValue ? "0x" + MinStructLength.Value.ToString("X") : null;
+
+        public string MaxStructLengthHex => MaxStructLength.HasValue ? "0x" + MaxStructLength.Value.ToString("X") : null;
     }
 }

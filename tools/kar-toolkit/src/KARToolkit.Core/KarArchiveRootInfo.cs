@@ -9,12 +9,14 @@ namespace KARToolkit.Core
         internal KarArchiveRootInfo(
             string name,
             string accessorTypeName,
+            int? structLength,
             KarRootDefinition definition,
             KarDataDefinition dataDefinition,
             IEnumerable<KarDataFieldValue> fieldValues)
         {
             Name = name;
             AccessorTypeName = accessorTypeName;
+            StructLength = structLength;
             Definition = definition;
             DataDefinition = dataDefinition;
             FieldValues = (fieldValues ?? Enumerable.Empty<KarDataFieldValue>())
@@ -25,6 +27,10 @@ namespace KARToolkit.Core
         public string Name { get; }
 
         public string AccessorTypeName { get; }
+
+        public int? StructLength { get; }
+
+        public string StructLengthHex => StructLength.HasValue ? "0x" + StructLength.Value.ToString("X") : null;
 
         public KarRootDefinition Definition { get; }
 

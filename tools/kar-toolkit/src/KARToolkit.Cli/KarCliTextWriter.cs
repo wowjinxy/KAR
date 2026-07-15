@@ -375,7 +375,12 @@ internal static class KarCliTextWriter
     {
         string schema = string.IsNullOrEmpty(group.DataDefinitionId) ? "" : " schema=" + group.DataDefinitionId;
         string accessor = string.IsNullOrEmpty(group.DisplayAccessorTypeName) ? "" : " accessor=" + group.DisplayAccessorTypeName;
-        Console.WriteLine("  " + group.DisplayName + " [" + group.Kind + "] files=" + group.FileCount + " issues=" + group.Count + schema + accessor);
+        string size = group.MinStructLength.HasValue && group.MaxStructLength.HasValue
+            ? group.MinStructLength.Value == group.MaxStructLength.Value
+                ? " size=" + group.MinStructLengthHex
+                : " size=" + group.MinStructLengthHex + "-" + group.MaxStructLengthHex
+            : "";
+        Console.WriteLine("  " + group.DisplayName + " [" + group.Kind + "] files=" + group.FileCount + " issues=" + group.Count + schema + accessor + size);
     }
 
     public static void PrintProjectDataCoverageIssue(KarProjectDataCoverageIssue issue)
@@ -388,7 +393,8 @@ internal static class KarCliTextWriter
 
         string schema = string.IsNullOrEmpty(issue.DataDefinitionId) ? "" : " schema=" + issue.DataDefinitionId;
         string accessor = string.IsNullOrEmpty(issue.DisplayAccessorTypeName) ? "" : " accessor=" + issue.DisplayAccessorTypeName;
-        Console.WriteLine("  " + target + " [" + issue.Kind + "]" + schema + accessor + " - " + issue.Message);
+        string size = string.IsNullOrEmpty(issue.StructLengthHex) ? "" : " size=" + issue.StructLengthHex;
+        Console.WriteLine("  " + target + " [" + issue.Kind + "]" + schema + accessor + size + " - " + issue.Message);
     }
 
     public static void PrintProjectModWorkspace(KarProjectModWorkspace workspace)
@@ -579,11 +585,12 @@ internal static class KarCliTextWriter
         {
             string known = root.IsKnown ? "known" : "unknown";
             string type = string.IsNullOrEmpty(root.DisplayAccessorTypeName) ? "<untyped>" : root.DisplayAccessorTypeName;
+            string size = string.IsNullOrEmpty(root.StructLengthHex) ? "" : ", size=" + root.StructLengthHex;
             string description = root.Definition == null || string.IsNullOrEmpty(root.Definition.Description)
                 ? ""
                 : " - " + root.Definition.Description;
 
-            Console.WriteLine(indent + "  " + root.Name + " [" + known + ", " + type + "]" + description);
+            Console.WriteLine(indent + "  " + root.Name + " [" + known + ", " + type + size + "]" + description);
 
             if (root.DataDefinition != null)
                 PrintDataDefinition(root.DataDefinition, indent + "    ");

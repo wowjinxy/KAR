@@ -38,6 +38,10 @@ namespace KARToolkit.Core
 
         public string AccessorTypeName => Root == null ? null : Root.AccessorTypeName;
 
+        public int? StructLength => Root == null ? (int?)null : Root.StructLength;
+
+        public string StructLengthHex => Root == null ? null : Root.StructLengthHex;
+
         public string ExpectedAccessorTypeName
         {
             get

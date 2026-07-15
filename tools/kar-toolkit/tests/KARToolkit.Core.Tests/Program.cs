@@ -282,6 +282,8 @@ namespace KARToolkit.Core.Tests
                 KarProjectDataCoverageIssueGroup missingDefinitionGroup = report.IssueGroups.Single(group => group.Kind == KarProjectDataCoverageIssueKind.MissingDataDefinition);
                 AssertTrue(missingDefinitionGroup.DisplayName == "HSD_TEXGraphicBank" && missingDefinitionGroup.Count == 2 && missingDefinitionGroup.FileCount == 2, "data coverage should group repeated missing schema targets");
                 AssertTrue(missingDefinitionGroup.RootNameCount == 2 && missingDefinitionGroup.RootNames.Contains("demo_texg") && missingDefinitionGroup.RootNames.Contains("other_texg"), "data coverage issue groups should retain contributing root names");
+                AssertTrue(missingDefinitionGroup.MinStructLength == 4 && missingDefinitionGroup.MaxStructLength == 4 && missingDefinitionGroup.StructLengthHexes.Single() == "0x4", "data coverage issue groups should summarize contributing root struct sizes");
+                AssertTrue(report.Issues.Single(issue => issue.RelativePath == "EfDemo.dat").StructLength == 4, "data coverage issues should expose root struct sizes");
                 AssertTrue(project.CreateDataCoverageReport().IssueCount == report.IssueCount, "project data coverage wrapper should delegate to schema service");
 
                 KarProjectDataCoverageReport filtered = project.CreateDataCoverageReport(new KarProjectDataCoverageOptions
@@ -293,6 +295,7 @@ namespace KARToolkit.Core.Tests
                     Text = "texg",
                 });
                 AssertTrue(filtered.ArchiveCount == 2 && filtered.IssueCount == 2 && filtered.IssueGroupCount == 1 && filtered.MissingDataDefinitionIssueCount == 2, "data coverage options should filter archives and issues by text");
+                AssertTrue(filtered.IssueGroups.Single().StructLengths.Single() == 4, "filtered data coverage issue groups should retain struct size summaries");
 
                 KarProjectDataCoverageReport noUnknownRoots = project.CreateDataCoverageReport(new KarProjectDataCoverageOptions
                 {
