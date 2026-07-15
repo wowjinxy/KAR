@@ -27,6 +27,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
+            Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
             Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
@@ -491,6 +492,76 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(screenInfoTables.Count == 2, "project relationship compatibility wrapper should support role filtering");
                 AssertTrue(project.QueryMapRelationships("GrCity1Event.dat").Count == 3, "project map relationship wrapper should resolve maps by file path");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectA2DServiceExtractsAndReplacesEntriesSafely()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-a2d-service-project-" + Guid.NewGuid().ToString("N"));
+            string filesRoot = Path.Combine(tempRoot, "files");
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(filesRoot);
+
+            string packagePath = Path.Combine(filesRoot, "A2Info.dat");
+            WriteA2DPackage(packagePath, new[] { "ScInfGo2D.tm", "readme.bin" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectA2DService a2d = project.A2DService;
+
+                AssertTrue(object.ReferenceEquals(a2d.Project, project), "A2D service should retain project context");
+
+                KarProjectA2DEntryInfo entry = a2d.GetEntry("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entry.EntryPath == "A2Info.dat#ScInfGo2D.tm", "A2D entry info should expose stable package entry paths");
+                AssertTrue(entry.Size == 4, "A2D entry info should expose entry sizes");
+                AssertTrue(entry.Role == "ScreenInfoTable", "A2D entry info should classify tm entries through the script table catalog");
+
+                KarProjectA2DEntryExtractResult extract = a2d.ExtractEntryToOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(extract.WroteOutput, "A2D entry extraction should write missing output assets");
+                AssertTrue(File.Exists(extract.OutputPath), "A2D entry extraction should create an output-side asset file");
+                AssertTrue(extract.OutputRelativePath == "a2d-entries/A2Info.dat/ScInfGo2D.tm", "A2D entry extraction should use stable sidecar paths");
+                AssertTrue(File.ReadAllBytes(extract.OutputPath).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D entry extraction should write the selected entry bytes");
+                AssertTrue(!File.Exists(project.FileService.GetOutputPath("A2Info.dat")), "A2D entry extraction should not stage a modified package");
+
+                KarProjectA2DEntryExtractResult skippedExtract = a2d.ExtractEntryToOutput("A2Info.dat#0");
+                AssertTrue(!skippedExtract.WroteOutput, "A2D entry extraction should skip existing assets unless overwrite is requested");
+
+                string replacementPath = Path.Combine(tempRoot, "replacement.tm");
+                File.WriteAllBytes(replacementPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                KarProjectA2DEntryReplaceResult replace = a2d.ReplaceEntryFromFile("A2Info.dat#ScInfGo2D.tm", replacementPath);
+                AssertTrue(replace.PackageRelativePath == "A2Info.dat", "A2D entry replacement should report the package path");
+                AssertTrue(replace.ReplacementLength == 4, "A2D entry replacement should report replacement length");
+                AssertTrue(File.Exists(replace.OutputPath), "A2D entry replacement should save the modified package to output");
+                AssertTrue(project.OutputService.GetFile("A2Info.dat").Status == KarProjectOutputFileStatus.DiffersFromSource, "A2D entry replacement should register as a modified project output");
+
+                KarProjectA2DPackage sourcePackage = project.ArchiveService.OpenProjectA2DPackage("A2Info.dat");
+                AssertTrue(sourcePackage.ReadPath == project.FileService.GetOutputPath("A2Info.dat"), "project A2D opens should prefer modified output packages after replacement");
+                AssertTrue(sourcePackage.Package.GetEntryData(0).SequenceEqual(new byte[] { 0x11, 0x22, 0x33, 0x44 }), "project A2D reads should see output package replacements");
+
+                A2DPackage sourceOnlyPackage;
+                string error;
+                AssertTrue(A2DPackage.TryOpen(project.FileService.GetSourcePath("A2Info.dat"), out sourceOnlyPackage, out error), "source package should still parse after output-only replacement");
+                AssertTrue(sourceOnlyPackage.GetEntryData(0).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D entry replacement should not mutate source packages");
+
+                KarProjectA2DEntryExtractResult overwrittenExtract = a2d.ExtractEntryToOutput("A2Info.dat#ScInfGo2D.tm", overwrite: true);
+                AssertTrue(overwrittenExtract.WroteOutput, "A2D entry extraction should overwrite sidecar assets when requested");
+                AssertTrue(File.ReadAllBytes(overwrittenExtract.OutputPath).SequenceEqual(new byte[] { 0x11, 0x22, 0x33, 0x44 }), "A2D entry extraction should read from modified output packages");
+
+                string wrongSizePath = Path.Combine(tempRoot, "wrong-size.tm");
+                File.WriteAllBytes(wrongSizePath, new byte[] { 0x55 });
+                AssertThrows<InvalidDataException>(
+                    () => a2d.ReplaceEntryFromFile("A2Info.dat#ScInfGo2D.tm", wrongSizePath),
+                    "A2D entry replacement should reject size-changing replacements for now");
+
+                AssertTrue(project.GetA2DEntry("A2Info.dat#ScInfGo2D.tm").Name == "ScInfGo2D.tm", "project A2D entry compatibility wrapper should delegate to A2D service");
             }
             finally
             {

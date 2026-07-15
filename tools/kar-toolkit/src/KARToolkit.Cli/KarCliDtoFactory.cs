@@ -538,6 +538,57 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectA2DEntryDto(KarProjectA2DEntryInfo entry)
+    {
+        return new
+        {
+            packageFile = ToProjectFileDto(entry.PackageFile),
+            packageRelativePath = entry.PackageRelativePath,
+            entryPath = entry.EntryPath,
+            index = entry.Index,
+            name = entry.Name,
+            nameOffset = entry.NameOffset,
+            nameOffsetHex = entry.NameOffsetHex,
+            dataOffset = entry.DataOffset,
+            dataOffsetHex = entry.DataOffsetHex,
+            size = entry.Size,
+            sizeHex = entry.SizeHex,
+            kind = entry.Kind,
+            role = entry.Role,
+            category = entry.Category,
+            description = entry.Description,
+        };
+    }
+
+    public static object ToA2DEntryExtractResultDto(KarProjectA2DEntryExtractResult result)
+    {
+        return new
+        {
+            entry = ToProjectA2DEntryDto(result.Entry),
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
+            wroteOutput = result.WroteOutput,
+        };
+    }
+
+    public static object ToA2DEntryReplaceResultDto(KarProjectA2DEntryReplaceResult result)
+    {
+        return new
+        {
+            entry = ToProjectA2DEntryDto(result.Entry),
+            packageFile = ToProjectFileDto(result.PackageFile),
+            packageRelativePath = result.PackageRelativePath,
+            replacementLength = result.ReplacementLength,
+            writeResult = new
+            {
+                relativePath = result.WriteResult.RelativePath,
+                outputPath = result.WriteResult.OutputPath,
+                outputLastWriteTimeUtc = result.WriteResult.OutputLastWriteTimeUtc,
+            },
+            outputPath = result.OutputPath,
+        };
+    }
+
     public static object ToValidationReportDto(KarValidationReport report)
     {
         return new

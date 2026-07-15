@@ -78,6 +78,11 @@ namespace KARToolkit.Core
             return ResolveUnderRoot(OutputFilesRoot, NormalizeRelativePath(relativePath));
         }
 
+        public string GetOutputAssetPath(string relativePath)
+        {
+            return ResolveUnderRoot(OutputRoot, NormalizeRelativePath(relativePath));
+        }
+
         public string GetReadPath(string relativePath)
         {
             string outputPath = GetOutputPath(relativePath);
@@ -123,6 +128,15 @@ namespace KARToolkit.Core
             return outputPath;
         }
 
+        public string PrepareOutputAssetPath(string relativePath)
+        {
+            string outputPath = GetOutputAssetPath(relativePath);
+            string parent = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(parent))
+                Directory.CreateDirectory(parent);
+            return outputPath;
+        }
+
         public string CopyToOutput(string relativePath, bool overwrite = false)
         {
             string sourcePath = GetSourcePath(relativePath);
@@ -153,6 +167,20 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(saveToTempPath));
 
             string outputPath = PrepareOutputPath(relativePath);
+            return SavePreparedOutputPath(outputPath, saveToTempPath);
+        }
+
+        public string SaveOutputAsset(string relativePath, Action<string> saveToTempPath)
+        {
+            if (saveToTempPath == null)
+                throw new ArgumentNullException(nameof(saveToTempPath));
+
+            string outputPath = PrepareOutputAssetPath(relativePath);
+            return SavePreparedOutputPath(outputPath, saveToTempPath);
+        }
+
+        private static string SavePreparedOutputPath(string outputPath, Action<string> saveToTempPath)
+        {
             string tempPath = outputPath + ".tmp";
 
             if (File.Exists(tempPath))

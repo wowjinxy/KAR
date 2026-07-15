@@ -22,6 +22,7 @@ namespace KARToolkit.Core
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
             ArchiveService = new KarProjectArchiveService(this);
+            A2DService = new KarProjectA2DService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
             DataService = new KarProjectDataService(this);
@@ -43,6 +44,8 @@ namespace KARToolkit.Core
         public KarProjectArchiveStore ArchiveStore { get; }
 
         public KarProjectArchiveService ArchiveService { get; }
+
+        public KarProjectA2DService A2DService { get; }
 
         public KarProjectOutputService OutputService { get; }
 
@@ -315,6 +318,21 @@ namespace KARToolkit.Core
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
             return ArchiveService.TryOpenA2DPackage(relativePath, out package, out error);
+        }
+
+        public KarProjectA2DEntryInfo GetA2DEntry(string packageEntryPath)
+        {
+            return A2DService.GetEntry(packageEntryPath);
+        }
+
+        public KarProjectA2DEntryExtractResult ExtractA2DEntryToOutput(string packageEntryPath, bool overwrite = false)
+        {
+            return A2DService.ExtractEntryToOutput(packageEntryPath, overwrite);
+        }
+
+        public KarProjectA2DEntryReplaceResult ReplaceA2DEntryFromFile(string packageEntryPath, string replacementPath)
+        {
+            return A2DService.ReplaceEntryFromFile(packageEntryPath, replacementPath);
         }
 
         public bool TryOpenProjectA2DPackage(string relativePath, out KarProjectA2DPackage package, out string error)
