@@ -372,6 +372,17 @@ internal static class KarCliTextWriter
         Console.WriteLine("Output: " + result.OutputPath);
     }
 
+    public static void PrintProjectResourceScalarEditResult(KarProjectResourceScalarEditResult result)
+    {
+        KarDataFieldEditResult edit = result.Edit;
+        Console.WriteLine("Edited resource scalar: " + result.Address);
+        Console.WriteLine("Root: " + edit.RootName);
+        Console.WriteLine("Field: " + edit.Field.Name);
+        Console.WriteLine("Previous: " + edit.PreviousValue.DisplayValue);
+        Console.WriteLine("New: " + edit.NewValue.DisplayValue);
+        Console.WriteLine("Output: " + result.OutputPath);
+    }
+
     public static void PrintProjectReport(KarProjectReport report)
     {
         Console.WriteLine("Project: " + report.Project.Name);
