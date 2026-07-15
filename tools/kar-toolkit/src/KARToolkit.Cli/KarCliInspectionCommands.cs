@@ -430,6 +430,27 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowArchiveSchemas(KarCliOptions options)
+    {
+        options.RequirePositionals("archive-schemas", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectArchiveSchemaInfo> schemas = project.SchemaService.QueryArchiveSchemas(CreateFileQuery(options))
+            .OrderBy(schema => schema.Category)
+            .ThenBy(schema => schema.RelativePath)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(schemas.Select(ToProjectArchiveSchemaDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectArchiveSchemaInfo schema in schemas)
+            PrintProjectArchiveSchema(schema);
+
+        return 0;
+    }
+
     private static int ShowRootSummaries(KarProject project, KarCliOptions options)
     {
         List<KarProjectRootSummary> summaries = project.DataService.QueryRootSummaries(CreateRootQuery(options))
@@ -453,7 +474,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("schema-usage", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectDataDefinitionUsage> usages = project.DataService.QueryDataDefinitionUsage(CreateRootQuery(options))
+        List<KarProjectDataDefinitionUsage> usages = project.SchemaService.QueryDataDefinitionUsage(CreateRootQuery(options))
             .OrderByDescending(usage => usage.Count)
             .ThenBy(usage => usage.DataDefinitionId)
             .ToList();

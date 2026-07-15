@@ -22,6 +22,7 @@ namespace KARToolkit.Core.Tests
             Run("BuiltInSchemasPassValidation", BuiltInSchemasPassValidation);
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
+            Run("ProjectSchemaServiceExposesActiveProjectCatalogs", ProjectSchemaServiceExposesActiveProjectCatalogs);
             Run("FileKindRegistryDescribesProjectHandlers", FileKindRegistryDescribesProjectHandlers);
             Run("ResourceHandlerRegistryDescribesResourceOperations", ResourceHandlerRegistryDescribesResourceOperations);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
@@ -160,6 +161,66 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(!reportWithoutSchemas.HasDataDefinitionValidation, "schema preflight should be optional for focused callers");
                 AssertTrue(reportWithoutSchemas.ErrorCount == reportWithoutSchemas.Errors.Count, "focused validation error count should omit skipped schema validation");
+            }
+            finally
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectSchemaServiceExposesActiveProjectCatalogs()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-schema-service-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                KAR_vsLegendaryData customData = new KAR_vsLegendaryData();
+                customData.x0C = 77;
+                WriteHsdFile(Path.Combine(tempRoot, "Custom.dat"), "customRoot", customData);
+
+                KarDataDefinition customDefinition = new KarDataDefinition(
+                    "kar.test.custom",
+                    "Custom Test Schema",
+                    "Tests",
+                    "KAR_vsLegendaryData",
+                    "Custom scalar schema for project-level registry tests.",
+                    "tests",
+                    new[] { new KarDataFieldDefinition("x0C", 0x0C, "s32", "Custom scalar value.") },
+                    0x14);
+                KarProject project = KarProject.Open(new KarProjectOptions
+                {
+                    SourceRoot = tempRoot,
+                    DataDefinitions = new KarDataDefinitionRegistry(new[] { customDefinition }),
+                    ArchiveDefinitions = new TestArchiveDefinitionProvider(),
+                });
+                KarProjectSchemaService schema = project.SchemaService;
+
+                AssertTrue(object.ReferenceEquals(schema.Project, project), "schema service should retain project context");
+                AssertTrue(object.ReferenceEquals(schema.DataDefinitions, project.DataService.Definitions), "data service should expose the active project schema registry");
+                AssertTrue(schema.DataDefinitions.All.Count == 1, "schema service should expose custom project schema registries");
+                AssertTrue(schema.FileKinds.Count > 0 && schema.FileHandlers.Count > 0 && schema.ResourceHandlers.Count > 0, "schema service should expose active handler catalogs");
+                AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
+                AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
+                AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Text = "scalar" }).Count == 1, "schema service should search data definition text");
+                AssertTrue(project.GetDataDefinition("KAR_vsLegendaryData").Id == "kar.test.custom", "project data definition lookup should resolve active accessor types");
+
+                KarProjectArchiveSchemaInfo archiveSchema = schema.GetArchiveSchema("Custom.dat");
+                AssertTrue(archiveSchema.RelativePath == "Custom.dat", "archive schema info should keep file context");
+                AssertTrue(archiveSchema.Category == "Tests", "archive schema info should expose archive definition metadata");
+                AssertTrue(archiveSchema.RootDefinitionCount == 1 && archiveSchema.RequiredRootDefinitionCount == 1, "archive schema info should expose expected root counts");
+                AssertTrue(archiveSchema.RootDefinitions[0].DataDefinitionId == "kar.test.custom", "archive schema info should expose expected root schema ids");
+                AssertTrue(project.QueryArchiveSchemas(null).Single().RelativePath == "Custom.dat", "project archive schema wrapper should delegate to schema service");
+
+                KarProjectDataDefinitionUsage usage = schema.QueryDataDefinitionUsage(null).Single();
+                AssertTrue(usage.DataDefinitionId == "kar.test.custom" && usage.Count == 1, "schema service should query active schema usage");
+                KarProjectFieldInfo field = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    DataDefinitionIdOrAccessorTypeName = "kar.test.custom",
+                    FieldName = "x0C",
+                }).Single();
+                AssertTrue(field.Value.SignedValue == 77, "project field queries should read values through custom active schemas");
+                AssertTrue(schema.ValidateDataDefinitions().IsValid && project.ValidateDataDefinitions().IsValid, "schema validation wrappers should validate active project schemas");
             }
             finally
             {
@@ -1891,6 +1952,22 @@ namespace KARToolkit.Core.Tests
             KAR_vsLegendaryData hydra = new KAR_vsLegendaryData();
             hydra.x0C = 303;
             WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", hydra);
+        }
+
+        private sealed class TestArchiveDefinitionProvider : KarArchiveDefinitionProvider
+        {
+            public override KarArchiveDefinition GetDefinition(string relativePath, KarFileKind kind, string mapName)
+            {
+                return new KarArchiveDefinition(
+                    kind,
+                    "Custom Test Archive",
+                    "Tests",
+                    "Custom archive definition for project-level schema tests.",
+                    new[]
+                    {
+                        KarRootDefinition.ExactData("customRoot", "Custom test root", "KAR_vsLegendaryData", "kar.test.custom"),
+                    });
+            }
         }
 
         private static void WriteHsdFile(string path, string rootName, HSDAccessor data)

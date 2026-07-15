@@ -33,6 +33,8 @@ internal static class Program
                 "files" => KarCliInspectionCommands.ShowFiles(options),
                 "file" => KarCliInspectionCommands.ShowFile(options),
                 "archives" => KarCliInspectionCommands.ShowArchives(options),
+                "archive-schemas" => KarCliInspectionCommands.ShowArchiveSchemas(options),
+                "file-schemas" => KarCliInspectionCommands.ShowArchiveSchemas(options),
                 "roots" => KarCliInspectionCommands.ShowRoots(options),
                 "schema-usage" => KarCliInspectionCommands.ShowSchemaUsage(options),
                 "data-definition-usage" => KarCliInspectionCommands.ShowSchemaUsage(options),
@@ -113,6 +115,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archives <source-folder> [--kind <file-kind>] [--category <category>]");
+        Console.WriteLine("  kar-toolkit archive-schemas <source-folder> [--kind <file-kind>] [--category <category>]");
         Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-usage <source-folder> [--kind <file-kind>] [--category <category>] [--root-name <name>]");
         Console.WriteLine("  kar-toolkit fields <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");

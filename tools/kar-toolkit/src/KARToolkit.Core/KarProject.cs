@@ -28,6 +28,7 @@ namespace KARToolkit.Core
             A2DService = new KarProjectA2DService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
+            SchemaService = new KarProjectSchemaService(this);
             DataService = new KarProjectDataService(this);
             EditService = new KarProjectEditService(this);
             RelationshipService = new KarProjectRelationshipService(this);
@@ -59,6 +60,8 @@ namespace KARToolkit.Core
         public KarProjectOutputService OutputService { get; }
 
         public KarProjectMapService MapService { get; }
+
+        public KarProjectSchemaService SchemaService { get; }
 
         public KarProjectDataService DataService { get; }
 
@@ -166,7 +169,37 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectDataDefinitionUsage> QueryDataDefinitionUsage(KarProjectRootQueryOptions options)
         {
-            return DataService.QueryDataDefinitionUsage(options);
+            return SchemaService.QueryDataDefinitionUsage(options);
+        }
+
+        public IReadOnlyList<KarDataDefinition> QueryDataDefinitions(KarDataDefinitionQueryOptions options = null)
+        {
+            return SchemaService.QueryDataDefinitions(options);
+        }
+
+        public KarDataDefinition GetDataDefinition(string idOrAccessorTypeName)
+        {
+            return SchemaService.GetDataDefinition(idOrAccessorTypeName);
+        }
+
+        public bool TryFindDataDefinition(string idOrAccessorTypeName, out KarDataDefinition definition)
+        {
+            return SchemaService.TryFindDataDefinition(idOrAccessorTypeName, out definition);
+        }
+
+        public KarDataDefinitionValidationReport ValidateDataDefinitions()
+        {
+            return SchemaService.ValidateDataDefinitions();
+        }
+
+        public IReadOnlyList<KarProjectArchiveSchemaInfo> QueryArchiveSchemas(KarProjectFileQueryOptions options = null)
+        {
+            return SchemaService.QueryArchiveSchemas(options);
+        }
+
+        public KarProjectArchiveSchemaInfo GetArchiveSchema(string relativePath)
+        {
+            return SchemaService.GetArchiveSchema(relativePath);
         }
 
         public IReadOnlyList<KarProjectFieldInfo> QueryFieldValues(KarProjectFieldQueryOptions options)

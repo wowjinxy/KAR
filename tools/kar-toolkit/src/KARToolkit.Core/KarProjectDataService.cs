@@ -15,7 +15,7 @@ namespace KARToolkit.Core
 
         public KarProject Project => _project;
 
-        public KarDataDefinitionRegistry Definitions => _project.ArchiveInspector.DataDefinitions;
+        public KarDataDefinitionRegistry Definitions => _project.SchemaService.DataDefinitions;
 
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options = null)
         {

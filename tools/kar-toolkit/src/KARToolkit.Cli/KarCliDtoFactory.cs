@@ -418,6 +418,35 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectArchiveSchemaDto(KarProjectArchiveSchemaInfo schema)
+    {
+        return new
+        {
+            file = ToProjectFileDto(schema.File),
+            relativePath = schema.RelativePath,
+            kind = schema.Kind.ToString(),
+            kindId = schema.KindId,
+            category = schema.Category,
+            displayName = schema.DisplayName,
+            description = schema.Description,
+            rootDefinitionCount = schema.RootDefinitionCount,
+            requiredRootDefinitionCount = schema.RequiredRootDefinitionCount,
+            rootDefinitions = schema.RootDefinitions.Select(ToRootDefinitionDto).ToList(),
+        };
+    }
+
+    public static object ToRootDefinitionDto(KarRootDefinition root)
+    {
+        return new
+        {
+            pattern = root.Pattern,
+            description = root.Description,
+            accessorTypeName = root.AccessorTypeName,
+            dataDefinitionId = root.DataDefinitionId,
+            isRequired = root.IsRequired,
+        };
+    }
+
     public static object ToRootDto(KarArchiveRootInfo root)
     {
         return new

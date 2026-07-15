@@ -423,6 +423,18 @@ internal static class KarCliTextWriter
         Console.WriteLine(issue.Severity + " " + issue.Code + location + " - " + issue.Message);
     }
 
+    public static void PrintProjectArchiveSchema(KarProjectArchiveSchemaInfo schema)
+    {
+        Console.WriteLine(schema.RelativePath + " [" + schema.Kind + ", " + schema.Category + "] expected-roots=" + schema.RootDefinitionCount + " required=" + schema.RequiredRootDefinitionCount + " - " + schema.DisplayName);
+        foreach (KarRootDefinition root in schema.RootDefinitions)
+        {
+            string required = root.IsRequired ? "required" : "optional";
+            string type = string.IsNullOrEmpty(root.AccessorTypeName) ? "<untyped>" : root.AccessorTypeName;
+            string dataDefinition = string.IsNullOrEmpty(root.DataDefinitionId) ? "" : ", " + root.DataDefinitionId;
+            Console.WriteLine("  " + root.Pattern + " [" + required + ", " + type + dataDefinition + "] - " + root.Description);
+        }
+    }
+
     public static void PrintDataDefinition(KarDataDefinition definition, string indent)
     {
         Console.WriteLine(indent + "schema: " + definition.Id + " (" + definition.DisplayName + ")");
