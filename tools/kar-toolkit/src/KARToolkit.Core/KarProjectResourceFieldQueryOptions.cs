@@ -10,6 +10,8 @@ namespace KARToolkit.Core
 
         public string FieldName { get; set; }
 
+        public string Text { get; set; }
+
         public bool? IsAvailable { get; set; }
 
         public bool Matches(KarProjectResourceFieldInfo field)
@@ -27,6 +29,8 @@ namespace KARToolkit.Core
             }
 
             if (IsAvailable.HasValue && field.Value.IsAvailable != IsAvailable.Value)
+                return false;
+            if (!string.IsNullOrWhiteSpace(Text) && !KarProjectFieldQueryOptions.MatchesSearchText(field.FieldInfo, Text))
                 return false;
 
             return true;

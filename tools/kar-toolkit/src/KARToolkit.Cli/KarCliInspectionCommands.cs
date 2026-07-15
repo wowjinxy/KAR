@@ -655,6 +655,7 @@ internal static class KarCliInspectionCommands
                 },
             },
             FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            Text = options.SearchText,
         };
     }
 
@@ -871,6 +872,7 @@ internal static class KarCliInspectionCommands
             Roots = CreateRootQuery(options),
             DataDefinitionIdOrAccessorTypeName = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+            Text = options.SearchText,
         };
     }
 

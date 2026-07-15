@@ -644,6 +644,17 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(x0C.Value.SignedValue == 303, "resource field query should expose field values");
                 AssertTrue(project.GetResourceFieldValue("VsHydra.dat:vsDataHydra", "x0C").Value.SignedValue == 303, "project resource field wrapper should delegate to resource service");
 
+                IReadOnlyList<KarProjectResourceFieldInfo> scalarFields = resources.QueryFieldValues(new KarProjectResourceFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "VsHydra.dat:vsDataHydra",
+                        Kind = KarResourceKind.HsdRoot,
+                    },
+                    Text = "unknown scalar",
+                });
+                AssertTrue(scalarFields.Count == 2 && scalarFields.Any(field => field.FieldName == "x0C"), "resource field text search should match field descriptions");
+
                 IReadOnlyList<KarProjectResourceFieldInfo> mapFields = resources.QueryFieldValues(new KarProjectResourceFieldQueryOptions
                 {
                     Resources = new KarProjectResourceQueryOptions
@@ -1812,6 +1823,16 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(hydraFields.Count == 1, "field query should match schemas by accessor type");
                 AssertTrue(hydraFields[0].RelativePath == "VsHydra.dat", "field query should keep file context");
                 AssertTrue(hydraFields[0].Value.SignedValue == 303, "field query should read versus scalar values");
+
+                IReadOnlyList<KarProjectFieldInfo> spawnFields = data.QueryFieldValues(new KarProjectFieldQueryOptions
+                {
+                    Roots = new KarProjectRootQueryOptions
+                    {
+                        Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                    },
+                    Text = "spawn/death",
+                });
+                AssertTrue(spawnFields.Count == 2 && spawnFields.All(field => field.FieldName == "positionNode"), "field text search should match field descriptions across project roots");
 
                 IReadOnlyList<KarProjectFieldInfo> mapOnly = data.QueryFieldValues(new KarProjectFieldQueryOptions
                 {

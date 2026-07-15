@@ -120,8 +120,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit archive-schemas <source-folder> [--kind <file-kind>] [--category <category>]");
         Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-usage <source-folder> [--kind <file-kind>] [--category <category>] [--root-name <name>]");
-        Console.WriteLine("  kar-toolkit fields <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");
-        Console.WriteLine("  kar-toolkit field-summary <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>]");
+        Console.WriteLine("  kar-toolkit fields <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>]");
+        Console.WriteLine("  kar-toolkit field-summary <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map-scripts <source-folder> [map-name-or-file] [script-table-name-or-address] [--output <mod-folder>]");
@@ -132,7 +132,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-detail <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit resource-fields <source-folder> [archive:root] [field-name] [--output <mod-folder>] [--kind <file-kind>] [--category <category>]");
+        Console.WriteLine("  kar-toolkit resource-fields <source-folder> [archive:root] [field-name] [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit script-tables <source-folder> [resource-address|package-relative-path] [table-name] [--output <mod-folder>]");
