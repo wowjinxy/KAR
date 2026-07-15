@@ -52,7 +52,7 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("Usage:");
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
@@ -75,6 +75,10 @@ internal static class Program
         Console.WriteLine("  --no-a2d-packages");
         Console.WriteLine("  --no-missing-map-models");
         Console.WriteLine("  --no-schema-validation");
+        Console.WriteLine("  --kind <file-kind>");
+        Console.WriteLine("  --category <category>");
+        Console.WriteLine("  --output-copy");
+        Console.WriteLine("  --source-only");
     }
 
     private static int Fail(string message)

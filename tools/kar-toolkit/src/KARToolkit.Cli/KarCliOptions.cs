@@ -15,6 +15,9 @@ internal sealed class KarCliOptions
         bool noSchemaValidation,
         bool schema,
         bool json,
+        string fileKind,
+        string fileCategory,
+        bool? fileHasOutputCopy,
         int? maxReferenceDepth,
         int? maxReferenceEntries)
     {
@@ -28,6 +31,9 @@ internal sealed class KarCliOptions
         NoSchemaValidation = noSchemaValidation;
         Schema = schema;
         Json = json;
+        FileKind = fileKind;
+        FileCategory = fileCategory;
+        FileHasOutputCopy = fileHasOutputCopy;
         MaxReferenceDepth = maxReferenceDepth;
         MaxReferenceEntries = maxReferenceEntries;
     }
@@ -52,6 +58,12 @@ internal sealed class KarCliOptions
 
     public bool Json { get; }
 
+    public string FileKind { get; }
+
+    public string FileCategory { get; }
+
+    public bool? FileHasOutputCopy { get; }
+
     public int? MaxReferenceDepth { get; }
 
     public int? MaxReferenceEntries { get; }
@@ -70,6 +82,9 @@ internal sealed class KarCliOptions
         bool noSchemaValidation = false;
         bool schema = false;
         bool json = false;
+        string fileKind = null;
+        string fileCategory = null;
+        bool? fileHasOutputCopy = null;
         int? maxReferenceDepth = null;
         int? maxReferenceEntries = null;
         using IEnumerator<string> enumerator = args.GetEnumerator();
@@ -134,6 +149,30 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--kind" || arg == "--file-kind")
+            {
+                fileKind = ReadValue(enumerator, arg);
+                continue;
+            }
+
+            if (arg == "--category" || arg == "--file-category")
+            {
+                fileCategory = ReadValue(enumerator, arg);
+                continue;
+            }
+
+            if (arg == "--output-copy" || arg == "--has-output-copy" || arg == "--output-only")
+            {
+                fileHasOutputCopy = true;
+                continue;
+            }
+
+            if (arg == "--source-only" || arg == "--no-output-copy")
+            {
+                fileHasOutputCopy = false;
+                continue;
+            }
+
             if (arg == "--max-reference-depth" || arg == "--reference-depth" || arg == "--ref-depth")
             {
                 maxReferenceDepth = ReadNonNegativeInt(enumerator, arg);
@@ -160,8 +199,19 @@ internal sealed class KarCliOptions
             noSchemaValidation,
             schema,
             json,
+            fileKind,
+            fileCategory,
+            fileHasOutputCopy,
             maxReferenceDepth,
             maxReferenceEntries);
+    }
+
+    private static string ReadValue(IEnumerator<string> enumerator, string optionName)
+    {
+        if (!enumerator.MoveNext())
+            throw new ArgumentException(optionName + " requires a value.");
+
+        return enumerator.Current;
     }
 
     private static int ReadNonNegativeInt(IEnumerator<string> enumerator, string optionName)

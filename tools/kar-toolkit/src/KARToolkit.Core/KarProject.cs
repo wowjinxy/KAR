@@ -95,6 +95,11 @@ namespace KARToolkit.Core
             return Index.TryGetFile(relativePath, out file);
         }
 
+        public IReadOnlyList<KarProjectFile> QueryFiles(KarProjectFileQueryOptions options)
+        {
+            return Index.QueryFiles(options);
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

@@ -58,7 +58,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("files", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectFile> files = project.Files
+        List<KarProjectFile> files = project.QueryFiles(CreateFileQuery(options))
             .OrderBy(file => file.Category)
             .ThenBy(file => file.RelativePath)
             .ToList();
@@ -73,6 +73,26 @@ internal static class KarCliInspectionCommands
             PrintProjectFileSummary(file);
 
         return 0;
+    }
+
+    private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
+        {
+            Category = options.FileCategory,
+            HasOutputCopy = options.FileHasOutputCopy,
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.FileKind))
+        {
+            KarFileKind kind;
+            if (!Enum.TryParse(options.FileKind, true, out kind))
+                throw new ArgumentException("Unknown file kind: " + options.FileKind);
+
+            query.Kind = kind;
+        }
+
+        return query;
     }
 
     public static int ShowFile(KarCliOptions options)

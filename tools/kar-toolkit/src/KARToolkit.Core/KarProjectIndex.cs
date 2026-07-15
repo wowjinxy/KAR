@@ -42,6 +42,17 @@ namespace KARToolkit.Core
             return _filesByPath.TryGetValue(normalized, out file);
         }
 
+        public IReadOnlyList<KarProjectFile> QueryFiles(KarProjectFileQueryOptions options)
+        {
+            if (options == null)
+                return Files;
+
+            return Files
+                .Where(options.Matches)
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             KarMapBundle map;

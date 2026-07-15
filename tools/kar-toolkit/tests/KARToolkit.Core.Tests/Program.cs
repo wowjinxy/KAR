@@ -17,6 +17,7 @@ namespace KARToolkit.Core.Tests
             Run("BuiltInSchemasPassValidation", BuiltInSchemasPassValidation);
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
+            Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -132,6 +133,45 @@ namespace KARToolkit.Core.Tests
             finally
             {
                 Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectFileQueryFiltersFiles()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-query-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            string filesRoot = Path.Combine(tempRoot, "files");
+            Directory.CreateDirectory(filesRoot);
+            Directory.CreateDirectory(Path.Combine(filesRoot, "audio"));
+
+            File.WriteAllBytes(Path.Combine(filesRoot, "GrCity1.dat"), new byte[] { 0 });
+            File.WriteAllBytes(Path.Combine(filesRoot, "A2Demo.dat"), new byte[] { 0 });
+            File.WriteAllBytes(Path.Combine(filesRoot, "audio", "test.hps"), new byte[] { 0 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "file query should filter by kind");
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { Category = "maps" }).Count == 1, "file query should filter by category case-insensitively");
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 0, "file query should filter files with output copies");
+
+                project.CopyToOutput("GrCity1.dat", true);
+
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 1, "file query should see newly created output copies");
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions { HasOutputCopy = false }).Count == project.Files.Count - 1, "file query should filter source-only files");
+                AssertTrue(project.QueryFiles(new KarProjectFileQueryOptions
+                {
+                    Kind = KarFileKind.MapData,
+                    HasOutputCopy = true,
+                }).Count == 1, "file query should combine filters");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
             }
         }
 
