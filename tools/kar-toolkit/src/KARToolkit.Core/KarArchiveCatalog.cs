@@ -6,6 +6,8 @@ namespace KARToolkit.Core
     {
         public static IReadOnlyList<KarFileKindDescriptor> FileKinds => KarFileKindRegistry.Default.Descriptors;
 
+        public static IReadOnlyList<KarProjectFileHandler> FileHandlers => KarProjectFileHandlerRegistry.Default.Handlers;
+
         public static KarFileKindMatch Classify(string relativePath)
         {
             return KarProjectFileClassifier.Classify(relativePath);
@@ -14,6 +16,11 @@ namespace KARToolkit.Core
         public static KarFileKindDescriptor DescribeKind(KarFileKind kind)
         {
             return KarFileKindRegistry.Default.GetDescriptor(kind);
+        }
+
+        public static KarProjectFileHandler GetHandler(KarFileKind kind)
+        {
+            return KarProjectFileHandlerRegistry.Default.GetHandler(kind);
         }
 
         public static KarFileKind ClassifyKind(string relativePath)

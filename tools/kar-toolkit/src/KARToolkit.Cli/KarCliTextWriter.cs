@@ -23,10 +23,11 @@ internal static class KarCliTextWriter
         Console.WriteLine(file.RelativePath + " [" + file.Kind + ", " + file.Category + "]" + output + " - " + file.DisplayName);
     }
 
-    public static void PrintFileKindDescriptor(KarFileKindDescriptor descriptor)
+    public static void PrintProjectFileHandler(KarProjectFileHandler handler)
     {
-        string traits = FormatFileKindTraits(descriptor);
-        Console.WriteLine(descriptor.Id + " [" + descriptor.Kind + ", " + descriptor.Category + "] " + traits + " - " + descriptor.DisplayName);
+        string traits = FormatFileKindTraits(handler.Descriptor);
+        string capabilities = string.Join(",", handler.CapabilityList);
+        Console.WriteLine(handler.Id + " [" + handler.Kind + ", " + handler.Category + "] " + traits + " capabilities=" + capabilities + " - " + handler.DisplayName);
     }
 
     public static void PrintProjectFile(KarProjectFile file)
@@ -35,6 +36,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Kind: " + file.Kind);
         Console.WriteLine("Kind id: " + file.KindId);
         Console.WriteLine("Kind traits: " + FormatFileKindTraits(file.KindDescriptor));
+        Console.WriteLine("Capabilities: " + string.Join(",", file.Handler.CapabilityList));
         if (file.HasMapName)
             Console.WriteLine("Map: " + file.MapName + " (" + file.MapBundleRole + ")");
         Console.WriteLine("Category: " + file.Category);

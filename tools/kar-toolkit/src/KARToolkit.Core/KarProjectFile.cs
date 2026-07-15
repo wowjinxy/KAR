@@ -11,6 +11,7 @@ namespace KARToolkit.Core
             string outputPath,
             KarFileKind kind,
             KarFileKindDescriptor kindDescriptor,
+            KarProjectFileHandler handler,
             string mapName,
             KarArchiveDefinition archiveDefinition)
         {
@@ -21,6 +22,9 @@ namespace KARToolkit.Core
             KindDescriptor = kindDescriptor ?? throw new ArgumentNullException(nameof(kindDescriptor));
             if (KindDescriptor.Kind != Kind)
                 throw new ArgumentException("File kind descriptor does not match file kind.", nameof(kindDescriptor));
+            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            if (Handler.Kind != Kind)
+                throw new ArgumentException("File handler does not match file kind.", nameof(handler));
             MapName = string.IsNullOrWhiteSpace(mapName) ? null : mapName;
             ArchiveDefinition = archiveDefinition ?? throw new ArgumentNullException(nameof(archiveDefinition));
         }
@@ -39,7 +43,11 @@ namespace KARToolkit.Core
 
         public KarFileKindDescriptor KindDescriptor { get; }
 
+        public KarProjectFileHandler Handler { get; }
+
         public string KindId => KindDescriptor.Id;
+
+        public KarProjectFileCapability Capabilities => Handler.Capabilities;
 
         public bool IsHsdArchive => KindDescriptor.IsHsdArchive;
 
@@ -50,6 +58,32 @@ namespace KARToolkit.Core
         public bool IsMapBundlePart => KindDescriptor.IsMapBundlePart;
 
         public string MapBundleRole => KindDescriptor.MapBundleRole;
+
+        public bool CanReadBytes => Handler.CanReadBytes;
+
+        public bool CanCopyToOutput => Handler.CanCopyToOutput;
+
+        public bool CanReplaceFileInOutput => Handler.CanReplaceFileInOutput;
+
+        public bool CanInspectHsdArchive => Handler.CanInspectHsdArchive;
+
+        public bool CanQueryHsdRoots => Handler.CanQueryHsdRoots;
+
+        public bool CanEditHsdScalarFields => Handler.CanEditHsdScalarFields;
+
+        public bool CanOpenA2DPackage => Handler.CanOpenA2DPackage;
+
+        public bool CanListA2DEntries => Handler.CanListA2DEntries;
+
+        public bool CanExtractA2DEntries => Handler.CanExtractA2DEntries;
+
+        public bool CanReplaceA2DEntries => Handler.CanReplaceA2DEntries;
+
+        public bool CanListScriptTables => Handler.CanListScriptTables;
+
+        public bool CanGroupWithMap => Handler.CanGroupWithMap;
+
+        public bool CanInspectMapArchive => Handler.CanInspectMapArchive;
 
         public string MapName { get; }
 

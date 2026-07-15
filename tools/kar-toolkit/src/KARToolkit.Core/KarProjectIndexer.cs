@@ -41,12 +41,14 @@ namespace KARToolkit.Core
                 {
                     string relativePath = workspace.GetRelativeSourcePath(path);
                     KarFileKindMatch match = _fileCatalog.Classify(relativePath);
+                    KarProjectFileHandler handler = _fileCatalog.GetHandler(match);
                     return new KarProjectFile(
                         relativePath,
                         path,
                         workspace.GetOutputPath(relativePath),
                         match.Kind,
                         match.Descriptor,
+                        handler,
                         match.MapName,
                         _fileCatalog.GetArchiveDefinition(match));
                 })

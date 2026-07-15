@@ -169,14 +169,20 @@ namespace KARToolkit.Core.Tests
         private static void FileKindRegistryDescribesProjectHandlers()
         {
             KarFileKindRegistry registry = KarFileKindRegistry.Default;
+            KarProjectFileHandlerRegistry handlers = KarProjectFileHandlerRegistry.Default;
             int enumCount = Enum.GetValues(typeof(KarFileKind)).Length;
             AssertTrue(registry.Descriptors.Count == enumCount, "file kind registry should describe every public file kind");
+            AssertTrue(handlers.Handlers.Count == enumCount, "file handler registry should provide every public file kind handler");
 
             KarFileKindMatch mapData = registry.Classify("GrCity1.dat");
             AssertTrue(mapData.Kind == KarFileKind.MapData, "registry should classify map data archives");
             AssertTrue(mapData.MapName == "City1", "registry should extract map data names");
             AssertTrue(mapData.Descriptor.IsHsdArchive, "map data should be marked as HSD archives");
             AssertTrue(mapData.Descriptor.MapBundleRole == "data", "map data should carry its map bundle role");
+            KarProjectFileHandler mapDataHandler = handlers.GetHandler(mapData);
+            AssertTrue(mapDataHandler.CanInspectHsdArchive, "map data handlers should support HSD archive inspection");
+            AssertTrue(mapDataHandler.CanQueryHsdRoots, "map data handlers should support HSD root queries");
+            AssertTrue(mapDataHandler.CanGroupWithMap && mapDataHandler.CanInspectMapArchive, "map data handlers should support map workflows");
 
             KarFileKindMatch mapModel = registry.Classify("GrCity1Model.dat");
             AssertTrue(mapModel.Kind == KarFileKind.MapModel && mapModel.MapName == "City1", "registry should classify map model archives and extract map names");
@@ -184,12 +190,17 @@ namespace KARToolkit.Core.Tests
             KarFileKindMatch a2d = registry.Classify("A2a2dBG_000F.dat");
             AssertTrue(a2d.Kind == KarFileKind.A2dPackage, "registry should classify A2D packages");
             AssertTrue(a2d.Descriptor.IsA2DPackage && !a2d.Descriptor.IsHsdArchive, "A2D packages should be package resources instead of HSD archives");
+            KarProjectFileHandler a2dHandler = handlers.GetHandler(a2d);
+            AssertTrue(a2dHandler.CanOpenA2DPackage && a2dHandler.CanListA2DEntries, "A2D handlers should support package entry workflows");
+            AssertTrue(a2dHandler.CanExtractA2DEntries && a2dHandler.CanReplaceA2DEntries, "A2D handlers should support safe entry output workflows");
+            AssertTrue(!a2dHandler.CanInspectHsdArchive, "A2D handlers should not support HSD archive inspection");
 
             KarFileKindMatch effect = registry.Classify("A2EfCommon.dat");
             AssertTrue(effect.Kind == KarFileKind.EffectData && effect.Descriptor.IsHsdArchive, "A2Ef files should remain effect HSD archives");
 
             KarFileKindMatch script = registry.Classify("ScInfGo2D.tm");
             AssertTrue(script.Kind == KarFileKind.ScriptTable && script.Descriptor.IsScriptTable, "loose .tm files should be script table resources");
+            AssertTrue(handlers.GetHandler(script).CanListScriptTables, "script table handlers should expose script table capability");
 
             KarFileKindDescriptor descriptor;
             AssertTrue(registry.TryFindDescriptor("map-data", out descriptor) && descriptor.Kind == KarFileKind.MapData, "registry should resolve descriptors by stable id");
@@ -200,6 +211,7 @@ namespace KARToolkit.Core.Tests
             AssertTrue(registry.TryGetMapName("GrCity1Event.dat", KarFileKind.MapEvent, out mapName) && mapName == "City1", "registry should extract event map names");
             AssertTrue(!registry.TryGetMapName("A2Info.dat", KarFileKind.A2dPackage, out mapName), "non-map file kinds should not expose map names");
             AssertTrue(KarProjectFileClassifier.Classify("GrCity1.dat").Descriptor.Id == "map-data", "compatibility classifier should delegate to the registry");
+            AssertTrue(KarArchiveCatalog.GetHandler(KarFileKind.MapData).Id == "map-data", "archive catalog compatibility wrappers should expose file handlers");
         }
 
         private static void ProjectFileQueryFiltersFiles()
@@ -226,10 +238,12 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(files.Get("GrCity1.dat").KindId == "map-data", "project files should expose stable file kind ids");
                 AssertTrue(files.Get("GrCity1.dat").IsHsdArchive && files.Get("GrCity1.dat").MapBundleRole == "data", "project files should expose file kind traits");
                 AssertTrue(files.Get("GrCity1.dat").MapName == "City1", "project files should expose path-specific map names");
+                AssertTrue(files.Get("GrCity1.dat").CanInspectHsdArchive && files.Get("GrCity1.dat").CanGroupWithMap, "project files should expose handler capabilities");
                 KarProjectFile tryFile;
                 AssertTrue(files.TryGet("A2Demo.dat", out tryFile), "file service should try-resolve project files by path");
                 AssertTrue(tryFile.Kind == KarFileKind.A2dPackage, "file service try-get should return project file metadata");
                 AssertTrue(tryFile.IsA2DPackage && !tryFile.IsHsdArchive, "A2D project files should expose package traits");
+                AssertTrue(tryFile.CanOpenA2DPackage && tryFile.CanListA2DEntries, "A2D project files should expose package handler capabilities");
                 AssertTrue(files.GetSourcePath("GrCity1.dat") == Path.Combine(filesRoot, "GrCity1.dat"), "file service should resolve source paths");
                 AssertTrue(files.GetOutputPath("GrCity1.dat") == Path.Combine(outputRoot, "files", "GrCity1.dat"), "file service should resolve output paths");
                 AssertTrue(files.GetReadPath("GrCity1.dat") == files.GetSourcePath("GrCity1.dat"), "file service should read from source before output copies exist");
@@ -243,6 +257,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(copyResult.File.RelativePath == "GrCity1.dat", "file service should return copied file metadata");
                 AssertTrue(File.Exists(copyResult.OutputPath), "file service should copy project files to output");
                 AssertTrue(files.GetReadPath("GrCity1.dat") == files.GetOutputPath("GrCity1.dat"), "file service should read from output after copies exist");
+                AssertTrue(project.OutputService.GetFile("GrCity1.dat").CanInspectMapArchive, "output file records should expose handler capabilities");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = true }).Count == 1, "file query should see newly created output copies");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions { HasOutputCopy = false }).Count == project.Files.Count - 1, "file query should filter source-only files");
                 AssertTrue(files.Query(new KarProjectFileQueryOptions

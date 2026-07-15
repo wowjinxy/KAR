@@ -122,6 +122,7 @@ namespace KARToolkit.Core
                 : null;
             KarFileKind kind = projectFile == null ? match.Kind : projectFile.Kind;
             KarFileKindDescriptor kindDescriptor = projectFile == null ? match.Descriptor : projectFile.KindDescriptor;
+            KarProjectFileHandler handler = projectFile == null ? _project.FileCatalog.GetHandler(match) : projectFile.Handler;
             string mapName = projectFile == null ? match.MapName : projectFile.MapName;
             KarArchiveDefinition archiveDefinition = projectFile == null
                 ? _project.FileCatalog.GetArchiveDefinition(match)
@@ -133,6 +134,7 @@ namespace KARToolkit.Core
                 _project.Workspace.GetOutputPath(relativePath),
                 kind,
                 kindDescriptor,
+                handler,
                 mapName,
                 archiveDefinition);
         }

@@ -49,6 +49,32 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectFileHandlerDto(KarProjectFileHandler handler)
+    {
+        return new
+        {
+            kind = handler.Kind.ToString(),
+            id = handler.Id,
+            displayName = handler.DisplayName,
+            category = handler.Category,
+            descriptor = ToFileKindDescriptorDto(handler.Descriptor),
+            capabilities = ToCapabilityNames(handler.CapabilityList),
+            canReadBytes = handler.CanReadBytes,
+            canCopyToOutput = handler.CanCopyToOutput,
+            canReplaceFileInOutput = handler.CanReplaceFileInOutput,
+            canInspectHsdArchive = handler.CanInspectHsdArchive,
+            canQueryHsdRoots = handler.CanQueryHsdRoots,
+            canEditHsdScalarFields = handler.CanEditHsdScalarFields,
+            canOpenA2DPackage = handler.CanOpenA2DPackage,
+            canListA2DEntries = handler.CanListA2DEntries,
+            canExtractA2DEntries = handler.CanExtractA2DEntries,
+            canReplaceA2DEntries = handler.CanReplaceA2DEntries,
+            canListScriptTables = handler.CanListScriptTables,
+            canGroupWithMap = handler.CanGroupWithMap,
+            canInspectMapArchive = handler.CanInspectMapArchive,
+        };
+    }
+
     public static object ToProjectReportDto(KarProjectReport report)
     {
         return new
@@ -195,6 +221,8 @@ internal static class KarCliDtoFactory
             kind = file.Kind.ToString(),
             kindId = file.KindId,
             kindInfo = ToFileKindDescriptorDto(file.KindDescriptor),
+            handler = ToProjectFileHandlerDto(file.Handler),
+            capabilities = ToCapabilityNames(file.Handler.CapabilityList),
             mapName = file.MapName,
             mapBundleRole = file.MapBundleRole,
             displayName = file.DisplayName,
@@ -836,6 +864,8 @@ internal static class KarCliDtoFactory
             kind = file.Kind.ToString(),
             kindId = file.KindId,
             kindInfo = ToFileKindDescriptorDto(file.KindDescriptor),
+            handler = ToProjectFileHandlerDto(file.Handler),
+            capabilities = ToCapabilityNames(file.Handler.CapabilityList),
             mapName = file.MapName,
             mapBundleRole = file.MapBundleRole,
             displayName = file.DisplayName,
@@ -857,6 +887,13 @@ internal static class KarCliDtoFactory
     public static object ToProjectFileDtoOrNull(KarProjectFile file)
     {
         return file == null ? null : ToProjectFileDto(file);
+    }
+
+    private static List<string> ToCapabilityNames(IEnumerable<KarProjectFileCapability> capabilities)
+    {
+        return capabilities
+            .Select(capability => capability.ToString())
+            .ToList();
     }
 
     public static object ToA2DEntryDto(A2DPackageEntry entry)

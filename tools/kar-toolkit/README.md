@@ -79,7 +79,7 @@ Project relationship discovery goes through `KarProject.RelationshipService`, an
 A2D entry inventory goes through `KarProject.A2DService.QueryEntries`, and the `a2d-entries` CLI command lists package entries across a project or inside one package.
 A2D sidecar output status goes through `KarProject.A2DService.QueryEntryOutputs`, and the `a2d-entry-outputs` CLI command compares output-side extracted entries against the current package entry bytes.
 A2D entry workflows go through `KarProject.A2DService`; `extract-a2d-entry` writes package entries to the output-side `a2d-entries` workspace, `apply-a2d-entry-outputs` packs modified sidecars into output packages, and `replace-a2d-entry` saves same-size replacements only through the configured output folder.
-Project file kind discovery goes through `KarFileKindRegistry`, which describes each known file kind, its stable id, category, and traits such as HSD archive, A2D package, script table, media, config, or map-bundle role. The `file-kinds` CLI command exposes that registry for tools and scripts.
+Project file kind discovery goes through `KarFileKindRegistry`, which describes each known file kind, its stable id, category, and traits such as HSD archive, A2D package, script table, media, config, or map-bundle role. Project file workflow capability discovery goes through `KarProjectFileHandlerRegistry`, which maps those file kinds to supported operations such as HSD root inspection, A2D entry workflows, script-table listing, and map grouping. The `file-kinds` CLI command exposes the handler registry for tools and scripts.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.ArchiveService.QueryHsdArchives` or the compatibility wrapper `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
@@ -88,7 +88,7 @@ Project-wide schema usage goes through `KarProject.DataService.QueryDataDefiniti
 Project-wide labeled field discovery goes through `KarProject.DataService.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.
 Project-wide labeled field comparison goes through `KarProject.DataService.QueryFieldSummaries`, and the `field-summary` CLI command groups values by schema field.
 Project file kind classification and map-name extraction go through `KarFileKindRegistry`; `KarProjectFileClassifier` remains as a compatibility wrapper.
-`KarProjectFileCatalog` is the replaceable service that connects file kind descriptors, HSD/A2D/script traits, archive metadata lookup, and map-name extraction.
+`KarProjectFileCatalog` is the replaceable service that connects file kind descriptors, file handlers/capabilities, HSD/A2D/script traits, archive metadata lookup, and map-name extraction.
 `KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.
 Project file lookup, filtering, asset paths, byte reads/writes, and single-file copies go through `KarProject.FileService`, which wraps the lower-level `KarProjectFileStore`.
 Copy operations can return `KarProjectFileCopyResult` when tools need both the copied file metadata and destination path.

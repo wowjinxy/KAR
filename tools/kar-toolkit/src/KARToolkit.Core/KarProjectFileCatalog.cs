@@ -8,32 +8,48 @@ namespace KARToolkit.Core
         public static KarProjectFileCatalog Default { get; } = new KarProjectFileCatalog();
 
         private readonly KarFileKindRegistry _fileKinds;
+        private readonly KarProjectFileHandlerRegistry _fileHandlers;
         private readonly KarArchiveDefinitionProvider _archiveDefinitions;
 
         public KarProjectFileCatalog()
-            : this(KarArchiveDefinitionProvider.Default, KarFileKindRegistry.Default)
+            : this(KarArchiveDefinitionProvider.Default, KarProjectFileHandlerRegistry.Default)
         {
         }
 
         public KarProjectFileCatalog(KarArchiveDefinitionProvider archiveDefinitions)
-            : this(archiveDefinitions, KarFileKindRegistry.Default)
+            : this(archiveDefinitions, KarProjectFileHandlerRegistry.Default)
         {
         }
 
         public KarProjectFileCatalog(KarFileKindRegistry fileKinds)
-            : this(KarArchiveDefinitionProvider.Default, fileKinds)
+            : this(KarArchiveDefinitionProvider.Default, new KarProjectFileHandlerRegistry(fileKinds))
+        {
+        }
+
+        public KarProjectFileCatalog(KarProjectFileHandlerRegistry fileHandlers)
+            : this(KarArchiveDefinitionProvider.Default, fileHandlers)
         {
         }
 
         public KarProjectFileCatalog(KarArchiveDefinitionProvider archiveDefinitions, KarFileKindRegistry fileKinds)
+            : this(archiveDefinitions, new KarProjectFileHandlerRegistry(fileKinds))
+        {
+        }
+
+        public KarProjectFileCatalog(KarArchiveDefinitionProvider archiveDefinitions, KarProjectFileHandlerRegistry fileHandlers)
         {
             _archiveDefinitions = archiveDefinitions ?? throw new ArgumentNullException(nameof(archiveDefinitions));
-            _fileKinds = fileKinds ?? throw new ArgumentNullException(nameof(fileKinds));
+            _fileHandlers = fileHandlers ?? throw new ArgumentNullException(nameof(fileHandlers));
+            _fileKinds = _fileHandlers.FileKindRegistry;
         }
 
         public KarFileKindRegistry FileKindRegistry => _fileKinds;
 
+        public KarProjectFileHandlerRegistry FileHandlerRegistry => _fileHandlers;
+
         public IReadOnlyList<KarFileKindDescriptor> FileKindDescriptors => _fileKinds.Descriptors;
+
+        public IReadOnlyList<KarProjectFileHandler> FileHandlers => _fileHandlers.Handlers;
 
         public KarArchiveDefinitionProvider ArchiveDefinitions => _archiveDefinitions;
 
@@ -50,6 +66,16 @@ namespace KARToolkit.Core
         public virtual KarFileKindDescriptor DescribeKind(KarFileKind kind)
         {
             return _fileKinds.GetDescriptor(kind);
+        }
+
+        public virtual KarProjectFileHandler GetHandler(KarFileKind kind)
+        {
+            return _fileHandlers.GetHandler(kind);
+        }
+
+        public virtual KarProjectFileHandler GetHandler(KarFileKindMatch match)
+        {
+            return _fileHandlers.GetHandler(match);
         }
 
         public virtual KarArchiveDefinition GetArchiveDefinition(string relativePath)

@@ -37,19 +37,19 @@ internal static class KarCliInspectionCommands
     public static int ShowFileKinds(KarCliOptions options)
     {
         options.RequirePositionals("file-kinds", 0);
-        List<KarFileKindDescriptor> descriptors = KarFileKindRegistry.Default.Descriptors
-            .OrderBy(descriptor => descriptor.Category)
-            .ThenBy(descriptor => descriptor.DisplayName)
+        List<KarProjectFileHandler> handlers = KarProjectFileHandlerRegistry.Default.Handlers
+            .OrderBy(handler => handler.Category)
+            .ThenBy(handler => handler.DisplayName)
             .ToList();
 
         if (options.Json)
         {
-            WriteJson(descriptors.Select(ToFileKindDescriptorDto).ToList());
+            WriteJson(handlers.Select(ToProjectFileHandlerDto).ToList());
             return 0;
         }
 
-        foreach (KarFileKindDescriptor descriptor in descriptors)
-            PrintFileKindDescriptor(descriptor);
+        foreach (KarProjectFileHandler handler in handlers)
+            PrintProjectFileHandler(handler);
 
         return 0;
     }
