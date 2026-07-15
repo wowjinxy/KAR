@@ -55,6 +55,19 @@ internal static class KarCliTextWriter
             Console.WriteLine("  " + root.RelativePath);
     }
 
+    public static void PrintArchiveInventory(KarArchiveInfo archive)
+    {
+        Console.WriteLine(
+            archive.File.RelativePath +
+            " [" + archive.File.Kind + ", " + archive.File.Category + "] roots=" + archive.Roots.Count +
+            " known=" + archive.KnownRoots.Count +
+            " unknown=" + archive.UnknownRoots.Count +
+            " missing=" + archive.MissingRequiredRoots.Count);
+
+        foreach (KarRootDefinition missing in archive.MissingRequiredRoots)
+            Console.WriteLine("  missing " + missing.Pattern);
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");

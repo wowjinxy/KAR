@@ -79,6 +79,19 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToArchiveInventoryDto(KarArchiveInfo archive)
+    {
+        return new
+        {
+            file = ToProjectFileDto(archive.File),
+            rootCount = archive.Roots.Count,
+            knownRootCount = archive.KnownRoots.Count,
+            unknownRootCount = archive.UnknownRoots.Count,
+            missingRequiredRootCount = archive.MissingRequiredRoots.Count,
+            missingRequiredRoots = archive.MissingRequiredRoots.Select(root => root.Pattern).ToList(),
+        };
+    }
+
     public static object ToRootDto(KarArchiveRootInfo root)
     {
         return new

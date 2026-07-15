@@ -100,6 +100,27 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowArchives(KarCliOptions options)
+    {
+        options.RequirePositionals("archives", 1);
+        KarProject project = OpenProject(options);
+        List<KarArchiveInfo> archives = project.QueryArchives(CreateFileQuery(options))
+            .OrderBy(archive => archive.File.Category)
+            .ThenBy(archive => archive.File.RelativePath)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(archives.Select(ToArchiveInventoryDto).ToList());
+            return 0;
+        }
+
+        foreach (KarArchiveInfo archive in archives)
+            PrintArchiveInventory(archive);
+
+        return 0;
+    }
+
     private static int ShowRootSummaries(KarProject project, KarCliOptions options)
     {
         List<KarProjectRootSummary> summaries = project.QueryRootSummaries(CreateRootQuery(options))

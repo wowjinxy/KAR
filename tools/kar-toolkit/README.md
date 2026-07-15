@@ -28,6 +28,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll v
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll file .\GKYE01 GrCity1.dat
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archives .\GKYE01 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll roots .\GKYE01 --kind MapData --unknown
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll roots .\GKYE01 --unknown --summary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
@@ -41,6 +42,7 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
+Project-wide archive inventory goes through `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
 Project-wide root discovery goes through `KarProject.QueryRoots`, grouped root discovery goes through `KarProject.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
 `KarProjectFileCatalog` is the replaceable service that connects file classification, HSD-kind checks, and map-name extraction.
