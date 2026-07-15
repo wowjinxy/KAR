@@ -796,6 +796,18 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceActionExecutionResult skippedDump = project.ResourceService.ExecuteAction("ScInfPause.tm", "dump-bytes");
                 AssertTrue(!skippedDump.Plan.WouldWriteOutput && !skippedDump.ByteDumpResult.WroteOutput, "resource action executors should keep skip/write state in the execution plan and result");
 
+                IReadOnlyList<KarProjectResourceActionExecutionResult> scriptDumps = project.ExecuteResourceActions(new KarProjectResourceActionPlanQueryOptions
+                {
+                    ActionId = "dump-bytes",
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Domain = "script-tables",
+                    },
+                });
+                AssertTrue(scriptDumps.Count == 2, "resource action batch execution should run batch-safe actions over filtered resource sets");
+                AssertTrue(scriptDumps.Any(result => result.Address == "ScInfPause.tm" && !result.ByteDumpResult.WroteOutput), "resource action batch execution should include skipped existing outputs");
+                AssertTrue(scriptDumps.Any(result => result.Address == "A2Info.dat#ScInfGo2D.tm" && result.ByteDumpResult.WroteOutput), "resource action batch execution should write missing outputs");
+
                 KarProjectResourceActionExecutionResult fields = executor.Execute("VsHydra.dat:vsDataHydra", "field-values");
                 AssertTrue(fields.FieldValues.Any(field => field.FieldName == "x0C" && field.Value.SignedValue == 303), "resource action executors should return field-list results");
 
@@ -804,6 +816,20 @@ namespace KARToolkit.Core.Tests
                     "field-values",
                     new KarProjectResourceActionExecutionOptions { FieldName = "x0C" });
                 AssertTrue(field.FieldValue.Value.SignedValue == 303, "resource action executors should return single field results when field names are supplied");
+
+                IReadOnlyList<KarProjectResourceActionExecutionResult> mapUnknowns = executor.ExecuteBatch(
+                    new KarProjectResourceActionPlanQueryOptions
+                    {
+                        ActionId = "field-values",
+                        Resources = new KarProjectResourceQueryOptions
+                        {
+                            Kind = KarResourceKind.HsdRoot,
+                            Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                        },
+                    },
+                    new KarProjectResourceActionExecutionOptions { FieldName = "unknown1" });
+                AssertTrue(mapUnknowns.Count == 2, "resource action batch execution should support shared field-value arguments");
+                AssertTrue(mapUnknowns.All(result => result.FieldValue.FieldName == "unknown1"), "resource action field batches should return the selected field for each resource");
 
                 KarProjectResourceActionExecutionResult scalarEdit = executor.Execute(
                     "VsHydra.dat:vsDataHydra",
@@ -836,6 +862,16 @@ namespace KARToolkit.Core.Tests
                         "set-scalar",
                         new KarProjectResourceActionExecutionOptions { FieldName = "x0C" }),
                     "resource action executors should reject incomplete scalar edit arguments");
+                AssertThrows<ArgumentException>(
+                    () => executor.ExecuteBatch(new KarProjectResourceActionPlanQueryOptions()),
+                    "resource action batch execution should require a single action id");
+                AssertThrows<NotSupportedException>(
+                    () => executor.ExecuteBatch(new KarProjectResourceActionPlanQueryOptions
+                    {
+                        ActionId = "export-output",
+                        Resources = new KarProjectResourceQueryOptions { Kind = KarResourceKind.File },
+                    }),
+                    "resource action batch execution should reject actions that are not marked batch-safe");
             }
             finally
             {

@@ -154,6 +154,13 @@ namespace KARToolkit.Core
             return _project.ResourceActionExecutor.Execute(address, actionId, options);
         }
 
+        public IReadOnlyList<KarProjectResourceActionExecutionResult> ExecuteActions(
+            KarProjectResourceActionPlanQueryOptions options,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return _project.ResourceActionExecutor.ExecuteBatch(options, executionOptions);
+        }
+
         public IReadOnlyList<KarProjectResourceByteInfo> QueryByteInfo(KarProjectResourceByteQueryOptions options = null)
         {
             IEnumerable<KarProjectResourceByteInfo> query = Query(options == null ? null : options.Resources)

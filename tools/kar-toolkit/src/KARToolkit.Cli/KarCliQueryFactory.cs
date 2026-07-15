@@ -97,6 +97,14 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectResourceActionPlanQueryOptions CreateResourceActionBatchPlanQuery(KarCliOptions options, string actionId)
+    {
+        KarProjectResourceActionPlanQueryOptions query = CreateResourceActionPlanQuery(options);
+        query.ActionId = actionId;
+        query.Resources.Address = null;
+        return query;
+    }
+
     public static KarProjectResourceFieldQueryOptions CreateResourceFieldQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);

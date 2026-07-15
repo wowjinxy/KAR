@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -65,6 +67,49 @@ namespace KARToolkit.Core
             }
 
             return new KarProjectResourceActionExecutionResult(plan, result);
+        }
+
+        public IReadOnlyList<KarProjectResourceActionExecutionResult> ExecuteBatch(
+            KarProjectResourceActionPlanQueryOptions options,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+            if (string.IsNullOrWhiteSpace(options.ActionId))
+                throw new ArgumentException("Batch resource action execution requires a single action id.", nameof(options));
+
+            executionOptions = executionOptions ?? new KarProjectResourceActionExecutionOptions();
+            bool overwrite = options.Overwrite || executionOptions.Overwrite;
+            executionOptions.Overwrite = overwrite;
+
+            KarProjectResourceActionPlanQueryOptions effectiveOptions = new KarProjectResourceActionPlanQueryOptions
+            {
+                Resources = options.Resources,
+                ActionId = options.ActionId,
+                IsReadOnly = options.IsReadOnly,
+                WritesOutput = options.WritesOutput,
+                CanRun = options.CanRun ?? true,
+                WouldWriteOutput = options.WouldWriteOutput,
+                Overwrite = overwrite,
+            };
+
+            List<KarProjectResourceActionExecutionResult> results = new List<KarProjectResourceActionExecutionResult>();
+            foreach (KarProjectResourceActionPlan plan in _project.ResourceService.QueryActionPlans(effectiveOptions))
+            {
+                if (!plan.SupportsBatch)
+                    throw new NotSupportedException("KAR resource action does not support batch execution: " + plan.ActionId);
+                if (!plan.CanRun)
+                    throw new InvalidOperationException("KAR resource action cannot run: " + plan.Address + " " + plan.ActionId + ". " + plan.Reason);
+
+                results.Add(Execute(plan.Address, plan.ActionId, executionOptions));
+            }
+
+            return results
+                .OrderBy(result => result.Resource.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(result => result.Kind)
+                .ThenBy(result => result.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
         }
     }
 }

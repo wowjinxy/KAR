@@ -2,6 +2,7 @@ using KARToolkit.Core;
 using static KARToolkit.Cli.KarCliDtoFactory;
 using static KARToolkit.Cli.KarCliJsonWriter;
 using static KARToolkit.Cli.KarCliProjectFactory;
+using static KARToolkit.Cli.KarCliQueryFactory;
 using static KARToolkit.Cli.KarCliTextWriter;
 
 namespace KARToolkit.Cli;
@@ -18,6 +19,31 @@ internal static class KarCliResourceActionCommands
         KarProjectResourceActionExecutionResult result = project.ResourceActionExecutor.Execute(address, actionId, executionOptions);
 
         return WriteActionResult(options, result);
+    }
+
+    public static int ExecuteBatch(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-action-batch", 2);
+        KarProject project = OpenProject(options);
+        string actionId = options.Positionals[1];
+        KarProjectResourceActionExecutionOptions executionOptions = CreateBatchExecutionOptions(options, actionId);
+        KarProjectResourceActionPlanQueryOptions query = CreateResourceActionBatchPlanQuery(options, actionId);
+        IReadOnlyList<KarProjectResourceActionExecutionResult> results = project.ResourceActionExecutor.ExecuteBatch(query, executionOptions);
+
+        if (options.Json)
+        {
+            WriteJson(results.Select(ToResourceActionExecutionResultDto).ToList());
+            return 0;
+        }
+
+        Console.WriteLine("Executed resource actions: " + results.Count);
+        foreach (KarProjectResourceActionExecutionResult result in results)
+        {
+            PrintProjectResourceActionPlan(result.Plan);
+            PrintResourceActionResult(result);
+        }
+
+        return 0;
     }
 
     private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
@@ -49,23 +75,41 @@ internal static class KarCliResourceActionCommands
         return executionOptions;
     }
 
+    private static KarProjectResourceActionExecutionOptions CreateBatchExecutionOptions(KarCliOptions options, string actionId)
+    {
+        KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
+        {
+            Overwrite = options.Overwrite,
+        };
+
+        if (actionId.Equals("field-values", StringComparison.OrdinalIgnoreCase) && options.Positionals.Count >= 3)
+            executionOptions.FieldName = options.Positionals[2];
+
+        return executionOptions;
+    }
+
     private static int WriteActionResult(
         KarCliOptions options,
         KarProjectResourceActionExecutionResult result)
     {
         if (options.Json)
         {
-            WriteJson(new
-            {
-                plan = ToProjectResourceActionPlanDto(result.Plan),
-                result = ToResourceActionResultDto(result),
-            });
+            WriteJson(ToResourceActionExecutionResultDto(result));
             return 0;
         }
 
         PrintProjectResourceActionPlan(result.Plan);
         PrintResourceActionResult(result);
         return 0;
+    }
+
+    private static object ToResourceActionExecutionResultDto(KarProjectResourceActionExecutionResult result)
+    {
+        return new
+        {
+            plan = ToProjectResourceActionPlanDto(result.Plan),
+            result = ToResourceActionResultDto(result),
+        };
     }
 
     private static object ToResourceActionResultDto(KarProjectResourceActionExecutionResult result)

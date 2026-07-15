@@ -339,6 +339,13 @@ namespace KARToolkit.Core
             return ResourceActionExecutor.Execute(address, actionId, options);
         }
 
+        public IReadOnlyList<KarProjectResourceActionExecutionResult> ExecuteResourceActions(
+            KarProjectResourceActionPlanQueryOptions options,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return ResourceActionExecutor.ExecuteBatch(options, executionOptions);
+        }
+
         public KarProjectResourceDetail GetResourceDetail(string address)
         {
             return ResourceService.GetDetail(address);
