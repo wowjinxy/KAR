@@ -17,16 +17,16 @@ internal static class Program
 
             return command switch
             {
-                "project" => KarCliCommands.ShowProject(options),
-                "maps" => KarCliCommands.ShowMaps(options),
-                "map" => KarCliCommands.ShowMap(options),
-                "archive" => KarCliCommands.ShowArchive(options),
-                "a2d" => KarCliCommands.ShowA2D(options),
-                "copy" => KarCliCommands.CopyFile(options),
-                "copy-map" => KarCliCommands.CopyMap(options),
-                "validate" => KarCliCommands.ValidateProject(options),
-                "definitions" => KarCliCommands.ShowDefinitions(options),
-                "definition" => KarCliCommands.ShowDefinition(options),
+                "project" => KarCliInspectionCommands.ShowProject(options),
+                "maps" => KarCliInspectionCommands.ShowMaps(options),
+                "map" => KarCliInspectionCommands.ShowMap(options),
+                "archive" => KarCliInspectionCommands.ShowArchive(options),
+                "a2d" => KarCliInspectionCommands.ShowA2D(options),
+                "copy" => KarCliCopyCommands.CopyFile(options),
+                "copy-map" => KarCliCopyCommands.CopyMap(options),
+                "validate" => KarCliInspectionCommands.ValidateProject(options),
+                "definitions" => KarCliInspectionCommands.ShowDefinitions(options),
+                "definition" => KarCliInspectionCommands.ShowDefinition(options),
                 _ => Fail("Unknown command: " + args[0]),
             };
         }

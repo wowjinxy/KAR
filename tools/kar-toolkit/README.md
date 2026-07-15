@@ -5,7 +5,7 @@
 ## Layout
 
 - `src/KARToolkit.Core`: project-safe workspace access, KAR file indexing, archive catalogs/inspection, map bundle grouping, copy-to-output helpers, and validation.
-- `src/KARToolkit.Cli`: thin command-line dispatch, command modules, and JSON/text output helpers for batch inspection, validation, and safe copy operations.
+- `src/KARToolkit.Cli`: thin command-line dispatch, read-only inspection commands, safe copy commands, and JSON/text output helpers for batch inspection, validation, and mod output operations.
 - `external/HSDLib`: external HSD parsing/viewer dependency. KAR-specific workflows should live here only when they are viewer UI glue or low-level HSD support.
 
 ## Build
