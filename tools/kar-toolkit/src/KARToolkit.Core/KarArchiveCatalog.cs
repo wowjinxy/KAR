@@ -28,15 +28,15 @@ namespace KARToolkit.Core
             switch (kind)
             {
                 case KarFileKind.StageTable:
-                    return Define(kind, "Stage Table", "Maps", "Global stage table.", Root("stData", "Stage table", "KAR_stData", dataDefinitionId: "kar.stage.table"));
+                    return KarMapArchiveDefinitions.DefineStageTable(kind);
                 case KarFileKind.MapCommon:
-                    return Define(kind, "Map Common Data", "Maps", "Shared map data used by stages.", Root("grDataCommon", "Shared map data", "KAR_grDataCommon"));
+                    return KarMapArchiveDefinitions.DefineMapCommon(kind);
                 case KarFileKind.MapData:
-                    return DefineMapData(relativePath, kind);
+                    return KarMapArchiveDefinitions.DefineMapData(relativePath, kind);
                 case KarFileKind.MapModel:
-                    return DefineMapModel(relativePath, kind);
+                    return KarMapArchiveDefinitions.DefineMapModel(relativePath, kind);
                 case KarFileKind.MapEvent:
-                    return DefineMapEvent(relativePath, kind);
+                    return KarMapArchiveDefinitions.DefineMapEvent(relativePath, kind);
                 case KarFileKind.A2dPackage:
                     return Define(kind, "A2D Package", "A2D", "Air Ride 2D package containing one or more embedded resources.");
                 case KarFileKind.VehicleData:
@@ -67,36 +67,6 @@ namespace KARToolkit.Core
         public static bool TryGetMapName(string relativePath, KarFileKind kind, out string mapName)
         {
             return KarProjectFileClassifier.TryGetMapName(relativePath, kind, out mapName);
-        }
-
-        private static KarArchiveDefinition DefineMapData(string relativePath, KarFileKind kind)
-        {
-            if (!TryGetMapName(relativePath, kind, out string mapName))
-                return GetDefinitionFallback(relativePath, kind);
-
-            return Define(kind, "Map Data: " + mapName, "Maps", "Map gameplay data and stage setup.", Root("grData" + mapName, "Map gameplay data", "KAR_grData", dataDefinitionId: "kar.gr.data"));
-        }
-
-        private static KarArchiveDefinition DefineMapModel(string relativePath, KarFileKind kind)
-        {
-            if (!TryGetMapName(relativePath, kind, out string mapName))
-                return GetDefinitionFallback(relativePath, kind);
-
-            return Define(
-                kind,
-                "Map Model: " + mapName,
-                "Maps",
-                "Map model and map model motion data.",
-                Root("grModel" + mapName, "Map model data", "KAR_grModel"),
-                Root("grModelMotion" + mapName, "Map model motion data", "HSDArrayAccessor<KAR_grModelMotion>", false));
-        }
-
-        private static KarArchiveDefinition DefineMapEvent(string relativePath, KarFileKind kind)
-        {
-            if (!TryGetMapName(relativePath, kind, out string mapName))
-                return GetDefinitionFallback(relativePath, kind);
-
-            return Define(kind, "Map Events: " + mapName, "Maps", "Map event/script archive tied to the map bundle.", Root("grEventDataAll" + mapName, "Map event/script data", null, dataDefinitionId: "kar.gr.eventDataAll"));
         }
 
         private static KarArchiveDefinition DefineVehicle(string name, KarFileKind kind)

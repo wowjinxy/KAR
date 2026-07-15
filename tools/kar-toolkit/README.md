@@ -30,6 +30,7 @@ Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
 Archive metadata lives in `KarArchiveCatalog`; live HSD root inspection goes through `KarArchiveInspector`.
+Map archive/root definitions are grouped in `KarMapArchiveDefinitions`; `KarArchiveCatalog` handles lookup and compatibility wrappers.
 Map bundle inspection goes through `KarMapInspector`, which ties each map's data, model, and event/script archives together.
 
 Use `definitions` to list known KAR data schemas. Archive and map inspection attach schema details to known roots when the toolkit has decomp-backed field information.
