@@ -8,13 +8,21 @@ namespace KARToolkit.Core
 
         public KarProjectIndexer Indexer { get; set; }
 
+        public KarProjectFileCatalog FileCatalog { get; set; }
+
         public KarArchiveInspector ArchiveInspector { get; set; }
 
         public KarDataDefinitionRegistry DataDefinitions { get; set; }
 
         internal KarProjectIndexer ResolveIndexer()
         {
-            return Indexer ?? KarProjectIndexer.Default;
+            if (Indexer != null)
+                return Indexer;
+
+            if (FileCatalog != null)
+                return new KarProjectIndexer(FileCatalog);
+
+            return KarProjectIndexer.Default;
         }
 
         internal KarArchiveInspector ResolveArchiveInspector()

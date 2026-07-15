@@ -9,6 +9,20 @@ namespace KARToolkit.Core
     {
         public static KarProjectIndexer Default { get; } = new KarProjectIndexer();
 
+        private readonly KarProjectFileCatalog _fileCatalog;
+
+        public KarProjectIndexer()
+            : this(KarProjectFileCatalog.Default)
+        {
+        }
+
+        public KarProjectIndexer(KarProjectFileCatalog fileCatalog)
+        {
+            _fileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
+        }
+
+        public KarProjectFileCatalog FileCatalog => _fileCatalog;
+
         public KarProjectIndex Build(KarProjectWorkspace workspace)
         {
             if (workspace == null)
@@ -19,25 +33,27 @@ namespace KARToolkit.Core
             return new KarProjectIndex(files, maps);
         }
 
-        private static IReadOnlyList<KarProjectFile> BuildFileIndex(KarProjectWorkspace workspace)
+        private IReadOnlyList<KarProjectFile> BuildFileIndex(KarProjectWorkspace workspace)
         {
             return Directory
                 .EnumerateFiles(workspace.SourceFilesRoot, "*", SearchOption.AllDirectories)
                 .Select(path =>
                 {
                     string relativePath = workspace.GetRelativeSourcePath(path);
+                    KarFileKind kind = _fileCatalog.ClassifyKind(relativePath);
                     return new KarProjectFile(
                         relativePath,
                         path,
                         workspace.GetOutputPath(relativePath),
-                        KarProjectFileClassifier.ClassifyKind(relativePath));
+                        kind,
+                        _fileCatalog.GetArchiveDefinition(relativePath, kind));
                 })
                 .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
         }
 
-        private static IReadOnlyList<KarMapBundle> BuildMapIndex(IReadOnlyList<KarProjectFile> files)
+        private IReadOnlyList<KarMapBundle> BuildMapIndex(IReadOnlyList<KarProjectFile> files)
         {
             Dictionary<string, MapBundleBuilder> builders = new Dictionary<string, MapBundleBuilder>(StringComparer.OrdinalIgnoreCase);
 
@@ -65,9 +81,9 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
-        private static bool TryGetMapName(KarProjectFile file, out string mapName)
+        private bool TryGetMapName(KarProjectFile file, out string mapName)
         {
-            return KarProjectFileClassifier.TryGetMapName(file.RelativePath, file.Kind, out mapName);
+            return _fileCatalog.TryGetMapName(file.RelativePath, file.Kind, out mapName);
         }
 
         private sealed class MapBundleBuilder

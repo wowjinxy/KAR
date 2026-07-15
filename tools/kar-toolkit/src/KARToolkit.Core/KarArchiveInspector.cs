@@ -38,7 +38,7 @@ namespace KARToolkit.Core
             if (hsdFile == null)
                 throw new ArgumentNullException(nameof(hsdFile));
 
-            KarArchiveDefinition definition = file.ArchiveDefinition ?? KarArchiveCatalog.GetDefinition(file.RelativePath, file.Kind);
+            KarArchiveDefinition definition = file.ArchiveDefinition;
             List<KarArchiveRootInfo> roots = hsdFile.Roots
                 .Select(root =>
                 {

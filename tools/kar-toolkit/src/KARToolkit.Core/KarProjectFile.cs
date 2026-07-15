@@ -1,16 +1,22 @@
+using System;
 using System.IO;
 
 namespace KARToolkit.Core
 {
     public sealed class KarProjectFile
     {
-        internal KarProjectFile(string relativePath, string sourcePath, string outputPath, KarFileKind kind)
+        internal KarProjectFile(
+            string relativePath,
+            string sourcePath,
+            string outputPath,
+            KarFileKind kind,
+            KarArchiveDefinition archiveDefinition)
         {
             RelativePath = relativePath;
             SourcePath = sourcePath;
             OutputPath = outputPath;
             Kind = kind;
-            ArchiveDefinition = KarArchiveCatalog.GetDefinition(relativePath, kind);
+            ArchiveDefinition = archiveDefinition ?? throw new ArgumentNullException(nameof(archiveDefinition));
         }
 
         public string RelativePath { get; }
