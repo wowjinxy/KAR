@@ -1093,6 +1093,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(usageSearch.Any(operation => operation.ActionId == "dump-bytes"), "operation queries should search assembled usage strings");
 
                 KarProjectSession session = project.CreateSession();
+                AssertTrue(session.RegistryCatalog.ResourceActionDefinitions.Any(definition => definition.Id == "dump-bytes"), "project sessions should expose resource action registry metadata alongside operations");
                 AssertTrue(session.CreateOperationCatalog(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project sessions should expose operation catalog creation");
 
                 KarProjectOperation looseDump = scriptDumps.Single(operation => operation.ResourceAddress == "ScInfPause.tm");
@@ -1952,6 +1953,10 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(session.SourceAndOutputRootsAreSeparate && session.SourceFilesAndOutputFilesRootsAreSeparate, "project sessions should expose separated source/output roots");
                 AssertTrue(session.WritePolicy.Contains("only under the configured output folder"), "project sessions should describe output-only writes");
                 AssertTrue(object.ReferenceEquals(session.Surface.Project, session.Project), "project sessions should attach a toolkit surface for the same project");
+                AssertTrue(object.ReferenceEquals(session.RegistryCatalog.Project, session.Project), "project sessions should attach the active registry catalog for the same project");
+                AssertTrue(session.RegistryCount == session.RegistryCatalog.RegistryCount && session.ResourceActionDefinitionCount == session.RegistryCatalog.ResourceActionDefinitionCount, "project sessions should expose registry catalog counts");
+                AssertTrue(session.FileKindCount > 0 && session.FileHandlerCount > 0 && session.ResourceHandlerCount > 0, "project sessions should expose file and resource toolkit registries");
+                AssertTrue(session.OperationDomainRuleCount >= 6 && session.OperationPresetDefinitionCount >= 6, "project sessions should expose operation toolkit registries");
                 AssertTrue(session.DomainCount == session.Domains.Count && session.WorkflowCount == session.Workflows.Count, "project sessions should expose toolkit domains and workflows");
                 AssertTrue(session.WorkflowGroups.Count == session.Surface.WorkflowGroupCount, "project sessions should expose grouped workflows");
 

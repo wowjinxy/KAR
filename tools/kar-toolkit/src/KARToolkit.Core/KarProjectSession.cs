@@ -9,11 +9,14 @@ namespace KARToolkit.Core
         {
             Project = project ?? throw new ArgumentNullException(nameof(project));
             Surface = surface ?? throw new ArgumentNullException(nameof(surface));
+            RegistryCatalog = Project.ToolkitService.CreateRegistryCatalog();
         }
 
         public KarProject Project { get; }
 
         public KarProjectWorkspace Workspace => Project.Workspace;
+
+        public KarProjectToolkitRegistryCatalog RegistryCatalog { get; }
 
         public KarProjectToolkitSurface Surface { get; }
 
@@ -74,6 +77,20 @@ namespace KARToolkit.Core
         public int AvailableWorkflowCount => Surface.AvailableWorkflowCount;
 
         public int OutputWorkflowCount => Surface.OutputWorkflowCount;
+
+        public int RegistryCount => RegistryCatalog.RegistryCount;
+
+        public int FileKindCount => RegistryCatalog.FileKindCount;
+
+        public int FileHandlerCount => RegistryCatalog.FileHandlerCount;
+
+        public int ResourceHandlerCount => RegistryCatalog.ResourceHandlerCount;
+
+        public int ResourceActionDefinitionCount => RegistryCatalog.ResourceActionDefinitionCount;
+
+        public int OperationDomainRuleCount => RegistryCatalog.OperationDomainRuleCount;
+
+        public int OperationPresetDefinitionCount => RegistryCatalog.OperationPresetDefinitionCount;
 
         public bool HasOutputs => Snapshot.HasOutputs;
 

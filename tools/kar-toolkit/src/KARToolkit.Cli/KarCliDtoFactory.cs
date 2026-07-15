@@ -70,6 +70,13 @@ internal static class KarCliDtoFactory
             sourceFilesAndOutputFilesRootsAreSeparate = session.SourceFilesAndOutputFilesRootsAreSeparate,
             fileCount = session.FileCount,
             mapCount = session.MapCount,
+            registryCount = session.RegistryCount,
+            fileKindCount = session.FileKindCount,
+            fileHandlerCount = session.FileHandlerCount,
+            resourceHandlerCount = session.ResourceHandlerCount,
+            resourceActionDefinitionCount = session.ResourceActionDefinitionCount,
+            operationDomainRuleCount = session.OperationDomainRuleCount,
+            operationPresetDefinitionCount = session.OperationPresetDefinitionCount,
             domainCount = session.DomainCount,
             workflowCount = session.WorkflowCount,
             availableWorkflowCount = session.AvailableWorkflowCount,
@@ -77,6 +84,7 @@ internal static class KarCliDtoFactory
             hasOutputs = session.HasOutputs,
             hasModifiedOutputs = session.HasModifiedOutputs,
             modManifest = modManifest == null ? null : ToProjectModManifestSummaryDto(modManifest),
+            registryCatalog = ToProjectToolkitRegistryCatalogDto(session.RegistryCatalog),
             surface = ToProjectToolkitSurfaceDto(session.Surface),
         };
     }

@@ -68,6 +68,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Write policy: " + session.WritePolicy);
         Console.WriteLine("Workspace safe: source/output=" + session.SourceAndOutputRootsAreSeparate + " files=" + session.SourceFilesAndOutputFilesRootsAreSeparate);
         Console.WriteLine("Project: files=" + session.FileCount + " maps=" + session.MapCount);
+        Console.WriteLine("Registries: file-kinds=" + session.FileKindCount + " file-handlers=" + session.FileHandlerCount + " resource-handlers=" + session.ResourceHandlerCount + " actions=" + session.ResourceActionDefinitionCount + " domains=" + session.OperationDomainRuleCount + " presets=" + session.OperationPresetDefinitionCount);
         Console.WriteLine("Toolkit: domains=" + session.DomainCount + " workflows=" + session.WorkflowCount + " available=" + session.AvailableWorkflowCount + " output=" + session.OutputWorkflowCount);
         Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
     }

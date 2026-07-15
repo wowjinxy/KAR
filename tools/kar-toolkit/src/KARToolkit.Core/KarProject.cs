@@ -209,7 +209,7 @@ namespace KARToolkit.Core
 
         public KarProjectToolkitRegistryCatalog CreateToolkitRegistryCatalog()
         {
-            return SchemaService.CreateToolkitRegistryCatalog();
+            return ToolkitService.CreateRegistryCatalog();
         }
 
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)
