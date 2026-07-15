@@ -50,6 +50,8 @@ namespace KARToolkit.Core
 
         public string ErrorMessage => Error == null ? null : Error.Message;
 
+        public KarProjectResourceActionExecutionSummary Summary => new KarProjectResourceActionExecutionSummary(this);
+
         public bool IsReadOnly => Plan.IsReadOnly;
 
         public bool WritesOutput => Plan.WritesOutput;

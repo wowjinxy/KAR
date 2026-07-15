@@ -873,6 +873,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(dump.ByteDumpResult.WroteOutput, "project resource action wrappers should execute byte dump actions");
                 AssertTrue(File.ReadAllBytes(dump.ByteDumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "resource action byte dumps should write active bytes to output assets");
                 AssertTrue(dump.ResultKind == "byte-dump" && dump.WritesOutput && dump.WouldWriteOutput && dump.WroteOutput && !dump.SkippedOutputWrite, "resource action execution results should summarize byte dump writes");
+                AssertTrue(dump.Summary.ActionId == "dump-bytes" && dump.Summary.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes && dump.Summary.ResultKind == dump.ResultKind && dump.Summary.OutputPath == dump.OutputPath, "resource action execution summaries should expose stable automation metadata");
                 AssertTrue(dump.OutputRelativePath == dump.ByteDumpResult.OutputRelativePath && dump.OutputPath == dump.ByteDumpResult.OutputPath, "resource action execution results should expose common output paths");
 
                 KarProjectResourceActionExecutionResult skippedDump = project.ResourceService.ExecuteAction("ScInfPause.tm", "dump-bytes");
@@ -1090,6 +1091,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectOperationExecutionResult dumpResult = project.ExecuteOperation(looseDump);
                 AssertTrue(dumpResult.Operation.Id == looseDump.Id, "operation execution results should retain the requested operation");
                 AssertTrue(dumpResult.Succeeded && dumpResult.ResultKind == "byte-dump", "operation execution should run resource-action operations through the existing executor");
+                AssertTrue(dumpResult.Summary.ActionId == "dump-bytes" && dumpResult.Summary.ExecutionKind == KarProjectResourceActionExecutionKind.DumpBytes, "operation execution summaries should expose underlying resource action metadata");
                 AssertTrue(dumpResult.WroteOutput && File.Exists(dumpResult.OutputPath), "operation execution should write outputs through safe resource actions");
                 AssertTrue(File.ReadAllBytes(dumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "operation execution should write active resource bytes");
 
