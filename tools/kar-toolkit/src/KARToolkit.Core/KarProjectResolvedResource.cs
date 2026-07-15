@@ -38,6 +38,12 @@ namespace KARToolkit.Core
 
         public string Description => ScriptTable == null ? Resource.Description : ScriptTable.Description;
 
+        public KarDataDefinition DataDefinition => Root == null ? null : Root.DataDefinition;
+
+        public string DataDefinitionId => Root == null ? null : Root.DataDefinitionId;
+
+        public bool HasDataDefinition => DataDefinition != null;
+
         public bool IsFile => Resource.IsFile;
 
         public bool IsHsdRoot => Resource.IsHsdRoot;

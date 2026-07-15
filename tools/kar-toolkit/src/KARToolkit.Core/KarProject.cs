@@ -320,6 +320,21 @@ namespace KARToolkit.Core
             return ResourceAddressService.TryResolve(address, out resolved);
         }
 
+        public KarProjectResolvedResourceDetail GetResolvedResourceDetail(string address)
+        {
+            return ResourceAddressService.GetDetail(address);
+        }
+
+        public IReadOnlyList<KarProjectResourceFieldInfo> QueryResolvedResourceFieldValues(string address)
+        {
+            return ResourceAddressService.QueryFieldValues(address);
+        }
+
+        public KarProjectResourceFieldInfo GetResolvedResourceFieldValue(string address, string fieldName)
+        {
+            return ResourceAddressService.GetFieldValue(address, fieldName);
+        }
+
         public IReadOnlyList<KarProjectScriptTable> QueryScriptTables(KarProjectScriptTableQueryOptions options = null)
         {
             return ScriptService.QueryTables(options);

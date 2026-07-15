@@ -146,6 +146,31 @@ internal static class KarCliTextWriter
         }
     }
 
+    public static void PrintProjectResolvedResourceDetail(KarProjectResolvedResourceDetail detail)
+    {
+        PrintProjectResolvedResource(detail.Resolved);
+
+        if (detail.HasDataDefinition)
+            Console.WriteLine("Data definition: " + detail.DataDefinitionId + " (" + detail.DataDefinition.DisplayName + ")");
+        else
+            Console.WriteLine("Data definition: <none>");
+
+        if (detail.Output != null)
+            Console.WriteLine("Output: " + detail.Output.Status + " [" + detail.Output.OutputKind + "] " + detail.Output.OutputRelativePath);
+
+        Console.WriteLine("Children: " + detail.ChildResourceCount);
+        foreach (KarProjectResourceInfo child in detail.ChildResources)
+            Console.WriteLine("  " + child.Address + " [" + child.Kind + ", " + child.Category + "] - " + child.DisplayName);
+
+        Console.WriteLine("Fields: " + detail.FieldCount);
+        foreach (KarProjectResourceFieldInfo field in detail.Fields)
+            PrintProjectResourceFieldValueIndented(field, "  ");
+
+        Console.WriteLine("Relationships: " + detail.RelationshipCount);
+        foreach (KarProjectRelationship relationship in detail.Relationships)
+            Console.WriteLine("  " + relationship.Kind + "/" + relationship.Role + " " + relationship.RelativePath);
+    }
+
     public static void PrintProjectResourceDetail(KarProjectResourceDetail detail)
     {
         PrintProjectResource(detail.Resource);

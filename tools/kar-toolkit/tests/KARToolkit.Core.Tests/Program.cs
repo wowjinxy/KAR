@@ -449,9 +449,20 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(resolvedFile.IsFile && !resolvedFile.IsScriptTable && resolvedFile.Resource.Address == fileResource.Address, "resource address service should resolve file addresses");
                 KarProjectResolvedResource resolvedRoot = project.ResolveResourceAddress("VsHydra.dat:vsDataHydra");
                 AssertTrue(resolvedRoot.IsHsdRoot && resolvedRoot.Root.RootName == "vsDataHydra", "project resource address wrapper should resolve HSD roots");
+                AssertTrue(resolvedRoot.HasDataDefinition && resolvedRoot.DataDefinitionId == "kar.vs.legendary", "resolved HSD roots should expose data definitions");
+                KarProjectResolvedResourceDetail resolvedRootDetail = project.GetResolvedResourceDetail("VsHydra.dat:vsDataHydra");
+                AssertTrue(resolvedRootDetail.HasDataDefinition && resolvedRootDetail.DataDefinition.DisplayName == "Legendary Machine Versus Data", "resolved resource details should expose root schemas");
+                AssertTrue(resolvedRootDetail.FieldCount >= 5, "resolved resource details should expose root fields");
+                IReadOnlyList<KarProjectResourceFieldInfo> resolvedFields = project.QueryResolvedResourceFieldValues("VsHydra.dat:vsDataHydra");
+                AssertTrue(resolvedFields.Count == resolvedRootDetail.FieldCount, "resolved resource field queries should match resolved detail fields");
+                AssertTrue(project.GetResolvedResourceFieldValue("VsHydra.dat:vsDataHydra", "x0C").FieldName == "x0C", "resolved resource field lookups should find root fields");
                 KarProjectResolvedResource resolvedScript = project.ResolveResourceAddress("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(resolvedScript.IsA2DEntry && resolvedScript.IsScriptTable, "resource address resolution should identify script-table entries");
                 AssertTrue(resolvedScript.ScriptTable.Role == "ScreenInfoTable" && resolvedScript.IsPackageScriptTable, "resolved script tables should expose script metadata");
+                KarProjectResolvedResourceDetail resolvedScriptDetail = project.ResourceAddressService.GetDetail("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(resolvedScriptDetail.Resolved.IsScriptTable && !resolvedScriptDetail.HasDataDefinition, "resolved script table details should keep script metadata separate from root schemas");
+                AssertTrue(resolvedScriptDetail.RelationshipCount == 1 && resolvedScriptDetail.FieldCount == 0, "resolved script table details should expose relationships without root fields");
+                AssertTrue(project.QueryResolvedResourceFieldValues("A2Info.dat#ScInfGo2D.tm").Count == 0, "resolved non-root field queries should be empty");
                 IReadOnlyList<KarProjectResolvedResource> scriptResolved = project.QueryResolvedResources(new KarProjectResourceQueryOptions
                 {
                     Category = "Scripts",

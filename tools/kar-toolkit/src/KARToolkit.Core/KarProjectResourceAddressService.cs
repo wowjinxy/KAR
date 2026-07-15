@@ -55,6 +55,54 @@ namespace KARToolkit.Core
             return true;
         }
 
+        public KarProjectResolvedResourceDetail GetDetail(string address)
+        {
+            return GetDetail(Resolve(address));
+        }
+
+        public KarProjectResolvedResourceDetail GetDetail(KarProjectResolvedResource resolved)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+
+            return new KarProjectResolvedResourceDetail(
+                resolved,
+                _project.ResourceService.GetDetail(resolved.Address));
+        }
+
+        public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(string address)
+        {
+            return QueryFieldValues(Resolve(address));
+        }
+
+        public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(KarProjectResolvedResource resolved)
+        {
+            if (resolved == null)
+                throw new ArgumentNullException(nameof(resolved));
+            if (!resolved.CanQueryFieldValues)
+                return Array.Empty<KarProjectResourceFieldInfo>();
+
+            return _project.ResourceService.QueryFieldValues(new KarProjectResourceFieldQueryOptions
+            {
+                Resources = new KarProjectResourceQueryOptions
+                {
+                    Address = resolved.Address,
+                    Kind = resolved.Kind,
+                },
+            });
+        }
+
+        public KarProjectResourceFieldInfo GetFieldValue(string address, string fieldName)
+        {
+            KarProjectResourceFieldInfo field = QueryFieldValues(address)
+                .FirstOrDefault(value => string.Equals(value.FieldName, fieldName, StringComparison.OrdinalIgnoreCase));
+
+            if (field == null)
+                throw new KeyNotFoundException("KAR project resource field was not found: " + address + " " + fieldName);
+
+            return field;
+        }
+
         public byte[] ReadBytes(string address)
         {
             return ReadBytes(Resolve(address));

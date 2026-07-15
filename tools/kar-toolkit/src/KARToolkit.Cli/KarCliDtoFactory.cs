@@ -375,6 +375,8 @@ internal static class KarCliDtoFactory
             role = resolved.Role,
             category = resolved.Category,
             description = resolved.Description,
+            dataDefinitionId = resolved.DataDefinitionId,
+            hasDataDefinition = resolved.HasDataDefinition,
             isFile = resolved.IsFile,
             isHsdRoot = resolved.IsHsdRoot,
             isA2DEntry = resolved.IsA2DEntry,
@@ -400,6 +402,28 @@ internal static class KarCliDtoFactory
                 packageEntrySize = resolved.ScriptTable.PackageEntrySize,
                 packageEntrySizeHex = resolved.ScriptTable.PackageEntrySizeHex,
             },
+        };
+    }
+
+    public static object ToProjectResolvedResourceDetailDto(KarProjectResolvedResourceDetail detail)
+    {
+        return new
+        {
+            resolved = ToProjectResolvedResourceDto(detail.Resolved),
+            reference = ToResourceReferenceDto(detail.Reference),
+            kind = detail.Kind.ToString(),
+            address = detail.Address,
+            parentAddress = detail.ParentAddress,
+            dataDefinitionId = detail.DataDefinitionId,
+            dataDefinition = ToDataDefinitionDtoOrNull(detail.DataDefinition),
+            hasDataDefinition = detail.HasDataDefinition,
+            output = detail.Output == null ? null : ToProjectResourceOutputDto(detail.Output),
+            childResourceCount = detail.ChildResourceCount,
+            fieldCount = detail.FieldCount,
+            relationshipCount = detail.RelationshipCount,
+            childResources = detail.ChildResources.Select(ToProjectResourceDto).ToList(),
+            fields = detail.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
+            relationships = detail.Relationships.Select(ToProjectRelationshipDto).ToList(),
         };
     }
 
