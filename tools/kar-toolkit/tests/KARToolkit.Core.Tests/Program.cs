@@ -564,6 +564,19 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(scriptResources.Count == 1 && scriptResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource query should filter by resource category");
 
+                IReadOnlyList<KarProjectResourceInfo> legendaryResources = resources.Query(new KarProjectResourceQueryOptions
+                {
+                    Text = "legendary",
+                });
+                AssertTrue(legendaryResources.Any(resource => resource.Address == "VsHydra.dat"), "resource text search should match file descriptions");
+                AssertTrue(legendaryResources.Any(resource => resource.Address == "VsHydra.dat:vsDataHydra"), "resource text search should match schema labels");
+
+                IReadOnlyList<KarProjectResourceInfo> screenInfoResources = project.QueryResources(new KarProjectResourceQueryOptions
+                {
+                    Text = "screen information",
+                });
+                AssertTrue(screenInfoResources.Count == 1 && screenInfoResources[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource text search should match A2D entry descriptions");
+
                 KarProjectResourceInfo rootResource = resources.Get("VsHydra.dat:vsDataHydra");
                 AssertTrue(rootResource.IsHsdRoot, "resource get should resolve HSD root addresses");
                 AssertTrue(rootResource.Root.RootName == "vsDataHydra", "resolved HSD root resources should expose root metadata");

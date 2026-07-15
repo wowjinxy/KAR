@@ -100,6 +100,7 @@ internal static class KarCliCopyCommands
             Resources = new KarProjectResourceQueryOptions
             {
                 Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+                Text = options.SearchText,
             },
         };
         IReadOnlyList<KarProjectResourceOutputApplyResult> results = project.ResourceService.ApplyModifiedOutputs(query);

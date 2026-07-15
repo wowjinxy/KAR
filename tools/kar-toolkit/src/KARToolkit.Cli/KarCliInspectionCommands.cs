@@ -584,6 +584,7 @@ internal static class KarCliInspectionCommands
         {
             Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             Category = options.FileCategory,
+            Text = options.SearchText,
             Files = parentFiles,
             Roots = new KarProjectRootQueryOptions
             {
@@ -610,6 +611,7 @@ internal static class KarCliInspectionCommands
         {
             Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             Category = options.FileCategory,
+            Text = options.SearchText,
             Files = parentFiles,
             Roots = new KarProjectRootQueryOptions
             {
@@ -643,6 +645,7 @@ internal static class KarCliInspectionCommands
                 Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
                 Kind = KarResourceKind.HsdRoot,
                 Category = options.FileCategory,
+                Text = options.SearchText,
                 Files = parentFiles,
                 Roots = new KarProjectRootQueryOptions
                 {
@@ -773,6 +776,7 @@ internal static class KarCliInspectionCommands
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
             Category = options.FileCategory,
+            Text = options.SearchText,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions
             {
@@ -823,6 +827,7 @@ internal static class KarCliInspectionCommands
         KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
         {
             Category = options.FileCategory,
+            Text = options.SearchText,
             Files = parentFiles,
             A2DEntries = new KarProjectA2DEntryQueryOptions
             {

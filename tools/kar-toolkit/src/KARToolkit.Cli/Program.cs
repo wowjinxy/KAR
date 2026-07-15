@@ -127,7 +127,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit map-scripts <source-folder> [map-name-or-file] [script-table-name-or-address] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit relationships <source-folder> [map-name-or-file] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-graph <source-folder> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit resources <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--kind <file-kind>] [--category <category>]");
+        Console.WriteLine("  kar-toolkit resources <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit resource <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-detail <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--modified|--unchanged|--source-only]");
@@ -164,6 +164,7 @@ internal static class Program
         Console.WriteLine("  --no-schema-validation");
         Console.WriteLine("  --kind <file-kind>");
         Console.WriteLine("  --resource-kind <file|root|a2d-entry>");
+        Console.WriteLine("  --search <text>");
         Console.WriteLine("  --category <category>");
         Console.WriteLine("  --output-copy");
         Console.WriteLine("  --source-only");
