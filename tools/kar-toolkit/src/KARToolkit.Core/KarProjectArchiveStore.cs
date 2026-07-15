@@ -28,6 +28,26 @@ namespace KARToolkit.Core
             return new KarProjectHsdArchive(this, file, readPath, new HSDRawFile(readPath));
         }
 
+        public KarProjectMapArchiveBundle OpenMapArchives(KarMapBundle map)
+        {
+            if (map == null)
+                throw new ArgumentNullException(nameof(map));
+
+            return new KarProjectMapArchiveBundle(
+                map,
+                OpenOptionalHsdArchive(map.DataFile),
+                OpenOptionalHsdArchive(map.ModelFile),
+                OpenOptionalHsdArchive(map.EventFile));
+        }
+
+        private KarProjectHsdArchive OpenOptionalHsdArchive(KarProjectFile file)
+        {
+            if (file == null)
+                return null;
+
+            return OpenHsdArchive(file.RelativePath);
+        }
+
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
             KarProjectA2DPackage projectPackage;

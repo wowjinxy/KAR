@@ -33,6 +33,7 @@ Copy operations can return `KarProjectFileCopyResult` when tools need both the c
 Write/save operations can return `KarProjectFileWriteResult` when tools need normalized project paths and output metadata.
 Typed HSD archive and A2D package opens/saves go through `KarProjectArchiveStore`.
 Editable project archive handles (`KarProjectHsdArchive`, `KarProjectA2DPackage`) keep project metadata attached while saving through the safe output folder.
+Editable map archive bundles (`KarProjectMapArchiveBundle`) group a map's data, model, and event/script archives for project-level workflows.
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
 Archive metadata lookup lives in `KarArchiveDefinitionProvider`; `KarArchiveCatalog` provides static compatibility wrappers; live HSD root inspection goes through `KarArchiveInspector`.

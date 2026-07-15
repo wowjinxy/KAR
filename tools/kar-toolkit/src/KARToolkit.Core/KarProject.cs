@@ -175,6 +175,16 @@ namespace KARToolkit.Core
             return ArchiveStore.OpenHsdArchive(relativePath);
         }
 
+        public KarProjectMapArchiveBundle OpenMapArchives(string mapNameOrPath)
+        {
+            return OpenMapArchives(Index.GetMap(mapNameOrPath));
+        }
+
+        public KarProjectMapArchiveBundle OpenMapArchives(KarMapBundle map)
+        {
+            return ArchiveStore.OpenMapArchives(map);
+        }
+
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
             return Inspector.InspectHsdArchive(relativePath);
