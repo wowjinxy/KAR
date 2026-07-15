@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace KARToolkit.Core
 {
@@ -37,6 +38,10 @@ namespace KARToolkit.Core
         public string HandlerId => Handler.Id;
 
         public KarProjectResourceCapability Capabilities => Handler.Capabilities;
+
+        public IReadOnlyList<KarProjectResourceAction> Actions => Handler.Actions;
+
+        public int ActionCount => Handler.ActionCount;
 
         public string Address => Reference.Address;
 

@@ -30,6 +30,10 @@ namespace KARToolkit.Core
 
         public KarProjectResourceInfo Resource { get; }
 
+        public IReadOnlyList<KarProjectResourceAction> Actions => Resource.Actions;
+
+        public int ActionCount => Resource.ActionCount;
+
         public KarResourceReference Reference => Resource.Reference;
 
         public KarResourceKind Kind => Resource.Kind;

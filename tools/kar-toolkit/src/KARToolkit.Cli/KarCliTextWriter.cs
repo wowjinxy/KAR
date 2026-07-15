@@ -33,7 +33,8 @@ internal static class KarCliTextWriter
     public static void PrintProjectResourceHandler(KarProjectResourceHandler handler)
     {
         string capabilities = string.Join(",", handler.CapabilityList);
-        Console.WriteLine(handler.Id + " [" + handler.Kind + "] capabilities=" + capabilities + " - " + handler.DisplayName);
+        string actions = string.Join(",", handler.Actions.Select(action => action.Id));
+        Console.WriteLine(handler.Id + " [" + handler.Kind + "] capabilities=" + capabilities + " actions=" + actions + " - " + handler.DisplayName);
     }
 
     public static void PrintProjectFile(KarProjectFile file)
@@ -92,6 +93,7 @@ internal static class KarCliTextWriter
             Console.WriteLine("Description: " + resource.Description);
         if (!string.IsNullOrEmpty(resource.ParentAddress))
             Console.WriteLine("Parent: " + resource.ParentAddress);
+        Console.WriteLine("Actions: " + string.Join(",", resource.Actions.Select(action => action.Id)));
 
         if (resource.File != null)
         {
@@ -117,6 +119,20 @@ internal static class KarCliTextWriter
             Console.WriteLine("Index: " + resource.A2DEntry.Index);
             Console.WriteLine("Offset: " + resource.A2DEntry.DataOffsetHex);
             Console.WriteLine("Size: " + resource.A2DEntry.SizeHex);
+        }
+    }
+
+    public static void PrintProjectResourceActions(KarProjectResourceInfo resource)
+    {
+        Console.WriteLine(resource.Address + " [" + resource.Kind + ", " + resource.Category + "] actions=" + resource.ActionCount);
+        foreach (KarProjectResourceAction action in resource.Actions)
+        {
+            string mode = action.IsReadOnly ? "read" : "write";
+            string batch = action.SupportsBatch ? " batch" : "";
+            string input = action.RequiresInputFile ? " input-file" : "";
+            string field = action.RequiresFieldName ? " field" : "";
+            string value = action.RequiresValue ? " value" : "";
+            Console.WriteLine("  " + action.Id + " command=" + action.Command + " " + mode + batch + input + field + value + " " + action.ArgumentHint);
         }
     }
 

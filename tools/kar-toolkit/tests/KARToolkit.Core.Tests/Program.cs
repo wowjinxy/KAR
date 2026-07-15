@@ -367,14 +367,17 @@ namespace KARToolkit.Core.Tests
             AssertTrue(fileHandler.Id == "file", "file resource handlers should expose stable ids");
             AssertTrue(fileHandler.CanReadBytes && fileHandler.CanExportToOutput && fileHandler.CanImportFromFile, "file resources should support byte and output workflows");
             AssertTrue(!fileHandler.CanSetScalarFields && !fileHandler.CanApplyOutput, "file resources should not expose root or sidecar-only workflows");
+            AssertTrue(fileHandler.ActionCount == 5 && fileHandler.Actions.Any(action => action.Id == "import-file" && action.RequiresInputFile), "file resource handlers should expose import action metadata");
 
             KarProjectResourceHandler rootHandler = registry.GetHandler(KarResourceKind.HsdRoot);
             AssertTrue(rootHandler.CanQueryFieldValues && rootHandler.CanSetScalarFields, "HSD root resources should support field and scalar workflows");
             AssertTrue(rootHandler.CanReadBytes && rootHandler.CanExportToOutput && !rootHandler.CanImportFromFile, "HSD root resources should expose struct byte reads and stage containing archives without standalone byte imports");
+            AssertTrue(rootHandler.Actions.Any(action => action.Id == "set-scalar" && action.RequiresFieldName && action.RequiresValue && action.Command == "set-resource-scalar"), "HSD root handlers should expose scalar edit action metadata");
 
             KarProjectResourceHandler entryHandler = registry.GetHandler(KarResourceKind.A2DEntry);
             AssertTrue(entryHandler.CanReadBytes && entryHandler.CanImportFromFile, "A2D entry resources should support byte reads and imports");
             AssertTrue(entryHandler.CanApplyOutput && !entryHandler.CanSetScalarFields, "A2D entry resources should support sidecar apply but not scalar edits");
+            AssertTrue(entryHandler.Actions.Any(action => action.Id == "apply-output" && action.SupportsBatch && action.WritesOutput), "A2D entry handlers should expose apply action metadata");
 
             KarProjectResourceHandler found;
             AssertTrue(registry.TryFindHandler("a2d-entry", out found) && found.Kind == KarResourceKind.A2DEntry, "resource handlers should resolve by stable id");
@@ -688,11 +691,13 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootResource.IsHsdRoot, "resource get should resolve HSD root addresses");
                 AssertTrue(rootResource.Root.RootName == "vsDataHydra", "resolved HSD root resources should expose root metadata");
                 AssertTrue(rootResource.File.RelativePath == "VsHydra.dat", "resolved HSD root resources should expose parent file metadata");
+                AssertTrue(rootResource.Actions.Any(action => action.Id == "set-scalar" && action.Command == "set-resource-scalar"), "resources should expose action metadata through handlers");
 
                 KarProjectResourceDetail fileDetail = resources.GetDetail("VsHydra.dat");
                 AssertTrue(fileDetail.Address == "VsHydra.dat" && fileDetail.Kind == KarResourceKind.File, "resource details should retain resource identity");
                 AssertTrue(fileDetail.Output.Status == KarProjectResourceOutputStatus.Missing, "resource details should include output status");
                 AssertTrue(fileDetail.HasByteInfo && fileDetail.ByteInfo.ActiveLength == File.ReadAllBytes(fileDetail.Resource.File.SourcePath).Length, "resource details should include active file byte info");
+                AssertTrue(fileDetail.ActionCount == fileDetail.Resource.ActionCount && fileDetail.Actions.Any(action => action.Id == "dump-bytes"), "resource details should expose resource action metadata");
                 AssertTrue(fileDetail.ChildResourceCount == 1 && fileDetail.ChildResources[0].Address == "VsHydra.dat:vsDataHydra", "resource details should include child resources");
                 AssertTrue(fileDetail.FieldCount == 0, "file resource details should not report HSD fields directly");
 

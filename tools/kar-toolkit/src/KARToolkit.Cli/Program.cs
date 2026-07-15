@@ -22,6 +22,8 @@ internal static class Program
                 "kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "resource-handlers" => KarCliInspectionCommands.ShowResourceHandlers(options),
                 "resource-kinds" => KarCliInspectionCommands.ShowResourceHandlers(options),
+                "resource-actions" => KarCliInspectionCommands.ShowResourceActions(options),
+                "actions" => KarCliInspectionCommands.ShowResourceActions(options),
                 "report" => KarCliInspectionCommands.ShowReport(options),
                 "project-report" => KarCliInspectionCommands.ShowReport(options),
                 "schema-gaps" => KarCliInspectionCommands.ShowDataCoverage(options),
@@ -152,6 +154,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit file-kinds");
         Console.WriteLine("  kar-toolkit resource-handlers");
+        Console.WriteLine("  kar-toolkit resource-actions <source-folder> [resource-address] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--json]");
         Console.WriteLine("  kar-toolkit report <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-gaps <source-folder> [relative-path] [--kind <file-kind>] [--category <category>] [--search <text>] [--json]");
         Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--modified|--unchanged|--orphan]");

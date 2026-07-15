@@ -84,6 +84,8 @@ internal static class KarCliDtoFactory
             displayName = handler.DisplayName,
             description = handler.Description,
             capabilities = ToResourceCapabilityNames(handler.CapabilityList),
+            actionCount = handler.ActionCount,
+            actions = handler.Actions.Select(ToProjectResourceActionDto).ToList(),
             canQueryOutput = handler.CanQueryOutput,
             canReadBytes = handler.CanReadBytes,
             canExportToOutput = handler.CanExportToOutput,
@@ -91,6 +93,25 @@ internal static class KarCliDtoFactory
             canQueryFieldValues = handler.CanQueryFieldValues,
             canSetScalarFields = handler.CanSetScalarFields,
             canApplyOutput = handler.CanApplyOutput,
+        };
+    }
+
+    public static object ToProjectResourceActionDto(KarProjectResourceAction action)
+    {
+        return new
+        {
+            id = action.Id,
+            displayName = action.DisplayName,
+            description = action.Description,
+            capability = action.CapabilityName,
+            command = action.Command,
+            argumentHint = action.ArgumentHint,
+            isReadOnly = action.IsReadOnly,
+            writesOutput = action.WritesOutput,
+            requiresInputFile = action.RequiresInputFile,
+            requiresFieldName = action.RequiresFieldName,
+            requiresValue = action.RequiresValue,
+            supportsBatch = action.SupportsBatch,
         };
     }
 
@@ -1203,6 +1224,8 @@ internal static class KarCliDtoFactory
             handlerId = resource.HandlerId,
             handler = ToProjectResourceHandlerDto(resource.Handler),
             capabilities = ToResourceCapabilityNames(resource.Handler.CapabilityList),
+            actionCount = resource.ActionCount,
+            actions = resource.Actions.Select(ToProjectResourceActionDto).ToList(),
             displayName = resource.DisplayName,
             role = resource.Role,
             category = resource.Category,
@@ -1234,12 +1257,28 @@ internal static class KarCliDtoFactory
             parentAddress = detail.ParentAddress,
             output = detail.Output == null ? null : ToProjectResourceOutputDto(detail.Output),
             byteInfo = detail.ByteInfo == null ? null : ToProjectResourceByteInfoDto(detail.ByteInfo),
+            actionCount = detail.ActionCount,
+            actions = detail.Actions.Select(ToProjectResourceActionDto).ToList(),
             childResourceCount = detail.ChildResourceCount,
             fieldCount = detail.FieldCount,
             relationshipCount = detail.RelationshipCount,
             childResources = detail.ChildResources.Select(ToProjectResourceDto).ToList(),
             fields = detail.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
             relationships = detail.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
+    public static object ToProjectResourceActionSetDto(KarProjectResourceInfo resource)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(resource),
+            address = resource.Address,
+            kind = resource.Kind.ToString(),
+            category = resource.Category,
+            role = resource.Role,
+            actionCount = resource.ActionCount,
+            actions = resource.Actions.Select(ToProjectResourceActionDto).ToList(),
         };
     }
 

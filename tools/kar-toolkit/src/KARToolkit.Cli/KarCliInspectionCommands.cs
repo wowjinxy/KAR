@@ -74,6 +74,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceActions(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-actions", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceInfo> resources = project.ResourceService.Query(CreateResourceQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(resources.Select(ToProjectResourceActionSetDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceInfo resource in resources)
+            PrintProjectResourceActions(resource);
+
+        return 0;
+    }
+
     public static int ShowReport(KarCliOptions options)
     {
         options.RequirePositionals("report", 1);
