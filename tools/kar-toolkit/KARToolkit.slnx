@@ -3,4 +3,7 @@
     <Project Path="src/KARToolkit.Cli/KARToolkit.Cli.csproj" />
     <Project Path="src/KARToolkit.Core/KARToolkit.Core.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/KARToolkit.Core.Tests/KARToolkit.Core.Tests.csproj" />
+  </Folder>
 </Solution>

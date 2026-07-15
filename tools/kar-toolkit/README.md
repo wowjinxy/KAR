@@ -14,6 +14,12 @@
 dotnet build .\tools\kar-toolkit\KARToolkit.slnx --no-restore /p:UseSharedCompilation=false
 ```
 
+## Tests
+
+```powershell
+dotnet run --project .\tools\kar-toolkit\tests\KARToolkit.Core.Tests\KARToolkit.Core.Tests.csproj
+```
+
 ## CLI
 
 ```powershell

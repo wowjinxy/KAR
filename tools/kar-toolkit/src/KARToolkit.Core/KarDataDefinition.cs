@@ -30,9 +30,15 @@ namespace KARToolkit.Core
             Description = description;
             Source = source;
             Size = size;
-            Fields = (fields ?? Enumerable.Empty<KarDataFieldDefinition>())
-                .ToList()
-                .AsReadOnly();
+            List<KarDataFieldDefinition> fieldList = (fields ?? Enumerable.Empty<KarDataFieldDefinition>())
+                .ToList();
+            IGrouping<string, KarDataFieldDefinition> duplicateField = fieldList
+                .GroupBy(field => field.Name, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateField != null)
+                throw new ArgumentException("Duplicate KAR data field name: " + duplicateField.Key, nameof(fields));
+
+            Fields = fieldList.AsReadOnly();
         }
 
         public string Id { get; }

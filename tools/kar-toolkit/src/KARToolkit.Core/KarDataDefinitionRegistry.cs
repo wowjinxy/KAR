@@ -16,11 +16,25 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(definitions));
 
             _definitions = definitions.ToList().AsReadOnly();
-            _definitionsById = _definitions.ToDictionary(definition => definition.Id, StringComparer.OrdinalIgnoreCase);
-            _definitionsByAccessor = _definitions
+
+            IGrouping<string, KarDataDefinition> duplicateId = _definitions
+                .GroupBy(definition => definition.Id, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateId != null)
+                throw new ArgumentException("Duplicate KAR data definition id: " + duplicateId.Key, nameof(definitions));
+
+            List<KarDataDefinition> accessorDefinitions = _definitions
                 .Where(definition => !string.IsNullOrWhiteSpace(definition.AccessorTypeName))
+                .ToList();
+            IGrouping<string, KarDataDefinition> duplicateAccessor = accessorDefinitions
                 .GroupBy(definition => definition.AccessorTypeName, StringComparer.Ordinal)
-                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateAccessor != null)
+                throw new ArgumentException("Duplicate KAR data definition accessor type: " + duplicateAccessor.Key, nameof(definitions));
+
+            _definitionsById = _definitions.ToDictionary(definition => definition.Id, StringComparer.OrdinalIgnoreCase);
+            _definitionsByAccessor = accessorDefinitions
+                .ToDictionary(definition => definition.AccessorTypeName, definition => definition, StringComparer.Ordinal);
         }
 
         public IReadOnlyList<KarDataDefinition> All => _definitions;
