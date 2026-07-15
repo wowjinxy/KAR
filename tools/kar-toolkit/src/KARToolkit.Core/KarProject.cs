@@ -18,6 +18,7 @@ namespace KARToolkit.Core
             IReadOnlyList<KarMapBundle> maps)
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
+            ArchiveInspector = KarArchiveInspector.Default;
             Files = files;
             Maps = maps;
             _filesByPath = files.ToDictionary(f => f.RelativePath, StringComparer.OrdinalIgnoreCase);
@@ -25,6 +26,8 @@ namespace KARToolkit.Core
         }
 
         public KarProjectWorkspace Workspace { get; }
+
+        public KarArchiveInspector ArchiveInspector { get; }
 
         public string SourceRoot => Workspace.SourceRoot;
 
@@ -152,7 +155,7 @@ namespace KARToolkit.Core
         public KarArchiveInfo InspectHsdArchive(string relativePath)
         {
             KarProjectFile file = GetFile(relativePath);
-            return KarArchiveCatalog.Inspect(file, OpenHsdFile(file.RelativePath));
+            return ArchiveInspector.Inspect(file, OpenHsdFile(file.RelativePath));
         }
 
         public bool TryInspectHsdArchive(string relativePath, out KarArchiveInfo info, out string error)

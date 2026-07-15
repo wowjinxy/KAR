@@ -1,8 +1,5 @@
-using HSDRaw;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -157,43 +154,6 @@ namespace KARToolkit.Core
                 mapName = mapName.Substring(0, mapName.Length - "Event".Length);
 
             return mapName.Length > 0;
-        }
-
-        public static KarArchiveInfo Inspect(KarProjectFile file, HSDRawFile hsdFile)
-        {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-            if (hsdFile == null)
-                throw new ArgumentNullException(nameof(hsdFile));
-
-            KarArchiveDefinition definition = file.ArchiveDefinition ?? GetDefinition(file.RelativePath, file.Kind);
-            List<KarArchiveRootInfo> roots = hsdFile.Roots
-                .Select(root =>
-                {
-                    KarRootDefinition rootDefinition = definition.FindRoot(root.Name);
-                    string accessorTypeName = root.Data == null ? null : root.Data.GetType().Name;
-                    KarDataDefinition dataDefinition = ResolveDataDefinition(rootDefinition, accessorTypeName);
-                    return new KarArchiveRootInfo(
-                        root.Name,
-                        accessorTypeName,
-                        rootDefinition,
-                        KarDataInspector.InspectFields(root.Data, dataDefinition));
-                })
-                .ToList();
-
-            return new KarArchiveInfo(file, definition, roots);
-        }
-
-        private static KarDataDefinition ResolveDataDefinition(KarRootDefinition rootDefinition, string accessorTypeName)
-        {
-            if (rootDefinition != null && rootDefinition.DataDefinition != null)
-                return rootDefinition.DataDefinition;
-
-            KarDataDefinition definition;
-            if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(accessorTypeName, out definition))
-                return definition;
-
-            return null;
         }
 
         private static KarArchiveDefinition DefineMapData(string relativePath, KarFileKind kind)
