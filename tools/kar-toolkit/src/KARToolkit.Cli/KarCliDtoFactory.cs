@@ -631,6 +631,49 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectArchiveContextDto(KarProjectArchiveContext context)
+    {
+        return new
+        {
+            file = ToProjectFileDto(context.File),
+            relativePath = context.RelativePath,
+            readPath = context.ReadPath,
+            kind = context.Kind.ToString(),
+            kindId = context.KindId,
+            category = context.Category,
+            displayName = context.DisplayName,
+            hasInspection = context.HasInspection,
+            hasInspectionError = context.HasInspectionError,
+            inspectionError = context.InspectionError,
+            rootCount = context.RootCount,
+            knownRootCount = context.KnownRootCount,
+            unknownRootCount = context.UnknownRootCount,
+            missingRequiredRootCount = context.MissingRequiredRootCount,
+            rootResourceCount = context.RootResourceCount,
+            resourceCount = context.ResourceCount,
+            fieldCount = context.FieldCount,
+            relationshipCount = context.RelationshipCount,
+            hasMissingRequiredRoots = context.HasMissingRequiredRoots,
+            hasRootResources = context.HasRootResources,
+            hasFields = context.HasFields,
+            hasRelationships = context.HasRelationships,
+            hasOutputInfo = context.HasOutputInfo,
+            hasOutput = context.HasOutput,
+            hasModifiedOutput = context.HasModifiedOutput,
+            hasUnchangedOutput = context.HasUnchangedOutput,
+            outputKind = context.OutputKind == null ? null : context.OutputKind.ToString(),
+            outputStatus = context.OutputStatus == null ? null : context.OutputStatus.ToString(),
+            outputRelativePath = context.OutputRelativePath,
+            outputPath = context.OutputPath,
+            archive = ToArchiveDtoOrNull(context.Archive),
+            resource = context.Resource == null ? null : ToProjectResourceDto(context.Resource),
+            output = context.Output == null ? null : ToProjectResourceOutputDto(context.Output),
+            rootResources = context.RootResources.Select(ToProjectResourceDto).ToList(),
+            fields = context.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
+            relationships = context.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
     public static object ToArchiveInventoryDto(KarArchiveInfo archive)
     {
         return new

@@ -36,6 +36,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll f
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll file .\GKYE01 GrCity1.dat
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archives .\GKYE01 --kind MapData --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archive-contexts .\GKYE01 VsHydra.dat --output .\mod-output --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll roots .\GKYE01 --kind MapData --unknown
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll roots .\GKYE01 --unknown --summary
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll schema-usage .\GKYE01 --kind MapData --json
@@ -96,6 +97,7 @@ Project file kind discovery goes through `KarFileKindRegistry`, which describes 
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.ArchiveService.QueryHsdArchives` or the compatibility wrapper `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
+Project archive toolkit contexts go through `KarProject.ArchiveContextService` or `KarProject.QueryArchiveContexts`, and the `archive-contexts` CLI command combines tolerant HSD inspection, root resources, labeled fields, graph relationships, and output-copy status for arbitrary archives without dropping malformed files from project views.
 Project-wide root discovery goes through `KarProject.DataService.QueryRoots`, grouped root discovery goes through `KarProject.DataService.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
 Project-wide schema usage goes through `KarProject.DataService.QueryDataDefinitionUsage`, and the `schema-usage` CLI command reports where known schemas appear.
 Project-wide labeled field discovery goes through `KarProject.DataService.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.

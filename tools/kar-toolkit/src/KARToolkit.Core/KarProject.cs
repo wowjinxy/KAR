@@ -25,6 +25,7 @@ namespace KARToolkit.Core
             ResourceGraphService = new KarProjectResourceGraphService(this);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector, ResourceGraphService.Invalidate);
             ArchiveService = new KarProjectArchiveService(this);
+            ArchiveContextService = new KarProjectArchiveContextService(this);
             A2DService = new KarProjectA2DService(this);
             A2DPackageContextService = new KarProjectA2DPackageContextService(this);
             OutputService = new KarProjectOutputService(this);
@@ -60,6 +61,8 @@ namespace KARToolkit.Core
         public KarProjectArchiveStore ArchiveStore { get; }
 
         public KarProjectArchiveService ArchiveService { get; }
+
+        public KarProjectArchiveContextService ArchiveContextService { get; }
 
         public KarProjectA2DService A2DService { get; }
 
@@ -173,6 +176,16 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarArchiveInfo> QueryArchives(KarProjectFileQueryOptions options)
         {
             return ArchiveService.QueryHsdArchives(options);
+        }
+
+        public IReadOnlyList<KarProjectArchiveContext> QueryArchiveContexts(KarProjectArchiveContextQueryOptions options = null)
+        {
+            return ArchiveContextService.Query(options);
+        }
+
+        public KarProjectArchiveContext GetArchiveContext(string relativePath)
+        {
+            return ArchiveContextService.Get(relativePath);
         }
 
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)

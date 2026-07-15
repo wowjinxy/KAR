@@ -36,6 +36,9 @@ internal static class Program
                 "files" => KarCliInspectionCommands.ShowFiles(options),
                 "file" => KarCliInspectionCommands.ShowFile(options),
                 "archives" => KarCliInspectionCommands.ShowArchives(options),
+                "archive-contexts" => KarCliInspectionCommands.ShowArchiveContexts(options),
+                "archive-context" => KarCliInspectionCommands.ShowArchiveContexts(options),
+                "archive-status" => KarCliInspectionCommands.ShowArchiveContexts(options),
                 "archive-schemas" => KarCliInspectionCommands.ShowArchiveSchemas(options),
                 "file-schemas" => KarCliInspectionCommands.ShowArchiveSchemas(options),
                 "roots" => KarCliInspectionCommands.ShowRoots(options),
@@ -137,6 +140,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archives <source-folder> [--kind <file-kind>] [--category <category>] [--search <text>]");
+        Console.WriteLine("  kar-toolkit archive-contexts <source-folder> [relative-path] [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--search <text>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit archive-schemas <source-folder> [--kind <file-kind>] [--category <category>] [--search <text>]");
         Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>] [--search <text>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-usage <source-folder> [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>]");

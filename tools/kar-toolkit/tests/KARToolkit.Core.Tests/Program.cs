@@ -51,6 +51,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectA2DPackageContextsSummarizePackages", ProjectA2DPackageContextsSummarizePackages);
             Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
+            Run("ProjectArchiveContextServiceCombinesArchiveToolkitState", ProjectArchiveContextServiceCombinesArchiveToolkitState);
             Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
@@ -2032,6 +2033,63 @@ namespace KARToolkit.Core.Tests
                 KarProjectFileWriteResult a2dWrite = archives.SaveA2DPackageToOutput("A2Demo.dat", package);
                 AssertTrue(File.Exists(a2dWrite.OutputPath), "archive service should save A2D packages to output");
                 AssertTrue(project.OutputService.HasFile("A2Demo.dat"), "archive A2D saves should register as output files");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectArchiveContextServiceCombinesArchiveToolkitState()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-archive-context-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteHsdFile(Path.Combine(tempRoot, "VsHydra.dat"), "vsDataHydra", new KAR_vsLegendaryData());
+            File.WriteAllBytes(Path.Combine(tempRoot, "VsBroken.dat"), new byte[] { 0x10 });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectArchiveContextService contexts = project.ArchiveContextService;
+
+                AssertTrue(object.ReferenceEquals(contexts.Project, project), "archive context service should retain project context");
+
+                IReadOnlyList<KarProjectArchiveContext> all = contexts.Query();
+                AssertTrue(all.Count == 2, "archive contexts should include every HSD archive file");
+
+                KarProjectArchiveContext hydra = contexts.Get("VsHydra.dat");
+                AssertTrue(hydra.RelativePath == "VsHydra.dat", "archive contexts should preserve file identity");
+                AssertTrue(hydra.HasInspection && !hydra.HasInspectionError, "valid archive contexts should include inspection state");
+                AssertTrue(hydra.RootCount == 1 && hydra.KnownRootCount == 1, "valid archive contexts should expose root counts");
+                AssertTrue(hydra.Resource.Address == "VsHydra.dat", "archive contexts should include file resources");
+                AssertTrue(hydra.RootResources.Single().Address == "VsHydra.dat:vsDataHydra", "archive contexts should include root resources");
+                AssertTrue(hydra.FieldCount >= 5, "archive contexts should include labeled root fields");
+                AssertTrue(hydra.OutputStatus == KarProjectResourceOutputStatus.Missing, "archive contexts should include missing output status");
+                AssertTrue(project.GetArchiveContext("VsHydra.dat").RootCount == 1, "project archive context wrapper should delegate to the context service");
+                AssertTrue(project.QueryArchiveContexts(new KarProjectArchiveContextQueryOptions { Text = "legendary" }).Any(context => context.RelativePath == "VsHydra.dat"), "archive context search should include schema and resource labels");
+
+                project.CopyToOutput("VsHydra.dat", true);
+                KarProjectArchiveContext copied = contexts.Get("VsHydra.dat");
+                AssertTrue(copied.HasOutput && copied.OutputStatus == KarProjectResourceOutputStatus.MatchesSource, "archive contexts should report copied output files");
+
+                project.SetResourceScalarFieldFromText("VsHydra.dat:vsDataHydra", "x0C", "0x190");
+                KarProjectArchiveContext modified = contexts.Get("VsHydra.dat");
+                AssertTrue(modified.HasModifiedOutput && modified.OutputStatus == KarProjectResourceOutputStatus.DiffersFromSource, "archive contexts should report modified output files");
+                AssertTrue(project.QueryArchiveContexts(new KarProjectArchiveContextQueryOptions
+                {
+                    OutputStatus = KarProjectResourceOutputStatus.DiffersFromSource,
+                }).Single().RelativePath == "VsHydra.dat", "archive context queries should filter by output status");
+
+                KarProjectArchiveContext broken = contexts.Get("VsBroken.dat");
+                AssertTrue(!broken.HasInspection && broken.HasInspectionError, "broken archive contexts should retain inspection errors without throwing");
+                AssertTrue(broken.RootCount == 0 && broken.FieldCount == 0, "broken archive contexts should not invent roots or fields");
+                AssertTrue(broken.Resource.Address == "VsBroken.dat", "broken archive contexts should still include file resources");
+                AssertTrue(project.QueryArchiveContexts(new KarProjectArchiveContextQueryOptions { HasInspectionError = true }).Single().RelativePath == "VsBroken.dat", "archive context queries should filter inspection errors");
             }
             finally
             {

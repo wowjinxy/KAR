@@ -466,6 +466,26 @@ internal static class KarCliTextWriter
             Console.WriteLine("  missing " + missing.Pattern);
     }
 
+    public static void PrintProjectArchiveContext(KarProjectArchiveContext context)
+    {
+        string output = context.Output == null ? "output=<none>" : "output=" + context.Output.Status + "/" + context.Output.OutputKind;
+        Console.WriteLine(
+            context.RelativePath +
+            " [" + context.Kind + ", " + context.Category + "] roots=" + context.RootCount +
+            " known=" + context.KnownRootCount +
+            " unknown=" + context.UnknownRootCount +
+            " missing=" + context.MissingRequiredRootCount +
+            " fields=" + context.FieldCount +
+            " relationships=" + context.RelationshipCount +
+            " " + output);
+
+        if (context.HasInspectionError)
+            Console.WriteLine("  inspection error: " + context.InspectionError);
+
+        foreach (KarRootDefinition missing in context.MissingRequiredRoots)
+            Console.WriteLine("  missing " + missing.Pattern);
+    }
+
     public static void PrintDataDefinitionUsage(KarProjectDataDefinitionUsage usage)
     {
         string accessor = string.IsNullOrEmpty(usage.AccessorTypeName) ? "<untyped>" : usage.AccessorTypeName;

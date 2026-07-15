@@ -555,6 +555,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowArchiveContexts(KarCliOptions options)
+    {
+        options.RequirePositionals("archive-contexts", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectArchiveContext> contexts = project.ArchiveContextService.Query(CreateArchiveContextQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(contexts.Select(ToProjectArchiveContextDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectArchiveContext context in contexts)
+            PrintProjectArchiveContext(context);
+
+        return 0;
+    }
+
     public static int ShowArchiveSchemas(KarCliOptions options)
     {
         options.RequirePositionals("archive-schemas", 1);
