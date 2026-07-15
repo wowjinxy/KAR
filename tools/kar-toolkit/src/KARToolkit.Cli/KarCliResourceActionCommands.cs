@@ -69,6 +69,31 @@ internal static class KarCliResourceActionCommands
         return 0;
     }
 
+    public static int ExecuteOperationBatch(KarCliOptions options)
+    {
+        options.RequirePositionals("operation-batch", 2);
+        KarProject project = OpenProject(options);
+        string actionId = options.Positionals[1];
+        KarProjectResourceActionExecutionOptions executionOptions = CreateBatchExecutionOptions(options, actionId);
+        KarProjectOperationQueryOptions query = CreateOperationBatchQuery(options, actionId);
+        KarProjectOperationBatchResult batch = project.OperationService.ExecuteBatch(query, executionOptions);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectOperationBatchResultDto(batch));
+            return batch.HasFailures ? 1 : 0;
+        }
+
+        Console.WriteLine("Executed operations: " + batch.ResultCount + " succeeded=" + batch.SucceededCount + " failed=" + batch.FailedCount);
+        foreach (KarProjectOperationExecutionResult result in batch.Results)
+        {
+            PrintProjectOperation(result.Operation);
+            PrintResourceActionResult(result.ResourceActionResult);
+        }
+
+        return batch.HasFailures ? 1 : 0;
+    }
+
     private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
     {
         KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
@@ -200,6 +225,25 @@ internal static class KarCliResourceActionCommands
             errorType = result.ErrorType,
             errorMessage = result.ErrorMessage,
             resourceAction = ToResourceActionExecutionResultDto(result.ResourceActionResult),
+        };
+    }
+
+    private static object ToProjectOperationBatchResultDto(KarProjectOperationBatchResult batch)
+    {
+        return new
+        {
+            overwrite = batch.Overwrite,
+            continueOnError = batch.ContinueOnError,
+            resultCount = batch.ResultCount,
+            succeededCount = batch.SucceededCount,
+            failedCount = batch.FailedCount,
+            readOnlyCount = batch.ReadOnlyCount,
+            writeActionCount = batch.WriteActionCount,
+            wouldWriteOutputCount = batch.WouldWriteOutputCount,
+            wroteOutputCount = batch.WroteOutputCount,
+            skippedOutputWriteCount = batch.SkippedOutputWriteCount,
+            hasFailures = batch.HasFailures,
+            results = batch.Results.Select(ToProjectOperationExecutionResultDto).ToList(),
         };
     }
 

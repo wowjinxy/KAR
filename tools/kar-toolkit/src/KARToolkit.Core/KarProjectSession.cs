@@ -148,5 +148,12 @@ namespace KARToolkit.Core
         {
             return Project.OperationService.Execute(operationId, executionOptions, queryOptions);
         }
+
+        public KarProjectOperationBatchResult ExecuteOperationBatch(
+            KarProjectOperationQueryOptions queryOptions,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return Project.OperationService.ExecuteBatch(queryOptions, executionOptions);
+        }
     }
 }

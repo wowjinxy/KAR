@@ -661,6 +661,13 @@ namespace KARToolkit.Core
             return OperationService.Execute(operation, executionOptions);
         }
 
+        public KarProjectOperationBatchResult ExecuteOperationBatch(
+            KarProjectOperationQueryOptions queryOptions,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return OperationService.ExecuteBatch(queryOptions, executionOptions);
+        }
+
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)
         {
             return OutputService.QueryFiles(options);

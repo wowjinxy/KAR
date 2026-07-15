@@ -1022,6 +1022,51 @@ namespace KARToolkit.Core.Tests
                 KarProjectOperationExecutionResult sessionDump = session.ExecuteOperation(scriptDumps.Single(operation => operation.ResourceAddress == "A2Info.dat#ScInfGo2D.tm").Id);
                 AssertTrue(sessionDump.Succeeded && sessionDump.WroteOutput, "project sessions should execute operation ids");
 
+                KarProjectOperationBatchResult overwriteBatch = project.ExecuteOperationBatch(
+                    new KarProjectOperationQueryOptions
+                    {
+                        DomainId = "script-tables",
+                        ActionId = "dump-bytes",
+                    },
+                    new KarProjectResourceActionExecutionOptions
+                    {
+                        Overwrite = true,
+                    });
+                AssertTrue(overwriteBatch.Overwrite && !overwriteBatch.ContinueOnError, "operation batch results should keep execution options");
+                AssertTrue(overwriteBatch.ResultCount == 2 && overwriteBatch.SucceededCount == 2 && overwriteBatch.AllSucceeded, "operation batches should execute matching resource-action operations");
+                AssertTrue(overwriteBatch.WriteActionCount == 2 && overwriteBatch.WroteOutputCount == 2 && overwriteBatch.SkippedOutputWriteCount == 0, "operation batches should summarize output writes");
+                AssertTrue(overwriteBatch.Results.All(result => result.Operation.IsResourceAction && result.ResultKind == "byte-dump"), "operation batches should keep operation metadata with each result");
+
+                KarProjectOperationBatchResult statusBatch = session.ExecuteOperationBatch(new KarProjectOperationQueryOptions
+                {
+                    DomainId = "script-tables",
+                    ActionId = "byte-status",
+                });
+                AssertTrue(statusBatch.ResultCount == 2 && statusBatch.ReadOnlyCount == 2 && statusBatch.WroteOutputCount == 0, "project sessions should execute read-only operation batches");
+
+                AssertThrows<NotSupportedException>(
+                    () => project.ExecuteOperationBatch(new KarProjectOperationQueryOptions
+                    {
+                        IncludeWorkflows = false,
+                        ResourceKind = KarResourceKind.File,
+                        ActionId = "export-output",
+                    }),
+                    "operation batches should reject non-batch resource actions");
+
+                KarProjectOperationBatchResult tolerantBatch = project.ExecuteOperationBatch(
+                    new KarProjectOperationQueryOptions
+                    {
+                        IncludeWorkflows = false,
+                        ResourceKind = KarResourceKind.File,
+                        ActionId = "export-output",
+                    },
+                    new KarProjectResourceActionExecutionOptions
+                    {
+                        ContinueOnError = true,
+                    });
+                AssertTrue(tolerantBatch.ContinueOnError && tolerantBatch.HasFailures, "tolerant operation batches should keep non-batch failures");
+                AssertTrue(tolerantBatch.FailedResults.All(result => result.Failed && result.ErrorType == "NotSupportedException"), "tolerant operation batches should expose failure metadata");
+
                 AssertThrows<NotSupportedException>(
                     () => project.ExecuteOperation(workflow),
                     "operation execution should reject workflow descriptors that are not direct resource actions");

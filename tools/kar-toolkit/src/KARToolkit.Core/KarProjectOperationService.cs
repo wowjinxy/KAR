@@ -87,6 +87,111 @@ namespace KARToolkit.Core
             return new KarProjectOperationExecutionResult(operation, result);
         }
 
+        public KarProjectOperationBatchResult ExecuteBatch(
+            KarProjectOperationQueryOptions queryOptions,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            if (queryOptions == null)
+                throw new ArgumentNullException(nameof(queryOptions));
+
+            executionOptions = executionOptions ?? new KarProjectResourceActionExecutionOptions();
+            KarProjectOperationQueryOptions effectiveQuery = CreateBatchQuery(queryOptions, executionOptions);
+            List<KarProjectOperationExecutionResult> results = new List<KarProjectOperationExecutionResult>();
+
+            foreach (KarProjectOperation operation in Query(effectiveQuery))
+            {
+                if (!operation.SupportsBatch)
+                {
+                    NotSupportedException error = new NotSupportedException("KAR project operation does not support batch execution: " + operation.Id);
+                    if (!executionOptions.ContinueOnError)
+                        throw error;
+
+                    results.Add(CreateFailedOperationResult(operation, error));
+                    continue;
+                }
+
+                if (operation.CanRun == false)
+                {
+                    InvalidOperationException error = new InvalidOperationException("KAR project operation cannot run: " + operation.Id + ". " + operation.Reason);
+                    if (!executionOptions.ContinueOnError)
+                        throw error;
+
+                    results.Add(CreateFailedOperationResult(operation, error));
+                    continue;
+                }
+
+                try
+                {
+                    results.Add(Execute(operation, executionOptions));
+                }
+                catch (Exception ex)
+                {
+                    if (!executionOptions.ContinueOnError)
+                        throw;
+
+                    results.Add(CreateFailedOperationResult(operation, ex));
+                }
+            }
+
+            IReadOnlyList<KarProjectOperationExecutionResult> orderedResults = results
+                .OrderBy(result => result.Operation.TargetDomainId, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(result => result.Operation.Command, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(result => result.Operation.ResourceAddress, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(result => result.Operation.Id, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+
+            return new KarProjectOperationBatchResult(
+                executionOptions.Overwrite,
+                executionOptions.ContinueOnError,
+                orderedResults);
+        }
+
+        private static KarProjectOperationQueryOptions CreateBatchQuery(
+            KarProjectOperationQueryOptions queryOptions,
+            KarProjectResourceActionExecutionOptions executionOptions)
+        {
+            return new KarProjectOperationQueryOptions
+            {
+                IncludeWorkflows = false,
+                IncludeResourceActions = true,
+                Kind = KarProjectOperationKind.ResourceAction,
+                Id = queryOptions.Id,
+                DomainId = queryOptions.DomainId,
+                Command = queryOptions.Command,
+                ActionId = queryOptions.ActionId,
+                ResourceAddress = queryOptions.ResourceAddress,
+                ResourceKind = queryOptions.ResourceKind,
+                Text = queryOptions.Text,
+                IsReadOnly = queryOptions.IsReadOnly,
+                WritesOutput = queryOptions.WritesOutput,
+                SupportsBatch = queryOptions.SupportsBatch,
+                RequiresInputFile = queryOptions.RequiresInputFile,
+                RequiresFieldName = queryOptions.RequiresFieldName,
+                RequiresValue = queryOptions.RequiresValue,
+                HasTargets = queryOptions.HasTargets,
+                HasOutputs = queryOptions.HasOutputs,
+                HasModifiedOutputs = queryOptions.HasModifiedOutputs,
+                HasInspectionIssues = queryOptions.HasInspectionIssues,
+                CanRun = queryOptions.CanRun ?? true,
+                WouldWriteOutput = queryOptions.WouldWriteOutput,
+                Overwrite = queryOptions.Overwrite || executionOptions.Overwrite,
+                SnapshotOptions = queryOptions.SnapshotOptions,
+            };
+        }
+
+        private static KarProjectOperationExecutionResult CreateFailedOperationResult(
+            KarProjectOperation operation,
+            Exception error)
+        {
+            if (operation.ResourceActionPlan == null)
+                throw new NotSupportedException("Only resource-action operations can be executed directly: " + operation.Id, error);
+
+            return new KarProjectOperationExecutionResult(
+                operation,
+                new KarProjectResourceActionExecutionResult(operation.ResourceActionPlan, null, error));
+        }
+
         private static string InferTargetDomain(KarProjectResourceInfo resource)
         {
             if (resource == null)

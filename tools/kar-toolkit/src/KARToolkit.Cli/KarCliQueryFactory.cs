@@ -123,6 +123,17 @@ internal static class KarCliQueryFactory
         return query;
     }
 
+    public static KarProjectOperationQueryOptions CreateOperationBatchQuery(KarCliOptions options, string actionId)
+    {
+        KarProjectOperationQueryOptions query = CreateOperationQuery(options);
+        query.Id = null;
+        query.ActionId = actionId;
+        query.IncludeWorkflows = false;
+        query.IncludeResourceActions = true;
+        query.Kind = KarProjectOperationKind.ResourceAction;
+        return query;
+    }
+
     public static KarProjectResourceActionPlanQueryOptions CreateResourceActionBatchPlanQuery(KarCliOptions options, string actionId)
     {
         KarProjectResourceActionPlanQueryOptions query = CreateResourceActionPlanQuery(options);
