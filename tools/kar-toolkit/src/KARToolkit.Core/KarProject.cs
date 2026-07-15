@@ -100,6 +100,28 @@ namespace KARToolkit.Core
             return Index.QueryFiles(options);
         }
 
+        public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)
+        {
+            List<KarProjectRootInfo> roots = new List<KarProjectRootInfo>();
+            KarProjectFileQueryOptions fileQuery = options == null ? null : options.Files;
+
+            foreach (KarProjectFile file in QueryFiles(fileQuery))
+            {
+                if (!FileCatalog.IsHsdArchiveKind(file.Kind))
+                    continue;
+
+                KarArchiveInfo archive = Inspector.ArchiveInspector.Inspect(file);
+                foreach (KarArchiveRootInfo root in archive.Roots)
+                {
+                    KarProjectRootInfo projectRoot = new KarProjectRootInfo(file, root);
+                    if (options == null || options.Matches(projectRoot))
+                        roots.Add(projectRoot);
+                }
+            }
+
+            return roots.AsReadOnly();
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);

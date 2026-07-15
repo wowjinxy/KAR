@@ -18,6 +18,8 @@ internal sealed class KarCliOptions
         string fileKind,
         string fileCategory,
         bool? fileHasOutputCopy,
+        bool? rootKnown,
+        string rootName,
         int? maxReferenceDepth,
         int? maxReferenceEntries)
     {
@@ -34,6 +36,8 @@ internal sealed class KarCliOptions
         FileKind = fileKind;
         FileCategory = fileCategory;
         FileHasOutputCopy = fileHasOutputCopy;
+        RootKnown = rootKnown;
+        RootName = rootName;
         MaxReferenceDepth = maxReferenceDepth;
         MaxReferenceEntries = maxReferenceEntries;
     }
@@ -64,6 +68,10 @@ internal sealed class KarCliOptions
 
     public bool? FileHasOutputCopy { get; }
 
+    public bool? RootKnown { get; }
+
+    public string RootName { get; }
+
     public int? MaxReferenceDepth { get; }
 
     public int? MaxReferenceEntries { get; }
@@ -85,6 +93,8 @@ internal sealed class KarCliOptions
         string fileKind = null;
         string fileCategory = null;
         bool? fileHasOutputCopy = null;
+        bool? rootKnown = null;
+        string rootName = null;
         int? maxReferenceDepth = null;
         int? maxReferenceEntries = null;
         using IEnumerator<string> enumerator = args.GetEnumerator();
@@ -173,6 +183,24 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--known")
+            {
+                rootKnown = true;
+                continue;
+            }
+
+            if (arg == "--unknown")
+            {
+                rootKnown = false;
+                continue;
+            }
+
+            if (arg == "--root-name")
+            {
+                rootName = ReadValue(enumerator, arg);
+                continue;
+            }
+
             if (arg == "--max-reference-depth" || arg == "--reference-depth" || arg == "--ref-depth")
             {
                 maxReferenceDepth = ReadNonNegativeInt(enumerator, arg);
@@ -202,6 +230,8 @@ internal sealed class KarCliOptions
             fileKind,
             fileCategory,
             fileHasOutputCopy,
+            rootKnown,
+            rootName,
             maxReferenceDepth,
             maxReferenceEntries);
     }

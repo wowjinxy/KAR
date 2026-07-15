@@ -37,6 +37,14 @@ internal static class KarCliTextWriter
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
     }
 
+    public static void PrintProjectRootSummary(KarProjectRootInfo root)
+    {
+        string known = root.IsKnown ? "known" : "unknown";
+        string type = string.IsNullOrEmpty(root.DisplayAccessorTypeName) ? "<untyped>" : root.DisplayAccessorTypeName;
+        string schema = string.IsNullOrEmpty(root.DataDefinitionId) ? "" : ", " + root.DataDefinitionId;
+        Console.WriteLine(root.RelativePath + ":" + root.RootName + " [" + known + ", " + type + schema + "]");
+    }
+
     public static void PrintArchive(KarArchiveInfo archive, string indent)
     {
         Console.WriteLine(indent + archive.File.RelativePath + " (" + archive.Definition.DisplayName + ")");

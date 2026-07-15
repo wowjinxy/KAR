@@ -75,6 +75,27 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowRoots(KarCliOptions options)
+    {
+        options.RequirePositionals("roots", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectRootInfo> roots = project.QueryRoots(CreateRootQuery(options))
+            .OrderBy(root => root.File.RelativePath)
+            .ThenBy(root => root.Root.Name)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(roots.Select(ToProjectRootDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectRootInfo root in roots)
+            PrintProjectRootSummary(root);
+
+        return 0;
+    }
+
     private static KarProjectFileQueryOptions CreateFileQuery(KarCliOptions options)
     {
         KarProjectFileQueryOptions query = new KarProjectFileQueryOptions
@@ -93,6 +114,16 @@ internal static class KarCliInspectionCommands
         }
 
         return query;
+    }
+
+    private static KarProjectRootQueryOptions CreateRootQuery(KarCliOptions options)
+    {
+        return new KarProjectRootQueryOptions
+        {
+            Files = CreateFileQuery(options),
+            IsKnown = options.RootKnown,
+            RootName = options.RootName,
+        };
     }
 
     public static int ShowFile(KarCliOptions options)

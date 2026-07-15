@@ -94,6 +94,30 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectRootDto(KarProjectRootInfo root)
+    {
+        return new
+        {
+            file = new
+            {
+                relativePath = root.File.RelativePath,
+                kind = root.File.Kind.ToString(),
+                category = root.File.Category,
+                displayName = root.File.DisplayName,
+            },
+            root = new
+            {
+                name = root.Root.Name,
+                isKnown = root.Root.IsKnown,
+                accessorTypeName = root.Root.AccessorTypeName,
+                expectedAccessorTypeName = root.Root.ExpectedAccessorTypeName,
+                displayAccessorTypeName = root.Root.DisplayAccessorTypeName,
+                description = root.Root.Definition == null ? null : root.Root.Definition.Description,
+                dataDefinitionId = root.Root.DataDefinitionId,
+            },
+        };
+    }
+
     public static object ToDataDefinitionDtoOrNull(KarDataDefinition definition)
     {
         return definition == null ? null : ToDataDefinitionDto(definition);
