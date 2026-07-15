@@ -37,6 +37,41 @@ internal static class KarCliTextWriter
         Console.WriteLine("Known root definitions: " + file.ArchiveDefinition.Roots.Count);
     }
 
+    public static void PrintProjectReport(KarProjectReport report)
+    {
+        Console.WriteLine("Project: " + report.Project.Name);
+        Console.WriteLine("Source: " + report.Project.SourceRoot);
+        Console.WriteLine("Output: " + report.Project.OutputRoot);
+        Console.WriteLine("Files: " + report.FileCount);
+        Console.WriteLine("Maps: " + report.MapCount + " complete=" + report.CompleteMapCount + " incomplete=" + report.IncompleteMapCount);
+        Console.WriteLine("HSD archives: " + report.HsdArchiveCount);
+        Console.WriteLine("A2D packages: " + report.A2DPackageCount);
+        Console.WriteLine("Roots: " + report.RootCount + " known=" + report.KnownRootCount + " unknown=" + report.UnknownRootCount + " missing-required=" + report.MissingRequiredRootCount);
+        Console.WriteLine("Schemas used: " + report.DataDefinitionUsageCount);
+
+        Console.WriteLine("Files by category:");
+        foreach (KarProjectFileGroupSummary group in report.FileCategories)
+            Console.WriteLine("  " + group.Name + ": " + group.Count);
+
+        Console.WriteLine("Files by kind:");
+        foreach (KarProjectFileGroupSummary group in report.FileKinds)
+            Console.WriteLine("  " + group.Name + ": " + group.Count);
+
+        if (report.DataDefinitionUsage.Count != 0)
+        {
+            Console.WriteLine("Schema usage:");
+            foreach (KarProjectDataDefinitionUsage usage in report.DataDefinitionUsage)
+                Console.WriteLine("  " + usage.DataDefinitionId + ": roots=" + usage.Count + " files=" + usage.FileCount + " - " + usage.DisplayName);
+        }
+
+        if (report.HasFieldSummaries)
+        {
+            Console.WriteLine("Field summaries:");
+            foreach (KarProjectFieldSummary summary in report.FieldSummaries)
+                PrintProjectFieldSummary(summary);
+        }
+    }
+
     public static void PrintProjectRootSummary(KarProjectRootInfo root)
     {
         string known = root.IsKnown ? "known" : "unknown";

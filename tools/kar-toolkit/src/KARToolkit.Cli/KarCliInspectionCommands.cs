@@ -34,6 +34,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowReport(KarCliOptions options)
+    {
+        options.RequirePositionals("report", 1);
+        KarProject project = OpenProject(options);
+        KarProjectReport report = project.CreateReport(CreateReportOptions(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectReportDto(report));
+            return 0;
+        }
+
+        PrintProjectReport(report);
+        return 0;
+    }
+
     public static int ShowMaps(KarCliOptions options)
     {
         options.RequirePositionals("maps", 1);
@@ -248,6 +264,17 @@ internal static class KarCliInspectionCommands
             Roots = CreateRootQuery(options),
             DataDefinitionIdOrAccessorTypeName = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
             FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
+        };
+    }
+
+    private static KarProjectReportOptions CreateReportOptions(KarCliOptions options)
+    {
+        return new KarProjectReportOptions
+        {
+            Files = CreateFileQuery(options),
+            Roots = CreateRootQuery(options),
+            Fields = CreateFieldQuery(options),
+            IncludeFieldSummaries = options.RootSummary,
         };
     }
 

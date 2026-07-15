@@ -24,6 +24,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectSchemaUsageGroupsKnownRoots", ProjectSchemaUsageGroupsKnownRoots);
             Run("ProjectFieldQueryReturnsLabeledValues", ProjectFieldQueryReturnsLabeledValues);
             Run("ProjectFieldSummariesGroupDistinctValues", ProjectFieldSummariesGroupDistinctValues);
+            Run("ProjectReportAggregatesInventories", ProjectReportAggregatesInventories);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -313,6 +314,46 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(hydraSummaries.Count == 1, "field summary should match schemas by accessor type");
                 AssertTrue(hydraSummaries[0].DistinctValueCount == 1, "field summary should group identical versus values");
                 AssertTrue(!hydraSummaries[0].HasValueVariation, "field summary should not flag single values as varying");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+            }
+        }
+
+        private static void ProjectReportAggregatesInventories()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-report-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+
+                KarProject project = KarProject.Open(tempRoot);
+                KarProjectReport report = project.CreateReport(new KarProjectReportOptions
+                {
+                    IncludeFieldSummaries = true,
+                    Fields = new KarProjectFieldQueryOptions
+                    {
+                        DataDefinitionIdOrAccessorTypeName = "kar.gr.data",
+                        FieldName = "unknown1",
+                    },
+                });
+
+                AssertTrue(report.FileCount == 3, "project report should count indexed files");
+                AssertTrue(report.HsdArchiveCount == 3, "project report should inspect HSD archives");
+                AssertTrue(report.RootCount == 3, "project report should count archive roots");
+                AssertTrue(report.KnownRootCount == 3, "project report should count known roots");
+                AssertTrue(report.UnknownRootCount == 0, "project report should count unknown roots");
+                AssertTrue(report.DataDefinitionUsageCount == 2, "project report should group schema usage");
+                AssertTrue(report.FieldSummaryCount == 1, "project report should include requested field summaries");
+                AssertTrue(report.FieldSummaries[0].HasValueVariation, "project report field summaries should retain value variation");
+                AssertTrue(report.FileCategories.Any(group => group.Name == "Maps" && group.Count == 2), "project report should summarize map files by category");
+                AssertTrue(report.FileKinds.Any(group => group.Name == KarFileKind.VersusData.ToString() && group.Count == 1), "project report should summarize files by kind");
+                AssertTrue(report.MapCount == 2, "project report should count map bundles");
+                AssertTrue(report.IncompleteMapCount == 2, "project report should count incomplete map bundles");
             }
             finally
             {

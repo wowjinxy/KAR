@@ -29,6 +29,49 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectReportDto(KarProjectReport report)
+    {
+        return new
+        {
+            project = ToProjectDto(report.Project),
+            fileCount = report.FileCount,
+            mapCount = report.MapCount,
+            completeMapCount = report.CompleteMapCount,
+            incompleteMapCount = report.IncompleteMapCount,
+            hsdArchiveCount = report.HsdArchiveCount,
+            a2dPackageCount = report.A2DPackageCount,
+            rootCount = report.RootCount,
+            knownRootCount = report.KnownRootCount,
+            unknownRootCount = report.UnknownRootCount,
+            missingRequiredRootCount = report.MissingRequiredRootCount,
+            dataDefinitionUsageCount = report.DataDefinitionUsageCount,
+            fieldSummaryCount = report.FieldSummaryCount,
+            fileCategories = report.FileCategories.Select(ToProjectFileGroupSummaryDto).ToList(),
+            fileKinds = report.FileKinds.Select(ToProjectFileGroupSummaryDto).ToList(),
+            rootSummaries = report.RootSummaries.Select(ToProjectRootSummaryDto).ToList(),
+            dataDefinitionUsage = report.DataDefinitionUsage.Select(ToDataDefinitionUsageDto).ToList(),
+            fieldSummaries = report.FieldSummaries.Select(ToProjectFieldSummaryDto).ToList(),
+        };
+    }
+
+    public static object ToProjectFileGroupSummaryDto(KarProjectFileGroupSummary group)
+    {
+        return new
+        {
+            name = group.Name,
+            count = group.Count,
+            files = group.Files
+                .Select(file => new
+                {
+                    relativePath = file.RelativePath,
+                    kind = file.Kind.ToString(),
+                    category = file.Category,
+                    displayName = file.DisplayName,
+                })
+                .ToList(),
+        };
+    }
+
     public static object ToMapInfoDto(KarMapInfo map)
     {
         return new

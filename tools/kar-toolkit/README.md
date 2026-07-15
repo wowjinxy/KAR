@@ -25,6 +25,7 @@ dotnet run --project .\tools\kar-toolkit\tests\KARToolkit.Core.Tests\KARToolkit.
 ```powershell
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-hsd-archives --no-a2d-packages --no-schema-validation
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll report .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll files .\GKYE01 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll file .\GKYE01 GrCity1.dat
@@ -43,6 +44,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll s
 
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
+Project-wide report snapshots go through `KarProject.CreateReport`, and the `report` CLI command aggregates file groups, map completeness, archive/root health, schema usage, and optional field summaries.
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.

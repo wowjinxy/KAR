@@ -196,6 +196,11 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
+        public KarProjectReport CreateReport(KarProjectReportOptions options = null)
+        {
+            return new KarProjectReport(this, options);
+        }
+
         public KarMapBundle GetMap(string mapNameOrPath)
         {
             return Index.GetMap(mapNameOrPath);
