@@ -1322,6 +1322,8 @@ internal static class KarCliDtoFactory
             isScalar = field.IsScalar,
             isFloatScalar = field.IsFloatScalar,
             canSetScalar = field.CanSetScalar,
+            hasScalarEdit = field.HasScalarEdit,
+            scalarEdit = ToProjectResourceDataFieldEditInfoDto(field.ScalarEdit),
             dataDefinitionId = field.DataDefinitionId,
             isAvailable = field.IsAvailable,
             valueKind = field.ValueKind,
@@ -1363,6 +1365,8 @@ internal static class KarCliDtoFactory
             isPointer = field.IsPointer,
             isScalar = field.IsScalar,
             canSetScalar = field.CanSetScalar,
+            hasScalarEdit = field.HasScalarEdit,
+            scalarEdit = ToProjectResourceDataFieldEditInfoDto(field.ScalarEdit),
             valueKind = field.ValueKind,
             displayValue = field.DisplayValue,
             signedValue = field.SignedValue,
@@ -1371,6 +1375,27 @@ internal static class KarCliDtoFactory
             hasReference = field.HasReference,
             referenceDataDefinitionId = field.ReferenceDataDefinitionId,
             error = field.Error,
+        };
+    }
+
+    public static object ToProjectResourceDataFieldEditInfoDto(KarProjectResourceDataFieldEditInfo edit)
+    {
+        if (edit == null)
+            return null;
+
+        return new
+        {
+            actionId = edit.ActionId,
+            command = edit.Command,
+            displayName = edit.DisplayName,
+            description = edit.Description,
+            argumentHint = edit.ArgumentHint,
+            address = edit.Address,
+            fieldName = edit.FieldName,
+            fieldPath = edit.FieldPath,
+            canRun = edit.CanRun,
+            writesOutput = edit.WritesOutput,
+            requiresValue = edit.RequiresValue,
         };
     }
 

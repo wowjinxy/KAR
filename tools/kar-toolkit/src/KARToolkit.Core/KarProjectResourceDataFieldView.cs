@@ -31,6 +31,7 @@ namespace KARToolkit.Core
                 .Select(entry => new KarProjectResourceDataEntryView(resource, FieldPath, entry, depth))
                 .ToList()
                 .AsReadOnly();
+            ScalarEdit = CanSetScalar ? new KarProjectResourceDataFieldEditInfo(this) : null;
         }
 
         public KarProjectResourceInfo Resource { get; }
@@ -112,6 +113,10 @@ namespace KARToolkit.Core
         public bool HasError => !string.IsNullOrEmpty(Error);
 
         public bool CanSetScalar => IsTopLevel && Resource.CanSetScalarFields && IsScalar && IsAvailable;
+
+        public KarProjectResourceDataFieldEditInfo ScalarEdit { get; }
+
+        public bool HasScalarEdit => ScalarEdit != null;
 
         public int TotalFieldCount => 1 +
             ReferenceFields.Sum(field => field.TotalFieldCount) +

@@ -1012,10 +1012,14 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceDataFieldView x0C = hydra.Fields.Single(field => field.FieldName == "x0C");
                 AssertTrue(x0C.FieldPath == "x0C" && x0C.OffsetHex == "0x0C", "resource data fields should expose stable field paths and offsets");
                 AssertTrue(x0C.IsScalar && x0C.CanSetScalar && x0C.SignedValue == 303, "resource data fields should expose editable scalar metadata and values");
+                AssertTrue(x0C.HasScalarEdit && x0C.ScalarEdit.ActionId == "set-scalar" && x0C.ScalarEdit.Command == "set-resource-scalar", "editable resource data fields should expose scalar edit action metadata");
+                AssertTrue(x0C.ScalarEdit.Address == "VsHydra.dat:vsDataHydra" && x0C.ScalarEdit.FieldName == "x0C", "scalar edit field metadata should retain resource and field selectors");
+                KarProjectResourceActionExecutionOptions editOptions = x0C.ScalarEdit.CreateExecutionOptions("0x200");
+                AssertTrue(editOptions.FieldName == "x0C" && editOptions.Value == "0x200", "scalar edit metadata should create resource action execution options");
                 AssertTrue(project.GetResourceDataField("VsHydra.dat:vsDataHydra", "x0C").SignedValue == 303, "project resource data field wrappers should look up fields by path or name");
 
                 KarProjectResourceDataFieldView pointer = hydra.Fields.Single(field => field.FieldName == "primaryModelAnimation");
-                AssertTrue(pointer.IsPointer && !pointer.CanSetScalar && pointer.DataDefinitionId == "kar.vs.legendary.modelAnimation", "resource data fields should retain pointer target schema ids");
+                AssertTrue(pointer.IsPointer && !pointer.CanSetScalar && !pointer.HasScalarEdit && pointer.DataDefinitionId == "kar.vs.legendary.modelAnimation", "resource data fields should retain pointer target schema ids");
                 AssertTrue(hydra.EditableScalarFieldCount >= 2 && hydra.PointerFieldCount >= 3, "resource data views should summarize scalar and pointer fields");
 
                 IReadOnlyList<KarProjectResourceDataFieldView> editable = project.QueryResourceDataFields(new KarProjectResourceDataFieldQueryOptions

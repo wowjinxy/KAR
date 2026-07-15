@@ -289,7 +289,7 @@ internal static class KarCliTextWriter
             : field.Resource.Root.DataDefinitionId;
         string flags = "";
         if (field.CanSetScalar)
-            flags += " editable";
+            flags += " editable command=" + field.ScalarEdit.Command;
         if (field.IsPointer)
             flags += " pointer";
         if (field.HasReferenceEntries)
