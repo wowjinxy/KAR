@@ -4,7 +4,7 @@ namespace KARToolkit.Core
 {
     public sealed class KarProjectToolkitWorkflow
     {
-        internal KarProjectToolkitWorkflow(
+        public KarProjectToolkitWorkflow(
             string id,
             string domainId,
             string displayName,

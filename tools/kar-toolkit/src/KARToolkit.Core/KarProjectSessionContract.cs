@@ -151,6 +151,8 @@ namespace KARToolkit.Core
 
         public int DomainContextProviderCount { get; set; }
 
+        public int ToolkitWorkflowProviderCount { get; set; }
+
         public int OperationPresetDefinitionCount { get; set; }
 
         public bool HasOutputs { get; set; }
@@ -195,6 +197,7 @@ namespace KARToolkit.Core
                 ResourceActionDefinitionCount = session.ResourceActionDefinitionCount,
                 OperationDomainRuleCount = session.OperationDomainRuleCount,
                 DomainContextProviderCount = session.DomainContextProviderCount,
+                ToolkitWorkflowProviderCount = session.ToolkitWorkflowProviderCount,
                 OperationPresetDefinitionCount = session.OperationPresetDefinitionCount,
                 HasOutputs = session.HasOutputs,
                 HasModifiedOutputs = session.HasModifiedOutputs,

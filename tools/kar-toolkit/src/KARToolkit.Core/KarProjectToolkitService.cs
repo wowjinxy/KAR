@@ -43,7 +43,8 @@ namespace KARToolkit.Core
             KarProjectToolkitSnapshot snapshot = CreateSnapshot(options);
             KarProjectResourceGraph graph = _project.ResourceGraphService.Snapshot;
             IReadOnlyList<KarProjectDomainContext> domains = CreateDomainContexts(snapshot, graph);
-            IReadOnlyList<KarProjectToolkitWorkflow> workflows = KarProjectToolkitWorkflowCatalog.Create(_project, snapshot, graph, domains);
+            IReadOnlyList<KarProjectToolkitWorkflow> workflows =
+                _project.ToolkitWorkflowProviderRegistry.CreateWorkflows(_project, snapshot, graph, domains);
             return new KarProjectToolkitSurface(_project, snapshot, domains, workflows);
         }
 

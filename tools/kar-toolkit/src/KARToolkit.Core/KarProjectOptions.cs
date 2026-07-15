@@ -22,6 +22,8 @@ namespace KARToolkit.Core
 
         public KarProjectDomainContextProviderRegistry DomainContextProviderRegistry { get; set; }
 
+        public KarProjectToolkitWorkflowProviderRegistry ToolkitWorkflowProviderRegistry { get; set; }
+
         public KarProjectOperationPresetRegistry OperationPresetRegistry { get; set; }
 
         public KarArchiveDefinitionProvider ArchiveDefinitions { get; set; }
@@ -91,6 +93,11 @@ namespace KARToolkit.Core
         internal KarProjectDomainContextProviderRegistry ResolveDomainContextProviderRegistry()
         {
             return DomainContextProviderRegistry ?? KarProjectDomainContextProviderRegistry.Default;
+        }
+
+        internal KarProjectToolkitWorkflowProviderRegistry ResolveToolkitWorkflowProviderRegistry()
+        {
+            return ToolkitWorkflowProviderRegistry ?? KarProjectToolkitWorkflowProviderRegistry.Default;
         }
 
         internal KarProjectOperationPresetRegistry ResolveOperationPresetRegistry()

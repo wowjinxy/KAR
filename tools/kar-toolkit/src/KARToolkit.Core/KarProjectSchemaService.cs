@@ -31,6 +31,8 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectDomainContextProvider> DomainContextProviders => _project.DomainContextProviderRegistry.Providers;
 
+        public IReadOnlyList<KarProjectToolkitWorkflowProvider> ToolkitWorkflowProviders => _project.ToolkitWorkflowProviderRegistry.Providers;
+
         public IReadOnlyList<KarProjectOperationPresetDefinition> OperationPresetDefinitions => _project.OperationPresetRegistry.Definitions;
 
         public KarProjectToolkitRegistryCatalog CreateToolkitRegistryCatalog()
@@ -43,6 +45,7 @@ namespace KARToolkit.Core
                 ResourceActionDefinitions,
                 OperationDomainRules,
                 DomainContextProviders,
+                ToolkitWorkflowProviders,
                 OperationPresetDefinitions);
         }
 

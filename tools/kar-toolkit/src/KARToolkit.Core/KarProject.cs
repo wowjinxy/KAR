@@ -15,6 +15,7 @@ namespace KARToolkit.Core
             KarProjectResourceHandlerRegistry resourceHandlers,
             KarProjectOperationDomainRegistry operationDomains,
             KarProjectDomainContextProviderRegistry domainContextProviders,
+            KarProjectToolkitWorkflowProviderRegistry toolkitWorkflowProviders,
             KarProjectOperationPresetRegistry operationPresets,
             KarArchiveInspector archiveInspector)
         {
@@ -25,6 +26,7 @@ namespace KARToolkit.Core
             ResourceActionRegistry = ResourceHandlerRegistry.ActionRegistry;
             OperationDomainRegistry = operationDomains ?? throw new ArgumentNullException(nameof(operationDomains));
             DomainContextProviderRegistry = domainContextProviders ?? throw new ArgumentNullException(nameof(domainContextProviders));
+            ToolkitWorkflowProviderRegistry = toolkitWorkflowProviders ?? throw new ArgumentNullException(nameof(toolkitWorkflowProviders));
             OperationPresetRegistry = operationPresets ?? throw new ArgumentNullException(nameof(operationPresets));
             FileStore = new KarProjectFileStore(Workspace, Index);
             FileService = new KarProjectFileService(this);
@@ -70,6 +72,8 @@ namespace KARToolkit.Core
         public KarProjectOperationDomainRegistry OperationDomainRegistry { get; }
 
         public KarProjectDomainContextProviderRegistry DomainContextProviderRegistry { get; }
+
+        public KarProjectToolkitWorkflowProviderRegistry ToolkitWorkflowProviderRegistry { get; }
 
         public KarProjectOperationPresetRegistry OperationPresetRegistry { get; }
 
@@ -189,6 +193,7 @@ namespace KARToolkit.Core
                 options.ResolveResourceHandlerRegistry(),
                 options.ResolveOperationDomainRegistry(),
                 options.ResolveDomainContextProviderRegistry(),
+                options.ResolveToolkitWorkflowProviderRegistry(),
                 options.ResolveOperationPresetRegistry(),
                 options.ResolveArchiveInspector());
         }

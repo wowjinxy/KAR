@@ -92,6 +92,8 @@ namespace KARToolkit.Core
 
         public int DomainContextProviderCount => RegistryCatalog.DomainContextProviderCount;
 
+        public int ToolkitWorkflowProviderCount => RegistryCatalog.ToolkitWorkflowProviderCount;
+
         public int OperationPresetDefinitionCount => RegistryCatalog.OperationPresetDefinitionCount;
 
         public bool HasOutputs => Snapshot.HasOutputs;

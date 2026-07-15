@@ -5,21 +5,18 @@ namespace KARToolkit.Core
 {
     internal static class KarProjectToolkitWorkflowCatalog
     {
-        public static IReadOnlyList<KarProjectToolkitWorkflow> Create(
-            KarProject project,
-            KarProjectToolkitSnapshot snapshot,
-            KarProjectResourceGraph graph,
-            IReadOnlyList<KarProjectDomainContext> domains)
+        public static IReadOnlyList<KarProjectToolkitWorkflow> CreateBuiltIn(
+            KarProjectToolkitWorkflowProviderContext providerContext)
         {
-            int dataFieldCount = project.ResourceService.QueryDataFields().Count;
-            int editableDataFieldCount = project.ResourceService.QueryDataFields(new KarProjectResourceDataFieldQueryOptions
-            {
-                CanSetScalar = true,
-            }).Count;
-            int importResourceCount = graph.Resources.Count(resource => resource.CanImportFromFile);
-            int readableResourceCount = graph.Resources.Count(resource => resource.CanReadBytes);
-            int exportableResourceCount = graph.Resources.Count(resource => resource.CanExportToOutput);
-            int a2dEntryCount = graph.A2DEntryCount;
+            KarProjectToolkitSnapshot snapshot = providerContext.Snapshot;
+            KarProjectResourceGraph graph = providerContext.Graph;
+            IReadOnlyList<KarProjectDomainContext> domains = providerContext.Domains;
+            int dataFieldCount = providerContext.DataFieldCount;
+            int editableDataFieldCount = providerContext.EditableDataFieldCount;
+            int importResourceCount = providerContext.ImportResourceCount;
+            int readableResourceCount = providerContext.ReadableResourceCount;
+            int exportableResourceCount = providerContext.ExportableResourceCount;
+            int a2dEntryCount = providerContext.A2DEntryCount;
 
             List<KarProjectToolkitWorkflow> workflows = new List<KarProjectToolkitWorkflow>
             {

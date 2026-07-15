@@ -16,6 +16,7 @@ namespace KARToolkit.Core
             IEnumerable<KarProjectResourceActionDefinition> resourceActionDefinitions,
             IEnumerable<KarProjectOperationDomainRule> operationDomainRules,
             IEnumerable<KarProjectDomainContextProvider> domainContextProviders,
+            IEnumerable<KarProjectToolkitWorkflowProvider> toolkitWorkflowProviders,
             IEnumerable<KarProjectOperationPresetDefinition> operationPresetDefinitions)
         {
             Project = project;
@@ -25,6 +26,7 @@ namespace KARToolkit.Core
             ResourceActionDefinitions = OrderResourceActionDefinitions(resourceActionDefinitions);
             OperationDomainRules = OrderOperationDomainRules(operationDomainRules);
             DomainContextProviders = OrderDomainContextProviders(domainContextProviders);
+            ToolkitWorkflowProviders = OrderToolkitWorkflowProviders(toolkitWorkflowProviders);
             OperationPresetDefinitions = OrderOperationPresetDefinitions(operationPresetDefinitions);
         }
 
@@ -42,6 +44,8 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectDomainContextProvider> DomainContextProviders { get; }
 
+        public IReadOnlyList<KarProjectToolkitWorkflowProvider> ToolkitWorkflowProviders { get; }
+
         public IReadOnlyList<KarProjectOperationPresetDefinition> OperationPresetDefinitions { get; }
 
         public bool HasProject => Project != null;
@@ -52,7 +56,7 @@ namespace KARToolkit.Core
 
         public string OutputRoot => Project == null ? null : Project.OutputRoot;
 
-        public int RegistryCount => 7;
+        public int RegistryCount => 8;
 
         public int FileKindCount => FileKinds.Count;
 
@@ -65,6 +69,8 @@ namespace KARToolkit.Core
         public int OperationDomainRuleCount => OperationDomainRules.Count;
 
         public int DomainContextProviderCount => DomainContextProviders.Count;
+
+        public int ToolkitWorkflowProviderCount => ToolkitWorkflowProviders.Count;
 
         public int OperationPresetDefinitionCount => OperationPresetDefinitions.Count;
 
@@ -79,6 +85,8 @@ namespace KARToolkit.Core
         public bool HasOperationDomainRules => OperationDomainRuleCount != 0;
 
         public bool HasDomainContextProviders => DomainContextProviderCount != 0;
+
+        public bool HasToolkitWorkflowProviders => ToolkitWorkflowProviderCount != 0;
 
         public bool HasOperationPresetDefinitions => OperationPresetDefinitionCount != 0;
 
@@ -97,6 +105,7 @@ namespace KARToolkit.Core
                 KarProjectResourceActionRegistry.Default.Definitions,
                 KarProjectOperationDomainRegistry.Default.Rules,
                 KarProjectDomainContextProviderRegistry.Default.Providers,
+                KarProjectToolkitWorkflowProviderRegistry.Default.Providers,
                 KarProjectOperationPresetRegistry.Default.Definitions);
         }
 
@@ -161,6 +170,16 @@ namespace KARToolkit.Core
         }
 
         private static IReadOnlyList<KarProjectDomainContextProvider> OrderDomainContextProviders(IEnumerable<KarProjectDomainContextProvider> providers)
+        {
+            if (providers == null)
+                throw new ArgumentNullException(nameof(providers));
+
+            return providers
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private static IReadOnlyList<KarProjectToolkitWorkflowProvider> OrderToolkitWorkflowProviders(IEnumerable<KarProjectToolkitWorkflowProvider> providers)
         {
             if (providers == null)
                 throw new ArgumentNullException(nameof(providers));
