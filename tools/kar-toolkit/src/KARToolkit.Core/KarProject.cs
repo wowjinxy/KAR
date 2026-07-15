@@ -36,6 +36,7 @@ namespace KARToolkit.Core
             EditService = new KarProjectEditService(this);
             RelationshipService = new KarProjectRelationshipService(this);
             ResourceService = new KarProjectResourceService(this);
+            ResourceActionExecutor = new KarProjectResourceActionExecutor(this);
             ScriptService = new KarProjectScriptService(this);
             ResourceAddressService = new KarProjectResourceAddressService(this);
             ScriptContextService = new KarProjectScriptContextService(this);
@@ -85,6 +86,8 @@ namespace KARToolkit.Core
         public KarProjectRelationshipService RelationshipService { get; }
 
         public KarProjectResourceService ResourceService { get; }
+
+        public KarProjectResourceActionExecutor ResourceActionExecutor { get; }
 
         public KarProjectScriptService ScriptService { get; }
 
@@ -326,6 +329,14 @@ namespace KARToolkit.Core
         public KarProjectResourceActionPlan GetResourceActionPlan(string address, string actionId, bool overwrite = false)
         {
             return ResourceService.GetActionPlan(address, actionId, overwrite);
+        }
+
+        public KarProjectResourceActionExecutionResult ExecuteResourceAction(
+            string address,
+            string actionId,
+            KarProjectResourceActionExecutionOptions options = null)
+        {
+            return ResourceActionExecutor.Execute(address, actionId, options);
         }
 
         public KarProjectResourceDetail GetResourceDetail(string address)

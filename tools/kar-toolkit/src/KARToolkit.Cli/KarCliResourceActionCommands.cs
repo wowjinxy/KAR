@@ -14,97 +14,108 @@ internal static class KarCliResourceActionCommands
         KarProject project = OpenProject(options);
         string address = options.Positionals[1];
         string actionId = options.Positionals[2];
-        KarProjectResourceActionPlan plan = project.ResourceService.GetActionPlan(address, actionId, options.Overwrite);
+        KarProjectResourceActionExecutionOptions executionOptions = CreateExecutionOptions(options, actionId);
+        KarProjectResourceActionExecutionResult result = project.ResourceActionExecutor.Execute(address, actionId, executionOptions);
 
-        switch (plan.ActionId)
+        return WriteActionResult(options, result);
+    }
+
+    private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
+    {
+        KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
         {
-            case "output-status":
-                return WriteActionResult(options, plan, project.ResourceService.GetOutput(address), ToProjectResourceOutputDto, PrintProjectResourceOutput);
+            Overwrite = options.Overwrite,
+        };
 
-            case "byte-status":
-                return WriteActionResult(options, plan, project.ResourceService.GetByteInfo(address), ToProjectResourceByteInfoDto, PrintProjectResourceByteInfo);
-
-            case "dump-bytes":
-                return WriteActionResult(options, plan, project.DumpResourceBytesToOutput(address, options.Overwrite), ToProjectResourceByteDumpResultDto, PrintProjectResourceByteDumpResult);
-
-            case "export-output":
-                return WriteActionResult(options, plan, project.ExportResourceToOutput(address, options.Overwrite), ToProjectResourceExportResultDto, PrintProjectResourceExportResult);
-
+        switch (actionId.ToLowerInvariant())
+        {
             case "import-file":
                 options.RequirePositionals("resource-action import-file", 4);
-                return WriteActionResult(options, plan, project.ImportResourceFromFile(address, options.Positionals[3]), ToProjectResourceImportResultDto, PrintProjectResourceImportResult);
+                executionOptions.InputPath = options.Positionals[3];
+                break;
 
             case "field-values":
-                return ExecuteFieldValues(options, project, plan, address);
+                if (options.Positionals.Count >= 4)
+                    executionOptions.FieldName = options.Positionals[3];
+                break;
 
             case "set-scalar":
                 options.RequirePositionals("resource-action set-scalar", 5);
-                return WriteActionResult(options, plan, project.SetResourceScalarFieldFromText(address, options.Positionals[3], options.Positionals[4]), ToProjectResourceScalarEditResultDto, PrintProjectResourceScalarEditResult);
-
-            case "apply-output":
-                return WriteActionResult(options, plan, project.ApplyResourceOutput(address), ToProjectResourceOutputApplyResultDto, PrintProjectResourceOutputApplyResult);
-
-            default:
-                throw new ArgumentException("Unsupported resource action: " + plan.ActionId);
+                executionOptions.FieldName = options.Positionals[3];
+                executionOptions.Value = options.Positionals[4];
+                break;
         }
+
+        return executionOptions;
     }
 
-    private static int ExecuteFieldValues(
+    private static int WriteActionResult(
         KarCliOptions options,
-        KarProject project,
-        KarProjectResourceActionPlan plan,
-        string address)
-    {
-        if (options.Positionals.Count >= 4)
-        {
-            KarProjectResourceFieldInfo field = project.GetResourceFieldValue(address, options.Positionals[3]);
-            return WriteActionResult(options, plan, field, ToProjectResourceFieldValueDto, PrintProjectResourceFieldValue);
-        }
-
-        IReadOnlyList<KarProjectResourceFieldInfo> fields = project.QueryResourceFieldValues(new KarProjectResourceFieldQueryOptions
-        {
-            Resources = new KarProjectResourceQueryOptions
-            {
-                Address = address,
-                Kind = KarResourceKind.HsdRoot,
-            },
-        });
-
-        if (options.Json)
-        {
-            WriteJson(new
-            {
-                plan = ToProjectResourceActionPlanDto(plan),
-                result = fields.Select(ToProjectResourceFieldValueDto).ToList(),
-            });
-            return 0;
-        }
-
-        PrintProjectResourceActionPlan(plan);
-        foreach (KarProjectResourceFieldInfo field in fields)
-            PrintProjectResourceFieldValue(field);
-        return 0;
-    }
-
-    private static int WriteActionResult<T>(
-        KarCliOptions options,
-        KarProjectResourceActionPlan plan,
-        T result,
-        Func<T, object> toDto,
-        Action<T> print)
+        KarProjectResourceActionExecutionResult result)
     {
         if (options.Json)
         {
             WriteJson(new
             {
-                plan = ToProjectResourceActionPlanDto(plan),
-                result = toDto(result),
+                plan = ToProjectResourceActionPlanDto(result.Plan),
+                result = ToResourceActionResultDto(result),
             });
             return 0;
         }
 
-        PrintProjectResourceActionPlan(plan);
-        print(result);
+        PrintProjectResourceActionPlan(result.Plan);
+        PrintResourceActionResult(result);
         return 0;
+    }
+
+    private static object ToResourceActionResultDto(KarProjectResourceActionExecutionResult result)
+    {
+        if (result.OutputInfo != null)
+            return ToProjectResourceOutputDto(result.OutputInfo);
+        if (result.ByteInfo != null)
+            return ToProjectResourceByteInfoDto(result.ByteInfo);
+        if (result.ByteDumpResult != null)
+            return ToProjectResourceByteDumpResultDto(result.ByteDumpResult);
+        if (result.ExportResult != null)
+            return ToProjectResourceExportResultDto(result.ExportResult);
+        if (result.ImportResult != null)
+            return ToProjectResourceImportResultDto(result.ImportResult);
+        if (result.FieldValue != null)
+            return ToProjectResourceFieldValueDto(result.FieldValue);
+        if (result.FieldValues != null)
+            return result.FieldValues.Select(ToProjectResourceFieldValueDto).ToList();
+        if (result.ScalarEditResult != null)
+            return ToProjectResourceScalarEditResultDto(result.ScalarEditResult);
+        if (result.OutputApplyResult != null)
+            return ToProjectResourceOutputApplyResultDto(result.OutputApplyResult);
+
+        throw new ArgumentException("Unsupported resource action result: " + result.ActionId, nameof(result));
+    }
+
+    private static void PrintResourceActionResult(KarProjectResourceActionExecutionResult result)
+    {
+        if (result.OutputInfo != null)
+            PrintProjectResourceOutput(result.OutputInfo);
+        else if (result.ByteInfo != null)
+            PrintProjectResourceByteInfo(result.ByteInfo);
+        else if (result.ByteDumpResult != null)
+            PrintProjectResourceByteDumpResult(result.ByteDumpResult);
+        else if (result.ExportResult != null)
+            PrintProjectResourceExportResult(result.ExportResult);
+        else if (result.ImportResult != null)
+            PrintProjectResourceImportResult(result.ImportResult);
+        else if (result.FieldValue != null)
+            PrintProjectResourceFieldValue(result.FieldValue);
+        else if (result.FieldValues != null)
+        {
+            foreach (KarProjectResourceFieldInfo field in result.FieldValues)
+                PrintProjectResourceFieldValue(field);
+        }
+        else if (result.ScalarEditResult != null)
+            PrintProjectResourceScalarEditResult(result.ScalarEditResult);
+        else if (result.OutputApplyResult != null)
+            PrintProjectResourceOutputApplyResult(result.OutputApplyResult);
+        else
+            throw new ArgumentException("Unsupported resource action result: " + result.ActionId, nameof(result));
     }
 }

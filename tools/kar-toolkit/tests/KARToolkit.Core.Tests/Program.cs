@@ -31,6 +31,7 @@ namespace KARToolkit.Core.Tests
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectResourceGraphIndexesResourcesAndRelationships", ProjectResourceGraphIndexesResourcesAndRelationships);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
+            Run("ProjectResourceActionExecutorRunsPlannedResourceActions", ProjectResourceActionExecutorRunsPlannedResourceActions);
             Run("ProjectResourceServiceQueriesFieldValues", ProjectResourceServiceQueriesFieldValues);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
@@ -751,6 +752,99 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(tempRoot, true);
                 if (Directory.Exists(outputRoot))
                     Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceActionExecutorRunsPlannedResourceActions()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-action-executor-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            string inputRoot = tempRoot + "_inputs";
+            Directory.CreateDirectory(tempRoot);
+            Directory.CreateDirectory(inputRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+                File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40, 0x41 });
+                WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceActionExecutor executor = project.ResourceActionExecutor;
+                AssertTrue(object.ReferenceEquals(executor.Project, project), "resource action executors should retain project context");
+
+                KarProjectResourceActionPlan scalarPreview = project.GetResourceActionPlan("VsHydra.dat:vsDataHydra", "set-scalar");
+                AssertTrue(!scalarPreview.CanRun && scalarPreview.Reason.Contains("field name"), "resource action previews should report missing scalar edit arguments");
+
+                KarProjectResourceActionPlan scalarExecutionPlan = project.ResourceService.GetActionPlan(
+                    "VsHydra.dat:vsDataHydra",
+                    "set-scalar",
+                    new KarProjectResourceActionExecutionOptions
+                    {
+                        FieldName = "x0C",
+                        Value = "0x1F4",
+                    });
+                AssertTrue(scalarExecutionPlan.CanRun && scalarExecutionPlan.WouldWriteOutput, "resource action execution plans should honor supplied scalar edit arguments");
+
+                KarProjectResourceActionExecutionResult byteStatus = executor.Execute("ScInfPause.tm", "byte-status");
+                AssertTrue(byteStatus.Plan.CanRun && byteStatus.ByteInfo.ActiveLength == 2, "resource action executors should return byte status results");
+
+                KarProjectResourceActionExecutionResult dump = project.ExecuteResourceAction("ScInfPause.tm", "dump-bytes");
+                AssertTrue(dump.ByteDumpResult.WroteOutput, "project resource action wrappers should execute byte dump actions");
+                AssertTrue(File.ReadAllBytes(dump.ByteDumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "resource action byte dumps should write active bytes to output assets");
+
+                KarProjectResourceActionExecutionResult skippedDump = project.ResourceService.ExecuteAction("ScInfPause.tm", "dump-bytes");
+                AssertTrue(!skippedDump.Plan.WouldWriteOutput && !skippedDump.ByteDumpResult.WroteOutput, "resource action executors should keep skip/write state in the execution plan and result");
+
+                KarProjectResourceActionExecutionResult fields = executor.Execute("VsHydra.dat:vsDataHydra", "field-values");
+                AssertTrue(fields.FieldValues.Any(field => field.FieldName == "x0C" && field.Value.SignedValue == 303), "resource action executors should return field-list results");
+
+                KarProjectResourceActionExecutionResult field = executor.Execute(
+                    "VsHydra.dat:vsDataHydra",
+                    "field-values",
+                    new KarProjectResourceActionExecutionOptions { FieldName = "x0C" });
+                AssertTrue(field.FieldValue.Value.SignedValue == 303, "resource action executors should return single field results when field names are supplied");
+
+                KarProjectResourceActionExecutionResult scalarEdit = executor.Execute(
+                    "VsHydra.dat:vsDataHydra",
+                    "set-scalar",
+                    new KarProjectResourceActionExecutionOptions
+                    {
+                        FieldName = "x0C",
+                        Value = "0x1F4",
+                    });
+                AssertTrue(scalarEdit.Plan.CanRun && scalarEdit.ScalarEditResult.Edit.NewValue.SignedValue == 500, "resource action executors should run scalar edit actions through safe output writes");
+
+                KarProjectResourceActionExecutionResult outputStatus = executor.Execute("VsHydra.dat:vsDataHydra", "output-status");
+                AssertTrue(outputStatus.OutputInfo.Status == KarProjectResourceOutputStatus.DiffersFromSource, "resource action output status should reflect earlier action writes");
+
+                string entryReplacementPath = Path.Combine(inputRoot, "ScInfGo2D.tm");
+                File.WriteAllBytes(entryReplacementPath, new byte[] { 0x21, 0x22, 0x23, 0x24 });
+                KarProjectResourceActionExecutionResult import = executor.Execute(
+                    "A2Info.dat#ScInfGo2D.tm",
+                    "import-file",
+                    new KarProjectResourceActionExecutionOptions { InputPath = entryReplacementPath });
+                AssertTrue(import.Plan.CanRun && import.ImportResult.OutputKind == KarProjectResourceOutputKind.ProjectFile, "resource action executors should run input-file imports through safe package outputs");
+                AssertTrue(project.ReadResourceBytes("A2Info.dat#ScInfGo2D.tm").SequenceEqual(new byte[] { 0x21, 0x22, 0x23, 0x24 }), "resource action imports should update active reads without mutating source packages");
+
+                AssertThrows<InvalidOperationException>(
+                    () => executor.Execute("A2Info.dat#ScInfGo2D.tm", "import-file"),
+                    "resource action executors should reject missing input-file arguments");
+                AssertThrows<InvalidOperationException>(
+                    () => executor.Execute(
+                        "VsHydra.dat:vsDataHydra",
+                        "set-scalar",
+                        new KarProjectResourceActionExecutionOptions { FieldName = "x0C" }),
+                    "resource action executors should reject incomplete scalar edit arguments");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+                if (Directory.Exists(inputRoot))
+                    Directory.Delete(inputRoot, true);
             }
         }
 

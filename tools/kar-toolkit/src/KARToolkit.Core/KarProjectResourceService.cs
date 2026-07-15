@@ -116,15 +116,42 @@ namespace KARToolkit.Core
 
         public KarProjectResourceActionPlan GetActionPlan(string address, string actionId, bool overwrite = false)
         {
-            return QueryActionPlans(new KarProjectResourceActionPlanQueryOptions
+            return GetActionPlan(address, actionId, new KarProjectResourceActionExecutionOptions
             {
-                Resources = new KarProjectResourceQueryOptions
-                {
-                    Address = address,
-                },
-                ActionId = actionId,
                 Overwrite = overwrite,
-            }).Single();
+            });
+        }
+
+        public KarProjectResourceActionPlan GetActionPlan(
+            string address,
+            string actionId,
+            KarProjectResourceActionExecutionOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(actionId))
+                throw new ArgumentException("KAR resource action id cannot be empty.", nameof(actionId));
+
+            options = options ?? new KarProjectResourceActionExecutionOptions();
+            KarProjectResourceInfo resource = Get(address);
+            KarProjectResourceAction action = resource.Actions
+                .FirstOrDefault(candidate => string.Equals(candidate.Id, actionId, StringComparison.OrdinalIgnoreCase));
+            if (action == null)
+                throw new KeyNotFoundException("KAR resource action was not found: " + resource.Address + " " + actionId);
+
+            return CreateActionPlan(
+                resource,
+                action,
+                options.Overwrite,
+                options.HasInputPath,
+                options.HasFieldName,
+                options.HasValue);
+        }
+
+        public KarProjectResourceActionExecutionResult ExecuteAction(
+            string address,
+            string actionId,
+            KarProjectResourceActionExecutionOptions options = null)
+        {
+            return _project.ResourceActionExecutor.Execute(address, actionId, options);
         }
 
         public IReadOnlyList<KarProjectResourceByteInfo> QueryByteInfo(KarProjectResourceByteQueryOptions options = null)
@@ -361,6 +388,23 @@ namespace KARToolkit.Core
 
         private KarProjectResourceActionPlan CreateActionPlan(KarProjectResourceInfo resource, KarProjectResourceAction action, bool overwrite)
         {
+            return CreateActionPlan(
+                resource,
+                action,
+                overwrite,
+                hasInputPath: false,
+                hasFieldName: false,
+                hasValue: false);
+        }
+
+        private KarProjectResourceActionPlan CreateActionPlan(
+            KarProjectResourceInfo resource,
+            KarProjectResourceAction action,
+            bool overwrite,
+            bool hasInputPath,
+            bool hasFieldName,
+            bool hasValue)
+        {
             KarProjectResourceOutputInfo output = NeedsOutputInfo(action) && resource.CanQueryOutput
                 ? CreateOutputInfo(resource)
                 : null;
@@ -372,13 +416,24 @@ namespace KARToolkit.Core
 
             if (action.RequiresInputFile)
             {
-                canRun = false;
-                reason = "Requires an input file.";
+                canRun = hasInputPath;
+                if (!canRun)
+                    reason = "Requires an input file.";
             }
-            else if (action.RequiresFieldName || action.RequiresValue)
+            else if (action.RequiresFieldName && !hasFieldName && action.RequiresValue && !hasValue)
             {
                 canRun = false;
                 reason = "Requires a field name and value.";
+            }
+            else if (action.RequiresFieldName && !hasFieldName)
+            {
+                canRun = false;
+                reason = "Requires a field name.";
+            }
+            else if (action.RequiresValue && !hasValue)
+            {
+                canRun = false;
+                reason = "Requires a value.";
             }
             else if (action.Id == "apply-output")
             {
