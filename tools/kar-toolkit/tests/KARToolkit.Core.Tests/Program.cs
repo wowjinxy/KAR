@@ -201,8 +201,12 @@ namespace KARToolkit.Core.Tests
                 project.WriteFileBytes("A2Demo.dat", new byte[] { 0x66, 0x77 });
                 project.WriteFileBytes("Loose.dat", new byte[] { 0x33, 0x44, 0x55 });
 
-                KarProjectOutputInventory inventory = project.CreateOutputInventory();
+                KarProjectOutputService outputs = project.OutputService;
+                KarProjectOutputInventory inventory = outputs.CreateInventory();
 
+                AssertTrue(object.ReferenceEquals(outputs.Project, project), "output service should retain project context");
+                AssertTrue(outputs.Root == project.OutputRoot, "output service should expose the project output root");
+                AssertTrue(outputs.FilesRoot == project.OutputFilesRoot, "output service should expose the project output files root");
                 AssertTrue(inventory.Count == 3, "output inventory should count staged output files");
                 AssertTrue(inventory.ProjectFileCount == 2, "output inventory should count output files tied to source project files");
                 AssertTrue(inventory.OrphanFileCount == 1, "output inventory should count output-only files");
@@ -228,9 +232,24 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(orphan.Status == KarProjectOutputFileStatus.Orphan, "output inventory should mark output-only files as orphan");
                 AssertTrue(inventory.TotalOutputLength == projectOutput.OutputLength + modified.OutputLength + orphan.OutputLength, "output inventory should sum output file lengths");
 
-                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "output query should filter by kind");
-                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { IsProjectFile = false }).Count == 1, "output query should filter orphan files");
-                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { Status = KarProjectOutputFileStatus.DiffersFromSource }).Count == 1, "output query should filter modified files");
+                KarProjectOutputFileInfo outputByPath = outputs.GetFile("GrCity1.dat");
+                AssertTrue(outputByPath.Status == KarProjectOutputFileStatus.MatchesSource, "output service should resolve output info by path");
+                AssertTrue(outputs.HasFile("Loose.dat"), "output service should detect output-only files by path");
+                KarProjectOutputFileInfo tryFile;
+                AssertTrue(!outputs.TryGetFile("Missing.dat", out tryFile), "output service should report missing output files");
+                AssertThrows<FileNotFoundException>(
+                    () => outputs.GetFile("Missing.dat"),
+                    "output service should throw for missing output files");
+
+                AssertTrue(outputs.QueryFiles(new KarProjectOutputFileQueryOptions { Kind = KarFileKind.MapData }).Count == 1, "output query should filter by kind");
+                AssertTrue(outputs.QueryFiles(new KarProjectOutputFileQueryOptions { IsProjectFile = false }).Count == 1, "output query should filter orphan files");
+                AssertTrue(outputs.QueryFiles(new KarProjectOutputFileQueryOptions { Status = KarProjectOutputFileStatus.DiffersFromSource }).Count == 1, "output query should filter modified files");
+                AssertTrue(outputs.QueryModifiedProjectFiles().Count == 1, "output service should query modified project files");
+                AssertTrue(outputs.QueryUnchangedProjectFiles().Count == 1, "output service should query unchanged project files");
+                AssertTrue(outputs.QueryOrphanFiles().Count == 1, "output service should query orphan output files");
+                AssertTrue(outputs.QueryMissingSourceFiles().Count == 0, "output service should query missing-source output files");
+                AssertTrue(project.QueryOutputFiles(new KarProjectOutputFileQueryOptions { Status = KarProjectOutputFileStatus.DiffersFromSource }).Count == 1, "project output query compatibility wrapper should delegate to output service");
+                AssertTrue(project.CreateOutputInventory().Count == inventory.Count, "project output inventory compatibility wrapper should delegate to output service");
 
                 KarProjectReport report = project.CreateReport(new KarProjectReportOptions
                 {

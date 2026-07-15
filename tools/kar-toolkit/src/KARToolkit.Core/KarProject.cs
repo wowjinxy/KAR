@@ -20,6 +20,7 @@ namespace KARToolkit.Core
             FileStore = new KarProjectFileStore(Workspace, Index);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
             ArchiveStore = new KarProjectArchiveStore(Workspace, FileStore, Inspector.ArchiveInspector);
+            OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
             Validator = new KarProjectValidator(this);
         }
@@ -33,6 +34,8 @@ namespace KARToolkit.Core
         public KarProjectFileStore FileStore { get; }
 
         public KarProjectArchiveStore ArchiveStore { get; }
+
+        public KarProjectOutputService OutputService { get; }
 
         public KarProjectMapService MapService { get; }
 
@@ -206,40 +209,12 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)
         {
-            List<KarProjectOutputFileInfo> outputFiles = new List<KarProjectOutputFileInfo>();
-
-            foreach (string relativePath in Workspace.EnumerateOutputRelativePaths())
-            {
-                KarProjectFile projectFile;
-                TryGetFile(relativePath, out projectFile);
-
-                KarFileKind kind = projectFile == null
-                    ? FileCatalog.ClassifyKind(relativePath)
-                    : projectFile.Kind;
-                KarArchiveDefinition archiveDefinition = projectFile == null
-                    ? FileCatalog.GetArchiveDefinition(relativePath, kind)
-                    : projectFile.ArchiveDefinition;
-
-                KarProjectOutputFileInfo outputFile = new KarProjectOutputFileInfo(
-                    projectFile,
-                    relativePath,
-                    Workspace.GetOutputPath(relativePath),
-                    kind,
-                    archiveDefinition);
-
-                if (options == null || options.Matches(outputFile))
-                    outputFiles.Add(outputFile);
-            }
-
-            return outputFiles
-                .OrderBy(file => file.RelativePath, StringComparer.OrdinalIgnoreCase)
-                .ToList()
-                .AsReadOnly();
+            return OutputService.QueryFiles(options);
         }
 
         public KarProjectOutputInventory CreateOutputInventory(KarProjectOutputFileQueryOptions options = null)
         {
-            return new KarProjectOutputInventory(this, QueryOutputFiles(options));
+            return OutputService.CreateInventory(options);
         }
 
         public IReadOnlyList<KarProjectMapOutputInfo> QueryMapOutputs(KarProjectMapOutputQueryOptions options)

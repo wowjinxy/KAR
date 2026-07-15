@@ -18,8 +18,8 @@ namespace KARToolkit.Core
                 .AsReadOnly();
             FileCategories = BuildFileGroups(Files, file => file.Category);
             FileKinds = BuildFileGroups(Files, file => file.Kind.ToString());
-            OutputFiles = project.QueryOutputFiles(options.OutputFiles);
-            OutputInventory = new KarProjectOutputInventory(project, OutputFiles);
+            OutputFiles = project.OutputService.QueryFiles(options.OutputFiles);
+            OutputInventory = project.OutputService.CreateInventory(OutputFiles);
             Maps = project.Maps
                 .OrderBy(map => map.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList()

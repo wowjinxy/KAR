@@ -54,7 +54,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("outputs", 1);
         KarProject project = OpenProject(options);
-        KarProjectOutputInventory inventory = project.CreateOutputInventory(CreateOutputQuery(options));
+        KarProjectOutputInventory inventory = project.OutputService.CreateInventory(CreateOutputQuery(options));
 
         if (options.Json)
         {

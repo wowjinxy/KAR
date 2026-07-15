@@ -31,7 +31,7 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectMapOutputInfo> QueryOutputs(KarProjectMapOutputQueryOptions options = null)
         {
-            IReadOnlyList<KarProjectOutputFileInfo> outputFiles = _project.QueryOutputFiles(options == null ? null : options.Outputs);
+            IReadOnlyList<KarProjectOutputFileInfo> outputFiles = _project.OutputService.QueryFiles(options == null ? null : options.Outputs);
             return KarProjectMapOutputInfo.BuildMany(Bundles, outputFiles, options);
         }
 
