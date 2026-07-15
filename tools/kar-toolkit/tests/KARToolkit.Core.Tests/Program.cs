@@ -1689,6 +1689,16 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(applyA2DWorkflow.SupportsBatch && applyA2DWorkflow.TargetCount == snapshot.ModifiedA2DEntryOutputCount, "toolkit workflows should surface batch apply targets for modified A2D sidecars");
                 IReadOnlyList<KarProjectToolkitWorkflow> workflows = project.QueryToolkitWorkflows();
                 AssertTrue(workflows.Count == surface.WorkflowCount && workflows.Any(workflow => workflow.Id == "map-context"), "project toolkit workflow wrappers should delegate to the toolkit service");
+                IReadOnlyList<KarProjectToolkitWorkflow> resourceWrites = project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions
+                {
+                    DomainId = "resources",
+                    WritesOutput = true,
+                });
+                AssertTrue(resourceWrites.Count >= 4 && resourceWrites.All(workflow => workflow.DomainId == "resources" && workflow.WritesOutput), "toolkit workflow queries should filter writable workflows by domain");
+                AssertTrue(project.ToolkitService.QueryWorkflows(new KarProjectToolkitWorkflowQueryOptions { Command = "resource-data-edit" }).Single().Id == "edit-resource-data-field", "toolkit workflow queries should filter by command");
+                AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { RequiresInputFile = true }).All(workflow => workflow.RequiresInputFile), "toolkit workflow queries should filter input-file workflows");
+                AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { SupportsBatch = true, Text = "A2D" }).Any(workflow => workflow.Id == "apply-a2d-entry-outputs"), "toolkit workflow queries should combine batch filters and search text");
+                AssertTrue(project.QueryToolkitWorkflows(new KarProjectToolkitWorkflowQueryOptions { RequiresValue = true, HasTargets = true }).Single().Id == "edit-resource-data-field", "toolkit workflow queries should filter value-taking available workflows");
 
                 KarProjectToolkitSnapshot trimmed = project.ToolkitService.CreateSnapshot(new KarProjectToolkitSnapshotOptions
                 {

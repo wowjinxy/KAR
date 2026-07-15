@@ -45,8 +45,9 @@ internal static class Program
                 "project-toolkit" => KarCliInspectionCommands.ShowToolkitSnapshot(options),
                 "toolkit-context" => KarCliInspectionCommands.ShowToolkitSnapshot(options),
                 "toolkit-surface" => KarCliInspectionCommands.ShowToolkitSurface(options),
-                "toolkit-workflows" => KarCliInspectionCommands.ShowToolkitSurface(options),
-                "workflows" => KarCliInspectionCommands.ShowToolkitSurface(options),
+                "toolkit-workflows" => KarCliInspectionCommands.ShowToolkitWorkflows(options),
+                "toolkit-workflow" => KarCliInspectionCommands.ShowToolkitWorkflows(options),
+                "workflows" => KarCliInspectionCommands.ShowToolkitWorkflows(options),
                 "domains" => KarCliInspectionCommands.ShowDomainContexts(options),
                 "domain-contexts" => KarCliInspectionCommands.ShowDomainContexts(options),
                 "project-domains" => KarCliInspectionCommands.ShowDomainContexts(options),
@@ -183,6 +184,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--modified|--unchanged|--orphan]");
         Console.WriteLine("  kar-toolkit toolkit <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit toolkit-surface <source-folder> [--output <mod-folder>] [--json]");
+        Console.WriteLine("  kar-toolkit toolkit-workflows <source-folder> [workflow-id] [--domain <domain>] [--search <text>] [--read-only|--writes-output] [--batch|--single] [--requires-input] [--requires-value] [--available] [--json]");
         Console.WriteLine("  kar-toolkit domains <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit mod-workspace <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map-outputs <source-folder> [map-name-or-file] [--output <mod-folder>] [--modified|--unchanged]");

@@ -212,6 +212,26 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowToolkitWorkflows(KarCliOptions options)
+    {
+        options.RequirePositionals("toolkit-workflows", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectToolkitWorkflow> workflows = project.ToolkitService.QueryWorkflows(
+                CreateToolkitWorkflowQuery(options),
+                CreateToolkitSnapshotOptions(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(workflows.Select(ToProjectToolkitWorkflowDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectToolkitWorkflow workflow in workflows)
+            PrintProjectToolkitWorkflow(workflow);
+        return 0;
+    }
+
     public static int ShowDomainContexts(KarCliOptions options)
     {
         options.RequirePositionals("domains", 1);

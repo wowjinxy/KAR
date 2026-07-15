@@ -586,9 +586,11 @@ namespace KARToolkit.Core
             return ToolkitService.QueryDomainContexts(options);
         }
 
-        public IReadOnlyList<KarProjectToolkitWorkflow> QueryToolkitWorkflows(KarProjectToolkitSnapshotOptions options = null)
+        public IReadOnlyList<KarProjectToolkitWorkflow> QueryToolkitWorkflows(
+            KarProjectToolkitWorkflowQueryOptions options = null,
+            KarProjectToolkitSnapshotOptions snapshotOptions = null)
         {
-            return ToolkitService.QueryWorkflows(options);
+            return ToolkitService.QueryWorkflows(options, snapshotOptions);
         }
 
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)

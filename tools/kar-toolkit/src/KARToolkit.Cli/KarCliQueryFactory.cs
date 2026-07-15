@@ -498,6 +498,25 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectToolkitWorkflowQueryOptions CreateToolkitWorkflowQuery(KarCliOptions options)
+    {
+        return new KarProjectToolkitWorkflowQueryOptions
+        {
+            Id = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            DomainId = options.Domain,
+            Command = options.ActionId,
+            Text = options.SearchText,
+            IsReadOnly = options.ActionIsReadOnly,
+            WritesOutput = options.ActionWritesOutput,
+            SupportsBatch = options.WorkflowSupportsBatch,
+            RequiresInputFile = options.WorkflowRequiresInputFile,
+            RequiresValue = options.WorkflowRequiresValue,
+            HasTargets = options.WorkflowHasTargets,
+            HasOutputs = options.FileHasOutputCopy,
+            HasModifiedOutputs = options.OutputStatus == KarProjectOutputFileStatus.DiffersFromSource ? true : null,
+        };
+    }
+
     public static KarProjectOutputFileQueryOptions CreateOutputQuery(KarCliOptions options)
     {
         KarProjectOutputFileQueryOptions query = new KarProjectOutputFileQueryOptions

@@ -44,9 +44,15 @@ namespace KARToolkit.Core
             return CreateDomainContexts(snapshot, graph);
         }
 
-        public IReadOnlyList<KarProjectToolkitWorkflow> QueryWorkflows(KarProjectToolkitSnapshotOptions options = null)
+        public IReadOnlyList<KarProjectToolkitWorkflow> QueryWorkflows(
+            KarProjectToolkitWorkflowQueryOptions options = null,
+            KarProjectToolkitSnapshotOptions snapshotOptions = null)
         {
-            return CreateSurface(options).Workflows;
+            options = options ?? new KarProjectToolkitWorkflowQueryOptions();
+            return CreateSurface(snapshotOptions).Workflows
+                .Where(options.Matches)
+                .ToList()
+                .AsReadOnly();
         }
 
         private IReadOnlyList<KarProjectDomainContext> CreateDomainContexts(

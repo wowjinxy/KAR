@@ -29,6 +29,10 @@ internal sealed class KarCliOptions
         bool? actionWritesOutput,
         bool? actionCanRun,
         bool? actionWouldWrite,
+        bool? workflowSupportsBatch,
+        bool? workflowRequiresInputFile,
+        bool? workflowRequiresValue,
+        bool? workflowHasTargets,
         bool? rootKnown,
         string rootName,
         bool rootSummary,
@@ -58,6 +62,10 @@ internal sealed class KarCliOptions
         ActionWritesOutput = actionWritesOutput;
         ActionCanRun = actionCanRun;
         ActionWouldWrite = actionWouldWrite;
+        WorkflowSupportsBatch = workflowSupportsBatch;
+        WorkflowRequiresInputFile = workflowRequiresInputFile;
+        WorkflowRequiresValue = workflowRequiresValue;
+        WorkflowHasTargets = workflowHasTargets;
         RootKnown = rootKnown;
         RootName = rootName;
         RootSummary = rootSummary;
@@ -111,6 +119,14 @@ internal sealed class KarCliOptions
 
     public bool? ActionWouldWrite { get; }
 
+    public bool? WorkflowSupportsBatch { get; }
+
+    public bool? WorkflowRequiresInputFile { get; }
+
+    public bool? WorkflowRequiresValue { get; }
+
+    public bool? WorkflowHasTargets { get; }
+
     public bool? RootKnown { get; }
 
     public string RootName { get; }
@@ -148,6 +164,10 @@ internal sealed class KarCliOptions
         bool? actionWritesOutput = null;
         bool? actionCanRun = null;
         bool? actionWouldWrite = null;
+        bool? workflowSupportsBatch = null;
+        bool? workflowRequiresInputFile = null;
+        bool? workflowRequiresValue = null;
+        bool? workflowHasTargets = null;
         bool? rootKnown = null;
         string rootName = null;
         bool rootSummary = false;
@@ -324,6 +344,54 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--batch" || arg == "--supports-batch")
+            {
+                workflowSupportsBatch = true;
+                continue;
+            }
+
+            if (arg == "--single" || arg == "--no-batch")
+            {
+                workflowSupportsBatch = false;
+                continue;
+            }
+
+            if (arg == "--requires-input" || arg == "--input-file")
+            {
+                workflowRequiresInputFile = true;
+                continue;
+            }
+
+            if (arg == "--no-input")
+            {
+                workflowRequiresInputFile = false;
+                continue;
+            }
+
+            if (arg == "--requires-value" || arg == "--value")
+            {
+                workflowRequiresValue = true;
+                continue;
+            }
+
+            if (arg == "--no-value")
+            {
+                workflowRequiresValue = false;
+                continue;
+            }
+
+            if (arg == "--available" || arg == "--has-targets")
+            {
+                workflowHasTargets = true;
+                continue;
+            }
+
+            if (arg == "--unavailable" || arg == "--no-targets")
+            {
+                workflowHasTargets = false;
+                continue;
+            }
+
             if (arg == "--known")
             {
                 rootKnown = true;
@@ -387,6 +455,10 @@ internal sealed class KarCliOptions
             actionWritesOutput,
             actionCanRun,
             actionWouldWrite,
+            workflowSupportsBatch,
+            workflowRequiresInputFile,
+            workflowRequiresValue,
+            workflowHasTargets,
             rootKnown,
             rootName,
             rootSummary,
