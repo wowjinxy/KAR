@@ -46,6 +46,29 @@ internal static class KarCliResourceActionCommands
         return batch.HasFailures ? 1 : 0;
     }
 
+    public static int ExecuteOperation(KarCliOptions options)
+    {
+        options.RequirePositionals("operation-run", 2);
+        KarProject project = OpenProject(options);
+        string operationId = options.Positionals[1];
+        KarProjectOperation operation = project.GetOperation(operationId, new KarProjectOperationQueryOptions
+        {
+            IncludeWorkflows = false,
+        });
+        KarProjectResourceActionExecutionOptions executionOptions = CreateOperationExecutionOptions(options, operation);
+        KarProjectOperationExecutionResult result = project.ExecuteOperation(operation, executionOptions);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectOperationExecutionResultDto(result));
+            return 0;
+        }
+
+        PrintProjectOperation(result.Operation);
+        PrintResourceActionResult(result.ResourceActionResult);
+        return 0;
+    }
+
     private static KarProjectResourceActionExecutionOptions CreateExecutionOptions(KarCliOptions options, string actionId)
     {
         KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
@@ -90,6 +113,41 @@ internal static class KarCliResourceActionCommands
         return executionOptions;
     }
 
+    private static KarProjectResourceActionExecutionOptions CreateOperationExecutionOptions(
+        KarCliOptions options,
+        KarProjectOperation operation)
+    {
+        KarProjectResourceActionExecutionOptions executionOptions = new KarProjectResourceActionExecutionOptions
+        {
+            Overwrite = options.Overwrite,
+            ContinueOnError = options.ContinueOnError,
+        };
+
+        if (operation == null || !operation.IsResourceAction)
+            return executionOptions;
+
+        switch (operation.ActionId.ToLowerInvariant())
+        {
+            case "import-file":
+                options.RequirePositionals("operation-run import-file", 3);
+                executionOptions.InputPath = options.Positionals[2];
+                break;
+
+            case "field-values":
+                if (options.Positionals.Count >= 3)
+                    executionOptions.FieldName = options.Positionals[2];
+                break;
+
+            case "set-scalar":
+                options.RequirePositionals("operation-run set-scalar", 4);
+                executionOptions.FieldName = options.Positionals[2];
+                executionOptions.Value = options.Positionals[3];
+                break;
+        }
+
+        return executionOptions;
+    }
+
     internal static int WriteActionResult(
         KarCliOptions options,
         KarProjectResourceActionExecutionResult result)
@@ -122,6 +180,26 @@ internal static class KarCliResourceActionCommands
             errorType = result.ErrorType,
             errorMessage = result.ErrorMessage,
             result = result.Failed ? null : ToResourceActionResultDto(result),
+        };
+    }
+
+    private static object ToProjectOperationExecutionResultDto(KarProjectOperationExecutionResult result)
+    {
+        return new
+        {
+            operation = ToProjectOperationDto(result.Operation),
+            succeeded = result.Succeeded,
+            resultKind = result.ResultKind,
+            isReadOnly = result.IsReadOnly,
+            writesOutput = result.WritesOutput,
+            wouldWriteOutput = result.WouldWriteOutput,
+            wroteOutput = result.WroteOutput,
+            skippedOutputWrite = result.SkippedOutputWrite,
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
+            errorType = result.ErrorType,
+            errorMessage = result.ErrorMessage,
+            resourceAction = ToResourceActionExecutionResultDto(result.ResourceActionResult),
         };
     }
 

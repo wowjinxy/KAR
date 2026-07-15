@@ -45,6 +45,48 @@ namespace KARToolkit.Core
             return CreateCatalog(options).Operations;
         }
 
+        public KarProjectOperation Get(string operationId, KarProjectOperationQueryOptions options = null)
+        {
+            if (string.IsNullOrWhiteSpace(operationId))
+                throw new ArgumentException("Operation id cannot be empty.", nameof(operationId));
+
+            options = options ?? new KarProjectOperationQueryOptions();
+            options.Id = operationId;
+
+            IReadOnlyList<KarProjectOperation> operations = Query(options);
+            if (operations.Count == 0)
+                throw new ArgumentException("KAR project operation was not found: " + operationId, nameof(operationId));
+            if (operations.Count > 1)
+                throw new InvalidOperationException("KAR project operation id is ambiguous: " + operationId);
+
+            return operations[0];
+        }
+
+        public KarProjectOperationExecutionResult Execute(
+            string operationId,
+            KarProjectResourceActionExecutionOptions executionOptions = null,
+            KarProjectOperationQueryOptions queryOptions = null)
+        {
+            return Execute(Get(operationId, queryOptions), executionOptions);
+        }
+
+        public KarProjectOperationExecutionResult Execute(
+            KarProjectOperation operation,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+            if (!operation.IsResourceAction)
+                throw new NotSupportedException("Only resource-action operations can be executed directly: " + operation.Id);
+
+            KarProjectResourceActionExecutionResult result = _project.ResourceActionExecutor.Execute(
+                operation.ResourceAddress,
+                operation.ActionId,
+                executionOptions);
+
+            return new KarProjectOperationExecutionResult(operation, result);
+        }
+
         private static string InferTargetDomain(KarProjectResourceInfo resource)
         {
             if (resource == null)

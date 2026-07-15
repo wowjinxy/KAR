@@ -140,5 +140,13 @@ namespace KARToolkit.Core
         {
             return Project.OperationService.CreateCatalog(options);
         }
+
+        public KarProjectOperationExecutionResult ExecuteOperation(
+            string operationId,
+            KarProjectResourceActionExecutionOptions executionOptions = null,
+            KarProjectOperationQueryOptions queryOptions = null)
+        {
+            return Project.OperationService.Execute(operationId, executionOptions, queryOptions);
+        }
     }
 }

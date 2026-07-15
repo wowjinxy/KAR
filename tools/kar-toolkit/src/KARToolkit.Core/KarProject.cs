@@ -641,6 +641,26 @@ namespace KARToolkit.Core
             return OperationService.Query(options);
         }
 
+        public KarProjectOperation GetOperation(string operationId, KarProjectOperationQueryOptions options = null)
+        {
+            return OperationService.Get(operationId, options);
+        }
+
+        public KarProjectOperationExecutionResult ExecuteOperation(
+            string operationId,
+            KarProjectResourceActionExecutionOptions executionOptions = null,
+            KarProjectOperationQueryOptions queryOptions = null)
+        {
+            return OperationService.Execute(operationId, executionOptions, queryOptions);
+        }
+
+        public KarProjectOperationExecutionResult ExecuteOperation(
+            KarProjectOperation operation,
+            KarProjectResourceActionExecutionOptions executionOptions = null)
+        {
+            return OperationService.Execute(operation, executionOptions);
+        }
+
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)
         {
             return OutputService.QueryFiles(options);

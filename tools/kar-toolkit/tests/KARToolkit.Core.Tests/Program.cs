@@ -997,6 +997,34 @@ namespace KARToolkit.Core.Tests
 
                 KarProjectSession session = project.CreateSession();
                 AssertTrue(session.CreateOperationCatalog(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project sessions should expose operation catalog creation");
+
+                KarProjectOperation looseDump = scriptDumps.Single(operation => operation.ResourceAddress == "ScInfPause.tm");
+                KarProjectOperationExecutionResult dumpResult = project.ExecuteOperation(looseDump);
+                AssertTrue(dumpResult.Operation.Id == looseDump.Id, "operation execution results should retain the requested operation");
+                AssertTrue(dumpResult.Succeeded && dumpResult.ResultKind == "byte-dump", "operation execution should run resource-action operations through the existing executor");
+                AssertTrue(dumpResult.WroteOutput && File.Exists(dumpResult.OutputPath), "operation execution should write outputs through safe resource actions");
+                AssertTrue(File.ReadAllBytes(dumpResult.OutputPath).SequenceEqual(new byte[] { 0x40, 0x41 }), "operation execution should write active resource bytes");
+
+                KarProjectOperationExecutionResult scalarResult = project.ExecuteOperation(
+                    scalarPreview.Id,
+                    new KarProjectResourceActionExecutionOptions
+                    {
+                        FieldName = "x0C",
+                        Value = "0x222",
+                    },
+                    new KarProjectOperationQueryOptions
+                    {
+                        IncludeWorkflows = false,
+                    });
+                AssertTrue(scalarResult.Succeeded && scalarResult.ResultKind == "scalar-edit", "operation execution by id should accept resource action arguments");
+                AssertTrue(scalarResult.ResourceActionResult.ScalarEditResult.Edit.NewValue.SignedValue == 0x222, "operation execution should return typed resource action results");
+
+                KarProjectOperationExecutionResult sessionDump = session.ExecuteOperation(scriptDumps.Single(operation => operation.ResourceAddress == "A2Info.dat#ScInfGo2D.tm").Id);
+                AssertTrue(sessionDump.Succeeded && sessionDump.WroteOutput, "project sessions should execute operation ids");
+
+                AssertThrows<NotSupportedException>(
+                    () => project.ExecuteOperation(workflow),
+                    "operation execution should reject workflow descriptors that are not direct resource actions");
             }
             finally
             {
