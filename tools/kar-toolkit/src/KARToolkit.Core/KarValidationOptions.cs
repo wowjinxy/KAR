@@ -9,5 +9,7 @@ namespace KARToolkit.Core
         public bool ReportUnknownRoots { get; set; } = true;
 
         public bool ReportMissingMapModels { get; set; } = true;
+
+        public bool ValidateDataDefinitions { get; set; } = true;
     }
 }

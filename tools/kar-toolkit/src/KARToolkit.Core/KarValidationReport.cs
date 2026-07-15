@@ -9,11 +9,13 @@ namespace KARToolkit.Core
             KarProject project,
             int hsdArchiveCount,
             int a2dPackageCount,
+            KarDataDefinitionValidationReport dataDefinitionValidation,
             IEnumerable<KarValidationIssue> issues)
         {
             Project = project;
             HsdArchiveCount = hsdArchiveCount;
             A2DPackageCount = a2dPackageCount;
+            DataDefinitionValidation = dataDefinitionValidation;
             Issues = issues.ToList().AsReadOnly();
             Errors = Issues.Where(issue => issue.Severity == KarValidationSeverity.Error).ToList().AsReadOnly();
             Warnings = Issues.Where(issue => issue.Severity == KarValidationSeverity.Warning).ToList().AsReadOnly();
@@ -30,6 +32,10 @@ namespace KARToolkit.Core
 
         public int A2DPackageCount { get; }
 
+        public KarDataDefinitionValidationReport DataDefinitionValidation { get; }
+
+        public bool HasDataDefinitionValidation => DataDefinitionValidation != null;
+
         public IReadOnlyList<KarValidationIssue> Issues { get; }
 
         public IReadOnlyList<KarValidationIssue> Errors { get; }
@@ -38,6 +44,12 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarValidationIssue> Infos { get; }
 
-        public bool IsValid => Errors.Count == 0;
+        public int ErrorCount => Errors.Count + (DataDefinitionValidation == null ? 0 : DataDefinitionValidation.ErrorCount);
+
+        public int WarningCount => Warnings.Count + (DataDefinitionValidation == null ? 0 : DataDefinitionValidation.WarningCount);
+
+        public int InfoCount => Infos.Count + (DataDefinitionValidation == null ? 0 : DataDefinitionValidation.InfoCount);
+
+        public bool IsValid => ErrorCount == 0;
     }
 }

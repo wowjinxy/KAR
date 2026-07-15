@@ -142,9 +142,23 @@ internal static class KarCliInspectionCommands
         Console.WriteLine("Maps: " + report.MapCount);
         Console.WriteLine("HSD archives checked: " + report.HsdArchiveCount);
         Console.WriteLine("A2D packages checked: " + report.A2DPackageCount);
-        Console.WriteLine("Errors: " + report.Errors.Count);
-        Console.WriteLine("Warnings: " + report.Warnings.Count);
-        Console.WriteLine("Info: " + report.Infos.Count);
+        if (report.HasDataDefinitionValidation)
+        {
+            Console.WriteLine("Schemas checked: " + report.DataDefinitionValidation.DefinitionCount);
+            Console.WriteLine("Schema errors: " + report.DataDefinitionValidation.ErrorCount);
+            Console.WriteLine("Schema warnings: " + report.DataDefinitionValidation.WarningCount);
+            Console.WriteLine("Schema info: " + report.DataDefinitionValidation.InfoCount);
+        }
+
+        Console.WriteLine("Errors: " + report.ErrorCount);
+        Console.WriteLine("Warnings: " + report.WarningCount);
+        Console.WriteLine("Info: " + report.InfoCount);
+
+        if (report.HasDataDefinitionValidation)
+        {
+            foreach (KarDataDefinitionValidationIssue issue in report.DataDefinitionValidation.Issues)
+                PrintDataDefinitionValidationIssue(issue);
+        }
 
         foreach (KarValidationIssue issue in report.Issues)
             PrintValidationIssue(issue);

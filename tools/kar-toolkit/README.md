@@ -46,6 +46,7 @@ Editable project archive handles (`KarProjectHsdArchive`, `KarProjectA2DPackage`
 Editable map archive bundles (`KarProjectMapArchiveBundle`) group a map's data, model, and event/script archives for project-level workflows.
 Project-level archive and map inspection goes through `KarProjectInspector`.
 Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
+Project validation includes schema integrity preflight through `KarDataDefinitionValidator`, and the schema report is included in validation output.
 Archive metadata lookup lives in `KarArchiveDefinitionProvider`; `KarArchiveCatalog` provides static compatibility wrappers; live HSD root inspection goes through `KarArchiveInspector`.
 Map archive/root definitions are grouped in `KarMapArchiveDefinitions`; `KarArchiveDefinitionProvider` handles lookup.
 Vehicle, rider, versus, item, and enemy archive/root definitions live in their matching domain definition modules.

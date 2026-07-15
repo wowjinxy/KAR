@@ -226,12 +226,21 @@ internal static class KarCliDtoFactory
             mapCount = report.MapCount,
             hsdArchiveCount = report.HsdArchiveCount,
             a2dPackageCount = report.A2DPackageCount,
+            dataDefinitionValidation = ToDataDefinitionValidationReportDtoOrNull(report.DataDefinitionValidation),
             isValid = report.IsValid,
-            errorCount = report.Errors.Count,
-            warningCount = report.Warnings.Count,
-            infoCount = report.Infos.Count,
+            errorCount = report.ErrorCount,
+            warningCount = report.WarningCount,
+            infoCount = report.InfoCount,
+            projectErrorCount = report.Errors.Count,
+            projectWarningCount = report.Warnings.Count,
+            projectInfoCount = report.Infos.Count,
             issues = report.Issues.Select(ToValidationIssueDto).ToList(),
         };
+    }
+
+    public static object ToDataDefinitionValidationReportDtoOrNull(KarDataDefinitionValidationReport report)
+    {
+        return report == null ? null : ToDataDefinitionValidationReportDto(report);
     }
 
     public static object ToValidationIssueDto(KarValidationIssue issue)

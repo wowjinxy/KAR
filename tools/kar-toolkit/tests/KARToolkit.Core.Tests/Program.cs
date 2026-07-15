@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using KARToolkit.Core;
 
@@ -15,6 +16,7 @@ namespace KARToolkit.Core.Tests
             Run("BuiltInCatalogHasExpectedCoreSchemas", BuiltInCatalogHasExpectedCoreSchemas);
             Run("BuiltInSchemasPassValidation", BuiltInSchemasPassValidation);
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
+            Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -94,6 +96,42 @@ namespace KARToolkit.Core.Tests
             AssertIssue(report, "MissingReferenceDataDefinition");
             AssertIssue(report, "NonPointerReferenceField");
             AssertIssue(report, "FieldExceedsDefinitionSize");
+        }
+
+        private static void ProjectValidationIncludesSchemaPreflight()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-empty-project-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot);
+                KarValidationReport report = project.Validate(new KarValidationOptions
+                {
+                    InspectHsdArchives = false,
+                    InspectA2DPackages = false,
+                    ReportMissingMapModels = false,
+                });
+
+                AssertTrue(report.HasDataDefinitionValidation, "project validation should include schema preflight by default");
+                AssertTrue(report.DataDefinitionValidation.DefinitionCount >= 32, "project schema preflight should inspect the active schema registry");
+                AssertTrue(report.ErrorCount == report.Errors.Count + report.DataDefinitionValidation.ErrorCount, "project validation error count should include schema errors");
+                AssertTrue(report.IsValid, "empty project with valid schemas should validate cleanly when archive scans are disabled");
+
+                KarValidationReport reportWithoutSchemas = project.Validate(new KarValidationOptions
+                {
+                    InspectHsdArchives = false,
+                    InspectA2DPackages = false,
+                    ReportMissingMapModels = false,
+                    ValidateDataDefinitions = false,
+                });
+
+                AssertTrue(!reportWithoutSchemas.HasDataDefinitionValidation, "schema preflight should be optional for focused callers");
+            }
+            finally
+            {
+                Directory.Delete(tempRoot, true);
+            }
         }
 
         private static void RegistryRejectsAmbiguousDefinitions()

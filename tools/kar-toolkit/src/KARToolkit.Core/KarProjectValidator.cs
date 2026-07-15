@@ -49,6 +49,7 @@ namespace KARToolkit.Core
             private readonly KarProjectArchiveStore _archiveStore;
             private readonly KarValidationOptions _options;
             private readonly List<KarValidationIssue> _issues = new List<KarValidationIssue>();
+            private KarDataDefinitionValidationReport _dataDefinitionValidation;
             private int _hsdArchiveCount;
             private int _a2dPackageCount;
 
@@ -70,6 +71,7 @@ namespace KARToolkit.Core
 
             public KarValidationReport Validate()
             {
+                ValidateDataDefinitions();
                 ValidateMaps();
 
                 foreach (KarProjectFile file in _index.Files)
@@ -80,7 +82,20 @@ namespace KARToolkit.Core
                         ValidateA2DPackage(file);
                 }
 
-                return new KarValidationReport(_project, _hsdArchiveCount, _a2dPackageCount, _issues);
+                return new KarValidationReport(
+                    _project,
+                    _hsdArchiveCount,
+                    _a2dPackageCount,
+                    _dataDefinitionValidation,
+                    _issues);
+            }
+
+            private void ValidateDataDefinitions()
+            {
+                if (!_options.ValidateDataDefinitions)
+                    return;
+
+                _dataDefinitionValidation = KarDataDefinitionValidator.Validate(_inspector.ArchiveInspector.DataDefinitions);
             }
 
             private void ValidateMaps()
