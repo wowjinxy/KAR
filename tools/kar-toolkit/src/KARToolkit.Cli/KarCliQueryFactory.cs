@@ -423,6 +423,7 @@ internal static class KarCliQueryFactory
             {
                 Resources = CreateResourceQuery(options),
             },
+            ResourceByteOutputs = CreateResourceByteQuery(options),
             A2DEntryOutputs = new KarProjectA2DEntryOutputQueryOptions
             {
                 Entries = CreateA2DEntryQuery(options),

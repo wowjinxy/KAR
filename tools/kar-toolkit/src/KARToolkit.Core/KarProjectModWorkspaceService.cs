@@ -18,6 +18,7 @@ namespace KARToolkit.Core
         {
             KarProjectOutputInventory outputInventory = _project.OutputService.CreateInventory(options == null ? null : options.OutputFiles);
             KarProjectResourceOutputQueryOptions resourceOutputOptions = options == null ? null : options.ResourceOutputs;
+            KarProjectResourceByteQueryOptions resourceByteOutputOptions = options == null ? null : options.ResourceByteOutputs;
             KarProjectA2DEntryOutputQueryOptions a2dOutputOptions = options == null ? null : options.A2DEntryOutputs;
             KarProjectMapOutputQueryOptions mapOutputOptions = options == null ? null : options.MapOutputs;
 
@@ -25,6 +26,8 @@ namespace KARToolkit.Core
                 _project,
                 outputInventory,
                 _project.ResourceService.QueryOutputs(resourceOutputOptions)
+                    .Where(output => output.HasOutput),
+                _project.ResourceService.QueryByteInfo(resourceByteOutputOptions)
                     .Where(output => output.HasOutput),
                 _project.A2DService.QueryEntryOutputs(a2dOutputOptions)
                     .Where(output => output.HasOutput),

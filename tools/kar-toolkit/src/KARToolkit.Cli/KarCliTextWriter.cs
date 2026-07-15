@@ -433,6 +433,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Mod workspace: " + workspace.Project.OutputRoot);
         Console.WriteLine("Output files: " + workspace.OutputFileCount + " project=" + workspace.ProjectOutputFileCount + " modified=" + workspace.ModifiedProjectOutputFileCount + " unchanged=" + workspace.UnchangedProjectOutputFileCount + " orphan=" + workspace.OrphanOutputFileCount);
         Console.WriteLine("Resource outputs: " + workspace.ResourceOutputCount + " project-file=" + workspace.ProjectFileResourceOutputCount + " assets=" + workspace.OutputAssetResourceOutputCount + " modified=" + workspace.ModifiedResourceOutputCount + " unchanged=" + workspace.UnchangedResourceOutputCount);
+        Console.WriteLine("Resource byte dumps: " + workspace.ResourceByteOutputCount + " modified=" + workspace.ModifiedResourceByteOutputCount + " matching=" + workspace.MatchingResourceByteOutputCount);
         Console.WriteLine("A2D sidecars: " + workspace.A2DEntryOutputCount + " modified=" + workspace.ModifiedA2DEntryOutputCount + " matching=" + workspace.MatchingA2DEntryOutputCount);
         Console.WriteLine("Map outputs: " + workspace.MapOutputCount + " modified=" + workspace.ModifiedMapOutputCount + " complete=" + workspace.CompleteMapOutputCount);
 
@@ -440,6 +441,13 @@ internal static class KarCliTextWriter
         {
             Console.WriteLine("Modified resources:");
             foreach (KarProjectResourceOutputInfo output in workspace.ModifiedResourceOutputs)
+                Console.WriteLine("  " + output.Address + " [" + output.Status + "] " + output.OutputRelativePath);
+        }
+
+        if (workspace.ModifiedResourceByteOutputs.Count != 0)
+        {
+            Console.WriteLine("Modified resource byte dumps:");
+            foreach (KarProjectResourceByteInfo output in workspace.ModifiedResourceByteOutputs)
                 Console.WriteLine("  " + output.Address + " [" + output.Status + "] " + output.OutputRelativePath);
         }
     }
@@ -451,7 +459,7 @@ internal static class KarCliTextWriter
         Console.WriteLine("Output: " + snapshot.OutputRoot);
         Console.WriteLine("Files: " + snapshot.FileCount);
         Console.WriteLine("Domains: maps=" + snapshot.MapContextCount + " vehicles=" + snapshot.VehicleContextCount + " a2d-packages=" + snapshot.A2DPackageContextCount + " script-tables=" + snapshot.ScriptTableContextCount);
-        Console.WriteLine("Outputs: files=" + snapshot.OutputFileCount + " resources=" + snapshot.ResourceOutputCount + " a2d-sidecars=" + snapshot.A2DEntryOutputCount + " modified=" + snapshot.HasModifiedOutputs);
+        Console.WriteLine("Outputs: files=" + snapshot.OutputFileCount + " resources=" + snapshot.ResourceOutputCount + " resource-bytes=" + snapshot.ResourceByteOutputCount + " a2d-sidecars=" + snapshot.A2DEntryOutputCount + " modified=" + snapshot.HasModifiedOutputs);
         Console.WriteLine("Inspection issues: " + snapshot.DomainInspectionIssueCount + " maps=" + snapshot.MapInspectionErrorCount + " vehicles=" + snapshot.VehicleInspectionErrorCount + " a2d=" + snapshot.A2DPackageOpenErrorCount);
     }
 

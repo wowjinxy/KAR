@@ -1288,21 +1288,25 @@ namespace KARToolkit.Core.Tests
                 project.WriteFileBytes("Loose.bin", new byte[] { 0x66, 0x77, 0x88 });
                 KarProjectA2DEntryExtractResult extract = project.ExtractA2DEntryToOutput("A2Info.dat#ScInfGo2D.tm");
                 File.WriteAllBytes(extract.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                KarProjectResourceByteDumpResult looseBytes = project.DumpResourceBytesToOutput("Loose.bin");
+                File.WriteAllBytes(looseBytes.OutputPath, new byte[] { 0x99 });
 
                 KarProjectModWorkspace workspace = mods.CreateSnapshot();
                 AssertTrue(object.ReferenceEquals(mods.Project, project), "mod workspace service should retain project context");
                 AssertTrue(object.ReferenceEquals(workspace.Project, project), "mod workspace snapshots should retain project context");
                 AssertTrue(workspace.HasOutputs, "mod workspace snapshots should detect staged outputs");
                 AssertTrue(workspace.HasModifiedOutputs, "mod workspace snapshots should detect modified outputs");
-                AssertTrue(workspace.OutputFileCount == 5, "mod workspace snapshots should count project-file outputs and output assets");
+                AssertTrue(workspace.OutputFileCount == 6, "mod workspace snapshots should count project-file outputs and output assets");
                 AssertTrue(workspace.ProjectOutputFileCount == 4, "mod workspace snapshots should count staged project files");
-                AssertTrue(workspace.OrphanOutputFileCount == 1, "mod workspace snapshots should count output assets as output-only files when they share the output files root");
+                AssertTrue(workspace.OrphanOutputFileCount == 2, "mod workspace snapshots should count output assets as output-only files when they share the output files root");
                 AssertTrue(workspace.ModifiedProjectOutputFileCount == 1, "mod workspace snapshots should count modified project files");
                 AssertTrue(workspace.UnchangedProjectOutputFileCount == 3, "mod workspace snapshots should count unchanged project files");
                 AssertTrue(workspace.ResourceOutputCount == 5, "mod workspace snapshots should count resource outputs with staged data");
                 AssertTrue(workspace.ProjectFileResourceOutputCount == 4, "mod workspace snapshots should count project-file resource outputs");
                 AssertTrue(workspace.OutputAssetResourceOutputCount == 1, "mod workspace snapshots should count output asset resource outputs");
                 AssertTrue(workspace.ModifiedResourceOutputCount == 2, "mod workspace snapshots should count modified project resources and sidecars");
+                AssertTrue(workspace.ResourceByteOutputCount == 1, "mod workspace snapshots should count resource byte dumps");
+                AssertTrue(workspace.ModifiedResourceByteOutputCount == 1 && workspace.MatchingResourceByteOutputCount == 0, "mod workspace snapshots should classify stale resource byte dumps");
                 AssertTrue(workspace.A2DEntryOutputCount == 1, "mod workspace snapshots should count staged A2D sidecars");
                 AssertTrue(workspace.ModifiedA2DEntryOutputCount == 1, "mod workspace snapshots should count modified A2D sidecars");
                 AssertTrue(workspace.MapOutputCount == 1, "mod workspace snapshots should count maps with staged outputs");
@@ -1310,6 +1314,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(workspace.ModifiedMapOutputCount == 0, "mod workspace snapshots should count modified map outputs");
                 AssertTrue(workspace.ModifiedResourceOutputs.Any(output => output.Address == "Loose.bin"), "mod workspace snapshots should include modified file resources");
                 AssertTrue(workspace.ModifiedResourceOutputs.Any(output => output.Address == "A2Info.dat#ScInfGo2D.tm"), "mod workspace snapshots should include modified A2D sidecars");
+                AssertTrue(workspace.ModifiedResourceByteOutputs.Single().Address == "Loose.bin", "mod workspace snapshots should include modified resource byte dumps");
 
                 KarProjectModWorkspace wrapper = project.CreateModWorkspace(new KarProjectModWorkspaceOptions
                 {
@@ -1352,6 +1357,7 @@ namespace KARToolkit.Core.Tests
 
                 KarProjectResourceExportResult export = project.ExportScriptTableToOutput("A2Info.dat#ScInfGo2D.tm");
                 File.WriteAllBytes(export.OutputPath, new byte[] { 0x11, 0x22, 0x33, 0x44 });
+                project.DumpResourceBytesToOutput("ScInfPause.tm");
 
                 KarProjectToolkitSnapshot snapshot = project.CreateToolkitSnapshot();
                 AssertTrue(snapshot.FileCount == 9, "toolkit snapshots should expose project file counts");
@@ -1361,6 +1367,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(snapshot.ScriptTableContextCount == 2, "toolkit snapshots should include script table contexts");
                 AssertTrue(snapshot.A2DPackageOpenErrorCount == 1 && snapshot.HasDomainInspectionIssues, "toolkit snapshots should preserve domain inspection issues");
                 AssertTrue(snapshot.ScriptTableOutputCount == 1 && snapshot.ModifiedScriptTableOutputCount == 1, "toolkit snapshots should summarize script output state");
+                AssertTrue(snapshot.ResourceByteOutputCount == 1 && snapshot.ModifiedResourceByteOutputCount == 0, "toolkit snapshots should summarize resource byte dump state");
                 AssertTrue(snapshot.HasOutputs && snapshot.HasModifiedOutputs, "toolkit snapshots should summarize mod output state");
                 AssertTrue(snapshot.A2DPackageContexts.Single(context => context.RelativePath == "A2Info.dat").HasModifiedEntryOutputs, "toolkit snapshots should include package sidecar state");
 

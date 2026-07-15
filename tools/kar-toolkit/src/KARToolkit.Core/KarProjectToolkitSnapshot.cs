@@ -72,6 +72,10 @@ namespace KARToolkit.Core
 
         public int ModifiedResourceOutputCount => ModWorkspace == null ? 0 : ModWorkspace.ModifiedResourceOutputCount;
 
+        public int ResourceByteOutputCount => ModWorkspace == null ? 0 : ModWorkspace.ResourceByteOutputCount;
+
+        public int ModifiedResourceByteOutputCount => ModWorkspace == null ? 0 : ModWorkspace.ModifiedResourceByteOutputCount;
+
         public int A2DEntryOutputCount => ModWorkspace == null ? 0 : ModWorkspace.A2DEntryOutputCount;
 
         public int ModifiedA2DEntryOutputCount => ModWorkspace == null ? 0 : ModWorkspace.ModifiedA2DEntryOutputCount;

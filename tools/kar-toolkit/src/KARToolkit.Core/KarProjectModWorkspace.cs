@@ -10,12 +10,17 @@ namespace KARToolkit.Core
             KarProject project,
             KarProjectOutputInventory outputInventory,
             IEnumerable<KarProjectResourceOutputInfo> resourceOutputs,
+            IEnumerable<KarProjectResourceByteInfo> resourceByteOutputs,
             IEnumerable<KarProjectA2DEntryOutputInfo> a2dEntryOutputs,
             IEnumerable<KarProjectMapOutputInfo> mapOutputs)
         {
             Project = project ?? throw new ArgumentNullException(nameof(project));
             OutputInventory = outputInventory ?? throw new ArgumentNullException(nameof(outputInventory));
             ResourceOutputs = (resourceOutputs ?? throw new ArgumentNullException(nameof(resourceOutputs)))
+                .OrderBy(output => output.Address, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+            ResourceByteOutputs = (resourceByteOutputs ?? throw new ArgumentNullException(nameof(resourceByteOutputs)))
                 .OrderBy(output => output.Address, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
@@ -41,6 +46,14 @@ namespace KARToolkit.Core
                 .AsReadOnly();
             UnchangedResourceOutputs = ResourceOutputs
                 .Where(output => output.IsUnchanged)
+                .ToList()
+                .AsReadOnly();
+            ModifiedResourceByteOutputs = ResourceByteOutputs
+                .Where(output => output.DiffersFromActive)
+                .ToList()
+                .AsReadOnly();
+            MatchingResourceByteOutputs = ResourceByteOutputs
+                .Where(output => output.MatchesActive)
                 .ToList()
                 .AsReadOnly();
             ModifiedA2DEntryOutputs = A2DEntryOutputs
@@ -74,6 +87,12 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResourceOutputInfo> ModifiedResourceOutputs { get; }
 
         public IReadOnlyList<KarProjectResourceOutputInfo> UnchangedResourceOutputs { get; }
+
+        public IReadOnlyList<KarProjectResourceByteInfo> ResourceByteOutputs { get; }
+
+        public IReadOnlyList<KarProjectResourceByteInfo> ModifiedResourceByteOutputs { get; }
+
+        public IReadOnlyList<KarProjectResourceByteInfo> MatchingResourceByteOutputs { get; }
 
         public IReadOnlyList<KarProjectA2DEntryOutputInfo> A2DEntryOutputs { get; }
 
@@ -109,6 +128,12 @@ namespace KARToolkit.Core
 
         public int UnchangedResourceOutputCount => UnchangedResourceOutputs.Count;
 
+        public int ResourceByteOutputCount => ResourceByteOutputs.Count;
+
+        public int ModifiedResourceByteOutputCount => ModifiedResourceByteOutputs.Count;
+
+        public int MatchingResourceByteOutputCount => MatchingResourceByteOutputs.Count;
+
         public int A2DEntryOutputCount => A2DEntryOutputs.Count;
 
         public int ModifiedA2DEntryOutputCount => ModifiedA2DEntryOutputs.Count;
@@ -121,11 +146,12 @@ namespace KARToolkit.Core
 
         public int CompleteMapOutputCount => CompleteMapOutputs.Count;
 
-        public bool HasOutputs => OutputFileCount != 0 || OutputAssetResourceOutputCount != 0;
+        public bool HasOutputs => OutputFileCount != 0 || OutputAssetResourceOutputCount != 0 || ResourceByteOutputCount != 0;
 
         public bool HasModifiedOutputs =>
             ModifiedProjectOutputFileCount != 0 ||
             ModifiedResourceOutputCount != 0 ||
+            ModifiedResourceByteOutputCount != 0 ||
             ModifiedA2DEntryOutputCount != 0 ||
             ModifiedMapOutputCount != 0;
     }
