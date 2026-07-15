@@ -15,6 +15,7 @@ namespace KARToolkit.Core
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileStore = new KarProjectFileStore(Workspace, Index);
             Inspector = new KarProjectInspector(Index);
+            Validator = new KarProjectValidator(this);
         }
 
         public KarProjectWorkspace Workspace { get; }
@@ -24,6 +25,8 @@ namespace KARToolkit.Core
         public KarProjectFileStore FileStore { get; }
 
         public KarProjectInspector Inspector { get; }
+
+        public KarProjectValidator Validator { get; }
 
         public KarArchiveInspector ArchiveInspector => Inspector.ArchiveInspector;
 
@@ -153,7 +156,7 @@ namespace KARToolkit.Core
 
         public KarValidationReport Validate(KarValidationOptions options = null)
         {
-            return new KarProjectValidator(this, options).Validate();
+            return Validator.Validate(options);
         }
 
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)

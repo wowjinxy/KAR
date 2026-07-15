@@ -26,6 +26,7 @@ All copy/save helpers go through `KarProjectWorkspace`, which reads from the ext
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 Project asset reads, copies, package opens, and saves go through `KarProjectFileStore`.
 Project-level archive and map inspection goes through `KarProjectInspector`.
+Project validation goes through `KarProjectValidator`, which creates a fresh validation run for each report.
 Archive metadata lives in `KarArchiveCatalog`; live HSD root inspection goes through `KarArchiveInspector`.
 Map bundle inspection goes through `KarMapInspector`, which ties each map's data, model, and event/script archives together.
 

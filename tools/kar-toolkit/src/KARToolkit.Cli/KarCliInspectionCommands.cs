@@ -126,7 +126,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("validate", 1);
         KarProject project = OpenProject(options);
-        KarValidationReport report = project.Validate(new KarValidationOptions
+        KarValidationReport report = project.Validator.Validate(new KarValidationOptions
         {
             ReportUnknownRoots = !options.NoUnknownRoots,
         });
