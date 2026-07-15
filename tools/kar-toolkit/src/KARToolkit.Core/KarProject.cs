@@ -358,6 +358,16 @@ namespace KARToolkit.Core
             return ResourceService.GetDetail(address);
         }
 
+        public IReadOnlyList<KarProjectResourceDataView> QueryResourceDataViews(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceService.QueryDataViews(options);
+        }
+
+        public KarProjectResourceDataView GetResourceDataView(string address)
+        {
+            return ResourceService.GetDataView(address);
+        }
+
         public KarProjectResourceOutputInfo GetResourceOutput(string address)
         {
             return ResourceService.GetOutput(address);

@@ -26,6 +26,7 @@ namespace KARToolkit.Core
             Relationships = (relationships ?? Enumerable.Empty<KarProjectRelationship>())
                 .ToList()
                 .AsReadOnly();
+            DataView = new KarProjectResourceDataView(this);
         }
 
         public KarProjectResourceInfo Resource { get; }
@@ -61,6 +62,10 @@ namespace KARToolkit.Core
         public int FieldCount => Fields.Count;
 
         public bool HasFields => FieldCount != 0;
+
+        public KarProjectResourceDataView DataView { get; }
+
+        public bool HasDataView => DataView != null;
 
         public IReadOnlyList<KarProjectRelationship> Relationships { get; }
 

@@ -591,6 +591,7 @@ internal static class KarCliDtoFactory
             byteInfo = detail.ByteInfo == null ? null : ToProjectResourceByteInfoDto(detail.ByteInfo),
             childResourceCount = detail.ChildResourceCount,
             fieldCount = detail.FieldCount,
+            dataView = ToProjectResourceDataViewDto(detail.DataView),
             relationshipCount = detail.RelationshipCount,
             childResources = detail.ChildResources.Select(ToProjectResourceDto).ToList(),
             fields = detail.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
@@ -1261,10 +1262,132 @@ internal static class KarCliDtoFactory
             actions = detail.Actions.Select(ToProjectResourceActionDto).ToList(),
             childResourceCount = detail.ChildResourceCount,
             fieldCount = detail.FieldCount,
+            dataView = ToProjectResourceDataViewDto(detail.DataView),
             relationshipCount = detail.RelationshipCount,
             childResources = detail.ChildResources.Select(ToProjectResourceDto).ToList(),
             fields = detail.Fields.Select(ToProjectResourceFieldValueDto).ToList(),
             relationships = detail.Relationships.Select(ToProjectRelationshipDto).ToList(),
+        };
+    }
+
+    public static object ToProjectResourceDataViewDto(KarProjectResourceDataView view)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(view.Resource),
+            reference = ToResourceReferenceDto(view.Reference),
+            kind = view.Kind.ToString(),
+            address = view.Address,
+            parentAddress = view.ParentAddress,
+            dataDefinitionId = view.DataDefinitionId,
+            dataDefinition = ToDataDefinitionDtoOrNull(view.DataDefinition),
+            displayName = view.DisplayName,
+            category = view.Category,
+            description = view.Description,
+            hasDataDefinition = view.HasDataDefinition,
+            fieldCount = view.FieldCount,
+            totalFieldCount = view.TotalFieldCount,
+            nestedFieldCount = view.NestedFieldCount,
+            scalarFieldCount = view.ScalarFieldCount,
+            editableScalarFieldCount = view.EditableScalarFieldCount,
+            pointerFieldCount = view.PointerFieldCount,
+            referenceFieldCount = view.ReferenceFieldCount,
+            referenceEntryCount = view.ReferenceEntryCount,
+            availableFieldCount = view.AvailableFieldCount,
+            unavailableFieldCount = view.UnavailableFieldCount,
+            errorFieldCount = view.ErrorFieldCount,
+            hasFields = view.HasFields,
+            hasNestedFields = view.HasNestedFields,
+            hasEditableScalarFields = view.HasEditableScalarFields,
+            fields = view.Fields.Select(ToProjectResourceDataFieldDto).ToList(),
+            flattenedFields = view.FlattenedFields.Select(ToProjectResourceDataFieldSummaryDto).ToList(),
+        };
+    }
+
+    public static object ToProjectResourceDataFieldDto(KarProjectResourceDataFieldView field)
+    {
+        return new
+        {
+            address = field.Address,
+            fieldName = field.FieldName,
+            fieldPath = field.FieldPath,
+            depth = field.Depth,
+            isTopLevel = field.IsTopLevel,
+            offset = field.Offset,
+            offsetHex = field.OffsetHex,
+            typeName = field.TypeName,
+            description = field.Description,
+            isPointer = field.IsPointer,
+            isScalar = field.IsScalar,
+            isFloatScalar = field.IsFloatScalar,
+            canSetScalar = field.CanSetScalar,
+            dataDefinitionId = field.DataDefinitionId,
+            isAvailable = field.IsAvailable,
+            valueKind = field.ValueKind,
+            displayValue = field.DisplayValue,
+            signedValue = field.SignedValue,
+            unsignedValue = field.UnsignedValue,
+            floatValue = field.FloatValue,
+            hasReference = field.HasReference,
+            referenceLength = field.ReferenceLength,
+            referenceLengthHex = field.ReferenceLengthHex,
+            referenceDataDefinitionId = field.ReferenceDataDefinitionId,
+            referenceDataDefinition = ToDataDefinitionDtoOrNull(field.ReferenceDataDefinition),
+            referenceFieldCount = field.ReferenceFieldCount,
+            referenceEntryCount = field.ReferenceEntryCount,
+            referenceEntryTotalCount = field.ReferenceEntryTotalCount,
+            hasReferenceFields = field.HasReferenceFields,
+            hasReferenceEntries = field.HasReferenceEntries,
+            hasReferenceEntryOverflow = field.HasReferenceEntryOverflow,
+            error = field.Error,
+            hasError = field.HasError,
+            totalFieldCount = field.TotalFieldCount,
+            fields = field.ReferenceFields.Select(ToProjectResourceDataFieldDto).ToList(),
+            entries = field.ReferenceEntries.Select(ToProjectResourceDataEntryDto).ToList(),
+        };
+    }
+
+    public static object ToProjectResourceDataFieldSummaryDto(KarProjectResourceDataFieldView field)
+    {
+        return new
+        {
+            address = field.Address,
+            fieldName = field.FieldName,
+            fieldPath = field.FieldPath,
+            depth = field.Depth,
+            isTopLevel = field.IsTopLevel,
+            offset = field.Offset,
+            offsetHex = field.OffsetHex,
+            typeName = field.TypeName,
+            isPointer = field.IsPointer,
+            isScalar = field.IsScalar,
+            canSetScalar = field.CanSetScalar,
+            valueKind = field.ValueKind,
+            displayValue = field.DisplayValue,
+            signedValue = field.SignedValue,
+            unsignedValue = field.UnsignedValue,
+            floatValue = field.FloatValue,
+            hasReference = field.HasReference,
+            referenceDataDefinitionId = field.ReferenceDataDefinitionId,
+            error = field.Error,
+        };
+    }
+
+    public static object ToProjectResourceDataEntryDto(KarProjectResourceDataEntryView entry)
+    {
+        return new
+        {
+            address = entry.Address,
+            parentFieldPath = entry.ParentFieldPath,
+            entryPath = entry.EntryPath,
+            depth = entry.Depth,
+            index = entry.Index,
+            offset = entry.Offset,
+            offsetHex = entry.OffsetHex,
+            fieldCount = entry.FieldCount,
+            totalFieldCount = entry.TotalFieldCount,
+            hasFields = entry.HasFields,
+            fields = entry.Fields.Select(ToProjectResourceDataFieldDto).ToList(),
         };
     }
 

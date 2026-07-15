@@ -53,6 +53,10 @@ namespace KARToolkit.Core
 
         public bool HasFields => Detail.HasFields;
 
+        public KarProjectResourceDataView DataView => Detail.DataView;
+
+        public bool HasDataView => Detail.HasDataView;
+
         public IReadOnlyList<KarProjectRelationship> Relationships => Detail.Relationships;
 
         public int RelationshipCount => Detail.RelationshipCount;

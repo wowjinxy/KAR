@@ -33,6 +33,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectResourceActionExecutorRunsPlannedResourceActions", ProjectResourceActionExecutorRunsPlannedResourceActions);
             Run("ProjectResourceServiceQueriesFieldValues", ProjectResourceServiceQueriesFieldValues);
+            Run("ProjectResourceDataViewsExposeLabeledFieldTrees", ProjectResourceDataViewsExposeLabeledFieldTrees);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
             Run("ProjectResourceServiceWritesScalarEditsToOutput", ProjectResourceServiceWritesScalarEditsToOutput);
@@ -981,6 +982,55 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(!project.ResourceGraphService.HasSnapshot, "resource graph services should invalidate after scalar edits write output archives");
                 AssertTrue(resources.GetFieldValue("VsHydra.dat:vsDataHydra", "x0C").Value.SignedValue == 500, "resource field query should read edited values from output copies");
                 AssertTrue(project.ResourceGraphService.HasSnapshot && !object.ReferenceEquals(cachedGraph, project.ResourceGraphService.Snapshot), "resource graph services should rebuild after invalidation");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceDataViewsExposeLabeledFieldTrees()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-data-view-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+
+                KarProjectResourceDataView hydra = project.GetResourceDataView("VsHydra.dat:vsDataHydra");
+                AssertTrue(hydra.Address == "VsHydra.dat:vsDataHydra" && hydra.Kind == KarResourceKind.HsdRoot, "resource data views should retain resource identity");
+                AssertTrue(hydra.HasDataDefinition && hydra.DataDefinitionId == "kar.vs.legendary", "resource data views should expose root data definitions");
+                AssertTrue(hydra.FieldCount >= 5 && hydra.TotalFieldCount >= hydra.FieldCount, "resource data views should expose labeled field counts");
+                AssertTrue(hydra.FlattenedFields.Count == hydra.TotalFieldCount, "resource data views should expose flattened field trees");
+
+                KarProjectResourceDataFieldView x0C = hydra.Fields.Single(field => field.FieldName == "x0C");
+                AssertTrue(x0C.FieldPath == "x0C" && x0C.OffsetHex == "0x0C", "resource data fields should expose stable field paths and offsets");
+                AssertTrue(x0C.IsScalar && x0C.CanSetScalar && x0C.SignedValue == 303, "resource data fields should expose editable scalar metadata and values");
+
+                KarProjectResourceDataFieldView pointer = hydra.Fields.Single(field => field.FieldName == "primaryModelAnimation");
+                AssertTrue(pointer.IsPointer && !pointer.CanSetScalar && pointer.DataDefinitionId == "kar.vs.legendary.modelAnimation", "resource data fields should retain pointer target schema ids");
+                AssertTrue(hydra.EditableScalarFieldCount >= 2 && hydra.PointerFieldCount >= 3, "resource data views should summarize scalar and pointer fields");
+
+                KarProjectResourceDetail detail = project.GetResourceDetail("VsHydra.dat:vsDataHydra");
+                AssertTrue(detail.HasDataView && object.ReferenceEquals(detail.DataView.Resource, detail.Resource), "resource details should carry a data view for the detailed resource");
+                KarProjectResolvedResourceDetail resolved = project.GetResolvedResourceDetail("VsHydra.dat:vsDataHydra");
+                AssertTrue(resolved.HasDataView && resolved.DataView.DataDefinitionId == hydra.DataDefinitionId, "resolved resource details should expose data views");
+
+                IReadOnlyList<KarProjectResourceDataView> mapViews = project.QueryResourceDataViews(new KarProjectResourceQueryOptions
+                {
+                    Kind = KarResourceKind.HsdRoot,
+                    Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                });
+                AssertTrue(mapViews.Count == 2 && mapViews.All(view => view.HasFields), "resource data view queries should filter through resource query options");
+
+                KarProjectResourceDataView file = project.ResourceService.GetDataView("VsHydra.dat");
+                AssertTrue(!file.HasFields && file.FieldCount == 0 && file.TotalFieldCount == 0, "resource data views should be empty for resources without field data");
             }
             finally
             {

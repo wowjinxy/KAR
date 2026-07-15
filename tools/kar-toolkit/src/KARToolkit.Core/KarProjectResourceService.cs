@@ -87,6 +87,19 @@ namespace KARToolkit.Core
             return CreateDetail(Get(address));
         }
 
+        public IReadOnlyList<KarProjectResourceDataView> QueryDataViews(KarProjectResourceQueryOptions options = null)
+        {
+            return QueryDetails(options)
+                .Select(detail => detail.DataView)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceDataView GetDataView(string address)
+        {
+            return GetDetail(address).DataView;
+        }
+
         public IReadOnlyList<KarProjectResourceActionPlan> QueryActionPlans(KarProjectResourceActionPlanQueryOptions options = null)
         {
             options = options ?? new KarProjectResourceActionPlanQueryOptions();
