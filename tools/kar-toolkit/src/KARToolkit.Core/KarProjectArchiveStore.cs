@@ -18,22 +18,56 @@ namespace KARToolkit.Core
 
         public HSDRawFile OpenHsdFile(string relativePath)
         {
-            return new HSDRawFile(_fileStore.GetReadPath(relativePath));
+            return OpenHsdArchive(relativePath).Archive;
+        }
+
+        public KarProjectHsdArchive OpenHsdArchive(string relativePath)
+        {
+            KarProjectFile file = _fileStore.GetFile(relativePath);
+            string readPath = file.ReadPath;
+            return new KarProjectHsdArchive(this, file, readPath, new HSDRawFile(readPath));
         }
 
         public bool TryOpenA2DPackage(string relativePath, out A2DPackage package, out string error)
         {
-            return A2DPackage.TryOpen(_fileStore.GetReadPath(relativePath), out package, out error);
+            KarProjectA2DPackage projectPackage;
+            if (!TryOpenProjectA2DPackage(relativePath, out projectPackage, out error))
+            {
+                package = null;
+                return false;
+            }
+
+            package = projectPackage.Package;
+            return true;
+        }
+
+        public bool TryOpenProjectA2DPackage(string relativePath, out KarProjectA2DPackage projectPackage, out string error)
+        {
+            projectPackage = null;
+            KarProjectFile file = _fileStore.GetFile(relativePath);
+            string readPath = file.ReadPath;
+
+            A2DPackage package;
+            if (!A2DPackage.TryOpen(readPath, out package, out error))
+                return false;
+
+            projectPackage = new KarProjectA2DPackage(this, file, readPath, package);
+            return true;
         }
 
         public A2DPackage OpenA2DPackage(string relativePath)
         {
-            A2DPackage package;
+            return OpenProjectA2DPackage(relativePath).Package;
+        }
+
+        public KarProjectA2DPackage OpenProjectA2DPackage(string relativePath)
+        {
+            KarProjectA2DPackage projectPackage;
             string error;
-            if (!TryOpenA2DPackage(relativePath, out package, out error))
+            if (!TryOpenProjectA2DPackage(relativePath, out projectPackage, out error))
                 throw new InvalidDataException(error);
 
-            return package;
+            return projectPackage;
         }
 
         public string SaveHsdFile(string relativePath, HSDRawFile file, bool bufferAlign = true, bool optimize = true, bool trim = false)

@@ -18,12 +18,22 @@ namespace KARToolkit.Core
 
         public string GetReadPath(string relativePath)
         {
-            return _index.GetFile(relativePath).ReadPath;
+            return GetFile(relativePath).ReadPath;
+        }
+
+        public KarProjectFile GetFile(string relativePath)
+        {
+            return _index.GetFile(relativePath);
+        }
+
+        public bool TryGetFile(string relativePath, out KarProjectFile file)
+        {
+            return _index.TryGetFile(relativePath, out file);
         }
 
         public string GetSourcePath(string relativePath)
         {
-            return _index.GetFile(relativePath).SourcePath;
+            return GetFile(relativePath).SourcePath;
         }
 
         public string GetOutputPath(string relativePath)
@@ -38,7 +48,7 @@ namespace KARToolkit.Core
 
         public KarProjectFileCopyResult CopyFileToOutput(string relativePath, bool overwrite = false)
         {
-            KarProjectFile file = _index.GetFile(relativePath);
+            KarProjectFile file = GetFile(relativePath);
             DateTime sourceLastWriteTimeUtc = File.GetLastWriteTimeUtc(file.SourcePath);
             string outputPath = _workspace.CopyToOutput(file.RelativePath, overwrite);
 
