@@ -31,6 +31,18 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectOperationPresetDefinition> OperationPresetDefinitions => _project.OperationPresetRegistry.Definitions;
 
+        public KarProjectToolkitRegistryCatalog CreateToolkitRegistryCatalog()
+        {
+            return new KarProjectToolkitRegistryCatalog(
+                _project,
+                FileKinds,
+                FileHandlers,
+                ResourceHandlers,
+                ResourceActionDefinitions,
+                OperationDomainRules,
+                OperationPresetDefinitions);
+        }
+
         public IReadOnlyList<KarDataDefinition> QueryDataDefinitions(KarDataDefinitionQueryOptions options = null)
         {
             IEnumerable<KarDataDefinition> definitions = DataDefinitions.All;

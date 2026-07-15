@@ -81,6 +81,37 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectToolkitRegistryCatalogDto(KarProjectToolkitRegistryCatalog catalog)
+    {
+        return new
+        {
+            project = catalog.Project == null ? null : ToProjectDto(catalog.Project),
+            hasProject = catalog.HasProject,
+            projectName = catalog.ProjectName,
+            sourceRoot = catalog.SourceRoot,
+            outputRoot = catalog.OutputRoot,
+            registryCount = catalog.RegistryCount,
+            fileKindCount = catalog.FileKindCount,
+            fileHandlerCount = catalog.FileHandlerCount,
+            resourceHandlerCount = catalog.ResourceHandlerCount,
+            resourceActionDefinitionCount = catalog.ResourceActionDefinitionCount,
+            operationDomainRuleCount = catalog.OperationDomainRuleCount,
+            operationPresetDefinitionCount = catalog.OperationPresetDefinitionCount,
+            hasFileKinds = catalog.HasFileKinds,
+            hasFileHandlers = catalog.HasFileHandlers,
+            hasResourceHandlers = catalog.HasResourceHandlers,
+            hasResourceActionDefinitions = catalog.HasResourceActionDefinitions,
+            hasOperationDomainRules = catalog.HasOperationDomainRules,
+            hasOperationPresetDefinitions = catalog.HasOperationPresetDefinitions,
+            fileKinds = catalog.FileKinds.Select(ToFileKindDescriptorDto).ToList(),
+            fileHandlers = catalog.FileHandlers.Select(ToProjectFileHandlerDto).ToList(),
+            resourceHandlers = catalog.ResourceHandlers.Select(ToProjectResourceHandlerDto).ToList(),
+            resourceActionDefinitions = catalog.ResourceActionDefinitions.Select(ToProjectResourceActionDefinitionDto).ToList(),
+            operationDomainRules = catalog.OperationDomainRules.Select(ToProjectOperationDomainRuleDto).ToList(),
+            operationPresetDefinitions = catalog.OperationPresetDefinitions.Select(ToProjectOperationPresetDefinitionDto).ToList(),
+        };
+    }
+
     public static object ToFileKindDescriptorDto(KarFileKindDescriptor descriptor)
     {
         return new

@@ -72,6 +72,37 @@ internal static class KarCliTextWriter
         Console.WriteLine("Mod outputs: present=" + session.HasOutputs + " modified=" + session.HasModifiedOutputs);
     }
 
+    public static void PrintProjectToolkitRegistryCatalog(KarProjectToolkitRegistryCatalog catalog)
+    {
+        string scope = catalog.HasProject ? catalog.ProjectName : "default";
+        Console.WriteLine("KAR toolkit registries: " + scope);
+        Console.WriteLine("Registries: " + catalog.RegistryCount + " file-kinds=" + catalog.FileKindCount + " file-handlers=" + catalog.FileHandlerCount + " resource-handlers=" + catalog.ResourceHandlerCount + " actions=" + catalog.ResourceActionDefinitionCount + " domains=" + catalog.OperationDomainRuleCount + " presets=" + catalog.OperationPresetDefinitionCount);
+
+        Console.WriteLine("File kinds:");
+        foreach (KarFileKindDescriptor descriptor in catalog.FileKinds)
+            Console.WriteLine("  " + descriptor.Id + " [" + descriptor.Kind + ", " + descriptor.Category + "] " + FormatFileKindTraits(descriptor) + " - " + descriptor.DisplayName);
+
+        Console.WriteLine("File handlers:");
+        foreach (KarProjectFileHandler handler in catalog.FileHandlers)
+            PrintProjectFileHandler(handler);
+
+        Console.WriteLine("Resource handlers:");
+        foreach (KarProjectResourceHandler handler in catalog.ResourceHandlers)
+            PrintProjectResourceHandler(handler);
+
+        Console.WriteLine("Resource action definitions:");
+        foreach (KarProjectResourceActionDefinition definition in catalog.ResourceActionDefinitions)
+            PrintProjectResourceActionDefinition(definition);
+
+        Console.WriteLine("Operation domain rules:");
+        foreach (KarProjectOperationDomainRule rule in catalog.OperationDomainRules)
+            PrintProjectOperationDomainRule(rule);
+
+        Console.WriteLine("Operation preset definitions:");
+        foreach (KarProjectOperationPresetDefinition definition in catalog.OperationPresetDefinitions)
+            PrintProjectOperationPresetDefinition(definition);
+    }
+
     public static void PrintProjectModManifest(KarProjectModManifest manifest)
     {
         Console.WriteLine("Mod manifest: " + manifest.Name);

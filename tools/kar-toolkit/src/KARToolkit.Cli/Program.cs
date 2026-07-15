@@ -24,6 +24,9 @@ internal static class Program
                 "kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "resource-handlers" => KarCliInspectionCommands.ShowResourceHandlers(options),
                 "resource-kinds" => KarCliInspectionCommands.ShowResourceHandlers(options),
+                "toolkit-registries" => KarCliInspectionCommands.ShowToolkitRegistries(options),
+                "registry-catalog" => KarCliInspectionCommands.ShowToolkitRegistries(options),
+                "registries" => KarCliInspectionCommands.ShowToolkitRegistries(options),
                 "resource-action-definitions" => KarCliInspectionCommands.ShowResourceActionDefinitions(options),
                 "action-definitions" => KarCliInspectionCommands.ShowResourceActionDefinitions(options),
                 "operation-domains" => KarCliInspectionCommands.ShowOperationDomains(options),
@@ -199,6 +202,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit session <source-folder> [--output <mod-folder>] [--json]");
         Console.WriteLine("  kar-toolkit file-kinds");
         Console.WriteLine("  kar-toolkit resource-handlers");
+        Console.WriteLine("  kar-toolkit toolkit-registries [source-folder] [--json]");
         Console.WriteLine("  kar-toolkit resource-action-definitions [source-folder] [--json]");
         Console.WriteLine("  kar-toolkit operation-domains [source-folder] [--json]");
         Console.WriteLine("  kar-toolkit operation-preset-definitions [source-folder] [--json]");

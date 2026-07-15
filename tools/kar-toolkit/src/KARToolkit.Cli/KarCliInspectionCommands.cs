@@ -89,6 +89,23 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowToolkitRegistries(KarCliOptions options)
+    {
+        options.RequirePositionals("toolkit-registries", 0);
+        KarProjectToolkitRegistryCatalog catalog = options.Positionals.Count == 0
+            ? KarProjectToolkitRegistryCatalog.Default
+            : OpenProject(options).CreateToolkitRegistryCatalog();
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectToolkitRegistryCatalogDto(catalog));
+            return 0;
+        }
+
+        PrintProjectToolkitRegistryCatalog(catalog);
+        return 0;
+    }
+
     public static int ShowResourceActionDefinitions(KarCliOptions options)
     {
         options.RequirePositionals("resource-action-definitions", 0);

@@ -214,6 +214,11 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(schema.DataDefinitions.All.Count == 1, "schema service should expose custom project schema registries");
                 AssertTrue(schema.FileKinds.Count > 0 && schema.FileHandlers.Count > 0 && schema.ResourceHandlers.Count > 0, "schema service should expose active handler catalogs");
                 AssertTrue(schema.ResourceActionDefinitions.Count >= 8 && schema.OperationDomainRules.Count >= 6 && schema.OperationPresetDefinitions.Count >= 6, "schema service should expose active toolkit registry catalogs");
+                KarProjectToolkitRegistryCatalog registryCatalog = schema.CreateToolkitRegistryCatalog();
+                AssertTrue(object.ReferenceEquals(registryCatalog.Project, project), "toolkit registry catalog should retain project context");
+                AssertTrue(registryCatalog.FileKindCount == schema.FileKinds.Count && registryCatalog.FileHandlerCount == schema.FileHandlers.Count && registryCatalog.ResourceHandlerCount == schema.ResourceHandlers.Count, "toolkit registry catalog should expose active handler counts");
+                AssertTrue(registryCatalog.ResourceActionDefinitionCount == schema.ResourceActionDefinitions.Count && registryCatalog.OperationDomainRuleCount == schema.OperationDomainRules.Count && registryCatalog.OperationPresetDefinitionCount == schema.OperationPresetDefinitions.Count, "toolkit registry catalog should expose active action and operation counts");
+                AssertTrue(KarProjectToolkitRegistryCatalog.Default.ResourceActionDefinitionCount >= 8 && KarProjectToolkitRegistryCatalog.Default.OperationPresetDefinitionCount >= 6, "default toolkit registry catalog should expose built-in action and preset registries");
                 AssertTrue(schema.QueryDataDefinitions(null).Single().Id == "kar.test.custom", "schema service should query active data definitions");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Category = "Tests" }).Count == 1, "schema service should filter data definitions by category");
                 AssertTrue(schema.QueryDataDefinitions(new KarDataDefinitionQueryOptions { Text = "scalar" }).Count == 1, "schema service should search data definition text");
@@ -451,6 +456,7 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceActionPlan plan = project.GetResourceActionPlan("ScInfPause.tm", "dump-bytes");
                 AssertTrue(object.ReferenceEquals(project.ResourceActionRegistry, customActions), "project options should expose custom resource action registries");
                 AssertTrue(project.SchemaService.ResourceActionDefinitions.Any(definition => definition.Id == "custom-dump-bytes"), "schema service should expose custom resource action definitions");
+                AssertTrue(project.CreateToolkitRegistryCatalog().ResourceActionDefinitions.Any(definition => definition.Id == "custom-dump-bytes"), "toolkit registry catalog should expose custom resource action definitions");
                 AssertTrue(plan.Action.DisplayName == "Custom Dump Bytes" && plan.Action.RequiresByteInfo && plan.Action.WritePolicy == KarProjectResourceActionWritePolicy.MissingByteDump && plan.CanRun && plan.WouldWriteOutput, "custom resource action metadata should flow into project action plans");
                 KarProjectResourceActionExecutionResult aliasResult = project.ExecuteResourceAction("ScInfPause.tm", "custom-dump-bytes");
                 AssertTrue(aliasResult.ActionId == "custom-dump-bytes" && aliasResult.ResultKind == "byte-dump" && aliasResult.WroteOutput, "custom resource action ids should execute through their declared execution kind");
@@ -1176,6 +1182,9 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(customOperationProject.OperationDomainRegistry.ResolveTargetDomain(customOperationProject.ResourceService.Get("ScInfPause.tm")) == "custom-scripts", "project options should allow custom operation domain rules");
                 AssertTrue(customOperationProject.SchemaService.OperationDomainRules.Single().Id == "custom-scripts", "schema service should expose custom operation domain rules");
                 AssertTrue(customOperationProject.SchemaService.OperationPresetDefinitions.Single().Id == "custom-script-status", "schema service should expose custom operation preset definitions");
+                KarProjectToolkitRegistryCatalog customRegistryCatalog = customOperationProject.CreateToolkitRegistryCatalog();
+                AssertTrue(customRegistryCatalog.OperationDomainRules.Single().Id == "custom-scripts", "toolkit registry catalog should expose custom operation domain rules");
+                AssertTrue(customRegistryCatalog.OperationPresetDefinitions.Single().Id == "custom-script-status", "toolkit registry catalog should expose custom operation preset definitions");
                 KarProjectOperationPreset customPreset = customOperationProject.QueryOperationPresets(null).Single();
                 AssertTrue(customPreset.Id == "custom-script-status" && customPreset.OperationCount == 1, "project options should allow custom operation preset registries with live counts");
                 AssertTrue(customOperationProject.QueryOperations(customPreset.CreateQueryOptions()).Single().ResourceAddress == "ScInfPause.tm", "custom preset queries should use custom operation domain rules");

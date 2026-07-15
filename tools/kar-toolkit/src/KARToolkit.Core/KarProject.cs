@@ -207,6 +207,11 @@ namespace KARToolkit.Core
             return ArchiveContextService.Get(relativePath);
         }
 
+        public KarProjectToolkitRegistryCatalog CreateToolkitRegistryCatalog()
+        {
+            return SchemaService.CreateToolkitRegistryCatalog();
+        }
+
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)
         {
             return DataService.QueryRoots(options);
