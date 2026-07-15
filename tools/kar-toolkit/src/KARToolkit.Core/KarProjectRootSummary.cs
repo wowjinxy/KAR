@@ -20,6 +20,11 @@ namespace KARToolkit.Core
             Roots = (roots ?? throw new ArgumentNullException(nameof(roots)))
                 .ToList()
                 .AsReadOnly();
+            KarProjectRootInfo first = Roots.FirstOrDefault();
+            DisplayName = first == null ? rootName : first.DisplayName;
+            Role = first == null ? displayAccessorTypeName : first.Role;
+            Category = first == null ? null : first.Category;
+            Description = first == null ? null : first.Description;
         }
 
         public string RootName { get; }
@@ -29,6 +34,14 @@ namespace KARToolkit.Core
         public string DisplayAccessorTypeName { get; }
 
         public string DataDefinitionId { get; }
+
+        public string DisplayName { get; }
+
+        public string Role { get; }
+
+        public string Category { get; }
+
+        public string Description { get; }
 
         public IReadOnlyList<KarProjectRootInfo> Roots { get; }
 

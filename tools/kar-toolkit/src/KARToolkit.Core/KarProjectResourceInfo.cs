@@ -100,20 +100,16 @@ namespace KARToolkit.Core
             if (root == null)
                 throw new ArgumentNullException(nameof(root));
 
-            string description = root.Root.Definition == null
-                ? root.Root.DataDefinition == null ? "HSD archive root." : root.Root.DataDefinition.Description
-                : root.Root.Definition.Description;
-
             return new KarProjectResourceInfo(
                 root.ResourceReference,
                 handler,
                 root.File,
                 root,
                 null,
-                root.RootName,
-                root.DataDefinitionId ?? root.DisplayAccessorTypeName,
-                root.Root.DataDefinition == null ? root.File.Category : root.Root.DataDefinition.Category,
-                description);
+                root.DisplayName,
+                root.Role,
+                root.Category,
+                root.Description);
         }
 
         internal static KarProjectResourceInfo FromA2DEntry(KarProjectA2DEntryInfo entry, KarProjectResourceHandler handler)

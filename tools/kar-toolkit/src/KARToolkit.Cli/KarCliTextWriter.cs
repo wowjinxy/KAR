@@ -103,8 +103,12 @@ internal static class KarCliTextWriter
         if (resource.Root != null)
         {
             Console.WriteLine("Root: " + resource.Root.RootName);
+            Console.WriteLine("Root role: " + resource.Root.Role);
             Console.WriteLine("Accessor: " + resource.Root.DisplayAccessorTypeName);
-            Console.WriteLine("Schema: " + (resource.Root.DataDefinitionId ?? "<none>"));
+            string schema = resource.Root.DataDefinitionId ?? "<none>";
+            if (!string.IsNullOrEmpty(resource.Root.SchemaDisplayName))
+                schema += " (" + resource.Root.SchemaDisplayName + ")";
+            Console.WriteLine("Schema: " + schema);
         }
 
         if (resource.A2DEntry != null)
@@ -299,7 +303,7 @@ internal static class KarCliTextWriter
         string known = root.IsKnown ? "known" : "unknown";
         string type = string.IsNullOrEmpty(root.DisplayAccessorTypeName) ? "<untyped>" : root.DisplayAccessorTypeName;
         string schema = string.IsNullOrEmpty(root.DataDefinitionId) ? "" : ", " + root.DataDefinitionId;
-        Console.WriteLine(root.RelativePath + ":" + root.RootName + " [" + known + ", " + type + schema + "]");
+        Console.WriteLine(root.RelativePath + ":" + root.RootName + " [" + known + ", " + type + schema + "] - " + root.DisplayName);
     }
 
     public static void PrintProjectRootSummaryGroup(KarProjectRootSummary summary)
@@ -307,7 +311,7 @@ internal static class KarCliTextWriter
         string known = summary.IsKnown ? "known" : "unknown";
         string type = string.IsNullOrEmpty(summary.DisplayAccessorTypeName) ? "<untyped>" : summary.DisplayAccessorTypeName;
         string schema = string.IsNullOrEmpty(summary.DataDefinitionId) ? "" : ", " + summary.DataDefinitionId;
-        Console.WriteLine(summary.RootName + " [" + known + ", " + type + schema + "] x" + summary.Count);
+        Console.WriteLine(summary.RootName + " [" + known + ", " + type + schema + "] x" + summary.Count + " - " + summary.DisplayName);
         foreach (KarProjectRootInfo root in summary.Roots)
             Console.WriteLine("  " + root.RelativePath);
     }

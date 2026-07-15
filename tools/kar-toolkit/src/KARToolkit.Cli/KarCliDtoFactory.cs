@@ -484,8 +484,14 @@ internal static class KarCliDtoFactory
                 accessorTypeName = root.Root.AccessorTypeName,
                 expectedAccessorTypeName = root.Root.ExpectedAccessorTypeName,
                 displayAccessorTypeName = root.Root.DisplayAccessorTypeName,
-                description = root.Root.Definition == null ? null : root.Root.Definition.Description,
+                displayName = root.DisplayName,
+                role = root.Role,
+                category = root.Category,
+                description = root.Description,
+                definitionDescription = root.Root.Definition == null ? null : root.Root.Definition.Description,
                 dataDefinitionId = root.Root.DataDefinitionId,
+                schemaDisplayName = root.SchemaDisplayName,
+                schemaDescription = root.SchemaDescription,
             },
         };
     }
@@ -498,6 +504,10 @@ internal static class KarCliDtoFactory
             isKnown = summary.IsKnown,
             displayAccessorTypeName = summary.DisplayAccessorTypeName,
             dataDefinitionId = summary.DataDefinitionId,
+            displayName = summary.DisplayName,
+            role = summary.Role,
+            category = summary.Category,
+            description = summary.Description,
             count = summary.Count,
             files = summary.Roots
                 .Select(root => new
@@ -540,6 +550,11 @@ internal static class KarCliDtoFactory
                 {
                     relativePath = root.RelativePath,
                     rootName = root.RootName,
+                    rootPath = root.RootPath,
+                    displayName = root.DisplayName,
+                    role = root.Role,
+                    category = root.Category,
+                    description = root.Description,
                 })
                 .ToList(),
         };

@@ -212,8 +212,22 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(archiveSchema.RootDefinitions[0].DataDefinitionId == "kar.test.custom", "archive schema info should expose expected root schema ids");
                 AssertTrue(project.QueryArchiveSchemas(null).Single().RelativePath == "Custom.dat", "project archive schema wrapper should delegate to schema service");
 
+                KarProjectRootInfo root = project.QueryRoots(null).Single();
+                AssertTrue(root.DisplayName == "Custom Test Schema", "project roots should expose active schema display names");
+                AssertTrue(root.Role == "Custom test root", "project roots should expose archive-specific root roles");
+                AssertTrue(root.Category == "Tests", "project roots should expose active schema categories");
+                AssertTrue(root.Description == "Custom scalar schema for project-level registry tests.", "project roots should expose active schema descriptions");
+                AssertTrue(root.SchemaDisplayName == "Custom Test Schema", "project roots should expose schema display names separately");
+                KarProjectRootSummary rootSummary = project.QueryRootSummaries(null).Single();
+                AssertTrue(rootSummary.DisplayName == root.DisplayName && rootSummary.Role == root.Role, "project root summaries should retain schema labels");
+
                 KarProjectDataDefinitionUsage usage = schema.QueryDataDefinitionUsage(null).Single();
                 AssertTrue(usage.DataDefinitionId == "kar.test.custom" && usage.Count == 1, "schema service should query active schema usage");
+                AssertTrue(usage.Roots.Single().DisplayName == "Custom Test Schema", "schema usage roots should carry schema labels");
+                KarProjectResourceInfo resource = project.ResourceService.Get("Custom.dat:customRoot");
+                AssertTrue(resource.DisplayName == "Custom Test Schema", "HSD root resources should use schema display names");
+                AssertTrue(resource.Role == "Custom test root", "HSD root resources should use root roles");
+                AssertTrue(resource.Description == "Custom scalar schema for project-level registry tests.", "HSD root resources should use schema descriptions");
                 KarProjectFieldInfo field = project.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "kar.test.custom",
