@@ -203,6 +203,16 @@ namespace KARToolkit.Core
             return ResourceService.GetOutput(address);
         }
 
+        public IReadOnlyList<KarProjectResourceFieldInfo> QueryResourceFieldValues(KarProjectResourceFieldQueryOptions options = null)
+        {
+            return ResourceService.QueryFieldValues(options);
+        }
+
+        public KarProjectResourceFieldInfo GetResourceFieldValue(string rootAddress, string fieldName)
+        {
+            return ResourceService.GetFieldValue(rootAddress, fieldName);
+        }
+
         public KarProjectResourceOutputApplyResult ApplyResourceOutput(string address)
         {
             return ResourceService.ApplyOutput(address);

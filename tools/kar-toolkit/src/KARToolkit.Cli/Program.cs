@@ -43,6 +43,8 @@ internal static class Program
                 "resource-outputs" => KarCliInspectionCommands.ShowResourceOutputs(options),
                 "resource-output" => KarCliInspectionCommands.ShowResourceOutput(options),
                 "resource-status" => KarCliInspectionCommands.ShowResourceOutput(options),
+                "resource-fields" => KarCliInspectionCommands.ShowResourceFields(options),
+                "resource-field-values" => KarCliInspectionCommands.ShowResourceFields(options),
                 "a2d-entries" => KarCliInspectionCommands.ShowA2DEntries(options),
                 "a2d-entry-outputs" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
                 "a2d-output-status" => KarCliInspectionCommands.ShowA2DEntryOutputs(options),
@@ -108,6 +110,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource <source-folder> <resource-address> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit resource-outputs <source-folder> [resource-address] [--output <mod-folder>] [--resource-kind <file|root|a2d-entry>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit resource-output <source-folder> <resource-address> [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit resource-fields <source-folder> [archive:root] [field-name] [--output <mod-folder>] [--kind <file-kind>] [--category <category>]");
         Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d-entry-outputs <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>] [--modified|--unchanged|--source-only]");
         Console.WriteLine("  kar-toolkit script-tables <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");

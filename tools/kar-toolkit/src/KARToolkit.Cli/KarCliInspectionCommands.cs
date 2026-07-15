@@ -209,6 +209,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceFields(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-fields", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceFieldInfo> fields = project.ResourceService.QueryFieldValues(CreateResourceFieldQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(fields.Select(ToProjectResourceFieldValueDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceFieldInfo field in fields)
+            PrintProjectResourceFieldValue(field);
+
+        return 0;
+    }
+
     public static int ShowA2DEntries(KarCliOptions options)
     {
         return ShowA2DEntriesCore(options, false);
@@ -489,6 +508,28 @@ internal static class KarCliInspectionCommands
         {
             Resources = resources,
             HasOutput = options.FileHasOutputCopy,
+        };
+    }
+
+    private static KarProjectResourceFieldQueryOptions CreateResourceFieldQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
+        return new KarProjectResourceFieldQueryOptions
+        {
+            Resources = new KarProjectResourceQueryOptions
+            {
+                Address = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+                Kind = KarResourceKind.HsdRoot,
+                Category = options.FileCategory,
+                Files = parentFiles,
+                Roots = new KarProjectRootQueryOptions
+                {
+                    Files = parentFiles,
+                    IsKnown = options.RootKnown,
+                    RootName = options.RootName,
+                },
+            },
+            FieldName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
         };
     }
 

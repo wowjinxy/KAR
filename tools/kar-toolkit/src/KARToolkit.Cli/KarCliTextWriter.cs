@@ -83,6 +83,14 @@ internal static class KarCliTextWriter
         Console.WriteLine(output.Address + " [" + output.Status + ", " + output.OutputKind + "] " + output.OutputRelativePath);
     }
 
+    public static void PrintProjectResourceFieldValue(KarProjectResourceFieldInfo field)
+    {
+        string offset = field.Field.OffsetHex ?? "n/a";
+        string schema = string.IsNullOrEmpty(field.DataDefinitionId) ? "<unschematized>" : field.DataDefinitionId;
+        string error = string.IsNullOrEmpty(field.Value.Error) ? "" : " (" + field.Value.Error + ")";
+        Console.WriteLine(field.Address + " " + schema + "." + field.FieldName + " " + offset + " = " + field.Value.DisplayValue + error);
+    }
+
     public static void PrintProjectResourceOutputApplyResult(KarProjectResourceOutputApplyResult result)
     {
         Console.WriteLine("Applied resource output: " + result.Address);

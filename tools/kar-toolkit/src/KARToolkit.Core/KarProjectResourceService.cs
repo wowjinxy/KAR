@@ -90,6 +90,52 @@ namespace KARToolkit.Core
             return CreateOutputInfo(Get(address));
         }
 
+        public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(KarProjectResourceFieldQueryOptions options = null)
+        {
+            IEnumerable<KarProjectResourceInfo> resources = Query(options == null ? null : options.Resources)
+                .Where(resource => resource.Kind == KarResourceKind.HsdRoot);
+            List<KarProjectResourceFieldInfo> fields = new List<KarProjectResourceFieldInfo>();
+
+            foreach (KarProjectResourceInfo resource in resources)
+            {
+                if (resource.Root.Root.DataDefinition == null || !resource.Root.Root.HasFieldValues)
+                    continue;
+
+                foreach (KarDataFieldValue value in resource.Root.Root.FieldValues)
+                {
+                    KarProjectFieldInfo fieldInfo = new KarProjectFieldInfo(resource.Root, value);
+                    KarProjectResourceFieldInfo field = new KarProjectResourceFieldInfo(resource, fieldInfo);
+                    if (options == null || options.Matches(field))
+                        fields.Add(field);
+                }
+            }
+
+            return fields
+                .OrderBy(field => field.Address, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(field => field.Field.Offset ?? int.MaxValue)
+                .ThenBy(field => field.FieldName, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public KarProjectResourceFieldInfo GetFieldValue(string rootAddress, string fieldName)
+        {
+            KarProjectResourceFieldInfo field = QueryFieldValues(new KarProjectResourceFieldQueryOptions
+            {
+                Resources = new KarProjectResourceQueryOptions
+                {
+                    Address = rootAddress,
+                    Kind = KarResourceKind.HsdRoot,
+                },
+                FieldName = fieldName,
+            }).FirstOrDefault();
+
+            if (field == null)
+                throw new KeyNotFoundException("KAR project resource field was not found: " + rootAddress + " " + fieldName);
+
+            return field;
+        }
+
         public bool TryGet(string address, out KarProjectResourceInfo resource)
         {
             resource = null;

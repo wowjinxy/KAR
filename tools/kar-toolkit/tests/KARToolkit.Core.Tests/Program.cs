@@ -25,6 +25,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
+            Run("ProjectResourceServiceQueriesFieldValues", ProjectResourceServiceQueriesFieldValues);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
             Run("ProjectResourceServiceImportsResourcesSafely", ProjectResourceServiceImportsResourcesSafely);
             Run("ProjectResourceServiceWritesScalarEditsToOutput", ProjectResourceServiceWritesScalarEditsToOutput);
@@ -340,6 +341,66 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceInfo missing;
                 AssertTrue(!resources.TryGet("VsHydra.dat:missingRoot", out missing), "resource try-get should return false for missing roots");
                 AssertTrue(!project.TryGetResource("../bad.dat", out missing), "project resource try-get wrapper should reject invalid addresses");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectResourceServiceQueriesFieldValues()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-resource-field-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectResourceService resources = project.ResourceService;
+
+                IReadOnlyList<KarProjectResourceFieldInfo> hydraFields = resources.QueryFieldValues(new KarProjectResourceFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "VsHydra.dat:vsDataHydra",
+                        Kind = KarResourceKind.HsdRoot,
+                    },
+                });
+                AssertTrue(hydraFields.Any(field => field.FieldName == "x0C"), "resource field query should return fields for addressed HSD roots");
+
+                KarProjectResourceFieldInfo x0C = resources.GetFieldValue("VsHydra.dat:vsDataHydra", "x0C");
+                AssertTrue(x0C.Address == "VsHydra.dat:vsDataHydra", "resource field get should preserve root resource addresses");
+                AssertTrue(x0C.DataDefinitionId == "kar.vs.legendary", "resource field query should retain schema ids");
+                AssertTrue(x0C.Value.SignedValue == 303, "resource field query should expose field values");
+                AssertTrue(project.GetResourceFieldValue("VsHydra.dat:vsDataHydra", "x0C").Value.SignedValue == 303, "project resource field wrapper should delegate to resource service");
+
+                IReadOnlyList<KarProjectResourceFieldInfo> mapFields = resources.QueryFieldValues(new KarProjectResourceFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Kind = KarResourceKind.HsdRoot,
+                        Files = new KarProjectFileQueryOptions { Kind = KarFileKind.MapData },
+                    },
+                    FieldName = "unknown1",
+                });
+                AssertTrue(mapFields.Count == 2, "resource field query should combine resource parent file and field filters");
+
+                IReadOnlyList<KarProjectResourceFieldInfo> fileFields = resources.QueryFieldValues(new KarProjectResourceFieldQueryOptions
+                {
+                    Resources = new KarProjectResourceQueryOptions
+                    {
+                        Address = "VsHydra.dat",
+                    },
+                });
+                AssertTrue(fileFields.Count == 0, "resource field query should ignore non-root resources");
+
+                resources.SetScalarFieldFromText("VsHydra.dat:vsDataHydra", "x0C", "0x1F4");
+                AssertTrue(resources.GetFieldValue("VsHydra.dat:vsDataHydra", "x0C").Value.SignedValue == 500, "resource field query should read edited values from output copies");
             }
             finally
             {

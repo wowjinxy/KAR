@@ -547,9 +547,26 @@ internal static class KarCliDtoFactory
             canExportToOutput = resource.CanExportToOutput,
             canImportFromFile = resource.CanImportFromFile,
             canSetScalarFields = resource.CanSetScalarFields,
+            canQueryFieldValues = resource.CanQueryFieldValues,
             file = ToProjectFileDtoOrNull(resource.File),
             root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
             a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
+        };
+    }
+
+    public static object ToProjectResourceFieldValueDto(KarProjectResourceFieldInfo field)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(field.Resource),
+            reference = ToResourceReferenceDto(field.Reference),
+            address = field.Address,
+            fieldName = field.FieldName,
+            relativePath = field.RelativePath,
+            rootName = field.RootName,
+            dataDefinitionId = field.DataDefinitionId,
+            projectField = ToProjectFieldValueDto(field.FieldInfo),
+            fieldValue = ToFieldValueDto(field.Value),
         };
     }
 

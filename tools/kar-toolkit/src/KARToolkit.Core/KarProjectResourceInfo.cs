@@ -62,6 +62,8 @@ namespace KARToolkit.Core
 
         public bool CanSetScalarFields => Kind == KarResourceKind.HsdRoot;
 
+        public bool CanQueryFieldValues => Kind == KarResourceKind.HsdRoot;
+
         internal static KarProjectResourceInfo FromFile(KarProjectFile file)
         {
             if (file == null)
