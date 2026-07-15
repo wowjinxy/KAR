@@ -691,6 +691,12 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(rootDetail.FieldCount >= 5, "root resource details should include schema field values");
                 AssertTrue(rootDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing && rootDetail.ByteInfo.ActiveLength > 0, "root resource details should include root byte dump status");
                 AssertTrue(rootDetail.ChildResourceCount == 0, "root resource details should only include direct child resources");
+                IReadOnlyList<KarProjectResourceDetail> rootDetails = project.QueryResourceDetails(new KarProjectResourceQueryOptions
+                {
+                    Kind = KarResourceKind.HsdRoot,
+                });
+                AssertTrue(rootDetails.Count == 1 && rootDetails[0].Address == "VsHydra.dat:vsDataHydra", "project resource detail queries should filter roots");
+                AssertTrue(rootDetails[0].HasByteInfo && rootDetails[0].FieldCount >= 5, "project resource detail queries should include byte and schema context");
 
                 KarProjectResourceInfo entryResource = project.GetResource("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryResource.IsA2DEntry, "project resource wrapper should resolve A2D entry addresses");
@@ -698,10 +704,23 @@ namespace KARToolkit.Core.Tests
                 KarProjectResourceDetail entryDetail = resources.GetDetail("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entryDetail.ByteInfo.ActiveLength == 4 && entryDetail.ByteInfo.Status == KarProjectResourceByteOutputStatus.Missing, "A2D entry resource details should include entry byte dump status");
                 AssertTrue(entryDetail.RelationshipCount == 1 && entryDetail.Relationships[0].Role == "ScreenInfoTable", "resource details should include graph relationships");
+                IReadOnlyList<KarProjectResourceDetail> scriptDetails = resources.QueryDetails(new KarProjectResourceQueryOptions
+                {
+                    Category = "Scripts",
+                });
+                AssertTrue(scriptDetails.Count == 1 && scriptDetails[0].Address == "A2Info.dat#ScInfGo2D.tm", "resource detail queries should filter by category");
+                AssertTrue(scriptDetails[0].ByteInfo.ActiveLength == 4 && scriptDetails[0].RelationshipCount == 1, "resource detail queries should include byte and relationship context");
                 AssertTrue(project.QueryResources(new KarProjectResourceQueryOptions
                 {
                     Address = "A2Info.dat#ScInfGo2D.tm",
                 }).Single().Address == entryResource.Address, "project resource query wrapper should filter by address");
+
+                IReadOnlyList<KarProjectResolvedResourceDetail> resolvedScriptDetails = project.QueryResolvedResourceDetails(new KarProjectResourceQueryOptions
+                {
+                    Category = "Scripts",
+                });
+                AssertTrue(resolvedScriptDetails.Count == 1 && resolvedScriptDetails[0].Resolved.IsScriptTable, "resolved resource detail queries should include script table context");
+                AssertTrue(resolvedScriptDetails[0].ByteInfo.ActiveLength == 4 && resolvedScriptDetails[0].RelationshipCount == 1, "resolved resource detail queries should include resource detail context");
 
                 KarProjectResourceInfo missing;
                 AssertTrue(!resources.TryGet("VsHydra.dat:missingRoot", out missing), "resource try-get should return false for missing roots");

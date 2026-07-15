@@ -74,6 +74,14 @@ namespace KARToolkit.Core
             return CreateOutputInfo(Get(address));
         }
 
+        public IReadOnlyList<KarProjectResourceDetail> QueryDetails(KarProjectResourceQueryOptions options = null)
+        {
+            return Query(options)
+                .Select(CreateDetail)
+                .ToList()
+                .AsReadOnly();
+        }
+
         public KarProjectResourceDetail GetDetail(string address)
         {
             return CreateDetail(Get(address));

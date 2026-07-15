@@ -313,6 +313,11 @@ namespace KARToolkit.Core
             return ResourceService.Get(address);
         }
 
+        public IReadOnlyList<KarProjectResourceDetail> QueryResourceDetails(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceService.QueryDetails(options);
+        }
+
         public KarProjectResourceDetail GetResourceDetail(string address)
         {
             return ResourceService.GetDetail(address);
@@ -361,6 +366,11 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResolvedResource> QueryResolvedResources(KarProjectResourceQueryOptions options = null)
         {
             return ResourceAddressService.Query(options);
+        }
+
+        public IReadOnlyList<KarProjectResolvedResourceDetail> QueryResolvedResourceDetails(KarProjectResourceQueryOptions options = null)
+        {
+            return ResourceAddressService.QueryDetails(options);
         }
 
         public KarProjectResolvedResource ResolveResourceAddress(string address)

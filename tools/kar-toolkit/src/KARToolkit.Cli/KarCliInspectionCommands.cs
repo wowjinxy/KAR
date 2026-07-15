@@ -330,6 +330,29 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResolvedResourceDetails(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-contexts", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResolvedResourceDetail> details = project.ResourceAddressService.QueryDetails(CreateResourceQuery(options))
+            .Where(detail => !options.OutputStatus.HasValue || (detail.Output != null && MatchesResourceOutputStatusOption(detail.Output, options.OutputStatus)))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(details.Select(ToProjectResolvedResourceDetailDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResolvedResourceDetail detail in details)
+        {
+            PrintProjectResolvedResourceDetail(detail);
+            Console.WriteLine();
+        }
+
+        return 0;
+    }
+
     public static int ShowResourceDetail(KarCliOptions options)
     {
         options.RequirePositionals("resource-detail", 2);
@@ -343,6 +366,29 @@ internal static class KarCliInspectionCommands
         }
 
         PrintProjectResourceDetail(detail);
+        return 0;
+    }
+
+    public static int ShowResourceDetails(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-details", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectResourceDetail> details = project.ResourceService.QueryDetails(CreateResourceQuery(options))
+            .Where(detail => !options.OutputStatus.HasValue || (detail.Output != null && MatchesResourceOutputStatusOption(detail.Output, options.OutputStatus)))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(details.Select(ToProjectResourceDetailDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceDetail detail in details)
+        {
+            PrintProjectResourceDetail(detail);
+            Console.WriteLine();
+        }
+
         return 0;
     }
 
