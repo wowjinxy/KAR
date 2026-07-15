@@ -54,6 +54,8 @@ namespace KARToolkit.Core
 
         public string Kind { get; }
 
+        public bool IsScriptTable => string.Equals(Kind, "tm", StringComparison.OrdinalIgnoreCase);
+
         public string Role { get; }
 
         public string Category { get; }

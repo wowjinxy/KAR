@@ -155,6 +155,11 @@ namespace KARToolkit.Core
             return DataService.QueryFieldSummaries(options);
         }
 
+        public IReadOnlyList<KarProjectA2DEntryInfo> QueryA2DEntries(KarProjectA2DEntryQueryOptions options = null)
+        {
+            return A2DService.QueryEntries(options);
+        }
+
         public IReadOnlyList<KarProjectRelationship> QueryRelationships(KarProjectRelationshipQueryOptions options = null)
         {
             return RelationshipService.Query(options);

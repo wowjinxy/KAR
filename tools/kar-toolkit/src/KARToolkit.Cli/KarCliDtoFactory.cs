@@ -554,6 +554,7 @@ internal static class KarCliDtoFactory
             size = entry.Size,
             sizeHex = entry.SizeHex,
             kind = entry.Kind,
+            isScriptTable = entry.IsScriptTable,
             role = entry.Role,
             category = entry.Category,
             description = entry.Description,

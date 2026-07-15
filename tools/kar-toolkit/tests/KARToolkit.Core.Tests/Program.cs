@@ -27,6 +27,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
+            Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
             Run("ProjectA2DServiceExtractsAndReplacesEntriesSafely", ProjectA2DServiceExtractsAndReplacesEntriesSafely);
             Run("ProjectArchiveServiceCoordinatesArchiveWorkflows", ProjectArchiveServiceCoordinatesArchiveWorkflows);
             Run("ProjectEditServiceWritesScalarEditsToOutput", ProjectEditServiceWritesScalarEditsToOutput);
@@ -492,6 +493,56 @@ namespace KARToolkit.Core.Tests
                 });
                 AssertTrue(screenInfoTables.Count == 2, "project relationship compatibility wrapper should support role filtering");
                 AssertTrue(project.QueryMapRelationships("GrCity1Event.dat").Count == 3, "project map relationship wrapper should resolve maps by file path");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectA2DServiceQueriesProjectEntries()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-a2d-query-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectA2DService a2d = project.A2DService;
+
+                IReadOnlyList<KarProjectA2DEntryInfo> allEntries = a2d.QueryEntries();
+                AssertTrue(allEntries.Count == 4, "A2D entry query should include entries from every project package");
+                AssertTrue(allEntries[0].EntryPath == "A2Info.dat#ScInfGo2D.tm", "A2D entry query should order entries by package path and index");
+                AssertTrue(allEntries.Any(entry => entry.EntryPath == "A2Kirby.dat#OB1800.tm" && entry.Role == "ObjectTable"), "A2D entry query should attach script table metadata");
+
+                IReadOnlyList<KarProjectA2DEntryInfo> infoEntries = a2d.QueryEntries(new KarProjectA2DEntryQueryOptions
+                {
+                    PackagePath = "A2Info.dat",
+                });
+                AssertTrue(infoEntries.Count == 2, "A2D entry query should filter by package path");
+
+                IReadOnlyList<KarProjectA2DEntryInfo> scriptTables = a2d.QueryScriptTableEntries();
+                AssertTrue(scriptTables.Count == 3, "A2D entry query should filter script-table entries");
+                AssertTrue(scriptTables.All(entry => entry.IsScriptTable), "script-table entry query should only return tm resources");
+
+                IReadOnlyList<KarProjectA2DEntryInfo> screenInfoTables = project.QueryA2DEntries(new KarProjectA2DEntryQueryOptions
+                {
+                    Role = "ScreenInfoTable",
+                });
+                AssertTrue(screenInfoTables.Count == 1 && screenInfoTables[0].Name == "ScInfGo2D.tm", "project A2D entry wrapper should support role filters");
+
+                IReadOnlyList<KarProjectA2DEntryInfo> namedEntries = a2d.QueryEntries(new KarProjectA2DEntryQueryOptions
+                {
+                    EntryName = "KIRBY.tm",
+                });
+                AssertTrue(namedEntries.Count == 1 && namedEntries[0].PackageRelativePath == "A2Kirby.dat", "A2D entry query should filter by entry name");
             }
             finally
             {

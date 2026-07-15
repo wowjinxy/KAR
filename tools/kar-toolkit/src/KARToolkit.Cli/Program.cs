@@ -38,6 +38,8 @@ internal static class Program
                 "map" => KarCliInspectionCommands.ShowMap(options),
                 "relationships" => KarCliInspectionCommands.ShowRelationships(options),
                 "links" => KarCliInspectionCommands.ShowRelationships(options),
+                "a2d-entries" => KarCliInspectionCommands.ShowA2DEntries(options),
+                "script-tables" => KarCliInspectionCommands.ShowScriptTables(options),
                 "archive" => KarCliInspectionCommands.ShowArchive(options),
                 "a2d" => KarCliInspectionCommands.ShowA2D(options),
                 "extract-a2d-entry" => KarCliA2DCommands.ExtractEntry(options),
@@ -85,6 +87,8 @@ internal static class Program
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit relationships <source-folder> [map-name-or-file] [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit a2d-entries <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
+        Console.WriteLine("  kar-toolkit script-tables <source-folder> [package-relative-path] [entry-name] [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit a2d <source-folder> <relative-path> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit extract-a2d-entry <source-folder> <package#entry> [--output <mod-folder>] [--overwrite]");

@@ -138,6 +138,37 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowA2DEntries(KarCliOptions options)
+    {
+        return ShowA2DEntriesCore(options, false);
+    }
+
+    public static int ShowScriptTables(KarCliOptions options)
+    {
+        return ShowA2DEntriesCore(options, true);
+    }
+
+    private static int ShowA2DEntriesCore(KarCliOptions options, bool scriptTablesOnly)
+    {
+        options.RequirePositionals(scriptTablesOnly ? "script-tables" : "a2d-entries", 1);
+        KarProject project = OpenProject(options);
+        KarProjectA2DEntryQueryOptions query = CreateA2DEntryQuery(options);
+        query.IsScriptTable = scriptTablesOnly ? true : query.IsScriptTable;
+        List<KarProjectA2DEntryInfo> entries = project.A2DService.QueryEntries(query)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(entries.Select(ToProjectA2DEntryDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectA2DEntryInfo entry in entries)
+            Console.WriteLine(entry.EntryPath + " [" + entry.Role + "] offset=" + entry.DataOffsetHex + " size=" + entry.SizeHex);
+
+        return 0;
+    }
+
     public static int ShowFiles(KarCliOptions options)
     {
         options.RequirePositionals("files", 1);
@@ -322,6 +353,16 @@ internal static class KarCliInspectionCommands
             Files = CreateFileQuery(options),
             IsKnown = options.RootKnown,
             RootName = options.RootName,
+        };
+    }
+
+    private static KarProjectA2DEntryQueryOptions CreateA2DEntryQuery(KarCliOptions options)
+    {
+        return new KarProjectA2DEntryQueryOptions
+        {
+            Packages = CreateFileQuery(options),
+            PackagePath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            EntryName = options.Positionals.Count >= 3 ? options.Positionals[2] : null,
         };
     }
 

@@ -1,5 +1,6 @@
 using KARToolkit.Core.AirRide;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -15,6 +16,50 @@ namespace KARToolkit.Core
         }
 
         public KarProject Project => _project;
+
+        public IReadOnlyList<KarProjectA2DEntryInfo> QueryEntries(KarProjectA2DEntryQueryOptions options = null)
+        {
+            IEnumerable<KarProjectFile> packageFiles = _project.FileService.Query(options == null ? null : options.Packages)
+                .Where(file => file.Kind == KarFileKind.A2dPackage);
+
+            List<KarProjectA2DEntryInfo> entries = new List<KarProjectA2DEntryInfo>();
+            foreach (KarProjectFile file in packageFiles)
+            {
+                KarProjectA2DPackage package;
+                string error;
+                if (!_project.ArchiveService.TryOpenProjectA2DPackage(file.RelativePath, out package, out error))
+                    continue;
+
+                foreach (A2DPackageEntry entry in package.Package.Entries)
+                    entries.Add(new KarProjectA2DEntryInfo(package.File, entry));
+            }
+
+            IEnumerable<KarProjectA2DEntryInfo> query = entries;
+            if (options != null)
+                query = query.Where(options.Matches);
+
+            return query
+                .OrderBy(entry => entry.PackageRelativePath, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(entry => entry.Index)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        public IReadOnlyList<KarProjectA2DEntryInfo> QueryScriptTableEntries(KarProjectA2DEntryQueryOptions options = null)
+        {
+            KarProjectA2DEntryQueryOptions query = new KarProjectA2DEntryQueryOptions
+            {
+                Packages = options == null ? null : options.Packages,
+                PackagePath = options == null ? null : options.PackagePath,
+                EntryName = options == null ? null : options.EntryName,
+                Kind = options == null ? null : options.Kind,
+                Role = options == null ? null : options.Role,
+                Category = options == null ? null : options.Category,
+                IsScriptTable = true,
+            };
+
+            return QueryEntries(query);
+        }
 
         public KarProjectA2DEntryInfo GetEntry(string packageEntryPath)
         {

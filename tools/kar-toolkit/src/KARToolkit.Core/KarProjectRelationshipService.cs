@@ -1,4 +1,3 @@
-using KARToolkit.Core.AirRide;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,32 +100,20 @@ namespace KARToolkit.Core
 
         private void AddA2DPackageEntryRelationships(List<KarProjectRelationship> relationships)
         {
-            foreach (KarProjectFile file in _project.FileService.Query(new KarProjectFileQueryOptions { Kind = KarFileKind.A2dPackage }))
+            foreach (KarProjectA2DEntryInfo entry in _project.A2DService.QueryScriptTableEntries())
             {
-                KarProjectA2DPackage package;
-                string error;
-                if (!_project.ArchiveService.TryOpenProjectA2DPackage(file.RelativePath, out package, out error))
-                    continue;
-
-                foreach (A2DPackageEntry entry in package.Package.Entries)
-                {
-                    if (!string.Equals(entry.Kind, "tm", StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    KarScriptTableInfo info = KarScriptTableCatalog.Describe(entry.Name);
-                    relationships.Add(new KarProjectRelationship(
-                        "A2DPackageEntry",
-                        info.Role,
-                        info.Category,
-                        info.Description,
-                        null,
-                        null,
-                        file,
-                        entry.Name,
-                        entry.Index,
-                        entry.DataOffset,
-                        entry.Size));
-                }
+                relationships.Add(new KarProjectRelationship(
+                    "A2DPackageEntry",
+                    entry.Role,
+                    entry.Category,
+                    entry.Description,
+                    null,
+                    null,
+                    entry.PackageFile,
+                    entry.Name,
+                    entry.Index,
+                    entry.DataOffset,
+                    entry.Size));
             }
         }
     }
