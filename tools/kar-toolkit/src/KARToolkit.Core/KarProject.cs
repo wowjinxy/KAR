@@ -30,6 +30,7 @@ namespace KARToolkit.Core
             RelationshipService = new KarProjectRelationshipService(this);
             ResourceService = new KarProjectResourceService(this);
             ScriptService = new KarProjectScriptService(this);
+            MapScriptService = new KarProjectMapScriptService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -62,6 +63,8 @@ namespace KARToolkit.Core
         public KarProjectResourceService ResourceService { get; }
 
         public KarProjectScriptService ScriptService { get; }
+
+        public KarProjectMapScriptService MapScriptService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -246,6 +249,16 @@ namespace KARToolkit.Core
             return ScriptService.GetTable(address);
         }
 
+        public IReadOnlyList<KarProjectMapScriptBundle> QueryMapScripts(KarProjectMapScriptQueryOptions options = null)
+        {
+            return MapScriptService.Query(options);
+        }
+
+        public KarProjectMapScriptBundle GetMapScripts(string mapNameOrPath, KarProjectScriptTableQueryOptions scriptTables = null)
+        {
+            return MapScriptService.Get(mapNameOrPath, scriptTables);
+        }
+
         public byte[] ReadScriptTableBytes(string address)
         {
             return ScriptService.ReadTableBytes(address);
@@ -264,6 +277,11 @@ namespace KARToolkit.Core
         public KarProjectResourceExportResult ExportScriptTableToOutput(string address, bool overwrite = false)
         {
             return ScriptService.ExportTableToOutput(address, overwrite);
+        }
+
+        public KarProjectResourceExportResult ExportMapScriptArchiveToOutput(string mapNameOrPath, bool overwrite = false)
+        {
+            return MapScriptService.ExportScriptArchiveToOutput(mapNameOrPath, overwrite);
         }
 
         public KarProjectResourceImportResult ImportResourceFromFile(string address, string inputPath)

@@ -38,6 +38,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll s
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll fields .\GKYE01 kar.gr.data unknown1 --kind MapData --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll field-summary .\GKYE01 kar.gr.data --kind MapData
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map-scripts .\GKYE01 City1 ScInfGo2D.tm --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll relationships .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resource-graph .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resources .\GKYE01 --resource-kind a2d-entry --category Scripts --json
@@ -70,6 +71,7 @@ Project-wide report snapshots go through `KarProject.CreateReport`, and the `rep
 Project output/mod-state inventory goes through `KarProject.OutputService` or the compatibility wrappers `KarProject.CreateOutputInventory` and `KarProject.QueryOutputFiles`, and the `outputs` CLI command reports staged project files, modified/unchanged source matches, and output-only orphan files.
 Map output/mod-state inventory goes through `KarProject.MapService.QueryOutputs` or the compatibility wrapper `KarProject.QueryMapOutputs`, and the `map-outputs` CLI command groups staged output files by map data/model/event-script bundles.
 Map-focused workflows go through `KarProject.MapService`, which groups map lookup, staged map output status, output-only map copying, editable map archive opens, and map inspection.
+Map script contexts go through `KarProject.MapScriptService`, and the `map-scripts` CLI command groups a selected map's data/model/event-script resources with known project script-table resources.
 Project relationship discovery goes through `KarProject.RelationshipService`, and the `relationships` CLI command lists map bundle files plus script-table resources found as loose `.tm` files or A2D package entries such as `A2Info.dat#ScInfGo2D.tm`.
 A2D entry inventory goes through `KarProject.A2DService.QueryEntries`, and the `a2d-entries` CLI command lists package entries across a project or inside one package.
 A2D sidecar output status goes through `KarProject.A2DService.QueryEntryOutputs`, and the `a2d-entry-outputs` CLI command compares output-side extracted entries against the current package entry bytes.

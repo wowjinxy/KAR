@@ -119,6 +119,29 @@ internal static class KarCliTextWriter
         Console.WriteLine(table.Address + " [" + table.Role + ", " + storage + "]" + details + " - " + table.Description);
     }
 
+    public static void PrintProjectMapScriptBundle(KarProjectMapScriptBundle bundle)
+    {
+        Console.WriteLine("Map scripts: " + bundle.MapName);
+        Console.WriteLine("  Map resources: " + bundle.MapResourceCount + " relationships=" + bundle.RelationshipCount);
+        PrintProjectMapScriptResourceSlot("Data", bundle.DataResource);
+        PrintProjectMapScriptResourceSlot("Model", bundle.ModelResource);
+        PrintProjectMapScriptResourceSlot("Script", bundle.ScriptArchiveResource);
+        Console.WriteLine("  Script tables: " + bundle.ScriptTableCount);
+        foreach (KarProjectScriptTable table in bundle.ScriptTables)
+            Console.WriteLine("    " + table.Address + " [" + table.Role + "]");
+    }
+
+    private static void PrintProjectMapScriptResourceSlot(string label, KarProjectResourceInfo resource)
+    {
+        if (resource == null)
+        {
+            Console.WriteLine("  " + label + ": <missing>");
+            return;
+        }
+
+        Console.WriteLine("  " + label + ": " + resource.Address + " [" + resource.Role + "]");
+    }
+
     public static void PrintProjectResourceOutputApplyResult(KarProjectResourceOutputApplyResult result)
     {
         Console.WriteLine("Applied resource output: " + result.Address);

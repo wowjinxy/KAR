@@ -725,6 +725,48 @@ internal static class KarCliInspectionCommands
         return query;
     }
 
+    private static KarProjectMapScriptQueryOptions CreateMapScriptQuery(KarCliOptions options)
+    {
+        KarProjectFileQueryOptions parentFiles = CreateResourceParentFileQuery(options);
+        KarProjectResourceQueryOptions resources = new KarProjectResourceQueryOptions
+        {
+            Category = options.FileCategory,
+            Files = parentFiles,
+            A2DEntries = new KarProjectA2DEntryQueryOptions
+            {
+                Packages = parentFiles,
+            },
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
+            resources.Kind = ParseResourceKind(options.ResourceKind);
+
+        KarProjectScriptTableQueryOptions scriptTables = new KarProjectScriptTableQueryOptions
+        {
+            Resources = resources,
+        };
+
+        if (options.Positionals.Count >= 3)
+        {
+            string selector = options.Positionals[2];
+            if (selector.IndexOf('#') >= 0)
+            {
+                scriptTables.Address = selector;
+                resources.Address = selector;
+            }
+            else
+            {
+                scriptTables.Name = selector;
+            }
+        }
+
+        return new KarProjectMapScriptQueryOptions
+        {
+            MapNameOrPath = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            ScriptTables = scriptTables,
+        };
+    }
+
     private static KarProjectFieldQueryOptions CreateFieldQuery(KarCliOptions options)
     {
         return new KarProjectFieldQueryOptions
@@ -816,6 +858,25 @@ internal static class KarCliInspectionCommands
             foreach (KarRootDefinition root in map.MissingRequiredRoots)
                 Console.WriteLine("  " + root.Pattern);
         }
+
+        return 0;
+    }
+
+    public static int ShowMapScripts(KarCliOptions options)
+    {
+        options.RequirePositionals("map-scripts", 1);
+        KarProject project = OpenProject(options);
+        List<KarProjectMapScriptBundle> bundles = project.MapScriptService.Query(CreateMapScriptQuery(options))
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(bundles.Select(ToProjectMapScriptBundleDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectMapScriptBundle bundle in bundles)
+            PrintProjectMapScriptBundle(bundle);
 
         return 0;
     }

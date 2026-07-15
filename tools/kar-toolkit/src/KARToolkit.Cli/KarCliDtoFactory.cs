@@ -254,6 +254,26 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectMapScriptBundleDto(KarProjectMapScriptBundle bundle)
+    {
+        return new
+        {
+            map = ToMapBundleDto(bundle.Map),
+            mapName = bundle.MapName,
+            mapResourceCount = bundle.MapResourceCount,
+            relationshipCount = bundle.RelationshipCount,
+            scriptTableCount = bundle.ScriptTableCount,
+            hasScriptArchive = bundle.HasScriptArchive,
+            hasScriptTables = bundle.HasScriptTables,
+            dataResource = bundle.DataResource == null ? null : ToProjectResourceDto(bundle.DataResource),
+            modelResource = bundle.ModelResource == null ? null : ToProjectResourceDto(bundle.ModelResource),
+            scriptArchiveResource = bundle.ScriptArchiveResource == null ? null : ToProjectResourceDto(bundle.ScriptArchiveResource),
+            mapResources = bundle.MapResources.Select(ToProjectResourceDto).ToList(),
+            mapRelationships = bundle.MapRelationships.Select(ToProjectRelationshipDto).ToList(),
+            scriptTables = bundle.ScriptTables.Select(ToProjectScriptTableDto).ToList(),
+        };
+    }
+
     public static object ToArchiveDtoOrNull(KarArchiveInfo archive)
     {
         return archive == null ? null : ToArchiveDto(archive);

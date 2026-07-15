@@ -35,6 +35,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectOutputInventoryTracksModFiles", ProjectOutputInventoryTracksModFiles);
             Run("ProjectMapOutputQueryGroupsModFiles", ProjectMapOutputQueryGroupsModFiles);
             Run("ProjectMapServiceCoordinatesMapWorkflows", ProjectMapServiceCoordinatesMapWorkflows);
+            Run("ProjectMapScriptServiceGroupsMapAndScriptResources", ProjectMapScriptServiceGroupsMapAndScriptResources);
             Run("ProjectRelationshipServiceConnectsMapsAndScriptTables", ProjectRelationshipServiceConnectsMapsAndScriptTables);
             Run("ProjectScriptServiceQueriesScriptTables", ProjectScriptServiceQueriesScriptTables);
             Run("ProjectA2DServiceQueriesProjectEntries", ProjectA2DServiceQueriesProjectEntries);
@@ -999,6 +1000,67 @@ namespace KARToolkit.Core.Tests
                 string error;
                 AssertTrue(maps.TryInspect("City1", out tryInfo, out error), "map service should expose try-inspection");
                 AssertTrue(tryInfo != null && error == null, "successful map service try-inspection should return info without an error");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
+            }
+        }
+
+        private static void ProjectMapScriptServiceGroupsMapAndScriptResources()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-map-script-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1.dat"), new byte[] { 0x10 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Model.dat"), new byte[] { 0x20 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "GrCity1Event.dat"), new byte[] { 0x30 });
+            File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40 });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+            WriteA2DPackage(Path.Combine(tempRoot, "A2Kirby.dat"), new[] { "OB1800.tm", "KIRBY.tm" });
+
+            try
+            {
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectMapScriptService mapScripts = project.MapScriptService;
+
+                AssertTrue(object.ReferenceEquals(mapScripts.Project, project), "map script service should retain project context");
+
+                KarProjectMapScriptBundle city = mapScripts.Get("City1");
+                AssertTrue(city.MapName == "City1", "map script service should resolve map script bundles by map name");
+                AssertTrue(city.MapResourceCount == 3, "map script bundles should include map data, model, and script resources");
+                AssertTrue(city.ScriptArchiveResource.Address == "GrCity1Event.dat", "map script bundles should expose map event archives as script archives");
+                AssertTrue(city.RelationshipCount == 3, "map script bundles should include map file relationships");
+                AssertTrue(city.ScriptTableCount == 4, "map script bundles should include project script table resources");
+                AssertTrue(city.ScriptTables.Any(table => table.Address == "ScInfPause.tm" && table.IsLooseFile), "map script bundles should include loose script table files");
+                AssertTrue(city.ScriptTables.Any(table => table.Address == "A2Info.dat#ScInfGo2D.tm" && table.IsPackageEntry), "map script bundles should include packaged script table entries");
+
+                KarProjectMapScriptBundle filtered = project.GetMapScripts("GrCity1Event.dat", new KarProjectScriptTableQueryOptions
+                {
+                    Name = "ScInfGo2D.tm",
+                });
+                AssertTrue(filtered.ScriptTableCount == 1 && filtered.ScriptTables[0].Address == "A2Info.dat#ScInfGo2D.tm", "project map script wrapper should filter script tables for a map context");
+
+                IReadOnlyList<KarProjectMapScriptBundle> queried = project.QueryMapScripts(new KarProjectMapScriptQueryOptions
+                {
+                    MapNameOrPath = "City1",
+                    ScriptTables = new KarProjectScriptTableQueryOptions
+                    {
+                        Role = "ObjectTable",
+                    },
+                    HasScriptArchive = true,
+                });
+                AssertTrue(queried.Count == 1 && queried[0].ScriptTables.Single().Address == "A2Kirby.dat#OB1800.tm", "map script queries should combine map and script-table filters");
+
+                KarProjectResourceExportResult export = project.ExportMapScriptArchiveToOutput("City1");
+                AssertTrue(export.Address == "GrCity1Event.dat", "map script archive exports should target the event/script archive");
+                AssertTrue(export.OutputKind == KarProjectResourceOutputKind.ProjectFile, "map script archive exports should stage project file outputs");
+                AssertTrue(File.Exists(export.OutputPath), "map script archive exports should write output-side files");
+                AssertTrue(File.Exists(project.FileService.GetOutputPath("GrCity1Event.dat")), "map script archive exports should not write outside the configured output folder");
             }
             finally
             {
