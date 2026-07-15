@@ -969,6 +969,19 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(scriptDumps.Any(operation => operation.ResourceAddress == "A2Info.dat#ScInfGo2D.tm"), "operation queries should include A2D script table actions");
                 AssertTrue(scriptDumps.All(operation => operation.Usage.Contains(operation.ResourceAddress)), "resource action operations should expose target-specific usage");
 
+                KarProjectOperationPresetCatalog presetCatalog = project.CreateOperationPresetCatalog();
+                AssertTrue(presetCatalog.PresetCount >= 6, "operation preset catalogs should expose reusable toolkit operation queries");
+                AssertTrue(presetCatalog.AvailablePresetCount != 0 && presetCatalog.OutputPresetCount != 0, "operation preset catalogs should summarize availability and output-writing presets");
+                KarProjectOperationPreset dumpScriptPreset = project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions
+                {
+                    Id = "dump-script-bytes",
+                }).Single();
+                AssertTrue(dumpScriptPreset.ActionId == "dump-bytes" && dumpScriptPreset.DomainId == "script-tables", "operation presets should describe action and domain filters");
+                AssertTrue(dumpScriptPreset.OperationCount == scriptDumps.Count && dumpScriptPreset.RunnableOperationCount == scriptDumps.Count, "operation presets should attach live operation counts");
+                AssertTrue(dumpScriptPreset.OperationUsage.Contains("--domain script-tables") && dumpScriptPreset.BatchUsage.Contains("operation-batch"), "operation presets should expose reusable CLI usage strings");
+                AssertTrue(project.QueryOperations(dumpScriptPreset.CreateQueryOptions()).Count == scriptDumps.Count, "operation presets should create operation queries matching their live counts");
+                AssertTrue(project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions { WritesOutput = true, HasOperations = true }).Any(preset => preset.Id == "dump-script-bytes"), "operation preset queries should filter writable available presets");
+
                 KarProjectOperation scalarPreview = project.QueryOperations(new KarProjectOperationQueryOptions
                 {
                     IncludeWorkflows = false,
@@ -1043,6 +1056,9 @@ namespace KARToolkit.Core.Tests
                     ActionId = "byte-status",
                 });
                 AssertTrue(statusBatch.ResultCount == 2 && statusBatch.ReadOnlyCount == 2 && statusBatch.WroteOutputCount == 0, "project sessions should execute read-only operation batches");
+                KarProjectOperationPreset statusPreset = project.QueryOperationPresets(new KarProjectOperationPresetQueryOptions { Id = "script-byte-status" }).Single();
+                KarProjectOperationBatchResult presetStatusBatch = project.ExecuteOperationBatch(statusPreset.CreateQueryOptions());
+                AssertTrue(presetStatusBatch.ResultCount == statusPreset.OperationCount && presetStatusBatch.ReadOnlyCount == statusPreset.OperationCount, "operation preset queries should be executable through operation batches");
 
                 AssertThrows<NotSupportedException>(
                     () => project.ExecuteOperationBatch(new KarProjectOperationQueryOptions

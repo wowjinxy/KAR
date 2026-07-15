@@ -134,6 +134,25 @@ internal static class KarCliQueryFactory
         return query;
     }
 
+    public static KarProjectOperationPresetQueryOptions CreateOperationPresetQuery(KarCliOptions options)
+    {
+        return new KarProjectOperationPresetQueryOptions
+        {
+            Id = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            DomainId = options.Domain,
+            ActionId = options.ActionId,
+            Text = options.SearchText,
+            IsReadOnly = options.ActionIsReadOnly,
+            WritesOutput = options.ActionWritesOutput,
+            SupportsBatch = options.WorkflowSupportsBatch,
+            RequiresInputFile = options.WorkflowRequiresInputFile,
+            RequiresValue = options.WorkflowRequiresValue,
+            HasOperations = options.WorkflowHasTargets,
+            HasRunnableOperations = options.ActionCanRun,
+            HasModifiedOutputOperations = options.OutputStatus == KarProjectOutputFileStatus.DiffersFromSource ? true : (bool?)null,
+        };
+    }
+
     public static KarProjectResourceActionPlanQueryOptions CreateResourceActionBatchPlanQuery(KarCliOptions options, string actionId)
     {
         KarProjectResourceActionPlanQueryOptions query = CreateResourceActionPlanQuery(options);

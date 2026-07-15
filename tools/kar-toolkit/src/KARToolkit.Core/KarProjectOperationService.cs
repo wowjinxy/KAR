@@ -45,6 +45,18 @@ namespace KARToolkit.Core
             return CreateCatalog(options).Operations;
         }
 
+        public KarProjectOperationPresetCatalog CreatePresetCatalog(KarProjectOperationPresetQueryOptions options = null)
+        {
+            options = options ?? new KarProjectOperationPresetQueryOptions();
+            return new KarProjectOperationPresetCatalog(_project, CreateBuiltInPresets()
+                .Where(options.Matches));
+        }
+
+        public IReadOnlyList<KarProjectOperationPreset> QueryPresets(KarProjectOperationPresetQueryOptions options = null)
+        {
+            return CreatePresetCatalog(options).Presets;
+        }
+
         public KarProjectOperation Get(string operationId, KarProjectOperationQueryOptions options = null)
         {
             if (string.IsNullOrWhiteSpace(operationId))
@@ -177,6 +189,191 @@ namespace KARToolkit.Core
                 WouldWriteOutput = queryOptions.WouldWriteOutput,
                 Overwrite = queryOptions.Overwrite || executionOptions.Overwrite,
                 SnapshotOptions = queryOptions.SnapshotOptions,
+            };
+        }
+
+        private IReadOnlyList<KarProjectOperationPreset> CreateBuiltInPresets()
+        {
+            return new[]
+            {
+                CreatePreset(
+                    "script-byte-status",
+                    "script-tables",
+                    "Script Byte Status",
+                    "Report active byte and output dump status for loose and packaged script tables.",
+                    "byte-status",
+                    null,
+                    isReadOnly: true,
+                    writesOutput: false,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: false,
+                    hasModifiedOutputs: null),
+                CreatePreset(
+                    "dump-script-bytes",
+                    "script-tables",
+                    "Dump Script Bytes",
+                    "Write raw bytes for loose and packaged script tables under resource-bytes/ in the output folder.",
+                    "dump-bytes",
+                    null,
+                    isReadOnly: false,
+                    writesOutput: true,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: true,
+                    hasModifiedOutputs: null),
+                CreatePreset(
+                    "dump-all-resource-bytes",
+                    "resources",
+                    "Dump All Resource Bytes",
+                    "Write raw bytes for every readable project resource under resource-bytes/ in the output folder.",
+                    "dump-bytes",
+                    null,
+                    isReadOnly: false,
+                    writesOutput: true,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: true,
+                    hasModifiedOutputs: null),
+                CreatePreset(
+                    "resource-output-status",
+                    "resources",
+                    "Resource Output Status",
+                    "Report output-side status for resources that can be staged or applied.",
+                    "output-status",
+                    null,
+                    isReadOnly: true,
+                    writesOutput: false,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: false,
+                    hasModifiedOutputs: null),
+                CreatePreset(
+                    "root-field-values",
+                    "resources",
+                    "Root Field Values",
+                    "Read labeled field values from HSD root resources with known schemas.",
+                    "field-values",
+                    KarResourceKind.HsdRoot,
+                    isReadOnly: true,
+                    writesOutput: false,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: false,
+                    hasModifiedOutputs: null),
+                CreatePreset(
+                    "apply-modified-resource-outputs",
+                    "mod-output",
+                    "Apply Modified Resource Outputs",
+                    "Pack modified output-side sidecars back into output package copies.",
+                    "apply-output",
+                    null,
+                    isReadOnly: false,
+                    writesOutput: true,
+                    supportsBatch: true,
+                    requiresInputFile: false,
+                    requiresFieldName: false,
+                    requiresValue: false,
+                    canRun: true,
+                    wouldWriteOutput: true,
+                    hasModifiedOutputs: true),
+            };
+        }
+
+        private KarProjectOperationPreset CreatePreset(
+            string id,
+            string domainId,
+            string displayName,
+            string description,
+            string actionId,
+            KarResourceKind? resourceKind,
+            bool isReadOnly,
+            bool writesOutput,
+            bool supportsBatch,
+            bool requiresInputFile,
+            bool requiresFieldName,
+            bool requiresValue,
+            bool? canRun,
+            bool? wouldWriteOutput,
+            bool? hasModifiedOutputs)
+        {
+            return new KarProjectOperationPreset(
+                id,
+                domainId,
+                displayName,
+                description,
+                actionId,
+                resourceKind,
+                isReadOnly,
+                writesOutput,
+                supportsBatch,
+                requiresInputFile,
+                requiresFieldName,
+                requiresValue,
+                canRun,
+                wouldWriteOutput,
+                hasModifiedOutputs,
+                CreateCatalog(CreatePresetQueryOptions(
+                    domainId,
+                    actionId,
+                    resourceKind,
+                    isReadOnly,
+                    writesOutput,
+                    supportsBatch,
+                    requiresInputFile,
+                    requiresFieldName,
+                    requiresValue,
+                    canRun,
+                    wouldWriteOutput,
+                    hasModifiedOutputs)));
+        }
+
+        private static KarProjectOperationQueryOptions CreatePresetQueryOptions(
+            string domainId,
+            string actionId,
+            KarResourceKind? resourceKind,
+            bool isReadOnly,
+            bool writesOutput,
+            bool supportsBatch,
+            bool requiresInputFile,
+            bool requiresFieldName,
+            bool requiresValue,
+            bool? canRun,
+            bool? wouldWriteOutput,
+            bool? hasModifiedOutputs)
+        {
+            return new KarProjectOperationQueryOptions
+            {
+                IncludeWorkflows = false,
+                IncludeResourceActions = true,
+                Kind = KarProjectOperationKind.ResourceAction,
+                DomainId = domainId,
+                ActionId = actionId,
+                ResourceKind = resourceKind,
+                IsReadOnly = isReadOnly,
+                WritesOutput = writesOutput,
+                SupportsBatch = supportsBatch,
+                RequiresInputFile = requiresInputFile,
+                RequiresFieldName = requiresFieldName,
+                RequiresValue = requiresValue,
+                CanRun = canRun,
+                WouldWriteOutput = wouldWriteOutput,
+                HasModifiedOutputs = hasModifiedOutputs,
             };
         }
 

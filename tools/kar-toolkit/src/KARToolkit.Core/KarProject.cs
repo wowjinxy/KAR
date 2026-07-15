@@ -641,6 +641,16 @@ namespace KARToolkit.Core
             return OperationService.Query(options);
         }
 
+        public KarProjectOperationPresetCatalog CreateOperationPresetCatalog(KarProjectOperationPresetQueryOptions options = null)
+        {
+            return OperationService.CreatePresetCatalog(options);
+        }
+
+        public IReadOnlyList<KarProjectOperationPreset> QueryOperationPresets(KarProjectOperationPresetQueryOptions options = null)
+        {
+            return OperationService.QueryPresets(options);
+        }
+
         public KarProjectOperation GetOperation(string operationId, KarProjectOperationQueryOptions options = null)
         {
             return OperationService.Get(operationId, options);

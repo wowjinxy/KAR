@@ -616,6 +616,25 @@ internal static class KarCliTextWriter
             PrintProjectOperation(operation);
     }
 
+    public static void PrintProjectOperationPresetCatalog(KarProjectOperationPresetCatalog catalog)
+    {
+        Console.WriteLine("KAR operation presets: " + catalog.PresetCount + " available=" + catalog.AvailablePresetCount + " runnable=" + catalog.RunnablePresetCount + " output=" + catalog.OutputPresetCount);
+        foreach (KarProjectOperationPreset preset in catalog.Presets)
+            PrintProjectOperationPreset(preset);
+    }
+
+    public static void PrintProjectOperationPreset(KarProjectOperationPreset preset)
+    {
+        string mode = preset.IsReadOnly ? "read" : "write";
+        string batch = preset.SupportsBatch ? " batch" : "";
+        string input = preset.RequiresInputFile ? " input" : "";
+        string field = preset.RequiresFieldName ? " field" : "";
+        string value = preset.RequiresValue ? " value" : "";
+        string modified = preset.ModifiedOutputOperationCount == 0 ? "" : " modified=" + preset.ModifiedOutputOperationCount;
+        string batchUsage = preset.BatchUsage == null ? "" : " batch-usage=\"" + preset.BatchUsage + "\"";
+        Console.WriteLine(preset.Id + " [" + preset.DomainId + ", " + mode + batch + input + field + value + "] operations=" + preset.OperationCount + " runnable=" + preset.RunnableOperationCount + modified + " usage=\"" + preset.OperationUsage + "\"" + batchUsage);
+    }
+
     public static void PrintProjectOperation(KarProjectOperation operation)
     {
         string mode = operation.IsReadOnly ? "read" : "write";

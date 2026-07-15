@@ -141,6 +141,11 @@ namespace KARToolkit.Core
             return Project.OperationService.CreateCatalog(options);
         }
 
+        public KarProjectOperationPresetCatalog CreateOperationPresetCatalog(KarProjectOperationPresetQueryOptions options = null)
+        {
+            return Project.OperationService.CreatePresetCatalog(options);
+        }
+
         public KarProjectOperationExecutionResult ExecuteOperation(
             string operationId,
             KarProjectResourceActionExecutionOptions executionOptions = null,
