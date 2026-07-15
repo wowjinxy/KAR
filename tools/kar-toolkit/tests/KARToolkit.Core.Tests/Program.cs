@@ -817,6 +817,23 @@ namespace KARToolkit.Core.Tests
                 byte originalFirstByte = rootBytes[0];
                 rootBytes[0] ^= 0xFF;
                 AssertTrue(resources.ReadBytes("VsHydra.dat:vsDataHydra")[0] == originalFirstByte, "HSD root byte reads should return a defensive copy");
+                rootBytes[0] = originalFirstByte;
+
+                KarProjectResourceByteDumpResult rootDump = project.DumpResourceBytesToOutput("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootDump.Address == "VsHydra.dat:vsDataHydra", "project resource byte dumps should preserve root resource addresses");
+                AssertTrue(rootDump.OutputRelativePath == "resource-bytes/VsHydra.dat/vsDataHydra.bin", "HSD root byte dumps should use stable output asset paths");
+                AssertTrue(rootDump.WroteOutput && rootDump.Length == rootBytes.Length, "HSD root byte dumps should write root struct bytes");
+                AssertTrue(rootDump.Sha256.Length == 64, "resource byte dumps should include a content hash");
+                AssertTrue(File.ReadAllBytes(rootDump.OutputPath).SequenceEqual(rootBytes), "HSD root byte dumps should write the raw struct payload");
+
+                KarProjectResourceByteDumpResult skippedRootDump = resources.DumpBytesToOutput("VsHydra.dat:vsDataHydra");
+                AssertTrue(!skippedRootDump.WroteOutput, "resource byte dumps should skip existing outputs unless overwrite is requested");
+                KarProjectResourceByteDumpResult overwrittenRootDump = resources.DumpBytesToOutput("VsHydra.dat:vsDataHydra", overwrite: true);
+                AssertTrue(overwrittenRootDump.WroteOutput, "resource byte dumps should overwrite outputs when requested");
+
+                KarProjectResourceByteDumpResult entryDump = resources.DumpBytesToOutput("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryDump.OutputRelativePath == "resource-bytes/A2Info.dat/ScInfGo2D.tm.bin", "A2D entry byte dumps should use stable output asset paths");
+                AssertTrue(File.ReadAllBytes(entryDump.OutputPath).SequenceEqual(new byte[] { 0xA0, 0xB0, 0xC0, 0xD0 }), "A2D entry byte dumps should write the selected entry bytes");
 
                 KarProjectResourceExportResult fileExport = resources.ExportToOutput("A2Info.dat");
                 AssertTrue(fileExport.Address == "A2Info.dat", "resource file export should report resource address");

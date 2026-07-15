@@ -76,6 +76,22 @@ internal static class KarCliCopyCommands
         return 0;
     }
 
+    public static int DumpResourceBytes(KarCliOptions options)
+    {
+        options.RequirePositionals("dump-resource-bytes", 2);
+        KarProject project = OpenProject(options);
+        KarProjectResourceByteDumpResult result = project.DumpResourceBytesToOutput(options.Positionals[1], options.Overwrite);
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectResourceByteDumpResultDto(result));
+            return 0;
+        }
+
+        PrintProjectResourceByteDumpResult(result);
+        return 0;
+    }
+
     public static int ImportResource(KarCliOptions options)
     {
         options.RequirePositionals("import-resource", 3);

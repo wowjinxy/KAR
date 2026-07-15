@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace KARToolkit.Core
 {
@@ -165,6 +166,35 @@ namespace KARToolkit.Core
             return GetAdapter(resource).ReadBytes(resource);
         }
 
+        public KarProjectResourceByteDumpResult DumpBytesToOutput(string address, bool overwrite = false)
+        {
+            KarProjectResourceInfo resource = Get(address);
+            return DumpBytesToOutput(resource, overwrite);
+        }
+
+        public KarProjectResourceByteDumpResult DumpBytesToOutput(KarProjectResourceInfo resource, bool overwrite = false)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (!resource.CanReadBytes)
+                throw new NotSupportedException("Resource " + resource.Address + " does not support byte dumps.");
+
+            byte[] data = GetAdapter(resource).ReadBytes(resource);
+            string outputRelativePath = CreateByteDumpRelativePath(resource);
+            string outputPath = _project.Workspace.GetOutputAssetPath(outputRelativePath);
+            bool wroteOutput = overwrite || !File.Exists(outputPath);
+            if (wroteOutput)
+                outputPath = _project.Workspace.SaveOutputAsset(outputRelativePath, tempPath => File.WriteAllBytes(tempPath, data));
+
+            return new KarProjectResourceByteDumpResult(
+                resource,
+                outputRelativePath,
+                outputPath,
+                data.Length,
+                ComputeSha256(data),
+                wroteOutput);
+        }
+
         public KarProjectResourceExportResult ExportToOutput(string address, bool overwrite = false)
         {
             KarProjectResourceInfo resource = Get(address);
@@ -257,6 +287,47 @@ namespace KARToolkit.Core
                 throw new ArgumentNullException(nameof(resource));
 
             return GetAdapter(resource).CreateOutputInfo(resource);
+        }
+
+        private static string CreateByteDumpRelativePath(KarProjectResourceInfo resource)
+        {
+            List<string> parts = new List<string> { "resource-bytes" };
+            parts.AddRange(KarProjectWorkspace.NormalizeRelativePath(resource.RelativePath)
+                .Split('/')
+                .Select(SanitizePathSegment));
+
+            if (resource.Kind == KarResourceKind.HsdRoot)
+                parts.Add(SanitizePathSegment(resource.Reference.RootName) + ".bin");
+            else if (resource.Kind == KarResourceKind.A2DEntry)
+                parts.Add(SanitizePathSegment(resource.Reference.EntryName) + ".bin");
+
+            return string.Join("/", parts);
+        }
+
+        private static string SanitizePathSegment(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "_";
+
+            char[] invalid = Path.GetInvalidFileNameChars();
+            char[] chars = value.Trim().ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (invalid.Contains(chars[i]) || chars[i] == '/' || chars[i] == '\\')
+                    chars[i] = '_';
+            }
+
+            string sanitized = new string(chars);
+            if (sanitized == "." || sanitized == "..")
+                return "_";
+
+            return sanitized.Length == 0 ? "_" : sanitized;
+        }
+
+        private static string ComputeSha256(byte[] data)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+                return string.Concat(sha256.ComputeHash(data).Select(value => value.ToString("x2")));
         }
     }
 }

@@ -428,6 +428,11 @@ namespace KARToolkit.Core
             return ResourceAddressService.ReadBytes(address);
         }
 
+        public KarProjectResourceByteDumpResult DumpResourceBytesToOutput(string address, bool overwrite = false)
+        {
+            return ResourceService.DumpBytesToOutput(address, overwrite);
+        }
+
         public KarProjectResourceExportResult ExportResourceToOutput(string address, bool overwrite = false)
         {
             return ResourceAddressService.ExportToOutput(address, overwrite);

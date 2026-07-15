@@ -1296,6 +1296,22 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceByteDumpResultDto(KarProjectResourceByteDumpResult result)
+    {
+        return new
+        {
+            resource = ToProjectResourceDto(result.Resource),
+            reference = ToResourceReferenceDto(result.Reference),
+            kind = result.Kind.ToString(),
+            address = result.Address,
+            outputRelativePath = result.OutputRelativePath,
+            outputPath = result.OutputPath,
+            length = result.Length,
+            sha256 = result.Sha256,
+            wroteOutput = result.WroteOutput,
+        };
+    }
+
     public static object ToProjectResourceImportResultDto(KarProjectResourceImportResult result)
     {
         return new

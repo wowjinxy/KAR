@@ -306,6 +306,16 @@ internal static class KarCliTextWriter
         Console.WriteLine("Wrote: " + result.WroteOutput);
     }
 
+    public static void PrintProjectResourceByteDumpResult(KarProjectResourceByteDumpResult result)
+    {
+        Console.WriteLine("Dumped resource bytes: " + result.Address);
+        Console.WriteLine("Output relative path: " + result.OutputRelativePath);
+        Console.WriteLine("Output: " + result.OutputPath);
+        Console.WriteLine("Length: " + result.Length);
+        Console.WriteLine("SHA256: " + result.Sha256);
+        Console.WriteLine("Wrote: " + result.WroteOutput);
+    }
+
     public static void PrintProjectResourceImportResult(KarProjectResourceImportResult result)
     {
         Console.WriteLine("Imported resource: " + result.Address);
