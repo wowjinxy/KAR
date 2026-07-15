@@ -20,6 +20,7 @@ internal sealed class KarCliOptions
         bool? fileHasOutputCopy,
         bool? rootKnown,
         string rootName,
+        bool rootSummary,
         int? maxReferenceDepth,
         int? maxReferenceEntries)
     {
@@ -38,6 +39,7 @@ internal sealed class KarCliOptions
         FileHasOutputCopy = fileHasOutputCopy;
         RootKnown = rootKnown;
         RootName = rootName;
+        RootSummary = rootSummary;
         MaxReferenceDepth = maxReferenceDepth;
         MaxReferenceEntries = maxReferenceEntries;
     }
@@ -72,6 +74,8 @@ internal sealed class KarCliOptions
 
     public string RootName { get; }
 
+    public bool RootSummary { get; }
+
     public int? MaxReferenceDepth { get; }
 
     public int? MaxReferenceEntries { get; }
@@ -95,6 +99,7 @@ internal sealed class KarCliOptions
         bool? fileHasOutputCopy = null;
         bool? rootKnown = null;
         string rootName = null;
+        bool rootSummary = false;
         int? maxReferenceDepth = null;
         int? maxReferenceEntries = null;
         using IEnumerator<string> enumerator = args.GetEnumerator();
@@ -201,6 +206,12 @@ internal sealed class KarCliOptions
                 continue;
             }
 
+            if (arg == "--summary" || arg == "--summarize" || arg == "--group")
+            {
+                rootSummary = true;
+                continue;
+            }
+
             if (arg == "--max-reference-depth" || arg == "--reference-depth" || arg == "--ref-depth")
             {
                 maxReferenceDepth = ReadNonNegativeInt(enumerator, arg);
@@ -232,6 +243,7 @@ internal sealed class KarCliOptions
             fileHasOutputCopy,
             rootKnown,
             rootName,
+            rootSummary,
             maxReferenceDepth,
             maxReferenceEntries);
     }

@@ -79,6 +79,10 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("roots", 1);
         KarProject project = OpenProject(options);
+
+        if (options.RootSummary)
+            return ShowRootSummaries(project, options);
+
         List<KarProjectRootInfo> roots = project.QueryRoots(CreateRootQuery(options))
             .OrderBy(root => root.File.RelativePath)
             .ThenBy(root => root.Root.Name)
@@ -92,6 +96,25 @@ internal static class KarCliInspectionCommands
 
         foreach (KarProjectRootInfo root in roots)
             PrintProjectRootSummary(root);
+
+        return 0;
+    }
+
+    private static int ShowRootSummaries(KarProject project, KarCliOptions options)
+    {
+        List<KarProjectRootSummary> summaries = project.QueryRootSummaries(CreateRootQuery(options))
+            .OrderByDescending(summary => summary.Count)
+            .ThenBy(summary => summary.RootName)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(summaries.Select(ToProjectRootSummaryDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectRootSummary summary in summaries)
+            PrintProjectRootSummaryGroup(summary);
 
         return 0;
     }

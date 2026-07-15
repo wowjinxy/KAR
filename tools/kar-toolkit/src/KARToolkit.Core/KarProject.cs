@@ -2,6 +2,7 @@ using HSDRaw;
 using KARToolkit.Core.AirRide;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KARToolkit.Core
 {
@@ -120,6 +121,26 @@ namespace KARToolkit.Core
             }
 
             return roots.AsReadOnly();
+        }
+
+        public IReadOnlyList<KarProjectRootSummary> QueryRootSummaries(KarProjectRootQueryOptions options)
+        {
+            return QueryRoots(options)
+                .GroupBy(root => new
+                {
+                    root.RootName,
+                    root.IsKnown,
+                    root.DisplayAccessorTypeName,
+                    root.DataDefinitionId,
+                })
+                .Select(group => new KarProjectRootSummary(
+                    group.Key.RootName,
+                    group.Key.IsKnown,
+                    group.Key.DisplayAccessorTypeName,
+                    group.Key.DataDefinitionId,
+                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)))
+                .ToList()
+                .AsReadOnly();
         }
 
         public KarMapBundle GetMap(string mapNameOrPath)

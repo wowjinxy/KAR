@@ -55,7 +55,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit files <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--output-copy|--source-only]");
         Console.WriteLine("  kar-toolkit file <source-folder> <relative-path> [--output <mod-folder>]");
-        Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>]");
+        Console.WriteLine("  kar-toolkit roots <source-folder> [--kind <file-kind>] [--category <category>] [--known|--unknown] [--root-name <name>] [--summary]");
         Console.WriteLine("  kar-toolkit maps <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit map <source-folder> <map-name-or-file> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit archive <source-folder> <relative-path> [--output <mod-folder>]");
@@ -84,6 +84,7 @@ internal static class Program
         Console.WriteLine("  --known");
         Console.WriteLine("  --unknown");
         Console.WriteLine("  --root-name <name>");
+        Console.WriteLine("  --summary");
     }
 
     private static int Fail(string message)
