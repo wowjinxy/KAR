@@ -53,10 +53,10 @@ Map-focused workflows go through `KarProject.MapService`, which groups map looku
 Project file discovery and map grouping go through `KarProjectIndexer`, with lookup results held by `KarProjectIndex`.
 The `files` and `file` CLI commands expose the project index without opening every archive, and `files` can filter by kind, category, or output-copy state.
 Project-wide archive inventory goes through `KarProject.ArchiveService.QueryHsdArchives` or the compatibility wrapper `KarProject.QueryArchives`, and the `archives` CLI command reports compact known/unknown/missing root counts.
-Project-wide root discovery goes through `KarProject.QueryRoots`, grouped root discovery goes through `KarProject.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
-Project-wide schema usage goes through `KarProject.QueryDataDefinitionUsage`, and the `schema-usage` CLI command reports where known schemas appear.
-Project-wide labeled field discovery goes through `KarProject.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.
-Project-wide labeled field comparison goes through `KarProject.QueryFieldSummaries`, and the `field-summary` CLI command groups values by schema field.
+Project-wide root discovery goes through `KarProject.DataService.QueryRoots`, grouped root discovery goes through `KarProject.DataService.QueryRootSummaries`, and the `roots` CLI command can filter by file kind/category and known/unknown root state.
+Project-wide schema usage goes through `KarProject.DataService.QueryDataDefinitionUsage`, and the `schema-usage` CLI command reports where known schemas appear.
+Project-wide labeled field discovery goes through `KarProject.DataService.QueryFieldValues`, and the `fields` CLI command can filter by schema id/accessor type, field name, file kind/category, and root name.
+Project-wide labeled field comparison goes through `KarProject.DataService.QueryFieldSummaries`, and the `field-summary` CLI command groups values by schema field.
 Project file kind classification and map-name extraction go through `KarProjectFileClassifier`.
 `KarProjectFileCatalog` is the replaceable service that connects file classification, HSD-kind checks, and map-name extraction.
 `KarArchiveDefinitionProvider` is the replaceable service that turns file kind, path, and optional map name into archive/root metadata.

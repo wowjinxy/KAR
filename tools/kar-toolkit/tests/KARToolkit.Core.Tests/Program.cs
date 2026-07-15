@@ -493,7 +493,11 @@ namespace KARToolkit.Core.Tests
                 WriteFieldQueryFixture(tempRoot);
 
                 KarProject project = KarProject.Open(tempRoot);
-                IReadOnlyList<KarProjectDataDefinitionUsage> usages = project.QueryDataDefinitionUsage(null);
+                KarProjectDataService data = project.DataService;
+                AssertTrue(object.ReferenceEquals(data.Project, project), "data service should retain project context");
+                AssertTrue(data.Definitions.All.Count >= 32, "data service should expose the active data definition registry");
+
+                IReadOnlyList<KarProjectDataDefinitionUsage> usages = data.QueryDataDefinitionUsage(null);
                 KarProjectDataDefinitionUsage mapUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.gr.data");
                 KarProjectDataDefinitionUsage versusUsage = usages.FirstOrDefault(usage => usage.DataDefinitionId == "kar.vs.legendary");
 
@@ -519,6 +523,9 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(mapOnly.Count == 1, "schema usage should respect file-kind filters");
                 AssertTrue(mapOnly[0].DataDefinitionId == "kar.gr.data", "schema usage file-kind filter should keep map data");
+                AssertTrue(project.QueryDataDefinitionUsage(null).Count == usages.Count, "project schema usage compatibility wrapper should delegate to data service");
+                AssertTrue(project.QueryRoots(null).Count == data.QueryRoots(null).Count, "project root compatibility wrapper should delegate to data service");
+                AssertTrue(project.QueryRootSummaries(null).Count == data.QueryRootSummaries(null).Count, "project root summary compatibility wrapper should delegate to data service");
             }
             finally
             {
@@ -537,7 +544,8 @@ namespace KARToolkit.Core.Tests
                 WriteFieldQueryFixture(tempRoot);
 
                 KarProject project = KarProject.Open(tempRoot);
-                IReadOnlyList<KarProjectFieldInfo> mapUnknowns = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                KarProjectDataService data = project.DataService;
+                IReadOnlyList<KarProjectFieldInfo> mapUnknowns = data.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "kar.gr.data",
                     FieldName = "unknown1",
@@ -548,7 +556,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(mapUnknowns.Any(field => field.RelativePath == "GrCity1.dat" && field.Value.SignedValue == 101), "field query should read GrCity1 scalar values");
                 AssertTrue(mapUnknowns.Any(field => field.RelativePath == "GrSimple.dat" && field.Value.SignedValue == 202), "field query should read GrSimple scalar values");
 
-                IReadOnlyList<KarProjectFieldInfo> hydraFields = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                IReadOnlyList<KarProjectFieldInfo> hydraFields = data.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "KAR_vsLegendaryData",
                     FieldName = "x0C",
@@ -558,7 +566,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(hydraFields[0].RelativePath == "VsHydra.dat", "field query should keep file context");
                 AssertTrue(hydraFields[0].Value.SignedValue == 303, "field query should read versus scalar values");
 
-                IReadOnlyList<KarProjectFieldInfo> mapOnly = project.QueryFieldValues(new KarProjectFieldQueryOptions
+                IReadOnlyList<KarProjectFieldInfo> mapOnly = data.QueryFieldValues(new KarProjectFieldQueryOptions
                 {
                     Roots = new KarProjectRootQueryOptions
                     {
@@ -569,6 +577,7 @@ namespace KARToolkit.Core.Tests
 
                 AssertTrue(mapOnly.Count == 2, "field query should respect root file filters");
                 AssertTrue(mapOnly.All(field => field.File.Kind == KarFileKind.MapData), "field query file filters should keep map data only");
+                AssertTrue(project.QueryFieldValues(null).Count == data.QueryFieldValues(null).Count, "project field query compatibility wrapper should delegate to data service");
             }
             finally
             {
@@ -587,7 +596,8 @@ namespace KARToolkit.Core.Tests
                 WriteFieldQueryFixture(tempRoot);
 
                 KarProject project = KarProject.Open(tempRoot);
-                IReadOnlyList<KarProjectFieldSummary> summaries = project.QueryFieldSummaries(new KarProjectFieldQueryOptions
+                KarProjectDataService data = project.DataService;
+                IReadOnlyList<KarProjectFieldSummary> summaries = data.QueryFieldSummaries(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "kar.gr.data",
                     FieldName = "unknown1",
@@ -606,7 +616,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(summary.DistinctValues.Any(value => value.SignedValue == 101 && value.Count == 1), "field summary should bucket GrCity1 value");
                 AssertTrue(summary.DistinctValues.Any(value => value.SignedValue == 202 && value.Count == 1), "field summary should bucket GrSimple value");
 
-                IReadOnlyList<KarProjectFieldSummary> hydraSummaries = project.QueryFieldSummaries(new KarProjectFieldQueryOptions
+                IReadOnlyList<KarProjectFieldSummary> hydraSummaries = data.QueryFieldSummaries(new KarProjectFieldQueryOptions
                 {
                     DataDefinitionIdOrAccessorTypeName = "KAR_vsLegendaryData",
                     FieldName = "x0C",
@@ -615,6 +625,7 @@ namespace KARToolkit.Core.Tests
                 AssertTrue(hydraSummaries.Count == 1, "field summary should match schemas by accessor type");
                 AssertTrue(hydraSummaries[0].DistinctValueCount == 1, "field summary should group identical versus values");
                 AssertTrue(!hydraSummaries[0].HasValueVariation, "field summary should not flag single values as varying");
+                AssertTrue(project.QueryFieldSummaries(null).Count == data.QueryFieldSummaries(null).Count, "project field summary compatibility wrapper should delegate to data service");
             }
             finally
             {

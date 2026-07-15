@@ -26,11 +26,11 @@ namespace KARToolkit.Core
                 .AsReadOnly();
             MapOutputs = BuildMapOutputs(Maps, OutputFiles);
             Archives = BuildArchives(project, Files);
-            Roots = BuildRoots(Archives, options.Roots);
-            RootSummaries = BuildRootSummaries(Roots);
-            DataDefinitionUsage = BuildDataDefinitionUsage(Roots);
+            Roots = OrderRoots(KarProjectDataService.BuildRoots(Archives, options.Roots));
+            RootSummaries = OrderRootSummaries(KarProjectDataService.BuildRootSummaries(Roots));
+            DataDefinitionUsage = OrderDataDefinitionUsage(KarProjectDataService.BuildDataDefinitionUsage(Roots));
             FieldSummaries = options.IncludeFieldSummaries
-                ? BuildFieldSummaries(BuildFields(Roots, options.Fields))
+                ? OrderFieldSummaries(KarProjectDataService.BuildFieldSummaries(KarProjectDataService.BuildFields(Roots, options.Fields)))
                 : Array.Empty<KarProjectFieldSummary>();
         }
 
@@ -136,25 +136,8 @@ namespace KARToolkit.Core
                 new KarProjectMapOutputQueryOptions { HasOutput = true });
         }
 
-        private static IReadOnlyList<KarProjectRootInfo> BuildRoots(
-            IEnumerable<KarArchiveInfo> archives,
-            KarProjectRootQueryOptions options)
+        private static IReadOnlyList<KarProjectRootInfo> OrderRoots(IEnumerable<KarProjectRootInfo> roots)
         {
-            List<KarProjectRootInfo> roots = new List<KarProjectRootInfo>();
-
-            foreach (KarArchiveInfo archive in archives)
-            {
-                if (options != null && options.Files != null && !options.Files.Matches(archive.File))
-                    continue;
-
-                foreach (KarArchiveRootInfo root in archive.Roots)
-                {
-                    KarProjectRootInfo projectRoot = new KarProjectRootInfo(archive.File, root);
-                    if (options == null || options.Matches(projectRoot))
-                        roots.Add(projectRoot);
-                }
-            }
-
             return roots
                 .OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(root => root.RootName, StringComparer.Ordinal)
@@ -162,81 +145,27 @@ namespace KARToolkit.Core
                 .AsReadOnly();
         }
 
-        private static IReadOnlyList<KarProjectRootSummary> BuildRootSummaries(IEnumerable<KarProjectRootInfo> roots)
+        private static IReadOnlyList<KarProjectRootSummary> OrderRootSummaries(IEnumerable<KarProjectRootSummary> summaries)
         {
-            return roots
-                .GroupBy(root => new
-                {
-                    root.RootName,
-                    root.IsKnown,
-                    root.DisplayAccessorTypeName,
-                    root.DataDefinitionId,
-                })
-                .Select(group => new KarProjectRootSummary(
-                    group.Key.RootName,
-                    group.Key.IsKnown,
-                    group.Key.DisplayAccessorTypeName,
-                    group.Key.DataDefinitionId,
-                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)))
+            return summaries
                 .OrderByDescending(summary => summary.Count)
                 .ThenBy(summary => summary.RootName, StringComparer.Ordinal)
                 .ToList()
                 .AsReadOnly();
         }
 
-        private static IReadOnlyList<KarProjectDataDefinitionUsage> BuildDataDefinitionUsage(IEnumerable<KarProjectRootInfo> roots)
+        private static IReadOnlyList<KarProjectDataDefinitionUsage> OrderDataDefinitionUsage(IEnumerable<KarProjectDataDefinitionUsage> usages)
         {
-            return roots
-                .Where(root => root.Root.DataDefinition != null)
-                .GroupBy(root => root.Root.DataDefinition.Id, StringComparer.OrdinalIgnoreCase)
-                .Select(group => new KarProjectDataDefinitionUsage(
-                    group.First().Root.DataDefinition,
-                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)
-                        .ThenBy(root => root.RootName, StringComparer.Ordinal)))
+            return usages
                 .OrderByDescending(usage => usage.Count)
                 .ThenBy(usage => usage.DataDefinitionId, StringComparer.OrdinalIgnoreCase)
                 .ToList()
                 .AsReadOnly();
         }
 
-        private static IReadOnlyList<KarProjectFieldInfo> BuildFields(
-            IEnumerable<KarProjectRootInfo> roots,
-            KarProjectFieldQueryOptions options)
+        private static IReadOnlyList<KarProjectFieldSummary> OrderFieldSummaries(IEnumerable<KarProjectFieldSummary> summaries)
         {
-            List<KarProjectFieldInfo> fields = new List<KarProjectFieldInfo>();
-
-            foreach (KarProjectRootInfo root in roots)
-            {
-                if (options != null && options.Roots != null)
-                {
-                    if (options.Roots.Files != null && !options.Roots.Files.Matches(root.File))
-                        continue;
-                    if (!options.Roots.Matches(root))
-                        continue;
-                }
-
-                if (root.Root.DataDefinition == null || !root.Root.HasFieldValues)
-                    continue;
-
-                foreach (KarDataFieldValue value in root.Root.FieldValues)
-                {
-                    KarProjectFieldInfo field = new KarProjectFieldInfo(root, value);
-                    if (options == null || options.Matches(field))
-                        fields.Add(field);
-                }
-            }
-
-            return fields.AsReadOnly();
-        }
-
-        private static IReadOnlyList<KarProjectFieldSummary> BuildFieldSummaries(IEnumerable<KarProjectFieldInfo> fields)
-        {
-            return fields
-                .GroupBy(field => field.DataDefinitionId + "\u001F" + field.FieldName, StringComparer.OrdinalIgnoreCase)
-                .Select(group => new KarProjectFieldSummary(
-                    group.First().ArchiveRoot.DataDefinition,
-                    group.First().Field,
-                    group))
+            return summaries
                 .OrderByDescending(summary => summary.Count)
                 .ThenByDescending(summary => summary.DistinctValueCount)
                 .ThenBy(summary => summary.DataDefinitionId, StringComparer.OrdinalIgnoreCase)

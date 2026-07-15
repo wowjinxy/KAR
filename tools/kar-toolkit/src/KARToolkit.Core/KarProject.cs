@@ -23,6 +23,7 @@ namespace KARToolkit.Core
             ArchiveService = new KarProjectArchiveService(this);
             OutputService = new KarProjectOutputService(this);
             MapService = new KarProjectMapService(this);
+            DataService = new KarProjectDataService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -41,6 +42,8 @@ namespace KARToolkit.Core
         public KarProjectOutputService OutputService { get; }
 
         public KarProjectMapService MapService { get; }
+
+        public KarProjectDataService DataService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -117,84 +120,27 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectRootInfo> QueryRoots(KarProjectRootQueryOptions options)
         {
-            List<KarProjectRootInfo> roots = new List<KarProjectRootInfo>();
-
-            foreach (KarArchiveInfo archive in QueryArchives(options == null ? null : options.Files))
-            {
-                foreach (KarArchiveRootInfo root in archive.Roots)
-                {
-                    KarProjectRootInfo projectRoot = new KarProjectRootInfo(archive.File, root);
-                    if (options == null || options.Matches(projectRoot))
-                        roots.Add(projectRoot);
-                }
-            }
-
-            return roots.AsReadOnly();
+            return DataService.QueryRoots(options);
         }
 
         public IReadOnlyList<KarProjectRootSummary> QueryRootSummaries(KarProjectRootQueryOptions options)
         {
-            return QueryRoots(options)
-                .GroupBy(root => new
-                {
-                    root.RootName,
-                    root.IsKnown,
-                    root.DisplayAccessorTypeName,
-                    root.DataDefinitionId,
-                })
-                .Select(group => new KarProjectRootSummary(
-                    group.Key.RootName,
-                    group.Key.IsKnown,
-                    group.Key.DisplayAccessorTypeName,
-                    group.Key.DataDefinitionId,
-                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)))
-                .ToList()
-                .AsReadOnly();
+            return DataService.QueryRootSummaries(options);
         }
 
         public IReadOnlyList<KarProjectDataDefinitionUsage> QueryDataDefinitionUsage(KarProjectRootQueryOptions options)
         {
-            return QueryRoots(options)
-                .Where(root => root.Root.DataDefinition != null)
-                .GroupBy(root => root.Root.DataDefinition.Id, StringComparer.OrdinalIgnoreCase)
-                .Select(group => new KarProjectDataDefinitionUsage(
-                    group.First().Root.DataDefinition,
-                    group.OrderBy(root => root.RelativePath, StringComparer.OrdinalIgnoreCase)
-                        .ThenBy(root => root.RootName, StringComparer.Ordinal)))
-                .ToList()
-                .AsReadOnly();
+            return DataService.QueryDataDefinitionUsage(options);
         }
 
         public IReadOnlyList<KarProjectFieldInfo> QueryFieldValues(KarProjectFieldQueryOptions options)
         {
-            List<KarProjectFieldInfo> fields = new List<KarProjectFieldInfo>();
-
-            foreach (KarProjectRootInfo root in QueryRoots(options == null ? null : options.Roots))
-            {
-                if (root.Root.DataDefinition == null || !root.Root.HasFieldValues)
-                    continue;
-
-                foreach (KarDataFieldValue value in root.Root.FieldValues)
-                {
-                    KarProjectFieldInfo field = new KarProjectFieldInfo(root, value);
-                    if (options == null || options.Matches(field))
-                        fields.Add(field);
-                }
-            }
-
-            return fields.AsReadOnly();
+            return DataService.QueryFieldValues(options);
         }
 
         public IReadOnlyList<KarProjectFieldSummary> QueryFieldSummaries(KarProjectFieldQueryOptions options)
         {
-            return QueryFieldValues(options)
-                .GroupBy(field => field.DataDefinitionId + "\u001F" + field.FieldName, StringComparer.OrdinalIgnoreCase)
-                .Select(group => new KarProjectFieldSummary(
-                    group.First().ArchiveRoot.DataDefinition,
-                    group.First().Field,
-                    group))
-                .ToList()
-                .AsReadOnly();
+            return DataService.QueryFieldSummaries(options);
         }
 
         public KarProjectReport CreateReport(KarProjectReportOptions options = null)

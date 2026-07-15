@@ -141,7 +141,7 @@ internal static class KarCliInspectionCommands
         if (options.RootSummary)
             return ShowRootSummaries(project, options);
 
-        List<KarProjectRootInfo> roots = project.QueryRoots(CreateRootQuery(options))
+        List<KarProjectRootInfo> roots = project.DataService.QueryRoots(CreateRootQuery(options))
             .OrderBy(root => root.File.RelativePath)
             .ThenBy(root => root.Root.Name)
             .ToList();
@@ -181,7 +181,7 @@ internal static class KarCliInspectionCommands
 
     private static int ShowRootSummaries(KarProject project, KarCliOptions options)
     {
-        List<KarProjectRootSummary> summaries = project.QueryRootSummaries(CreateRootQuery(options))
+        List<KarProjectRootSummary> summaries = project.DataService.QueryRootSummaries(CreateRootQuery(options))
             .OrderByDescending(summary => summary.Count)
             .ThenBy(summary => summary.RootName)
             .ToList();
@@ -202,7 +202,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("schema-usage", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectDataDefinitionUsage> usages = project.QueryDataDefinitionUsage(CreateRootQuery(options))
+        List<KarProjectDataDefinitionUsage> usages = project.DataService.QueryDataDefinitionUsage(CreateRootQuery(options))
             .OrderByDescending(usage => usage.Count)
             .ThenBy(usage => usage.DataDefinitionId)
             .ToList();
@@ -226,7 +226,7 @@ internal static class KarCliInspectionCommands
             return ShowFieldSummaries(options);
 
         KarProject project = OpenProject(options);
-        List<KarProjectFieldInfo> fields = project.QueryFieldValues(CreateFieldQuery(options))
+        List<KarProjectFieldInfo> fields = project.DataService.QueryFieldValues(CreateFieldQuery(options))
             .OrderBy(field => field.RelativePath)
             .ThenBy(field => field.RootName)
             .ThenBy(field => field.Field.Offset ?? int.MaxValue)
@@ -249,7 +249,7 @@ internal static class KarCliInspectionCommands
     {
         options.RequirePositionals("field-summary", 1);
         KarProject project = OpenProject(options);
-        List<KarProjectFieldSummary> summaries = project.QueryFieldSummaries(CreateFieldQuery(options))
+        List<KarProjectFieldSummary> summaries = project.DataService.QueryFieldSummaries(CreateFieldQuery(options))
             .OrderByDescending(summary => summary.Count)
             .ThenByDescending(summary => summary.DistinctValueCount)
             .ThenBy(summary => summary.DataDefinitionId)
