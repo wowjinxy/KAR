@@ -152,6 +152,28 @@ internal static class KarCliInspectionCommands
         return report.IsValid ? 0 : 2;
     }
 
+    public static int ValidateSchemas(KarCliOptions options)
+    {
+        options.RequirePositionals("validate-schemas", 0);
+        KarDataDefinitionValidationReport report = KarDataDefinitionValidator.ValidateBuiltIn();
+
+        if (options.Json)
+        {
+            WriteJson(ToDataDefinitionValidationReportDto(report));
+            return report.IsValid ? 0 : 2;
+        }
+
+        Console.WriteLine("Schemas: " + report.DefinitionCount);
+        Console.WriteLine("Errors: " + report.ErrorCount);
+        Console.WriteLine("Warnings: " + report.WarningCount);
+        Console.WriteLine("Info: " + report.InfoCount);
+
+        foreach (KarDataDefinitionValidationIssue issue in report.Issues)
+            PrintDataDefinitionValidationIssue(issue);
+
+        return report.IsValid ? 0 : 2;
+    }
+
     public static int ShowDefinitions(KarCliOptions options)
     {
         options.RequirePositionals("definitions", 0);

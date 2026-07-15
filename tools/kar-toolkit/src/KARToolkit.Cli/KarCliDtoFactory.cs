@@ -132,6 +132,32 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToDataDefinitionValidationReportDto(KarDataDefinitionValidationReport report)
+    {
+        return new
+        {
+            definitionCount = report.DefinitionCount,
+            isValid = report.IsValid,
+            errorCount = report.ErrorCount,
+            warningCount = report.WarningCount,
+            infoCount = report.InfoCount,
+            issues = report.Issues.Select(ToDataDefinitionValidationIssueDto).ToList(),
+        };
+    }
+
+    public static object ToDataDefinitionValidationIssueDto(KarDataDefinitionValidationIssue issue)
+    {
+        return new
+        {
+            severity = issue.Severity.ToString(),
+            code = issue.Code,
+            message = issue.Message,
+            definitionId = issue.DefinitionId,
+            fieldName = issue.FieldName,
+            referencedDataDefinitionId = issue.ReferencedDataDefinitionId,
+        };
+    }
+
     public static object ToFieldValueDto(KarDataFieldValue value)
     {
         return new

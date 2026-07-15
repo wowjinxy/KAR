@@ -26,6 +26,7 @@ internal static class Program
                 "copy-map" => KarCliCopyCommands.CopyMap(options),
                 "set-scalar" => KarCliEditCommands.SetScalar(options),
                 "validate" => KarCliInspectionCommands.ValidateProject(options),
+                "validate-schemas" => KarCliInspectionCommands.ValidateSchemas(options),
                 "definitions" => KarCliInspectionCommands.ShowDefinitions(options),
                 "definition" => KarCliInspectionCommands.ShowDefinition(options),
                 _ => Fail("Unknown command: " + args[0]),
@@ -58,6 +59,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <root-name> <field-name> <value> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit set-scalar <source-folder> <relative-path> <definition-id-or-accessor-type> <field-name> <value> --schema [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit validate <source-folder> [--output <mod-folder>] [--no-unknown-roots]");
+        Console.WriteLine("  kar-toolkit validate-schemas");
         Console.WriteLine("  kar-toolkit definitions");
         Console.WriteLine("  kar-toolkit definition <definition-id-or-accessor-type>");
         Console.WriteLine();

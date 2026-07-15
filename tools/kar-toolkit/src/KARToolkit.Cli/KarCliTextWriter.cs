@@ -57,6 +57,17 @@ internal static class KarCliTextWriter
         Console.WriteLine(issue.Severity + " " + issue.Code + location + " - " + issue.Message);
     }
 
+    public static void PrintDataDefinitionValidationIssue(KarDataDefinitionValidationIssue issue)
+    {
+        string location = "";
+        if (!string.IsNullOrEmpty(issue.DefinitionId))
+            location = " " + issue.DefinitionId;
+        if (!string.IsNullOrEmpty(issue.FieldName))
+            location += "." + issue.FieldName;
+
+        Console.WriteLine(issue.Severity + " " + issue.Code + location + " - " + issue.Message);
+    }
+
     public static void PrintDataDefinition(KarDataDefinition definition, string indent)
     {
         Console.WriteLine(indent + "schema: " + definition.Id + " (" + definition.DisplayName + ")");

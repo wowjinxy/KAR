@@ -13,8 +13,8 @@ namespace KARToolkit.Core.Tests
         public static int Main()
         {
             Run("BuiltInCatalogHasExpectedCoreSchemas", BuiltInCatalogHasExpectedCoreSchemas);
-            Run("BuiltInFieldReferencesResolve", BuiltInFieldReferencesResolve);
-            Run("FixedSizeDefinitionsContainTheirFields", FixedSizeDefinitionsContainTheirFields);
+            Run("BuiltInSchemasPassValidation", BuiltInSchemasPassValidation);
+            Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("RegistryRejectsAmbiguousDefinitions", RegistryRejectsAmbiguousDefinitions);
             Run("DefinitionRejectsAmbiguousFields", DefinitionRejectsAmbiguousFields);
 
@@ -41,54 +41,59 @@ namespace KARToolkit.Core.Tests
             AssertResolves(registry, "kar.vc.common", "KAR_vcDataCommon");
         }
 
-        private static void BuiltInFieldReferencesResolve()
+        private static void BuiltInSchemasPassValidation()
         {
-            KarDataDefinitionRegistry registry = KarDataDefinitionCatalog.BuiltIn;
+            KarDataDefinitionValidationReport report = KarDataDefinitionValidator.ValidateBuiltIn();
 
-            foreach (KarDataDefinition definition in registry.All)
-            {
-                foreach (KarDataFieldDefinition field in definition.Fields)
-                {
-                    if (string.IsNullOrWhiteSpace(field.DataDefinitionId))
-                        continue;
-
-                    AssertTrue(
-                        field.IsPointer,
-                        definition.Id + "." + field.Name + " has a nested schema id but is not marked as a pointer");
-
-                    KarDataDefinition nestedDefinition;
-                    AssertTrue(
-                        registry.TryGet(field.DataDefinitionId, out nestedDefinition),
-                        definition.Id + "." + field.Name + " references missing schema " + field.DataDefinitionId);
-                }
-            }
+            AssertTrue(report.DefinitionCount >= 32, "schema validation should inspect the built-in schema set");
+            AssertTrue(report.IsValid, "built-in schemas should pass validation");
+            AssertTrue(report.ErrorCount == 0, "built-in schemas should have no validation errors");
         }
 
-        private static void FixedSizeDefinitionsContainTheirFields()
+        private static void SchemaValidatorReportsInvalidDefinitions()
         {
-            foreach (KarDataDefinition definition in KarDataDefinitionCatalog.All)
+            KarDataDefinitionValidationReport report = KarDataDefinitionValidator.Validate(new[]
             {
-                if (!definition.Size.HasValue)
-                    continue;
+                new KarDataDefinition(
+                    "kar.test.invalid",
+                    "Invalid Definition",
+                    "Tests",
+                    "InvalidAccessor",
+                    "Invalid definition.",
+                    "tests",
+                    new[]
+                    {
+                        new KarDataFieldDefinition("missingReference", 0, "HSDAccessor", "Missing reference.", true, "kar.test.missing"),
+                        new KarDataFieldDefinition("nonPointerReference", 4, "s32", "Non-pointer reference.", false, "kar.test.invalid"),
+                        new KarDataFieldDefinition("pastEnd", 8, "s32", "Past fixed size."),
+                    },
+                    8),
+                new KarDataDefinition(
+                    "kar.test.invalid",
+                    "Duplicate Definition Id",
+                    "Tests",
+                    "OtherAccessor",
+                    "Duplicate definition id.",
+                    "tests",
+                    new[] { new KarDataFieldDefinition("x00", 0, "s32", "Test field.") },
+                    4),
+                new KarDataDefinition(
+                    "kar.test.other",
+                    "Duplicate Accessor",
+                    "Tests",
+                    "InvalidAccessor",
+                    "Duplicate accessor.",
+                    "tests",
+                    new[] { new KarDataFieldDefinition("x00", 0, "s32", "Test field.") },
+                    4),
+            });
 
-                foreach (KarDataFieldDefinition field in definition.Fields)
-                {
-                    if (!field.Offset.HasValue)
-                        continue;
-
-                    AssertTrue(field.Offset.Value >= 0, definition.Id + "." + field.Name + " has a negative offset");
-
-                    int fieldSize;
-                    if (!TryGetFixedFieldSize(field, out fieldSize))
-                        continue;
-
-                    int endOffset = field.Offset.Value + fieldSize;
-                    AssertTrue(
-                        endOffset <= definition.Size.Value,
-                        definition.Id + "." + field.Name + " ends at 0x" + endOffset.ToString("X") +
-                            ", past definition size " + definition.SizeHex);
-                }
-            }
+            AssertTrue(!report.IsValid, "invalid schemas should fail validation");
+            AssertIssue(report, "DuplicateDefinitionId");
+            AssertIssue(report, "DuplicateAccessorTypeName");
+            AssertIssue(report, "MissingReferenceDataDefinition");
+            AssertIssue(report, "NonPointerReferenceField");
+            AssertIssue(report, "FieldExceedsDefinitionSize");
         }
 
         private static void RegistryRejectsAmbiguousDefinitions()
@@ -149,40 +154,9 @@ namespace KARToolkit.Core.Tests
                 4);
         }
 
-        private static bool TryGetFixedFieldSize(KarDataFieldDefinition field, out int size)
+        private static void AssertIssue(KarDataDefinitionValidationReport report, string code)
         {
-            if (field.IsPointer)
-            {
-                size = 4;
-                return true;
-            }
-
-            switch ((field.TypeName ?? "").Trim().ToLowerInvariant())
-            {
-                case "s8":
-                case "u8":
-                case "byte":
-                    size = 1;
-                    return true;
-                case "s16":
-                case "u16":
-                    size = 2;
-                    return true;
-                case "s32":
-                case "u32":
-                case "int":
-                case "int32":
-                case "uint":
-                case "uint32":
-                case "f32":
-                case "float":
-                case "single":
-                    size = 4;
-                    return true;
-                default:
-                    size = 0;
-                    return false;
-            }
+            AssertTrue(report.Issues.Any(issue => issue.Code == code), "schema validation should report " + code);
         }
 
         private static void Run(string name, Action test)

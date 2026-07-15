@@ -26,6 +26,7 @@ dotnet run --project .\tools\kar-toolkit\tests\KARToolkit.Core.Tests\KARToolkit.
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll map .\GKYE01 City1
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll definition kar.vs.legendary
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate-schemas
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll archive .\GKYE01 VcCommon.dat --json --max-reference-depth 2 --max-reference-entries 16
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll set-scalar .\GKYE01 VsHydra.dat kar.vs.legendary x0C 1 --schema --output .\mod-output
 ```
@@ -60,6 +61,7 @@ Use `--max-reference-depth` and `--max-reference-entries` with archive/map inspe
 Map gameplay schemas include position nodes, position-list rows, coordinate rows for event/item/vehicle/dead-position/area tables, and item timing/spawn tables.
 Schema-backed scalar fields can be edited in memory through `KarDataEditor` or `KarProjectHsdArchive.SetScalarField*`, then saved through the output-only project archive APIs.
 The `set-scalar` CLI command exposes that same safe output-only scalar edit path for quick mod experiments.
+Schema integrity checks go through `KarDataDefinitionValidator`, and the `validate-schemas` CLI command exposes the built-in schema report.
 `KarDataDefinitionRegistry` owns schema indexing by id and accessor type; `KarDataDefinitionCatalog` exposes the built-in KAR registry.
 `KarArchiveInspector` can be constructed with a custom `KarDataDefinitionRegistry`; `Default` uses the built-in KAR registry.
 Add new decomp-backed data schemas to the domain definition files (`KarMapDataDefinitions`, `KarVehicleDataDefinitions`, `KarVersusDataDefinitions`) and let `KarDataDefinitionCatalog` handle lookup/indexing.
