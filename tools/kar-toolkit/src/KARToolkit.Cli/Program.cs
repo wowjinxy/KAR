@@ -33,6 +33,9 @@ internal static class Program
                 "resource-actions-run" => KarCliResourceActionCommands.ExecuteBatch(options),
                 "run-resource-actions" => KarCliResourceActionCommands.ExecuteBatch(options),
                 "execute-resource-actions" => KarCliResourceActionCommands.ExecuteBatch(options),
+                "operations" => KarCliInspectionCommands.ShowOperations(options),
+                "operation" => KarCliInspectionCommands.ShowOperations(options),
+                "operation-plans" => KarCliInspectionCommands.ShowOperations(options),
                 "resource-action-plans" => KarCliInspectionCommands.ShowResourceActionPlans(options),
                 "resource-plans" => KarCliInspectionCommands.ShowResourceActionPlans(options),
                 "action-plans" => KarCliInspectionCommands.ShowResourceActionPlans(options),
@@ -183,6 +186,7 @@ internal static class Program
         Console.WriteLine("  kar-toolkit resource-actions <source-folder> [resource-address] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--json]");
         Console.WriteLine("  kar-toolkit resource-action <source-folder> <resource-address> <action-id> [action-args...] [--output <mod-folder>] [--overwrite] [--json]");
         Console.WriteLine("  kar-toolkit resource-action-batch <source-folder> <action-id> [action-args...] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--output <mod-folder>] [--overwrite] [--continue-on-error] [--json]");
+        Console.WriteLine("  kar-toolkit operations <source-folder> [operation-id] [--domain <domain>] [--action <action-id>] [--resource-kind <file|root|a2d-entry>] [--read-only|--writes-output] [--can-run|--cannot-run] [--would-write|--would-skip] [--json]");
         Console.WriteLine("  kar-toolkit resource-action-plans <source-folder> [resource-address] [--action <action-id>] [--domain <domain>] [--resource-kind <file|root|a2d-entry>] [--writes-output|--read-only] [--can-run|--cannot-run] [--would-write|--would-skip] [--overwrite] [--json]");
         Console.WriteLine("  kar-toolkit report <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--search <text>] [--summary]");
         Console.WriteLine("  kar-toolkit schema-gaps <source-folder> [relative-path] [--kind <file-kind>] [--category <category>] [--search <text>] [--json]");

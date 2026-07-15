@@ -29,6 +29,18 @@ namespace KARToolkit.Core
 
         public IReadOnlyList<KarProjectToolkitWorkflowGroup> WorkflowGroups => Surface.WorkflowGroups;
 
+        public KarProjectOperationCatalog OperationCatalog => Project.OperationService.CreateCatalog(new KarProjectOperationQueryOptions
+        {
+            SnapshotOptions = new KarProjectToolkitSnapshotOptions
+            {
+                IncludeModWorkspace = Snapshot.HasModWorkspace,
+                IncludeMapContexts = Snapshot.MapContextCount != 0,
+                IncludeVehicleContexts = Snapshot.VehicleContextCount != 0,
+                IncludeA2DPackageContexts = Snapshot.A2DPackageContextCount != 0,
+                IncludeScriptTableContexts = Snapshot.ScriptTableContextCount != 0,
+            },
+        });
+
         public string Name => Project.Name;
 
         public string SourceRoot => Project.SourceRoot;
@@ -122,6 +134,11 @@ namespace KARToolkit.Core
                 return new KarProjectModManifest(Project, ModWorkspace);
 
             return Project.ModWorkspaceService.CreateManifest(options);
+        }
+
+        public KarProjectOperationCatalog CreateOperationCatalog(KarProjectOperationQueryOptions options = null)
+        {
+            return Project.OperationService.CreateCatalog(options);
         }
     }
 }

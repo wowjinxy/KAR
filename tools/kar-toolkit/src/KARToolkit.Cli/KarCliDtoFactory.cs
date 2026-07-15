@@ -477,6 +477,73 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectOperationCatalogDto(KarProjectOperationCatalog catalog)
+    {
+        return new
+        {
+            project = ToProjectDto(catalog.Project),
+            operationCount = catalog.OperationCount,
+            workflowOperationCount = catalog.WorkflowOperationCount,
+            resourceActionOperationCount = catalog.ResourceActionOperationCount,
+            runnableOperationCount = catalog.RunnableOperationCount,
+            outputOperationCount = catalog.OutputOperationCount,
+            modifiedOutputOperationCount = catalog.ModifiedOutputOperationCount,
+            hasOperations = catalog.HasOperations,
+            hasRunnableOperations = catalog.HasRunnableOperations,
+            hasOutputOperations = catalog.HasOutputOperations,
+            hasModifiedOutputOperations = catalog.HasModifiedOutputOperations,
+            operations = catalog.Operations.Select(ToProjectOperationDto).ToList(),
+        };
+    }
+
+    public static object ToProjectOperationDto(KarProjectOperation operation)
+    {
+        return new
+        {
+            kind = operation.Kind.ToString(),
+            id = operation.Id,
+            domainId = operation.DomainId,
+            targetDomainId = operation.TargetDomainId,
+            displayName = operation.DisplayName,
+            description = operation.Description,
+            command = operation.Command,
+            argumentHint = operation.ArgumentHint,
+            executableName = operation.ExecutableName,
+            commandLine = operation.CommandLine,
+            usage = operation.Usage,
+            jsonUsage = operation.JsonUsage,
+            mode = operation.Mode,
+            isReadOnly = operation.IsReadOnly,
+            writesOutput = operation.WritesOutput,
+            supportsBatch = operation.SupportsBatch,
+            requiresInputFile = operation.RequiresInputFile,
+            requiresFieldName = operation.RequiresFieldName,
+            requiresValue = operation.RequiresValue,
+            targetCount = operation.TargetCount,
+            outputCount = operation.OutputCount,
+            modifiedOutputCount = operation.ModifiedOutputCount,
+            inspectionIssueCount = operation.InspectionIssueCount,
+            canRun = operation.CanRun,
+            wouldWriteOutput = operation.WouldWriteOutput,
+            reason = operation.Reason,
+            resourceAddress = operation.ResourceAddress,
+            resourceKind = operation.ResourceKind == null ? null : operation.ResourceKind.ToString(),
+            actionId = operation.ActionId,
+            outputKind = operation.OutputKind == null ? null : operation.OutputKind.ToString(),
+            outputStatus = operation.OutputStatus == null ? null : operation.OutputStatus.ToString(),
+            byteStatus = operation.ByteStatus == null ? null : operation.ByteStatus.ToString(),
+            outputRelativePath = operation.OutputRelativePath,
+            outputPath = operation.OutputPath,
+            hasTargets = operation.HasTargets,
+            hasOutputs = operation.HasOutputs,
+            hasModifiedOutputs = operation.HasModifiedOutputs,
+            hasInspectionIssues = operation.HasInspectionIssues,
+            hasReason = operation.HasReason,
+            workflow = operation.Workflow == null ? null : ToProjectToolkitWorkflowDto(operation.Workflow),
+            resourceActionPlan = operation.ResourceActionPlan == null ? null : ToProjectResourceActionPlanDto(operation.ResourceActionPlan),
+        };
+    }
+
     public static object ToProjectDomainContextDto(KarProjectDomainContext context)
     {
         return new

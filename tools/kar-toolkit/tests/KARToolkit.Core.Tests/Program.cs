@@ -32,6 +32,7 @@ namespace KARToolkit.Core.Tests
             Run("ProjectResourceGraphIndexesResourcesAndRelationships", ProjectResourceGraphIndexesResourcesAndRelationships);
             Run("ProjectResourceServiceQueriesAndResolvesAddresses", ProjectResourceServiceQueriesAndResolvesAddresses);
             Run("ProjectResourceActionExecutorRunsPlannedResourceActions", ProjectResourceActionExecutorRunsPlannedResourceActions);
+            Run("ProjectOperationServiceIndexesWorkflowsAndResourceActions", ProjectOperationServiceIndexesWorkflowsAndResourceActions);
             Run("ProjectResourceServiceQueriesFieldValues", ProjectResourceServiceQueriesFieldValues);
             Run("ProjectResourceDataViewsExposeLabeledFieldTrees", ProjectResourceDataViewsExposeLabeledFieldTrees);
             Run("ProjectResourceServiceReadsAndExportsResourcesSafely", ProjectResourceServiceReadsAndExportsResourcesSafely);
@@ -917,6 +918,92 @@ namespace KARToolkit.Core.Tests
                     Directory.Delete(outputRoot, true);
                 if (Directory.Exists(inputRoot))
                     Directory.Delete(inputRoot, true);
+            }
+        }
+
+        private static void ProjectOperationServiceIndexesWorkflowsAndResourceActions()
+        {
+            string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-operation-service-project-" + Guid.NewGuid().ToString("N"));
+            string outputRoot = tempRoot + "_mod";
+            Directory.CreateDirectory(tempRoot);
+
+            try
+            {
+                WriteFieldQueryFixture(tempRoot);
+                File.WriteAllBytes(Path.Combine(tempRoot, "ScInfPause.tm"), new byte[] { 0x40, 0x41 });
+                WriteA2DPackage(Path.Combine(tempRoot, "A2Info.dat"), new[] { "ScInfGo2D.tm", "readme.bin" });
+
+                KarProject project = KarProject.Open(tempRoot, outputRoot);
+                KarProjectOperationService operations = project.OperationService;
+                AssertTrue(object.ReferenceEquals(operations.Project, project), "operation services should retain project context");
+
+                KarProjectToolkitSurface surface = project.CreateToolkitSurface();
+                KarProjectOperationCatalog catalog = project.CreateOperationCatalog();
+                AssertTrue(catalog.WorkflowOperationCount == surface.WorkflowCount, "operation catalogs should include toolkit workflow operations");
+                AssertTrue(catalog.ResourceActionOperationCount > 0, "operation catalogs should include resource action operations");
+                AssertTrue(catalog.OperationCount == catalog.WorkflowOperationCount + catalog.ResourceActionOperationCount, "operation catalogs should count all operation kinds");
+                AssertTrue(catalog.OutputOperationCount != 0 && catalog.RunnableOperationCount != 0, "operation catalogs should summarize writable and runnable operations");
+
+                KarProjectOperation workflow = catalog.WorkflowOperations.Single(operation => operation.Id == "workflow:edit-resource-data-field");
+                AssertTrue(workflow.Workflow != null && workflow.ResourceActionPlan == null, "workflow operations should keep workflow payloads only");
+                AssertTrue(workflow.DomainId == "resources" && workflow.RequiresValue && workflow.WritesOutput, "workflow operations should expose workflow metadata");
+                AssertTrue(workflow.Usage.Contains("kar-toolkit resource-data-edit"), "workflow operations should expose CLI usage");
+
+                IReadOnlyList<KarProjectOperation> workflowOnly = project.QueryOperations(new KarProjectOperationQueryOptions
+                {
+                    IncludeResourceActions = false,
+                });
+                AssertTrue(workflowOnly.Count == surface.WorkflowCount && workflowOnly.All(operation => operation.IsWorkflow), "operation queries should support workflow-only catalogs");
+
+                IReadOnlyList<KarProjectOperation> scriptDumps = project.QueryOperations(new KarProjectOperationQueryOptions
+                {
+                    IncludeWorkflows = false,
+                    DomainId = "script-tables",
+                    ActionId = "dump-bytes",
+                    CanRun = true,
+                    WouldWriteOutput = true,
+                });
+                AssertTrue(scriptDumps.Count == 2, "operation queries should find runnable script-table byte dump actions");
+                AssertTrue(scriptDumps.All(operation => operation.IsResourceAction && operation.TargetDomainId == "script-tables"), "resource action operations should expose target domains");
+                AssertTrue(scriptDumps.Any(operation => operation.ResourceAddress == "ScInfPause.tm"), "operation queries should include loose script table actions");
+                AssertTrue(scriptDumps.Any(operation => operation.ResourceAddress == "A2Info.dat#ScInfGo2D.tm"), "operation queries should include A2D script table actions");
+                AssertTrue(scriptDumps.All(operation => operation.Usage.Contains(operation.ResourceAddress)), "resource action operations should expose target-specific usage");
+
+                KarProjectOperation scalarPreview = project.QueryOperations(new KarProjectOperationQueryOptions
+                {
+                    IncludeWorkflows = false,
+                    ResourceKind = KarResourceKind.HsdRoot,
+                    ActionId = "set-scalar",
+                    Text = "VsHydra",
+                    CanRun = false,
+                }).Single();
+                AssertTrue(scalarPreview.ResourceAddress == "VsHydra.dat:vsDataHydra", "operation queries should search resource action target addresses");
+                AssertTrue(scalarPreview.RequiresFieldName && scalarPreview.RequiresValue && scalarPreview.HasReason, "resource action operations should expose missing argument requirements");
+                AssertTrue(scalarPreview.Reason.Contains("field name"), "resource action operations should preserve plan reasons");
+
+                KarProjectOperation byId = project.QueryOperations(new KarProjectOperationQueryOptions
+                {
+                    Id = scalarPreview.Id,
+                    IncludeWorkflows = false,
+                }).Single();
+                AssertTrue(byId.ResourceAddress == scalarPreview.ResourceAddress && byId.ActionId == scalarPreview.ActionId, "operation queries should filter by stable operation id");
+
+                IReadOnlyList<KarProjectOperation> usageSearch = project.QueryOperations(new KarProjectOperationQueryOptions
+                {
+                    IncludeWorkflows = false,
+                    Text = "kar-toolkit dump-resource-bytes",
+                });
+                AssertTrue(usageSearch.Any(operation => operation.ActionId == "dump-bytes"), "operation queries should search assembled usage strings");
+
+                KarProjectSession session = project.CreateSession();
+                AssertTrue(session.CreateOperationCatalog(new KarProjectOperationQueryOptions { IncludeResourceActions = false }).WorkflowOperationCount == surface.WorkflowCount, "project sessions should expose operation catalog creation");
+            }
+            finally
+            {
+                if (Directory.Exists(tempRoot))
+                    Directory.Delete(tempRoot, true);
+                if (Directory.Exists(outputRoot))
+                    Directory.Delete(outputRoot, true);
             }
         }
 

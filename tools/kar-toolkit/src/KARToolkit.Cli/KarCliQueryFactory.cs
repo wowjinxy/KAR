@@ -97,6 +97,32 @@ internal static class KarCliQueryFactory
         };
     }
 
+    public static KarProjectOperationQueryOptions CreateOperationQuery(KarCliOptions options)
+    {
+        KarProjectOperationQueryOptions query = new KarProjectOperationQueryOptions
+        {
+            Id = options.Positionals.Count >= 2 ? options.Positionals[1] : null,
+            DomainId = options.Domain,
+            Text = options.SearchText,
+            ActionId = options.ActionId,
+            IsReadOnly = options.ActionIsReadOnly,
+            WritesOutput = options.ActionWritesOutput,
+            CanRun = options.ActionCanRun,
+            WouldWriteOutput = options.ActionWouldWrite,
+            SupportsBatch = options.WorkflowSupportsBatch,
+            RequiresInputFile = options.WorkflowRequiresInputFile,
+            RequiresValue = options.WorkflowRequiresValue,
+            HasTargets = options.WorkflowHasTargets,
+            Overwrite = options.Overwrite,
+            SnapshotOptions = CreateToolkitSnapshotOptions(options),
+        };
+
+        if (!string.IsNullOrWhiteSpace(options.ResourceKind))
+            query.ResourceKind = ParseResourceKind(options.ResourceKind);
+
+        return query;
+    }
+
     public static KarProjectResourceActionPlanQueryOptions CreateResourceActionBatchPlanQuery(KarCliOptions options, string actionId)
     {
         KarProjectResourceActionPlanQueryOptions query = CreateResourceActionPlanQuery(options);

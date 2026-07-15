@@ -44,6 +44,7 @@ namespace KARToolkit.Core
             MapContextService = new KarProjectMapContextService(this);
             ModWorkspaceService = new KarProjectModWorkspaceService(this);
             ToolkitService = new KarProjectToolkitService(this);
+            OperationService = new KarProjectOperationService(this);
             Validator = new KarProjectValidator(this);
         }
 
@@ -102,6 +103,8 @@ namespace KARToolkit.Core
         public KarProjectModWorkspaceService ModWorkspaceService { get; }
 
         public KarProjectToolkitService ToolkitService { get; }
+
+        public KarProjectOperationService OperationService { get; }
 
         public KarProjectInspector Inspector { get; }
 
@@ -626,6 +629,16 @@ namespace KARToolkit.Core
             KarProjectToolkitSnapshotOptions snapshotOptions = null)
         {
             return ToolkitService.QueryWorkflows(options, snapshotOptions);
+        }
+
+        public KarProjectOperationCatalog CreateOperationCatalog(KarProjectOperationQueryOptions options = null)
+        {
+            return OperationService.CreateCatalog(options);
+        }
+
+        public IReadOnlyList<KarProjectOperation> QueryOperations(KarProjectOperationQueryOptions options = null)
+        {
+            return OperationService.Query(options);
         }
 
         public IReadOnlyList<KarProjectOutputFileInfo> QueryOutputFiles(KarProjectOutputFileQueryOptions options)

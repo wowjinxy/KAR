@@ -609,6 +609,29 @@ internal static class KarCliTextWriter
         PrintProjectToolkitWorkflow("", workflow);
     }
 
+    public static void PrintProjectOperationCatalog(KarProjectOperationCatalog catalog)
+    {
+        Console.WriteLine("KAR operations: " + catalog.OperationCount + " workflows=" + catalog.WorkflowOperationCount + " resource-actions=" + catalog.ResourceActionOperationCount + " runnable=" + catalog.RunnableOperationCount + " output=" + catalog.OutputOperationCount);
+        foreach (KarProjectOperation operation in catalog.Operations)
+            PrintProjectOperation(operation);
+    }
+
+    public static void PrintProjectOperation(KarProjectOperation operation)
+    {
+        string mode = operation.IsReadOnly ? "read" : "write";
+        string targetDomain = string.IsNullOrWhiteSpace(operation.TargetDomainId) || operation.TargetDomainId == operation.DomainId
+            ? ""
+            : " target-domain=" + operation.TargetDomainId;
+        string resource = string.IsNullOrWhiteSpace(operation.ResourceAddress) ? "" : " resource=" + operation.ResourceAddress;
+        string action = string.IsNullOrWhiteSpace(operation.ActionId) ? "" : " action=" + operation.ActionId;
+        string run = operation.CanRun.HasValue ? " can-run=" + operation.CanRun.Value : "";
+        string write = operation.WouldWriteOutput.HasValue ? " would-write=" + operation.WouldWriteOutput.Value : "";
+        string output = string.IsNullOrWhiteSpace(operation.OutputRelativePath) ? "" : " output=" + operation.OutputRelativePath;
+        string reason = operation.HasReason ? " reason=\"" + operation.Reason + "\"" : "";
+
+        Console.WriteLine(operation.Id + " [" + operation.Kind + ", " + operation.DomainId + ", " + mode + "] targets=" + operation.TargetCount + targetDomain + resource + action + run + write + output + reason + " usage=\"" + operation.Usage + "\"");
+    }
+
     private static void PrintProjectToolkitWorkflow(string indent, KarProjectToolkitWorkflow workflow)
     {
         string mode = workflow.IsReadOnly ? "read" : "write";

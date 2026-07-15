@@ -127,6 +127,22 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowOperations(KarCliOptions options)
+    {
+        options.RequirePositionals("operations", 1);
+        KarProject project = OpenProject(options);
+        KarProjectOperationCatalog catalog = project.OperationService.CreateCatalog(CreateOperationQuery(options));
+
+        if (options.Json)
+        {
+            WriteJson(ToProjectOperationCatalogDto(catalog));
+            return 0;
+        }
+
+        PrintProjectOperationCatalog(catalog);
+        return 0;
+    }
+
     public static int ShowReport(KarCliOptions options)
     {
         options.RequirePositionals("report", 1);
