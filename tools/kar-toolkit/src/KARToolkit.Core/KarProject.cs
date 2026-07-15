@@ -12,11 +12,13 @@ namespace KARToolkit.Core
             KarProjectWorkspace workspace,
             KarProjectIndex index,
             KarProjectFileCatalog fileCatalog,
+            KarProjectResourceHandlerRegistry resourceHandlers,
             KarArchiveInspector archiveInspector)
         {
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             Index = index ?? throw new ArgumentNullException(nameof(index));
             FileCatalog = fileCatalog ?? throw new ArgumentNullException(nameof(fileCatalog));
+            ResourceHandlerRegistry = resourceHandlers ?? throw new ArgumentNullException(nameof(resourceHandlers));
             FileStore = new KarProjectFileStore(Workspace, Index);
             FileService = new KarProjectFileService(this);
             Inspector = new KarProjectInspector(Index, archiveInspector ?? KarArchiveInspector.Default);
@@ -40,6 +42,8 @@ namespace KARToolkit.Core
         public KarProjectIndex Index { get; }
 
         public KarProjectFileCatalog FileCatalog { get; }
+
+        public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; }
 
         public KarProjectFileStore FileStore { get; }
 
@@ -119,7 +123,12 @@ namespace KARToolkit.Core
             KarProjectWorkspace workspace = KarProjectWorkspace.Open(options.SourceRoot, options.OutputRoot);
             KarProjectIndexer indexer = options.ResolveIndexer();
             KarProjectIndex index = indexer.Build(workspace);
-            return new KarProject(workspace, index, indexer.FileCatalog, options.ResolveArchiveInspector());
+            return new KarProject(
+                workspace,
+                index,
+                indexer.FileCatalog,
+                options.ResolveResourceHandlerRegistry(),
+                options.ResolveArchiveInspector());
         }
 
         public KarProjectFile GetFile(string relativePath)

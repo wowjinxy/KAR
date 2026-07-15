@@ -30,6 +30,12 @@ internal static class KarCliTextWriter
         Console.WriteLine(handler.Id + " [" + handler.Kind + ", " + handler.Category + "] " + traits + " capabilities=" + capabilities + " - " + handler.DisplayName);
     }
 
+    public static void PrintProjectResourceHandler(KarProjectResourceHandler handler)
+    {
+        string capabilities = string.Join(",", handler.CapabilityList);
+        Console.WriteLine(handler.Id + " [" + handler.Kind + "] capabilities=" + capabilities + " - " + handler.DisplayName);
+    }
+
     public static void PrintProjectFile(KarProjectFile file)
     {
         Console.WriteLine("File: " + file.RelativePath);

@@ -6,6 +6,7 @@ namespace KARToolkit.Core
     {
         private KarProjectResourceInfo(
             KarResourceReference reference,
+            KarProjectResourceHandler handler,
             KarProjectFile file,
             KarProjectRootInfo root,
             KarProjectA2DEntryInfo a2dEntry,
@@ -15,6 +16,9 @@ namespace KARToolkit.Core
             string description)
         {
             Reference = reference ?? throw new ArgumentNullException(nameof(reference));
+            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            if (Handler.Kind != Reference.Kind)
+                throw new ArgumentException("Resource handler does not match resource kind.", nameof(handler));
             File = file;
             Root = root;
             A2DEntry = a2dEntry;
@@ -27,6 +31,12 @@ namespace KARToolkit.Core
         public KarResourceReference Reference { get; }
 
         public KarResourceKind Kind => Reference.Kind;
+
+        public KarProjectResourceHandler Handler { get; }
+
+        public string HandlerId => Handler.Id;
+
+        public KarProjectResourceCapability Capabilities => Handler.Capabilities;
 
         public string Address => Reference.Address;
 
@@ -54,23 +64,28 @@ namespace KARToolkit.Core
 
         public bool IsA2DEntry => Kind == KarResourceKind.A2DEntry;
 
-        public bool CanReadBytes => Kind == KarResourceKind.File || Kind == KarResourceKind.A2DEntry;
+        public bool CanQueryOutput => Handler.CanQueryOutput;
 
-        public bool CanExportToOutput => true;
+        public bool CanReadBytes => Handler.CanReadBytes;
 
-        public bool CanImportFromFile => Kind == KarResourceKind.File || Kind == KarResourceKind.A2DEntry;
+        public bool CanExportToOutput => Handler.CanExportToOutput;
 
-        public bool CanSetScalarFields => Kind == KarResourceKind.HsdRoot;
+        public bool CanImportFromFile => Handler.CanImportFromFile;
 
-        public bool CanQueryFieldValues => Kind == KarResourceKind.HsdRoot;
+        public bool CanSetScalarFields => Handler.CanSetScalarFields;
 
-        internal static KarProjectResourceInfo FromFile(KarProjectFile file)
+        public bool CanQueryFieldValues => Handler.CanQueryFieldValues;
+
+        public bool CanApplyOutput => Handler.CanApplyOutput;
+
+        internal static KarProjectResourceInfo FromFile(KarProjectFile file, KarProjectResourceHandler handler)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
             return new KarProjectResourceInfo(
                 file.ResourceReference,
+                handler,
                 file,
                 null,
                 null,
@@ -80,7 +95,7 @@ namespace KARToolkit.Core
                 file.ArchiveDefinition.Description);
         }
 
-        internal static KarProjectResourceInfo FromRoot(KarProjectRootInfo root)
+        internal static KarProjectResourceInfo FromRoot(KarProjectRootInfo root, KarProjectResourceHandler handler)
         {
             if (root == null)
                 throw new ArgumentNullException(nameof(root));
@@ -91,6 +106,7 @@ namespace KARToolkit.Core
 
             return new KarProjectResourceInfo(
                 root.ResourceReference,
+                handler,
                 root.File,
                 root,
                 null,
@@ -100,13 +116,14 @@ namespace KARToolkit.Core
                 description);
         }
 
-        internal static KarProjectResourceInfo FromA2DEntry(KarProjectA2DEntryInfo entry)
+        internal static KarProjectResourceInfo FromA2DEntry(KarProjectA2DEntryInfo entry, KarProjectResourceHandler handler)
         {
             if (entry == null)
                 throw new ArgumentNullException(nameof(entry));
 
             return new KarProjectResourceInfo(
                 entry.ResourceReference,
+                handler,
                 entry.PackageFile,
                 null,
                 entry,

@@ -123,9 +123,12 @@ namespace KARToolkit.Core
         private static IReadOnlyList<KarProjectResourceInfo> BuildResources(KarProject project)
         {
             List<KarProjectResourceInfo> resources = new List<KarProjectResourceInfo>();
+            KarProjectResourceHandler fileHandler = project.ResourceHandlerRegistry.GetHandler(KarResourceKind.File);
+            KarProjectResourceHandler rootHandler = project.ResourceHandlerRegistry.GetHandler(KarResourceKind.HsdRoot);
+            KarProjectResourceHandler a2dEntryHandler = project.ResourceHandlerRegistry.GetHandler(KarResourceKind.A2DEntry);
 
             foreach (KarProjectFile file in project.FileService.Files)
-                resources.Add(KarProjectResourceInfo.FromFile(file));
+                resources.Add(KarProjectResourceInfo.FromFile(file, fileHandler));
 
             foreach (KarProjectFile file in project.FileService.Files.Where(file => file.IsHsdArchive))
             {
@@ -135,11 +138,11 @@ namespace KARToolkit.Core
                     continue;
 
                 foreach (KarArchiveRootInfo root in archive.Roots)
-                    resources.Add(KarProjectResourceInfo.FromRoot(new KarProjectRootInfo(archive.File, root)));
+                    resources.Add(KarProjectResourceInfo.FromRoot(new KarProjectRootInfo(archive.File, root), rootHandler));
             }
 
             foreach (KarProjectA2DEntryInfo entry in project.A2DService.QueryEntries())
-                resources.Add(KarProjectResourceInfo.FromA2DEntry(entry));
+                resources.Add(KarProjectResourceInfo.FromA2DEntry(entry, a2dEntryHandler));
 
             return resources
                 .OrderBy(resource => resource.RelativePath, StringComparer.OrdinalIgnoreCase)

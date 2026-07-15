@@ -75,6 +75,25 @@ internal static class KarCliDtoFactory
         };
     }
 
+    public static object ToProjectResourceHandlerDto(KarProjectResourceHandler handler)
+    {
+        return new
+        {
+            kind = handler.Kind.ToString(),
+            id = handler.Id,
+            displayName = handler.DisplayName,
+            description = handler.Description,
+            capabilities = ToResourceCapabilityNames(handler.CapabilityList),
+            canQueryOutput = handler.CanQueryOutput,
+            canReadBytes = handler.CanReadBytes,
+            canExportToOutput = handler.CanExportToOutput,
+            canImportFromFile = handler.CanImportFromFile,
+            canQueryFieldValues = handler.CanQueryFieldValues,
+            canSetScalarFields = handler.CanSetScalarFields,
+            canApplyOutput = handler.CanApplyOutput,
+        };
+    }
+
     public static object ToProjectReportDto(KarProjectReport report)
     {
         return new
@@ -690,6 +709,9 @@ internal static class KarCliDtoFactory
             address = resource.Address,
             parentAddress = resource.ParentAddress,
             relativePath = resource.RelativePath,
+            handlerId = resource.HandlerId,
+            handler = ToProjectResourceHandlerDto(resource.Handler),
+            capabilities = ToResourceCapabilityNames(resource.Handler.CapabilityList),
             displayName = resource.DisplayName,
             role = resource.Role,
             category = resource.Category,
@@ -697,11 +719,13 @@ internal static class KarCliDtoFactory
             isFile = resource.IsFile,
             isHsdRoot = resource.IsHsdRoot,
             isA2DEntry = resource.IsA2DEntry,
+            canQueryOutput = resource.CanQueryOutput,
             canReadBytes = resource.CanReadBytes,
             canExportToOutput = resource.CanExportToOutput,
             canImportFromFile = resource.CanImportFromFile,
             canSetScalarFields = resource.CanSetScalarFields,
             canQueryFieldValues = resource.CanQueryFieldValues,
+            canApplyOutput = resource.CanApplyOutput,
             file = ToProjectFileDtoOrNull(resource.File),
             root = resource.Root == null ? null : ToProjectRootDto(resource.Root),
             a2dEntry = resource.A2DEntry == null ? null : ToProjectA2DEntryDto(resource.A2DEntry),
@@ -890,6 +914,13 @@ internal static class KarCliDtoFactory
     }
 
     private static List<string> ToCapabilityNames(IEnumerable<KarProjectFileCapability> capabilities)
+    {
+        return capabilities
+            .Select(capability => capability.ToString())
+            .ToList();
+    }
+
+    private static List<string> ToResourceCapabilityNames(IEnumerable<KarProjectResourceCapability> capabilities)
     {
         return capabilities
             .Select(capability => capability.ToString())

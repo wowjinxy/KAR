@@ -14,6 +14,8 @@ namespace KARToolkit.Core
 
         public KarProjectFileHandlerRegistry FileHandlerRegistry { get; set; }
 
+        public KarProjectResourceHandlerRegistry ResourceHandlerRegistry { get; set; }
+
         public KarArchiveDefinitionProvider ArchiveDefinitions { get; set; }
 
         public KarArchiveInspector ArchiveInspector { get; set; }
@@ -60,6 +62,11 @@ namespace KARToolkit.Core
                 return new KarArchiveInspector(KarDataDefinitionCatalog.BuiltIn, DataInspection);
 
             return KarArchiveInspector.Default;
+        }
+
+        internal KarProjectResourceHandlerRegistry ResolveResourceHandlerRegistry()
+        {
+            return ResourceHandlerRegistry ?? KarProjectResourceHandlerRegistry.Default;
         }
     }
 }

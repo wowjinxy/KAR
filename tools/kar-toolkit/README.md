@@ -26,6 +26,7 @@ dotnet run --project .\tools\kar-toolkit\tests\KARToolkit.Core.Tests\KARToolkit.
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-unknown-roots
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll validate .\GKYE01 --no-hsd-archives --no-a2d-packages --no-schema-validation
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll file-kinds --json
+dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll resource-handlers --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll report .\GKYE01 --json
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll outputs .\GKYE01 --output .\mod-output
 dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll mod-workspace .\GKYE01 --output .\mod-output --json
@@ -66,6 +67,7 @@ dotnet .\tools\kar-toolkit\src\KARToolkit.Cli\bin\Debug\net8.0\kar-toolkit.dll s
 All copy/save helpers go through `KarProjectWorkspace`, which reads from the extracted source folder and writes only under the configured output folder.
 Use `KarProject.Open(KarProjectOptions)` when a tool needs custom output roots, project indexing, archive inspection, or data schema registries.
 Toolkit resources use stable addresses across the CLI and JSON output: project files use `Relative/Path.dat`, HSD roots use `Archive.dat:rootName`, and A2D entries use `Package.dat#EntryName`.
+Project resource workflow capability discovery goes through `KarProjectResourceHandlerRegistry`, which maps file, HSD root, and A2D entry resources to supported operations such as byte reads, output export/import, scalar edits, field queries, and sidecar apply. The `resource-handlers` CLI command exposes those resource handlers for tools and scripts.
 Project resource graph snapshots go through `KarProject.CreateResourceGraph`, and the `resource-graph` CLI command exposes one project-wide view of resource addresses, parent/child resources, and known relationships.
 Project script table workflows go through `KarProject.ScriptService`, and the `script-tables` CLI command lists loose `.tm` files and A2D-contained `.tm` entries as the same kind of script table resource.
 Project-wide resource inventory, address resolution, field inspection, output status, byte reads, safe output exports, safe imports, output-side applies, and resource-address scalar edits go through `KarProject.ResourceService`; the `resources`/`resource` CLI commands expose mixed file, HSD root, and A2D entry resources, `resource-fields` reads labeled HSD root fields by resource address, `resource-outputs` reports file/root package outputs and A2D sidecar or package-entry status, `export-resource` stages file/root archives or A2D sidecars under the configured output folder, `apply-resource-outputs` packs modified A2D sidecars into output packages, `import-resource` writes file replacements or same-size A2D entry replacements only into output packages, and `set-resource-scalar` edits HSD root resources by address.

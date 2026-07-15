@@ -20,6 +20,8 @@ internal static class Program
                 "project" => KarCliInspectionCommands.ShowProject(options),
                 "file-kinds" => KarCliInspectionCommands.ShowFileKinds(options),
                 "kinds" => KarCliInspectionCommands.ShowFileKinds(options),
+                "resource-handlers" => KarCliInspectionCommands.ShowResourceHandlers(options),
+                "resource-kinds" => KarCliInspectionCommands.ShowResourceHandlers(options),
                 "report" => KarCliInspectionCommands.ShowReport(options),
                 "project-report" => KarCliInspectionCommands.ShowReport(options),
                 "outputs" => KarCliInspectionCommands.ShowOutputs(options),
@@ -103,6 +105,7 @@ internal static class Program
         Console.WriteLine("Usage:");
         Console.WriteLine("  kar-toolkit project <source-folder> [--output <mod-folder>]");
         Console.WriteLine("  kar-toolkit file-kinds");
+        Console.WriteLine("  kar-toolkit resource-handlers");
         Console.WriteLine("  kar-toolkit report <source-folder> [definition-id-or-accessor-type] [field-name] [--kind <file-kind>] [--category <category>] [--root-name <name>] [--summary]");
         Console.WriteLine("  kar-toolkit outputs <source-folder> [--output <mod-folder>] [--kind <file-kind>] [--category <category>] [--modified|--unchanged|--orphan]");
         Console.WriteLine("  kar-toolkit mod-workspace <source-folder> [--output <mod-folder>]");

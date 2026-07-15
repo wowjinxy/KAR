@@ -54,6 +54,25 @@ internal static class KarCliInspectionCommands
         return 0;
     }
 
+    public static int ShowResourceHandlers(KarCliOptions options)
+    {
+        options.RequirePositionals("resource-handlers", 0);
+        List<KarProjectResourceHandler> handlers = KarProjectResourceHandlerRegistry.Default.Handlers
+            .OrderBy(handler => handler.Kind)
+            .ToList();
+
+        if (options.Json)
+        {
+            WriteJson(handlers.Select(ToProjectResourceHandlerDto).ToList());
+            return 0;
+        }
+
+        foreach (KarProjectResourceHandler handler in handlers)
+            PrintProjectResourceHandler(handler);
+
+        return 0;
+    }
+
     public static int ShowReport(KarCliOptions options)
     {
         options.RequirePositionals("report", 1);

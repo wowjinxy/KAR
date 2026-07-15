@@ -23,6 +23,7 @@ namespace KARToolkit.Core.Tests
             Run("SchemaValidatorReportsInvalidDefinitions", SchemaValidatorReportsInvalidDefinitions);
             Run("ProjectValidationIncludesSchemaPreflight", ProjectValidationIncludesSchemaPreflight);
             Run("FileKindRegistryDescribesProjectHandlers", FileKindRegistryDescribesProjectHandlers);
+            Run("ResourceHandlerRegistryDescribesResourceOperations", ResourceHandlerRegistryDescribesResourceOperations);
             Run("ProjectFileQueryFiltersFiles", ProjectFileQueryFiltersFiles);
             Run("ResourceReferencesAddressProjectObjects", ResourceReferencesAddressProjectObjects);
             Run("ProjectResourceGraphIndexesResourcesAndRelationships", ProjectResourceGraphIndexesResourcesAndRelationships);
@@ -214,6 +215,30 @@ namespace KARToolkit.Core.Tests
             AssertTrue(KarArchiveCatalog.GetHandler(KarFileKind.MapData).Id == "map-data", "archive catalog compatibility wrappers should expose file handlers");
         }
 
+        private static void ResourceHandlerRegistryDescribesResourceOperations()
+        {
+            KarProjectResourceHandlerRegistry registry = KarProjectResourceHandlerRegistry.Default;
+            int enumCount = Enum.GetValues(typeof(KarResourceKind)).Length;
+            AssertTrue(registry.Handlers.Count == enumCount, "resource handler registry should describe every public resource kind");
+
+            KarProjectResourceHandler fileHandler = registry.GetHandler(KarResourceKind.File);
+            AssertTrue(fileHandler.Id == "file", "file resource handlers should expose stable ids");
+            AssertTrue(fileHandler.CanReadBytes && fileHandler.CanExportToOutput && fileHandler.CanImportFromFile, "file resources should support byte and output workflows");
+            AssertTrue(!fileHandler.CanSetScalarFields && !fileHandler.CanApplyOutput, "file resources should not expose root or sidecar-only workflows");
+
+            KarProjectResourceHandler rootHandler = registry.GetHandler(KarResourceKind.HsdRoot);
+            AssertTrue(rootHandler.CanQueryFieldValues && rootHandler.CanSetScalarFields, "HSD root resources should support field and scalar workflows");
+            AssertTrue(rootHandler.CanExportToOutput && !rootHandler.CanReadBytes && !rootHandler.CanImportFromFile, "HSD root resources should stage containing archives without standalone byte imports");
+
+            KarProjectResourceHandler entryHandler = registry.GetHandler(KarResourceKind.A2DEntry);
+            AssertTrue(entryHandler.CanReadBytes && entryHandler.CanImportFromFile, "A2D entry resources should support byte reads and imports");
+            AssertTrue(entryHandler.CanApplyOutput && !entryHandler.CanSetScalarFields, "A2D entry resources should support sidecar apply but not scalar edits");
+
+            KarProjectResourceHandler found;
+            AssertTrue(registry.TryFindHandler("a2d-entry", out found) && found.Kind == KarResourceKind.A2DEntry, "resource handlers should resolve by stable id");
+            AssertTrue(registry.TryFindHandler("HsdRoot", out found) && found.Id == "hsd-root", "resource handlers should resolve by enum name");
+        }
+
         private static void ProjectFileQueryFiltersFiles()
         {
             string tempRoot = Path.Combine(Path.GetTempPath(), "kar-toolkit-query-project-" + Guid.NewGuid().ToString("N"));
@@ -335,6 +360,13 @@ namespace KARToolkit.Core.Tests
                 KarProjectA2DEntryInfo entry = project.A2DService.GetEntry("A2Info.dat#ScInfGo2D.tm");
                 AssertTrue(entry.EntryPath == "A2Info.dat#ScInfGo2D.tm", "A2D entries should expose package-entry resource addresses");
                 AssertTrue(entry.ResourceReference.Equals(entryReference), "A2D entries should expose parse-compatible resource references");
+
+                KarProjectResourceInfo fileResource = project.ResourceService.Get("VsHydra.dat");
+                AssertTrue(fileResource.HandlerId == "file" && fileResource.CanReadBytes && fileResource.CanImportFromFile, "file resources should expose file handler capabilities");
+                KarProjectResourceInfo rootResource = project.ResourceService.Get("VsHydra.dat:vsDataHydra");
+                AssertTrue(rootResource.HandlerId == "hsd-root" && rootResource.CanQueryFieldValues && rootResource.CanSetScalarFields, "HSD root resources should expose root handler capabilities");
+                KarProjectResourceInfo entryResource = project.ResourceService.Get("A2Info.dat#ScInfGo2D.tm");
+                AssertTrue(entryResource.HandlerId == "a2d-entry" && entryResource.CanReadBytes && entryResource.CanApplyOutput, "A2D entry resources should expose entry handler capabilities");
 
                 KarProjectRelationship relationship = project.RelationshipService.Query(new KarProjectRelationshipQueryOptions
                 {

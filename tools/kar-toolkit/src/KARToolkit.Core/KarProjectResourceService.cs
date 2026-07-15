@@ -55,7 +55,7 @@ namespace KARToolkit.Core
         public IReadOnlyList<KarProjectResourceFieldInfo> QueryFieldValues(KarProjectResourceFieldQueryOptions options = null)
         {
             IEnumerable<KarProjectResourceInfo> resources = Query(options == null ? null : options.Resources)
-                .Where(resource => resource.Kind == KarResourceKind.HsdRoot);
+                .Where(resource => resource.CanQueryFieldValues);
             List<KarProjectResourceFieldInfo> fields = new List<KarProjectResourceFieldInfo>();
 
             foreach (KarProjectResourceInfo resource in resources)
@@ -135,6 +135,7 @@ namespace KARToolkit.Core
         public byte[] ReadBytes(string address)
         {
             KarProjectResourceInfo resource = Get(address);
+            EnsureCapability(resource, KarProjectResourceCapability.ReadBytes);
             switch (resource.Kind)
             {
                 case KarResourceKind.File:
@@ -154,6 +155,7 @@ namespace KARToolkit.Core
         public KarProjectResourceExportResult ExportToOutput(string address, bool overwrite = false)
         {
             KarProjectResourceInfo resource = Get(address);
+            EnsureCapability(resource, KarProjectResourceCapability.ExportToOutput);
             switch (resource.Kind)
             {
                 case KarResourceKind.File:
@@ -182,6 +184,7 @@ namespace KARToolkit.Core
                 throw new ArgumentException("Input path cannot be empty.", nameof(inputPath));
 
             KarProjectResourceInfo resource = Get(address);
+            EnsureCapability(resource, KarProjectResourceCapability.ImportFromFile);
             switch (resource.Kind)
             {
                 case KarResourceKind.File:
@@ -229,7 +232,7 @@ namespace KARToolkit.Core
             bool trim = false)
         {
             KarProjectResourceInfo resource = Get(rootAddress);
-            if (resource.Kind != KarResourceKind.HsdRoot)
+            if (!resource.CanSetScalarFields)
                 throw new NotSupportedException("Scalar edits require an HSD root resource address.");
 
             KarProjectScalarEditResult edit = _project.EditService.SetScalarFieldFromText(
@@ -269,6 +272,7 @@ namespace KARToolkit.Core
         {
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
+            EnsureCapability(output.Resource, KarProjectResourceCapability.ApplyOutput);
             if (output.Kind != KarResourceKind.A2DEntry || output.OutputKind != KarProjectResourceOutputKind.OutputAsset)
                 throw new NotSupportedException("Only A2D entry sidecar output resources can be applied.");
             if (output.A2DEntryOutput == null || !output.A2DEntryOutput.HasOutput)
@@ -282,6 +286,7 @@ namespace KARToolkit.Core
         {
             if (resource == null)
                 throw new ArgumentNullException(nameof(resource));
+            EnsureCapability(resource, KarProjectResourceCapability.QueryOutput);
 
             switch (resource.Kind)
             {
@@ -421,6 +426,14 @@ namespace KARToolkit.Core
                 wroteOutput,
                 copy,
                 null);
+        }
+
+        private static void EnsureCapability(KarProjectResourceInfo resource, KarProjectResourceCapability capability)
+        {
+            if (resource == null)
+                throw new ArgumentNullException(nameof(resource));
+            if (!resource.Handler.HasCapability(capability))
+                throw new NotSupportedException("Resource " + resource.Address + " does not support " + capability + ".");
         }
     }
 }
