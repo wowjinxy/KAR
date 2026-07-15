@@ -4,29 +4,29 @@ namespace KARToolkit.Core
 {
     public static class KarDataDefinitionCatalog
     {
-        private static readonly KarDataDefinitionRegistry Registry =
+        public static KarDataDefinitionRegistry BuiltIn { get; } =
             new KarDataDefinitionRegistry(KarBuiltInDataDefinitions.All);
 
-        public static IReadOnlyList<KarDataDefinition> All => Registry.All;
+        public static IReadOnlyList<KarDataDefinition> All => BuiltIn.All;
 
         public static KarDataDefinition Get(string id)
         {
-            return Registry.Get(id);
+            return BuiltIn.Get(id);
         }
 
         public static bool TryGet(string id, out KarDataDefinition definition)
         {
-            return Registry.TryGet(id, out definition);
+            return BuiltIn.TryGet(id, out definition);
         }
 
         public static bool TryGetByAccessorTypeName(string accessorTypeName, out KarDataDefinition definition)
         {
-            return Registry.TryGetByAccessorTypeName(accessorTypeName, out definition);
+            return BuiltIn.TryGetByAccessorTypeName(accessorTypeName, out definition);
         }
 
         public static bool TryFind(string idOrAccessorTypeName, out KarDataDefinition definition)
         {
-            return Registry.TryFind(idOrAccessorTypeName, out definition);
+            return BuiltIn.TryFind(idOrAccessorTypeName, out definition);
         }
     }
 }

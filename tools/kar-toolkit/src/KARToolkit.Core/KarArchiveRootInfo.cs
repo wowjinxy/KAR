@@ -9,11 +9,13 @@ namespace KARToolkit.Core
             string name,
             string accessorTypeName,
             KarRootDefinition definition,
+            KarDataDefinition dataDefinition,
             IEnumerable<KarDataFieldValue> fieldValues)
         {
             Name = name;
             AccessorTypeName = accessorTypeName;
             Definition = definition;
+            DataDefinition = dataDefinition;
             FieldValues = (fieldValues ?? Enumerable.Empty<KarDataFieldValue>())
                 .ToList()
                 .AsReadOnly();
@@ -35,20 +37,7 @@ namespace KARToolkit.Core
 
         public string DataDefinitionId => DataDefinition == null ? null : DataDefinition.Id;
 
-        public KarDataDefinition DataDefinition
-        {
-            get
-            {
-                if (Definition != null && Definition.DataDefinition != null)
-                    return Definition.DataDefinition;
-
-                KarDataDefinition definition;
-                if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(DisplayAccessorTypeName, out definition))
-                    return definition;
-
-                return null;
-            }
-        }
+        public KarDataDefinition DataDefinition { get; }
 
         public string DisplayAccessorTypeName
         {

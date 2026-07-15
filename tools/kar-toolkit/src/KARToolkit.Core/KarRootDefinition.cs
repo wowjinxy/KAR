@@ -40,21 +40,29 @@ namespace KARToolkit.Core
         {
             get
             {
-                KarDataDefinition definition;
-                if (!string.IsNullOrWhiteSpace(DataDefinitionId) &&
-                    KarDataDefinitionCatalog.TryGet(DataDefinitionId, out definition))
-                {
-                    return definition;
-                }
-
-                if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(AccessorTypeName, out definition))
-                    return definition;
-
-                return null;
+                return ResolveDataDefinition(KarDataDefinitionCatalog.BuiltIn);
             }
         }
 
         public bool IsRequired { get; }
+
+        public KarDataDefinition ResolveDataDefinition(KarDataDefinitionRegistry registry)
+        {
+            if (registry == null)
+                throw new ArgumentNullException(nameof(registry));
+
+            KarDataDefinition definition;
+            if (!string.IsNullOrWhiteSpace(DataDefinitionId) &&
+                registry.TryGet(DataDefinitionId, out definition))
+            {
+                return definition;
+            }
+
+            if (registry.TryGetByAccessorTypeName(AccessorTypeName, out definition))
+                return definition;
+
+            return null;
+        }
 
         public static KarRootDefinition Exact(string name, string description, string accessorTypeName, bool isRequired = true)
         {

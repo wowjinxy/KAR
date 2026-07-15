@@ -9,6 +9,20 @@ namespace KARToolkit.Core
     {
         public static KarArchiveInspector Default { get; } = new KarArchiveInspector();
 
+        private readonly KarDataDefinitionRegistry _dataDefinitions;
+
+        public KarArchiveInspector()
+            : this(KarDataDefinitionCatalog.BuiltIn)
+        {
+        }
+
+        public KarArchiveInspector(KarDataDefinitionRegistry dataDefinitions)
+        {
+            _dataDefinitions = dataDefinitions ?? throw new ArgumentNullException(nameof(dataDefinitions));
+        }
+
+        public KarDataDefinitionRegistry DataDefinitions => _dataDefinitions;
+
         public KarArchiveInfo Inspect(KarProjectFile file)
         {
             if (file == null)
@@ -35,6 +49,7 @@ namespace KARToolkit.Core
                         root.Name,
                         accessorTypeName,
                         rootDefinition,
+                        dataDefinition,
                         KarDataInspector.InspectFields(root.Data, dataDefinition));
                 })
                 .ToList();
@@ -42,13 +57,17 @@ namespace KARToolkit.Core
             return new KarArchiveInfo(file, definition, roots);
         }
 
-        private static KarDataDefinition ResolveDataDefinition(KarRootDefinition rootDefinition, string accessorTypeName)
+        private KarDataDefinition ResolveDataDefinition(KarRootDefinition rootDefinition, string accessorTypeName)
         {
-            if (rootDefinition != null && rootDefinition.DataDefinition != null)
-                return rootDefinition.DataDefinition;
+            if (rootDefinition != null)
+            {
+                KarDataDefinition rootDefinitionData = rootDefinition.ResolveDataDefinition(_dataDefinitions);
+                if (rootDefinitionData != null)
+                    return rootDefinitionData;
+            }
 
             KarDataDefinition definition;
-            if (KarDataDefinitionCatalog.TryGetByAccessorTypeName(accessorTypeName, out definition))
+            if (_dataDefinitions.TryGetByAccessorTypeName(accessorTypeName, out definition))
                 return definition;
 
             return null;
