@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gr/grparts.h>
 #include <sysdolphin/random.h>
 
 #define GR_POINT_STRIKE_PANEL_MAX 0x34
@@ -51,7 +52,6 @@ struct Ground {
     s32 point_strike_panel_num;
 };
 
-void kar_grparts__near_800db1a8(s32* list, s32 count);
 s32 kar_grcommon__800db234(s32* list, s32 index, s32 count);
 void* kar_gryakubreakhpcoll_create_effect_indexed_kind62_collision_trigger(
     void* model, s32 effect_index, s32 joint, s32 param);
