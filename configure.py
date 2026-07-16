@@ -206,7 +206,7 @@ config.scratch_preset_id = None
 
 # Compiler: CodeWarrior for GameCube 2.4.2 build 81 (GC MW 1.3.2).
 # The first group is the observed KAR game-code flag set.
-DOLPHIN_SDK_COMPILER_VERSION = "GC/1.0"
+DOLPHIN_SDK_COMPILER_VERSION = "GC/1.2.5n"
 
 cflags_base = [
     "-O4,p",
