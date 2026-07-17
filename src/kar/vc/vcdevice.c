@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <dolphin/types.h>
+#include <kar/gr/grairglider.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/gobj.h>
 #include <sysdolphin/jobj.h>
@@ -120,7 +121,6 @@ extern void fn_801F07D4(VcDevice* device);
 extern void fn_801F620C(VcDevice* device);
 extern void fn_801FA0B8(VcDevice* device);
 extern void kar_collision_object_flush_dirty_motion_slots(void* object);
-extern void kar_grairglider_release_spawn_handle(HSD_GObj* gobj);
 extern s32 kar_plclearcheckerlib__near_80231b68(VcDevice* device);
 extern void kar_vcgenerator__near_801dd668(s32* handle);
 extern BOOL fn_801EF76C(VcDevice* device);

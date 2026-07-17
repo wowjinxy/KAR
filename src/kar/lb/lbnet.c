@@ -7,6 +7,7 @@
 #include <dolphin/mtx/vec.h>
 #include <dolphin/os.h>
 #include <dolphin/pad.h>
+#include <kar/gr/grairglider.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/lobj.h>
@@ -447,12 +448,10 @@ static LbNetGeneInfoState lbl_80552E40;
 extern s32 fn_800B8808(void);
 extern s32 fn_800B8054(void);
 extern void kar_gmmain__near_80005d54(void);
-extern s8 kar_grairglider_get_slot_enemy_kind(s8 arg0);
 extern u8 lbl_805D5578;
 extern u8 lbl_805D5580;
 extern u8 lbl_805D5584;
 extern u8 lbl_805D558C;
-extern s32 kar_grairglider_is_slot_spawned(s32 arg0);
 extern u8 lbl_805D5590;
 extern u8 lbl_8049BA70[0x24];
 extern u8 lbl_805D5598;
@@ -474,7 +473,6 @@ void fn_80083CBC(void);
 extern void kar_grcommon_get_startpos_vectors_by_index(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3);
 extern void kar_grcommon__near_800cee24(f32 *arg0, s32 *arg1);
 extern f32 kar_grcommon__near_800d066c(s32 arg0, s32 arg1, f32 arg2, f32 arg3);
-extern void kar_grairglider_get_slot_enemy_position(s32 arg0, f32 *arg1);
 typedef struct LbNetSubsystemFlag {
     u8 unk0;
     u8 unk1;
@@ -3023,7 +3021,7 @@ void fn_800839BC(s32 arg0, f32 *arg1, f32 *arg2) {
 
     kar_grcommon_get_startpos_vectors_by_index(0, &a.x, &a.y, &a.z);
     kar_grcommon__near_800cee24(&a.x, &ca);
-    kar_grairglider_get_slot_enemy_position(arg0, &b.x);
+    kar_grairglider_get_slot_enemy_position(arg0, &b);
     kar_grcommon__near_800cee24(&b.x, &cb);
     *arg1 = kar_grcommon__near_800d066c(ca, cb, 0.0f, 0.0f);
     *arg2 = kar_grcommon__near_800d066c(cb, ca, 0.0f, 0.0f);
