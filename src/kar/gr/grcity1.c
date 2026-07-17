@@ -2,6 +2,7 @@
 #include <dolphin/mtx/vec.h>
 #include <kar/gr/granim.h>
 #include <kar/gr/grcommon.h>
+#include <kar/gr/gryakubreakcoll.h>
 #include <kar/gr/gryaku.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/gobj.h>
@@ -124,12 +125,6 @@ void kar_gryakubreakhpcoll_create_stage_linked_kind36_breakhpcoll_door(
     Ground* ground, s32 link);
 void kar_gryakubreakhpcoll_create_stage_linked_kind38_breakhpcoll_house(
     Ground* ground, s32 link);
-void kar_gryakubreakcoll_create_stage_linked_kind33_breakcoll(Ground* ground,
-                                                              s32 link);
-void kar_gryakubreakcoll_create_stage_linked_kind34_breakcoll(Ground* ground,
-                                                              s32 link);
-void kar_gryakubreakcoll_create_stage_linked_kind35_breakcoll(Ground* ground,
-                                                              s32 link);
 void kar_gryakubreakcoral_create_stage_linked_kind29_breakcoral(Ground* ground,
                                                                 s32 link);
 void kar_gryakurisingcube_create_stage_linked_cube_yaku(Ground* ground,
@@ -137,8 +132,6 @@ void kar_gryakurisingcube_create_stage_linked_cube_yaku(Ground* ground,
 void kar_gryakurisingcube_trigger_cube_state_toggle(void* target);
 void kar_gryakubreakhpcoll_break_target_by_index_with_credit(
     HSD_GObj* gobj, s32 index, Vec* pos, Vec* dir0, Vec* dir1, s32 player);
-void kar_gryakubreakcoll_break_target_by_index(HSD_GObj* gobj, s32 index,
-                                               Vec* dir, s32 player);
 
 void kar_grcity1_init_mode_dependent_anim_and_bitcounter_params(HSD_GObj* gobj);
 void kar_grcity1_create_stage_city_yaku_objects(Ground* ground);
