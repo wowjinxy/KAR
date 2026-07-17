@@ -1,4 +1,5 @@
 #include <kar/gr/grspline.h>
+#include <kar/gr/grrangespline.h>
 #include <sysdolphin/forward.h>
 
 typedef struct SplineList SplineList;
@@ -39,8 +40,6 @@ struct GroundSplineSets {
 void kar_lbspline__near_8006c66c(HSD_Spline* spline, f32 scale);
 void kar_grcoursespline_init(Ground* ground);
 void kar_grcoursespline_destroy(Ground* ground);
-void kar_grrangespline_init(Ground* ground);
-void kar_grrangespline_destroy(Ground* ground);
 
 void kar_grspline_scale_all_spline_sets(GroundSplineSets* spline_sets, f32 scale)
 {
