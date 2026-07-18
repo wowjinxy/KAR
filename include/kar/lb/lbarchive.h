@@ -13,6 +13,7 @@
 
 void kar_lbarchive__80059a20(s32 arg0, char* archive_name, void* out,
                              char* symbol_name, ...);
+void kar_lbarchive__80059818(void* out_slot, char* archive_name);
 void kar_lbarchive__near_80059520(void* archive, void* out, char* name, s32 arg3,
                                   ...);
 void kar_lbarchive__near_80059cfc(void);

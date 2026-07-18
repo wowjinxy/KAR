@@ -156,6 +156,7 @@ void HSD_JObjCheckDepend(HSD_JObj* jobj);
 void HSD_JObjPrependRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);
 void HSD_JObjDeleteRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);
 void HSD_JObjUnref(HSD_JObj* jobj);
+void HSD_JObjRemoveAnimAll(HSD_JObj* jobj);
 void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
 void HSD_JObjReqAnimAllByFlags(HSD_JObj* jobj, s32 flags, f32 frame);
 void HSD_JObjAnimAll(HSD_JObj* jobj);

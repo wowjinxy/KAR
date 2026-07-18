@@ -8,6 +8,7 @@
 #include <dolphin/os.h>
 #include <dolphin/pad.h>
 #include <kar/gr/grairglider.h>
+#include <kar/gr/greventlighthouse.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/cobj.h>
 #include <sysdolphin/lobj.h>
@@ -259,8 +260,6 @@ static char *lbl_805DEDE8 = "Gm Timeclear";
 static s32 lbl_805DEDEC = 0x80;
 static void *lbl_805DEDF0 = (void *) 0xFFFFFFFF;
 
-extern void kar_greventlighthouse_clear_ui_refresh_flag(void);
-extern void kar_greventlighthouse_set_ui_refresh_flag(void);
 extern void *kar_gmmain__near_80006c14(void *arg0);
 extern void *kar_gmmain__near_80005cbc(void);
 extern void *kar_textlib__800ab2d4(s32 a0, s32 a1, s32 a2, s32 a3, s32 a4, void *cb);

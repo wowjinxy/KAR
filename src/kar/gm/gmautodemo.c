@@ -11,6 +11,7 @@
 #include <kar/gm/gmmain.h>
 #include <kar/gm/gmmovieassets.h>
 #include <kar/gm/gmracenormal.h>
+#include <kar/gr/greventlighthouse.h>
 #include <kar/lb/lbarchive.h>
 #include <kar/lb/lbaudio.h>
 #include <kar/lb/lbfile.h>
@@ -355,8 +356,6 @@ void fn_80261DA4(void);
 void fn_80261DCC(s32 arg0);
 void kar_clobject__near_8018dd14(void);
 void fn_801C4EDC(void);
-void kar_greventlighthouse_show_round_ui_and_shared_panels(void);
-void kar_greventlighthouse_hide_round_ui_and_shared_panels(void);
 void* kar_debugconsole_main__near_80440744(s32 arg0, s32 arg1, s32 arg2,
                                            s32 arg3);
 void kar_pslist__near_804397b4(void* key);
@@ -387,16 +386,6 @@ void fn_80041E0C(s32 arg0, s32 arg1, s32* out);
 void fn_800ACF40(void);
 void fn_801385B0(void);
 void* kar_gmglobal__near_80008874(void);
-void fn_80113F10(s32 arg0, s32 arg1, void* arg2);
-void fn_80113C38(s32 arg0);
-void fn_80113C70(s32 arg0);
-void fn_80113CA8(s32 arg0);
-void fn_80113D00(s32 arg0);
-void fn_80113D58(s32 arg0);
-void fn_80113BE0(s32 arg0);
-void fn_8011370C(s32 arg0);
-void fn_801137F0(s32 arg0);
-void fn_801142FC(s32 arg0);
 void fn_8012A1C0(s32 arg0);
 s32 fn_8019203C(void* arg0);
 s32 fn_80191F68(void* arg0);
@@ -488,13 +477,6 @@ f32 kar_grlib2__near_800d51fc(void);
 f32 kar_grlib2__near_800d52e4(Vec* vec);
 void kar_grlib2__near_800d5370(Vec* vec);
 s32 kar_grdata__near_800ceaf4(void);
-void kar_greventlighthouse_hide_all_round_ui_components(void);
-void kar_greventlighthouse_create_ifround_panel0_for_player_if_active(s32 arg0);
-void fn_801138D4(s32 arg0);
-void fn_801138F4(void);
-void fn_80113B28(s32 arg0);
-void fn_80114178(s32 arg0);
-void fn_80114234(void);
 void fn_80279F68(void);
 void kar_gmracenormal__near_80015a00(void);
 void kar_gmracenormal__near_8001530c(void);

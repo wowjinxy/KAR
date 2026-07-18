@@ -2,6 +2,7 @@
 #define __GMLANMENU_H_
 
 #include <dolphin/types.h>
+#include <sysdolphin/forward.h>
 
 void kar_gmlanmenu__80008220(void);
 void kar_gmlanmenu__800082a0(s32 arg0);
@@ -12,6 +13,7 @@ void kar_gmlanmenu_set_sis_lan_box2_message_id(s32 id);
 void kar_gmlanmenu_set_sis_lan_box3_message_id(s32 id);
 void kar_gmlanmenu_set_sis_lan_box4_message_id(s32 id);
 void kar_gmlanmenu__80277748(void);
+void kar_gmlanmenu__near_80052fb8(HSD_JObj* jobj, u32 flags);
 s32 kar_gmlanmenu__near_800547e0(void* jobj);
 
 #endif

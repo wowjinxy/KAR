@@ -110,6 +110,8 @@ void HSD_GObjObjectRemove(HSD_GObj* gobj);
 HSD_GObj* HSD_GObjCreate(u16 classifier, u8 p_link, u8 priority);
 HSD_GObj* HSD_GObjGXLink(HSD_GObj* gobj, void (*render_cb)(HSD_GObj*, s32),
                          u8 gx_link, u8 priority);
+HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
+                              void (*render_cb)(HSD_GObj*, s32), u8 priority);
 void HSD_GObjGXLinkRemove(HSD_GObj* gobj);
 void HSD_GObjPLinkChange_Internal(s32 type, HSD_GObj* gobj, u8 p_link,
                                   u8 priority, HSD_GObj* position);
@@ -117,6 +119,8 @@ HSD_GObjProc* HSD_GObjProcCreate(HSD_GObj* gobj,
                                  void (*callback)(HSD_GObj*), u8 priority);
 void HSD_GObjProcRemove(HSD_GObjProc* proc);
 void HSD_GObjProcRemoveAll(HSD_GObj* gobj);
+void HSD_GObjJObjRemove(HSD_GObj* gobj);
+void HSD_GObjJObjDisp(HSD_GObj* gobj, s32 pass);
 void HSD_GObjDestroy(HSD_GObj* gobj);
 u32 GObj_GetFlagFromArray(s32 i);
 void GObj_SetTextureCamera(HSD_GObj* gobj, u32 mask);
