@@ -50,10 +50,6 @@
 #define GX_CA_TEXA 4
 #define GX_CA_A0 1
 
-extern HSD_GObj* GObj_SetupGXLinkMax(HSD_GObj* gobj,
-                                     void (*render_cb)(HSD_GObj*, s32),
-                                     u32 priority);
-
 extern HSD_Archive* kar_lbarchive__800596b4(char* path);
 extern void kar_lbarchive__80059798(HSD_Archive* archive);
 
