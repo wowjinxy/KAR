@@ -45,6 +45,7 @@ void HSD_DObjSetCurrent(HSD_DObj* dobj);
 u32 HSD_DObjGetFlags(HSD_DObj* dobj);
 
 void HSD_DObjSetFlags(HSD_DObj* dobj, u32 flags);
+void HSD_DObjClearFlags(HSD_DObj* dobj, u32 flags);
 
 HSD_DObj* HSD_DObjAlloc(void);
 HSD_DObj* HSD_DObjLoadDesc(HSD_DObjDesc* desc);

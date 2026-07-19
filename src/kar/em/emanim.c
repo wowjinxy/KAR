@@ -2,6 +2,7 @@
 #include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/em/emanim.h>
+#include <kar/em/emparts.h>
 #include <kar/lb/lbairride.h>
 #include <kar/lb/lbvector.h>
 #include <sysdolphin/dobj.h>
@@ -87,8 +88,6 @@
 #define fn_80201504 fn_801FD7D4
 #define fn_802016AC fn_801FD97C
 #define fn_8020172C fn_801FD9FC
-#define kar_emparts__802026d4 fn_801FE9A0
-#define kar_emparts__80202a40 fn_801FED0C
 #define kar_emupdate__near_8020429c fn_80200568
 #define kar_emupdate__near_802042fc fn_802005C8
 #define fn_801FBA38 fn_801F7D7C
@@ -224,8 +223,6 @@
 #define fn_80201504 fn_802021D8
 #define fn_802016AC fn_80202380
 #define fn_8020172C fn_80202400
-#define kar_emparts__802026d4 fn_802033A8
-#define kar_emparts__80202a40 fn_80203714
 #define kar_emupdate__near_8020429c fn_80204EF0
 #define kar_emupdate__near_802042fc fn_80204F50
 #define fn_801FBA38 fn_801FC760
@@ -303,7 +300,9 @@ typedef struct EmAnimFlagsByte {
 } EmAnimFlagsByte;
 
 typedef struct EmAnimTemplateState {
-    u8 pad_000[0x58];
+    u8 pad_000[0x28];
+    f32 field_028;
+    u8 pad_02C[0x2C];
     f32 field_058;
     u8 pad_05C[0x48];
 } EmAnimTemplateState;
@@ -474,8 +473,6 @@ void* kar_emanim__near_802019fc(EmAnim* anim, s32 arg1, s32 arg2);
 void* kar_emanim__near_80201a34(EmAnim* anim);
 void* kar_emanim__near_80201ad0(EmAnim* anim);
 void kar_emanim__near_8020267c(EmAnim* anim);
-void kar_emparts__802026d4(EmAnim* anim);
-void kar_emparts__80202a40(EmAnim* anim);
 void kar_emupdate__near_8020429c(HSD_GObj* gobj);
 void kar_emupdate__near_802042fc(HSD_GObj* gobj);
 void* kar_cmreplay__8022cb74(s32 player_id);

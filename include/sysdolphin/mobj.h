@@ -159,6 +159,7 @@ void HSD_MObjReqAnim(HSD_MObj *mobj, f32 startframe);
 void MObjUpdateFunc(void* obj, u32 type, FObjData* val);
 
 void HSD_MObjAnim(HSD_MObj* mobj);
+HSD_TObj* HSD_MObjGetTObj(HSD_MObj* mobj);
 
 int MObjLoad(HSD_MObj* mobj, HSD_MObjDesc* desc);
 
