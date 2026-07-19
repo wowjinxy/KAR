@@ -11,7 +11,7 @@ typedef struct LbAirRideAnimSet {
     void* unk0;
     HSD_AnimJoint** joints;
     HSD_MatAnimJoint** materials;
-    HSD_ShapeAnimDObj** shapes;
+    HSD_ShapeAnimJoint** shapes;
 } LbAirRideAnimSet;
 
 typedef struct LbAirRideSlotNodeA {
@@ -44,10 +44,6 @@ extern s32 kar_object_slot_remap_table[4];
 extern s32 lbl_80497CE8[8];
 extern s32 lbl_80497D08[8];
 extern HSD_Joint lbl_80497D28;
-
-extern void HSD_JObjAddAnimAll(HSD_JObj* jobj, HSD_AnimJoint* animjoint,
-                               HSD_MatAnimJoint* matanim,
-                               HSD_ShapeAnimDObj* shapeanim);
 
 HSD_Joint* kar_lbairride__near_80055da0(void);
 
@@ -229,9 +225,9 @@ void kar_lbairride__near_80055a30(HSD_JObj* jobj, s32 index,
 {
     HSD_AnimJoint* joint;
     HSD_MatAnimJoint* mat;
-    HSD_ShapeAnimDObj* shape;
+    HSD_ShapeAnimJoint* shape;
     HSD_AnimJoint** joints = anim->joints;
-    HSD_ShapeAnimDObj** shapes = anim->shapes;
+    HSD_ShapeAnimJoint** shapes = anim->shapes;
     HSD_MatAnimJoint** materials = anim->materials;
 
     if (joints != NULL) {

@@ -8,7 +8,7 @@ typedef struct LbAirRideAnimSet {
     void* unk0;
     HSD_AnimJoint** joints;
     HSD_MatAnimJoint** materials;
-    HSD_ShapeAnimDObj** shapes;
+    HSD_ShapeAnimJoint** shapes;
 } LbAirRideAnimSet;
 
 #if defined(VERSION_GKYJ01)
