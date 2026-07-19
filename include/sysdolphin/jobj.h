@@ -156,10 +156,14 @@ void HSD_JObjCheckDepend(HSD_JObj* jobj);
 void HSD_JObjPrependRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);
 void HSD_JObjDeleteRObj(HSD_JObj* jobj, struct _HSD_RObj* robj);
 void HSD_JObjUnref(HSD_JObj* jobj);
+void HSD_JObjRemoveAnimAllByFlags(HSD_JObj* jobj, u32 flags);
 void HSD_JObjRemoveAnimAll(HSD_JObj* jobj);
 void HSD_JObjReqAnimAll(HSD_JObj* jobj, f32 frame);
 void HSD_JObjReqAnimAllByFlags(HSD_JObj* jobj, s32 flags, f32 frame);
 void HSD_JObjAnimAll(HSD_JObj* jobj);
+void HSD_JObjAddAnimAll(HSD_JObj* jobj, HSD_AnimJoint* ajoint,
+                        HSD_MatAnimJoint* mjoint,
+                        HSD_ShapeAnimDObj* shapeanimdobj);
 void HSD_JObjMakeMatrix(HSD_JObj* jobj);
 void HSD_JObjUnrefThis(HSD_JObj* jobj);
 void HSD_JObjDispAll(HSD_JObj* jobj, Mtx vmtx, u32 flags, u32 rendermode);

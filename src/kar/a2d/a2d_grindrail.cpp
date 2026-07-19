@@ -127,7 +127,6 @@ void kar_diag__802dd040(void *, void *, s32, void *);
 s32 HSD_Randi(s32);
 f32 HSD_Randf(void);
 
-u32 HSD_JObjRemoveAnimAllByFlags(void *, s32, f32);
 void HSD_JObjRemoveAnim(void *);
 
 void PSVECAdd(Vec3f *, const Vec3f *, const Vec3f *);
