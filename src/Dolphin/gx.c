@@ -445,14 +445,14 @@ volatile PPCWGPipe GXWGFifo : GXFIFO_ADDR;
 #define GX_PERF1_NONE 22
 
 typedef struct _GXVtxDescList {
-    u32 attr;
-    u32 type;
+    s32 attr;
+    s32 type;
 } GXVtxDescList;
 
 typedef struct _GXVtxAttrFmtList {
-    u32 attr;
-    u32 cnt;
-    u32 type;
+    s32 attr;
+    s32 cnt;
+    s32 type;
     u8 frac;
 } GXVtxAttrFmtList;
 
@@ -643,6 +643,49 @@ u32 peCount;
 
 const char* __GXVersion = "<< Dolphin SDK - GX\trelease build: Nov 10 2004 06:27:12 (0x2301) >>";
 
+extern const f32 lbl_805E5780; /* 1.0F */
+extern const f32 lbl_805E5784; /* 0.0F */
+extern const f32 lbl_805E5788; /* 0.1F */
+extern const f32 lbl_805E57A0; /* 0.0F */
+extern const f32 lbl_805E57A4; /* 90.0F */
+extern const f32 lbl_805E57A8; /* 3.1415927F */
+extern const f32 lbl_805E57AC; /* 180.0F */
+extern const f32 lbl_805E57B0; /* -1000.0F */
+extern const f32 lbl_805E57B4; /* 1000.0F */
+extern const f32 lbl_805E57B8; /* 1.0F */
+extern const f32 lbl_805E57BC; /* 2.0F */
+extern const f32 lbl_805E57C0; /* -4.0F */
+extern const f32 lbl_805E57C4; /* 4.0F */
+extern const f32 lbl_805E57C8; /* -2.0F */
+extern const f32 lbl_805E57CC; /* 0.5F */
+extern const f32 lbl_805E57D0; /* 16.0F */
+extern const f32 lbl_805E57E0; /* -4.0F */
+extern const f32 lbl_805E57E4; /* 4.0F */
+extern const f32 lbl_805E57E8; /* 3.99F */
+extern const f32 lbl_805E57EC; /* 32.0F */
+extern const f32 lbl_805E57F0; /* 0.0F */
+extern const f32 lbl_805E57F4; /* 10.0F */
+extern const f32 lbl_805E5800; /* 0.0F */
+extern const f32 lbl_805E5804; /* 1.0F */
+extern const f32 lbl_805E5808; /* 0.5F */
+extern const f64 lbl_805E5810; /* 1.0 */
+extern const f32 lbl_805E5818; /* 2.0F */
+extern const f64 lbl_805E5820; /* 0.5 */
+extern const f32 lbl_805E5828; /* 8388638.0F */
+extern const f64 lbl_805E5838; /* 0.0 */
+extern const f64 lbl_805E5840; /* 3.0 */
+extern const f32 lbl_805E5848; /* 256.0F */
+extern const f32 lbl_805E5858; /* 0.0F */
+extern const f64 lbl_805E5860; /* 0.5 */
+extern const f64 lbl_805E5868; /* 3.0 */
+extern const f32 lbl_805E5870; /* 1.0F */
+extern const f32 lbl_805E5874; /* 3.1415927F */
+extern const f32 lbl_805E5890; /* 0.0F */
+extern const f32 lbl_805E5894; /* 1.0F */
+extern const f32 lbl_805E5898; /* 0.5F */
+extern const f32 lbl_805E58A8; /* 342.0F */
+extern const f32 lbl_805E58AC; /* 16777215.0F */
+
 static OSResetFunctionInfo GXResetFuncInfo;
 
 #define GET_REG_FIELD(reg, size, shift) ((int)((reg) >> (shift)) & ((1 << (size)) - 1))
@@ -750,15 +793,15 @@ void GXSetTexCoordGen2(u32 dst_coord, u32 func, u32 src_param, u32 mtx, BOOL nor
 void GXSetNumTexGens(u8 nTexGens);
 void GXClearVtxDesc(void);
 void GXInvalidateVtxCache(void);
-void GXSetArray(u32 attr, void* base_ptr, u8 stride);
+void GXSetArray(s32 attr, void* base_ptr, u8 stride);
 void GXSetVtxAttrFmtv(u32 vtxfmt, const GXVtxAttrFmtList* list);
 void GXSetLineWidth(u8 width, u32 texOffsets);
 void GXSetPointSize(u8 pointSize, u32 texOffsets);
 void GXEnableTexOffsets(u32 coord, u8 line_enable, u8 point_enable);
 void GXLoadPosMtxImm(const f32 mtx[3][4], u32 id);
-void kar_grcoll__803d078c(const f32 mtx[3][4], u32 id); /* GXLoadNrmMtxImm */
+void GXLoadNrmMtxImm(const f32 mtx[3][4], u32 id);
 void GXSetCurrentMtx(u32 id);
-void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, u32 type);
+void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, s32 type);
 void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 void GXSetProjectionv(const f32* ptr);
 void GXSetCoPlanar(BOOL enable);
@@ -773,9 +816,9 @@ void kar_grcoll__803cd3ac(u32 chan, GXColor mat_color); /* GXSetChanMatColor */
 void GXInvalidateTexAll(void);
 GXTexRegionCallback fn_803CE0CC(GXTexRegionCallback f); /* GXSetTexRegionCallback */
 GXTlutRegionCallback fn_803CE0E0(GXTlutRegionCallback f); /* GXSetTlutRegionCallback */
-void GXSetTevOrder(u32 stage, u32 coord, u32 map, u32 color);
+void GXSetTevOrder(s32 stage, s32 coord, s32 map, s32 color);
 void GXSetNumTevStages(u8 nStages);
-void GXSetTevOp(u32 id, u32 mode);
+void GXSetTevOp(s32 id, s32 mode);
 void GXSetAlphaCompare(u32 comp0, u8 ref0, u32 op, u32 comp1, u8 ref1);
 void GXSetZTexture(u32 op, u32 fmt, u32 bias);
 void GXSetTevKColorSel(s32 stage, u32 sel);
@@ -792,12 +835,12 @@ void GXSetColorUpdate(u8 update_enable);
 void GXSetAlphaUpdate(u8 update_enable);
 void GXSetZMode(u8 compare_enable, u32 func, u8 update_enable);
 void GXSetZCompLoc(u8 before_tex);
-void GXSetPixelFmt(u32 pix_fmt, u32 z_fmt);
+void GXSetPixelFmt(s32 pix_fmt, u32 z_fmt);
 void GXSetDither(u8 dither);
 void GXSetDstAlpha(u8 enable, u8 alpha);
 void GXSetFieldMask(u8 odd_mask, u8 even_mask);
 void GXSetFieldMode(u8 field_mode, u8 half_aspect_ratio);
-void fn_803CC5C4(u16 left, u16 top, u16 wd, u16 ht); /* GXSetDispCopySrc */
+void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 void GXSetDispCopyDst(u16 wd, u16 ht);
 u32 GXSetDispCopyYScale(f32 vscale);
 void GXSetCopyClamp(u32 clamp);
@@ -809,7 +852,7 @@ void GXClearBoundingBox(void);
 void fn_803CBEC0(u32 func, u8 threshold); /* GXPokeAlphaMode */
 void fn_803CBED4(u32 mode); /* GXPokeAlphaRead */
 void fn_803CBEE8(BOOL update_enable); /* GXPokeAlphaUpdate */
-void GXPokeBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op);
+void GXPokeBlendMode(s32 type, u32 src_factor, u32 dst_factor, u32 op);
 void fn_803CBF8C(BOOL update_enable); /* GXPokeColorUpdate */
 void fn_803CBFA8(BOOL enable, u8 alpha); /* GXPokeDstAlpha */
 void fn_803CBFBC(BOOL dither); /* GXPokeDither */
@@ -1124,7 +1167,7 @@ void __GXInitGX(void) {
     identity_mtx[2][2] = 1.0f;
     identity_mtx[2][3] = 0.0f;
     GXLoadPosMtxImm(identity_mtx, GX_PNMTX0);
-    kar_grcoll__803d078c(identity_mtx, GX_PNMTX0);
+    GXLoadNrmMtxImm(identity_mtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
     GXLoadTexMtxImm(identity_mtx, GX_IDENTITY, GX_MTX3x4);
     GXLoadTexMtxImm(identity_mtx, GX_PTIDENTITY, GX_MTX3x4);
@@ -1201,7 +1244,7 @@ void __GXInitGX(void) {
     GXSetFieldMode(rmode->field_rendering,
                    ((rmode->viHeight == 2 * rmode->xfbHeight) ? GX_ENABLE : GX_DISABLE));
 
-    fn_803CC5C4(0, 0, rmode->fbWidth, rmode->efbHeight);
+    GXSetDispCopySrc(0, 0, rmode->fbWidth, rmode->efbHeight);
     GXSetDispCopyDst(rmode->fbWidth, rmode->efbHeight);
     GXSetDispCopyYScale((f32)(rmode->xfbHeight) / (f32)(rmode->efbHeight));
     GXSetCopyClamp(GX_CLAMP_TOP | GX_CLAMP_BOTTOM);
@@ -1254,7 +1297,7 @@ void GXCPInterruptHandler(u32 interrupt, OSContext* context) {
     }
 
     if (GET_REG_FIELD(gx->cpEnable, 1, 5) && GET_REG_FIELD(gx->cpStatus, 1, 4)) {
-        SET_REG_FIELD(gx->cpEnable, 1, 5, 0);
+        gx->cpEnable = gx->cpEnable & 0xFFFFFFDF;
         GX_SET_CP_REG(1, gx->cpEnable);
         if (BreakPointCB != NULL) {
             OSClearContext(&exceptionContext);
@@ -1308,9 +1351,10 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
 
         GX_SET_PI_REG(3, (u32)realFifo->base & 0x3FFFFFFF);
         GX_SET_PI_REG(4, (u32)realFifo->top & 0x3FFFFFFF);
-        SET_REG_FIELD(reg, 21, 5, (u32)realFifo->wrPtr >> 5);
-        SET_REG_FIELD(reg, 1, 26, 0);
+        OLD_SET_REG_FIELD(reg, 21, 5, (u32)realFifo->wrPtr >> 5);
+        OLD_SET_REG_FIELD(reg, 1, 26, 0);
         GX_SET_PI_REG(5, reg);
+        CPGPLinked = 1;
 
         __GXWriteFifoIntReset(1, 1);
         __GXWriteFifoIntEnable(1, 0);
@@ -1320,14 +1364,15 @@ void GXSetCPUFifo(GXFifoObj* fifo) {
 
         if (CPGPLinked) {
             __GXFifoLink(0);
+            CPGPLinked = 0;
         }
 
         __GXWriteFifoIntEnable(0, 0);
         reg = 0;
         GX_SET_PI_REG(3, (u32)realFifo->base & 0x3FFFFFFF);
         GX_SET_PI_REG(4, (u32)realFifo->top & 0x3FFFFFFF);
-        SET_REG_FIELD(reg, 21, 5, (u32)realFifo->wrPtr >> 5);
-        SET_REG_FIELD(reg, 1, 26, 0);
+        OLD_SET_REG_FIELD(reg, 21, 5, (u32)realFifo->wrPtr >> 5);
+        OLD_SET_REG_FIELD(reg, 1, 26, 0);
         GX_SET_PI_REG(5, reg);
     }
 
@@ -1361,9 +1406,11 @@ void GXSetGPFifo(GXFifoObj* fifo) {
     kar_diagnostic__near_803c3354(); /* PPCSync */
 
     if (CPUFifo == GPFifo) {
+        CPGPLinked = 1;
         __GXWriteFifoIntEnable(1, 0);
         __GXFifoLink(1);
     } else {
+        CPGPLinked = 0;
         __GXWriteFifoIntEnable(0, 0);
         __GXFifoLink(0);
     }
@@ -1421,10 +1468,10 @@ void __GXWriteFifoIntReset(u8 hiWatermarkClr, u8 loWatermarkClr) {
 }
 
 void fn_803C9F1C(void) {
+    GXFifoObj dummyFifo;
     GXFifoObj* gpFifo;
     GXFifoObj* cpuFifo;
     void* base;
-    GXFifoObj dummyFifo;
 
     gpFifo = fn_803CA024();
     if (gpFifo == NULL) {
@@ -1455,7 +1502,7 @@ GXFifoObj* fn_803CA024(void) {
     return (GXFifoObj*)GPFifo;
 }
 
-void __GXSetMatrixIndex(u32 matIdxAttr);
+void __GXSetMatrixIndex(s32 matIdxAttr);
 
 void __GXXfVtxSpecs(void) {
     u32 nCols = 0;
@@ -1482,7 +1529,7 @@ void __GXXfVtxSpecs(void) {
     gx->bpSentNot = 1;
 }
 
-static inline void SETVCDATTR(u32 Attr, u32 Type) {
+static inline void SETVCDATTR(s32 Attr, s32 Type) {
     switch (Attr) {
     case GX_VA_PNMTXIDX:   OLD_SET_REG_FIELD(gx->vcdLo, 1, 0, Type); break;
     case GX_VA_TEX0MTXIDX: OLD_SET_REG_FIELD(gx->vcdLo, 1, 1, Type); break;
@@ -1558,12 +1605,12 @@ void __GXSetVCD(void) {
 }
 #pragma pop
 
-void __GXCalculateVLim(void) {
-    static u8 tbl1[] = { 0, 4, 1, 2 };
-    static u8 tbl2[] = { 0, 8, 1, 2 };
-    static u8 tbl3[] = { 0, 12, 1, 2 };
+static u8 lbl_805DC910[] = { 0, 4, 1, 2 };
+static u8 lbl_805DC914[] = { 0, 8, 1, 2 };
+static u8 lbl_805DC918[] = { 0, 12, 1, 2 };
 
-    u32 nc = 0;
+void __GXCalculateVLim(void) {
+    s32 nc = 0;
     u32 vlm;
     u32 b;
     u32 vl;
@@ -1585,7 +1632,7 @@ void __GXCalculateVLim(void) {
         vlm += (u8)GET_REG_FIELD(vl, 1, 6);
         vlm += (u8)GET_REG_FIELD(vl, 1, 7);
         vlm += (u8)GET_REG_FIELD(vl, 1, 8);
-        vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 9)];
+        vlm += lbl_805DC918[(u8)GET_REG_FIELD(vl, 2, 9)];
 
         if (nc == 1) {
             b = 3;
@@ -1593,22 +1640,22 @@ void __GXCalculateVLim(void) {
             b = 1;
         }
 
-        vlm += tbl3[(u8)GET_REG_FIELD(vl, 2, 11)] * b;
-        vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 13)];
-        vlm += tbl1[(u8)GET_REG_FIELD(vl, 2, 15)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 0)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 2)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 4)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 6)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 8)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 10)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 12)];
-        vlm += tbl2[(u8)GET_REG_FIELD(vh, 2, 14)];
+        vlm += lbl_805DC918[(u8)GET_REG_FIELD(vl, 2, 11)] * b;
+        vlm += lbl_805DC910[(u8)GET_REG_FIELD(vl, 2, 13)];
+        vlm += lbl_805DC910[(u8)GET_REG_FIELD(vl, 2, 15)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 0)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 2)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 4)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 6)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 8)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 10)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 12)];
+        vlm += lbl_805DC914[(u8)GET_REG_FIELD(vh, 2, 14)];
         gx->vLim = vlm;
     }
 }
 
-void fn_803CA9C0(u32 attr, u32* type) {
+void fn_803CA9C0(u32 attr, s32* type) {
     u32 cpType;
 
     switch (attr) {
@@ -1641,7 +1688,7 @@ void fn_803CA9C0(u32 attr, u32* type) {
 
 #pragma dont_inline on
 void fn_803CAB74(GXVtxDescList* vcd) {
-    u32 attr;
+    s32 attr;
 
     for (attr = GX_VA_PNMTXIDX; attr <= GX_VA_TEX7; attr++) {
         vcd[attr].attr = attr;
@@ -1665,7 +1712,7 @@ void GXClearVtxDesc(void) {
     gx->dirtyState |= 8;
 }
 
-static inline void SETVAT(u32* va, u32* vb, u32* vc, u32 attr, u32 cnt, u32 type, u8 shft) {
+static inline void SETVAT(u32* va, u32* vb, u32* vc, s32 attr, s32 cnt, s32 type, u8 shft) {
     switch (attr) {
     case GX_VA_POS:
         OLD_SET_REG_FIELD(*va, 1, 0, cnt);
@@ -1766,18 +1813,15 @@ void GXSetVtxAttrFmtv(u32 vtxfmt, const GXVtxAttrFmtList* list) {
 }
 
 void __GXSetVAT(void) {
-    s32 i;
-    u32 dirty = gx->dirtyVAT;
+    u8 i;
 
-    i = 0;
-    do {
-        if (dirty & (1 << i)) {
+    for (i = 0; i < 8; i++) {
+        if (gx->dirtyVAT & (1 << i)) {
             GX_WRITE_SOME_REG4(8, i | 0x70, gx->vatA[i], i - 12);
             GX_WRITE_SOME_REG4(8, i | 0x80, gx->vatB[i], i - 12);
             GX_WRITE_SOME_REG4(8, i | 0x90, gx->vatC[i], i - 12);
         }
-        i++;
-    } while (i < 8);
+    }
 
     gx->dirtyVAT = 0;
 }
@@ -1801,7 +1845,7 @@ static inline u8 GetFracForNrm(u32 type) {
     return frac;
 }
 
-void fn_803CB3A8(u32 fmt, u32 attr, u32* cnt, u32* type, u8* frac) {
+void fn_803CB3A8(u32 fmt, u32 attr, s32* cnt, s32* type, u8* frac) {
     u32* va;
     u32* vb;
     u32* vc;
@@ -1885,7 +1929,7 @@ void fn_803CB3A8(u32 fmt, u32 attr, u32* cnt, u32* type, u8* frac) {
 
 #pragma dont_inline on
 void fn_803CB628(u32 fmt, GXVtxAttrFmtList* vat) {
-    u32 attr;
+    s32 attr;
 
     for (attr = GX_VA_POS; attr <= GX_VA_TEX7; attr++) {
         vat->attr = attr;
@@ -1897,8 +1941,8 @@ void fn_803CB628(u32 fmt, GXVtxAttrFmtList* vat) {
 }
 #pragma dont_inline reset
 
-void GXSetArray(u32 attr, void* base_ptr, u8 stride) {
-    u32 cpAttr;
+void GXSetArray(s32 attr, void* base_ptr, u8 stride) {
+    s32 cpAttr;
     u32 phyAddr;
 
     if (attr == GX_VA_NBT) {
@@ -2015,13 +2059,13 @@ void GXSetNumTexGens(u8 nTexGens) {
 typedef void (*GXDrawSyncCallback)(u16 token);
 typedef void (*GXDrawDoneCallback)(void);
 
-static GXDrawSyncCallback lbl_805DDE60; /* TokenCB */
-static GXDrawDoneCallback lbl_805DDE64; /* DrawDoneCB */
+static GXDrawSyncCallback lbl_805DDE50; /* TokenCB */
+static GXDrawDoneCallback lbl_805DDE54; /* DrawDoneCB */
 static u8 lbl_805DDE58; /* DrawDone */
-static u8 lbl_805DDE5C[12]; /* FinishQueue (OSThreadQueue) */
+static u8 lbl_805DDE5C[8]; /* FinishQueue (OSThreadQueue) */
 
-#define TokenCB lbl_805DDE60
-#define DrawDoneCB lbl_805DDE64
+#define TokenCB lbl_805DDE50
+#define DrawDoneCB lbl_805DDE54
 #define DrawDone lbl_805DDE58
 #define FinishQueue lbl_805DDE5C
 
@@ -2092,7 +2136,7 @@ static inline void __GXAbortWaitPECopyDone(void) {
 }
 
 void __GXAbort(void) {
-    if (gx->abtWaitPECopy && fn_803CA024() != NULL) {
+    if (gx->abtWaitPECopy && GPFifo != NULL) {
         __GXAbortWaitPECopyDone();
     }
 
@@ -2107,7 +2151,7 @@ void fn_803CBC48(void) { /* GXAbortFrame */
     fn_803C9F1C();
 }
 
-void fn_803CBDB8(void) { /* GXSetDrawDone */
+void GXSetDrawDone(void) {
     u32 reg;
     BOOL enabled;
 
@@ -2154,11 +2198,11 @@ void fn_803CBEE8(BOOL update_enable) { /* GXPokeAlphaUpdate */
     u32 reg;
 
     reg = GX_GET_PE_REG(1);
-    OLD_SET_REG_FIELD(reg, 1, 4, update_enable);
+    OLD_SET_REG_FIELD(reg, 1, 4, (u8)update_enable);
     GX_SET_PE_REG(1, reg);
 }
 
-void GXPokeBlendMode(u32 type, u32 src_factor, u32 dst_factor, u32 op) {
+void GXPokeBlendMode(s32 type, u32 src_factor, u32 dst_factor, u32 op) {
     u32 reg;
 
     reg = GX_GET_PE_REG(1);
@@ -2176,7 +2220,7 @@ void fn_803CBF8C(BOOL update_enable) { /* GXPokeColorUpdate */
     u32 reg;
 
     reg = GX_GET_PE_REG(1);
-    OLD_SET_REG_FIELD(reg, 1, 3, update_enable);
+    OLD_SET_REG_FIELD(reg, 1, 3, (u8)update_enable);
     GX_SET_PE_REG(1, reg);
 }
 
@@ -2184,7 +2228,7 @@ void fn_803CBFA8(BOOL enable, u8 alpha) { /* GXPokeDstAlpha */
     u32 reg = 0;
 
     OLD_SET_REG_FIELD(reg, 8, 0, alpha);
-    OLD_SET_REG_FIELD(reg, 1, 8, enable);
+    OLD_SET_REG_FIELD(reg, 1, 8, (u8)enable);
     GX_SET_PE_REG(2, reg);
 }
 
@@ -2192,7 +2236,7 @@ void fn_803CBFBC(BOOL dither) { /* GXPokeDither */
     u32 reg;
 
     reg = GX_GET_PE_REG(1);
-    OLD_SET_REG_FIELD(reg, 1, 2, dither);
+    OLD_SET_REG_FIELD(reg, 1, 2, (u8)dither);
     GX_SET_PE_REG(1, reg);
 }
 
@@ -2234,7 +2278,7 @@ void GXTokenInterruptHandler(u32 interrupt, OSContext* context) {
     GX_SET_PE_REG(5, reg);
 }
 
-GXDrawDoneCallback fn_803CC0CC(GXDrawDoneCallback cb) { /* GXSetDrawDoneCallback */
+GXDrawDoneCallback GXSetDrawDoneCallback(GXDrawDoneCallback cb) {
     GXDrawDoneCallback oldcb;
     BOOL enabled;
 
@@ -2386,7 +2430,7 @@ void fn_803CC5A0(void) { /* __GXSetGenMode */
 
 void fn_803CD70C(s32 fmt, u16 wd, u16 ht, u32* rowTiles, u32* colTiles, u32* cmpTiles); /* __GetImageTileCount */
 
-void fn_803CC5C4(u16 left, u16 top, u16 wd, u16 ht) { /* GXSetDispCopySrc */
+void GXSetDispCopySrc(u16 left, u16 top, u16 wd, u16 ht) { /* GXSetDispCopySrc */
     gx->cpDispSrc = 0;
     OLD_SET_REG_FIELD(gx->cpDispSrc, 10, 0, left);
     OLD_SET_REG_FIELD(gx->cpDispSrc, 10, 10, top);
@@ -2756,7 +2800,7 @@ typedef struct __GXLightObjInt_struct {
     f32 ldir[3];
 } __GXLightObjInt;
 
-extern f32 fn_803BD560(f32 x); /* cosf */
+extern f32 mtx_cosf(f32 x);
 
 void GXInitLightAttn(GXLightObj* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2) {
     __GXLightObjInt* obj = (__GXLightObjInt*)lt_obj;
@@ -2776,12 +2820,12 @@ void GXInitLightSpot(GXLightObj* lt_obj, f32 cutoff, u32 spot_func) {
     f32 r;
     __GXLightObjInt* obj = (__GXLightObjInt*)lt_obj;
 
-    if (cutoff <= 0.0f || cutoff > 90.0f) {
+    if (cutoff <= lbl_805E57A0 || cutoff > lbl_805E57A4) {
         spot_func = 0; /* GX_SP_OFF */
     }
 
-    r = (3.1415927f * cutoff) / 180.0f;
-    cr = fn_803BD560(r);
+    r = (lbl_805E57A8 * cutoff) / lbl_805E57AC;
+    cr = mtx_cosf(r);
 
     switch (spot_func) {
     case 1: /* GX_SP_FLAT */
@@ -2905,8 +2949,8 @@ void GXLoadLightObjImm(const GXLightObj* lt_obj, u32 light) {
         register const GXLightObj* src = lt_obj;
         register void* dest = (void*)GXFIFO_ADDR;
         register u32 zero, color;
-        register f32 a0_a1, a2_k0, k1_k2;
-        register f32 px_py, pz_dx, dy_dz;
+        register f32 dy_dz, pz_dx, px_py;
+        register f32 k1_k2, a2_k0, a0_a1;
 
         asm {
             lwz     color, 12(src)
@@ -3059,7 +3103,7 @@ void GXSetChanCtrl(s32 chan, u8 enable, u32 amb_src, u32 mat_src, u32 light_mask
     gx->bpSentNot = 1;
 }
 
-u32 kar_shadow__803cd5b0(u16 width, u16 height, u32 format, u8 mipmap, u8 max_lod) { /* GXGetTexBufferSize */
+u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, u8 mipmap, u8 max_lod) {
     u32 tileShiftX;
     u32 tileShiftY;
     u32 tileBytes;
@@ -3194,7 +3238,7 @@ void fn_803CD70C(s32 fmt, u16 wd, u16 ht, u32* rowTiles, u32* colTiles, u32* cmp
     *cmpTiles = (fmt == GX_TF_RGBA8 || fmt == GX_TF_Z24X8) ? 2 : 1;
 }
 
-static u8 GX2HWFiltConv[6] = { 0x00, 0x04, 0x01, 0x05, 0x02, 0x06 };
+static u8 lbl_805DC958[6] = { 0x00, 0x04, 0x01, 0x05, 0x02, 0x06 };
 
 void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 format, u32 wrap_s, u32 wrap_t, u8 mipmap) {
     u32 imageBase;
@@ -3226,7 +3270,7 @@ void GXInitTexObj(GXTexObj* obj, void* image_ptr, u16 width, u16 height, u32 for
             maxLOD = 31 - __cntlzw(height);
         }
 
-        lmax = 16.0f * maxLOD;
+        lmax = lbl_805E57D0 * maxLOD;
         OLD_SET_REG_FIELD(t->mode1, 8, 8, lmax);
     } else {
         OLD_SET_REG_FIELD(t->mode0, 3, 5, 4);
@@ -3298,16 +3342,16 @@ void fn_803CDA90(GXTexObj* obj, u32 min_filt, s32 mag_filt, f32 min_lod, f32 max
     u8 lmax;
     __GXTexObjInt* t = (__GXTexObjInt*)obj;
 
-    if (lod_bias < -4.0f) {
-        lod_bias = -4.0f;
-    } else if (lod_bias >= 4.0f) {
-        lod_bias = 3.99f;
+    if (lod_bias < lbl_805E57E0) {
+        lod_bias = lbl_805E57E0;
+    } else if (lod_bias >= lbl_805E57E4) {
+        lod_bias = lbl_805E57E8;
     }
 
-    lbias = 32.0f * lod_bias;
+    lbias = lbl_805E57EC * lod_bias;
     OLD_SET_REG_FIELD(t->mode0, 8, 9, lbias);
     OLD_SET_REG_FIELD(t->mode0, 1, 4, (mag_filt == GX_LINEAR) ? 1 : 0);
-    OLD_SET_REG_FIELD(t->mode0, 3, 5, GX2HWFiltConv[min_filt]);
+    OLD_SET_REG_FIELD(t->mode0, 3, 5, lbl_805DC958[min_filt]);
     OLD_SET_REG_FIELD(t->mode0, 1, 8, do_edge_lod ? 0 : 1);
     OLD_SET_REG_FIELD(t->mode0, 1, 17, 0);
     OLD_SET_REG_FIELD(t->mode0, 1, 18, 0);
@@ -3777,9 +3821,9 @@ void GXSetTevDirect(u32 tev_stage) {
 }
 
 void __GXUpdateBPMask(void) {
-    u32 mask;
-    u32 tmap;
     u32 i;
+    u32 tmap;
+    u32 mask;
 
     mask = 0;
     for (i = 0; i < GET_REG_FIELD(gx->genMode, 3, 16); i++) {
@@ -3894,7 +3938,7 @@ static struct {
     { 193, 0, 0, 1, 0, 0, 7, 7, 7, 0, 0, 0 },
 };
 
-void GXSetTevOp(u32 id, u32 mode) {
+void GXSetTevOp(s32 id, s32 mode) {
     u32* ctmp;
     u32* atmp;
     u32 tevReg;
@@ -3948,7 +3992,7 @@ void GXSetTevAlphaIn(u32 stage, u32 a, u32 b, u32 c, u32 d) {
     gx->bpSentNot = 0;
 }
 
-void fn_803CEC68(u32 stage, u32 op, u32 bias, u32 scale, u8 clamp, u32 out_reg) { /* GXSetTevColorOp */
+void fn_803CEC68(u32 stage, s32 op, u32 bias, u32 scale, u8 clamp, u32 out_reg) { /* GXSetTevColorOp */
     u32 tevReg;
 
     tevReg = gx->tevc[stage];
@@ -3968,7 +4012,7 @@ void fn_803CEC68(u32 stage, u32 op, u32 bias, u32 scale, u8 clamp, u32 out_reg) 
     gx->bpSentNot = 0;
 }
 
-void fn_803CECD0(u32 stage, u32 op, u32 bias, u32 scale, u8 clamp, u32 out_reg) { /* GXSetTevAlphaOp */
+void fn_803CECD0(u32 stage, s32 op, u32 bias, u32 scale, u8 clamp, u32 out_reg) { /* GXSetTevAlphaOp */
     u32 tevReg;
 
     tevReg = gx->teva[stage];
@@ -4156,11 +4200,12 @@ void GXSetZTexture(u32 op, u32 fmt, u32 bias) {
     gx->bpSentNot = 0;
 }
 
-void GXSetTevOrder(u32 stage, u32 coord, u32 map, u32 color) {
+static s32 lbl_804F9FA8[] = { 0, 1, 0, 1, 0, 1, 7, 5, 6 };
+
+void GXSetTevOrder(s32 stage, s32 coord, s32 map, s32 color) {
     u32* ptref;
     u32 tmap;
     u32 tcoord;
-    static s32 c2r[] = { 0, 1, 0, 1, 0, 1, 7, 5, 6 };
 
     ptref = &gx->tref[stage / 2];
     gx->texmapId[stage] = map;
@@ -4179,12 +4224,12 @@ void GXSetTevOrder(u32 stage, u32 coord, u32 map, u32 color) {
     if (stage & 1) {
         OLD_SET_REG_FIELD(*ptref, 3, 12, tmap);
         OLD_SET_REG_FIELD(*ptref, 3, 15, tcoord);
-        OLD_SET_REG_FIELD(*ptref, 3, 19, (color == GX_COLOR_NULL) ? 7 : c2r[color]);
+        OLD_SET_REG_FIELD(*ptref, 3, 19, (color == GX_COLOR_NULL) ? 7 : lbl_804F9FA8[color]);
         OLD_SET_REG_FIELD(*ptref, 1, 18, (map != GX_TEXMAP_NULL && !(map & GX_TEX_DISABLE)));
     } else {
         OLD_SET_REG_FIELD(*ptref, 3, 0, tmap);
         OLD_SET_REG_FIELD(*ptref, 3, 3, tcoord);
-        OLD_SET_REG_FIELD(*ptref, 3, 7, (color == GX_COLOR_NULL) ? 7 : c2r[color]);
+        OLD_SET_REG_FIELD(*ptref, 3, 7, (color == GX_COLOR_NULL) ? 7 : lbl_804F9FA8[color]);
         OLD_SET_REG_FIELD(*ptref, 1, 6, (map != GX_TEXMAP_NULL && !(map & GX_TEX_DISABLE)));
     }
 
@@ -4302,7 +4347,7 @@ void GXSetFog(u32 type, f32 startz, f32 endz, f32 nearz, f32 farz, GXColor color
     gx->bpSentNot = 0;
 }
 
-void fn_803CF558(GXFogAdjTable* table, u16 width, const f32 projmtx[4][4]) { /* GXInitFogAdjTable */
+void GXInitFogAdjTable(GXFogAdjTable* table, u16 width, const f32 projmtx[4][4]) {
     f32 xi;
     f32 iw;
     f32 rangeVal;
@@ -4411,13 +4456,14 @@ void GXSetZCompLoc(u8 before_tex) {
     gx->bpSentNot = 0;
 }
 
-void GXSetPixelFmt(u32 pix_fmt, u32 z_fmt) {
+static u32 lbl_804F9FD0[8] = { 0, 1, 2, 3, 4, 4, 4, 5 };
+
+void GXSetPixelFmt(s32 pix_fmt, u32 z_fmt) {
     u32 oldPeCtrl;
     u8 aa;
-    static u32 p2f[8] = { 0, 1, 2, 3, 4, 4, 4, 5 };
 
     oldPeCtrl = gx->peCtrl;
-    OLD_SET_REG_FIELD(gx->peCtrl, 3, 0, p2f[pix_fmt]);
+    OLD_SET_REG_FIELD(gx->peCtrl, 3, 0, lbl_804F9FD0[pix_fmt]);
     OLD_SET_REG_FIELD(gx->peCtrl, 3, 3, z_fmt);
 
     if (oldPeCtrl != gx->peCtrl) {
@@ -4431,7 +4477,7 @@ void GXSetPixelFmt(u32 pix_fmt, u32 z_fmt) {
         gx->dirtyState |= 4;
     }
 
-    if (p2f[pix_fmt] == 4) {
+    if (lbl_804F9FD0[pix_fmt] == 4) {
         OLD_SET_REG_FIELD(gx->cmode1, 2, 9, (pix_fmt - 4) & 0x3);
         OLD_SET_REG_FIELD(gx->cmode1, 8, 24, 0x42);
         GX_WRITE_RAS_REG(gx->cmode1);
@@ -4487,7 +4533,7 @@ void GXSetFieldMode(u8 field_mode, u8 half_aspect_ratio) {
     __GXFlushTextureState();
 }
 
-extern f32 fn_803BD53C(f32 x); /* sinf */
+extern f32 mtx_sinf(f32 x);
 
 static GXVtxDescList vcd[27];
 static GXVtxAttrFmtList vat[27];
@@ -4583,7 +4629,7 @@ void fn_803CFB3C(u8 depth, f32 v0[3], f32 v1[3], f32 v2[3]) { /* Subdivide */
 }
 
 void fn_803CFEF0(u8 numMajor, u8 numMinor) { /* GXDrawSphere */
-    u32 ttype;
+    s32 ttype;
     f32 radius = 1.0f;
     f32 majorStep = 3.1415927f / numMajor;
     f32 minorStep = 6.2831855f / numMinor;
@@ -4611,15 +4657,15 @@ void fn_803CFEF0(u8 numMajor, u8 numMinor) { /* GXDrawSphere */
     for (i = 0; i < numMajor; i++) {
         a = i * majorStep;
         b = a + majorStep;
-        r0 = radius * fn_803BD53C(a);
-        r1 = radius * fn_803BD53C(b);
-        z0 = radius * fn_803BD560(a);
-        z1 = radius * fn_803BD560(b);
+        r0 = radius * mtx_sinf(a);
+        r1 = radius * mtx_sinf(b);
+        z0 = radius * mtx_cosf(a);
+        z1 = radius * mtx_cosf(b);
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT3, (numMinor + 1) * 2);
         for (j = 0; j <= numMinor; j++) {
             c = j * minorStep;
-            x = fn_803BD560(c);
-            y = fn_803BD53C(c);
+            x = mtx_cosf(c);
+            y = mtx_sinf(c);
             GX_WRITE_F32(x * r1);
             GX_WRITE_F32(y * r1);
             GX_WRITE_F32(z1);
@@ -4710,7 +4756,7 @@ void fn_803D03F4(f32 x, f32 y, f32 z, const f32 mtx[3][4], const f32* pm, const 
     *sz = vp[5] + (wc * (zc * (vp[5] - vp[4])));
 }
 
-void GXSetProjection(const f32 mtx[4][4], u32 type) {
+void GXSetProjection(const f32 mtx[4][4], s32 type) {
     gx->projType = type;
     gx->projMtx[0] = mtx[0][0];
     gx->projMtx[2] = mtx[1][1];
@@ -4757,7 +4803,7 @@ void GXSetProjectionv(const f32* ptr) {
     gx->bpSentNot = 1;
 }
 
-void fn_803D06DC(f32* ptr) { /* GXGetProjectionv */
+void GXGetProjectionv(f32* ptr) {
     ptr[0] = ((u32)gx->projType != GX_PERSPECTIVE) ? 1.0f : 0.0f;
     ptr[1] = gx->projMtx[0];
     ptr[2] = gx->projMtx[1];
@@ -4780,7 +4826,7 @@ void GXLoadPosMtxImm(const f32 mtx[3][4], u32 id) {
     {
         register const f32 (*m)[4] = mtx;
         register void* dest = (void*)GXFIFO_ADDR;
-        register f32 a00_a01, a02_a03, a10_a11, a12_a13, a20_a21, a22_a23;
+        register f32 a22_a23, a20_a21, a12_a13, a10_a11, a02_a03, a00_a01;
 
         asm {
             psq_l a00_a01, 0x00(m), 0, 0
@@ -4799,7 +4845,7 @@ void GXLoadPosMtxImm(const f32 mtx[3][4], u32 id) {
     }
 }
 
-void kar_grcoll__803d078c(const f32 mtx[3][4], u32 id) { /* GXLoadNrmMtxImm */
+void GXLoadNrmMtxImm(const f32 mtx[3][4], u32 id) {
     u32 reg;
     u32 addr;
 
@@ -4812,7 +4858,7 @@ void kar_grcoll__803d078c(const f32 mtx[3][4], u32 id) { /* GXLoadNrmMtxImm */
     {
         register const f32 (*m)[4] = mtx;
         register void* dest = (void*)GXFIFO_ADDR;
-        register f32 a00_a01, a02, a10_a11, a12, a20_a21, a22;
+        register f32 a22, a20_a21, a12, a10_a11, a02, a00_a01;
 
         asm {
             psq_l  a00_a01, 0x00(m), 0, 0
@@ -4836,7 +4882,7 @@ void GXSetCurrentMtx(u32 id) {
     __GXSetMatrixIndex(GX_VA_PNMTXIDX);
 }
 
-void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, u32 type) {
+void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, s32 type) {
     u32 reg;
     u32 addr;
     u32 count;
@@ -4855,7 +4901,7 @@ void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, u32 type) {
     if (type == GX_MTX3x4) {
         register const f32 (*m)[4] = mtx;
         register void* dest = (void*)GXFIFO_ADDR;
-        register f32 a00_a01, a02_a03, a10_a11, a12_a13, a20_a21, a22_a23;
+        register f32 a22_a23, a20_a21, a12_a13, a10_a11, a02_a03, a00_a01;
 
         asm {
             psq_l a00_a01, 0x00(m), 0, 0
@@ -4874,7 +4920,7 @@ void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, u32 type) {
     } else {
         register const f32 (*m)[4] = mtx;
         register void* dest = (void*)GXFIFO_ADDR;
-        register f32 a00_a01, a02_a03, a10_a11, a12_a13;
+        register f32 a12_a13, a10_a11, a02_a03, a00_a01;
 
         asm {
             psq_l a00_a01, 0x00(m), 0, 0
@@ -4939,7 +4985,7 @@ void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz) {
     GXSetViewportJitter(left, top, wd, ht, nearz, farz, 1);
 }
 
-void fn_803D09F0(f32* vp) { /* GXGetViewportv */
+void GXGetViewportv(f32* vp) {
     vp[0] = gx->vpLeft;
     vp[1] = gx->vpTop;
     vp[2] = gx->vpWd;
@@ -4989,7 +5035,7 @@ void GXSetClipMode(u32 mode) {
     gx->bpSentNot = 1;
 }
 
-void __GXSetMatrixIndex(u32 matIdxAttr) {
+void __GXSetMatrixIndex(s32 matIdxAttr) {
     if (matIdxAttr < GX_VA_TEX4MTXIDX) {
         GX_WRITE_SOME_REG4(8, 0x30, gx->matIdxA, -12);
         GX_WRITE_XF_REG(24, gx->matIdxA);
@@ -5173,3 +5219,46 @@ void fn_803D13EC(void) { /* GXClearGPMetric */
     reg = 4;
     GX_SET_CP_REG(2, reg);
 }
+
+const f32 lbl_805E5780 = 1.0f;
+const f32 lbl_805E5784 = 0.0f;
+const f32 lbl_805E5788 = 0.1f;
+const f32 lbl_805E57A0 = 0.0f;
+const f32 lbl_805E57A4 = 90.0f;
+const f32 lbl_805E57A8 = 3.1415927f;
+const f32 lbl_805E57AC = 180.0f;
+const f32 lbl_805E57B0 = -1000.0f;
+const f32 lbl_805E57B4 = 1000.0f;
+const f32 lbl_805E57B8 = 1.0f;
+const f32 lbl_805E57BC = 2.0f;
+const f32 lbl_805E57C0 = -4.0f;
+const f32 lbl_805E57C4 = 4.0f;
+const f32 lbl_805E57C8 = -2.0f;
+const f32 lbl_805E57CC = 0.5f;
+const f32 lbl_805E57D0 = 16.0f;
+const f32 lbl_805E57E0 = -4.0f;
+const f32 lbl_805E57E4 = 4.0f;
+const f32 lbl_805E57E8 = 3.99f;
+const f32 lbl_805E57EC = 32.0f;
+const f32 lbl_805E57F0 = 0.0f;
+const f32 lbl_805E57F4 = 10.0f;
+const f32 lbl_805E5800 = 0.0f;
+const f32 lbl_805E5804 = 1.0f;
+const f32 lbl_805E5808 = 0.5f;
+const f64 lbl_805E5810 = 1.0;
+const f32 lbl_805E5818 = 2.0f;
+const f64 lbl_805E5820 = 0.5;
+const f32 lbl_805E5828 = 8388638.0f;
+const f64 lbl_805E5838 = 0.0;
+const f64 lbl_805E5840 = 3.0;
+const f32 lbl_805E5848 = 256.0f;
+const f32 lbl_805E5858 = 0.0f;
+const f64 lbl_805E5860 = 0.5;
+const f64 lbl_805E5868 = 3.0;
+const f32 lbl_805E5870 = 1.0f;
+const f32 lbl_805E5874 = 3.1415927f;
+const f32 lbl_805E5890 = 0.0f;
+const f32 lbl_805E5894 = 1.0f;
+const f32 lbl_805E5898 = 0.5f;
+const f32 lbl_805E58A8 = 342.0f;
+const f32 lbl_805E58AC = 16777215.0f;

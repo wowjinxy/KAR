@@ -7,6 +7,13 @@ extern int vprintf(const char* fmt, va_list args);
 #define OS_BASE_UNCACHED 0xC0000000
 #define OSPhysicalToCached(paddr) ((void*)((u32)(paddr) + OS_BASE_CACHED))
 
+#define OS_BUS_CLOCK (*(u32*)(OS_BASE_CACHED | 0x00F8))
+#define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
+#define OSSecondsToTicks(sec) ((sec) * (OS_TIMER_CLOCK))
+#define OSMillisecondsToTicks(msec) ((msec) * (OS_TIMER_CLOCK / 1000))
+#define OSMicrosecondsToTicks(usec) (((usec) * (OS_TIMER_CLOCK / 125000)) / 8)
+#define OSTicksToSeconds(ticks) ((ticks) / (OS_TIMER_CLOCK))
+
 typedef s64 OSTime;
 typedef u32 OSTick;
 typedef u8 __OSException;
@@ -524,7 +531,7 @@ extern s32 __OSGetEffectivePriority(OSThread* thread);
 extern void kar_osthread__near_803d9e28(OSThread* thread, s32 priority); /* __OSPromoteThread */
 extern void __OSReschedule(void);
 extern OSTime __OSGetSystemTime(void);
-extern OSTime kar_osthread__near_803db59c(OSTime time); /* __OSTimeToSystemTime */
+extern OSTime __OSTimeToSystemTime(OSTime time);
 #define __OSActiveThreadQueue (*(OSThreadQueue*)0x800000DC)
 volatile OSTime __OSLastInterruptTime;
 volatile __OSInterrupt __OSLastInterrupt;
@@ -952,16 +959,21 @@ static inline void DisableWriteGatherPipe(void) {
 
 static void ClearArena(void) {
     if (OSGetResetCode() != 0x80000000) {
+        __OSSavedRegionStart = NULL;
+        __OSSavedRegionEnd = NULL;
         memset(OSGetArenaLo(), 0, (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
         return;
     }
 
-    __OSSavedRegionStart = *(void**)0x812FDFF0;
-    __OSSavedRegionEnd = *(void**)0x812FDFEC;
-
-    if (__OSSavedRegionStart == NULL) {
-        memset(OSGetArenaLo(), 0, (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
-        return;
+    {
+        void* end = *(void**)0x812FDFEC;
+        void* start = *(void**)0x812FDFF0;
+        __OSSavedRegionStart = start;
+        __OSSavedRegionEnd = end;
+        if (start == NULL) {
+            memset(OSGetArenaLo(), 0, (u32)OSGetArenaHi() - (u32)OSGetArenaLo());
+            return;
+        }
     }
 
     if ((u32)OSGetArenaLo() < (u32)__OSSavedRegionStart) {
@@ -1362,6 +1374,7 @@ static inline void SetTimer(OSAlarm* alarm) {
     }
 }
 
+#pragma peephole on
 void OSInitAlarm(void) {
     if (__OSGetExceptionHandler(8) != DecrementerExceptionHandler) {
         AlarmQueue.head = AlarmQueue.tail = NULL;
@@ -1435,7 +1448,7 @@ void fn_803D3148(OSAlarm* alarm, OSTime start, OSTime period, OSAlarmHandler han
     BOOL enabled;
     enabled = OSDisableInterrupts();
     alarm->period = period;
-    alarm->start = kar_osthread__near_803db59c(start);
+    alarm->start = __OSTimeToSystemTime(start);
     InsertAlarm(alarm, 0, handler);
     OSRestoreInterrupts(enabled);
 }
@@ -1515,6 +1528,7 @@ static void DecrementerExceptionCallback(register __OSException exception, regis
     __OSReschedule();
     OSLoadContext(context);
 }
+#pragma peephole reset
 
 static asm void DecrementerExceptionHandler(register __OSException exception, register OSContext* context) {
     nofralloc
@@ -1602,6 +1616,7 @@ static u8 DSPInitCode[128] = {
     0x02, 0xFF, 0x02, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+#pragma peephole on
 void __OSInitAudioSystem(void) {
     u8 errFlag;
     u16 reg16;
@@ -1701,6 +1716,7 @@ void __OSStopAudioSystem(void) {
 
 #undef waitUntil
 }
+#pragma peephole reset
 
 asm void DCEnable(void) {
     nofralloc
@@ -2548,13 +2564,16 @@ OSErrorHandler __OSErrorTable[__OS_ERROR_MAX];
 
 u32 lbl_805DC988 = FPSCR_ENABLE;
 
+#pragma peephole on
 void OSReport(const char* msg, ...) {
     va_list marker;
     va_start(marker, msg);
     vprintf(msg, marker);
     va_end(marker);
 }
+#pragma peephole reset
 
+#pragma peephole on
 void OSPanic(const char* file, int line, const char* msg, ...) {
     va_list marker;
     u32 i;
@@ -2730,6 +2749,7 @@ void __OSUnhandledException(__OSException exception, OSContext* context, u32 dsi
              __OSLastInterruptTime);
     PPCHalt();
 }
+#pragma peephole reset
 
 typedef char* (*ParseStringCallback)(u16, char*, OSFontHeader**, int*);
 
@@ -2737,7 +2757,7 @@ static OSFontHeader* FontDataAnsi;
 static OSFontHeader* FontDataSjis;
 static int FixedPitch;
 static ParseStringCallback ParseString;
-static u16 FontEncode = 0xFFFF;
+static u16 lbl_805DC998 = 0xFFFF;
 
 extern void DCStoreRange(register void* addr, register u32 nBytes);
 
@@ -2991,14 +3011,15 @@ static inline u32 ReadFont(void* img, u16 encode, void* fontData) {
 #define VI_DEBUG_PAL 4
 #define VI_EURGB60 5
 
+#pragma peephole on
 u16 OSGetFontEncode(void) {
-    if (FontEncode <= 1) {
-        return FontEncode;
+    if (lbl_805DC998 <= 1) {
+        return lbl_805DC998;
     }
 
     switch (*(int*)OSPhysicalToCached(0xCC)) {
     case VI_NTSC:
-        FontEncode = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
+        lbl_805DC998 = (__VIRegs[VI_DTV_STAT] & 2) ? OS_FONT_ENCODE_SJIS : OS_FONT_ENCODE_ANSI;
         break;
     case VI_PAL:
     case VI_MPAL:
@@ -3006,11 +3027,12 @@ u16 OSGetFontEncode(void) {
     case VI_DEBUG_PAL:
     case VI_EURGB60:
     default:
-        FontEncode = OS_FONT_ENCODE_ANSI;
+        lbl_805DC998 = OS_FONT_ENCODE_ANSI;
     }
 
-    return FontEncode;
+    return lbl_805DC998;
 }
+#pragma peephole reset
 
 u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
     u16 encode;
@@ -3516,6 +3538,7 @@ void __OSModuleInit(void) {
     *(u32*)0x800030D0 = 0;
 }
 
+#pragma peephole on
 void OSInitMessageQueue(OSMessageQueue* mq, void* msgArray, s32 msgCount) {
     OSInitThreadQueue(&mq->queueSend);
     OSInitThreadQueue(&mq->queueReceive);
@@ -3565,6 +3588,7 @@ int OSReceiveMessage(OSMessageQueue* mq, void* msg, s32 flags) {
     OSRestoreInterrupts(enabled);
     return 1;
 }
+#pragma peephole reset
 
 u32 OSGetPhysicalMemSize(void) {
     return *(u32*)0x80000028;
@@ -3574,6 +3598,7 @@ u32 OSGetConsoleSimulatedMemSize(void) {
     return *(u32*)0x800000F0;
 }
 
+#pragma peephole on
 BOOL OSOnReset(BOOL final) {
     if (final) {
         __MEMRegs[8] = 0xFF;
@@ -3581,9 +3606,11 @@ BOOL OSOnReset(BOOL final) {
     }
     return TRUE;
 }
+#pragma peephole reset
 
 static OSResetFunctionInfo ResetFunctionInfo = { OSOnReset, 0x7F, NULL, NULL };
 
+#pragma peephole on
 static void MEMIntrruptHandler(__OSInterrupt interrupt, OSContext* context) {
     u32 addr;
     u32 cause;
@@ -3599,6 +3626,7 @@ static void MEMIntrruptHandler(__OSInterrupt interrupt, OSContext* context) {
 
     __OSUnhandledException(__OS_EXCEPTION_MEMORY_PROTECTION, context, cause, addr);
 }
+#pragma peephole reset
 
 static asm void Config24MB(void) {
     nofralloc
@@ -3756,6 +3784,7 @@ void __OSInitMemoryProtection(void) {
         (queue)->head = __next; \
     } while (0);
 
+#pragma peephole on
 void fn_803D7E20(OSMutex* mutex) {
     OSInitThreadQueue(&mutex->queue);
     mutex->thread = 0;
@@ -3895,6 +3924,7 @@ int __OSCheckMutexes(OSThread* thread) {
     }
     return 1;
 }
+#pragma peephole reset
 
 asm void fn_803D8218(register u32 lr) {
     nofralloc
@@ -3968,24 +3998,35 @@ typedef struct OSResetFunctionQueue2 {
 
 static OSResetFunctionQueue2 ResetFunctionQueue;
 
+#pragma peephole on
 void OSRegisterResetFunction(OSResetFunctionInfo* info) {
     ENQUEUE_INFO_PRIO(info, &ResetFunctionQueue);
 }
+#pragma peephole reset
 
+#pragma peephole on
 int fn_803D85F8(BOOL final) {
     OSResetFunctionInfo* info;
-    int err;
-    u32 priority;
+    int err = 0;
 
-    priority = 0;
-    err = 0;
-
-    for (info = ResetFunctionQueue.head; info != 0;) {
-        if (err != 0 && priority != info->priority)
-            break;
+    for (info = ResetFunctionQueue.head; info != 0 && err == 0; info = info->next) {
         err |= !info->func(final);
-        priority = info->priority;
-        info = info->next;
+    }
+
+    err |= !__OSSyncSram();
+    if (err) {
+        return 0;
+    }
+    return 1;
+}
+#pragma peephole reset
+
+static inline int fn_803D85F8Inline(BOOL final) {
+    OSResetFunctionInfo* info;
+    int err = 0;
+
+    for (info = ResetFunctionQueue.head; info != 0 && err == 0; info = info->next) {
+        err |= !info->func(final);
     }
 
     err |= !__OSSyncSram();
@@ -4057,7 +4098,7 @@ void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu) {
     }
 
     do {
-    } while (!fn_803D85F8(FALSE));
+    } while (!fn_803D85F8Inline(FALSE));
     do {
     } while (!__OSSyncSram());
 
@@ -4069,7 +4110,7 @@ void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu) {
         __OSUnlockSram(1);
     }
 
-    fn_803D85F8(TRUE);
+    fn_803D85F8Inline(TRUE);
 
     LCDisable();
 
@@ -4119,7 +4160,7 @@ void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu) {
 
 u32 OSGetResetCode(void) {
     if (*(u8*)OSPhysicalToCached(0x30E2)) {
-        return *(u32*)OSPhysicalToCached(0);
+        return (u32)OSPhysicalToCached(0);
     }
     return (__PIRegs[9] & 0xFFFFFFF8) / 8;
 }
@@ -4130,11 +4171,14 @@ static BOOL LastState;
 static OSTime HoldUp;
 static OSTime HoldDown;
 
+#pragma peephole on
 void __OSResetSWInterruptHandler(s16 exception, OSContext* context) {
     OSResetCallback callback;
+    OSTime hold;
 
     HoldDown = __OSGetSystemTime();
-    while (__OSGetSystemTime() - HoldDown < 400 && !(__PIRegs[0] & 0x00010000)) {
+    hold = OSMicrosecondsToTicks(100);
+    while (__OSGetSystemTime() - HoldDown < hold && !(__PIRegs[0] & 0x00010000)) {
         ;
     }
     if (!(__PIRegs[0] & 0x00010000)) {
@@ -4154,6 +4198,7 @@ BOOL OSGetResetButtonState(void) {
     int state;
     u32 reg;
     OSTime now;
+    u8 timer;
 
     now = __OSGetSystemTime();
 
@@ -4164,7 +4209,8 @@ BOOL OSGetResetButtonState(void) {
             state = HoldUp ? TRUE : FALSE;
             HoldDown = now;
         } else {
-            state = HoldUp || (400 < now - HoldDown) ? TRUE : FALSE;
+            state = HoldUp || (OSMicrosecondsToTicks(100) < now - HoldDown) ? TRUE
+                                                                             : FALSE;
         }
     } else if (Down) {
         Down = FALSE;
@@ -4174,7 +4220,7 @@ BOOL OSGetResetButtonState(void) {
         } else {
             HoldUp = 0;
         }
-    } else if (HoldUp && (now - HoldUp < 40)) {
+    } else if (HoldUp && (now - HoldUp < OSMillisecondsToTicks(40))) {
         state = TRUE;
     } else {
         state = FALSE;
@@ -4183,12 +4229,13 @@ BOOL OSGetResetButtonState(void) {
 
     LastState = state;
 
-    if (*(u8*)0x800030E3 & 0x1F) {
-        OSTime fire = (*(u8*)0x800030E3 & 0x1F) * 60;
-        fire = __OSStartTime + (fire * 4000);
+    timer = *(u8*)0x800030E3 & 0x3F;
+    if (timer) {
+        OSTime fire = timer * 60;
+        fire = __OSStartTime + OSSecondsToTicks(fire);
         if (fire < now) {
             now -= fire;
-            now = (now / 4000) / 2;
+            now = OSTicksToSeconds(now) / 2;
             if ((now & 1) == 0) {
                 state = TRUE;
             } else {
@@ -4204,11 +4251,13 @@ BOOL OSGetResetButtonState(void) {
 int OSGetResetSwitchState(void) {
     return OSGetResetButtonState();
 }
+#pragma peephole reset
 
 static SramControl Scb_8056D900;
 
 int WriteSram(void* buffer, u32 offset, u32 size);
 
+#pragma peephole on
 void fn_803D8DA8(s32 chan, OSContext* context) {
     Scb_8056D900.sync =
         WriteSram(&Scb_8056D900.sram[Scb_8056D900.offset], Scb_8056D900.offset, SRAM_SIZE - Scb_8056D900.offset);
@@ -4377,3 +4426,4 @@ void OSSetSoundMode(u32 mode) {
     sram->flags |= mode;
     UnlockSram(1, 0);
 }
+#pragma peephole reset

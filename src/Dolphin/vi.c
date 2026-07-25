@@ -41,7 +41,7 @@ extern int __OSUnlockSram(int commit);
 extern void SIRefreshSamplingRate(void);
 extern void __VIInitPhilips(void);
 
-#define __VIRegs ((volatile u16*)0xCC002000)
+volatile u16 __VIRegs[] : (0xCC002000);
 #define VI_HORIZ_COUNT (23)
 #define VI_VERT_COUNT  (22)
 
@@ -361,7 +361,7 @@ void __VIInit(VITVMode mode) {
         __VIInitPhilips();
     }
 
-    nonInter = mode & 3;
+    nonInter = mode & 2;
     tv = (u32)mode >> 2;
     *(u32*)OSPhysicalToCached(0xCC) = tv;
     if (encoderType == 0) {
@@ -402,7 +402,7 @@ void __VIInit(VITVMode mode) {
         __VIRegs[1] = (tv << 8) | 5;
         __VIRegs[54] = 1;
     } else {
-        __VIRegs[1] = ((nonInter << 2) & 4) | 1 | (tv << 8);
+        __VIRegs[1] = (nonInter << 2) | 1 | (tv << 8);
         __VIRegs[54] = 0;
     }
 }

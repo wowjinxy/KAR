@@ -304,6 +304,7 @@ AXVPB* __AXGetStackHead(u32 priority)
     return lbl_8056E9E8[priority];
 }
 
+#pragma dont_inline on
 void __AXServiceCallbackStack(void)
 {
     AXVPB* p;
@@ -319,6 +320,7 @@ void __AXServiceCallbackStack(void)
         }
     }
 }
+#pragma dont_inline off
 
 void __AXAllocInit(void)
 {
@@ -546,6 +548,7 @@ void __AXAuxInit(void)
     }
 }
 
+#pragma dont_inline on
 void fn_803EC608(u32* p)
 {
     if (lbl_805DE088) {
@@ -603,6 +606,7 @@ void fn_803EC744(u32* p)
 {
     *p = (u32)&lbl_80570180[lbl_805DE0B4][0];
 }
+#pragma dont_inline off
 
 extern u32 lbl_805DE0D0;
 
@@ -678,9 +682,9 @@ static u32 lbl_805DE0C0;
 static u16* lbl_805DE0C4;
 static u32 lbl_805DE0C8;
 static u32 lbl_805DE0CC;
-static u32 lbl_805DE0D0;
+u32 lbl_805DE0D0;
 
-static const u16 lbl_805DE0CCTable[3360] = {
+u16 lbl_804FCFC0[3360] = {
     0x7FA1, 0x7F43, 0x7EE6, 0x7E88, 0x7E2B, 0x7DCE, 0x7D72, 0x7D16,
     0x7CBA, 0x7C5E, 0x7C02, 0x7BA7, 0x7B4C, 0x7AF1, 0x7A97, 0x7A3D,
     0x79E3, 0x7989, 0x7930, 0x78D6, 0x787E, 0x7825, 0x77CD, 0x7774,
@@ -1613,6 +1617,7 @@ u32 fn_803EC9B4(void)
 }
 #pragma dont_inline off
 
+#pragma dont_inline on
 u32 fn_803EC9BC(void)
 {
     u32 address;
@@ -1623,6 +1628,7 @@ u32 fn_803EC9BC(void)
     lbl_805DE0C4 = (void*)&lbl_80571800[lbl_805DE0C0][0];
     return address;
 }
+#pragma dont_inline off
 
 static inline void __AXWriteToCommandList(u16 data)
 {
@@ -1730,8 +1736,8 @@ void salBuildCommandList(void* sbuffer, void* buffer)
         __AXWriteToCommandList(0x12);
         __AXWriteToCommandList(0x8000);
         __AXWriteToCommandList(0xA);
-        __AXWriteToCommandList((u32)lbl_805DE0CCTable >> 0x10);
-        __AXWriteToCommandList((u32)lbl_805DE0CCTable);
+        __AXWriteToCommandList((u32)lbl_804FCFC0 >> 0x10);
+        __AXWriteToCommandList((u32)lbl_804FCFC0);
         lbl_805DE0C8 += 0xBB8;
     }
 
@@ -1761,9 +1767,10 @@ void fn_803ED0CC(u32 mode)
     }
 }
 
+s16 lbl_80571E00[3][320];
+
 typedef struct
 {
-    s16 outBuf[3][320];
     DSPTaskInfo task;
     u16 dram[8192];
     struct
@@ -1776,9 +1783,9 @@ typedef struct
         OSTime axFrameEnd;
         u32 axNumVoices;
     } profile;
-} SalAudioState;
+} SalDspState;
 
-static SalAudioState lbl_80571E00;
+SalDspState lbl_80572580;
 
 static u32 lbl_805DE0D8;
 static u32 lbl_805DE0DC;
@@ -1800,7 +1807,7 @@ void salCallback(u32 lessDspCycles)
     u8* dest;
     u32 i;
 
-    lbl_80571E00.profile.axFrameStart = OSGetTime();
+    lbl_80572580.profile.axFrameStart = OSGetTime();
     SortVoices(lessDspCycles);
     fn_803ED780();
     cl = fn_803EC9BC();
@@ -1814,29 +1821,29 @@ void salCallback(u32 lessDspCycles)
         ;
 
     __AXServiceCallbackStack();
-    lbl_80571E00.profile.auxProcessingStart = OSGetTime();
+    lbl_80572580.profile.auxProcessingStart = OSGetTime();
     salHandleAuxProcessing();
-    lbl_80571E00.profile.auxProcessingEnd = OSGetTime();
-    lbl_80571E00.profile.userCallbackStart = OSGetTime();
+    lbl_80572580.profile.auxProcessingEnd = OSGetTime();
+    lbl_80572580.profile.userCallbackStart = OSGetTime();
 
     if (lbl_805DE0E8) {
         lbl_805DE0E8();
     }
 
-    lbl_80571E00.profile.userCallbackEnd = OSGetTime();
-    salBuildCommandList(&lbl_80571E00.outBuf[2][0], &lbl_80571E00.outBuf[lbl_805DE0D8][0]);
+    lbl_80572580.profile.userCallbackEnd = OSGetTime();
+    salBuildCommandList(&lbl_80571E00[2][0], &lbl_80571E00[lbl_805DE0D8][0]);
     lbl_805DE0D8 += 1;
     lbl_805DE0D8 &= 1;
-    AIInitDMA((u32)&lbl_80571E00.outBuf[lbl_805DE0D8][0], 0x280);
+    AIInitDMA((u32)&lbl_80571E00[lbl_805DE0D8][0], 0x280);
 
-    lbl_80571E00.profile.axFrameEnd = OSGetTime();
-    lbl_80571E00.profile.axNumVoices = fn_803EDC38();
+    lbl_80572580.profile.axFrameEnd = OSGetTime();
+    lbl_80572580.profile.axNumVoices = fn_803EDC38();
     profile = (void*)hwGetStreamPlayBuffer();
 
     if (profile) {
         i = 56;
         dest = (u8*)profile;
-        src = (u8*)&lbl_80571E00.profile;
+        src = (u8*)&lbl_80572580.profile;
 
         while (i != 0) {
             *dest = *src;
@@ -1858,7 +1865,7 @@ void fn_803ED268(void)
         salCallback(0);
     } else {
         lbl_805DE0DC = 2;
-        DSPAssertTask(&lbl_80571E00.task);
+        DSPAssertTask(&lbl_80572580.task);
     }
 }
 
@@ -1885,19 +1892,19 @@ void fn_803ED334(void)
 
 void salInitDsp(void)
 {
-    lbl_80571E00.task.iram_mmem_addr = (u16*)lbl_804FEA00;
-    lbl_80571E00.task.iram_length = __AXDspCodeSize;
-    lbl_80571E00.task.iram_addr = 0;
-    lbl_80571E00.task.dram_mmem_addr = lbl_80571E00.dram;
-    lbl_80571E00.task.dram_length = 0x2000;
-    lbl_80571E00.task.dram_addr = 0;
-    lbl_80571E00.task.dsp_init_vector = 0x10;
-    lbl_80571E00.task.dsp_resume_vector = 0x30;
-    lbl_80571E00.task.init_cb = (DSPCallback)fn_803ED2D0;
-    lbl_80571E00.task.res_cb = (DSPCallback)fn_803ED2DC;
-    lbl_80571E00.task.done_cb = (DSPCallback)fn_803ED334;
-    lbl_80571E00.task.req_cb = NULL;
-    lbl_80571E00.task.priority = 0;
+    lbl_80572580.task.iram_mmem_addr = (u16*)lbl_804FEA00;
+    lbl_80572580.task.iram_length = __AXDspCodeSize;
+    lbl_80572580.task.iram_addr = 0;
+    lbl_80572580.task.dram_mmem_addr = lbl_80572580.dram;
+    lbl_80572580.task.dram_length = 0x2000;
+    lbl_80572580.task.dram_addr = 0;
+    lbl_80572580.task.dsp_init_vector = 0x10;
+    lbl_80572580.task.dsp_resume_vector = 0x30;
+    lbl_80572580.task.init_cb = (DSPCallback)fn_803ED2D0;
+    lbl_80572580.task.res_cb = (DSPCallback)fn_803ED2DC;
+    lbl_80572580.task.done_cb = (DSPCallback)fn_803ED334;
+    lbl_80572580.task.req_cb = NULL;
+    lbl_80572580.task.priority = 0;
     lbl_805DE0EC = 0;
     lbl_805DE0F0 = 0;
 
@@ -1906,44 +1913,44 @@ void salInitDsp(void)
         DSPInit();
     }
 
-    DSPAddTask(&lbl_80571E00.task);
+    DSPAddTask(&lbl_80572580.task);
     while (lbl_805DE0EC == 0)
         ;
 }
 
 void salInitAi(void)
 {
-    u32 i;
+    int i;
     u32* p;
 
     lbl_805DE0D8 = 0;
     lbl_805DE0F0 = 0;
 
-    p = (u32*)&lbl_80571E00;
-    for (i = 0x140; i != 0; i--) {
+    p = (u32*)lbl_80571E00;
+    for (i = 0; i < 0x140; i++) {
         *p = 0;
         p++;
     }
 
-    DCFlushRange(&lbl_80571E00, 0x500);
+    DCFlushRange(lbl_80571E00, 0x500);
 
-    p = (u32*)lbl_80571E00.outBuf[2];
-    for (i = 0xA0; i != 0; i--) {
+    p = (u32*)lbl_80571E00[2];
+    for (i = 0; i < 0xA0; i++) {
         *p = 0;
         p++;
     }
 
-    DCFlushRange(lbl_80571E00.outBuf[2], 0x280);
+    DCFlushRange(lbl_80571E00[2], 0x280);
 
     salInitDsp();
     AIRegisterDMACallback((void*)fn_803ED268);
 
-    salBuildCommandList(lbl_80571E00.outBuf[2], &lbl_80571E00.outBuf[1][0]);
+    salBuildCommandList(lbl_80571E00[2], &lbl_80571E00[1][0]);
 
     lbl_805DE0DC = 1;
     lbl_805DE0E8 = NULL;
 
-    AIInitDMA((u32)&lbl_80571E00.outBuf[lbl_805DE0D8][0], 0x280);
+    AIInitDMA((u32)&lbl_80571E00[lbl_805DE0D8][0], 0x280);
     AIStartDMA();
 }
 
@@ -2051,7 +2058,7 @@ static u32 lbl_804FCEE8[54] = {
     0x000009E2, 0x000009E2, 0x00000E97, 0x00000000
 };
 
-static struct {
+struct {
     AXPB pb[AX_MAX_VOICES];
     AXPBITDBUFFER itd[AX_MAX_VOICES];
     AXPBU updates[AX_MAX_VOICES];
@@ -2131,12 +2138,13 @@ void salCalcVolume(AXVPB* p)
         *(dst) = *(src); dst += 1; src += 1;
         *(dst) = *(src); dst += 1; src += 1;
         *(dst) = *(src); dst += 1; src += 1;
+        *(dst) = *(src); dst += 1; src += 1;
         *(dst) = *(src);
 
         if (p->updateCounter != 0) {
             u32 count;
-            u16* src2 = (u16*)&lbl_80576660.updates[p->index];
-            u16* dst2 = p->updateData;
+            u32* src2 = (u32*)&lbl_80576660.updates[p->index];
+            u32* dst2 = (u32*)p->updateData;
             for (count = p->updateCounter; count; count--) {
                 *(dst2) = *(src2);
                 dst2 += 1;
@@ -2514,26 +2522,28 @@ void salInitDspCtrl(void)
 void fn_803EE7F4(AXVPB* p, u32 type)
 {
     BOOL old;
+    AXPB* ppb;
 
     old = OSDisableInterrupts();
+    ppb = &p->pb;
     switch (type) {
     case 0:
-        p->pb.srcSelect = 2;
+        ppb->srcSelect = 2;
         break;
     case 1:
-        p->pb.srcSelect = 1;
+        ppb->srcSelect = 1;
         break;
     case 2:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 0;
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 0;
         break;
     case 3:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 1;
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 1;
         break;
     case 4:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 2;
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 2;
         break;
     }
 
@@ -2635,7 +2645,7 @@ void fn_803EEC80(AXVPB* p, s16 delta)
     OSRestoreInterrupts(old);
 }
 
-void fn_803EECCC(AXVPB* p, AXPBADDR* addr)
+void AXHwStub55(AXVPB* p, AXPBADDR* addr)
 {
     BOOL old;
     u32* dst;
@@ -2648,9 +2658,11 @@ void fn_803EECCC(AXVPB* p, AXPBADDR* addr)
     *(dst) = *(src); dst += 1; src += 1;
     *(dst) = *(src); dst += 1; src += 1;
     *(dst) = *(src); dst += 1; src += 1;
-    *(dst) = *(src);
+    *(dst) = *(src); dst += 1;
 
     switch (addr->format) {
+    case 0:
+        break;
     case 10:
         *(dst) = 0; dst += 1;
         *(dst) = 0; dst += 1;
@@ -2714,7 +2726,7 @@ void fn_803EEE7C(AXVPB* p, u32 addr)
     OSRestoreInterrupts(old);
 }
 
-void fn_803EEED0(AXVPB* p, u32 addr)
+void AXHwStub59(AXVPB* p, u32 addr)
 {
     BOOL old;
 
@@ -2901,10 +2913,10 @@ typedef struct AXFX_REVSTD_WORK
 
 extern void* salMalloc(u32 size);
 extern void salFree(void* p);
-extern f32 powf(f32 base, f32 exp);
+extern f32 fn_803BD4F4(f32 base, f32 exp);
 
-static void* (*__AXFXAlloc)(u32) = salMalloc;
-static void (*__AXFXFree)(void*) = salFree;
+static void* (*lbl_805DCA28)(u32) = salMalloc;
+static void (*lbl_805DCA2C)(void*) = salFree;
 
 static inline void DLsetdelayHI(AXFX_REVHI_DELAYLINE* dl, s32 lag)
 {
@@ -2914,52 +2926,31 @@ static inline void DLsetdelayHI(AXFX_REVHI_DELAYLINE* dl, s32 lag)
     }
 }
 
-static inline int DLcreateHI(AXFX_REVHI_DELAYLINE* dl, s32 max_length)
+static inline void DLcreateHI(AXFX_REVHI_DELAYLINE* dl, s32 max_length)
 {
     dl->length = (max_length * 4);
-    dl->inputs = __AXFXAlloc(max_length << 2);
-    if (dl->inputs == NULL) {
-        return 0;
-    }
-
+    dl->inputs = lbl_805DCA28(max_length << 2);
     memset(dl->inputs, 0, max_length << 2);
     dl->lastOutput = 0.0f;
     DLsetdelayHI(dl, max_length >> 1);
     dl->inPoint = 0;
     dl->outPoint = 0;
-    return 1;
 }
 
 static inline void DLdeleteHI(AXFX_REVHI_DELAYLINE* dl)
 {
-    __AXFXFree(dl->inputs);
+    lbl_805DCA2C(dl->inputs);
 }
 
-void ReverbHIFree(AXFX_REVHI_WORK* rv)
-{
-    u8 i;
+void ReverbHIFree(AXFX_REVHI_WORK* rv);
 
-    for (i = 0; i < 9; i++) {
-        DLdeleteHI(&rv->AP[i]);
-    }
-
-    for (i = 0; i < 9; i++) {
-        DLdeleteHI(&rv->C[i]);
-    }
-
-    if (rv->preDelayTime) {
-        for (i = 0; i < 3; i++) {
-            __AXFXFree(rv->preDelayLine[i]);
-        }
-    }
-}
+s32 lbl_80500920[8] = { 0x000006FD, 0x000007CF, 0x0000091D, 0x000001B1,
+                       0x00000095, 0x0000002F, 0x00000049, 0x00000043 };
 
 int ReverbHICreate(AXFX_REVHI_WORK* rv, f32 coloration, f32 time, f32 mix, f32 damping, f32 preDelay, f32 crosstalk)
 {
     u8 i;
     u8 k;
-    static s32 lbl_80500920[8] = { 0x000006FD, 0x000007CF, 0x0000091D, 0x000001B1,
-                           0x00000095, 0x0000002F, 0x00000049, 0x00000043 };
 
     if ((coloration < 0.0f) || (coloration > 1.0f) || (time < 0.01f) || (time > 10.0f) || (mix < 0.0f) ||
         (mix > 1.0f) || (crosstalk < 0.0f) || (crosstalk > 1.0f) || (damping < 0.0f) || (damping > 1.0f) ||
@@ -2971,27 +2962,17 @@ int ReverbHICreate(AXFX_REVHI_WORK* rv, f32 coloration, f32 time, f32 mix, f32 d
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 3; i++) {
-            if (DLcreateHI(&rv->C[i + (k * 3)], lbl_80500920[i] + 2) == 0) {
-                ReverbHIFree(rv);
-                return 0;
-            }
-
+            DLcreateHI(&rv->C[i + (k * 3)], lbl_80500920[i] + 2);
             DLsetdelayHI(&rv->C[i + (k * 3)], lbl_80500920[i]);
-            rv->combCoef[i + (k * 3)] = powf(10.0f, (lbl_80500920[i] * -3) / (32000.0f * time));
+            rv->combCoef[i + (k * 3)] = fn_803BD4F4(10.0f, (lbl_80500920[i] * -3) / (32000.0f * time));
         }
 
         for (i = 0; i < 2; i++) {
-            if (DLcreateHI(&rv->AP[i + (k * 3)], lbl_80500920[i + 3] + 2) == 0) {
-                ReverbHIFree(rv);
-                return 0;
-            }
+            DLcreateHI(&rv->AP[i + (k * 3)], lbl_80500920[i + 3] + 2);
             DLsetdelayHI(&rv->AP[i + (k * 3)], lbl_80500920[i + 3]);
         }
 
-        if (DLcreateHI(&rv->AP[2 + (k * 3)], lbl_80500920[k + 5] + 2) == 0) {
-            ReverbHIFree(rv);
-            return 0;
-        }
+        DLcreateHI(&rv->AP[2 + (k * 3)], lbl_80500920[k + 5] + 2);
         DLsetdelayHI(&rv->AP[2 + (k * 3)], lbl_80500920[k + 5]);
         rv->lpLastout[k] = 0.0f;
     }
@@ -3008,12 +2989,7 @@ int ReverbHICreate(AXFX_REVHI_WORK* rv, f32 coloration, f32 time, f32 mix, f32 d
     if (0.0f != preDelay) {
         rv->preDelayTime = (32000.0f * preDelay);
         for (i = 0; i < 3; i++) {
-            rv->preDelayLine[i] = __AXFXAlloc(rv->preDelayTime * 4);
-            if (rv->preDelayLine[i] == NULL) {
-                ReverbHIFree(rv);
-                return 0;
-            }
-
+            rv->preDelayLine[i] = lbl_805DCA28(rv->preDelayTime * 4);
             memset(rv->preDelayLine[i], 0, rv->preDelayTime * 4);
             rv->preDelayPtr[i] = rv->preDelayLine[i];
         }
@@ -3496,14 +3472,35 @@ L_00000C7C:
     blr
 }
 
-void sndAuxCallbackPrepareReverbHI(AXFX_REVERBHI* rev)
+void ReverbHIFree(AXFX_REVHI_WORK* rv)
 {
+    u8 i;
+
+    for (i = 0; i < 9; i++) {
+        DLdeleteHI(&rv->AP[i]);
+    }
+
+    for (i = 0; i < 9; i++) {
+        DLdeleteHI(&rv->C[i]);
+    }
+
+    if (rv->preDelayTime) {
+        for (i = 0; i < 3; i++) {
+            lbl_805DCA2C(rv->preDelayLine[i]);
+        }
+    }
+}
+
+int sndAuxCallbackPrepareReverbHI(AXFX_REVERBHI* rev)
+{
+    int result;
     BOOL old;
 
     old = OSDisableInterrupts();
     rev->tempDisableFX = 0;
-    ReverbHICreate(&rev->rv, rev->coloration, rev->time, rev->mix, rev->damping, rev->preDelay, rev->crosstalk);
+    result = ReverbHICreate(&rev->rv, rev->coloration, rev->time, rev->mix, rev->damping, rev->preDelay, rev->crosstalk);
     OSRestoreInterrupts(old);
+    return result;
 }
 
 int sndAuxCallbackShutdownReverbHI(AXFX_REVERBHI* rev)
@@ -3519,22 +3516,29 @@ int sndAuxCallbackShutdownReverbHI(AXFX_REVERBHI* rev)
 void sndAuxCallbackReverbHI(AXFX_BUFFERUPDATE* bufferUpdate, AXFX_REVERBHI* reverb)
 {
     u8 k;
+    s32* left;
+    s32* right;
+    s32* surround;
 
     if (reverb->tempDisableFX == 0) {
+        surround = bufferUpdate->surround;
+        right = bufferUpdate->right;
+        left = bufferUpdate->left;
+
         for (k = 0; k < 3; k++) {
             switch (k) {
             case 0:
                 if (0.0f != reverb->rv.crosstalk) {
-                    DoCrossTalk(bufferUpdate->left, bufferUpdate->right, 0.5f * reverb->rv.crosstalk,
+                    DoCrossTalk(left, right, 0.5f * reverb->rv.crosstalk,
                                 1.0f - (0.5f * reverb->rv.crosstalk));
                 }
-                ReverbHI_HandleReverb(bufferUpdate->left, &reverb->rv, 0);
+                ReverbHI_HandleReverb(left, &reverb->rv, 0);
                 break;
             case 1:
-                ReverbHI_HandleReverb(bufferUpdate->right, &reverb->rv, 1);
+                ReverbHI_HandleReverb(right, &reverb->rv, 1);
                 break;
             case 2:
-                ReverbHI_HandleReverb(bufferUpdate->surround, &reverb->rv, 2);
+                ReverbHI_HandleReverb(surround, &reverb->rv, 2);
                 break;
             }
         }
@@ -3549,46 +3553,24 @@ static inline void DLsetdelaySTD(AXFX_REVSTD_DELAYLINE* dl, s32 lag)
     }
 }
 
-static inline int DLcreateSTD(AXFX_REVSTD_DELAYLINE* dl, s32 max_length)
+static inline void DLcreateSTD(AXFX_REVSTD_DELAYLINE* dl, s32 max_length)
 {
     dl->length = (max_length * 4);
-    dl->inputs = __AXFXAlloc(max_length * 4);
-    if (dl->inputs == NULL) {
-        return 0;
-    }
-
+    dl->inputs = lbl_805DCA28(max_length * 4);
     memset(dl->inputs, 0, max_length * 4);
     dl->lastOutput = 0.0f;
     DLsetdelaySTD(dl, max_length >> 1);
     dl->inPoint = 0;
     dl->outPoint = 0;
-    return 1;
 }
 
-static inline void ReverbSTDFree(AXFX_REVSTD_WORK* rv)
-{
-    u8 i;
+s32 lbl_80500940[4] = { 0x000006FD, 0x000007CF, 0x000001B1, 0x00000095 };
 
-    for (i = 0; i < 6; i++) {
-        __AXFXFree(rv->AP[i].inputs);
-    }
-
-    for (i = 0; i < 6; i++) {
-        __AXFXFree(rv->C[i].inputs);
-    }
-
-    if (rv->preDelayTime) {
-        for (i = 0; i < 3; i++) {
-            __AXFXFree(rv->preDelayLine[i]);
-        }
-    }
-}
-
+#pragma peephole on
 int ReverbSTDCreate(AXFX_REVSTD_WORK* rv, f32 coloration, f32 time, f32 mix, f32 damping, f32 predelay)
 {
     u8 i;
     u8 k;
-    static s32 lbl_80500940[4] = { 0x000006FD, 0x000007CF, 0x000001B1, 0x00000095 };
 
     if ((coloration < 0.0f) || (coloration > 1.0f) || (time < 0.01f) || (time > 10.0f) || (mix < 0.0f) ||
         (mix > 1.0f) || (damping < 0.0f) || (damping > 1.0f) || (predelay < 0.0f) || (predelay > 0.1f)) {
@@ -3599,19 +3581,13 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK* rv, f32 coloration, f32 time, f32 mix, f32
 
     for (k = 0; k < 3; k++) {
         for (i = 0; i < 2; i++) {
-            if (DLcreateSTD(&rv->C[i + (k * 2)], lbl_80500940[i] + 2) == 0) {
-                ReverbSTDFree(rv);
-                return 0;
-            }
+            DLcreateSTD(&rv->C[i + (k * 2)], lbl_80500940[i] + 2);
             DLsetdelaySTD(&rv->C[i + (k * 2)], lbl_80500940[i]);
-            rv->combCoef[i + (k * 2)] = powf(10.0f, (lbl_80500940[i] * -3) / (32000.0f * time));
+            rv->combCoef[i + (k * 2)] = fn_803BD4F4(10.0f, (lbl_80500940[i] * -3) / (32000.0f * time));
         }
 
         for (i = 0; i < 2; i++) {
-            if (DLcreateSTD(&rv->AP[i + (k * 2)], lbl_80500940[i + 2] + 2) == 0) {
-                ReverbSTDFree(rv);
-                return 0;
-            }
+            DLcreateSTD(&rv->AP[i + (k * 2)], lbl_80500940[i + 2] + 2);
             DLsetdelaySTD(&rv->AP[i + (k * 2)], lbl_80500940[i + 2]);
         }
         rv->lpLastout[k] = 0.0f;
@@ -3628,12 +3604,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK* rv, f32 coloration, f32 time, f32 mix, f32
     if (0.0f != predelay) {
         rv->preDelayTime = (32000.0f * predelay);
         for (i = 0; i < 3; i++) {
-            rv->preDelayLine[i] = __AXFXAlloc(rv->preDelayTime * 4);
-            if (rv->preDelayLine[i] == NULL) {
-                ReverbSTDFree(rv);
-                return 0;
-            }
-
+            rv->preDelayLine[i] = lbl_805DCA28(rv->preDelayTime * 4);
             memset(rv->preDelayLine[i], 0, rv->preDelayTime * 4);
             rv->preDelayPtr[i] = rv->preDelayLine[i];
         }
@@ -3647,3 +3618,4 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK* rv, f32 coloration, f32 time, f32 mix, f32
 
     return 1;
 }
+#pragma peephole reset

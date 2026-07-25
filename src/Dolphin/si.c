@@ -20,9 +20,7 @@ extern void OSReport(char* fmt, ...);
 extern u32 VIGetCurrentLine(void);
 extern s32 VIGetTvFormat(void);
 
-#define SI_BASE 0xCC006400
-
-#define __SIRegs ((volatile u32*)SI_BASE)
+static volatile u32 __SIRegs[0x100] : 0xCC006400;
 
 #define SIPOLL __SIRegs[0x0C]
 #define SICOMCSR __SIRegs[0x0D]
@@ -111,7 +109,7 @@ static u32 SamplingRate;
 
 u32 fn_803E87C8(void);
 static void SIInterruptHandler(u32 interrupt, OSContext* context);
-BOOL __SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback);
+BOOL __SITransfer(s32 chan, void* outBuf, u32 outLen, void* inBuf, u32 inLen, SITransferCallback callback);
 void fn_803E96CC(OSAlarm* alarm, OSContext* context);
 static void GetTypeCallback(s32 chan, u32 status, OSContext* context);
 BOOL SIEnablePollingInterrupt(BOOL enable);
@@ -136,52 +134,48 @@ BOOL SIIsChanBusy(s32 chan)
 
 u32 fn_803E87C8(void)
 {
-    u32 comcsr = SICOMCSR;
     u32 sr = SISR;
-    s32 chan;
+    u32 comcsr = SICOMCSR;
+    u32 i;
+    u32 rLen;
 
     comcsr |= 0x80000000;
     comcsr &= ~1;
     SICOMCSR = comcsr;
 
-    chan = Si.curChan;
-    if (chan != -1) {
-        s32 wordCount;
-        s32 rem;
-        s32 i;
-        u32* dst;
-        u8* hwSrc;
+    if (Si.curChan != -1) {
+        u8* input;
+        u32 temp;
 
-        LastXfer[chan] = __OSGetSystemTime();
+        LastXfer[Si.curChan] = __OSGetSystemTime();
 
-        wordCount = Si.inLen >> 2;
-        dst = (u32*)Si.inBuf;
-        hwSrc = SIIOBUF;
-        for (i = 0; i < wordCount; i++) {
-            dst[i] = *(u32*)(hwSrc + i * 4);
+        input = Si.inBuf;
+        rLen = Si.inLen / sizeof(u32);
+        for (i = 0; i < rLen; i++) {
+            *((u32*)input)++ = __SIRegs[i + 0x20];
         }
 
-        rem = Si.inLen & 3;
-        if (rem != 0) {
-            u32 word = *(u32*)(hwSrc + wordCount * 4);
-            u8* bdst = (u8*)dst + wordCount * 4;
-            for (i = 0; i < rem; i++) {
-                bdst[i] = (u8)(word >> ((3 - i) * 8));
+        rLen = Si.inLen & 3;
+        if (rLen != 0) {
+            temp = __SIRegs[i + 0x20];
+            for (i = 0; i < rLen; i++) {
+                *(input++) = (u8)(temp >> ((3 - i) * 8));
             }
         }
 
-        if ((SICOMCSR & 0x20000000) == 0) {
-            TypeTime[chan] = __OSGetSystemTime();
-            sr = 0;
-        } else {
-            u32 s = sr >> ((3 - chan) * 8);
-            sr = s & 0xf;
-            if ((s & 8) && !(Type[chan] & 0x80)) {
+        if (SICOMCSR & 0x20000000) {
+            s32 chan = Si.curChan;
+            sr >>= (3 - chan) * 8;
+            sr &= 0xf;
+            if ((sr & 8) && !(Type[chan] & 0x80)) {
                 Type[chan] = 8;
             }
             if (sr == 0) {
                 sr = 4;
             }
+        } else {
+            TypeTime[Si.curChan] = __OSGetSystemTime();
+            sr = 0;
         }
 
         Si.curChan = -1;
@@ -236,7 +230,7 @@ static void SIInterruptHandler(u32 interrupt, OSContext* context)
     if ((comcsr & 0x18000000) == 0x18000000) {
         u32 line = VIGetCurrentLine() + 1;
         u32 poll = Si.pollValue;
-        u32 interval = (poll & 0x3ff) >> 1;
+        u32 interval = ((poll & 0x3ff0000) >> 16) >> 1;
         s32 i;
 
         for (i = 0; i < 4; i++) {
@@ -245,17 +239,20 @@ static void SIInterruptHandler(u32 interrupt, OSContext* context)
             }
         }
 
-        if ((!(poll & 0x80) || (PollThreshold[0] != 0 && line <= interval + PollThreshold[0])) &&
-            (!(poll & 0x40) || (PollThreshold[1] != 0 && line <= interval + PollThreshold[1])) &&
-            (!(poll & 0x20) || (PollThreshold[2] != 0 && line <= interval + PollThreshold[2])) &&
-            (!(poll & 0x10) || (PollThreshold[3] != 0 && line <= interval + PollThreshold[3]))) {
-            for (i = 0; i < 4; i++) {
-                PollThreshold[i] = 0;
-            }
-            for (i = 0; i < 4; i++) {
-                if (PollHandlerTable[i]) {
-                    PollHandlerTable[i](interrupt, context);
+        for (i = 0; i < 4; i++) {
+            if (poll & (0x80000000 >> (24 + i))) {
+                if (PollThreshold[i] == 0 || interval + PollThreshold[i] < line) {
+                    return;
                 }
+            }
+        }
+
+        for (i = 0; i < 4; i++) {
+            PollThreshold[i] = 0;
+        }
+        for (i = 0; i < 4; i++) {
+            if (PollHandlerTable[i]) {
+                PollHandlerTable[i](interrupt, context);
             }
         }
     }
@@ -275,14 +272,14 @@ BOOL SIEnablePollingInterrupt(BOOL enable)
         old = FALSE;
     }
 
-    if (!enable) {
-        comcsr &= 0xf7ffffff;
-    } else {
+    if (enable) {
         PollThreshold[0] = 0;
         comcsr |= 0x8000000;
         PollThreshold[1] = 0;
         PollThreshold[2] = 0;
         PollThreshold[3] = 0;
+    } else {
+        comcsr &= 0xf7ffffff;
     }
 
     SICOMCSR = comcsr & 0x7ffffffe;
@@ -371,7 +368,7 @@ void SIInit(void)
     SIGetType(3);
 }
 
-BOOL __SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITransferCallback callback)
+BOOL __SITransfer(s32 chan, void* outBuf, u32 outLen, void* inBuf, u32 inLen, SITransferCallback callback)
 {
     BOOL enabled = OSDisableInterrupts();
     union {
@@ -402,12 +399,16 @@ BOOL __SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SI
         return FALSE;
     }
 
-    SISR &= 0xF000000 >> (chan << 3);
+    {
+        u32 sr = SISR;
+        sr &= 0xF000000 >> (chan << 3);
+        SISR = sr;
+    }
 
     Si.curChan = chan;
+    Si.callback = callback;
     Si.inLen = inLen;
     Si.inBuf = inBuf;
-    Si.callback = callback;
 
     wordCount = (outLen + 3) >> 2;
     src = (u32*)outBuf;
@@ -585,36 +586,38 @@ BOOL SITransfer(s32 chan, void* outBuf, s32 outLen, void* inBuf, s32 inLen, SITr
 {
     SIPacket* packet = &Packet[chan];
     BOOL enabled = OSDisableInterrupts();
+    OSTime now;
+    OSTime due;
 
-    if (packet->chan == -1 && Si.curChan != chan) {
-        OSTime now = __OSGetSystemTime();
-        OSTime due = now;
+    if (packet->chan != -1 || Si.curChan == chan) {
+        OSRestoreInterrupts(enabled);
+        return FALSE;
+    }
 
-        if (retryDelay != 0) {
-            due = LastXfer[chan] + retryDelay;
-        }
+    now = __OSGetSystemTime();
+    due = now;
 
-        if (due > now) {
-            OSSetAlarm(&Alarm[chan], due, fn_803E96CC);
-        } else if (__SITransfer(chan, outBuf, outLen, inBuf, inLen, callback)) {
-            OSRestoreInterrupts(enabled);
-            return TRUE;
-        }
+    if (retryDelay != 0) {
+        due = LastXfer[chan] + retryDelay;
+    }
 
-        packet->chan = chan;
-        packet->outBuf = outBuf;
-        packet->outLen = outLen;
-        packet->inBuf = inBuf;
-        packet->inLen = inLen;
-        packet->callback = callback;
-        packet->dueTime = due;
-
+    if (due > now) {
+        OSSetAlarm(&Alarm[chan], due, fn_803E96CC);
+    } else if (__SITransfer(chan, outBuf, outLen, inBuf, inLen, callback)) {
         OSRestoreInterrupts(enabled);
         return TRUE;
     }
 
+    packet->chan = chan;
+    packet->outBuf = outBuf;
+    packet->outLen = outLen;
+    packet->inBuf = inBuf;
+    packet->inLen = inLen;
+    packet->callback = callback;
+    packet->dueTime = due;
+
     OSRestoreInterrupts(enabled);
-    return FALSE;
+    return TRUE;
 }
 
 static void GetTypeCallback(s32 chan, u32 status, OSContext* context)
@@ -636,8 +639,19 @@ static void GetTypeCallback(s32 chan, u32 status, OSContext* context)
     oldPending = wirelessPending & chanBit;
     wirelessPending &= ~chanBit;
 
-    if ((status & 0xF) == 0 && (type & 0x18000000) == 0x08000000 && (type & 0x80000000) != 0 &&
-        (type & 0x04000000) == 0) {
+    if ((status & 0xF) != 0 || (type & 0x18000000) != 0x08000000 || (type & 0x80000000) == 0 ||
+        (type & 0x04000000) != 0) {
+        OSSetWirelessID(chan, 0);
+
+        queue = TypeCallbackQueue[chan];
+        for (i = 0; i < 4; i++) {
+            if (queue[i]) {
+                SIGetTypeCallback cb = queue[i];
+                queue[i] = 0;
+                cb(chan, type);
+            }
+        }
+    } else {
         u16 id = OSGetWirelessID(chan);
         u32 wid = (u32)id << 8;
 
@@ -669,16 +683,14 @@ static void GetTypeCallback(s32 chan, u32 status, OSContext* context)
         } else {
             OSSetWirelessID(chan, 0);
         }
-    } else {
-        OSSetWirelessID(chan, 0);
-    }
 
-    queue = TypeCallbackQueue[chan];
-    for (i = 0; i < 4; i++) {
-        if (queue[i]) {
-            SIGetTypeCallback cb = queue[i];
-            queue[i] = 0;
-            cb(chan, Type[chan]);
+        queue = TypeCallbackQueue[chan];
+        for (i = 0; i < 4; i++) {
+            if (queue[i]) {
+                SIGetTypeCallback cb = queue[i];
+                queue[i] = 0;
+                cb(chan, type);
+            }
         }
     }
 }

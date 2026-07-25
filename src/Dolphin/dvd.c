@@ -161,7 +161,7 @@ typedef struct FSTEntry
 
 #define DVD_MIN_TRANSFER_SIZE 32
 
-extern const char kar_srcfile_dvdfs_c_805dc8d8[];
+extern const char kar_srcfile_dvdfs_c_805dc8d8[8];
 extern const char lbl_804F94C8[];
 extern const char lbl_804F9590[];
 
@@ -222,7 +222,7 @@ extern volatile BOOL lbl_805DDD60;               /* Breaking */
 extern volatile u32 ResetOccurred_805DDD58;      /* ResetOccurred */
 extern volatile OSTime LastResetEnd_805DDD50;    /* LastResetEnd */
 
-extern BOOL lbl_805DC8D0; /* FirstRead */
+extern BOOL FirstRead;
 
 BOOL DVDLowSeek(u32 offset, DVDLowCallback callback);
 BOOL DVDLowReadDiskID(DVDDiskID* diskID, DVDLowCallback callback);
@@ -289,58 +289,67 @@ typedef struct
 
 BOOL DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback callback)
 {
+    DVDCommand* cmdList = CommandList_8056CB40;
+    u32* currOffset = (u32*)((u8*)cmdList + 0xcc);
     u32 blockNumOfPrevEnd;
     u32 blockNumOfCurrStart;
     OSTime diff;
 
     __DIRegs[6] = length;
-    Curr.addr = addr;
-    Curr.length = length;
-    Curr.offset = offset;
+    *(void**)((u8*)cmdList + 0xc4) = addr;
+    *(u32*)((u8*)cmdList + 0xc8) = length;
+    *currOffset = offset;
 
     if (WorkAroundType == 0) {
-        CommandList_8056CB40[0].command = -1;
+        cmdList[0].command = -1;
         NextCommandNumber_805DDD84 = 0;
         fn_803C4470(addr, length, offset, callback);
     } else if (WorkAroundType == 1) {
-        if (lbl_805DC8D0) {
+        if (FirstRead) {
             fn_803C4580(addr, length, offset, callback);
         } else {
+            u32* prevLength = (u32*)((u8*)cmdList + 0xbc);
+            u32* prevOffset = (u32*)((u8*)cmdList + 0xc0);
             DVDDiskID* id;
             u32 cacheBlockSize;
 
-            blockNumOfPrevEnd = (Prev.offset + Prev.length - 1) >> 15;
-            blockNumOfCurrStart = Curr.offset >> 15;
+            blockNumOfPrevEnd = (*prevOffset + *prevLength - 1) >> 15;
+            blockNumOfCurrStart = *currOffset >> 15;
 
             id = DVDGetCurrentDiskID();
-            cacheBlockSize = id->streaming ? 5 : 15;
+            {
+                BOOL streaming = id->streaming;
+                cacheBlockSize = streaming ? 5 : 15;
+            }
 
             if ((blockNumOfCurrStart > blockNumOfPrevEnd - 2) ||
                 (blockNumOfCurrStart < blockNumOfPrevEnd + cacheBlockSize + 3)) {
-                CommandList_8056CB40[0].command = -1;
+                cmdList[0].command = -1;
                 NextCommandNumber_805DDD84 = 0;
                 fn_803C4470(addr, length, offset, callback);
             } else {
-                blockNumOfPrevEnd = ((Prev.offset + Prev.length - 1) >> 15) & 0x1FFFF;
-                blockNumOfCurrStart = (Curr.offset >> 15) & 0x1FFFF;
+                blockNumOfPrevEnd = ((*prevOffset + *prevLength - 1) >> 15) & 0x1FFFF;
+                blockNumOfCurrStart = (*currOffset >> 15) & 0x1FFFF;
 
                 if (blockNumOfPrevEnd == blockNumOfCurrStart || blockNumOfPrevEnd + 1 == blockNumOfCurrStart) {
                     diff = __OSGetSystemTime() - lbl_805DDD70;
                     if (OSMillisecondsToTicks(5) < diff) {
-                        CommandList_8056CB40[0].command = -1;
+                        cmdList[0].command = -1;
                         NextCommandNumber_805DDD84 = 0;
                         fn_803C4470(addr, length, offset, callback);
                     } else {
-                        CommandList_8056CB40[0].command = 1;
-                        CommandList_8056CB40[0].address = addr;
-                        CommandList_8056CB40[0].length = length;
-                        CommandList_8056CB40[0].offset = offset;
-                        CommandList_8056CB40[0].callback = callback;
-                        CommandList_8056CB40[1].command = -1;
+                        cmdList[0].command = 1;
+                        cmdList[0].address = addr;
+                        cmdList[0].length = length;
+                        cmdList[0].offset = offset;
+                        cmdList[0].callback = callback;
+                        cmdList[1].command = -1;
                         NextCommandNumber_805DDD84 = 0;
                         OSCreateAlarm(&AlarmForTimeout);
-                        OSSetAlarm(&AlarmForTimeout, OSMillisecondsToTicks(5) - diff + OSMicrosecondsToTicks(500),
-                                   (OSAlarmHandler)fn_803C437C);
+                        {
+                            OSTime wait = OSMillisecondsToTicks(5) - diff + OSMicrosecondsToTicks(500);
+                            OSSetAlarm(&AlarmForTimeout, wait, (OSAlarmHandler)fn_803C437C);
+                        }
                     }
                 } else {
                     fn_803C4580(addr, length, offset, callback);
@@ -556,7 +565,7 @@ void __DVDFSInit(void)
 static inline BOOL isSame(const char* path, const char* string)
 {
     while (*string != '\0') {
-        if (fn_803B3870((u8)*path++) != fn_803B3870((u8)*string++)) {
+        if (fn_803B3870(*path++) != fn_803B3870(*string++)) {
             return FALSE;
         }
     }
@@ -576,7 +585,8 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr)
     u32 length;
     u32 dirLookAt;
     u32 i;
-    const char* extentionStart = NULL;
+    const char* origPathPtr = pathPtr;
+    const char* extentionStart;
     BOOL illegal;
     BOOL extention;
 
@@ -628,7 +638,7 @@ s32 DVDConvertPathToEntrynum(const char* pathPtr)
             }
 
             if (illegal) {
-                OSPanic(kar_srcfile_dvdfs_c_805dc8d8, 387, lbl_804F94C8, pathPtr);
+                OSPanic(kar_srcfile_dvdfs_c_805dc8d8, 379, lbl_804F94C8, origPathPtr);
             }
         } else {
             for (ptr = pathPtr; (*ptr != '\0') && (*ptr != '/'); ptr++)
@@ -715,20 +725,41 @@ u32 fn_803C5328(u32 entry, char* path, u32 maxlen)
 {
     char* name;
     u32 loc;
-    char* dest;
     u32 remain;
     u32 i;
+    char* dest;
+    u32 parent;
+    u32 unused1;
+    u32 unused2;
 
     if (entry == 0) {
         return 0;
     }
 
     name = FstStringStart + stringOff(entry);
+    parent = parentDir(entry);
 
-    if (parentDir(entry) == 0) {
+    if (parent == 0) {
         loc = 0;
     } else {
-        loc = fn_803C5328(parentDir(entry), path, maxlen);
+        char* parentName = FstStringStart + stringOff(parent);
+
+        loc = fn_803C5328(parentDir(parent), path, maxlen);
+
+        if (loc == maxlen) {
+            return loc;
+        }
+
+        *(path + loc++) = '/';
+
+        remain = maxlen - loc;
+        i = remain;
+        dest = path + loc;
+        while ((i > 0) && (*parentName != 0)) {
+            *dest++ = *parentName++;
+            i--;
+        }
+        loc += remain - i;
     }
 
     if (loc == maxlen) {
@@ -739,10 +770,13 @@ u32 fn_803C5328(u32 entry, char* path, u32 maxlen)
 
     dest = path + loc;
     remain = maxlen - loc;
-    i = remain;
-    while ((i > 0) && (*name != 0)) {
-        *dest++ = *name++;
-        i--;
+    {
+        char* src = name;
+        i = remain;
+        while ((i > 0) && (*src != 0)) {
+            *dest++ = *src++;
+            i--;
+        }
     }
     loc += remain - i;
 
@@ -777,10 +811,10 @@ BOOL DVDGetCurrentDir(char* path, u32 maxlen)
 BOOL DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset, void (*callback)(s32, DVDFileInfo*),
                       s32 prio)
 {
-    DVD_ASSERTMSGLINE(0x2e6, (0 <= offset) && (offset <= (s32)fileInfo->length),
+    DVD_ASSERTMSGLINE(0x2e6, (0 <= offset) && (offset < fileInfo->length),
                        "DVDReadAsync(): specified area is out of the file  ");
 
-    DVD_ASSERTMSGLINE(0x2ec, (0 <= offset + length) && (offset + length < (s32)fileInfo->length + DVD_MIN_TRANSFER_SIZE),
+    DVD_ASSERTMSGLINE(0x2ec, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE),
                        "DVDReadAsync(): specified area is out of the file  ");
 
     fileInfo->callback = callback;
@@ -808,9 +842,9 @@ s32 DVDReadPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset, s32 p
     BOOL enabled;
     s32 retVal;
 
-    DVD_ASSERTMSGLINE(0x32c, (0 <= offset) && (offset <= (s32)fileInfo->length),
+    DVD_ASSERTMSGLINE(0x32c, (0 <= offset) && (offset < fileInfo->length),
                        "DVDRead(): specified area is out of the file  ");
-    DVD_ASSERTMSGLINE(0x332, (0 <= offset + length) && (offset + length < (s32)fileInfo->length + DVD_MIN_TRANSFER_SIZE),
+    DVD_ASSERTMSGLINE(0x332, (0 <= offset + length) && (offset + length < fileInfo->length + DVD_MIN_TRANSFER_SIZE),
                        "DVDRead(): specified area is out of the file  ");
 
     block = &fileInfo->cb;
@@ -942,7 +976,7 @@ void DVDInit(void)
 void stateReadingFST()
 {
     lbl_805DDDEC = stateReadingFST;
-    DVD_ASSERTMSGLINE_DVD(0x295, bootInfo->FSTMaxLength >= BB2.FSTLength,
+    DVD_ASSERTMSGLINE_DVD(0x287, bootInfo->FSTMaxLength >= BB2.FSTLength,
                            "DVDChangeDisk(): FST in the new disc is too big.   ");
     DVDLowRead(bootInfo->FSTLocation, (u32)(BB2.FSTLength + 0x1F) & 0xFFFFFFE0, BB2.FSTPosition,
                cbForStateReadingFST);
@@ -1558,10 +1592,6 @@ static void stateBusy(DVDCommandBlock* block)
         block->currTransferSize = 0x20;
         DVDLowInquiry(block->addr, cbForStateBusy);
         return;
-    case DVD_COMMAND_UNK_16:
-        __DIRegs[1] = __DIRegs[1];
-        DVDLowStopMotor(cbForStateBusy);
-        return;
     default:
         checkOptionalCommand(block, cbForStateBusy);
         return;
@@ -1659,20 +1689,6 @@ void cbForStateBusy(u32 intType)
 
     if (intType & 1) {
         lbl_805DDDDC = 0;
-
-        if (CurrCommand == 0x10) {
-            MotorState = 1;
-            finished = executing;
-            executing = &DummyCommandBlock;
-            finished->state = 0;
-
-            if (finished->callback != 0) {
-                (*finished->callback)(0, finished);
-            }
-
-            stateReady();
-            return;
-        }
 
         if (CheckCancel(0) != FALSE) {
             return;
@@ -1813,6 +1829,8 @@ int DVDReadAbsAsyncForBS(DVDCommandBlock* block, void* addr, s32 length, s32 off
     int result;
     BOOL level;
     int idle;
+    u32 unused1;
+    u32 unused2;
 
     block->command = DVD_COMMAND_BSREAD;
     block->addr = addr;
@@ -1845,6 +1863,8 @@ int DVDReadDiskID(DVDCommandBlock* block, DVDDiskID* diskID, DVDCBCallback callb
     int result;
     BOOL level;
     int idle;
+    u32 unused1;
+    u32 unused2;
 
     block->command = DVD_COMMAND_READID;
     block->addr = diskID;
@@ -1915,6 +1935,8 @@ int DVDInquiryAsync(DVDCommandBlock* block, DVDDriveInfo* info, DVDCBCallback ca
     int result;
     BOOL level;
     int idle;
+    u32 unused1;
+    u32 unused2;
 
     block->command = DVD_COMMAND_INQUIRY;
     block->addr = info;
