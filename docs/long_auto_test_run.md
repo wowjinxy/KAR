@@ -26,3 +26,25 @@ Branch: `long-auto-test`
 - GKYJ01 object: passing
 - GKYP01 object: passing
 - Commit: `a71eea3`
+
+### main/grkdtree
+
+- Source: `src/kar/gr/grkdtree.c`
+- Starting unit score: 97.64% fuzzy, 6 / 7 exact functions
+- Ending unit score: 97.98% fuzzy, 6 / 7 exact functions
+- Improved:
+  - `kar_grkdtree_next_query_object_id_for_kind`: 95.30% -> 95.97%
+- Discovery: declaring `object_index`, the tree pointer, the kind offset, and
+  the kind record in target lifetime order aligns all four long-lived
+  registers. Control flow and field offsets were already correct.
+- Deferred: the remaining differences are ephemeral register allocation and
+  scheduling in the linked-list traversal and visited-bit calculation. Three
+  further source-shape experiments either regressed or did not change the
+  score.
+- GKYE01 object and report: passing; all six existing exact functions remain
+  exact
+- GKYJ01 source compile: passing (manual compile because this region has no
+  `grkdtree` split yet)
+- GKYP01 source compile: passing (manual compile because this region has no
+  `grkdtree` split yet)
+- Commit: `07193af`
