@@ -232,3 +232,30 @@ Branch: `long-auto-test`
   removed. Recovering the remainder likely requires the original shared
   `aobj.h` inline/macro context rather than more local source shuffling.
 - No source commit
+
+### main/efcallback
+
+- Source: `src/kar/ef/efcallback.c`
+- Starting unit score: 98.70% fuzzy, 2 / 6 exact functions
+- Ending unit score: 100.00% code and data, 6 / 6 exact functions
+- Newly exact:
+  - `kar_efcallback__80234e4c`: 97.39% -> 100.00%
+  - `kar_efcallback__near_802350a0`: 98.72% -> 100.00%
+  - `kar_efcallback__near_8023515c`: 98.46% -> 100.00%
+  - `kar_efcallback__near_80235190`: 98.28% -> 100.00%
+- Discoveries:
+  - Effect-entry flags at `0x2C` are extracted as one-bit values after shifts,
+    producing the target `extrwi` instructions rather than mask-only
+    `rlwinm` tests.
+  - Particle resource versions are promoted from `u16` storage to an `s32`
+    local before comparison.
+  - The effect bank-table base and `bank * 4` offset are formed in separate
+    statements. This preserves the target base and offset registers in both
+    the setter and getter.
+- Marked `efcallback.c` as matching after proving the complete object exact for
+  GKYE01, GKYJ01, and GKYP01.
+- GKYE01 full build, link, and checksum: passing
+- GKYJ01 full build, link, and checksum: passing
+- GKYP01 full build, link, and checksum: passing
+- GKYE01 progress after linking: 19.60% fuzzy, 9.04% matched, 1.52% linked
+  overall; Game Code 7.51% fuzzy, 3.97% matched, 1.15% linked

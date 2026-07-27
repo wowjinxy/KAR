@@ -660,7 +660,7 @@ kar_objects = [
     Object(NonMatching, "plclearcheckerlib.c"),
     Object(NonMatching, "pltrick.c"),
     Object(NonMatching, "effect.c"),
-    Object(NonMatching, "efcallback.c"),
+    Object(Matching, "efcallback.c"),
     Object(NonMatching, "efdata.c"),
     Object(NonMatching, "efrequest.c"),
     Object(NonMatching, "efrequest2.c"),
