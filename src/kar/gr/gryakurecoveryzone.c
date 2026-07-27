@@ -322,8 +322,6 @@ void kar_gryakurecoveryzone_start_kind41_joint_idle_motion(HSD_GObj* gobj)
     }
 }
 
-// NONMATCHING: flow is correct, remaining diff is register allocation in the
-// transition block after the wait flags fire.
 void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
@@ -334,8 +332,8 @@ void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj)
 
     if ((YAKU_FLAGS_144_BITS(yaku).b7 && YAKU_FIELD_140(yaku) <= 0) ||
         YAKU_FLAGS_144_BITS(yaku).b6) {
-        Yaku* yaku2;
         Kind41Param* param;
+        Yaku* yaku2;
         s32 flag;
 
         yaku2 = gobj->user_data;

@@ -397,3 +397,44 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing; both wrapper functions remain exact
 - GKYJ01 object and objdiff: passing at the same 94.14%
 - GKYP01 object and objdiff: passing at the same 94.14%
+
+### main/plclearchecker
+
+- Source: `src/kar/pl/plclearchecker.c`
+- Unit restored unchanged at 55.53%, 12 / 16 exact functions
+- Inspected:
+  - `kar_plclearchecker_begin_object_action`: 98.61%
+  - `kar_plclearchecker_end_object_action`: 98.61%
+- Discovery: both wrappers are instruction-identical except for the target
+  using `r5` for the scaled template offset while the current source uses `r4`.
+- Rejected: making the scaled offset an explicit local compiled identically and
+  was removed.
+- GKYE01 baseline object and report restored and passing
+
+### main/gryakurecoveryzone
+
+- Source: `src/kar/gr/gryakurecoveryzone.c`
+- Unit fuzzy score: 33.39% -> 33.44%
+- Exact functions: 8 / 21 -> 9 / 21
+- Matched:
+  - `kar_gryakurecoveryzone_update_kind41_wait_then_extend`: 98.82% -> 100%
+- Discovery: declaring `Kind41Param*` before the reloaded `Yaku*` produces the
+  target `r31` parameter block and `r30` yaku allocation throughout the
+  transition.
+- Rejected:
+  - Applying the analogous declaration swap to
+    `kar_gryakurecoveryzone_enter_enabled_state_sequence` compiled identically
+    and was removed.
+  - Replacing the kind-42 search `goto` with a structured `break` and null test
+    regressed that function from 98.04% to 92.05% and was removed.
+- Deferred:
+  - The raw GKYJ01/GKYP01 objects are instruction-identical for the newly
+    matched function, but its anonymous `0.0f/1.0f` pair is one `.sdata2` slot
+    earlier than target symbols `lbl_805DA30C/310` and
+    `lbl_805D234C/350`. The full recovery-zone constant block must be
+    reconstructed before those relocations can be linked exactly.
+  - The enter-state function remains at 98.71% with an `r30/r31` allocation
+    swap and constants owned by the preceding translation unit.
+- GKYE01 object and report: passing
+- GKYJ01 source compile and instruction diff: passing
+- GKYP01 source compile and instruction diff: passing
