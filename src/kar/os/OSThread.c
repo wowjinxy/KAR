@@ -214,7 +214,7 @@ extern int __OSCheckMutexes(OSThread* thread);
 extern void __OSUnlockAllMutex(OSThread* thread);
 
 extern OSErrorHandler __OSErrorTable[];
-extern u32 lbl_805DC988;
+extern u32 __OSFpscrEnableBits;
 
 extern u8 _stack_end[];
 extern u8 _stack_addr[];
@@ -340,7 +340,6 @@ static volatile u32 RunQueueBits;
 static volatile int RunQueueHint;
 static s32 Reschedule;
 
-#pragma peephole on
 void __OSThreadInit(void) {
     OSThread* thread = &DefaultThread;
     OSPriority prio;
@@ -376,7 +375,6 @@ void __OSThreadInit(void) {
     OSClearContext(&IdleContext);
     Reschedule = 0;
 }
-#pragma peephole reset
 
 void OSInitThreadQueue(OSThreadQueue* queue) {
     queue->head = queue->tail = 0;
@@ -386,7 +384,6 @@ OSThread* OSGetCurrentThread(void) {
     return __OSCurrentThread;
 }
 
-#pragma peephole on
 BOOL kar_osthread__near_803d9af4(OSThread* thread) {
     if (thread->suspend > 0) {
         return TRUE;
@@ -397,7 +394,6 @@ BOOL kar_osthread__near_803d9af4(OSThread* thread) {
 BOOL kar_osthread__near_803d9b10(OSThread* thread) {
     return (thread->state == OS_THREAD_STATE_MORIBUND || thread->state == 0) ? TRUE : FALSE;
 }
-#pragma peephole reset
 
 s32 OSDisableScheduler(void) {
     register BOOL enabled;
@@ -429,7 +425,6 @@ static inline void SetRun(OSThread* thread) {
 }
 
 #pragma dont_inline on
-#pragma peephole on
 void kar_osthread__near_803d9bc4(OSThread* thread) {
     OSThreadQueue* queue;
 
@@ -442,10 +437,8 @@ void kar_osthread__near_803d9bc4(OSThread* thread) {
     }
     thread->queue = NULL;
 }
-#pragma peephole reset
 #pragma dont_inline off
 
-#pragma peephole on
 s32 __OSGetEffectivePriority(OSThread* thread) {
     s32 priority = thread->base;
     OSMutex* mutex;
@@ -458,9 +451,7 @@ s32 __OSGetEffectivePriority(OSThread* thread) {
     }
     return priority;
 }
-#pragma peephole reset
 
-#pragma peephole on
 OSThread* kar_osthread__near_803d9c68(OSThread* thread, s32 priority) {
     switch (thread->state) {
     case OS_THREAD_STATE_READY:
@@ -485,7 +476,6 @@ OSThread* kar_osthread__near_803d9c68(OSThread* thread, s32 priority) {
     }
     return 0;
 }
-#pragma peephole reset
 
 static inline void UpdatePriority(OSThread* thread) {
     s32 priority;
@@ -505,7 +495,6 @@ static inline void UpdatePriority(OSThread* thread) {
     }
 }
 
-#pragma peephole on
 void kar_osthread__near_803d9e28(OSThread* thread, s32 priority) {
     while (1) {
         if (thread->suspend > 0 || thread->priority <= priority) {
@@ -517,7 +506,6 @@ void kar_osthread__near_803d9e28(OSThread* thread, s32 priority) {
         }
     }
 }
-#pragma peephole reset
 
 static inline void __OSSwitchThread(OSThread* nextThread) {
     OSSetCurrentThread(nextThread);
@@ -525,7 +513,6 @@ static inline void __OSSwitchThread(OSThread* nextThread) {
     OSLoadContext(&nextThread->context);
 }
 
-#pragma peephole on
 static OSThread* SelectThread(int yield) {
     OSContext* currentContext;
     OSThread* currentThread;
@@ -588,7 +575,6 @@ static OSThread* SelectThread(int yield) {
     __OSSwitchThread(nextThread);
     return nextThread;
 }
-#pragma peephole reset
 
 void __OSReschedule(void) {
     if (RunQueueHint != 0) {
@@ -596,7 +582,6 @@ void __OSReschedule(void) {
     }
 }
 
-#pragma peephole on
 int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param, void* stack, u32 stackSize, OSPriority priority, u16 attr) {
     BOOL enabled;
     u32 sp;
@@ -635,7 +620,7 @@ int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param, void* st
     if (__OSErrorTable[16] != NULL) {
         thread->context.srr1 |= 0x900;
         thread->context.state |= 1;
-        thread->context.fpscr = (lbl_805DC988 & 0xf8) | 4;
+        thread->context.fpscr = (__OSFpscrEnableBits & 0xf8) | 4;
         for (i = 0; i < 32; ++i) {
             *(u64*)&thread->context.fpr[i] = (u64)0xffffffffffffffffLL;
             *(u64*)&thread->context.psf[i] = (u64)0xffffffffffffffffLL;
@@ -647,9 +632,7 @@ int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param, void* st
     OSRestoreInterrupts(enabled);
     return 1;
 }
-#pragma peephole reset
 
-#pragma peephole on
 void OSExitThread(void* val) {
     BOOL enabled = OSDisableInterrupts();
     OSThread* currentThread = OSGetCurrentThread();
@@ -670,9 +653,7 @@ void OSExitThread(void* val) {
     }
     OSRestoreInterrupts(enabled);
 }
-#pragma peephole reset
 
-#pragma peephole on
 void OSCancelThread(OSThread* thread) {
     BOOL enabled = OSDisableInterrupts();
 
@@ -708,9 +689,7 @@ void OSCancelThread(OSThread* thread) {
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
-#pragma peephole reset
 
-#pragma peephole on
 int kar_osthread__near_803da558(OSThread* thread, void* val) {
     BOOL enabled = OSDisableInterrupts();
 
@@ -746,9 +725,7 @@ int kar_osthread__near_803da558(OSThread* thread, void* val) {
     OSRestoreInterrupts(enabled);
     return 0;
 }
-#pragma peephole reset
 
-#pragma peephole on
 s32 OSResumeThread(OSThread* thread) {
     BOOL enabled = OSDisableInterrupts();
     s32 suspendCount;
@@ -775,9 +752,7 @@ s32 OSResumeThread(OSThread* thread) {
     OSRestoreInterrupts(enabled);
     return suspendCount;
 }
-#pragma peephole reset
 
-#pragma peephole on
 s32 OSSuspendThread(OSThread* thread) {
     BOOL enabled = OSDisableInterrupts();
     s32 suspendCount;
@@ -806,9 +781,7 @@ s32 OSSuspendThread(OSThread* thread) {
     OSRestoreInterrupts(enabled);
     return suspendCount;
 }
-#pragma peephole reset
 
-#pragma peephole on
 void OSSleepThread(OSThreadQueue* queue) {
     BOOL enabled = OSDisableInterrupts();
     OSThread* currentThread = OSGetCurrentThread();
@@ -820,9 +793,7 @@ void OSSleepThread(OSThreadQueue* queue) {
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
-#pragma peephole reset
 
-#pragma peephole on
 void OSWakeupThread(OSThreadQueue* queue) {
     BOOL enabled = OSDisableInterrupts();
 
@@ -839,9 +810,7 @@ void OSWakeupThread(OSThreadQueue* queue) {
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
-#pragma peephole reset
 
-#pragma peephole on
 int kar_osthread__near_803dac80(OSThreadQueue* queue) {
     OSThread* thread;
 
@@ -863,7 +832,6 @@ int kar_osthread__near_803dac80(OSThreadQueue* queue) {
     }
     return 1;
 }
-#pragma peephole reset
 
 static inline BOOL IsMember(OSThreadQueue* queue, OSThread* thread) {
     OSThread* member = queue->head;
@@ -883,7 +851,6 @@ static inline BOOL IsMember(OSThreadQueue* queue, OSThread* thread) {
         OSPanic(__FILE__, line, ""); \
     }
 
-#pragma peephole on
 s32 kar_osthread__803dad1c(void) {
     OSThread* thread;
     s32 prio;
@@ -952,4 +919,3 @@ s32 kar_osthread__803dad1c(void) {
     OSRestoreInterrupts(enabled);
     return cThread;
 }
-#pragma peephole reset

@@ -35,14 +35,41 @@
 #include <kar/ef/particle.h>
 #include <kar/ef/pltrick.h>
 
-extern char lbl_8055D7A0[];
+extern void* lbl_8055D7A0[];
 extern char lbl_804B510C[];
 
-#define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))
-#define GET_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
+typedef struct EffectGObj {
+    u8 pad_00[0x04];
+    u32 flags;
+    u8 pad_08[0x24];
+    f32 position[3];
+    u8 pad_38[0x04];
+    f32 field_3C;
+    u8 pad_40[0x19];
+    u8 particle_kind;
+    u8 pad_5A[0x32];
+    void* gp;
+    u8 pad_90[0x0C];
+    u16 transform_flags;
+    u8 pad_9E[0x02];
+    f32 scale[3];
+    f32 field_AC;
+} EffectGObj;
+
+typedef struct ParticleInstance {
+    u8 pad_00[0x5C];
+    void (*destroy_callback)(void*);
+} ParticleInstance;
+
+typedef struct ParticleBankData {
+    u16 version;
+    u16 resource_id;
+} ParticleBankData;
+
+typedef struct EffectAnimResourceTableEntry {
+    EffectAnimResource* resource;
+    u8 pad_04[0x04];
+} EffectAnimResourceTableEntry;
 
 void* lbl_804B4E08[] = {
     kar_efcallback__80234e4c,
@@ -55,10 +82,11 @@ char lbl_805D7270[] = "gp";
 
 s32 kar_efcallback__80234e4c(void* gobj)
 {
+    EffectGObj* effect_gobj = gobj;
     EffectEntry* entry;
     void* gp;
 
-    gp = GET_PTR(gobj, 0x8C);
+    gp = effect_gobj->gp;
     if (gp == NULL) {
         __assert(kar_src_efcallback_804b4e14, 0x24, lbl_805D7270);
     }
@@ -68,29 +96,29 @@ s32 kar_efcallback__80234e4c(void* gobj)
         return 0;
     }
 
-    if (GET_PTR(entry, 0x20) != NULL) {
-        kar_particle__near_8042b5a8(GET_U8(entry, 0x24), GET_PTR(entry, 0x20));
-        GET_U8(gobj, 0x59) = GET_U8(entry, 0x24);
+    if (entry->particle != NULL) {
+        kar_particle__near_8042b5a8(entry->particle_kind, entry->particle);
+        effect_gobj->particle_kind = entry->particle_kind;
     }
 
-    if (GET_U8(entry, 0x2C) & 0x80) {
-        GET_F32(gobj, 0x2C) = GET_F32(entry, 0x30);
-        GET_F32(gobj, 0x30) = GET_F32(entry, 0x34);
-        GET_F32(gobj, 0x34) = GET_F32(entry, 0x38);
-        GET_U16(gobj, 0x9C) |= 1;
+    if (entry->flags & 0x80) {
+        effect_gobj->position[0] = entry->position[0];
+        effect_gobj->position[1] = entry->position[1];
+        effect_gobj->position[2] = entry->position[2];
+        effect_gobj->transform_flags |= 1;
     }
 
-    if (GET_U8(entry, 0x2C) & 0x40) {
-        GET_U32(gobj, 0x04) |= 2;
-        GET_F32(gobj, 0x3C) = GET_F32(entry, 0x48);
+    if (entry->flags & 0x40) {
+        effect_gobj->flags |= 2;
+        effect_gobj->field_3C = entry->field_48;
     }
 
-    if (GET_U8(entry, 0x2C) & 0x20) {
-        GET_F32(gobj, 0xA0) = GET_F32(entry, 0x3C);
-        GET_F32(gobj, 0xA4) = GET_F32(entry, 0x40);
-        GET_F32(gobj, 0xA8) = GET_F32(entry, 0x44);
-        GET_F32(gobj, 0xAC) = GET_F32(entry, 0x4C);
-        GET_U16(gobj, 0x9C) |= 2;
+    if (entry->flags & 0x20) {
+        effect_gobj->scale[0] = entry->scale[0];
+        effect_gobj->scale[1] = entry->scale[1];
+        effect_gobj->scale[2] = entry->scale[2];
+        effect_gobj->field_AC = entry->field_4C;
+        effect_gobj->transform_flags |= 2;
     }
 
     return 0;
@@ -99,6 +127,7 @@ s32 kar_efcallback__80234e4c(void* gobj)
 void kar_efcallback__near_80234f60(void* handle, void* particle, void* arg2,
                                    void* owner)
 {
+    ParticleInstance* instance = particle;
     EffectEntry* entry;
     EffectEntry* created;
     EffectCallback callback;
@@ -106,12 +135,12 @@ void kar_efcallback__near_80234f60(void* handle, void* particle, void* arg2,
     entry = kar_effect__near_80234a04(handle, NULL);
     if (entry != NULL) {
         kar_particle__near_8042ba60(particle, lbl_804B4E08);
-        GET_PTR(particle, 0x5C) = kar_efcallback__near_80235008;
+        instance->destroy_callback = kar_efcallback__near_80235008;
 
         created = kar_effect__near_802344dc(owner, particle, -1, 0);
         if (created != NULL) {
             kar_pltrick__near_802341c0(created, entry);
-            callback = GET_PTR(entry, 0x54);
+            callback = entry->callback;
             if (callback != NULL) {
                 callback(created, owner);
             }
@@ -126,17 +155,17 @@ void kar_efcallback__near_80235008(void* handle)
 
     entry = kar_effect__near_80234a04(handle, &prev);
     if (entry != NULL) {
-        if (GET_PTR(entry, 0x60) != NULL) {
-            HSD_GObjDestroy(GET_PTR(entry, 0x60));
+        if (entry->gobj != NULL) {
+            HSD_GObjDestroy(entry->gobj);
         }
 
-        if (GET_U16(entry, 0x26) != 0) {
-            GET_PTR(entry, 0x5C) = NULL;
+        if (entry->reference_count != 0) {
+            entry->particle_handle = NULL;
         } else {
-            if (GET_PTR(entry, 0x04) != NULL &&
-                kar_pltrick__near_80233ecc(GET_PTR(entry, 0x04)) != 0) {
-                kar_effect_find_entry_by_owner_key(GET_PTR(entry, 0x10),
-                                                   GET_PTR(entry, 0x14), &prev);
+            if (entry->pltrick != NULL &&
+                kar_pltrick__near_80233ecc(entry->pltrick) != 0) {
+                kar_effect_find_entry_by_owner_key(entry->owner, entry->key,
+                                                   &prev);
             }
             kar_effect__802341ec(entry, prev);
             kar_effect__near_802349b0(entry);
@@ -147,6 +176,7 @@ void kar_efcallback__near_80235008(void* handle)
 s32 kar_efcallback__near_802350a0(s32 bank, void* particle, void* arg2,
                                   void* arg3, void* arg4)
 {
+    ParticleBankData* data = particle;
     s32 valid;
     u16 version;
     void* particle_ptr = particle;
@@ -158,7 +188,7 @@ s32 kar_efcallback__near_802350a0(s32 bank, void* particle, void* arg2,
         return 0;
     }
 
-    version = GET_U16(particle_ptr, 0);
+    version = data->version;
     if (version < 0x43) {
         OSReport(lbl_804B510C, version, 0x43);
         valid = 0;
@@ -170,21 +200,18 @@ s32 kar_efcallback__near_802350a0(s32 bank, void* particle, void* arg2,
         return 0;
     }
 
-    kar_particle__8042a734(GET_U16(particle_ptr, 2), particle_ptr, arg2_ptr,
+    kar_particle__8042a734(data->resource_id, particle_ptr, arg2_ptr,
                            arg3_ptr, arg4_ptr);
     return 1;
 }
 
 s32 kar_efcallback__near_8023515c(s32 bank, void* table)
 {
-    void* base;
-
     if (bank < 0x18 || bank >= 0x25) {
         return 0;
     }
 
-    base = lbl_8055D7A0 + bank * 4;
-    GET_PTR(base, 0x24) = table;
+    lbl_8055D7A0[bank + 9] = table;
     return 1;
 }
 
@@ -198,9 +225,10 @@ EffectAnimResource* kar_efcallback__near_80235190(s32 id)
         return NULL;
     }
 
-    table = GET_PTR(lbl_8055D7A0 + bank * 4, 0x24);
+    table = lbl_8055D7A0[bank + 9];
     if (table != NULL) {
-        return GET_PTR(table, (id % 10000) * 8);
+        EffectAnimResourceTableEntry* entries = table;
+        return entries[id % 10000].resource;
     }
 
     return NULL;

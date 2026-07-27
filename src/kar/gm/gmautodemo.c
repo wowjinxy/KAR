@@ -23,7 +23,6 @@
 #include <sysdolphin/random.h>
 #include <sysdolphin/video.h>
 
-#define LOAD_F32(sym) (*(const f32*) &(sym))
 #define PLAYER_INPUT(i) (*(u32*) (HSD_PadCopyStatus + ((u8) (i) * 0x44) + 8))
 #define PAD_MASTER_INPUT(i) (*(u32*) (HSD_PadMasterStatus + ((i) * 0x44)))
 
@@ -968,21 +967,21 @@ void kar_gmglobal__near_80008df8(void)
     mode = (work[0x4D] >> 6) & 3;
     switch (mode) {
     case 0:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE720);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE720;
         ticks = (u64) base;
         base = (f32) (s64) ticks;
         ticks = (u64) base;
         kar_lbaudio__near_80062874(ticks);
         break;
     case 2:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE720);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE720;
         ticks = (u64) base;
         base = (f32) (s64) ticks;
-        ticks = (u64) (LOAD_F32(lbl_805DE724) * base);
+        ticks = (u64) (lbl_805DE724 * base);
         kar_lbaudio__near_80062874(ticks);
         break;
     default:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE720);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE720;
         ticks = (u64) base;
         kar_lbaudio__near_80062874(ticks);
         break;
@@ -1295,7 +1294,7 @@ f32 fn_800096B8(s32 arg0, s32 arg1)
     } else {
         value = ((f32*) table2.values)[arg1];
     }
-    return value * LOAD_F32(lbl_805DE738);
+    return value * lbl_805DE738;
 }
 
 f32 fn_80009764(s32 arg0)
@@ -1442,8 +1441,8 @@ void fn_80009A98(s32* out_minutes, s32* out_seconds, s32* out_centiseconds)
         *out_seconds = *(u32*) (work + 0x834) % 60;
         frame_remainder = work[0x833] % 60;
         *out_centiseconds =
-            (s32) (LOAD_F32(lbl_805DE73C) * (f32) frame_remainder /
-                   LOAD_F32(lbl_805DE740));
+            (s32) (lbl_805DE73C * (f32) frame_remainder /
+                   lbl_805DE740);
     }
 }
 
@@ -1496,8 +1495,8 @@ void fn_80009C18(s32 arg0, s32 arg1, s32* out_value, s32* out_minutes,
     *out_seconds = (frames / 60) % 60;
     frame_remainder = frames % 60;
     *out_centiseconds =
-        (s32) (LOAD_F32(lbl_805DE73C) * (f32) frame_remainder /
-               LOAD_F32(lbl_805DE740));
+        (s32) (lbl_805DE73C * (f32) frame_remainder /
+               lbl_805DE740);
     base += arg0 * 3;
     *out_flag = (s8) base[arg1 + 0x128];
 }
@@ -1529,8 +1528,8 @@ void fn_80009DB8(s32 arg0, s32* out_minutes, s32* out_seconds,
         *out_seconds = (*(s32*) (work + 0x8CC) / 60) % 60;
         frame_remainder = *(s32*) (work + 0x8CC) % 60;
         *out_centiseconds =
-            (s32) (LOAD_F32(lbl_805DE73C) * (f32) frame_remainder /
-                   LOAD_F32(lbl_805DE740));
+            (s32) (lbl_805DE73C * (f32) frame_remainder /
+                   lbl_805DE740);
     }
 }
 
@@ -1590,8 +1589,8 @@ void kar_grboxgenerator__80009ff0(s32* out_minutes, s32* out_seconds,
     *out_seconds = remaining % 60;
     centisecond_frame = (60 - work[0x833]) % 60;
     *out_centiseconds =
-        (s32) (LOAD_F32(lbl_805DE73C) * (f32) centisecond_frame /
-               LOAD_F32(lbl_805DE740));
+        (s32) (lbl_805DE73C * (f32) centisecond_frame /
+               lbl_805DE740);
 }
 
 #pragma dont_inline on
@@ -1696,7 +1695,7 @@ f32 kar_gmracenormal__8000a370(s32 arg0)
         }
     }
 
-    return LOAD_F32(lbl_805DE750) * (f32) (((s8) work[0xA95] - 1) - count);
+    return lbl_805DE750 * (f32) (((s8) work[0xA95] - 1) - count);
 }
 
 void fn_8000A444(s32 arg0)
@@ -3533,10 +3532,10 @@ void kar_gmautodemo__near_8000cde0(void* arg0, void* gobj)
 
     if (GObj_GetFlagFromArray(gobj) == 2 && lbl_805DD548 != NULL) {
         kar_lbhvqm__near_80078028(lbl_805DD548, &x, &y, &z);
-        kar_lbkdcoll__near_80076f8c(x, y, z, 0, 0, LOAD_F32(lbl_805DE764),
-                                    LOAD_F32(lbl_805DE764),
-                                    LOAD_F32(lbl_805DE768),
-                                    LOAD_F32(lbl_805DE76C));
+        kar_lbkdcoll__near_80076f8c(x, y, z, 0, 0, lbl_805DE764,
+                                    lbl_805DE764,
+                                    lbl_805DE768,
+                                    lbl_805DE76C);
     }
 }
 
@@ -3589,17 +3588,17 @@ void kar_gmautodemo__near_8000ce50(void)
 
                 lbl_805DD558 = text;
                 text_entry = HSD_SisLib_803A6B98(
-                    text, LOAD_F32(lbl_805DE758), LOAD_F32(lbl_805DE758),
+                    text, lbl_805DE758, lbl_805DE758,
                     lbl_805D5138, lbl_8049B1A8);
                 HSD_SisLib_803A7548(lbl_805DD558, text_entry,
-                                    LOAD_F32(lbl_805DE75C),
-                                    LOAD_F32(lbl_805DE75C));
+                                    lbl_805DE75C,
+                                    lbl_805DE75C);
                 text_entry = HSD_SisLib_803A6B98(
-                    lbl_805DD558, LOAD_F32(lbl_805DE758),
-                    LOAD_F32(lbl_805DE760), lbl_805D5138, lbl_8049B1E0);
+                    lbl_805DD558, lbl_805DE758,
+                    lbl_805DE760, lbl_805D5138, lbl_8049B1E0);
                 HSD_SisLib_803A7548(lbl_805DD558, text_entry,
-                                    LOAD_F32(lbl_805DE75C),
-                                    LOAD_F32(lbl_805DE75C));
+                                    lbl_805DE75C,
+                                    lbl_805DE75C);
                 ((u8*) lbl_805DD558)[0x49] = 1;
             }
         }
@@ -3788,16 +3787,16 @@ setup_text:
             HSD_SisLib_803A611C(0, NULL, 0x29, 0x11, 0, 0x1B, 0, 5);
         text = HSD_SisLib_803A6754(0, lbl_805DD554);
         lbl_805DD558 = text;
-        entry = HSD_SisLib_803A6B98(text, LOAD_F32(lbl_805DE758),
-                                    LOAD_F32(lbl_805DE758), lbl_805D5138,
+        entry = HSD_SisLib_803A6B98(text, lbl_805DE758,
+                                    lbl_805DE758, lbl_805D5138,
                                     lbl_8049B1A8);
-        HSD_SisLib_803A7548(lbl_805DD558, entry, LOAD_F32(lbl_805DE75C),
-                            LOAD_F32(lbl_805DE75C));
-        entry = HSD_SisLib_803A6B98(lbl_805DD558, LOAD_F32(lbl_805DE758),
-                                    LOAD_F32(lbl_805DE760), lbl_805D5138,
+        HSD_SisLib_803A7548(lbl_805DD558, entry, lbl_805DE75C,
+                            lbl_805DE75C);
+        entry = HSD_SisLib_803A6B98(lbl_805DD558, lbl_805DE758,
+                                    lbl_805DE760, lbl_805D5138,
                                     lbl_8049B1E0);
-        HSD_SisLib_803A7548(lbl_805DD558, entry, LOAD_F32(lbl_805DE75C),
-                            LOAD_F32(lbl_805DE75C));
+        HSD_SisLib_803A7548(lbl_805DD558, entry, lbl_805DE75C,
+                            lbl_805DE75C);
         ((u8*) lbl_805DD558)[0x49] = 1;
     }
 }
@@ -3888,10 +3887,10 @@ void kar_gmautodemo__near_8000d768(void* arg0, void* gobj)
 
     if (GObj_GetFlagFromArray(gobj) == 2) {
         kar_lbhvqm__near_80078028(lbl_805DD560, &x, &y, &z);
-        kar_lbkdcoll__near_80076f8c(x, y, z, 0, 0, LOAD_F32(lbl_805DE770),
-                                    LOAD_F32(lbl_805DE770),
-                                    LOAD_F32(lbl_805DE774),
-                                    LOAD_F32(lbl_805DE778));
+        kar_lbkdcoll__near_80076f8c(x, y, z, 0, 0, lbl_805DE770,
+                                    lbl_805DE770,
+                                    lbl_805DE774,
+                                    lbl_805DE778);
     }
 }
 
@@ -4597,59 +4596,56 @@ u64 kar_gmautodemo__near_8000ed30(s32 arg0)
 
 void kar_gmautodemo__near_8000ed50(s32 arg0)
 {
-    arg0 *= sizeof(AutodemoInputEntry);
+    AutodemoInputEntry* input = &lbl_80537000.entries[arg0];
 
-#define INPUT_FIELD(offset) (*(u64*) ((u8*) &lbl_80537000 + arg0 + (offset)))
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x1100, 0x1);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x1100, 0x1);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x1100, 0x1);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x1100, 0x1);
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x1100, 0x1);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x1100, 0x1);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x1100, 0x1);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x1100, 0x1);
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x200, 0x2);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x200, 0x2);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x200, 0x2);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x200, 0x2);
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x200, 0x2);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x200, 0x2);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x200, 0x2);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x200, 0x2);
-
-    SET_INPUT_FLAG_IF_ALL(INPUT_FIELD(0x00), 0x1060, 0x4);
-    SET_INPUT_FLAG_IF_ALL(INPUT_FIELD(0x10), 0x1060, 0x4);
-    if ((INPUT_FIELD(0x00) & (u64) 0x1060) == (u64) 0x1060) {
-        SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x1060, 0x4);
+    SET_INPUT_FLAG_IF_ALL(input->field_00, 0x1060, 0x4);
+    SET_INPUT_FLAG_IF_ALL(input->held, 0x1060, 0x4);
+    if ((input->field_00 & (u64) 0x1060) == (u64) 0x1060) {
+        SET_INPUT_FLAG_IF_ANY(input->pressed, 0x1060, 0x4);
     }
-    if ((INPUT_FIELD(0x00) & (u64) 0x1060) == (u64) 0x1060) {
-        SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x1060, 0x4);
+    if ((input->field_00 & (u64) 0x1060) == (u64) 0x1060) {
+        SET_INPUT_FLAG_IF_ANY(input->field_18, 0x1060, 0x4);
     }
 
-    SET_INPUT_FLAG_IF_ALL(INPUT_FIELD(0x00), 0x1160, 0x8);
-    SET_INPUT_FLAG_IF_ALL(INPUT_FIELD(0x10), 0x1160, 0x8);
-    if ((INPUT_FIELD(0x00) & (u64) 0x1160) == (u64) 0x1160) {
-        SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x1160, 0x8);
+    SET_INPUT_FLAG_IF_ALL(input->field_00, 0x1160, 0x8);
+    SET_INPUT_FLAG_IF_ALL(input->held, 0x1160, 0x8);
+    if ((input->field_00 & (u64) 0x1160) == (u64) 0x1160) {
+        SET_INPUT_FLAG_IF_ANY(input->pressed, 0x1160, 0x8);
     }
-    if ((INPUT_FIELD(0x00) & (u64) 0x1160) == (u64) 0x1160) {
-        SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x1160, 0x8);
+    if ((input->field_00 & (u64) 0x1160) == (u64) 0x1160) {
+        SET_INPUT_FLAG_IF_ANY(input->field_18, 0x1160, 0x8);
     }
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x10008, 0x10);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x10008, 0x10);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x10008, 0x10);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x10008, 0x10);
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x10008, 0x10);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x10008, 0x10);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x10008, 0x10);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x10008, 0x10);
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x20004, 0x20);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x20004, 0x20);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x20004, 0x20);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x20004, 0x20);
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x20004, 0x20);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x20004, 0x20);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x20004, 0x20);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x20004, 0x20);
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x40001, 0x40);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x40001, 0x40);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x40001, 0x40);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x40001, 0x40);
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x40001, 0x40);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x40001, 0x40);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x40001, 0x40);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x40001, 0x40);
 
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x00), 0x80002, 0x80);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x10), 0x80002, 0x80);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x08), 0x80002, 0x80);
-    SET_INPUT_FLAG_IF_ANY(INPUT_FIELD(0x18), 0x80002, 0x80);
+    SET_INPUT_FLAG_IF_ANY(input->field_00, 0x80002, 0x80);
+    SET_INPUT_FLAG_IF_ANY(input->held, 0x80002, 0x80);
+    SET_INPUT_FLAG_IF_ANY(input->pressed, 0x80002, 0x80);
+    SET_INPUT_FLAG_IF_ANY(input->field_18, 0x80002, 0x80);
 
-#undef INPUT_FIELD
 }
 
 #undef SET_INPUT_FLAG_IF_ANY
@@ -4886,9 +4882,9 @@ void kar_gmautodemo__near_8000fcb8(s32* out_minutes, s32* out_seconds,
 
         *out_minutes = elapsed_seconds / 60;
         *out_seconds = elapsed_seconds % 60;
-        *out_centiseconds = (s32) (LOAD_F32(lbl_805DE780) *
+        *out_centiseconds = (s32) (lbl_805DE780 *
                                    (f32) frame_remainder /
-                                   LOAD_F32(lbl_805DE784));
+                                   lbl_805DE784);
     }
 }
 #pragma dont_inline off
@@ -5040,7 +5036,7 @@ void kar_gmautodemo__near_8000ff78(void)
             kar_plclearcheckerlib__near_8022cc80(i, 1);
             if ((s32) work[0xA94] == 0xE) {
                 kar_plclearcheckerlib__near_8022ca38(i,
-                                                     LOAD_F32(lbl_805DE79C));
+                                                     lbl_805DE79C);
             }
         } else if (timer == 0) {
             s32 fade = *(s32*) ((u8*) lbl_805DD570 + offset + 0xA8);
@@ -5192,12 +5188,12 @@ void kar_gmautodemo__near_80010478(void)
         signed_state = (s8) state;
         switch (signed_state) {
         case 0:
-            if (progress >= LOAD_F32(lbl_805DE7A0) &&
-                progress < LOAD_F32(lbl_805DE7A4)) {
+            if (progress >= lbl_805DE7A0 &&
+                progress < lbl_805DE7A4) {
                 results->field_01D[i] = state + 1;
             }
-            if (progress >= LOAD_F32(lbl_805DE7A4) &&
-                progress < LOAD_F32(lbl_805DE79C)) {
+            if (progress >= lbl_805DE7A4 &&
+                progress < lbl_805DE79C) {
                 results->field_01D[i] = 2;
                 if (result_word->field_038[0] >= 0) {
                     result_word->field_038[0]--;
@@ -5205,24 +5201,24 @@ void kar_gmautodemo__near_80010478(void)
             }
             break;
         case 1:
-            if (progress >= LOAD_F32(lbl_805DE7A4)) {
+            if (progress >= lbl_805DE7A4) {
                 results->field_01D[i] = state + 1;
             }
-            if (progress >= LOAD_F32(lbl_805DE7A8) &&
-                progress < LOAD_F32(lbl_805DE7A0)) {
+            if (progress >= lbl_805DE7A8 &&
+                progress < lbl_805DE7A0) {
                 results->field_01D[i]--;
             }
             break;
         case 2:
-            if ((progress >= LOAD_F32(lbl_805DE7A8) &&
-                 progress < LOAD_F32(lbl_805DE7A0)) ||
-                progress >= LOAD_F32(lbl_805DE79C)) {
+            if ((progress >= lbl_805DE7A8 &&
+                 progress < lbl_805DE7A0) ||
+                progress >= lbl_805DE79C) {
                 results->field_01D[i] = 0;
                 result_word->field_038[0]++;
                 kar_gmautodemo__near_800101f4(i);
             }
-            if (progress >= LOAD_F32(lbl_805DE7A0) &&
-                progress < LOAD_F32(lbl_805DE7A4)) {
+            if (progress >= lbl_805DE7A0 &&
+                progress < lbl_805DE7A4) {
                 results->field_01D[i]--;
             }
             break;
@@ -5232,8 +5228,8 @@ void kar_gmautodemo__near_80010478(void)
         result_word->field_21C[0] =
             (f32) result_word->field_038[0] * results->field_014 +
             scaled_progress;
-        if (result_word->field_21C[0] < LOAD_F32(lbl_805DE7A8)) {
-            result_word->field_21C[0] = LOAD_F32(lbl_805DE7A8);
+        if (result_word->field_21C[0] < lbl_805DE7A8) {
+            result_word->field_21C[0] = lbl_805DE7A8;
         }
     }
 }
@@ -5265,12 +5261,12 @@ s32 kar_gmautodemo__near_800106ec(s32 arg0)
     signed_state = (s8) state;
     switch (signed_state) {
     case 0:
-        if (progress >= LOAD_F32(lbl_805DE7A0) &&
-            progress < LOAD_F32(lbl_805DE7A4)) {
+        if (progress >= lbl_805DE7A0 &&
+            progress < lbl_805DE7A4) {
             results->field_01D[arg0] = state + 1;
         }
-        if (progress >= LOAD_F32(lbl_805DE7A4) &&
-            progress < LOAD_F32(lbl_805DE79C)) {
+        if (progress >= lbl_805DE7A4 &&
+            progress < lbl_805DE79C) {
             results->field_01D[arg0] = 2;
             if (results->field_038[arg0] >= 0) {
                 results->field_038[arg0]--;
@@ -5278,23 +5274,23 @@ s32 kar_gmautodemo__near_800106ec(s32 arg0)
         }
         break;
     case 1:
-        if (progress >= LOAD_F32(lbl_805DE7A4)) {
+        if (progress >= lbl_805DE7A4) {
             results->field_01D[arg0] = state + 1;
         }
-        if (progress >= LOAD_F32(lbl_805DE7A8) &&
-            progress < LOAD_F32(lbl_805DE7A0)) {
+        if (progress >= lbl_805DE7A8 &&
+            progress < lbl_805DE7A0) {
             results->field_01D[arg0]--;
         }
         break;
     case 2:
-        if ((progress >= LOAD_F32(lbl_805DE7A8) &&
-             progress < LOAD_F32(lbl_805DE7A0)) ||
-            progress >= LOAD_F32(lbl_805DE79C)) {
+        if ((progress >= lbl_805DE7A8 &&
+             progress < lbl_805DE7A0) ||
+            progress >= lbl_805DE79C) {
             results->field_01D[arg0] = 0;
             return 1;
         }
-        if (progress >= LOAD_F32(lbl_805DE7A0) &&
-            progress < LOAD_F32(lbl_805DE7A4)) {
+        if (progress >= lbl_805DE7A0 &&
+            progress < lbl_805DE7A4) {
             results->field_01D[arg0]--;
         }
         break;
@@ -5456,7 +5452,7 @@ s32 kar_gmautodemo__near_80010dac(s32 arg0)
     kar_plclearchecker_get_template_vec_008(arg0, &pos);
     switch ((s8) ((u8*) lbl_805DD570)[arg0 + 0x15]) {
     case 0:
-        if (kar_grlib2__near_800d52e4(&pos) >= LOAD_F32(lbl_805DE7A8)) {
+        if (kar_grlib2__near_800d52e4(&pos) >= lbl_805DE7A8) {
             ((u8*) lbl_805DD570)[arg0 + 0x15] = 1;
             fn_80113C70(arg0);
         }
@@ -5470,28 +5466,28 @@ s32 kar_gmautodemo__near_80010dac(s32 arg0)
         }
 
         if (kar_plclearcheckerlib__near_8022d49c(arg0) != 0) {
-            if (pos.x < LOAD_F32(lbl_805DE7A8)) {
-                pos.x += LOAD_F32(lbl_805DE7B4);
+            if (pos.x < lbl_805DE7A8) {
+                pos.x += lbl_805DE7B4;
             } else {
-                pos.x -= LOAD_F32(lbl_805DE7B4);
+                pos.x -= lbl_805DE7B4;
             }
 
             switch (kar_plclearcheckerlib__near_8022c910(arg0)) {
             case 8:
-                pos.y -= LOAD_F32(lbl_805DE7B8);
+                pos.y -= lbl_805DE7B8;
                 break;
             case 9:
-                pos.y -= LOAD_F32(lbl_805DE7BC);
+                pos.y -= lbl_805DE7BC;
                 break;
             case 0x15:
             case 0x17:
-                pos.y -= LOAD_F32(lbl_805DE7C0);
+                pos.y -= lbl_805DE7C0;
                 break;
             case 0x16:
-                pos.y -= LOAD_F32(lbl_805DE7C4);
+                pos.y -= lbl_805DE7C4;
                 break;
             default:
-                pos.y -= LOAD_F32(lbl_805DE7C8);
+                pos.y -= lbl_805DE7C8;
                 break;
             }
 
@@ -5566,11 +5562,11 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
     }
 
     speed_results = (AutodemoPlayerResults*) kar_gmmain__near_80006c14();
-    speed_scale = LOAD_F32(lbl_805DE794);
+    speed_scale = lbl_805DE794;
     speed_results = (AutodemoPlayerResults*) ((u8*) speed_results + 0x830);
-    frame_scale = LOAD_F32(lbl_805DE790);
+    frame_scale = lbl_805DE790;
     i = 0;
-    speed_divisor = LOAD_F32(lbl_805DE798);
+    speed_divisor = lbl_805DE798;
     for (; i < 5; i++) {
         if (kar_plclearcheckerlib__near_8022c858(i) != 4) {
             Vec pos;
@@ -5593,11 +5589,11 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
         results->state = 2;
         kar_gmautodemo__near_8000fe34();
         if (kar_grdata__near_800ceaf4() != 0) {
-            results->field_014 = LOAD_F32(lbl_805DE794) *
+            results->field_014 = lbl_805DE794 *
                                   kar_grlib2__near_800d51fc() /
-                                  LOAD_F32(lbl_805DE7B0);
+                                  lbl_805DE7B0;
         } else {
-            results->field_014 = LOAD_F32(lbl_805DE7A8);
+            results->field_014 = lbl_805DE7A8;
         }
         break;
     case 2:
@@ -5655,9 +5651,9 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
                 u32 counter = *(u32*) AUTODEMO_COUNTERS;
                 f32 speed = *(f32*) (resource + 4);
 
-                if (counter == (s32) (LOAD_F32(lbl_805DE7D4) / speed) ||
-                    counter == (s32) (LOAD_F32(lbl_805DE7D8) / speed) ||
-                    counter == (s32) (LOAD_F32(lbl_805DE7DC) / speed)) {
+                if (counter == (s32) (lbl_805DE7D4 / speed) ||
+                    counter == (s32) (lbl_805DE7D8 / speed) ||
+                    counter == (s32) (lbl_805DE7DC / speed)) {
                     if ((s8) fn_8000AD48() != 0) {
                         kar_lbaudio__near_8006176c(0x20011);
                     } else {
@@ -5667,7 +5663,7 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
             }
 
             if ((f32) *(u32*) AUTODEMO_COUNTERS >=
-                LOAD_F32(lbl_805DE7E0) / *(f32*) (resource + 4)) {
+                lbl_805DE7E0 / *(f32*) (resource + 4)) {
                 results->state = 0;
                 kar_plclearcheckerlib__near_8022ce28();
                 fn_80131804();
@@ -6132,7 +6128,7 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
                         kar_plclearchecker_get_template_vec_008(i, &pos);
                         switch ((s8) AUTODEMO_COUNTERS[i + 0x15]) {
                         case 0:
-                            if (pos.x >= LOAD_F32(lbl_805DE7CC)) {
+                            if (pos.x >= lbl_805DE7CC) {
                                 AUTODEMO_COUNTERS[i + 0x15] = 1;
                                 fn_80113C38(i);
                             }
@@ -6140,9 +6136,9 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
                             break;
                         case 1:
                             if (results->field_21C[i] <
-                                LOAD_F32(lbl_805DE7D0) + pos.y) {
+                                lbl_805DE7D0 + pos.y) {
                                 results->field_21C[i] =
-                                    LOAD_F32(lbl_805DE7D0) + pos.y;
+                                    lbl_805DE7D0 + pos.y;
                             }
                             if (kar_plclearcheckerlib__near_8022d49c(i) != 0) {
                                 results->field_022[i] = 1;
@@ -6434,7 +6430,7 @@ void kar_gmautodemo__near_80011024(HSD_GObj* gobj)
 
                             if (results->field_200[i] != 0) {
                                 results->field_21C[i] =
-                                    LOAD_F32(lbl_805DE7A8);
+                                    lbl_805DE7A8;
                             }
                             *(f32*) (race_work + i * 8 + 0x34) =
                                 *(f32*) (race_work + i * 8 + 0x30);

@@ -156,8 +156,6 @@ void fn_8010F920(void);
 void fn_8010F924(void);
 void fn_8010F928(void);
 
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-
 GroundCallback kar_grcity1_main_callback_table[3] = {
     (GroundCallback) kar_grcity1_init_mode_dependent_anim_and_bitcounter_params,
     (GroundCallback) kar_grcity1_create_stage_city_yaku_objects,

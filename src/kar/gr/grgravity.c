@@ -67,12 +67,6 @@ const f32 lbl_805DF730[2] = { 1.0f, 0.0f };
 void* memcpy(void* dst, const void* src, unsigned long n);
 f32 kar_lbcolanim__near_8006bac8(HSD_Spline* spline, Vec* pos, s32 arg2);
 
-#define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
-
 f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
                                               Vec* out)
 {
@@ -84,23 +78,18 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
     f32 nearest_dist;
     f32 zero;
     f32 no_param;
-    s32 spline_offset;
-    s32 param_offset;
     s32 best_index;
     s32 i;
 
     if (spline_set != NULL) {
-        spline_offset = 0;
         gravity_params = data->gravity_params;
-        param_offset = spline_offset;
         nearest_dist = GRGRAVITY_INIT_DIST;
         best_index = -1;
         no_param = GRGRAVITY_NO_PARAM;
         i = 0;
         zero = GRGRAVITY_ZERO;
         while (i < spline_set->list->count) {
-            HSD_Spline* spline =
-                GET_PTR(spline_set->list->splines, spline_offset);
+            HSD_Spline* spline = spline_set->list->splines[i];
             f32 spline_param =
                 kar_lbcolanim__near_8006bac8(spline, pos,
                                              (spline_set->flags >> 7) &
@@ -112,12 +101,12 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
             }
 
             if (spline_param > zero &&
-                spline_param < LOAD_F32(GRGRAVITY_ONE_ZERO[0])) {
+                spline_param < GRGRAVITY_ONE_ZERO[0]) {
                 f32 dist;
 
                 splArcLengthPoint(&spline_pos, spline, spline_param);
                 dist = PSVECDistance(pos, &spline_pos);
-                if (dist < GET_F32(gravity_params->spline_params, param_offset) &&
+                if (dist < gravity_params->spline_params[i * 3] &&
                     dist < nearest_dist) {
                     memcpy(&nearest_pos, &spline_pos, sizeof(Vec));
                     nearest_dist = dist;
@@ -125,8 +114,6 @@ f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos,
                 }
             }
 
-            spline_offset += 4;
-            param_offset += 0xC;
             i++;
         }
 

@@ -12,8 +12,13 @@
 #include <sysdolphin/gobjuserdata.h>
 #include <sysdolphin/objalloc.h>
 
+typedef struct AutoDemoData AutoDemoData;
+typedef struct RaceCommon RaceCommon;
+typedef struct RaceGame RaceGame;
 typedef struct RaceSlot RaceSlot;
 typedef struct RacePlayerMap RacePlayerMap;
+typedef struct RaceSettingWindow RaceSettingWindow;
+typedef struct RaceSettings RaceSettings;
 typedef struct RaceUserData RaceUserData;
 
 struct RaceSlot {
@@ -37,17 +42,108 @@ struct RacePlayerMap {
     s8 mapped_index;
 };
 
+struct RaceCommon {
+    u8 state;
+    s8 current_slot;
+    u8 enabled;
+    u8 status;
+    u32 flags;
+    u32 timer;
+    s32 current_index;
+    s32 previous_index;
+    f32 elapsed;
+    u8 flags_18[5];
+    u8 flags_1D[5];
+    u8 flags_22[5];
+    u8 flags_27[5];
+    s8 start_positions[5];
+    s8 alternate_start_positions[5];
+    u8 pad_36[2];
+    u32 words_38[5];
+    u32 words_4C[5];
+    f32 floats_60[5];
+    f32 floats_74[5];
+    u32 words_88[5];
+    u32 words_9C[5];
+    Vec vectors_B0[5];
+    Vec vectors_EC[5];
+    u8 triplets_128[5][3];
+    u8 pad_137[0xC9];
+    u8 flags_200[5];
+    u8 pad_205[3];
+    u32 words_208[5];
+    f32 floats_21C[5];
+    f32 floats_230[5];
+    f32 floats_244[5];
+    u32 field_258;
+    u32 field_25C;
+    u32 field_260;
+};
+
+struct RaceSettingWindow {
+    u8 pad_00[0x0C];
+    f32 params[9];
+};
+
+struct RaceSettings {
+    u8 data[0xC0];
+    s8 field_C0[5];
+    s8 field_C5[5];
+    u8 pad_CA[0x3D2];
+};
+
+struct RaceGame {
+    u8 pad_000[0x354];
+    u8 source_course;
+    u8 pad_355;
+    s16 source_mode;
+    s16 source_value;
+    u8 source_flags;
+    u8 pad_35B;
+    s8 source_disabled;
+    u8 pad_35D[0x37];
+    RaceSettings race_settings;
+    RaceCommon race_common;
+    u8 course;
+    u8 player_count;
+    s8 active_player_count;
+    u8 pad_A97[3];
+    u8 mode;
+    u8 pad_A9B;
+    u16 value_A9C;
+    u8 pad_A9E[6];
+    u8 enabled_AA4;
+    u8 settings_AA5;
+    u8 settings_AA6;
+    u8 pad_AA7;
+    f32 player_speeds[5];
+    u8 pad_ABC[0x0C];
+    RaceSlot slots[5];
+    RacePlayerMap player_maps[4];
+};
+
+struct AutoDemoData {
+    u8 pad_00[0x9C];
+    f32 replay_speeds[8];
+    f32 default_speed;
+    f32 template_float;
+};
+
 struct RaceUserData {
     u32 field_0;
     u32 field_4;
     u32 field_8;
     u16 field_C;
     u16 active_slot_count;
-    u8 bytes_10[0xA];
+    u8 bytes_10[5];
+    u8 bytes_15[5];
     u8 pad_1A[0x52];
     u32 words_6C[5];
     f32 floats_80[5];
-    u8 pad_94[0x50];
+    u32 words_94[5];
+    u8 pad_A8[0x14];
+    u32 words_BC[5];
+    u32 words_D0[5];
 };
 
 HSD_ObjAllocData lbl_80537400;
@@ -145,15 +241,6 @@ void fn_8022B768(s32 arg0);
 u64 fn_803AE0F0(f32 arg0);
 f32 fn_803AE03C(u64 arg0);
 
-#define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define GET_S8(base, offset) (*(s8*) ((u8*) (base) + (offset)))
-#define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))
-#define GET_S16(base, offset) (*(s16*) ((u8*) (base) + (offset)))
-#define GET_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
-
 void kar_gmracecommon__80012e84(void* gp)
 {
     char* base = kar_linkfile_gmdata_dat_80496028;
@@ -169,9 +256,9 @@ void kar_gmracecommon__80012e84(void* gp)
 
 void kar_gmracecommon__near_80012efc(void)
 {
-    u8* game = kar_gmmain__near_80006c14();
-    RaceSlot* slots = (RaceSlot*) (game + 0xAC8);
-    RacePlayerMap* maps = (RacePlayerMap*) (game + 0xBB8);
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
+    RaceSlot* slots = game->slots;
+    RacePlayerMap* maps = game->player_maps;
     s8 first_slot;
     s8 active_count;
     s8 compact_index;
@@ -190,12 +277,12 @@ void kar_gmracecommon__near_80012efc(void)
             active_count++;
         }
     }
-    GET_S8(game, 0xA96) = active_count;
+    game->active_player_count = active_count;
 
     compact_index = 0;
     for (i = 0; i < 4; i++) {
         if (maps[i].active != 0) {
-            if (GET_S8(game, 0xA96) <= 2) {
+            if (game->active_player_count <= 2) {
                 maps[i].mapped_index = compact_index;
             } else {
                 maps[i].mapped_index = i;
@@ -228,12 +315,13 @@ void kar_gmracecommon__near_80012efc(void)
 
 void kar_gmracecommon__near_800130a8(void)
 {
-    u8* race_common = (u8*) kar_gmmain__near_80006c14() + 0x830;
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
+    RaceCommon* race_common = &game->race_common;
     HSD_GObj* gobj;
     RaceUserData* user_data;
     s32 i;
 
-    memset(race_common, 0, 0x264);
+    memset(race_common, 0, sizeof(RaceCommon));
     gobj = HSD_GObjCreate(0x1A, 0x19, 0);
     HSD_GObjProcCreate(gobj, kar_gmautodemo__near_80011024, 0x13);
     HSD_ObjAllocInit(&lbl_80537400, 0xE4, 4);
@@ -241,62 +329,62 @@ void kar_gmracecommon__near_800130a8(void)
     lbl_805DD570 = user_data;
     HSD_GObjUserDataLink(gobj, 0x1A, kar_gmracecommon__80012e84, user_data);
 
-    race_common[2] = 1;
-    race_common[3] = 0;
-    GET_U32(race_common, 4) = 0;
+    race_common->enabled = 1;
+    race_common->status = 0;
+    race_common->flags = 0;
 
     user_data->field_0 = 0;
     user_data->field_4 = 0;
     user_data->field_8 = 0;
     user_data->field_C = 0;
-    race_common[0] = 0;
-    race_common[1] = -1;
-    GET_U32(race_common, 8) = 0x3C;
-    GET_S32(race_common, 0xC) = -1;
-    GET_S32(race_common, 0x10) = -1;
-    GET_F32(race_common, 0x14) = lbl_805DE7A8;
+    race_common->state = 0;
+    race_common->current_slot = -1;
+    race_common->timer = 0x3C;
+    race_common->current_index = -1;
+    race_common->previous_index = -1;
+    race_common->elapsed = lbl_805DE7A8;
     user_data->active_slot_count = 0;
 
     for (i = 0; i < 5; i++) {
-        race_common[0x18 + i] = 0;
-        race_common[0x1D + i] = 0;
-        race_common[0x22 + i] = 0;
-        race_common[0x27 + i] = 0;
-        race_common[0x2C + i] = i;
-        race_common[0x31 + i] = -1;
-        GET_U32(race_common, 0x38 + i * 4) = 0;
-        GET_U32(race_common, 0x4C + i * 4) = 0;
-        GET_F32(race_common, 0x60 + i * 4) = lbl_805DE7A8;
-        GET_F32(race_common, 0x74 + i * 4) = lbl_805DE7A8;
-        GET_U32(race_common, 0x88 + i * 4) = 0;
-        GET_U32(race_common, 0x9C + i * 4) = 0;
-        GET_U32(race_common, 0xB0 + i * 0xC) = 0;
-        GET_U32(race_common, 0xB4 + i * 0xC) = 0;
-        GET_U32(race_common, 0xB8 + i * 0xC) = 0;
-        GET_U32(race_common, 0xEC + i * 0xC) = 0;
-        GET_U32(race_common, 0xF0 + i * 0xC) = 0;
-        GET_U32(race_common, 0xF4 + i * 0xC) = 0;
-        race_common[0x128 + i * 3] = 0;
-        race_common[0x129 + i * 3] = 0;
-        race_common[0x12A + i * 3] = 0;
-        race_common[0x200 + i] = 0;
-        GET_U32(race_common, 0x208 + i * 4) = 0;
-        GET_F32(race_common, 0x21C + i * 4) = lbl_805DE7A8;
-        GET_F32(race_common, 0x230 + i * 4) = lbl_805DE7A8;
-        GET_F32(race_common, 0x244 + i * 4) = lbl_805DE7A8;
+        race_common->flags_18[i] = 0;
+        race_common->flags_1D[i] = 0;
+        race_common->flags_22[i] = 0;
+        race_common->flags_27[i] = 0;
+        race_common->start_positions[i] = i;
+        race_common->alternate_start_positions[i] = -1;
+        race_common->words_38[i] = 0;
+        race_common->words_4C[i] = 0;
+        race_common->floats_60[i] = lbl_805DE7A8;
+        race_common->floats_74[i] = lbl_805DE7A8;
+        race_common->words_88[i] = 0;
+        race_common->words_9C[i] = 0;
+        race_common->vectors_B0[i].x = 0.0f;
+        race_common->vectors_B0[i].y = 0.0f;
+        race_common->vectors_B0[i].z = 0.0f;
+        race_common->vectors_EC[i].x = 0.0f;
+        race_common->vectors_EC[i].y = 0.0f;
+        race_common->vectors_EC[i].z = 0.0f;
+        race_common->triplets_128[i][0] = 0;
+        race_common->triplets_128[i][1] = 0;
+        race_common->triplets_128[i][2] = 0;
+        race_common->flags_200[i] = 0;
+        race_common->words_208[i] = 0;
+        race_common->floats_21C[i] = lbl_805DE7A8;
+        race_common->floats_230[i] = lbl_805DE7A8;
+        race_common->floats_244[i] = lbl_805DE7A8;
 
-        GET_U32(user_data, 0x6C + i * 4) = 0;
-        GET_F32(user_data, 0x80 + i * 4) = lbl_805DE7A8;
-        GET_U8(user_data, 0x10 + i) = 0;
-        GET_U32(user_data, 0xBC + i * 4) = 0;
-        GET_U32(user_data, 0x94 + i * 4) = 0;
-        GET_U8(user_data, 0x15 + i) = 0;
-        GET_U32(user_data, 0xD0 + i * 4) = 0;
+        user_data->words_6C[i] = 0;
+        user_data->floats_80[i] = lbl_805DE7A8;
+        user_data->bytes_10[i] = 0;
+        user_data->words_BC[i] = 0;
+        user_data->words_94[i] = 0;
+        user_data->bytes_15[i] = 0;
+        user_data->words_D0[i] = 0;
     }
 
-    GET_U32(race_common, 0x258) = 0;
-    GET_U32(race_common, 0x25C) = 0;
-    GET_U32(race_common, 0x260) = 0;
+    race_common->field_258 = 0;
+    race_common->field_25C = 0;
+    race_common->field_260 = 0;
     kar_gmracecommon__near_80012efc();
     ClearChecker_MarkUnlockSfxPlayedThisFrame();
 }
@@ -308,21 +396,21 @@ u32 kar_gmracecommon__near_800132b8(void)
 
 void kar_gmracecommon__near_800132c4(void)
 {
-    u8* game = kar_gmmain__near_80006c14();
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
 
-    game[0xAA4] = 1;
+    game->enabled_AA4 = 1;
 }
 
 void kar_gmracecommon__near_800132ec(void)
 {
-    u8* game = kar_gmmain__near_80006c14();
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
 
-    game[0xAA4] = 0;
+    game->enabled_AA4 = 0;
 }
 
 void kar_gmracecommon__near_80013314(void)
 {
-    u8* game = kar_gmmain__near_80006c14();
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
     u8 src;
     u8 value;
 
@@ -342,39 +430,39 @@ void kar_gmracecommon__near_80013314(void)
         return;
     }
 
-    if (GET_S8(game, 0x35C) == 0) {
-        GET_U8(game, 0xA94) = GET_U8(game, 0x354);
-        GET_U8(game, 0xA9A) = GET_S16(game, 0x356);
-        GET_U16(game, 0xA9C) = GET_S16(game, 0x358);
+    if (game->source_disabled == 0) {
+        game->course = game->source_course;
+        game->mode = game->source_mode;
+        game->value_A9C = game->source_value;
 
-        src = GET_U8(game, 0x35A);
-        value = GET_U8(game, 0xAA5);
+        src = game->source_flags;
+        value = game->settings_AA5;
         value = (value & ~0x10) | ((src >> 1) & 0x10);
-        GET_U8(game, 0xAA5) = value;
+        game->settings_AA5 = value;
 
-        src = GET_U8(game, 0x35A);
-        value = GET_U8(game, 0xAA5);
+        src = game->source_flags;
+        value = game->settings_AA5;
         value = (value & ~0x8) | ((src >> 2) & 0x8);
-        GET_U8(game, 0xAA5) = value;
+        game->settings_AA5 = value;
 
-        src = GET_U8(game, 0x35A);
-        value = GET_U8(game, 0xAA5);
+        src = game->source_flags;
+        value = game->settings_AA5;
         value = (value & ~0x6) | ((src >> 5) & 0x6);
-        GET_U8(game, 0xAA5) = value;
+        game->settings_AA5 = value;
 
-        src = GET_U8(game, 0x35A);
-        value = GET_U8(game, 0xAA6);
+        src = game->source_flags;
+        value = game->settings_AA6;
         value = (value & ~0x40) | ((src << 2) & 0x40);
-        GET_U8(game, 0xAA6) = value;
+        game->settings_AA6 = value;
 
-        src = GET_U8(game, 0x35A);
-        value = GET_U8(game, 0xAA6);
+        src = game->source_flags;
+        value = game->settings_AA6;
         value = (value & ~0x6) | ((src >> 1) & 0x6);
-        GET_U8(game, 0xAA6) = value;
+        game->settings_AA6 = value;
     }
 
     if ((s8) kar_gmracenormal__8000af5c() != 0) {
-        RaceSlot* slots = (RaceSlot*) (game + 0xAC8);
+        RaceSlot* slots = game->slots;
 
         slots[0].kind = 1;
         slots[0].player_index = 0;
@@ -392,53 +480,53 @@ void kar_gmracecommon__near_80013314(void)
         slots[3].player_index = 3;
         slots[3].field_8 = 8;
         slots[3].field_9 = 8;
-        GET_U8(game, 0xA95) = 4;
-        GET_U8(game, 0xA94) = 0;
-        GET_U8(game, 0xA9A) = 3;
-        GET_U16(game, 0xA9C) = 0;
+        game->player_count = 4;
+        game->course = 0;
+        game->mode = 3;
+        game->value_A9C = 0;
 
-        value = GET_U8(game, 0xAA5);
+        value = game->settings_AA5;
         value = (value & ~0x10);
-        GET_U8(game, 0xAA5) = value;
-        value = GET_U8(game, 0xAA5);
+        game->settings_AA5 = value;
+        value = game->settings_AA5;
         value = (value & ~0x8);
-        GET_U8(game, 0xAA5) = value;
-        value = GET_U8(game, 0xAA5);
+        game->settings_AA5 = value;
+        value = game->settings_AA5;
         value = (value & ~0x6) | 2;
-        GET_U8(game, 0xAA5) = value;
-        value = GET_U8(game, 0xAA6);
+        game->settings_AA5 = value;
+        value = game->settings_AA6;
         value = (value & ~0x40) | 0x40;
-        GET_U8(game, 0xAA6) = value;
-        value = GET_U8(game, 0xAA6);
+        game->settings_AA6 = value;
+        value = game->settings_AA6;
         value = (value & ~0x6) | 2;
-        GET_U8(game, 0xAA6) = value;
+        game->settings_AA6 = value;
     }
 }
 
 void kar_gmracecommon__near_800134d4(void)
 {
-    u8* game = kar_gmmain__near_80006c14();
-    s32 mode = (GET_U8(game, 0xAA6) >> 1) & 3;
+    RaceGame* game = (RaceGame*) kar_gmmain__near_80006c14();
+    s32 mode = (game->settings_AA6 >> 1) & 3;
     u64 ticks;
     f32 base;
 
     switch (mode) {
     case 0:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE7F4);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE7F4;
         ticks = fn_803AE0F0(base);
         base = fn_803AE03C(ticks);
-        ticks = fn_803AE0F0(LOAD_F32(lbl_805DE7F0) * base);
+        ticks = fn_803AE0F0(lbl_805DE7F0 * base);
         kar_lbaudio__near_80062874(ticks);
         break;
     case 2:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE7F4);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE7F4;
         ticks = fn_803AE0F0(base);
         base = fn_803AE03C(ticks);
-        ticks = fn_803AE0F0(LOAD_F32(lbl_805DE7F8) * base);
+        ticks = fn_803AE0F0(lbl_805DE7F8 * base);
         kar_lbaudio__near_80062874(ticks);
         break;
     default:
-        base = (f32) (*(u32*) 0x800000F8 >> 2) * LOAD_F32(lbl_805DE7F4);
+        base = (f32) (*(u32*) 0x800000F8 >> 2) * lbl_805DE7F4;
         ticks = fn_803AE0F0(base);
         base = fn_803AE03C(ticks);
         ticks = fn_803AE0F0(base);
@@ -449,11 +537,11 @@ void kar_gmracecommon__near_800134d4(void)
 
 void kar_gmracecommon__near_800135ec(s32 player)
 {
-    u8* game;
-    u8* race_common;
+    RaceGame* game;
+    RaceCommon* race_common;
     RaceSlot* slots;
     RaceSlot* slot;
-    u8* auto_data;
+    AutoDemoData* auto_data;
     s32 player_index;
     s32 start_pos_index;
     s32 route_index;
@@ -466,18 +554,20 @@ void kar_gmracecommon__near_800135ec(s32 player)
     f32* slot_params;
 
     kar_gmmain__near_80006c14();
-    game = kar_gmmain__near_80006c14();
-    slots = (RaceSlot*) (game + 0xAC8);
-    race_common = game + 0x830;
-    auto_data = *(u8**) kar_gmautodemo__near_8000fcb0();
+    game = (RaceGame*) kar_gmmain__near_80006c14();
+    slots = game->slots;
+    race_common = &game->race_common;
+    auto_data = *(AutoDemoData**) kar_gmautodemo__near_8000fcb0();
 
     player_index = (s8) player;
     if ((s8) kar_diag__8000acb0() == 1) {
-        start_pos_index = GET_S8(race_common, 0x31 + player_index);
+        start_pos_index =
+            race_common->alternate_start_positions[player_index];
     } else if ((s8) fn_8000AD48() == 1) {
-        start_pos_index = GET_S8(race_common, 0x31 + player_index);
+        start_pos_index =
+            race_common->alternate_start_positions[player_index];
     } else {
-        start_pos_index = GET_S8(race_common, 0x2C + player_index);
+        start_pos_index = race_common->start_positions[player_index];
     }
 
     kar_grcommon_get_startpos_vectors_by_index(start_pos_index, &pos, &dir,
@@ -508,10 +598,9 @@ void kar_gmracecommon__near_800135ec(s32 player)
         s32 shadow_player = (s8) HSD_PadState[shadow_offset + 0x12];
 
         if (shadow_player == (u8) kar_shadow__near_8007b990()) {
-            s32 source_slot =
-                (s8) HSD_PadState[shadow_offset + 0x13] * sizeof(RaceSlot);
+            s32 source_slot = (s8) HSD_PadState[shadow_offset + 0x13];
             kar_plclearcheckerlib__near_8022cc10(player_index,
-                                                 GET_S8(slots, source_slot + 5));
+                                                 slots[source_slot].field_5);
         } else {
             kar_plclearcheckerlib__near_8022cc10(player_index, 0);
         }
@@ -527,11 +616,11 @@ void kar_gmracecommon__near_800135ec(s32 player)
     if ((s8) fn_8000AD48() == 1 &&
         (s8) kar_gmracenormal__8000ae50() == 0x17 && player_index == 4) {
         kar_plclearchecker_set_template_float_02c_030(4,
-                                                      GET_F32(auto_data, 0xC0));
+                                                      auto_data->template_float);
         kar_plclearcheckerlib__near_8022d660(4);
     }
 
-    count = GET_S8(game, 0xA96);
+    count = game->active_player_count;
     if (count > 2) {
         kar_plclearcheckerlib__near_8022c990(player_index, 1);
         kar_plclearcheckerlib__near_8022c9c0(player_index, 2);
@@ -543,8 +632,8 @@ void kar_gmracecommon__near_800135ec(s32 player)
         kar_plclearcheckerlib__near_8022c9c0(player_index, 0);
     }
 
-    game = kar_gmmain__near_80006c14();
-    slots = (RaceSlot*) (game + 0xAC8);
+    game = (RaceGame*) kar_gmmain__near_80006c14();
+    slots = game->slots;
     kar_gmautodemo__near_8000fcb0();
     slot = &slots[player_index];
     slot_params = slot->params;
@@ -559,38 +648,38 @@ void kar_gmracecommon__near_800135ec(s32 player)
     slot_params[8] = lbl_805DE808;
 
     if ((s8) kar_diag__8000acb0() == 1 || (s8) fn_8000AD48() == 1) {
-        u8* race_settings = (u8*) kar_gmmain__near_80006c14() + 0x394;
-        u8* source = race_settings + player_index * 0x24;
-        u8* dest = (u8*) slot;
+        RaceSettings* race_settings = &game->race_settings;
+        RaceSettingWindow* source =
+            (RaceSettingWindow*) &race_settings->data[player_index * 0x24];
 
-        GET_U32(dest, 0xC) = GET_U32(source, 0xC);
-        GET_U32(dest, 0x10) = GET_U32(source, 0x10);
-        GET_U32(dest, 0x14) = GET_U32(source, 0x14);
-        GET_U32(dest, 0x18) = GET_U32(source, 0x18);
-        GET_U32(dest, 0x1C) = GET_U32(source, 0x1C);
-        GET_U32(dest, 0x20) = GET_U32(source, 0x20);
-        GET_U32(dest, 0x24) = GET_U32(source, 0x24);
-        GET_U32(dest, 0x28) = GET_U32(source, 0x28);
-        GET_U32(dest, 0x2C) = GET_U32(source, 0x2C);
+        slot->params[0] = source->params[0];
+        slot->params[1] = source->params[1];
+        slot->params[2] = source->params[2];
+        slot->params[3] = source->params[3];
+        slot->params[4] = source->params[4];
+        slot->params[5] = source->params[5];
+        slot->params[6] = source->params[6];
+        slot->params[7] = source->params[7];
+        slot->params[8] = source->params[8];
         kar_plclearcheckerlib__near_8022c8c8(
-            player_index, GET_S8(race_settings, 0xC0 + player_index));
+            player_index, race_settings->field_C0[player_index]);
         kar_plclearcheckerlib__near_8022c8f8(
-            player_index, GET_S8(race_settings, 0xC5 + player_index));
+            player_index, race_settings->field_C5[player_index]);
     }
 
     kar_plclearcheckerlib__near_8022cfc8(player_index, slot->params);
 
-    game = kar_gmmain__near_80006c14();
-    auto_data = *(u8**) kar_gmautodemo__near_8000fcb0();
+    game = (RaceGame*) kar_gmmain__near_80006c14();
+    auto_data = *(AutoDemoData**) kar_gmautodemo__near_8000fcb0();
     if (((s8) kar_gmracenormal__8000aea8() == 4 &&
          (s8) kar_gmracenormal__8003d5f0() == 0) ||
         ((s8) kar_gmracenormal__8000aea8() == 6 &&
          (s8) kar_gmracenormal__8003f6cc() == 1)) {
         replay_index = (s8) fn_800095F8(player_index);
-        GET_F32(game, 0xAA8 + player_index * 4) =
-            GET_F32(auto_data, 0x9C + replay_index * 4);
+        game->player_speeds[player_index] =
+            auto_data->replay_speeds[replay_index];
     } else {
-        GET_F32(game, 0xAA8 + player_index * 4) = GET_F32(auto_data, 0xBC);
+        game->player_speeds[player_index] = auto_data->default_speed;
     }
 
     kar_plclearcheckerlib__near_8022ca20(player_index, lbl_805DE808);

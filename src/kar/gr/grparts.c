@@ -15,11 +15,14 @@
 #define GRPARTS_NEG_ONE -1.0f
 #define GRPARTS_AABB_EPSILON 0.01f
 #define GRPARTS_NEG_AABB_EPSILON -0.01f
-#define GRPARTS_FACE_STRIDE 0x40
 
 typedef struct GrPartsAlloc GrPartsAlloc;
+typedef struct GrPartsCollision GrPartsCollision;
+typedef struct GrPartsFace GrPartsFace;
+typedef struct GrPartsTransform GrPartsTransform;
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
+typedef struct GroundHeader GroundHeader;
 typedef struct GroundPosData GroundPosData;
 typedef struct PartConfig PartConfig;
 
@@ -29,16 +32,49 @@ struct GrPartsAlloc {
     void* extra;
 };
 
+struct GrPartsTransform {
+    u8 pad_00[0x2C];
+    Mtx transform_2C;
+    Mtx transform_5C;
+};
+
+struct GrPartsFace {
+    u8 pad_00[0x0C];
+    Vec normal;
+    Vec center;
+    Vec extent;
+    u32 material_flags;
+    u32 state_flags;
+    GrPartsTransform* transform;
+    u8 status;
+    u8 pad_3D[3];
+};
+
+struct GrPartsCollision {
+    u8 pad_00[0x08];
+    GrPartsFace* faces;
+};
+
+struct GroundHeader {
+    u8 pad_00[0x28];
+    HSD_JObj* root_jobj;
+};
+
 struct Ground {
-    u8 pad_000[0x08];
+    GroundHeader* header;
+    u8 pad_004[0x04];
     GroundData* data;
-    u8 pad_00C[0x6F4];
+    u8 pad_00C[0xF8];
+    GrPartsAlloc parts_alloc;
+    u8 pad_110[0x5F0];
     void* gr_kdcoll_tree;
     void* gr_kdcoll_query;
 };
 
 struct GroundData {
-    u8 pad_00[0x20];
+    u8 pad_00[0x0C];
+    PartConfig** parts_config;
+    u8 pad_10[0x10];
     GroundPosData* pos;
     void* enemy;
     void* item;
@@ -94,12 +130,6 @@ void kar_collision_math_build_transformed_axis_pair(void* a, void* b, Vec* in0,
                                                     Vec* out1);
 f32 kar_grparts__near_800d9190(f32 angle);
 
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
-
 static void grparts_copy_vec(Vec* dst, Vec* src)
 {
     dst->x = src->x;
@@ -129,12 +159,9 @@ static BOOL grparts_is_near_zero_vec(Vec* v)
            v->z < GRPARTS_EPSILON && v->z > GRPARTS_NEG_EPSILON;
 }
 
-static void* grparts_get_stage_pos_table(Ground* ground, s32 table_offset,
+static void* grparts_get_stage_pos_table(void* table,
                                          s32 (*get_id)(void))
 {
-    GroundPosData* pos = ground->data->pos;
-    void* table = GET_PTR(pos, table_offset);
-
     if (table == NULL) {
         return NULL;
     }
@@ -184,34 +211,36 @@ void kar_grparts__near_800d8b40(GrPartsAlloc* parts)
 
 void kar_grparts__near_800d8b98(void* ground)
 {
-    void* desc_holder = GET_PTR(GET_PTR(ground, 0x8), 0xC);
+    Ground* current_ground = ground;
+    PartConfig** config_holder = current_ground->data->parts_config;
 
-    if (desc_holder != NULL) {
-        PartConfig* config = *(PartConfig**) desc_holder;
+    if (config_holder != NULL) {
+        PartConfig* config = *config_holder;
 
-        kar_grparts__800d8a60((GrPartsAlloc*) ((u8*) ground + 0x104),
-                              GET_PTR(GET_PTR(ground, 0), 0x28),
+        kar_grparts__800d8a60(&current_ground->parts_alloc,
+                              current_ground->header->root_jobj,
                               config->joint, config->part_count,
                               config->link_count, config->extra_count);
     } else {
-        kar_grparts__800d8a60((GrPartsAlloc*) ((u8*) ground + 0x104),
-                              GET_PTR(GET_PTR(ground, 0), 0x28),
+        kar_grparts__800d8a60(&current_ground->parts_alloc,
+                              current_ground->header->root_jobj,
                               kar_lbairride__near_80055da0(), 1, 0, 0);
     }
 }
 
 void kar_grparts__near_800d8c28(void* ground)
 {
-    void* ptr = GET_PTR(ground, 0x104);
+    Ground* current_ground = ground;
+    void* ptr = current_ground->parts_alloc.parts;
 
     if (ptr != NULL) {
         HSD_Free(ptr);
     }
-    ptr = GET_PTR(ground, 0x108);
+    ptr = current_ground->parts_alloc.links;
     if (ptr != NULL) {
         HSD_Free(ptr);
     }
-    ptr = GET_PTR(ground, 0x10C);
+    ptr = current_ground->parts_alloc.extra;
     if (ptr != NULL) {
         HSD_Free(ptr);
     }
@@ -237,22 +266,22 @@ s32 kar_grparts__near_800d8d0c(void)
     return (s8) fn_800092B4() > 1;
 }
 
-void kar_grparts__near_800d8d44(void* gcp, Vec* pos, s32 id, Vec* out_delta,
-                                Vec* in_axis0, Vec* in_axis1, Vec* out_axis0,
-                                Vec* out_axis1)
+void kar_grparts__near_800d8d44(GrPartsCollision* gcp, Vec* pos, s32 id,
+                                Vec* out_delta, Vec* in_axis0, Vec* in_axis1,
+                                Vec* out_axis0, Vec* out_axis1)
 {
-    u8* face = (u8*) GET_PTR(gcp, 8) + id * GRPARTS_FACE_STRIDE;
+    GrPartsFace* face = &gcp->faces[id];
 
-    if ((GET_U32(face, 0x34) & 0x20) != 0) {
+    if ((face->state_flags & 0x20) != 0) {
         Vec transformed;
-        void* transform = GET_PTR(face, 0x38);
+        GrPartsTransform* transform = face->transform;
 
-        kar_collision_math_apply_two_transforms((u8*) transform + 0x5C,
-                                                (u8*) transform + 0x2C, pos,
+        kar_collision_math_apply_two_transforms(transform->transform_5C,
+                                                transform->transform_2C, pos,
                                                 &transformed);
         kar_collision_math_build_transformed_axis_pair(
-            (u8*) transform + 0x5C, (u8*) transform + 0x2C, in_axis0, in_axis1,
-            out_axis0, out_axis1);
+            transform->transform_5C, transform->transform_2C, in_axis0,
+            in_axis1, out_axis0, out_axis1);
 
         out_delta->x = transformed.x - pos->x;
         out_delta->y = transformed.y - pos->y;
@@ -271,14 +300,14 @@ void kar_grparts__near_800d8d44(void* gcp, Vec* pos, s32 id, Vec* out_delta,
 
 // NONMATCHING: real flow recovered, but the transformed-face path still needs
 // stronger local types before matching work is useful.
-f32 kar_grparts__near_800d8edc(f32 angle, Vec* dir, void* gcp, s32 id,
-                               Vec* pos)
+f32 kar_grparts__near_800d8edc(f32 angle, Vec* dir, GrPartsCollision* gcp,
+                               s32 id, Vec* pos)
 {
-    u8* face = (u8*) GET_PTR(gcp, 8) + id * GRPARTS_FACE_STRIDE;
+    GrPartsFace* face = &gcp->faces[id];
     Vec normal;
     f32 len;
 
-    if ((GET_U8(face, 0x3C) & 0x80) != 0) {
+    if ((face->status & 0x80) != 0) {
         __assert(kar_src_grcoll_804a3e30, 0xDD, lbl_804A3E3C);
     }
 
@@ -291,8 +320,8 @@ f32 kar_grparts__near_800d8edc(f32 angle, Vec* dir, void* gcp, s32 id,
         normal.x *= GRPARTS_NEG_ONE;
         normal.y *= GRPARTS_NEG_ONE;
         normal.z *= GRPARTS_NEG_ONE;
-        dot = normal.x * GET_F32(face, 0xC) + normal.y * GET_F32(face, 0x10) +
-              normal.z * GET_F32(face, 0x14);
+        dot = normal.x * face->normal.x + normal.y * face->normal.y +
+              normal.z * face->normal.z;
 
         if (dot < sin_angle) {
             if (dot > GRPARTS_ZERO) {
@@ -305,18 +334,18 @@ f32 kar_grparts__near_800d8edc(f32 angle, Vec* dir, void* gcp, s32 id,
         len = GRPARTS_ZERO;
     }
 
-    if ((GET_U32(face, 0x34) & 0x20) != 0) {
+    if ((face->state_flags & 0x20) != 0) {
         Vec transformed;
         Vec delta;
         Vec axis0 = { GRPARTS_ZERO, GRPARTS_ZERO, GRPARTS_ONE };
         Vec axis1 = { GRPARTS_ZERO, GRPARTS_ONE, GRPARTS_ZERO };
-        void* transform = GET_PTR(face, 0x38);
+        GrPartsTransform* transform = face->transform;
 
-        kar_collision_math_apply_two_transforms((u8*) transform + 0x5C,
-                                                (u8*) transform + 0x2C, pos,
+        kar_collision_math_apply_two_transforms(transform->transform_5C,
+                                                transform->transform_2C, pos,
                                                 &transformed);
         kar_collision_math_build_transformed_axis_pair(
-            (u8*) transform + 0x5C, (u8*) transform + 0x2C, &axis0, &axis1,
+            transform->transform_5C, transform->transform_2C, &axis0, &axis1,
             &axis0, &axis1);
 
         delta.x = transformed.x - pos->x;
@@ -328,8 +357,8 @@ f32 kar_grparts__near_800d8edc(f32 angle, Vec* dir, void* gcp, s32 id,
             kar_lbvector_normalize_with_axis_fallback(&delta, &delta);
         }
 
-        len += delta.x * GET_F32(face, 0xC) + delta.y * GET_F32(face, 0x10) +
-               delta.z * GET_F32(face, 0x14);
+        len += delta.x * face->normal.x + delta.y * face->normal.y +
+               delta.z * face->normal.z;
     }
 
     if (len < GRPARTS_ZERO) {
@@ -346,38 +375,38 @@ f32 kar_grparts__near_800d9190(f32 angle)
 // NONMATCHING: broadphase collision face test. The exact candidate iteration is
 // still in generated asm and needs typed KD-tree structures.
 s32 kar_grparts__near_800d95dc(f32 max_t, Vec* start, Vec* dir, Vec* aabb,
-                               void* gcp, s32 id, u32 flags, u32 allow_backface,
-                               f32* out_t, Vec* out_pos)
+                               GrPartsCollision* gcp, s32 id, u32 flags,
+                               u32 allow_backface, f32* out_t, Vec* out_pos)
 {
-    u8* face = (u8*) GET_PTR(gcp, 8) + id * GRPARTS_FACE_STRIDE;
+    GrPartsFace* face = &gcp->faces[id];
     f32 dist;
 
-    if (grparts_absf(GET_F32(face, 0x18) - aabb->x) >
-        GRPARTS_AABB_EPSILON + GET_F32(face, 0x24) + GET_F32(aabb, 0xC)) {
+    if (grparts_absf(face->center.x - aabb[0].x) >
+        GRPARTS_AABB_EPSILON + face->extent.x + aabb[1].x) {
         return FALSE;
     }
-    if (grparts_absf(GET_F32(face, 0x1C) - aabb->y) >
-        GRPARTS_AABB_EPSILON + GET_F32(face, 0x28) + GET_F32(aabb, 0x10)) {
+    if (grparts_absf(face->center.y - aabb[0].y) >
+        GRPARTS_AABB_EPSILON + face->extent.y + aabb[1].y) {
         return FALSE;
     }
-    if (grparts_absf(GET_F32(face, 0x20) - aabb->z) >
-        GRPARTS_AABB_EPSILON + GET_F32(face, 0x2C) + GET_F32(aabb, 0x14)) {
-        return FALSE;
-    }
-
-    if ((flags & GET_U32(face, 0x30)) == 0 || (GET_U8(face, 0x3C) & 0x40) == 0 ||
-        (GET_U8(face, 0x3C) & 0x80) != 0) {
+    if (grparts_absf(face->center.z - aabb[0].z) >
+        GRPARTS_AABB_EPSILON + face->extent.z + aabb[1].z) {
         return FALSE;
     }
 
-    dist = dir->x * GET_F32(face, 0xC) + dir->y * GET_F32(face, 0x10) +
-           dir->z * GET_F32(face, 0x14);
+    if ((flags & face->material_flags) == 0 || (face->status & 0x40) == 0 ||
+        (face->status & 0x80) != 0) {
+        return FALSE;
+    }
+
+    dist = dir->x * face->normal.x + dir->y * face->normal.y +
+           dir->z * face->normal.z;
     if (dist > GRPARTS_EPSILON || dist > GRPARTS_NEG_EPSILON) {
         return FALSE;
     }
 
-    if (allow_backface != 0 && (GET_U32(face, 0x30) & 1) == 0 &&
-        (GET_U32(face, 0x34) & 0x8000) == 0) {
+    if (allow_backface != 0 && (face->material_flags & 1) == 0 &&
+        (face->state_flags & 0x8000) == 0) {
         return FALSE;
     }
 
@@ -419,17 +448,20 @@ s32 kar_grparts__near_800d9e34(f32 radius, f32 arg1, void* gcp, Vec* start,
 
 void* kar_grparts__near_800da3d4(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x4, kar_grcoursespline__802622e0);
+    return grparts_get_stage_pos_table(ground->data->pos->startpos,
+                                       kar_grcoursespline__802622e0);
 }
 
 void* kar_grparts__near_800da424(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x8, fn_80262364);
+    return grparts_get_stage_pos_table(ground->data->pos->enemypos,
+                                       fn_80262364);
 }
 
 void* kar_grparts__near_800da474(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x18, fn_802623E8);
+    return grparts_get_stage_pos_table(ground->data->pos->itempos,
+                                       fn_802623E8);
 }
 
 void* kar_grparts__near_800da4c4(Ground* ground)
@@ -450,17 +482,20 @@ void* kar_grparts__near_800da518(Ground* ground)
 
 void* kar_grparts__near_800da578(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x30, fn_8026246C);
+    return grparts_get_stage_pos_table(ground->data->pos->item_areapos,
+                                       fn_8026246C);
 }
 
 void* kar_grparts__near_800da5c8(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x20, fn_802624F0);
+    return grparts_get_stage_pos_table(ground->data->pos->vehiclepos,
+                                       fn_802624F0);
 }
 
 void* kar_grparts__near_800da618(Ground* ground)
 {
-    return grparts_get_stage_pos_table(ground, 0x34, fn_802624F0);
+    return grparts_get_stage_pos_table(ground->data->pos->vehicle_areapos,
+                                       fn_802624F0);
 }
 
 void* kar_grparts__near_800da668(Ground* ground)

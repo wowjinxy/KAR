@@ -15,7 +15,8 @@ typedef struct FgmEntry FgmEntry;
 typedef void (*GroundCallback)(void);
 
 struct FgmEntry {
-    u8 pad[0x08];
+    u8 pad_00[0x04];
+    s32 count;
 };
 
 struct Ground {
@@ -36,7 +37,10 @@ struct Yaku {
     u8 pad_F0[0x28];
     FgmEntry break_fgm_entry;
     u8 pad_120[0x10];
-    u64 effect_keys[4];
+    union {
+        u64 effect_keys[4];
+        void* effect_alloc;
+    } effect;
     s32* fgm_handles;
 };
 
@@ -54,9 +58,6 @@ struct BreakFanParam {
     s32 remove_effect_count;
     s32 hide_joint;
 };
-
-#define YAKU_EFFECT_ALLOC(yaku) (*(void**) ((u8*) (yaku) + 0x130))
-#define FGM_ENTRY_COUNT(entry) (*(s32*) ((u8*) (entry) + 0x04))
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUBREAKFAN_ASSERT_REMOVE_EFFECT_COUNT_LINE 0xA1
@@ -147,7 +148,7 @@ void kar_gryakubreakfan_trigger_kind30_break_effects_from_event(HSD_GObj* gobj,
         slot = yaku;
         entry_offset = i;
         while (i < param->remove_effect_count) {
-            slot->effect_keys[0] =
+            slot->effect.effect_keys[0] =
                 kar_gryakueffect_request_by_entry_mode(gobj,
                                                        (u8*) param->effect_entries + entry_offset,
                                                        param->effect_resource, 0, 0, &pos, 0);
@@ -156,7 +157,7 @@ void kar_gryakubreakfan_trigger_kind30_break_effects_from_event(HSD_GObj* gobj,
             slot = (Yaku*) ((u8*) slot + 0x08);
         }
 
-        if (FGM_ENTRY_COUNT(&yaku->break_fgm_entry) > 0) {
+        if (yaku->break_fgm_entry.count > 0) {
             kar_graudio_play_fgm_entry_id(&yaku->break_fgm_entry, 0);
         }
 
@@ -173,7 +174,7 @@ void kar_gryakubreakfan_cleanup_shared_allocs_and_fgm_handles(HSD_GObj* gobj)
     s32* handles;
     s32 i;
 
-    HSD_Free(YAKU_EFFECT_ALLOC(yaku));
+    HSD_Free(yaku->effect.effect_alloc);
 
     if (yaku->fgm_handles != NULL) {
         for (i = 0; i < param->effect_resource; i++) {

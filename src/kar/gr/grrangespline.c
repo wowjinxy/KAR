@@ -215,7 +215,6 @@ extern s32 kar_lbkdcoll__near_80071c90(void* world, void* tree, s32 obj_kind,
                                        void* aabb);
 extern void kar_lbkdcoll__near_8007133c(void* world, void* tree);
 
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
 
 u16* kar_grrangespline_get_ctpoint_pair_table_entry(u16* table,
                                                     s32 range_ctpoint0,
@@ -277,7 +276,7 @@ void kar_grrangespline_build_sample_cache(Ground* ground)
     for (i = 0; i < rangeData->pairNum; i++) {
         cache = &ground->range_cache[i];
         cache->type = 0;
-        cache->tension = LOAD_F32(lbl_805DF6E8);
+        cache->tension = lbl_805DF6E8;
 
         RANGE_DATA_ASSERT(0x1D, rangeData);
         RANGE_ID_ASSERT(0x1E, rangeData, i);
@@ -308,10 +307,10 @@ void kar_grrangespline_build_sample_cache(Ground* ground)
                               param);
 
             kar_lbvector_lerp(&right_pos, &left_pos, &cache->cv[j],
-                              LOAD_F32(lbl_805DF6EC));
+                              lbl_805DF6EC);
         }
 
-        cache->totalLength = LOAD_F32(lbl_805DF6E8);
+        cache->totalLength = lbl_805DF6E8;
         cache->segLength = HSD_Alloc(cache->numcv * sizeof(f32));
         for (j = 0; j < cache->numcv - 1; j++) {
             delta.x = cache->cv[j + 1].x - cache->cv[j].x;
@@ -386,7 +385,7 @@ s32 kar_grrangespline_find_best_connected_range_from_ctpoint(
     s32 i;
     f32 dist;
 
-    *out_distance = LOAD_F32(lbl_805DF6F0);
+    *out_distance = lbl_805DF6F0;
     *out_range_id = -1;
     best = NULL;
 
@@ -408,7 +407,7 @@ s32 kar_grrangespline_find_best_connected_range_from_ctpoint(
         }
     }
 
-    if (*out_distance != LOAD_F32(lbl_805DF6F0)) {
+    if (*out_distance != lbl_805DF6F0) {
         *out_forward = best->param < best->target_connection->param;
     }
 
@@ -470,11 +469,11 @@ void kar_grrangespline_build_ctpoint_connection_graph(Ground* ground)
         endPoint->connections[endPoint->connect_num] = endConn;
 
         startConn->range_id = i;
-        startConn->param = LOAD_F32(lbl_805DF6E8);
+        startConn->param = lbl_805DF6E8;
         startConn->target_ctpoint = endPoint;
         startConn->target_connection = endConn;
         endConn->range_id = i;
-        endConn->param = LOAD_F32(lbl_805DF6F4);
+        endConn->param = lbl_805DF6F4;
         endConn->target_ctpoint = startPoint;
         endConn->target_connection = startConn;
 
@@ -509,10 +508,10 @@ void kar_grrangespline_assign_ctpoint_ids_by_endpoint_distance(Ground* ground)
     for (i = 0; i < rangeData->pairNum; i++) {
         pair = &rangeData->pairs[i];
 
-        splArcLengthPoint(&left_start, pair->left, LOAD_F32(lbl_805DF6E8));
-        splArcLengthPoint(&left_end, pair->left, LOAD_F32(lbl_805DF6F4));
-        splArcLengthPoint(&right_start, pair->right, LOAD_F32(lbl_805DF6E8));
-        splArcLengthPoint(&right_end, pair->right, LOAD_F32(lbl_805DF6F4));
+        splArcLengthPoint(&left_start, pair->left, lbl_805DF6E8);
+        splArcLengthPoint(&left_end, pair->left, lbl_805DF6F4);
+        splArcLengthPoint(&right_start, pair->right, lbl_805DF6E8);
+        splArcLengthPoint(&right_end, pair->right, lbl_805DF6F4);
 
         if (pair->start_ctpoint_id == -1) {
             pair->start_ctpoint_id = next_ctpoint++;
@@ -524,40 +523,40 @@ void kar_grrangespline_assign_ctpoint_ids_by_endpoint_distance(Ground* ground)
         for (j = i + 1; j < rangeData->pairNum; j++) {
             other = &rangeData->pairs[j];
             splArcLengthPoint(&other_start, other->left,
-                              LOAD_F32(lbl_805DF6E8));
+                              lbl_805DF6E8);
             splArcLengthPoint(&other_end, other->left,
-                              LOAD_F32(lbl_805DF6F4));
+                              lbl_805DF6F4);
 
             if (PSVECSquareDistance(&left_start, &other_start) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->start_ctpoint_id = pair->start_ctpoint_id;
             }
             if (PSVECSquareDistance(&left_end, &other_start) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->start_ctpoint_id = pair->end_ctpoint_id;
             }
             if (PSVECSquareDistance(&left_start, &other_end) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->end_ctpoint_id = pair->start_ctpoint_id;
             }
             if (PSVECSquareDistance(&left_end, &other_end) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->end_ctpoint_id = pair->end_ctpoint_id;
             }
             if (PSVECSquareDistance(&right_start, &other_start) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->start_ctpoint_id = pair->start_ctpoint_id;
             }
             if (PSVECSquareDistance(&right_end, &other_start) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->start_ctpoint_id = pair->end_ctpoint_id;
             }
             if (PSVECSquareDistance(&right_start, &other_end) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->end_ctpoint_id = pair->start_ctpoint_id;
             }
             if (PSVECSquareDistance(&right_end, &other_end) <
-                LOAD_F32(lbl_805DF6F4)) {
+                lbl_805DF6F4) {
                 other->end_ctpoint_id = pair->end_ctpoint_id;
             }
         }
@@ -735,7 +734,7 @@ s32 kar_grrangespline_query_nearest_enabled_segment(Ground* ground, Vec* pos,
     current = kar_gryaku_current_ground;
     tree = *(void**) ((u8*) current + 0x700);
     world = *(void**) ((u8*) current + 0x704);
-    *out_distance = LOAD_F32(lbl_805DF6F8);
+    *out_distance = lbl_805DF6F8;
     found_limited = 0;
 
     kar_mpresponse_build_sphere_aabb_center_extents(pos, aabb, search_range);

@@ -114,7 +114,6 @@ void kar_mpresponse_build_swept_sphere_aabb_center_extents(Vec* pos, Vec* next_p
                                                            Vec* extents, f32 radius_start,
                                                            f32 radius_end);
 
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
 
 void kar_mpcoll_free_report(MpCollReport* report);
 void kar_mpcoll_init_report_subpools(void);
@@ -208,7 +207,7 @@ f32 kar_mpcoll_lerp_sphere_radius(MpCollHandle* handle, f32 t)
     end = handle->sphere_shape->radius_end;
     equal = start == end;
 
-    if ((f32) !equal != LOAD_F32(lbl_805E2B38)) {
+    if ((f32) !equal != lbl_805E2B38) {
         return t * (shape->radius_end - shape->radius_start) + shape->radius_start;
     }
 

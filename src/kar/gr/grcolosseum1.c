@@ -6,15 +6,26 @@
 
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
+typedef struct GroundJObjEntry GroundJObjEntry;
+typedef struct GroundStageYakuObject GroundStageYakuObject;
+typedef struct CommonSetupList CommonSetupList;
+typedef struct ColosseumCommonSetupParam ColosseumCommonSetupParam;
+typedef struct ColosseumEffectParam ColosseumEffectParam;
 typedef void (*GroundCallback)(void);
 typedef void (*GrSwitchCallback)(HSD_GObj* gobj, s32 stage_index);
+
+struct GroundStageYakuObject {
+    void* object;
+    u8 pad_04[0x44];
+};
 
 struct Ground {
     u8 pad_00[0x08];
     GroundData* data;
     u8 pad_0C[0xF8];
-    void** jobjs;
-    u8 pad_108[0x620];
+    GroundJObjEntry* jobjs;
+    u8 pad_108[0x110];
+    GroundStageYakuObject stage_yaku_objects[18];
     HSD_GObj* external_airflows[8];
     s32 external_airflow_count;
 };
@@ -24,8 +35,24 @@ struct GroundData {
     void* indiviParam;
 };
 
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
+struct GroundJObjEntry {
+    void* jobj;
+    u8 pad_04[0x04];
+};
+
+struct CommonSetupList {
+    void** entries;
+    s32 count;
+};
+
+struct ColosseumCommonSetupParam {
+    CommonSetupList course21;
+    CommonSetupList course19;
+};
+
+struct ColosseumEffectParam {
+    s32 joint_index;
+};
 
 extern s32 fn_80261ECC(void);
 extern void kar_grcommon__near_800db774(Ground* ground, void* entry);
@@ -240,11 +267,11 @@ __declspec(section ".sdata2") const f32 lbl_805DFB20[2] = { -1.0f, 0.0f };
 
 void kar_grcolosseum1_init_course_dependent_common_setup_list(HSD_GObj* gobj)
 {
-    s32 offset;
     s32 i;
     GroundData* data;
     Ground* ground;
-    u8* param;
+    ColosseumCommonSetupParam* param;
+    CommonSetupList* setup_list;
 
     ground = gobj->user_data;
     data = ground->data;
@@ -252,17 +279,15 @@ void kar_grcolosseum1_init_course_dependent_common_setup_list(HSD_GObj* gobj)
 
     switch (fn_80261ECC()) {
     case 0x13:
-        for (i = 0, offset = 0; i < GET_S32(param, 0x0C);
-             offset += sizeof(void*), i++) {
-            kar_grcommon__near_800db774(
-                ground, GET_PTR(GET_PTR(param, 0x08), offset));
+        setup_list = &param->course19;
+        for (i = 0; i < setup_list->count; i++) {
+            kar_grcommon__near_800db774(ground, setup_list->entries[i]);
         }
         break;
     case 0x21:
-        for (i = 0, offset = 0; i < GET_S32(param, 0x04);
-             offset += sizeof(void*), i++) {
-            kar_grcommon__near_800db774(
-                ground, GET_PTR(GET_PTR(param, 0x00), offset));
+        setup_list = &param->course21;
+        for (i = 0; i < setup_list->count; i++) {
+            kar_grcommon__near_800db774(ground, setup_list->entries[i]);
         }
         break;
     default:
@@ -282,8 +307,8 @@ void kar_grcolosseum1_create_course19_kind23_breakhouse_pair(Ground* ground)
 void kar_grcolosseum1_request_effect_9c47_at_configured_joint(HSD_GObj* gobj)
 {
     Ground* ground = gobj->user_data;
-    u8* param = ground->data->indiviParam;
-    void* jobj = GET_PTR(ground->jobjs, GET_S32(param, 0x00) * 8);
+    ColosseumEffectParam* param = ground->data->indiviParam;
+    void* jobj = ground->jobjs[param->joint_index].jobj;
 
     kar_efrequest__80236c40(gobj, 0x9C47, 4, 0xCF, jobj);
 }
@@ -315,11 +340,10 @@ void kar_grcolosseum1_create_risingcube_pair_and_controller(Ground* ground)
 void kar_grcolosseum1_update_risingcube_controller_targets_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    u8* stage_object = (u8*) kar_gryaku_current_ground;
+    Ground* ground = kar_gryaku_current_ground;
 
-    stage_object += stage_index * 0x48;
     kar_gryakurisingcube_update_controller_target_groups(
-        GET_PTR(stage_object, 0x218));
+        ground->stage_yaku_objects[stage_index].object);
 }
 
 void fn_8010FB84(void) {}
@@ -490,19 +514,19 @@ void fn_801100E4(void) {}
 void kar_grcolosseum1_switch0_trigger_risingcube_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    u8* stage_object = (u8*) kar_gryaku_current_ground;
+    Ground* ground = kar_gryaku_current_ground;
 
-    stage_object += stage_index * 0x48;
-    kar_gryakurisingcube_trigger_cube_state_toggle(GET_PTR(stage_object, 0x218));
+    kar_gryakurisingcube_trigger_cube_state_toggle(
+        ground->stage_yaku_objects[stage_index].object);
 }
 
 void kar_grcolosseum1_switch1_trigger_risingcube_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    u8* stage_object = (u8*) kar_gryaku_current_ground;
+    Ground* ground = kar_gryaku_current_ground;
 
-    stage_object += stage_index * 0x48;
-    kar_gryakurisingcube_trigger_cube_state_toggle(GET_PTR(stage_object, 0x218));
+    kar_gryakurisingcube_trigger_cube_state_toggle(
+        ground->stage_yaku_objects[stage_index].object);
 }
 
 void fn_80110148(void) {}
@@ -512,11 +536,10 @@ void fn_80110150(void) {}
 void kar_grcolosseum1_switch5_trigger_lasergate_ctrl_open_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    u8* stage_object = (u8*) kar_gryaku_current_ground;
+    Ground* ground = kar_gryaku_current_ground;
 
-    stage_object += stage_index * 0x48;
     kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(
-        GET_PTR(stage_object, 0x218));
+        ground->stage_yaku_objects[stage_index].object);
 }
 
 // NONMATCHING: event state machine not recovered yet.

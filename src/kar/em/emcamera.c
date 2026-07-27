@@ -81,16 +81,19 @@
 #define fn_801FD6B0 fn_801FE37C
 #endif
 
-#define FIELD(type, obj, off) (*(type*) ((u8*) (obj) + (off)))
-#define VEC_FIELD(obj, off) FIELD(Vec, obj, off)
-#define F32_FIELD(obj, off) FIELD(f32, obj, off)
-#define S32_FIELD(obj, off) FIELD(s32, obj, off)
-#define U8_FIELD(obj, off) FIELD(u8, obj, off)
-#define PTR_FIELD(type, obj, off) FIELD(type*, obj, off)
+typedef struct EmCameraFloatState {
+    u8 pad_00[0x0C];
+    f32 value;
+} EmCameraFloatState;
 
 typedef struct EmCameraTemplateSource {
-    void* state;
+    EmCameraFloatState* state;
 } EmCameraTemplateSource;
+
+typedef struct EmCameraSpline {
+    u8 pad_00[0x0C];
+    f32 length;
+} EmCameraSpline;
 
 typedef struct EmCameraFlagsByte {
     u8 flag_80 : 1;
@@ -107,10 +110,60 @@ struct EmAnim {
     HSD_GObj* gobj;
     u8 pad_004[0x10];
     EmCameraTemplateSource* field_014;
-    u8 pad_018[0x2D4];
+    u8 pad_018[0x2C8];
     Vec velocity;
     Vec pos;
-    u8 pad_304[0x805];
+    Vec camera_pos;
+    u8 pad_304[0x30];
+    Vec forward;
+    Vec right;
+    u8 pad_34C[0x44];
+    f32 speed_min;
+    f32 speed_mid;
+    f32 speed_random;
+    f32 speed_max;
+    u8 pad_3A0[0x04];
+    f32 velocity_scale;
+    u8 pad_3A8[0x1C];
+    f32 pass_x;
+    f32 pass_y;
+    f32 pass_z;
+    u8 pad_3D0[0x18C];
+    Vec target_pos;
+    u8 pad_568[0x34];
+    s32 ground_face_id;
+    u8 pad_5A0[0x0C];
+    Vec ground_query_pos;
+    Vec ground_pos;
+    u8 pad_5C4[0x04];
+    Vec axis_scale;
+    EmCameraSpline* spline_a;
+    EmCameraSpline* spline_b;
+    s32 spline_face_id;
+    u8 pad_5E0[0x18];
+    s32 spline_direction;
+    f32 spline_t;
+    u8 pad_600[0x64];
+    Vec surface_normal;
+    u8 pad_670[0x198];
+    Vec camera_pos_copy;
+    u8 pad_814[0x18];
+    Vec target_pos_copy;
+    u8 pad_838[0x0C];
+    Vec motion;
+    u8 pad_850[0x2C];
+    s32 camera_mode;
+    u8 pad_880[0x88];
+    s32 movement_state;
+    u8 pad_90C[0x58];
+    f32 spline_speed;
+    f32 lateral_speed;
+    f32 forward_speed;
+    f32 acceleration;
+    f32 direction_scale;
+    u8 pad_978[0x08];
+    f32 random_speed;
+    u8 pad_984[0x185];
     EmCameraFlagsByte flags_B09;
     EmCameraFlagsByte flags_B0A;
 };
@@ -191,11 +244,11 @@ const f32 lbl_805E23F8 = 0.2f;
 
 static f32 emcamera_scale_by_spline(EmAnim* anim, f32 value)
 {
-    void* spline = PTR_FIELD(void, anim, 0x5D4);
+    EmCameraSpline* spline = anim->spline_a;
     f32 result = 0.0f;
 
     if (spline != NULL) {
-        f32 length = F32_FIELD(spline, 0x0C);
+        f32 length = spline->length;
         if (length != 0.0f) {
             result = (1.0f / length) * value;
         }
@@ -217,13 +270,13 @@ BOOL kar_emcamera__80206d90(HSD_GObj* gobj, Vec* pos)
 
     source = anim->field_014;
     value = kar_grlib2__near_800bad8c(pos, &anim->pos,
-                                      F32_FIELD(source->state, 0x0C));
+                                      source->state->value);
     return value >= 1.0f;
 }
 
 void kar_emcamera__near_80206e1c(EmAnim* anim, BOOL value)
 {
-    FIELD(EmCameraFlagsByte, anim, 0xB09).flag_02 = value;
+    anim->flags_B09.flag_02 = value;
 }
 
 void kar_emcamera__near_80206e2c(EmAnim* anim)
@@ -236,15 +289,15 @@ void kar_emcamera__near_80206e2c(EmAnim* anim)
         anim->pos = old_pos;
         anim->flags_B0A.flag_04 = TRUE;
     } else {
-        S32_FIELD(anim, 0x5DC) = face_id;
-        F32_FIELD(anim, 0x5FC) = t;
+        anim->spline_face_id = face_id;
+        anim->spline_t = t;
 
-        if (S32_FIELD(anim, 0x5F8) == 1) {
-            PTR_FIELD(void, anim, 0x5D4) = kar_grcommon__800cf3ac(face_id);
-            PTR_FIELD(void, anim, 0x5D8) = kar_grcommon__800cf44c(face_id);
+        if (anim->spline_direction == 1) {
+            anim->spline_a = kar_grcommon__800cf3ac(face_id);
+            anim->spline_b = kar_grcommon__800cf44c(face_id);
         } else {
-            PTR_FIELD(void, anim, 0x5D4) = kar_grcommon__800cf44c(face_id);
-            PTR_FIELD(void, anim, 0x5D8) = kar_grcommon__800cf3ac(face_id);
+            anim->spline_a = kar_grcommon__800cf44c(face_id);
+            anim->spline_b = kar_grcommon__800cf3ac(face_id);
         }
     }
 }
@@ -349,20 +402,20 @@ s32 kar_emcamera__near_802070e8(EmAnim* anim)
     }
 
     {
-        void* spline = camera->spline_a;
-        f32 value = F32_FIELD(anim, 0x390);
+        EmCameraSpline* spline = camera->spline_a;
+        f32 value = anim->speed_min;
         f32 scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
 
-        F32_FIELD(anim, 0x964) = F32_FIELD(anim, 0x974) * scaled;
+        anim->spline_speed = anim->direction_scale * scaled;
     }
-    camera->t += F32_FIELD(anim, 0x964) * (f32) camera->direction;
+    camera->t += anim->spline_speed * (f32) camera->direction;
     return camera->adjacent_count;
 }
 
@@ -375,16 +428,16 @@ void kar_emcamera__near_8020728c(EmAnim* anim, BOOL reset)
     // NONMATCHING: this routine builds the camera frame from the active spline.
     // The fallback preserves the important position snapshots while the path
     // math is still being reconstructed.
-    if (PTR_FIELD(void, anim, 0x5D4) != NULL) {
-        splArcLengthPoint(&pos, PTR_FIELD(void, anim, 0x5D4), F32_FIELD(anim, 0x5FC));
-        VEC_FIELD(anim, 0x2F8) = pos;
-        VEC_FIELD(anim, 0x808) = pos;
+    if (anim->spline_a != NULL) {
+        splArcLengthPoint(&pos, anim->spline_a, anim->spline_t);
+        anim->camera_pos = pos;
+        anim->camera_pos_copy = pos;
     }
 
     if (reset != FALSE) {
-        VEC_FIELD(anim, 0x82C) = VEC_FIELD(anim, 0x2F8);
+        anim->target_pos_copy = anim->camera_pos;
     }
-    VEC_FIELD(anim, 0x55C) = VEC_FIELD(anim, 0x2F8);
+    anim->target_pos = anim->camera_pos;
 }
 #pragma pop
 
@@ -423,7 +476,7 @@ f32 kar_emcamera__near_8020789c(f32 angle)
 
 void kar_emcamera__near_80207ce8(EmAnim* anim)
 {
-    if (kar_emupdate__near_802043c8(FIELD(HSD_GObj*, anim, 0x0)) != FALSE) {
+    if (kar_emupdate__near_802043c8(anim->gobj) != FALSE) {
         f32 angle;
 
         if (kar_grdata__near_800ceaa4() != 0) {
@@ -431,25 +484,25 @@ void kar_emcamera__near_80207ce8(EmAnim* anim)
         } else {
             Vec b;
             Vec a;
-            kar_lbvector_cross_normalize(&VEC_FIELD(anim, 0x340), &VEC_FIELD(anim, 0x664), &a);
-            kar_lbvector_cross_normalize(&a, &VEC_FIELD((u8*) anim + 0x300, 0x40), &b);
-            angle = kar_lbvector_angle_between(&VEC_FIELD(anim, 0x334), &b) * 57.29578f;
+            kar_lbvector_cross_normalize(&anim->right, &anim->surface_normal, &a);
+            kar_lbvector_cross_normalize(&a, &anim->right, &b);
+            angle = kar_lbvector_angle_between(&anim->forward, &b) * 57.29578f;
         }
 
         if (angle < 90.0f) {
-            S32_FIELD(anim, 0x5F8) = 1;
+            anim->spline_direction = 1;
             kar_empass__near_80209ce4(anim, 0);
         } else {
-            S32_FIELD(anim, 0x5F8) = -1;
+            anim->spline_direction = -1;
             kar_empass__near_80209ce4(anim, 1);
         }
 
-        if (S32_FIELD(anim, 0x5F8) == 1) {
-            PTR_FIELD(void, anim, 0x5D4) = kar_grcommon__800cf3ac(S32_FIELD(anim, 0x5DC));
-            PTR_FIELD(void, anim, 0x5D8) = kar_grcommon__800cf44c(S32_FIELD(anim, 0x5DC));
+        if (anim->spline_direction == 1) {
+            anim->spline_a = kar_grcommon__800cf3ac(anim->spline_face_id);
+            anim->spline_b = kar_grcommon__800cf44c(anim->spline_face_id);
         } else {
-            PTR_FIELD(void, anim, 0x5D4) = kar_grcommon__800cf44c(S32_FIELD(anim, 0x5DC));
-            PTR_FIELD(void, anim, 0x5D8) = kar_grcommon__800cf3ac(S32_FIELD(anim, 0x5DC));
+            anim->spline_a = kar_grcommon__800cf44c(anim->spline_face_id);
+            anim->spline_b = kar_grcommon__800cf3ac(anim->spline_face_id);
         }
 
         kar_emcamera__near_8020728c(anim, FALSE);
@@ -460,96 +513,96 @@ void kar_emcamera__near_80207dec(EmAnim* anim)
 {
     f32 value;
 
-    if (S32_FIELD(anim, 0x59C) == -1) {
-        S32_FIELD(anim, 0x59C) =
-            kar_emupdate__near_80204e64(anim, &VEC_FIELD(anim, 0x5AC), 10.0f);
+    if (anim->ground_face_id == -1) {
+        anim->ground_face_id =
+            kar_emupdate__near_80204e64(anim, &anim->ground_query_pos, 10.0f);
     }
 
-    if (kar_grcoll_is_face_id_invalid(S32_FIELD(anim, 0x59C)) == FALSE) {
-        kar_emupdate__near_80204f3c(anim, &VEC_FIELD(anim, 0x5B8));
+    if (kar_grcoll_is_face_id_invalid(anim->ground_face_id) == FALSE) {
+        kar_emupdate__near_80204f3c(anim, &anim->ground_pos);
     }
 
-    VEC_FIELD(anim, 0x55C) = VEC_FIELD(anim, 0x2F8);
-    VEC_FIELD(anim, 0x82C) = VEC_FIELD(anim, 0x2F8);
+    anim->target_pos = anim->camera_pos;
+    anim->target_pos_copy = anim->camera_pos;
     kar_empass__near_80209ce4(anim, 0);
     fn_801FD6B0(anim);
 
-    F32_FIELD(anim, 0x980) = F32_FIELD(anim, 0x398) * HSD_Randf();
+    anim->random_speed = anim->speed_random * HSD_Randf();
 
-    value = F32_FIELD(anim, 0x980) + F32_FIELD(anim, 0x390);
+    value = anim->random_speed + anim->speed_min;
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
+        EmCameraSpline* spline = anim->spline_a;
         f32 scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x964) = scaled;
+        anim->spline_speed = scaled;
     }
 
-    value = F32_FIELD(anim, 0x980) + F32_FIELD(anim, 0x394);
+    value = anim->random_speed + anim->speed_mid;
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
+        EmCameraSpline* spline = anim->spline_a;
         f32 scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x968) = scaled;
+        anim->lateral_speed = scaled;
     }
 
-    value = F32_FIELD(anim, 0x980) + F32_FIELD(anim, 0x390);
+    value = anim->random_speed + anim->speed_min;
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
+        EmCameraSpline* spline = anim->spline_a;
         f32 scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x96C) = scaled;
+        anim->forward_speed = scaled;
     }
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x39C);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_max;
         f32 scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x970) = scaled;
+        anim->acceleration = scaled;
     }
 
-    value = F32_FIELD(anim, 0x964);
-    VEC_FIELD(anim, 0x2EC).x = VEC_FIELD(anim, 0x664).x * value;
-    VEC_FIELD(anim, 0x2EC).y = VEC_FIELD(anim, 0x664).y * value;
-    VEC_FIELD(anim, 0x2EC).z = VEC_FIELD(anim, 0x664).z * value;
+    value = anim->spline_speed;
+    anim->pos.x = anim->surface_normal.x * value;
+    anim->pos.y = anim->surface_normal.y * value;
+    anim->pos.z = anim->surface_normal.z * value;
 
-    if (S32_FIELD(anim, 0x908) == 1) {
+    if (anim->movement_state == 1) {
         f32 scale;
 
         kar_emupdate__near_802054e4(anim);
-        scale = F32_FIELD(anim, 0x3A4);
-        VEC_FIELD(anim, 0x2E0).x = VEC_FIELD(anim, 0x5C8).x * scale;
-        VEC_FIELD(anim, 0x2E0).y = VEC_FIELD(anim, 0x5C8).y * scale;
-        VEC_FIELD(anim, 0x2E0).z = VEC_FIELD(anim, 0x5C8).z * scale;
+        scale = anim->velocity_scale;
+        anim->velocity.x = anim->axis_scale.x * scale;
+        anim->velocity.y = anim->axis_scale.y * scale;
+        anim->velocity.z = anim->axis_scale.z * scale;
     }
 
-    FIELD(EmCameraFlagsByte, anim, 0xB09).flag_02 = TRUE;
-    FIELD(EmCameraFlagsByte, anim, 0xB09).flag_01 = TRUE;
-    FIELD(EmCameraFlagsByte, anim, 0xB0A).flag_80 = TRUE;
-    S32_FIELD(anim, 0x87C) = 1;
+    anim->flags_B09.flag_02 = TRUE;
+    anim->flags_B09.flag_01 = TRUE;
+    anim->flags_B0A.flag_80 = TRUE;
+    anim->camera_mode = 1;
 }
 
 BOOL kar_emcamera__near_80208008(EmAnim* anim)
@@ -564,113 +617,113 @@ void kar_emcamera__near_80208010(EmAnim* anim)
     f32 scaled;
 
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x394);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_mid;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
     }
-    F32_FIELD(anim, 0x968) = scaled;
+    anim->lateral_speed = scaled;
     if (scaled < 0.0f) {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x394);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_mid;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
         max_a = -scaled;
-        F32_FIELD(anim, 0x968) = scaled;
+        anim->lateral_speed = scaled;
     } else {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x394);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_mid;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x968) = scaled;
+        anim->lateral_speed = scaled;
         max_a = scaled;
     }
 
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x390);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_min;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
     }
-    F32_FIELD(anim, 0x96C) = scaled;
+    anim->forward_speed = scaled;
     if (scaled < 0.0f) {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x390);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_min;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
         max_b = -scaled;
-        F32_FIELD(anim, 0x96C) = scaled;
+        anim->forward_speed = scaled;
     } else {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x390);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_min;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
-        F32_FIELD(anim, 0x96C) = scaled;
+        anim->forward_speed = scaled;
         max_b = scaled;
     }
 
     {
-        void* spline = PTR_FIELD(void, anim, 0x5D4);
-        f32 value = F32_FIELD(anim, 0x39C);
+        EmCameraSpline* spline = anim->spline_a;
+        f32 value = anim->speed_max;
         scaled = 0.0f;
 
         if (spline != NULL) {
-            f32 length = F32_FIELD(spline, 0x0C);
+            f32 length = spline->length;
             if (scaled != length) {
                 scaled = (1.0f / length) * value;
             }
         }
     }
-    F32_FIELD(anim, 0x970) = scaled;
-    F32_FIELD(anim, 0x964) += F32_FIELD(anim, 0x970);
+    anim->acceleration = scaled;
+    anim->spline_speed += anim->acceleration;
 
-    if (F32_FIELD(anim, 0x964) > 0.0f) {
-        if (F32_FIELD(anim, 0x964) > max_a) {
-            F32_FIELD(anim, 0x964) = max_a;
-        } else if (F32_FIELD(anim, 0x964) < max_b) {
-            F32_FIELD(anim, 0x964) = max_b;
+    if (anim->spline_speed > 0.0f) {
+        if (anim->spline_speed > max_a) {
+            anim->spline_speed = max_a;
+        } else if (anim->spline_speed < max_b) {
+            anim->spline_speed = max_b;
         }
-    } else if (F32_FIELD(anim, 0x964) < 0.0f) {
-        if (F32_FIELD(anim, 0x964) < -max_a) {
-            F32_FIELD(anim, 0x964) = -max_a;
-        } else if (F32_FIELD(anim, 0x964) > -max_b) {
-            F32_FIELD(anim, 0x964) = -max_b;
+    } else if (anim->spline_speed < 0.0f) {
+        if (anim->spline_speed < -max_a) {
+            anim->spline_speed = -max_a;
+        } else if (anim->spline_speed > -max_b) {
+            anim->spline_speed = -max_b;
         }
     }
 }
@@ -679,19 +732,19 @@ BOOL kar_emcamera__near_802081ec(EmAnim* anim)
 {
     // NONMATCHING: large camera steering/update routine. Keep the existing
     // helper side effects that are already understood, then report success.
-    if (F32_FIELD(anim, 0x964) == 0.0f) {
+    if (anim->spline_speed == 0.0f) {
         return TRUE;
     }
 
-    if (PSVECMag(&VEC_FIELD(anim, 0x844)) != 0.0f) {
+    if (PSVECMag(&anim->motion) != 0.0f) {
         if (kar_empass__near_8020b01c(anim) != FALSE) {
             return TRUE;
         }
         kar_emcamera__near_80206e2c(anim);
     } else {
-        kar_empass__near_8020aad8(anim, F32_FIELD(anim, 0x3C4),
-                                  F32_FIELD(anim, 0x3C8), F32_FIELD(anim, 0x3CC));
-        if (F32_FIELD(anim, 0x974) == 1.0f) {
+        kar_empass__near_8020aad8(anim, anim->pass_x,
+                                  anim->pass_y, anim->pass_z);
+        if (anim->direction_scale == 1.0f) {
             kar_emcamera__near_80208010(anim);
         }
     }

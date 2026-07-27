@@ -7,21 +7,7 @@ typedef s16 __OSInterrupt;
 
 typedef struct OSContext
 {
-    /* 0x000 */ u32 gpr[32];
-    /* 0x080 */ u32 cr;
-    /* 0x084 */ u32 lr;
-    /* 0x088 */ u32 ctr;
-    /* 0x08C */ u32 xer;
-    /* 0x090 */ f64 fpr[32];
-    /* 0x190 */ u32 fpscr_pad;
-    /* 0x194 */ u32 fpscr;
-    /* 0x198 */ u32 srr0;
-    /* 0x19C */ u32 srr1;
-    /* 0x1A0 */ u16 mode;
-    /* 0x1A2 */ u16 state;
-    /* 0x1A4 */ u32 gqr[8];
-    /* 0x1C4 */ u32 psf_pad;
-    /* 0x1C8 */ f64 psf[32];
+    u8 data[0x2C8];
 } OSContext;
 
 typedef void (*EXICallback)(s32 chan, OSContext* context);
@@ -60,7 +46,7 @@ extern const char __EXIVersionString[];
 
 #define REG_MAX 5
 #define REG(chan, idx) (__EXIRegs[((chan) * REG_MAX) + (idx)])
-extern vu32 __EXIRegs[15] : 0xCC006800;
+#define __EXIRegs ((vu32*)0xCC006800)
 
 #define STATE_DMA      1
 #define STATE_IMM      2
@@ -80,7 +66,7 @@ extern vu32 __EXIRegs[15] : 0xCC006800;
 #define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
 #define OSTicksToMilliseconds(ticks) ((ticks) / (OS_TIMER_CLOCK / 1000))
 
-extern s32 __gUnknown800030C0[2] : 0x800030C0;
+#define __gUnknown800030C0 ((s32*)0x800030C0)
 #define __OSDeviceCode (*(vu16*)0x800030E6)
 
 u32 EXIClearInterrupts(s32 chan, int exi, int tc, int ext);
@@ -297,8 +283,8 @@ u32 EXIClearInterrupts(s32 chan, int exi, int tc, int ext)
     u32 cpr;
     u32 prev;
 
-    cpr = prev = __EXIRegs[(chan * 5)];
-    prev &= 0x7F5;
+    cpr = __EXIRegs[(chan * 5)];
+    prev = cpr & 0x7F5;
 
     if (exi != 0)
     {
@@ -791,62 +777,6 @@ int EXIUnlock(s32 chan)
 }
 #pragma dont_inline off
 
-static inline int EXIDetachInline(s32 chan)
-{
-    EXIControl* exi = &Ecb[chan];
-    BOOL enabled;
-
-    enabled = OSDisableInterrupts();
-
-    if (!(exi->state & STATE_ATTACHED))
-    {
-        OSRestoreInterrupts(enabled);
-        return 1;
-    }
-
-    if ((exi->state & STATE_LOCKED) && (exi->dev == 0))
-    {
-        OSRestoreInterrupts(enabled);
-        return 0;
-    }
-
-    exi->state &= ~STATE_ATTACHED;
-    __OSMaskInterrupts(0x500000U >> (chan * 3));
-
-    OSRestoreInterrupts(enabled);
-    return 1;
-}
-
-static inline int EXIUnlockInline(s32 chan)
-{
-    EXIControl* exi = &Ecb[chan];
-    BOOL enabled;
-    EXICallback unlockedCallback;
-
-    enabled = OSDisableInterrupts();
-
-    if (!(exi->state & STATE_LOCKED))
-    {
-        OSRestoreInterrupts(enabled);
-        return 0;
-    }
-
-    exi->state &= ~STATE_LOCKED;
-    SetExiInterruptMask(chan, exi);
-    if (exi->items > 0)
-    {
-        unlockedCallback = exi->queue[0].callback;
-        if (--exi->items > 0)
-        {
-            memmove(&exi->queue[0], &exi->queue[1], exi->items * 8);
-        }
-        unlockedCallback(chan, 0);
-    }
-
-    OSRestoreInterrupts(enabled);
-    return 1;
-}
-
 #pragma dont_inline on
 u32 EXIGetState(s32 chan)
 {
@@ -912,14 +842,14 @@ s32 EXIGetID(s32 chan, u32 dev, u32* id)
             err |= !EXIDeselect(chan);
         }
 
-        EXIUnlockInline(chan);
+        EXIUnlock(chan);
     }
 
     OSRestoreInterrupts(enabled);
 
     if ((chan < 2) && (dev == 0))
     {
-        EXIDetachInline(chan);
+        EXIDetach(chan);
         enabled = OSDisableInterrupts();
         err |= __gUnknown800030C0[chan] != startTime;
 

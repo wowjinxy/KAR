@@ -1156,10 +1156,8 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
     s32 rlen;
     u32 rshift;
 
-    u8 fsts;
     u32 wk, wk1;
     u32 Ans1 = 0;
-    u32 Ans2 = 0;
     u32* dp;
     u8 rbuf[64];
     u32 para1A = 0;
@@ -1180,7 +1178,6 @@ s32 __CARDUnlock(s32 chan, u8 flashID[12]) {
     input = (u8*)OSRoundUp32B(input);
     output = input + 32;
 
-    fsts = 0;
     init_val = GetInitVal();
 
     dummy = fn_803E33BC();
@@ -2546,13 +2543,13 @@ s32 __CARDAccess(CARDControl* card, CARDDir* ent) {
 
 #pragma dont_inline on
 s32 __CARDIsPublic(CARDDir* ent) {
-    if (ent->gameName[0] == 0xff)
+    if (ent->fileName[0] == 0xff)
         return CARD_RESULT_NOFILE;
 
-    if (ent->permission & CARD_ATTR_PUBLIC)
-        return 0;
+    if (!(ent->permission & CARD_ATTR_PUBLIC))
+        return CARD_RESULT_NOPERM;
 
-    return CARD_RESULT_NOPERM;
+    return CARD_RESULT_READY;
 }
 #pragma dont_inline off
 
@@ -2591,47 +2588,43 @@ s32 __CARDGetFileNo(CARDControl* card, const char* fileName, s32* pfileNo) {
 
 s32 CARDOpen(s32 chan, const char* fileName, CARDFileInfo* fileInfo) {
     CARDControl* card;
-    CARDControl* c;
     s32 fileNo;
     s32 result;
     CARDDir* dir;
     CARDDir* ent;
-    s32 i;
-    s32 err;
 
     fileInfo->chan = -1;
-    err = __CARDGetControlBlock(chan, &card);
-    if (err < 0)
-        return err;
+    result = __CARDGetControlBlock(chan, &card);
+    if (result < 0)
+        return result;
 
     if (!card->attached)
         result = CARD_RESULT_NOCARD;
     else {
-        c = card;
-        dir = kar_diagnostic__803e49f0(c);
-        for (i = 0; i < CARD_MAX_FILE; i++) {
-            CARDDir* e;
-            ent = &dir[i];
-            e = ent;
+        dir = kar_diagnostic__803e49f0(card);
+        for (fileNo = 0; fileNo < CARD_MAX_FILE; fileNo++) {
+            const DVDDiskID* diskID;
+            ent = &dir[fileNo];
 
             if (ent->gameName[0] == 0xFF)
                 result = CARD_RESULT_NOFILE;
-            else if (c->diskID == &__CARDDiskNone
-             || (memcmp(e->gameName, c->diskID->gameName, sizeof(e->gameName)) == 0
-              && memcmp(e->company, c->diskID->company, sizeof(e->company)) == 0))
-                result = CARD_RESULT_READY;
-            else
-                result = CARD_RESULT_NOPERM;
+            else {
+                diskID = card->diskID;
+                if (diskID == &__CARDDiskNone
+                 || (memcmp(ent->gameName, diskID->gameName, sizeof(ent->gameName)) == 0
+                  && memcmp(ent->company, diskID->company, sizeof(ent->company)) == 0))
+                    result = CARD_RESULT_READY;
+                else
+                    result = CARD_RESULT_NOPERM;
+            }
 
             if (result < 0)
                 continue;
-            if (__CARDCompareFileName(ent, fileName)) {
-                fileNo = i;
+            if (__CARDCompareFileName(ent, fileName))
                 break;
-            }
         }
 
-        if (i >= CARD_MAX_FILE)
+        if (fileNo >= CARD_MAX_FILE)
             result = CARD_RESULT_NOFILE;
     }
 

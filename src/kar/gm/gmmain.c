@@ -121,13 +121,6 @@ u8 GObj_AddFuncTable(HSD_GObjLibInitDataType* init_data, GObjFuncs* funcs);
 void GObj_Init(HSD_GObjLibInitDataType* init_data);
 void HSD_SObjLib_803A44A4(void);
 
-#define GMMAIN_BASE ((u8*) kar_gmmain__near_80006c14())
-#define GMMAIN_FIELD_U8(offset) (*(u8*) (GMMAIN_BASE + (offset)))
-#define GMMAIN_FIELD_U32(offset) (*(u32*) (GMMAIN_BASE + (offset)))
-#define GMMAIN_FLAGS(base, offset) (*(GmMainFlagByte*) ((base) + (offset)))
-#define GMMAIN_PACKED_FLAGS(base, offset)                                      \
-    (*(GmMainPackedFlagByte*) ((base) + (offset)))
-
 void fn_80005800(void)
 {
     HSD_PadData* queue = (HSD_PadData*) lbl_80535300;
@@ -156,12 +149,12 @@ void fn_80005894(void)
 
 void* kar_gmmain__near_80005cbc(void)
 {
-    return GMMAIN_BASE + 0x7E0;
+    return (u8*) kar_gmmain__near_80006c14() + 0x7E0;
 }
 
 u32 kar_gmmain__near_80005ce0(void)
 {
-    return GMMAIN_FIELD_U32(0x7E4);
+    return *(u32*) ((u8*) kar_gmmain__near_80006c14() + 0x7E4);
 }
 
 s32 kar_gmmain__near_80005d04(s32 bit)
@@ -174,7 +167,7 @@ s32 kar_gmmain__near_80005d04(s32 bit)
 
 s32 kar_gmmain__near_80005d54(void)
 {
-    return GMMAIN_FIELD_U8(0x7F0);
+    return *((u8*) kar_gmmain__near_80006c14() + 0x7F0);
 }
 
 void kar_gmmain__near_80005d78(s32 bit)
@@ -494,21 +487,26 @@ void* kar_gmmain__near_80006c38(void)
 void kar_gmmain__near_80006c48(void)
 {
     u8* data = lbl_805359D8 + 0xA94;
+    GmMainFlagByte* flags_11 = (GmMainFlagByte*) &data[0x11];
+    GmMainFlagByte* flags_12 = (GmMainFlagByte*) &data[0x12];
+    GmMainFlagByte* flags_13 = (GmMainFlagByte*) &data[0x13];
+    GmMainPackedFlagByte* packed_flags_13 =
+        (GmMainPackedFlagByte*) &data[0x13];
 
     memset(data, 0, 0x34);
-    GMMAIN_FLAGS(data, 0x12).b7 = 1;
-    GMMAIN_FLAGS(data, 0x12).b6 = 1;
-    GMMAIN_FLAGS(data, 0x11).b4 = 0;
-    GMMAIN_FLAGS(data, 0x12).b5 = 1;
-    GMMAIN_PACKED_FLAGS(data, 0x13).b7_b6 = 0;
-    GMMAIN_FLAGS(data, 0x11).b3 = 0;
-    GMMAIN_FLAGS(data, 0x12).b4 = 1;
-    GMMAIN_FLAGS(data, 0x11).b2_b1 = 1;
-    GMMAIN_FLAGS(data, 0x13).b5 = 1;
-    GMMAIN_FLAGS(data, 0x12).b3 = 0;
-    GMMAIN_FLAGS(data, 0x11).b0 = 0;
-    GMMAIN_FLAGS(data, 0x13).b4 = 1;
-    GMMAIN_FLAGS(data, 0x12).b2_b1 = 1;
+    flags_12->b7 = 1;
+    flags_12->b6 = 1;
+    flags_11->b4 = 0;
+    flags_12->b5 = 1;
+    packed_flags_13->b7_b6 = 0;
+    flags_11->b3 = 0;
+    flags_12->b4 = 1;
+    flags_11->b2_b1 = 1;
+    flags_13->b5 = 1;
+    flags_12->b3 = 0;
+    flags_11->b0 = 0;
+    flags_13->b4 = 1;
+    flags_12->b2_b1 = 1;
     data[1] = 1;
     data[2] = 1;
     data[3] = 0;
@@ -519,10 +517,10 @@ void kar_gmmain__near_80006c48(void)
     *(u16*) (data + 8) = 0x78;
     *(u32*) (data + 0x0C) = 0;
     *(u32*) (data + 0x28) = 0;
-    GMMAIN_FLAGS(data, 0x12).b4 = 0;
-    GMMAIN_FLAGS(data, 0x13).b3 = 0;
+    flags_12->b4 = 0;
+    flags_13->b3 = 0;
     data[0x10] = 1;
-    GMMAIN_FLAGS(data, 0x11).b5 = 0;
+    flags_11->b5 = 0;
 }
 
 void kar_gmmain__near_80006d80(s8 index)
@@ -573,6 +571,7 @@ void* kar_gmmain__near_80006eec(void)
 {
     u8* data;
     u8* block;
+    GmMainPackedFlagByte* packed_flags;
 
     memset(kar_gmglobal__near_8000771c(), 0, 0x118);
     ClearChecker_ShuffleRewardSlots(0);
@@ -599,10 +598,11 @@ void* kar_gmmain__near_80006eec(void)
 
     data = lbl_805359D8 + 0x354;
     memset(data, 0, 0x20);
-    GMMAIN_PACKED_FLAGS(data, 6).b7_b6 = 1;
-    GMMAIN_PACKED_FLAGS(data, 6).b5 = 0;
-    GMMAIN_PACKED_FLAGS(data, 6).b4 = 1;
-    GMMAIN_PACKED_FLAGS(data, 6).b2_b1 = 1;
+    packed_flags = (GmMainPackedFlagByte*) &data[6];
+    packed_flags->b7_b6 = 1;
+    packed_flags->b5 = 0;
+    packed_flags->b4 = 1;
+    packed_flags->b2_b1 = 1;
     data[0] = 0;
     *(u16*) (data + 2) = 0;
     *(u16*) (data + 4) = 0x78;
@@ -641,8 +641,9 @@ void* kar_gmmain__near_80006eec(void)
 
     data = lbl_805359D8 + 0x394;
     memset(data, 0, 0xF0);
-    GMMAIN_PACKED_FLAGS(data, 3).b7_b6 = 1;
-    GMMAIN_PACKED_FLAGS(data, 3).b5 = 1;
+    packed_flags = (GmMainPackedFlagByte*) &data[3];
+    packed_flags->b7_b6 = 1;
+    packed_flags->b5 = 1;
     *(u16*) data = 0x12C;
     data[2] = 0;
     data[4] = 0;

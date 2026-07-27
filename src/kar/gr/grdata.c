@@ -136,7 +136,6 @@ void kar_efdata__near_802358c4(s32 kind);
 f32 kar_grgravity_calc_nearest_nullpos_gravity(Ground* ground, Vec* pos, Vec* out);
 f32 kar_grgravity_calc_nearest_spline_gravity(Ground* ground, Vec* pos, Vec* out);
 
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
 
 void kar_grdata__800ce7a0(s32 kind)
 {
@@ -184,7 +183,7 @@ void kar_grdata__800ce7a0(s32 kind)
             if (model_param != NULL) {
                 scale = model_param->stage_scale;
             } else {
-                scale = LOAD_F32(lbl_805DF5C8[0]);
+                scale = lbl_805DF5C8[0];
             }
 
             nullpos_all = data->nullpos_all;
@@ -238,7 +237,7 @@ f32 kar_grdata__near_800cea80(void)
         return model_param->default_camera_scale;
     }
 
-    return LOAD_F32(lbl_805DF5D0);
+    return lbl_805DF5D0;
 }
 
 u8 kar_grdata__near_800ceaa4(void)
@@ -277,7 +276,7 @@ f32 kar_grdata__near_800ceb18(Vec* pos, Vec* out)
     ground = kar_gryaku_current_ground;
     model_param = ground->data->model_param;
     gravity = kar_grgravity_calc_nearest_nullpos_gravity(ground, pos, out);
-    if (gravity < LOAD_F32(lbl_805DF5D4) && gravity > LOAD_F32(lbl_805DF5D8)) {
+    if (gravity < lbl_805DF5D4 && gravity > lbl_805DF5D8) {
         use_default = TRUE;
     } else {
         use_default = FALSE;
@@ -291,7 +290,7 @@ f32 kar_grdata__near_800ceb18(Vec* pos, Vec* out)
     }
 
     gravity = kar_grgravity_calc_nearest_spline_gravity(ground, pos, out);
-    if (gravity < LOAD_F32(lbl_805DF5D4) && gravity > LOAD_F32(lbl_805DF5D8)) {
+    if (gravity < lbl_805DF5D4 && gravity > lbl_805DF5D8) {
         use_default = TRUE;
     } else {
         use_default = FALSE;
@@ -308,11 +307,11 @@ f32 kar_grdata__near_800ceb18(Vec* pos, Vec* out)
         *out = model_param->default_gravity_dir;
         gravity = model_param->default_gravity;
     } else {
-        f32 zero = LOAD_F32(lbl_805DF5DC);
-        f32 one = LOAD_F32(lbl_805DF5E0);
+        f32 zero = lbl_805DF5DC;
+        f32 one = lbl_805DF5E0;
 
         out->x = zero;
-        gravity = LOAD_F32(lbl_805DF5E4);
+        gravity = lbl_805DF5E4;
         out->y = one;
         out->z = zero;
     }

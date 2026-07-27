@@ -16,6 +16,8 @@ typedef struct Yaku Yaku;
 typedef struct YakuParamLink YakuParamLink;
 typedef struct RecoveryZoneParam RecoveryZoneParam;
 typedef struct Kind41Param Kind41Param;
+typedef struct Kind41MotionParam Kind41MotionParam;
+typedef struct RecoveryCollision RecoveryCollision;
 typedef struct GroundGroupParam GroundGroupParam;
 typedef union YakuFlagByte YakuFlagByte;
 typedef union YakuKind41FlagByte YakuKind41FlagByte;
@@ -62,12 +64,46 @@ struct GroundJObjEntry {
     u8 pad[0x04];
 };
 
+union YakuFlagByte {
+    u8 flags;
+    struct {
+        u8 b7 : 1;
+    };
+};
+
+union YakuKind41FlagByte {
+    u8 flags;
+    struct {
+        u8 b7 : 1;
+        u8 b6 : 1;
+    };
+};
+
 struct Yaku {
     void* owner;
     u8 pad_04[0x04];
     YakuParamLink* param_link;
     u8 pad_0C[0x58];
     GroundJObjEntry* jobjs;
+    u8 pad_068[0xB0];
+    u8 fgm_entry[0x04];
+    s32 fgm_entry_count;
+    u8 pad_120[0x10];
+    union {
+        void* ptr;
+        HSD_GObj** ground_gobjs;
+    } field_130;
+    union {
+        f32 float_value;
+        s32 int_value;
+    } field_134;
+    void* field_138;
+    YakuFlagByte flags_13C;
+    u8 pad_13D[0x03];
+    s32 field_140;
+    YakuKind41FlagByte flags_144;
+    u8 pad_145[0x13];
+    u8 flags_158;
 };
 
 struct YakuParamLink {
@@ -91,10 +127,22 @@ struct RecoveryZoneParam {
 };
 
 struct Kind41Param {
-    void* motion_param;
+    Kind41MotionParam* motion_param;
     s32 joint_index;
     s32 motion_joint_index;
     void* path_nodes;
+};
+
+struct Kind41MotionParam {
+    u8 pad_00[0x10];
+    s32 reset_timer;
+    u8 pad_14[0x04];
+    s32 wait_timer;
+};
+
+struct RecoveryCollision {
+    u8 pad_000[0x138];
+    void* owner;
 };
 
 struct GroundGroupParam {
@@ -104,32 +152,7 @@ struct GroundGroupParam {
     s32 ground_count;
 };
 
-union YakuFlagByte {
-    u8 flags;
-    struct {
-        u8 b7 : 1;
-    };
-};
-
-union YakuKind41FlagByte {
-    u8 flags;
-    struct {
-        u8 b7 : 1;
-        u8 b6 : 1;
-    };
-};
-
 #define YAKU_PARAM(yaku, type) ((type*) ((yaku)->param_link->param))
-#define YAKU_FIELD_130(yaku) (*(void**) ((u8*) (yaku) + 0x130))
-#define YAKU_FIELD_134_F(yaku) (*(f32*) ((u8*) (yaku) + 0x134))
-#define YAKU_FIELD_134_S32(yaku) (*(s32*) ((u8*) (yaku) + 0x134))
-#define YAKU_FIELD_138(yaku) (*(void**) ((u8*) (yaku) + 0x138))
-#define YAKU_FIELD_140(yaku) (*(s32*) ((u8*) (yaku) + 0x140))
-#define YAKU_FIELD_11C(yaku) (*(s32*) ((u8*) (yaku) + 0x11C))
-#define YAKU_FLAGS_158(yaku) (*(u8*) ((u8*) (yaku) + 0x158))
-#define YAKU_FLAGS_13C(yaku) (*(u8*) ((u8*) (yaku) + 0x13C))
-#define YAKU_FLAGS_13C_BITS(yaku) (*(YakuFlagByte*) ((u8*) (yaku) + 0x13C))
-#define YAKU_FLAGS_144_BITS(yaku) (*(YakuKind41FlagByte*) ((u8*) (yaku) + 0x144))
 extern char kar_src_gryakurecoveryzone_c[];
 extern char kar_gryakurecoveryzone_assert_kind_recoveryzone[];
 extern char kar_src_ground_h_804a6170[];
@@ -177,13 +200,14 @@ void kar_gryakurecoveryzone_init_stage_linked_recoveryzone_yaku(HSD_GObj* gobj,
     GroundData* ground_data = ground_gobj->user_data;
     RecoveryZoneParam* param = YAKU_PARAM(yaku, RecoveryZoneParam);
 
-    YAKU_FIELD_130(yaku) =
+    yaku->field_130.ptr =
         kar_grcoll__800d79c0(&kar_gryaku_current_ground->collision_root,
                              ground_data->jobjs[param->joint_index].jobj, 0);
     flag = 1;
-    *(void**) ((u8*) YAKU_FIELD_130(yaku) + 0x138) = yaku->owner;
-    YAKU_FIELD_134_F(yaku) = param->timing[0];
-    YAKU_FLAGS_158(yaku) = (YAKU_FLAGS_158(yaku) & ~(flag << 7)) | (flag << 7);
+    ((RecoveryCollision*) yaku->field_130.ptr)->owner = yaku->owner;
+    yaku->field_134.float_value = param->timing[0];
+    yaku->flags_158 =
+        (yaku->flags_158 & ~(flag << 7)) | (flag << 7);
     kar_gryakurecoveryzone_start_state1_path_motion(gobj);
 }
 
@@ -203,7 +227,7 @@ void kar_gryakurecoveryzone_start_state2_path_motion(HSD_GObj* gobj)
     RecoveryZoneParam* param = YAKU_PARAM(yaku, RecoveryZoneParam);
     f32 zero = GRRECOVERY_STATE_ZERO;
 
-    YAKU_FIELD_134_F(yaku) = zero;
+    yaku->field_134.float_value = zero;
     kar_gryaku_set_path_node_motion(yaku, 2, (void*) -1, param->joint_index, 0, zero,
                                     zero, zero);
 }
@@ -313,8 +337,8 @@ void kar_gryakurecoveryzone_start_kind41_joint_idle_motion(HSD_GObj* gobj)
     Yaku* yaku = gobj->user_data;
     Kind41Param* param = YAKU_PARAM(yaku, Kind41Param);
 
-    YAKU_FIELD_140(yaku) = *(s32*) ((u8*) param->motion_param + 0x18);
-    kar_grcoll__near_800d7ad0(YAKU_FIELD_130(yaku), 0);
+    yaku->field_140 = param->motion_param->wait_timer;
+    kar_grcoll__near_800d7ad0(yaku->field_130.ptr, 0);
     {
         f32 zero = GRRECOVERY_KIND41_ZERO;
         kar_gryaku_set_path_node_motion(yaku, 0, param->path_nodes,
@@ -328,12 +352,12 @@ void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
 
-    if (YAKU_FIELD_140(yaku) > 0) {
-        YAKU_FIELD_140(yaku)--;
+    if (yaku->field_140 > 0) {
+        yaku->field_140--;
     }
 
-    if ((YAKU_FLAGS_144_BITS(yaku).b7 && YAKU_FIELD_140(yaku) <= 0) ||
-        YAKU_FLAGS_144_BITS(yaku).b6) {
+    if ((yaku->flags_144.b7 && yaku->field_140 <= 0) ||
+        yaku->flags_144.b6) {
         Yaku* yaku2;
         Kind41Param* param;
         s32 flag;
@@ -341,11 +365,11 @@ void kar_gryakurecoveryzone_update_kind41_wait_then_extend(HSD_GObj* gobj)
         yaku2 = gobj->user_data;
         param = YAKU_PARAM(yaku2, Kind41Param);
         flag = 0;
-        YAKU_FIELD_140(yaku2) = *(s32*) ((u8*) param->motion_param + 0x10);
-        YAKU_FLAGS_144_BITS(yaku2).b6 = flag;
+        yaku2->field_140 = param->motion_param->reset_timer;
+        yaku2->flags_144.b6 = flag;
 
-        if (YAKU_FIELD_11C(yaku2) > 0) {
-            kar_graudio_play_fgm_entry_id((u8*) yaku2 + 0x118, 0);
+        if (yaku2->fgm_entry_count > 0) {
+            kar_graudio_play_fgm_entry_id(yaku2->fgm_entry, 0);
         }
 
         {
@@ -367,17 +391,16 @@ void kar_gryakurecoveryzone_create_stage_linked_kind42_ground_group_yaku(HSD_GOb
 void kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku(
     HSD_GObj* gobj, HSD_GObj* ground_gobj)
 {
-    s32 offset;
     Yaku* yaku = gobj->user_data;
     GroundGroupParam* param = YAKU_PARAM(yaku, GroundGroupParam);
     s32 i;
 
-    YAKU_FIELD_130(yaku) = HSD_Alloc(param->ground_count * sizeof(HSD_GObj*));
+    yaku->field_130.ground_gobjs =
+        HSD_Alloc(param->ground_count * sizeof(HSD_GObj*));
 
     i = 0;
-    offset = 0;
     while (i < param->ground_count) {
-        s32 index = *(s32*) ((u8*) param->ground_indices + offset);
+        s32 index = param->ground_indices[i];
         s32 ground_index = 0;
         HSD_GObj* ground = hsdGObj_p_link_heads[8];
 
@@ -394,17 +417,16 @@ void kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku(
         ground = NULL;
 
     found_ground:
-        *(HSD_GObj**) ((u8*) YAKU_FIELD_130(yaku) + offset) = ground;
+        yaku->field_130.ground_gobjs[i] = ground;
         i++;
-        offset += 4;
     }
 
     {
         s32 flag = 0;
 
-        YAKU_FIELD_134_S32(yaku) = flag;
-        YAKU_FIELD_138(yaku) = (void*) flag;
-        YAKU_FLAGS_13C_BITS(yaku).b7 = flag;
+        yaku->field_134.int_value = flag;
+        yaku->field_138 = (void*) flag;
+        yaku->flags_13C.b7 = flag;
     }
 
     kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(gobj);
@@ -413,7 +435,7 @@ void kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku(
 void kar_gryakurecoveryzone_destroy_kind42_ground_group_yaku(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
-    HSD_Free(YAKU_FIELD_130(yaku));
+    HSD_Free(yaku->field_130.ptr);
 }
 
 void kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(HSD_GObj* gobj)
@@ -422,6 +444,6 @@ void kar_gryakurecoveryzone_start_kind42_ground_group_idle_motion(HSD_GObj* gobj
     GroundGroupParam* param = YAKU_PARAM(yaku, GroundGroupParam);
     f32 zero = GRRECOVERY_KIND41_ZERO;
 
-    YAKU_FIELD_134_S32(yaku) = param->joint_index;
+    yaku->field_134.int_value = param->joint_index;
     kar_gryaku_set_path_node_motion(yaku, 0, (void*) -1, -1, 0, zero, zero, zero);
 }

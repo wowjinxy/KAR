@@ -10,8 +10,12 @@
 
 typedef struct Ground Ground;
 typedef struct GroundMapObject GroundMapObject;
+typedef struct GroundMapPrimitive GroundMapPrimitive;
+typedef struct GroundMapPrimitiveTable GroundMapPrimitiveTable;
 typedef struct GroundJObjEntry GroundJObjEntry;
 typedef struct Yaku Yaku;
+typedef struct YakuCollision YakuCollision;
+typedef struct YakuFgmEntry YakuFgmEntry;
 typedef struct YakuParamLink YakuParamLink;
 typedef struct DownForceZoneParam DownForceZoneParam;
 typedef struct FgmParam FgmParam;
@@ -34,6 +38,16 @@ struct GroundMapObject {
     u8 pad_13C[0x04];
 };
 
+struct GroundMapPrimitive {
+    u32 kind;
+    u8 pad_04[0x20];
+};
+
+struct GroundMapPrimitiveTable {
+    u8 pad_00[0x24];
+    GroundMapPrimitive primitives[1];
+};
+
 struct GroundJObjEntry {
     void* jobj;
     u8 pad[0x04];
@@ -45,10 +59,24 @@ struct YakuParamLink {
     FgmParam* fgm_param;
 };
 
+struct YakuCollision {
+    u8 pad_000[0x138];
+    void* owner;
+};
+
+struct YakuFgmEntry {
+    u8 pad_00[0x0C];
+    void* track;
+    u8 pad_10[0x04];
+};
+
 struct Yaku {
     void* owner;
     s32 kind;
     YakuParamLink* param_link;
+    u8 pad_00C[0x124];
+    YakuCollision* collision;
+    YakuFgmEntry fgm_entries[4];
 };
 
 struct DownForceZoneParam {
@@ -65,29 +93,23 @@ struct FgmParam {
 };
 
 struct CollisionReportFace {
-    u8 pad_00[0x58];
     s32 map_object_index;
     s32 primitive_index;
     Vec pos;
+    u8 pad_14[0x0C];
 };
 
 struct CollisionReport {
     u8 pad_000[0x04];
     void* event;
-    u8 pad_008[0x3C];
-    CollisionReportFace faces[1];
+    u8 pad_008[0x94];
+    CollisionReportFace faces[20];
+    s32 face_count;
 };
 
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define GET_U16(base, offset) (*(u16*) ((u8*) (base) + (offset)))
-#define GET_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
-#define YAKU_COLLISION(yaku) (*(void**) ((u8*) (yaku) + 0x130))
-#define YAKU_FGM_ENTRY(yaku, index) ((u8*) (yaku) + 0x134 + (index) * 0x14)
-#define YAKU_FGM_TRACK(yaku, index) (*(void**) ((u8*) (yaku) + 0x140 + (index) * 0x14))
-#define REPORT_FACE_COUNT(report) (*(s32*) ((u8*) (report) + 0x31C))
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
+typedef struct CollisionEvent {
+    u16 kind;
+} CollisionEvent;
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB
@@ -219,7 +241,7 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
     pos.z = GRYAKUDOWNFORCEZONE_ZERO;
     event = report->event;
     if (event != NULL) {
-        switch (GET_U16(event, 0)) {
+        switch (((CollisionEvent*) event)->kind) {
         case 0x11:
             fn_80191B4C(event, &pos);
             break;
@@ -230,8 +252,8 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
     }
 
     check_pos = pos;
-    eps = LOAD_F32(GRYAKUDOWNFORCEZONE_EPS);
-    neg = LOAD_F32(GRYAKUDOWNFORCEZONE_NEG_EPS[0]);
+    eps = GRYAKUDOWNFORCEZONE_EPS;
+    neg = GRYAKUDOWNFORCEZONE_NEG_EPS[0];
     if (check_pos.x >= eps || check_pos.x <= neg || check_pos.y >= eps ||
         check_pos.y <= neg || check_pos.z >= eps || check_pos.z <= neg) {
         in_deadzone = 0;
@@ -259,15 +281,15 @@ void kar_gryakudownforcezone_play_contact_fgm_at_report(Yaku* yaku,
     pos = NULL;
     face = report->faces;
     ground = kar_gryaku_current_ground;
-    for (i = 0; i < REPORT_FACE_COUNT(report); i++) {
-        GroundMapObject* map_object =
-            (GroundMapObject*) ((u8*) ground->map_objects +
-                                face->map_object_index * sizeof(GroundMapObject) +
-                                face->primitive_index * 0x24);
-        if ((s32) (map_object->kind & 0x01FFFFFF) == 0x11) {
+    for (i = 0; i < report->face_count; i++) {
+        GroundMapPrimitiveTable* map_object =
+            (GroundMapPrimitiveTable*)
+                &ground->map_objects[face->map_object_index];
+        if ((s32) (map_object->primitives[face->primitive_index].kind &
+                   0x01FFFFFF) == 0x11) {
             pos = &face->pos;
         }
-        face = (CollisionReportFace*) ((u8*) face + 0x20);
+        face++;
     }
 
     if (pos != NULL) {
@@ -276,12 +298,13 @@ void kar_gryakudownforcezone_play_contact_fgm_at_report(Yaku* yaku,
 
         slot = 0;
         while (slot < 4) {
-            if (kar_graudio_is_active_fgm_slot_playing(YAKU_FGM_ENTRY(yaku, slot)) == 0) {
+            YakuFgmEntry* entry = &yaku->fgm_entries[slot];
+
+            if (kar_graudio_is_active_fgm_slot_playing(entry) == 0) {
                 fgm_param = yaku->param_link->fgm_param;
                 kar_graudio_configure_fgm_track_mode(
-                    fgm_param->mode, YAKU_FGM_TRACK(yaku, slot), fgm_param->scale,
-                    pos);
-                kar_graudio_play_fgm_entry_id(YAKU_FGM_ENTRY(yaku, slot), 0);
+                    fgm_param->mode, entry->track, fgm_param->scale, pos);
+                kar_graudio_play_fgm_entry_id(entry, 0);
                 break;
             }
             slot++;
@@ -308,10 +331,10 @@ void kar_gryakudownforcezone_init_stage_linked_kind17_yaku(HSD_GObj* gobj,
     yaku = gobj->user_data;
     ground_data = ground_gobj->user_data;
     param = yaku->param_link->param;
-    YAKU_COLLISION(yaku) =
+    yaku->collision =
         kar_grcoll__800d79c0(&kar_gryaku_current_ground->collision_root,
                              ground_data->jobjs[param->joint_index].jobj, 0);
-    GET_PTR(YAKU_COLLISION(yaku), 0x138) = yaku->owner;
+    yaku->collision->owner = yaku->owner;
 
     if (yaku->param_link->fgm_param != NULL) {
         kar_gryakuaudio_configure_fgm_track_from_joint(gobj, param->joint_index, 0);
