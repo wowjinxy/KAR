@@ -308,3 +308,42 @@ Branch: `long-auto-test`
 - GKYE01 object and objdiff: passing; existing exact cleanup remains exact
 - GKYJ01 object and constant relocations: passing
 - GKYP01 object and constant relocations: passing
+
+### main/gmracecommon
+
+- Source: `src/kar/gm/gmracecommon.c`
+- Unit fuzzy score: 81.70% -> 84.28%
+- Exact functions: 5 / 9 -> 7 / 9
+- Matched code: 640 / 3204 bytes -> 1368 / 3204 bytes
+- Matched:
+  - `kar_gmracecommon__near_80013314`: 92.72% -> 100%
+  - `kar_gmracecommon__near_800134d4`: 98.50% -> 100%
+- Improved:
+  - `kar_gmracecommon__near_800135ec`: 83.20% -> 86.69%
+- Discoveries:
+  - The race-option copies are direct byte-bitfield assignments. Using the
+    established `gmmain` union layout reproduces both the source-to-destination
+    `rlwimi` operations and the constant field writes.
+  - The two `kar_gmracenormal__8003d5f0` return cases are one `||` condition;
+    separate early returns omit a target branch.
+  - The audio clock calculation multiplies the scale constant on the left.
+    Reversing the commutative operands fixes the target FPR allocation.
+  - The runtime conversion calls are `__cvt_dbl_usll` and `__cvt_sll_flt`;
+    replacing raw address labels fixes their relocations.
+  - The large player setup routine retains separate signed values for slot
+    addressing and API calls. Its start-position and route values are `s8`,
+    and start-position fields are loaded unsigned before the merged sign
+    extension.
+- Rejected:
+  - Nesting the audio conversion calls compiled identically and was removed.
+  - Changing the large routine parameter itself to `s8` regressed the function
+    to 82.98% and was removed.
+- Deferred:
+  - `kar_gmracecommon__near_800135ec` still differs in pointer retention,
+    repeated slot-field address formation, structure-copy shape, and remaining
+    register allocation.
+  - `kar_gmracecommon__near_800130a8` remains at 37.55% and needs a separate
+    reconstruction pass.
+- GKYE01 object and report: passing; both newly exact functions confirmed
+- GKYJ01 source compile: passing
+- GKYP01 source compile: passing
