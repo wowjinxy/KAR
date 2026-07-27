@@ -24,10 +24,6 @@ typedef enum DSError {
     kWaitACKError = 0x0800
 } DSError;
 
-typedef struct ExcStatusWords {
-    u32 w0, w4, w8, wC;
-} ExcStatusWords;
-
 typedef enum MessageCommandID {
     kDSPing = 0x00,
     kDSConnect = 0x01,
@@ -140,7 +136,7 @@ DSError kar_diagnostic__803bff28(void* p1);
 
 DSError kar_diagnostic__803c2388(const void* bytes, u32 length);
 
-extern u8 gTRKBigEndian[];
+extern bool gTRKBigEndian;
 extern TRKMsgBufs lbl_80569E90;
 
 MessageBuffer* TRKGetBuffer(int index);
@@ -180,7 +176,7 @@ static inline DSError TRKAppendBuffer1_ui16(MessageBuffer* buffer,
     u8* byteData;
     u8 swapBuffer[sizeof(data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) &data;
     } else {
         byteData = (u8*) &data;
@@ -201,7 +197,7 @@ static inline DSError TRKAppendBuffer1_ui32(MessageBuffer* buffer,
     u8* byteData;
     u8 swapBuffer[sizeof(data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) &data;
     } else {
         byteData = (u8*) &data;
@@ -249,7 +245,7 @@ static inline DSError TRKReadBuffer1_ui16(MessageBuffer* buffer, u16* data)
     u8* byteData;
     u8 swapBuffer[sizeof(*data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) data;
     } else {
         bigEndianData = swapBuffer;
@@ -258,7 +254,7 @@ static inline DSError TRKReadBuffer1_ui16(MessageBuffer* buffer, u16* data)
     err = kar_diagnostic__near_803bdffc_impl(buffer, (void*) bigEndianData,
                                              sizeof(*data));
 
-    if (!(*(BOOL*) gTRKBigEndian) && err == kNoError) {
+    if (!gTRKBigEndian && err == kNoError) {
         byteData = (u8*) data;
 
         byteData[0] = bigEndianData[1];
@@ -276,7 +272,7 @@ static inline DSError TRKReadBuffer1_ui32(MessageBuffer* buffer, u32* data)
     u8* byteData;
     u8 swapBuffer[sizeof(*data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) data;
     } else {
         bigEndianData = swapBuffer;
@@ -285,7 +281,7 @@ static inline DSError TRKReadBuffer1_ui32(MessageBuffer* buffer, u32* data)
     err = kar_diagnostic__near_803bdffc_impl(buffer, (void*) bigEndianData,
                                              sizeof(*data));
 
-    if (!(*(BOOL*) gTRKBigEndian) && err == kNoError) {
+    if (!gTRKBigEndian && err == kNoError) {
         byteData = (u8*) data;
 
         byteData[0] = bigEndianData[3];
@@ -297,13 +293,13 @@ static inline DSError TRKReadBuffer1_ui32(MessageBuffer* buffer, u32* data)
     return err;
 }
 
-extern u8 gTRKBigEndian[];
+extern bool gTRKBigEndian;
 extern TRKMsgBufs lbl_80569E90;
 
 DSError TRKInitializeSerialHandler(void);
 DSError kar_diag__near_803be368(void);
 void TRKGetInput(void);
-void kar_diag__near_803be434(MessageBufferID bufID);
+inline void kar_diag__near_803be434(MessageBufferID bufID);
 MessageBufferID kar_diag__803be4e4(void);
 extern void* gTRKInputPendingPtr;
 
@@ -520,7 +516,7 @@ static inline bool TRKInitializeEndian(void)
     u8 bendian[4];
     bool result = false;
 
-    (*(BOOL*) gTRKBigEndian) = true;
+    gTRKBigEndian = true;
 
     bendian[0] = 0x12;
     bendian[1] = 0x34;
@@ -528,9 +524,9 @@ static inline bool TRKInitializeEndian(void)
     bendian[3] = 0x78;
 
     if (*(u32*) bendian == 0x12345678) {
-        (*(BOOL*) gTRKBigEndian) = true;
+        gTRKBigEndian = true;
     } else if (*(u32*) bendian == 0x78563412) {
-        (*(BOOL*) gTRKBigEndian) = false;
+        gTRKBigEndian = false;
     } else {
         result = true;
     }
@@ -585,12 +581,10 @@ DSError TRKInitializeNub(void)
     return result;
 }
 
-extern u8 lbl_8048BC30[];
-
 DSError kar_diagnostic__803bdae8(MessageBuffer* msg)
 {
     DSError result = kar_diagnostic__803c2388(msg->fData, msg->fLength);
-    MWTRACE(1, (const char*) lbl_8048BC30, result);
+    MWTRACE(1, "MessageSend : cc_write returned %ld\n", result);
     return kNoError;
 }
 
@@ -626,7 +620,7 @@ DSError kar_diagnostic__803bdcb4(MessageBuffer* buffer, u64* data)
     u8* byteData;
     u8 swapBuffer[sizeof(*data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) data;
     } else {
         bigEndianData = swapBuffer;
@@ -635,7 +629,7 @@ DSError kar_diagnostic__803bdcb4(MessageBuffer* buffer, u64* data)
     err = kar_diagnostic__near_803bdffc_impl(buffer, bigEndianData,
                                              sizeof(*data));
 
-    if (!(*(BOOL*) gTRKBigEndian) && err == kNoError) {
+    if (!gTRKBigEndian && err == kNoError) {
         byteData = (u8*) data;
 
         byteData[0] = bigEndianData[7];
@@ -688,7 +682,7 @@ DSError kar_diagnostic__803bdd9c(MessageBuffer* buffer, const u32* data, int cou
         u8 swapBuffer[sizeof(u32)];
         u32 data32 = data[i];
 
-        if ((*(BOOL*) gTRKBigEndian)) {
+        if (gTRKBigEndian) {
             bigEndianData = (u8*) &data32;
         } else {
             byteData = (u8*) &data32;
@@ -724,7 +718,7 @@ DSError kar_diagnostic__803bdf00(MessageBuffer* buffer, const u64 data)
     u8* byteData;
     u8 swapBuffer[sizeof(data)];
 
-    if ((*(BOOL*) gTRKBigEndian)) {
+    if (gTRKBigEndian) {
         bigEndianData = (u8*) &data;
     } else {
         byteData = (u8*) &data;
@@ -743,7 +737,6 @@ DSError kar_diagnostic__803bdf00(MessageBuffer* buffer, const u64 data)
     return kar_diagnostic__803be088_impl(buffer, bigEndianData, sizeof(data));
 }
 
-#pragma dont_inline on
 DSError kar_diagnostic__near_803bdffc(MessageBuffer* buf, void* data, size_t length)
 {
     DSError error = kNoError;
@@ -764,7 +757,6 @@ DSError kar_diagnostic__near_803bdffc(MessageBuffer* buf, void* data, size_t len
     buf->fPosition += length;
     return error;
 }
-#pragma dont_inline reset
 
 DSError kar_diagnostic__803be088(MessageBuffer* buf, const void* data, size_t length)
 {
@@ -794,7 +786,6 @@ DSError kar_diagnostic__803be088(MessageBuffer* buf, const void* data, size_t le
     return error;
 }
 
-#pragma dont_inline on
 DSError kar_diagnostic__803be12c(MessageBuffer* buf, u32 pos)
 {
     DSError error = kNoError;
@@ -811,7 +802,6 @@ DSError kar_diagnostic__803be12c(MessageBuffer* buf, u32 pos)
 
     return error;
 }
-#pragma dont_inline reset
 
 void kar_diagnostic__803be15c(MessageBuffer* buf, bool keepData)
 {
@@ -850,8 +840,6 @@ MessageBuffer* TRKGetBuffer(int index)
     return buf;
 }
 
-extern u8 lbl_8048BC58[];
-
 DSError kar_diag__803be22c(int* bufferIndexPtr, MessageBuffer** destBufPtr)
 {
     DSError error = kNoMessageBufferAvailable;
@@ -876,7 +864,7 @@ DSError kar_diag__803be22c(int* bufferIndexPtr, MessageBuffer** destBufPtr)
     }
 
     if (error == kNoMessageBufferAvailable) {
-        fn_803BE624((const char*) lbl_8048BC58);
+        fn_803BE624("ERROR : No buffer available\n");
     }
 
     return error;
@@ -923,8 +911,7 @@ DSError TRKInitializeSerialHandler(void)
     return kNoError;
 }
 
-#pragma dont_inline on
-void kar_diag__near_803be434(MessageBufferID bufID)
+inline void kar_diag__near_803be434(MessageBufferID bufID)
 {
     NubEvent event;
 
@@ -933,7 +920,6 @@ void kar_diag__near_803be434(MessageBufferID bufID)
     lbl_8056B840.fBufferID = -1;
     kar_diagnostic__803bd764(&event);
 }
-#pragma dont_inline reset
 
 #pragma dont_inline on
 void TRKGetInput(void)
@@ -955,16 +941,13 @@ void TRKGetInput(void)
 
 void usr_put_initialize(void) {}
 
-extern u8 lbl_8048BE08[];
-extern u8 lbl_8048BE24[];
-
 DSError TRKDispatchMessage(MessageBuffer* buffer)
 {
     DSError result = kDispatchError;
     msgbuf_t* msg = (msgbuf_t*) buffer->fData;
 
     kar_diagnostic__803be12c(buffer, 0);
-    MWTRACE(1, (const char*) lbl_8048BE08, msg->commandId);
+    MWTRACE(1, "Dispatch command 0x%08x\n", msg->commandId);
 
     switch (msg->commandId) {
     case kDSConnect:
@@ -1013,7 +996,7 @@ DSError TRKDispatchMessage(MessageBuffer* buffer)
         break;
     }
 
-    MWTRACE(1, (const char*) lbl_8048BE24, result);
+    MWTRACE(1, "Dispatch complete err = %ld\n", result);
     return result;
 }
 
@@ -1043,8 +1026,8 @@ static inline void TRKSendAck(u8 replyError)
     RawAckMsg ack;
 
     memset(&ack, 0, sizeof(ack));
-    ack.commandId = kDSReplyACK;
     ack.length = sizeof(ack);
+    ack.commandId = kDSReplyACK;
     ack.replyError = replyError;
     kar_diagnostic__803c2388(&ack, sizeof(ack));
 }
@@ -1077,9 +1060,6 @@ DSError kar_diagnostic__near_803be8cc(MessageBuffer* buf)
     DSReplyError reply;
 
     switch (kar_diagnostic__near_803c046c()) {
-    case kNoError:
-        reply = kDSReplyNoError;
-        break;
     case kInvalidProcessId:
         reply = kDSReplyInvalidProcessId;
         break;
@@ -1088,6 +1068,9 @@ DSError kar_diagnostic__near_803be8cc(MessageBuffer* buf)
         break;
     case kOsError:
         reply = kDSReplyOsError;
+        break;
+    case kNoError:
+        reply = kDSReplyNoError;
         break;
     default:
         reply = kDSReplyError;
@@ -1114,26 +1097,21 @@ DSError kar_diagnostic__803be974(MessageBuffer* buf)
     rangeStart = *(u32*) (buf->fData + 0x10);
     rangeEnd = *(u32*) (buf->fData + 0x14);
 
-    switch (type) {
-    case kDSStepIntoCount:
-    case kDSStepOverCount:
-        if (buf->fData[0xC] < 1) {
+    if (type == kDSStepIntoCount || type == kDSStepOverCount) {
+        u8 count = buf->fData[0xC];
+
+        if (count < 1) {
             TRKSendAck(kDSReplyParameterError);
             return kNoError;
         }
-        break;
-    case kDSStepIntoRange:
-    case kDSStepOverRange:
-    {
+    } else if (type == kDSStepIntoRange || type == kDSStepOverRange) {
         u32 pc = kar_diagnostic__near_803c06a4();
 
         if (pc < rangeStart || pc > rangeEnd) {
             TRKSendAck(kDSReplyParameterError);
             return kNoError;
         }
-        break;
-    }
-    default:
+    } else {
         TRKSendAck(kDSReplyUnsupportedOptionError);
         return kNoError;
     }
@@ -1145,16 +1123,12 @@ DSError kar_diagnostic__803be974(MessageBuffer* buf)
 
     TRKSendAck(kDSReplyNoError);
 
-    switch (type) {
-    case kDSStepIntoCount:
-    case kDSStepOverCount:
-        kar_diagnostic__near_803c076c(buf->fData[0xC], type == kDSStepOverCount);
-        break;
-    case kDSStepIntoRange:
-    case kDSStepOverRange:
+    if (type == kDSStepIntoCount || type == kDSStepOverCount) {
+        u8 count = buf->fData[0xC];
+        kar_diagnostic__near_803c076c(count, type == kDSStepOverCount);
+    } else if (type == kDSStepIntoRange || type == kDSStepOverRange) {
         kar_diagnostic__near_803c06b4(rangeStart, rangeEnd,
                                       type == kDSStepOverRange);
-        break;
     }
 
     return kNoError;
@@ -1172,7 +1146,8 @@ DSError kar_diagnostic__803beb94(MessageBuffer* buf)
     }
 
     TRKSendAck(kDSReplyNoError);
-    return TRKTargetContinue();
+    TRKTargetContinue();
+    return kNoError;
 }
 
 extern u8 lbl_8056B858[];
@@ -1207,16 +1182,12 @@ static inline DSReplyError kar_diagnostic__near_803c0f9c_reply_map(DSError error
     }
 }
 
-extern u8 lbl_8048BEA8[];
-extern u8 lbl_8048BEC8[];
-
 DSError kar_diagnostic__803bec44(MessageBuffer* buf)
 {
     u8 sp9 = buf->fData[8];
     u16 firstRegister = *(u16*) (buf->fData + 0xC);
     u16 lastRegister = *(u16*) (buf->fData + 0x10);
     DSError error;
-    DSReplyError reply;
     size_t length;
 
     kar_diagnostic__803be12c(buf, 0);
@@ -1229,6 +1200,10 @@ DSError kar_diagnostic__803bec44(MessageBuffer* buf)
     kar_diagnostic__803be12c(buf, 0x40);
 
     switch (sp9) {
+    case 2:
+        error = kar_diagnostic__803c0b64(firstRegister, lastRegister, buf,
+                                         &length, 0);
+        break;
     case 0:
         error = kar_diagnostic__803c15d8(firstRegister, lastRegister, buf,
                                          &length, 0);
@@ -1237,12 +1212,8 @@ DSError kar_diagnostic__803bec44(MessageBuffer* buf)
         error = kar_diagnostic__803c110c(firstRegister, lastRegister, buf,
                                          &length, 0);
         break;
-    case 2:
+    case 4:
         error = kar_diagnostic__803c0f9c(firstRegister, lastRegister, buf,
-                                         &length, 0);
-        break;
-    case 3:
-        error = kar_diagnostic__803c0b64(firstRegister, lastRegister, buf,
                                          &length, 0);
         break;
     default:
@@ -1256,45 +1227,13 @@ DSError kar_diagnostic__803bec44(MessageBuffer* buf)
         RawAckMsg ack;
 
         memset(&ack, 0, sizeof(ack));
-        ack.length = sizeof(ack);
+        ack.length = 0x40;
         ack.commandId = kDSReplyACK;
-        ack.replyError = error;
-        error = kar_diagnostic__803be088(buf, &ack, sizeof(ack));
+        kar_diagnostic__803c2388(&ack, sizeof(ack));
+        return kNoError;
     }
 
-    switch (error) {
-    case kUnsupportedError:
-        reply = kDSReplyUnsupportedOptionError;
-        break;
-    case kInvalidRegister:
-        reply = kDSReplyInvalidRegisterRange;
-        break;
-    case kMessageBufferReadError:
-        reply = kDSReplyPacketSizeError;
-        break;
-    case kCWDSException:
-        reply = kDSReplyCWDSException;
-        break;
-    case kInvalidProcessId:
-        reply = kDSReplyInvalidProcessId;
-        break;
-    case kInvalidThreadId:
-        reply = kDSReplyInvalidThreadId;
-        break;
-    case kOsError:
-        reply = kDSReplyOsError;
-        break;
-    case kNoError:
-        MWTRACE(1, (const char*) lbl_8048BEA8);
-        error = kar_diagnostic__803bdae8(buf);
-        MWTRACE(1, (const char*) lbl_8048BEC8, error);
-        return error;
-    default:
-        reply = kDSReplyCWDSError;
-        break;
-    }
-
-    TRKSendAck(reply);
+    TRKSendAck(kar_diagnostic__near_803c0f9c_reply_map(error));
     return kNoError;
 }
 
@@ -1333,59 +1272,8 @@ typedef enum MemoryAccessOptions {
     kDebuggerMemory = 1
 } MemoryAccessOptions;
 
-DSError fn_803C1864(u32 start, u32 length, s32 readWriteable);
-u32 kar_diagnostic__near_803c2144(u32 addr);
-u32 kar_diagnostic__near_803c00c8(void);
-void kar_diagnostic__near_803c00d8(void* dest, const void* src, int n,
-                                   u32 msrA, u32 msrB);
-void kar_diagnostic__803bffd8(u32 addr, u32 length);
-extern u8 gTRKCPUState[];
-extern u8 gTRKExceptionStatus[];
-
-#pragma dont_inline on
 DSError fn_803C1718(void* data, u32 start, size_t* length,
-                    MemoryAccessOptions accessOptions, bool read)
-{
-    DSError error;
-    u32 addr;
-    u32 msr;
-    u32 msr2;
-    ExcStatusWords tempExceptionStatus;
-
-    tempExceptionStatus = *(ExcStatusWords*) gTRKExceptionStatus;
-    *(u8*) (gTRKExceptionStatus + 0xD) = 0;
-
-    addr = kar_diagnostic__near_803c2144(start);
-    error = fn_803C1864(addr, *length, !read);
-
-    if (error == kNoError) {
-        msr = kar_diagnostic__near_803c00c8();
-        msr2 = msr | (*(u32*) (gTRKCPUState + 0x1f8) & 0x10);
-
-        if (read) {
-            kar_diagnostic__near_803c00d8(data, (void*) addr, *length, msr,
-                                          msr2);
-        } else {
-            kar_diagnostic__near_803c00d8((void*) addr, data, *length, msr2,
-                                          msr);
-            kar_diagnostic__803bffd8(addr, *length);
-            if (start != addr) {
-                kar_diagnostic__803bffd8(start, *length);
-            }
-        }
-    } else {
-        *length = 0;
-    }
-
-    if (*(u8*) (gTRKExceptionStatus + 0xD)) {
-        error = kCWDSException;
-        *length = 0;
-    }
-
-    *(ExcStatusWords*) gTRKExceptionStatus = tempExceptionStatus;
-    return error;
-}
-#pragma dont_inline reset
+                    MemoryAccessOptions accessOptions, bool read);
 
 static inline DSReplyError kar_diagnostic__near_803bf730_reply_map(DSError error)
 {
@@ -1412,7 +1300,7 @@ DSError kar_diagnostic__803bf1b4(MessageBuffer* buf)
     u16 spA = *(u16*) (buf->fData + 0xC);
     u32 spC = *(u32*) (buf->fData + 0x10);
     DSError error;
-    u8 buffer[0x800];
+    u8 buffer[0x800] __attribute__((aligned(32)));
     size_t sp10;
 
     MWTRACE(1, (const char*) lbl_8048BE48 + 0x180, sp8, spC, spA, sp9);
@@ -1453,7 +1341,7 @@ DSError kar_diagnostic__803bf3a8(MessageBuffer* buf)
     u16 spA = *(u16*) (buf->fData + 0xC);
     u32 spC = *(u32*) (buf->fData + 0x10);
     DSError error;
-    u8 buffer[0x800];
+    u8 buffer[0x800] __attribute__((aligned(32)));
     size_t sp10;
 
     MWTRACE(1, (const char*) lbl_8048BE48 + 0x1B0, sp8, spC, spA, sp9);
@@ -2586,7 +2474,7 @@ extern u8 lbl_8056BDE0[];
 DSError TRKInitializeTarget(void)
 {
     *(bool*) (gTRKState + 0x98) = true;
-    *(u32*) (gTRKState + 0x8c) = kar_diagnostic__near_803c00c8();
+    *(u32*) (gTRKCPUState + 0x8c) = kar_diagnostic__near_803c00c8();
     *(u32*) lbl_8056BDE0 = 0xE0000000;
     return kNoError;
 }
@@ -2646,6 +2534,10 @@ DSError TRKTargetContinue(void)
     ReserveEXI2Port();
     return kNoError;
 }
+
+typedef struct ExcStatusWords {
+    u32 w0, w4, w8, wC;
+} ExcStatusWords;
 
 #pragma dont_inline on
 DSError kar_diagnostic__803c15d8(u32 firstRegister, u32 lastRegister,
@@ -2784,7 +2676,6 @@ void TRK_main(void)
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
 void kar_diagnostic__near_803bf730(u32 val)
 {
     *(u32*) lbl_8056B858 = val;
@@ -2794,10 +2685,10 @@ u32 kar_diagnostic__near_803bf73c(void)
 {
     return *(u32*) lbl_8056B858;
 }
-#pragma dont_inline reset
 
 void fn_803BE624(const char* msg)
 {
+    u32 saved;
     bool done = false;
 
     while (!done) {
@@ -2806,14 +2697,9 @@ void fn_803BE624(const char* msg)
         if (c == 0) {
             done = true;
         } else {
-            char buf[2];
-            u32 saved = kar_diagnostic__near_803bf73c();
-
-            buf[0] = c;
-            buf[1] = 0;
-
+            saved = kar_diagnostic__near_803bf73c();
             kar_diagnostic__near_803bf730(0);
-            OSReport(buf);
+            OSReport("%c", c);
             kar_diagnostic__near_803bf730(saved);
         }
     }
