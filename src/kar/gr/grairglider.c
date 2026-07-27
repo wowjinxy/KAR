@@ -555,19 +555,14 @@ void kar_grairglider_register_spawned_enemy_kdcoll(void)
 void kar_grairglider_mark_spawn_handle_inactive(void* handle)
 {
     s32 slot;
-    s32 offset;
-    u8* slots;
     AirGliderRuntime* runtime;
 
     if (handle != NULL) {
         slot = (s32) kar_emupdate__near_80204054(handle);
         if (slot >= 0) {
             runtime = lbl_805DD714;
-            offset = slot * AIR_GLIDER_SLOT_STRIDE;
-            slots = (u8*) runtime->slots;
-            if (*(void**) (slots + offset + 0x58) == handle) {
-                ((AirGliderFlagByte*) (slots + offset + 0x52))->bits.blocked =
-                    FALSE;
+            if (runtime->slots[slot].spawn_handle == handle) {
+                runtime->slots[slot].flags_52.bits.blocked = FALSE;
             }
         }
     }

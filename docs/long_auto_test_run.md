@@ -438,3 +438,36 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing
 - GKYJ01 source compile and instruction diff: passing
 - GKYP01 source compile and instruction diff: passing
+
+### main/grcolosseum1
+
+- Source: `src/kar/gr/grcolosseum1.c`
+- Unit restored unchanged at 33.99%
+- Inspected:
+  - `kar_grcolosseum1_init_course_dependent_common_setup_list`: 97.50%
+- Discovery: the function is instruction-identical apart from a rotation of
+  the ground, parameter, and byte-offset registers.
+- Rejected: initializing the first byte offset from the zeroed loop index
+  compiled identically and was removed.
+- GKYE01 baseline object and report restored and passing
+
+### main/grairglider
+
+- Source: `src/kar/gr/grairglider.c`
+- Unit fuzzy score: 12.09% -> 12.13%
+- Improved:
+  - `kar_grairglider_mark_spawn_handle_inactive`: 90.00% -> 98.27%
+- Discovery: the handle comparison and blocked-bit clear are two accesses to
+  the same typed `AirGliderSlot`. Replacing raw byte arithmetic with
+  `runtime->slots[slot]` produces the target pointer/indexed bitfield shape.
+- Deferred: the remaining instructions are a register permutation among the
+  runtime pointer, scaled slot index, and slot-array base.
+- Rejected:
+  - Retaining an explicit typed slot-array base compiled identically.
+  - Combining an explicit byte offset with typed members regressed the function
+    to 90.00% and was removed.
+  - Explicit byte offsets in the three adjacent slot accessors compiled
+    identically and were removed.
+- GKYE01 object and report: passing
+- GKYJ01 source compile: passing; no regional target-object split is available
+- GKYP01 source compile: passing; no regional target-object split is available
