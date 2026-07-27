@@ -420,18 +420,17 @@ void kar_emparts__near_80202c18(EmAnim* anim, s32 index, s32 value)
 void kar_emparts__near_80202c80(void* config_arg, s32 kind, void* tables_arg)
 {
     EmPartsConfig** config_ptr;
-    EmPartsConfig* config;
     EmPartsGroup* group;
     HSD_DObj*** tables;
     s32 outer;
 
     config_ptr = config_arg;
-    config = *config_ptr;
     tables = tables_arg;
-    group = config->groups[kind];
+    group = (*config_ptr)->groups[kind];
 
     if (group != NULL) {
-        for (outer = 0; outer < config->count[kind]; outer++, group++) {
+        for (outer = 0; outer < (*config_ptr)->count[kind];
+             outer++, group++) {
             s32 middle;
             s32 list_offset;
 
@@ -526,17 +525,15 @@ void kar_emparts__near_8020335c(EmAnim* anim)
     axis = cross;
 
     mtx[0][0] = axis.x;
-    mtx[0][1] = anim->scale.x;
-    mtx[0][2] = anim->dir.x;
-    mtx[0][3] = LOAD_F32(lbl_805E22C0);
     mtx[1][0] = axis.y;
-    mtx[1][1] = anim->scale.y;
-    mtx[1][2] = anim->dir.y;
-    mtx[1][3] = LOAD_F32(lbl_805E22C0);
     mtx[2][0] = axis.z;
+    mtx[0][1] = anim->scale.x;
+    mtx[1][1] = anim->scale.y;
     mtx[2][1] = anim->scale.z;
+    mtx[0][2] = anim->dir.x;
+    mtx[1][2] = anim->dir.y;
     mtx[2][2] = anim->dir.z;
-    mtx[2][3] = LOAD_F32(lbl_805E22C0);
+    mtx[0][3] = mtx[1][3] = mtx[2][3] = LOAD_F32(lbl_805E22C0);
 
     PSMTXMultVec(mtx, &anim->field_550, &out);
     anim->pos.x += out.x;

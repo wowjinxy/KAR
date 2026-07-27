@@ -259,3 +259,33 @@ Branch: `long-auto-test`
 - GKYP01 full build, link, and checksum: passing
 - GKYE01 progress after linking: 19.60% fuzzy, 9.04% matched, 1.52% linked
   overall; Game Code 7.51% fuzzy, 3.97% matched, 1.15% linked
+
+### main/emparts
+
+- Source: `src/kar/em/emparts.c`
+- Starting unit score: 81.51% fuzzy, 3 / 8 exact functions
+- Ending unit score: 81.78% fuzzy, 4 / 8 exact functions
+- Newly exact:
+  - `kar_emparts__near_8020335c`: 98.02% -> 100.00%
+- Improved:
+  - `kar_emparts__near_80202c80`: 93.14% -> 95.29%
+- Discoveries:
+  - The enemy transform matrix is populated by columns: cross-product axis,
+    scale, and direction. Its translation column is a chained zero assignment,
+    which produces the target reverse store order.
+  - The part-table walker does not retain `EmPartsConfig*`; it reloads
+    `*config_ptr` when checking `count[kind]`, preserving the scaled kind index
+    used by the target.
+- Deferred:
+  - Part-table walker: the remaining instructions and control flow match; its
+    difference is a full loop-register permutation plus one temporary move.
+  - Parts initializer: changing the `-2`/`-1` aliases to `s32` or direct
+    literals compiled identically. Its remaining gap is config/index register
+    allocation and optimizer placement of repeated loop setup.
+  - The two large hierarchy/show-hide routines remain candidates for a later
+    focused pass; this checkpoint avoided mixing their broader reconstruction
+    with the verified narrow fixes.
+- GKYE01 object and report: passing; all four exact functions confirmed and
+  data remains 100%
+- GKYJ01 object: passing
+- GKYP01 object: passing
