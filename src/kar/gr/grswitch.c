@@ -127,7 +127,6 @@ void kar_grswitch__near_800e86cc(Ground* ground, void* target, s32 zone_id)
 void kar_grswitch__800e86dc(HSD_GObj* gobj, s32 object_index)
 {
     Ground* ground;
-    GroundMapObject* map_object;
     GrSwitchParam* param;
     GrSwitchAll* switch_all;
     GrSwitchZone* zone;
@@ -135,10 +134,8 @@ void kar_grswitch__800e86dc(HSD_GObj* gobj, s32 object_index)
     s32 slot;
 
     ground = kar_gryaku_current_ground;
-    map_object = (GroundMapObject*) ((u8*) ground->map_objects +
-                                     object_index * sizeof(GroundMapObject));
     switch_all = &ground->switch_all;
-    param = map_object->switch_param;
+    param = ground->map_objects[object_index].switch_param;
 
     valid = 0;
     if (param->ref_id >= 0 && param->ref_id < switch_all->zone_num) {
@@ -191,16 +188,14 @@ void kar_grswitch__near_800e8888(Ground* ground)
         s32 slot = zone->head;
 
         while (slot != zone->tail) {
-            GrSwitchEntry* entry = &zone->entries[slot];
-
-            if (entry->gobj != NULL) {
-                if (entry->timer > 0) {
-                    entry->timer--;
+            if (zone->entries[slot].gobj != NULL) {
+                if (zone->entries[slot].timer > 0) {
+                    zone->entries[slot].timer--;
                 }
 
-                if (entry->timer <= 0) {
-                    entry->gobj = NULL;
-                    entry->timer = 0;
+                if (zone->entries[slot].timer <= 0) {
+                    zone->entries[slot].gobj = NULL;
+                    zone->entries[slot].timer = 0;
                     zone->head++;
                     zone->head %= GR_SWITCH_ENTRY_COUNT;
                 }

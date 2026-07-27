@@ -136,3 +136,47 @@ Branch: `long-auto-test`
 - GKYJ01 object: passing
 - GKYP01 object: passing
 - Commit: `7774205`
+
+### main/gryakulasergate
+
+- Source: `src/kar/gr/gryakulasergate.c`
+- Unit score: unchanged at 97.55% fuzzy, 4 / 6 exact functions
+- Inspected:
+  - `kar_gryakulasergate_init_kind58_lasergate_ctrl`: 94.47%
+  - `kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates`: 97.58%
+- Discovery: the trigger function has the same 91 instructions as the target;
+  all 37 differences are register allocation. The initializer's object search
+  is also semantically correct; its substantive diff is an equivalent
+  `beq` versus `bne` plus explicit branch selected by the optimizer.
+- Deferred: a natural search loop regressed the initializer to 90.65%, while
+  an explicit `bne` continuation compiled identically to the baseline. Both
+  experiments were removed. The remaining differences are register coloring,
+  one duplicated zero materialization, and equivalent branch shaping.
+- No source commit
+
+### main/grswitch
+
+- Source: `src/kar/gr/grswitch.c`
+- Starting unit score: 94.00% fuzzy, 1 / 4 exact functions
+- Ending unit score: 96.69% fuzzy, 2 / 4 exact functions
+- Newly exact:
+  - `kar_grswitch__near_800e8888`: 96.68% -> 100.00%
+- Improved:
+  - `kar_grswitch__800e86dc`: 93.17% -> 97.48%
+- Discoveries:
+  - The switch activation path indexes the typed `GroundMapObject` array
+    directly when loading `switch_param`; this recovers the target's indexed
+    load with the field offset folded into the address.
+  - The switch update path indexes `zone->entries[slot]` directly. The prior
+    temporary entry pointer introduced an extra `addi` and changed every
+    queue-field access.
+- Deferred:
+  - `kar_grswitch__800e85a8`: 92.95%; remaining differences are assertion and
+    switch-array pointer register coloring. Reordering assignments compiled
+    identically and was removed.
+  - `kar_grswitch__800e86dc`: the remaining 31 operand differences are one
+    cyclic allocation of the three long-lived pointers. Declaration reordering
+    compiled identically and was removed.
+- GKYE01 object and report: passing; both exact functions confirmed
+- GKYJ01 object: passing
+- GKYP01 object: passing
