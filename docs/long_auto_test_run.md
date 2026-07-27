@@ -289,3 +289,22 @@ Branch: `long-auto-test`
   data remains 100%
 - GKYJ01 object: passing
 - GKYP01 object: passing
+
+### main/gryakubreakfan
+
+- Source: `src/kar/gr/gryakubreakfan.c`
+- Unit fuzzy score: unchanged at 96.91%, 1 / 2 exact functions
+- Corrected:
+  - `kar_gryakubreakfan_trigger_kind30_break_effects_from_event`: replaced
+    anonymous `0.0f` and `1.0f` literals with the target `.sdata2` symbols for
+    all three regions.
+- Discovery: the path-motion constants are US `lbl_805DFA68/6C`, Japanese
+  `lbl_805DA490/94`, and PAL `lbl_805D24D0/D4`. Fuzzy scoring ignores these
+  relocation identities, but objdiff confirms both target relocations now
+  match in every region.
+- Deferred: the only remaining differences are `li i`, `mr slot,yaku`, and
+  `mr offset,i` scheduling. A comma-list `for` initializer compiled identically
+  to the existing loop and was removed.
+- GKYE01 object and objdiff: passing; existing exact cleanup remains exact
+- GKYJ01 object and constant relocations: passing
+- GKYP01 object and constant relocations: passing
