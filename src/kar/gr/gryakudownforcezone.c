@@ -85,40 +85,43 @@ struct CollisionReport {
 #define GET_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
 #define YAKU_COLLISION(yaku) (*(void**) ((u8*) (yaku) + 0x130))
 #define YAKU_FGM_ENTRY(yaku, index) ((u8*) (yaku) + 0x134 + (index) * 0x14)
-#define YAKU_FGM_TRACK(yaku, index) (*(void**) ((u8*) (yaku) + 0x140 + (index) * 0x14))
 #define REPORT_FACE_COUNT(report) (*(s32*) ((u8*) (report) + 0x31C))
 #define LOAD_F32(sym) (*(volatile const f32*) &(sym))
 
 #if defined(VERSION_GKYJ01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB
+#define GRYAKUDOWNFORCEZONE_ZERO lbl_805DA2D0
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805DA2D4
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805DA2D8
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805DA2E0
 
+const f32 lbl_805DA2D0 = 0.0f;
 const f32 lbl_805DA2D4 = 0.00001f;
 const f32 lbl_805DA2D8[2] = { -0.00001f, 0.0f };
 const f32 lbl_805DA2E0[2] = { 0.0f, 0.0f };
 #elif defined(VERSION_GKYP01)
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xB3
+#define GRYAKUDOWNFORCEZONE_ZERO lbl_805D2310
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805D2314
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805D2318
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805D2320
 
+const f32 lbl_805D2310 = 0.0f;
 const f32 lbl_805D2314 = 0.00001f;
 const f32 lbl_805D2318[2] = { -0.00001f, 0.0f };
 const f32 lbl_805D2320[2] = { 0.0f, 0.0f };
 #else
 #define GRYAKUDOWNFORCEZONE_ASSERT_KIND_LINE 0xAB
+#define GRYAKUDOWNFORCEZONE_ZERO lbl_805DF8A8
 #define GRYAKUDOWNFORCEZONE_EPS lbl_805DF8AC
 #define GRYAKUDOWNFORCEZONE_NEG_EPS lbl_805DF8B0
 #define GRYAKUDOWNFORCEZONE_PATH_ZERO lbl_805DF8B8
 
+const f32 lbl_805DF8A8 = 0.0f;
 const f32 lbl_805DF8AC = 0.00001f;
 const f32 lbl_805DF8B0[2] = { -0.00001f, 0.0f };
 const f32 lbl_805DF8B8[2] = { 0.0f, 0.0f };
 #endif
-
-#define GRYAKUDOWNFORCEZONE_ZERO 0.0F
 
 char kar_src_gryakudownforcezone_c[0x18] = "gryakudownforcezone.c";
 char kar_gryakudownforcezone_assert_kind_downforcezone[0x2C] =
@@ -141,8 +144,7 @@ void kar_gryakudownforcezone_init_stage_linked_kind17_yaku(HSD_GObj* gobj,
                                                            HSD_GObj* ground_gobj);
 void kar_gryakudownforcezone_start_path_motion(HSD_GObj* gobj);
 
-// NONMATCHING: flow and data are correct; remaining diff is map-object address
-// calculation/register allocation at the top of the function.
+// NONMATCHING: only collision-root pointer scheduling remains.
 f32 kar_gryakudownforcezone_query_force_vector(s32 map_object_index, Vec* out,
                                                s32* audio_id)
 {
@@ -152,11 +154,12 @@ f32 kar_gryakudownforcezone_query_force_vector(s32 map_object_index, Vec* out,
     HSD_GObj* gobj;
     Yaku* yaku;
     DownForceZoneParam* param;
+    f32 zero;
 
     ground = kar_gryaku_current_ground;
     collision_root = &ground->collision_root;
-    map_object = (GroundMapObject*) ((u8*) ground->map_objects +
-                                     map_object_index * sizeof(GroundMapObject));
+    map_object = ground->map_objects;
+    map_object += map_object_index;
     gobj = map_object->yaku_gobj;
 
     if (gobj != NULL) {
@@ -174,15 +177,15 @@ f32 kar_gryakudownforcezone_query_force_vector(s32 map_object_index, Vec* out,
         return param->force;
     }
 
-    out->x = GRYAKUDOWNFORCEZONE_ZERO;
-    out->y = GRYAKUDOWNFORCEZONE_ZERO;
-    out->z = GRYAKUDOWNFORCEZONE_ZERO;
+    zero = LOAD_F32(GRYAKUDOWNFORCEZONE_ZERO);
+    out->x = zero;
+    out->y = zero;
+    out->z = zero;
     *audio_id = -1;
-    return GRYAKUDOWNFORCEZONE_ZERO;
+    return zero;
 }
 
-// NONMATCHING: flow is correct; remaining diff is float compare register order
-// in the deadzone test and map-object address calculation.
+// NONMATCHING: the deadzone comparisons use a different FPR allocation.
 void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* report,
                                                            s32 map_object_index)
 {
@@ -194,14 +197,15 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
     Vec check_pos;
     void* event;
     s32 in_deadzone;
-    f32 eps;
+    f32 zero;
     f32 neg;
+    f32 eps;
 
     ground = kar_gryaku_current_ground;
     {
-        GroundMapObject* map_object =
-            (GroundMapObject*) ((u8*) ground->map_objects +
-                                map_object_index * sizeof(GroundMapObject));
+        GroundMapObject* map_object = ground->map_objects;
+
+        map_object += map_object_index;
         gobj = map_object->yaku_gobj;
     }
     if (gobj == NULL) {
@@ -214,10 +218,11 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
         return;
     }
 
-    pos.x = GRYAKUDOWNFORCEZONE_ZERO;
-    pos.y = GRYAKUDOWNFORCEZONE_ZERO;
-    pos.z = GRYAKUDOWNFORCEZONE_ZERO;
     event = report->event;
+    zero = LOAD_F32(GRYAKUDOWNFORCEZONE_ZERO);
+    pos.x = zero;
+    pos.y = zero;
+    pos.z = zero;
     if (event != NULL) {
         switch (GET_U16(event, 0)) {
         case 0x11:
@@ -230,8 +235,8 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
     }
 
     check_pos = pos;
-    eps = LOAD_F32(GRYAKUDOWNFORCEZONE_EPS);
     neg = LOAD_F32(GRYAKUDOWNFORCEZONE_NEG_EPS[0]);
+    eps = LOAD_F32(GRYAKUDOWNFORCEZONE_EPS);
     if (check_pos.x >= eps || check_pos.x <= neg || check_pos.y >= eps ||
         check_pos.y <= neg || check_pos.z >= eps || check_pos.z <= neg) {
         in_deadzone = 0;
@@ -246,12 +251,14 @@ void kar_gryakudownforcezone_handle_collision_report_audio(CollisionReport* repo
     }
 }
 
-// NONMATCHING: behavior matches the collision-face scan and FGM slot setup;
-// remaining diff is register allocation in the slot loop.
+// NONMATCHING: the free-slot path coalesces its byte offset with a different
+// dead register.
 void kar_gryakudownforcezone_play_contact_fgm_at_report(Yaku* yaku,
                                                         CollisionReport* report)
 {
     Ground* ground;
+    s32 slot;
+    s32 offset;
     Vec* pos;
     CollisionReportFace* face;
     s32 i;
@@ -272,16 +279,18 @@ void kar_gryakudownforcezone_play_contact_fgm_at_report(Yaku* yaku,
 
     if (pos != NULL) {
         FgmParam* fgm_param;
-        s32 slot;
 
         slot = 0;
         while (slot < 4) {
-            if (kar_graudio_is_active_fgm_slot_playing(YAKU_FGM_ENTRY(yaku, slot)) == 0) {
+            if (kar_graudio_is_active_fgm_slot_playing(
+                    YAKU_FGM_ENTRY(yaku, slot)) == 0) {
+                offset = slot * 0x14;
                 fgm_param = yaku->param_link->fgm_param;
                 kar_graudio_configure_fgm_track_mode(
-                    fgm_param->mode, YAKU_FGM_TRACK(yaku, slot), fgm_param->scale,
+                    fgm_param->mode, GET_PTR(yaku, 0x140 + offset),
+                    fgm_param->scale,
                     pos);
-                kar_graudio_play_fgm_entry_id(YAKU_FGM_ENTRY(yaku, slot), 0);
+                kar_graudio_play_fgm_entry_id((u8*) yaku + 0x134 + offset, 0);
                 break;
             }
             slot++;
