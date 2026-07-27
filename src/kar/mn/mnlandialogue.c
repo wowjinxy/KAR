@@ -121,7 +121,6 @@ void kar_mnlandialogue_project_box1_origin_to_screen(Vec* out);
 void kar_mnlandialogue_project_box1_right_edge_to_screen(Vec* out);
 void kar_mnlandialogue_project_box1_bottom_edge_to_screen(Vec* out);
 
-#define LOAD_F32(sym) (*(volatile const f32*) &(sym))
 
 #define PROJECT_DIALOGUE_BOX(out, member)                                      \
     do {                                                                       \
@@ -152,7 +151,7 @@ void kar_mnlandialogue_project_box1_bottom_edge_to_screen(Vec* out);
         HSD_GObj* gobj = fn_801311E0()->dialogue_gobj;                         \
         if (gobj != NULL) {                                                    \
             LanDialoguePanel* panel = gobj->user_data;                         \
-            HSD_JObjReqAnimAll(panel->dialogue_anim, LOAD_F32(frame_const));   \
+            HSD_JObjReqAnimAll(panel->dialogue_anim, frame_const);   \
             HSD_JObjAnimAll(panel->dialogue_anim);                             \
         }                                                                      \
     }
@@ -163,7 +162,7 @@ void kar_mnlandialogue_project_box1_bottom_edge_to_screen(Vec* out);
         HSD_GObj* gobj = fn_801311E0()->dialogue_gobj;                         \
         if (gobj != NULL) {                                                    \
             LanDialoguePanel* panel = gobj->user_data;                         \
-            HSD_JObjReqAnimAll(panel->choice_anim, LOAD_F32(frame_const));     \
+            HSD_JObjReqAnimAll(panel->choice_anim, frame_const);     \
             HSD_JObjAnimAll(panel->choice_anim);                               \
             kar_gmlanmenu_set_sis_lan_box2_message_id(msg2);                   \
             kar_gmlanmenu_set_sis_lan_box3_message_id(msg3);                   \
@@ -176,7 +175,7 @@ void kar_mnlandialogue_project_box1_bottom_edge_to_screen(Vec* out);
         HSD_GObj* gobj = fn_801311E0()->gobj_field;                            \
         if (gobj != NULL) {                                                    \
             HSD_JObj* jobj = gobj->hsd_obj;                                    \
-            HSD_JObjReqAnimAll(jobj, LOAD_F32(frame_const));                   \
+            HSD_JObjReqAnimAll(jobj, frame_const);                   \
             HSD_JObjAnimAll(jobj);                                             \
         }                                                                      \
     }
@@ -341,7 +340,7 @@ void kar_mnlandialogue_create_dialogue_panel_and_cache_child_jobjs(void)
 
     HSD_GObjProcCreate(gobj, fn_8018436C, 1);
     fn_801389D8(jobj, *(void**) ctx->dialogue_scene_models,
-                LOAD_F32(lbl_805E0E80), LOAD_F32(lbl_805E0E84));
+                lbl_805E0E80, lbl_805E0E84);
     panel = kar_diag__80138a00(gobj, 0xBA);
     panel->box0_origin = kar_lbairride__near_80055af0(gobj, 2);
     panel->box0_right_edge = kar_lbairride__near_80055af0(gobj, 3);
@@ -370,9 +369,9 @@ DESTROY_PANEL(kar_mnlandialogue_destroy_dialogue_panel, dialogue_gobj)
             jobj = gobj->hsd_obj;                                              \
             fn_80138B10(jobj, panel->state,                                    \
                         *(void**) ctx->connect_scene_models,                   \
-                        LOAD_F32(lbl_805E0E98), LOAD_F32(lbl_805E0E9C));       \
+                        lbl_805E0E98, lbl_805E0E9C);       \
             panel->timer = 0;                                                  \
-            HSD_JObjReqAnimAll(jobj, LOAD_F32(lbl_805E0E98));                  \
+            HSD_JObjReqAnimAll(jobj, lbl_805E0E98);                  \
         }                                                                      \
     }
 
@@ -457,9 +456,9 @@ void kar_mnlandialogue_proc_update_connect_panel(HSD_GObj* gobj)
                     next_panel->state = 2;
                     fn_80138B10(root, next_panel->state,
                                 *(void**) ctx->connect_scene_models,
-                                LOAD_F32(lbl_805E0E98),
-                                LOAD_F32(lbl_805E0E9C));
-                    HSD_JObjReqAnimAll(root, LOAD_F32(lbl_805E0E98));
+                                lbl_805E0E98,
+                                lbl_805E0E9C);
+                    HSD_JObjReqAnimAll(root, lbl_805E0E98);
                 }
             }
         }
@@ -489,9 +488,9 @@ void kar_mnlandialogue_proc_update_connect_panel(HSD_GObj* gobj)
                     next_panel->state = 4;
                     fn_80138B10(root, next_panel->state,
                                 *(void**) ctx->connect_scene_models,
-                                LOAD_F32(lbl_805E0E98),
-                                LOAD_F32(lbl_805E0E9C));
-                    HSD_JObjReqAnimAll(root, LOAD_F32(lbl_805E0E98));
+                                lbl_805E0E98,
+                                lbl_805E0E9C);
+                    HSD_JObjReqAnimAll(root, lbl_805E0E98);
                 }
             }
         }
@@ -502,7 +501,7 @@ void kar_mnlandialogue_proc_update_connect_panel(HSD_GObj* gobj)
     default:
         if (panel->timer == 0x59) {
             panel->timer = 0;
-            HSD_JObjReqAnimAll(jobj, LOAD_F32(lbl_805E0E98));
+            HSD_JObjReqAnimAll(jobj, lbl_805E0E98);
         }
         break;
     }
@@ -521,7 +520,7 @@ void kar_mnlandialogue_create_connect_panel_and_cache_child_jobjs(void)
 
     HSD_GObjProcCreate(gobj, kar_mnlandialogue_proc_update_connect_panel, 1);
     fn_801389D8(jobj, *(void**) ctx->connect_scene_models,
-                LOAD_F32(lbl_805E0E98), LOAD_F32(lbl_805E0E9C));
+                lbl_805E0E98, lbl_805E0E9C);
     panel = kar_diag__80138a00(gobj, 0xBA);
     panel->indicators[0] = kar_lbairride__near_80055af0(gobj, 1);
     panel->indicators[1] = kar_lbairride__near_80055af0(gobj, 2);
@@ -552,7 +551,7 @@ void kar_mnlandialogue_create_wait_panel(void)
 
     HSD_GObjProcCreate(gobj, kar_mnlandialogue_proc_anim_wait_panel, 1);
     fn_801389D8(jobj, *(void**) ctx->wait_scene_models,
-                LOAD_F32(lbl_805E0EA0), LOAD_F32(lbl_805E0EA4));
+                lbl_805E0EA0, lbl_805E0EA4);
     kar_diag__80138a00(gobj, 0xBA);
     ctx->wait_gobj = gobj;
 }
@@ -580,7 +579,7 @@ void kar_mnlandialogue_create_select_panel(void)
 
     HSD_GObjProcCreate(gobj, fn_80184EC0, 1);
     fn_801389D8(jobj, *(void**) ctx->select_scene_models,
-                LOAD_F32(lbl_805E0EA8), LOAD_F32(lbl_805E0EAC));
+                lbl_805E0EA8, lbl_805E0EAC);
     kar_diag__80138a00(gobj, 0xBA);
     ctx->select_gobj = gobj;
 }
@@ -606,7 +605,7 @@ void kar_mnlandialogue_create_airride_panel(void)
 
     HSD_GObjProcCreate(gobj, fn_801850D8, 1);
     fn_801389D8(jobj, *(void**) ctx->airride_scene_models,
-                LOAD_F32(lbl_805E0EB8), LOAD_F32(lbl_805E0EBC));
+                lbl_805E0EB8, lbl_805E0EBC);
     kar_diag__80138a00(gobj, 0xBA);
     ctx->airride_gobj = gobj;
 }
@@ -635,7 +634,7 @@ void kar_mnlandialogue_create_city_panel(void)
 
     HSD_GObjProcCreate(gobj, fn_80185388, 1);
     fn_801389D8(jobj, *(void**) ctx->city_scene_models,
-                LOAD_F32(lbl_805E0EC0), LOAD_F32(lbl_805E0EC4));
+                lbl_805E0EC0, lbl_805E0EC4);
     kar_diag__80138a00(gobj, 0xBA);
     ctx->city_gobj = gobj;
 }
@@ -681,7 +680,7 @@ void kar_mnlandialogue_create_time_panel_and_cache_digit_jobjs(void)
 
     HSD_GObjProcCreate(gobj, fn_80185684, 1);
     fn_801389D8(jobj, *(void**) ctx->time_scene_models,
-                LOAD_F32(lbl_805E0ED8), LOAD_F32(lbl_805E0EDC));
+                lbl_805E0ED8, lbl_805E0EDC);
     panel = kar_diag__80138a00(gobj, 0xBA);
     panel->digits[0] = kar_lbairride__near_80055af0(gobj, 1);
     panel->digits[1] = kar_lbairride__near_80055af0(gobj, 2);

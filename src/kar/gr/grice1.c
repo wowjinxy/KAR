@@ -15,13 +15,20 @@ typedef struct GroundData GroundData;
 typedef struct GroundIceParam GroundIceParam;
 typedef struct IndividualFgmAll IndividualFgmAll;
 typedef struct IndividualFgmParam IndividualFgmParam;
+typedef struct GroundStageYakuObject GroundStageYakuObject;
 typedef void (*GroundCallback)(void);
 typedef void (*GrSwitchCallback)(HSD_GObj* gobj, s32 ref_id);
+
+struct GroundStageYakuObject {
+    void* object;
+    u8 pad_04[0x44];
+};
 
 struct Ground {
     u8 pad_0[0x08];
     GroundData* data;
-    u8 pad_C[0x71C];
+    u8 pad_C[0x20C];
+    GroundStageYakuObject stage_yaku_objects[18];
     s32 fgm_counters[GRICE1_FGM_COUNTER_NUM];
 };
 
@@ -63,8 +70,6 @@ void kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index(
     HSD_GObj* gobj, s32 stage_index);
 void kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index(
     HSD_GObj* gobj, s32 stage_index);
-
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
 
 GrIce1CallbackTable kar_grice1_callback_table = {
     {
@@ -167,7 +172,8 @@ void kar_grice1_update_individual_fgm_timers(HSD_GObj* gobj)
 void kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index(HSD_GObj* gobj,
                                                                   s32 stage_index)
 {
-    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
+    Ground* ground = kar_gryaku_current_ground;
+    void* target = ground->stage_yaku_objects[stage_index].object;
 
     if (target != NULL) {
         kar_gryakupushoutwall_trigger_kind50_target_wall_pushes(target);
@@ -177,7 +183,8 @@ void kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index(HSD_GObj* gobj
 void kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
+    Ground* ground = kar_gryaku_current_ground;
+    void* target = ground->stage_yaku_objects[stage_index].object;
 
     if (target != NULL) {
         kar_gryakulighttunnel_trigger_kind52_pillar_entry_motion(target);
@@ -187,7 +194,8 @@ void kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index(
 void kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index(
     HSD_GObj* gobj, s32 stage_index)
 {
-    void* target = GET_PTR(kar_gryaku_current_ground, 0x218 + stage_index * 0x48);
+    Ground* ground = kar_gryaku_current_ground;
+    void* target = ground->stage_yaku_objects[stage_index].object;
 
     if (target != NULL) {
         kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(target);

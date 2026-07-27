@@ -9,7 +9,18 @@ permissions:
   packages: read
 
 jobs:
+  source-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Reject compiler-output source tricks
+      run: python tools/check_decomp_source_quality.py
+
   build:
+    needs: source-quality
     # Private build container with the original game files under /orig.
     # See docs/github_actions.md for setup details.
     container: ghcr.io/wowjinxy/kar-build:main

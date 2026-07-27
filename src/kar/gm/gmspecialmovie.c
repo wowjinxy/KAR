@@ -109,7 +109,6 @@ void fn_8027F610(void);
 void kar_pltrick__near_80233a74(void);
 
 #define PLAYER_INPUT(i) (*(u32*) (HSD_PadCopyStatus + ((u8) (i) * 0x44) + 8))
-#define LOAD_F32(sym) (*(const f32*) &(sym))
 #define CAMERA_GOBJ() (lbl_805DD57C)
 #define MOVIE_GOBJ() (lbl_805DD580[0])
 #define ENDING_WORK() (lbl_805DD588[0])
@@ -188,10 +187,10 @@ void kar_gmspecialmovie__near_80049250(GObj* arg0, GObj* gobj)
 
         kar_lbhvqm__near_80078028(lbl_805DD578, &x, &y, &z);
         kar_lbkdcoll__near_80076f8c(x, y, z, 0x46, 0,
-                                    LOAD_F32(lbl_805DE900),
-                                    LOAD_F32(lbl_805DE900),
-                                    LOAD_F32(lbl_805DE904),
-                                    LOAD_F32(lbl_805DE908[0]));
+                                    lbl_805DE900,
+                                    lbl_805DE900,
+                                    lbl_805DE904,
+                                    lbl_805DE908[0]);
     }
 }
 

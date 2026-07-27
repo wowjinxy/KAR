@@ -23,18 +23,81 @@ typedef struct GrConveyerParam {
     s32 index;
 } GrConveyerParam;
 
-extern void* kar_gryaku_current_ground;
+typedef struct GroundData GroundData;
+typedef struct GroundSplineRoot GroundSplineRoot;
+typedef struct GroundConveyerInfo GroundConveyerInfo;
+typedef struct GrConveyerSplineData GrConveyerSplineData;
+typedef struct GrConveyerSplineList GrConveyerSplineList;
+typedef struct GrConveyerFace GrConveyerFace;
+typedef struct GrConveyerFaceData GrConveyerFaceData;
+typedef struct GrConveyerCollision GrConveyerCollision;
+typedef struct GrConveyerWork GrConveyerWork;
+
+struct GroundData {
+    u8 pad_00[0x1C];
+    GroundSplineRoot* spline_root;
+    GroundConveyerInfo* conveyer_info;
+};
+
+struct GroundSplineRoot {
+    u8 pad_00[0x10];
+    GrConveyerSplineData* spline_data;
+};
+
+struct GroundConveyerInfo {
+    u8 pad_00[0x14];
+    void* vectors;
+};
+
+struct GrConveyerSplineList {
+    HSD_Spline** splines;
+};
+
+struct GrConveyerSplineData {
+    GrConveyerSplineList* list;
+    u8 flags;
+};
+
+struct GrConveyerFaceData {
+    u8 pad_00[0x8C];
+    s32 type;
+    GrConveyerParam* param;
+};
+
+struct GrConveyerFace {
+    u8 pad_00[0x0C];
+    Vec normal;
+    u8 pad_18[0x1C];
+    u32 flags;
+    GrConveyerFaceData* data;
+    u8 status;
+    u8 pad_3D[0x03];
+};
+
+struct GrConveyerCollision {
+    u8 pad_00[0x08];
+    GrConveyerFace* faces;
+};
+
+struct GrConveyerWork {
+    s32 values[18];
+};
+
+struct Ground {
+    u8 pad_000[0x08];
+    GroundData* data;
+    u8 pad_00C[0x48];
+    GrConveyerCollision collision;
+    u8 pad_060[0x1B0];
+    GrConveyerWork conveyer_work[8];
+    s32 conveyer_work_count;
+};
+
+extern Ground* kar_gryaku_current_ground;
 extern f32 kar_lbcolanim__near_8006bac8(HSD_Spline* spline, Vec* pos,
                                         s32 flag);
 extern void kar_lbcolanim__near_8006b048(Vec* out, HSD_Spline* spline);
 
-#define LOAD_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define LOAD_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define LOAD_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define LOAD_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define STORE_S32(base, offset, value) \
-    (*(s32*) ((u8*) (base) + (offset)) = (value))
-#define FACE_AT(faces, index) ((u8*) (faces) + ((index) * 0x40))
 #define VEC_ZERO(vec)                   \
     do {                                \
         (vec)->x = 0.0f;                \
@@ -98,12 +161,13 @@ __declspec(section ".sdata2") const f32 lbl_805DF754 = 0.0f;
 
 f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
 {
-    void* ground = kar_gryaku_current_ground;
-    void* data = LOAD_PTR(ground, 0x8);
-    void* spline_data = LOAD_PTR(LOAD_PTR(data, 0x1C), 0x10);
-    u8* face = FACE_AT(LOAD_PTR(gcp, 0x8), face_id);
-    void* face_data = LOAD_PTR(face, 0x38);
-    GrConveyerParam* param = LOAD_PTR(face_data, 0x90);
+    Ground* ground = kar_gryaku_current_ground;
+    GroundData* data = ground->data;
+    GrConveyerSplineData* spline_data = data->spline_root->spline_data;
+    GrConveyerCollision* collision = gcp;
+    GrConveyerFace* face = &collision->faces[face_id];
+    GrConveyerFaceData* face_data = face->data;
+    GrConveyerParam* param = face_data->param;
     GrConveyerDataStrings* assert_data = &kar_src_grconveyer_804a4bc0;
     HSD_Spline* spline;
     Vec tangent;
@@ -117,24 +181,24 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
         return 0.0f;
     }
 
-    if (LOAD_U8(face, 0x3C) & 0x80) {
+    if (face->status & 0x80) {
         __assert(assert_data->grcoll_src, 0xDD, assert_data->face_assert);
     }
 
-    spline = ((HSD_Spline**) LOAD_PTR(LOAD_PTR(spline_data, 0x0), 0x0))[param->index];
+    spline = spline_data->list->splines[param->index];
     if (spline == NULL) {
         __assert(assert_data->src, 0x7E, assert_data->spline_assert);
     }
 
-    kar_lbcolanim__near_8006bac8(spline, pos, LOAD_U8(spline_data, 0x4) >> 7);
+    kar_lbcolanim__near_8006bac8(spline, pos, spline_data->flags >> 7);
     kar_lbcolanim__near_8006b048(&tangent, spline);
 
-    VEC_CROSS(&side, (Vec*) (face + 0xC), &tangent);
+    VEC_CROSS(&side, &face->normal, &tangent);
     kar_lbvector_normalize_with_axis_fallback(&side, &side);
-    VEC_CROSS(&tangent, &side, (Vec*) (face + 0xC));
+    VEC_CROSS(&tangent, &side, &face->normal);
     kar_lbvector_normalize_with_axis_fallback(&tangent, &tangent);
 
-    dir_index = (LOAD_U32(face, 0x34) >> 6) & 0xF;
+    dir_index = (face->flags >> 6) & 0xF;
     side_bits = dir_index & 0xC;
     if (side_bits == 0xC) {
         __assert(assert_data->src, 0x95, assert_data->left_right_assert_spaced);
@@ -171,10 +235,10 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
 
 f32 kar_grconveyer__800e8338(Vec* pos, s32 face_id, Vec* out)
 {
-    void* ground = kar_gryaku_current_ground;
-    u8* face = FACE_AT(LOAD_PTR(ground, 0x5C), face_id);
-    void* face_data = LOAD_PTR(face, 0x38);
-    s32 type = LOAD_S32(face_data, 0x8C);
+    Ground* ground = kar_gryaku_current_ground;
+    GrConveyerFace* face = &ground->collision.faces[face_id];
+    GrConveyerFaceData* face_data = face->data;
+    s32 type = face_data->type;
     GrConveyerDataStrings* assert_data = &kar_src_grconveyer_804a4bc0;
     GrConveyerParam* param;
     Vec origin;
@@ -184,27 +248,27 @@ f32 kar_grconveyer__800e8338(Vec* pos, s32 face_id, Vec* out)
     s32 dir_index;
     s32 side_bits;
 
-    if (((LOAD_U32(face, 0x34) >> 6) & 0xF) == 0) {
+    if (((face->flags >> 6) & 0xF) == 0) {
         return 0.0f;
     }
 
     if (type == 2) {
-        return kar_grconveyer__800e8000((u8*) ground + 0x54, pos, face_id, out);
+        return kar_grconveyer__800e8000(&ground->collision, pos, face_id, out);
     }
 
     if (type < 2 && type >= 1) {
-        if (LOAD_PTR(LOAD_PTR(LOAD_PTR(ground, 0x8), 0x20), 0x14) == NULL) {
+        if (ground->data->conveyer_info->vectors == NULL) {
             return 0.0f;
         }
 
-        param = LOAD_PTR(face_data, 0x90);
+        param = face_data->param;
         kar_grcommon_get_conveyerpos_vectors_by_index(param->index, &origin,
                                                       &axis_a, &axis_b);
         VEC_SUB(&delta, pos, &origin);
         VEC_CROSS(out, &delta, &axis_b);
         kar_lbvector_normalize_with_axis_fallback(out, out);
 
-        dir_index = (LOAD_U32(face, 0x34) >> 6) & 0xF;
+        dir_index = (face->flags >> 6) & 0xF;
         side_bits = dir_index & 0xC;
         if (side_bits != 0x4 && dir_index != 0x8) {
             __assert(assert_data->src, 0x4E, assert_data->left_right_assert);
@@ -227,30 +291,16 @@ f32 kar_grconveyer__800e8338(Vec* pos, s32 face_id, Vec* out)
 
 void kar_grconveyer__near_800e853c(Ground* ground)
 {
-    u8* work = (u8*) ground + 0x210;
     s32 i;
+    s32 j;
 
     for (i = 0; i < 8; i++) {
-        STORE_S32(work, 0x0, 0);
-        STORE_S32(work, 0x4, -1);
-        STORE_S32(work, 0x8, 0);
-        STORE_S32(work, 0xC, 0);
-        STORE_S32(work, 0x10, 0);
-        STORE_S32(work, 0x14, 0);
-        STORE_S32(work, 0x18, 0);
-        STORE_S32(work, 0x1C, 0);
-        STORE_S32(work, 0x20, 0);
-        STORE_S32(work, 0x24, 0);
-        STORE_S32(work, 0x28, 0);
-        STORE_S32(work, 0x2C, 0);
-        STORE_S32(work, 0x30, 0);
-        STORE_S32(work, 0x34, 0);
-        STORE_S32(work, 0x38, 0);
-        STORE_S32(work, 0x3C, 0);
-        STORE_S32(work, 0x40, 0);
-        STORE_S32(work, 0x44, 0);
-        work += 0x48;
+        ground->conveyer_work[i].values[0] = 0;
+        ground->conveyer_work[i].values[1] = -1;
+        for (j = 2; j < 18; j++) {
+            ground->conveyer_work[i].values[j] = 0;
+        }
     }
 
-    STORE_S32(ground, 0x450, 0);
+    ground->conveyer_work_count = 0;
 }

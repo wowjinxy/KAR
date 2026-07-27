@@ -14,6 +14,7 @@ typedef struct YakuParamLink YakuParamLink;
 typedef struct LaserGateParam LaserGateParam;
 typedef struct LaserGateCtrlParam LaserGateCtrlParam;
 typedef struct LaserGateCtrlData LaserGateCtrlData;
+typedef struct LaserGateFgmEntry LaserGateFgmEntry;
 typedef void (*GroundCallback)(void);
 
 #if defined(VERSION_GKYJ01)
@@ -89,6 +90,11 @@ struct YakuParamLink {
     void* fgm_param;
 };
 
+struct LaserGateFgmEntry {
+    u8 pad_00[0x04];
+    s32 count;
+};
+
 struct Yaku {
     void* owner;
     s32 kind;
@@ -96,8 +102,12 @@ struct Yaku {
     u8 pad_0C[0x68];
     s32 state;
     u8 pad_78[0xA0];
-    u8 fgm_entry[0x08];
+    LaserGateFgmEntry fgm_entry;
     u8 pad_120[0x10];
+    union {
+        HSD_GObj* linked_gobjs[LASERGATE_CTRL_MAX_GOBJS];
+        f32 lasergate_frame;
+    } work;
 };
 
 struct LaserGateCtrlParam {
@@ -124,10 +134,6 @@ struct LaserGateCtrlData {
 };
 
 #define YAKU_PARAM(yaku, type) ((type*) ((yaku)->param_link->param))
-#define YAKU_FGM_ENTRY(yaku) ((void*) ((u8*) (yaku) + 0x118))
-#define YAKU_FGM_ENTRY_COUNT(yaku) (*(s32*) ((u8*) (yaku) + 0x11C))
-#define YAKU_LINKED_GOBJ(yaku, index) (*(HSD_GObj**) ((u8*) (yaku) + 0x130 + (index) * 4))
-#define YAKU_LASERGATE_FRAME(yaku) (*(f32*) ((u8*) (yaku) + 0x130))
 #define LASERGATE_COMMON_BASE kar_gryakubreakcommon_kind57_lasergate_callback_table
 #define LASERGATE_SRC(base) ((base) + 0x88)
 #define LASERGATE_ASSERT_GATE_KIND(base) ((base) + 0x9C)
@@ -213,7 +219,7 @@ void kar_gryakulasergate_init_kind58_lasergate_ctrl(HSD_GObj* gobj,
         s32 index;
         s32 target_id;
 
-        YAKU_LINKED_GOBJ(yaku, i) = NULL;
+        yaku->work.linked_gobjs[i] = NULL;
         if (i >= param->target_count) {
             continue;
         }
@@ -235,7 +241,7 @@ void kar_gryakulasergate_init_kind58_lasergate_ctrl(HSD_GObj* gobj,
         __assert(LASERGATE_GROUND_SRC(assert_base), 0x96C, LASERGATE_ASSERT_ZERO);
         cursor = NULL;
     found_cursor:
-        YAKU_LINKED_GOBJ(yaku, i) = cursor;
+                    yaku->work.linked_gobjs[i] = cursor;
     }
 
     if (yaku->param_link->fgm_param != NULL) {
@@ -250,8 +256,8 @@ void kar_gryakulasergate_start_kind58_ctrl_idle_wait_motion(HSD_GObj* gobj)
     Yaku* yaku = gobj->user_data;
     f32 zero;
 
-    if (YAKU_FGM_ENTRY_COUNT(yaku) > 0) {
-        kar_graudio_play_fgm_entry_id(YAKU_FGM_ENTRY(yaku), 0);
+    if (yaku->fgm_entry.count > 0) {
+        kar_graudio_play_fgm_entry_id(&yaku->fgm_entry, 0);
     }
 
     zero = LASERGATE_ZERO;
@@ -268,7 +274,8 @@ void kar_gryakulasergate_update_kind58_ctrl_target_reset_to_idle(HSD_GObj* gobj)
     yaku = gobj->user_data;
     param = YAKU_PARAM(yaku, LaserGateCtrlParam);
     for (i = 0; i < param->target_count; i++) {
-        if (kar_gryakulib_get_yaku_state_or_none(YAKU_LINKED_GOBJ(yaku, i)) == 0) {
+        if (kar_gryakulib_get_yaku_state_or_none(
+                yaku->work.linked_gobjs[i]) == 0) {
             kar_gryakulasergate_start_kind58_ctrl_idle_wait_motion(gobj);
         }
     }
@@ -295,7 +302,7 @@ void kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(void* target)
         HSD_GObj* gate_gobj;
         Yaku* gate_yaku;
 
-        gate_gobj = YAKU_LINKED_GOBJ(yaku, i);
+        gate_gobj = yaku->work.linked_gobjs[i];
         gate_yaku = gate_gobj->user_data;
         if (gate_yaku->kind != YAKU_KIND_LASERGATE) {
             __assert(LASERGATE_SRC(assert_base), LASERGATE_ASSERT_GATE_KIND_LINE,
@@ -319,7 +326,7 @@ void kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(void* target)
                          LASERGATE_ASSERT_AOBJ);
             }
 
-            YAKU_LASERGATE_FRAME(gate_yaku) = aobj->curr_frame;
+    gate_yaku->work.lasergate_frame = aobj->curr_frame;
             HSD_JObjSetFlags(ground->jobjs[gate_param->hide_joint_index].jobj,
                              JOBJ_HIDDEN);
             zero = LASERGATE_ZERO;
@@ -330,8 +337,8 @@ void kar_gryakulasergate_trigger_kind58_ctrl_open_linked_gates(void* target)
     }
 
     yaku = gobj->user_data;
-    if (YAKU_FGM_ENTRY_COUNT(yaku) > 0) {
-        kar_graudio_stop_active_fgm_slot(YAKU_FGM_ENTRY(yaku));
+    if (yaku->fgm_entry.count > 0) {
+        kar_graudio_stop_active_fgm_slot(&yaku->fgm_entry);
     }
 
     {
@@ -351,7 +358,7 @@ s32 kar_gryakulasergate_test_kind58_ctrl_has_idle_gate_target(HSD_GObj* gobj)
     yaku = gobj->user_data;
     param = YAKU_PARAM(yaku, LaserGateCtrlParam);
     for (i = 0; i < param->target_count; i++) {
-        Yaku* gate_yaku = YAKU_LINKED_GOBJ(yaku, i)->user_data;
+        Yaku* gate_yaku = yaku->work.linked_gobjs[i]->user_data;
 
         switch (gate_yaku->state) {
         case 0:

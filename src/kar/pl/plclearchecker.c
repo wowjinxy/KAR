@@ -28,7 +28,7 @@ struct PlClearCheckerTemplate {
     f32 float_038;
     void* cl_object;
     void* object_040;
-    u8 payload_044[0x48];
+    u32 payload_044[18];
     u8 byte_08C;
     u8 byte_08D;
     u8 byte_08E;
@@ -38,6 +38,38 @@ struct PlClearCheckerTemplate {
     u8 flags_909;
     u8 pad_90A[0x2];
 };
+
+typedef struct PlClearCheckerClObjectArgs {
+    void* unk_00;
+    u8 first_byte;
+    u8 pad_05[3];
+    u32 player_kind;
+    u8 variant;
+    u8 pad_0D[3];
+    Vec vec_10;
+    Vec vec_1C;
+    Vec vec_28;
+    f32 float_34;
+    u32 payload_38[9];
+    u8 flags;
+    u8 pad_5D[3];
+} PlClearCheckerClObjectArgs;
+
+typedef struct PlClearCheckerRuntimeArgs {
+    u32 player_kind;
+    u8 variant;
+    u8 pad_05[3];
+    Vec vec_08;
+    Vec vec_14;
+    Vec vec_20;
+    f32 float_2C;
+    f32 float_30;
+    f32 float_34;
+    u32 payload_38[18];
+    u8 byte_80;
+    u8 flags;
+    u8 pad_82[2];
+} PlClearCheckerRuntimeArgs;
 
 u64 plclearchecker_player_template_table[0x5A8];
 
@@ -57,87 +89,11 @@ void fn_80191C18(void* arg);
     ((PlClearCheckerTemplate*) ((u8*) plclearchecker_player_template_table +          \
                                 ((slot) * PLCC_TEMPLATE_SIZE)))
 
-#define LOAD_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define LOAD_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define LOAD_F32(base, offset) (*(f32*) ((u8*) (base) + (offset)))
-#define STORE_U8(base, offset, value) (*(u8*) ((u8*) (base) + (offset)) = (value))
-#define STORE_U32(base, offset, value) (*(u32*) ((u8*) (base) + (offset)) = (value))
-#define STORE_F32(base, offset, value) (*(f32*) ((u8*) (base) + (offset)) = (value))
-
-#define COPY_U32(dst, dst_off, src, src_off) STORE_U32(dst, dst_off, LOAD_U32(src, src_off))
-#define COPY_F32(dst, dst_off, src, src_off) STORE_F32(dst, dst_off, LOAD_F32(src, src_off))
-
-#define FILL_CLOBJECT_ARGS(args, template, first_byte, flag_byte)                     \
-    do {                                                                             \
-        COPY_U32(args, 0x00, template, 0x04);                                        \
-        STORE_U8(args, 0x04, first_byte);                                            \
-        STORE_U32(args, 0x08, LOAD_U8(template, 0x8E));                              \
-        STORE_U8(args, 0x0C, LOAD_U8(template, 0x8F));                               \
-        COPY_U32(args, 0x10, template, 0x08);                                        \
-        COPY_U32(args, 0x14, template, 0x0C);                                        \
-        COPY_U32(args, 0x18, template, 0x10);                                        \
-        COPY_U32(args, 0x1C, template, 0x14);                                        \
-        COPY_U32(args, 0x20, template, 0x18);                                        \
-        COPY_U32(args, 0x24, template, 0x1C);                                        \
-        COPY_U32(args, 0x28, template, 0x20);                                        \
-        COPY_U32(args, 0x2C, template, 0x24);                                        \
-        COPY_U32(args, 0x30, template, 0x28);                                        \
-        COPY_F32(args, 0x34, template, 0x2C);                                        \
-        COPY_U32(args, 0x38, template, 0x44);                                        \
-        COPY_U32(args, 0x3C, template, 0x48);                                        \
-        COPY_U32(args, 0x40, template, 0x4C);                                        \
-        COPY_U32(args, 0x44, template, 0x50);                                        \
-        COPY_U32(args, 0x48, template, 0x54);                                        \
-        COPY_U32(args, 0x4C, template, 0x58);                                        \
-        COPY_U32(args, 0x50, template, 0x5C);                                        \
-        COPY_U32(args, 0x54, template, 0x60);                                        \
-        COPY_U32(args, 0x58, template, 0x64);                                        \
-        STORE_U8(args, 0x5C, flag_byte);                                             \
-    } while (0)
-
-#define FILL_RUNTIME_ARGS(args, template, flag_byte)                                 \
-    do {                                                                             \
-        STORE_U32(args, 0x00, LOAD_U8(template, 0x8E));                              \
-        STORE_U8(args, 0x04, LOAD_U8(template, 0x8F));                               \
-        COPY_U32(args, 0x08, template, 0x08);                                        \
-        COPY_U32(args, 0x0C, template, 0x0C);                                        \
-        COPY_U32(args, 0x10, template, 0x10);                                        \
-        COPY_U32(args, 0x14, template, 0x14);                                        \
-        COPY_U32(args, 0x18, template, 0x18);                                        \
-        COPY_U32(args, 0x1C, template, 0x1C);                                        \
-        COPY_U32(args, 0x20, template, 0x20);                                        \
-        COPY_U32(args, 0x24, template, 0x24);                                        \
-        COPY_U32(args, 0x28, template, 0x28);                                        \
-        COPY_F32(args, 0x2C, template, 0x30);                                        \
-        STORE_U8(args, 0x81, flag_byte);                                             \
-        COPY_F32(args, 0x30, template, 0x34);                                        \
-        COPY_F32(args, 0x34, template, 0x38);                                        \
-        COPY_U32(args, 0x38, template, 0x44);                                        \
-        COPY_U32(args, 0x3C, template, 0x48);                                        \
-        COPY_U32(args, 0x40, template, 0x4C);                                        \
-        COPY_U32(args, 0x44, template, 0x50);                                        \
-        COPY_U32(args, 0x48, template, 0x54);                                        \
-        COPY_U32(args, 0x4C, template, 0x58);                                        \
-        COPY_U32(args, 0x50, template, 0x5C);                                        \
-        COPY_U32(args, 0x54, template, 0x60);                                        \
-        COPY_U32(args, 0x58, template, 0x64);                                        \
-        COPY_U32(args, 0x5C, template, 0x68);                                        \
-        COPY_U32(args, 0x60, template, 0x6C);                                        \
-        COPY_U32(args, 0x64, template, 0x70);                                        \
-        COPY_U32(args, 0x68, template, 0x74);                                        \
-        COPY_U32(args, 0x6C, template, 0x78);                                        \
-        COPY_U32(args, 0x70, template, 0x7C);                                        \
-        COPY_U32(args, 0x74, template, 0x80);                                        \
-        COPY_U32(args, 0x78, template, 0x84);                                        \
-        COPY_U32(args, 0x7C, template, 0x88);                                        \
-        STORE_U8(args, 0x80, 0);                                                     \
-    } while (0)
-
 void kar_plclearchecker_create_first_player_objects(void)
 {
     PlClearCheckerTemplate* template = PLCC_TEMPLATE(0);
-    u8 cl_args[0x60];
-    u8 runtime_args[0x84];
+    PlClearCheckerClObjectArgs cl_args;
+    PlClearCheckerRuntimeArgs runtime_args;
     u8 cl_flags = 0;
     u8 runtime_flags = 0;
 
@@ -146,8 +102,25 @@ void kar_plclearchecker_create_first_player_objects(void)
     }
     cl_flags |= ((template->flags_909 >> 5) & 1) << 6;
 
-    FILL_CLOBJECT_ARGS(cl_args, template, 0, cl_flags);
-    template->cl_object = kar_clobject__near_8018e21c(cl_args);
+    cl_args.unk_00 = template->unk_004;
+    cl_args.first_byte = 0;
+    cl_args.player_kind = template->byte_08E;
+    cl_args.variant = template->byte_08F;
+    cl_args.vec_10 = template->vec_008;
+    cl_args.vec_1C = template->vec_014;
+    cl_args.vec_28 = template->vec_020;
+    cl_args.float_34 = template->float_02C;
+    cl_args.payload_38[0] = template->payload_044[0];
+    cl_args.payload_38[1] = template->payload_044[1];
+    cl_args.payload_38[2] = template->payload_044[2];
+    cl_args.payload_38[3] = template->payload_044[3];
+    cl_args.payload_38[4] = template->payload_044[4];
+    cl_args.payload_38[5] = template->payload_044[5];
+    cl_args.payload_38[6] = template->payload_044[6];
+    cl_args.payload_38[7] = template->payload_044[7];
+    cl_args.payload_38[8] = template->payload_044[8];
+    cl_args.flags = cl_flags;
+    template->cl_object = kar_clobject__near_8018e21c(&cl_args);
 
     if (template->unk_000 == (void*) 2) {
         runtime_flags |= 0x40;
@@ -159,15 +132,42 @@ void kar_plclearchecker_create_first_player_objects(void)
         }
     }
 
-    FILL_RUNTIME_ARGS(runtime_args, template, runtime_flags);
-    template->object_040 = fn_801C552C(runtime_args);
+    runtime_args.player_kind = template->byte_08E;
+    runtime_args.variant = template->byte_08F;
+    runtime_args.vec_08 = template->vec_008;
+    runtime_args.vec_14 = template->vec_014;
+    runtime_args.vec_20 = template->vec_020;
+    runtime_args.float_2C = template->float_030;
+    runtime_args.flags = runtime_flags;
+    runtime_args.float_30 = template->float_034;
+    runtime_args.float_34 = template->float_038;
+    runtime_args.payload_38[0] = template->payload_044[0];
+    runtime_args.payload_38[1] = template->payload_044[1];
+    runtime_args.payload_38[2] = template->payload_044[2];
+    runtime_args.payload_38[3] = template->payload_044[3];
+    runtime_args.payload_38[4] = template->payload_044[4];
+    runtime_args.payload_38[5] = template->payload_044[5];
+    runtime_args.payload_38[6] = template->payload_044[6];
+    runtime_args.payload_38[7] = template->payload_044[7];
+    runtime_args.payload_38[8] = template->payload_044[8];
+    runtime_args.payload_38[9] = template->payload_044[9];
+    runtime_args.payload_38[10] = template->payload_044[10];
+    runtime_args.payload_38[11] = template->payload_044[11];
+    runtime_args.payload_38[12] = template->payload_044[12];
+    runtime_args.payload_38[13] = template->payload_044[13];
+    runtime_args.payload_38[14] = template->payload_044[14];
+    runtime_args.payload_38[15] = template->payload_044[15];
+    runtime_args.payload_38[16] = template->payload_044[16];
+    runtime_args.payload_38[17] = template->payload_044[17];
+    runtime_args.byte_80 = 0;
+    template->object_040 = fn_801C552C(&runtime_args);
     fn_80192468(template->cl_object, 0, 2, template->object_040);
 }
 
 void kar_plclearchecker_create_current_player_object(s32 slot)
 {
     PlClearCheckerTemplate* template = PLCC_TEMPLATE(slot);
-    u8 runtime_args[0x84];
+    PlClearCheckerRuntimeArgs runtime_args;
     u8 runtime_flags = 0;
 
     if (template->unk_000 == (void*) 2) {
@@ -180,8 +180,35 @@ void kar_plclearchecker_create_current_player_object(s32 slot)
         }
     }
 
-    FILL_RUNTIME_ARGS(runtime_args, template, runtime_flags);
-    template->object_040 = fn_801C552C(runtime_args);
+    runtime_args.player_kind = template->byte_08E;
+    runtime_args.variant = template->byte_08F;
+    runtime_args.vec_08 = template->vec_008;
+    runtime_args.vec_14 = template->vec_014;
+    runtime_args.vec_20 = template->vec_020;
+    runtime_args.float_2C = template->float_030;
+    runtime_args.flags = runtime_flags;
+    runtime_args.float_30 = template->float_034;
+    runtime_args.float_34 = template->float_038;
+    runtime_args.payload_38[0] = template->payload_044[0];
+    runtime_args.payload_38[1] = template->payload_044[1];
+    runtime_args.payload_38[2] = template->payload_044[2];
+    runtime_args.payload_38[3] = template->payload_044[3];
+    runtime_args.payload_38[4] = template->payload_044[4];
+    runtime_args.payload_38[5] = template->payload_044[5];
+    runtime_args.payload_38[6] = template->payload_044[6];
+    runtime_args.payload_38[7] = template->payload_044[7];
+    runtime_args.payload_38[8] = template->payload_044[8];
+    runtime_args.payload_38[9] = template->payload_044[9];
+    runtime_args.payload_38[10] = template->payload_044[10];
+    runtime_args.payload_38[11] = template->payload_044[11];
+    runtime_args.payload_38[12] = template->payload_044[12];
+    runtime_args.payload_38[13] = template->payload_044[13];
+    runtime_args.payload_38[14] = template->payload_044[14];
+    runtime_args.payload_38[15] = template->payload_044[15];
+    runtime_args.payload_38[16] = template->payload_044[16];
+    runtime_args.payload_38[17] = template->payload_044[17];
+    runtime_args.byte_80 = 0;
+    template->object_040 = fn_801C552C(&runtime_args);
     fn_801C863C(template->object_040, slot, 3);
 }
 

@@ -74,8 +74,6 @@ void kar_grdesert1_create_recovery_zone_stage_yaku_objects(Ground* ground);
 void kar_grdesert1_trigger_risingcube_by_stage_index(s32 unused,
                                                      s32 stage_index);
 
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-
 GroundCallback kar_grdesert1_main_callback_table[] = {
     (GroundCallback) kar_grdesert1_init_loop_anim_and_switch_group,
     (GroundCallback) kar_grdesert1_create_main_stage_yaku_objects,
@@ -209,10 +207,10 @@ void kar_grdesert1_create_recovery_zone_stage_yaku_objects(Ground* ground)
 
 void kar_grdesert1_trigger_risingcube_by_stage_index(s32 unused, s32 stage_index)
 {
-    u8* stage_object = (u8*) kar_gryaku_current_ground;
+    Ground* ground = kar_gryaku_current_ground;
 
-    stage_object += stage_index * 0x48;
-    kar_gryakurisingcube_trigger_cube_state_toggle(GET_PTR(stage_object, 0x218));
+    kar_gryakurisingcube_trigger_cube_state_toggle(
+        ground->stage_yaku_objects[stage_index].object);
 }
 
 __declspec(section ".sdata") GrSwitchCallback lbl_805D6360[] = {

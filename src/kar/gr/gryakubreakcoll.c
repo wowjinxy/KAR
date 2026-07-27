@@ -15,6 +15,8 @@ typedef struct YakuParamLink YakuParamLink;
 typedef struct BreakCollParam BreakCollParam;
 typedef struct BreakCollTarget BreakCollTarget;
 typedef struct BreakCollFgmParam BreakCollFgmParam;
+typedef struct BreakCollFgmState BreakCollFgmState;
+typedef struct BreakCollCleanupAllocations BreakCollCleanupAllocations;
 typedef struct BreakCollSharedData BreakCollSharedData;
 typedef void (*GroundCallback)(void);
 
@@ -80,6 +82,26 @@ struct BreakCollFgmParam {
     f32 scale;
 };
 
+struct BreakCollFgmState {
+    void* entry_data;
+    union {
+        s32 count;
+        struct {
+            u8 flags;
+            u8 pad[3];
+        } bytes;
+    } state;
+    void* slot_arg;
+    u8 pad_0C[0x04];
+    Vec slot_pos;
+};
+
+struct BreakCollCleanupAllocations {
+    void* buffers[4];
+    u8 pad_10[0x20];
+    s32* fgm_handles;
+};
+
 struct BreakCollSharedData {
     GroundCallback callbacks[8];
     char src[0x14];
@@ -94,13 +116,6 @@ struct BreakCollSharedData {
 #define BREAKCOLL_EFFECT_ENTRY_SIZE 0x1C
 #define BREAKCOLL_TARGET_HIT_STRIDE 0x40
 #define BREAKCOLL_TARGET_HIT_COLLISION_OFFSET 0x38
-
-#define YAKU_FGM_ENTRY_COUNT(yaku) (*(s32*) ((u8*) (yaku) + 0x11C))
-#define YAKU_FGM_ENTRY_DATA(yaku) (*(void**) ((u8*) (yaku) + 0x118))
-#define YAKU_FGM_ENTRY_FLAGS(yaku) (*(u8*) ((u8*) (yaku) + 0x11C))
-#define YAKU_FGM_SLOT_ARG(yaku) (*(void**) ((u8*) (yaku) + 0x120))
-#define YAKU_FGM_SLOT_POS(yaku) ((Vec*) ((u8*) (yaku) + 0x128))
-#define YAKU_RAW_PTR(yaku, offset) (*(void**) ((u8*) (yaku) + (offset)))
 
 extern StageGround* kar_gryaku_current_ground;
 
@@ -179,6 +194,7 @@ void kar_gryakubreakcoll_break_target_by_index(HSD_GObj* gobj, s32 index,
     YakuParamLink* link = yaku->param_link;
     BreakCollParam* param = link->param;
     BreakCollTarget* target = &param->targets[index];
+    BreakCollFgmState* fgm = (BreakCollFgmState*) yaku->fgm_entry;
     s32 i;
 
     if (kar_grcoll__near_800d7b0c(yaku->collisions[index], 1) == 0) {
@@ -205,7 +221,7 @@ void kar_gryakubreakcoll_break_target_by_index(HSD_GObj* gobj, s32 index,
                 target->effect_resource, 0, 0, dir, 0);
     }
 
-    if (YAKU_FGM_ENTRY_COUNT(yaku) > 0) {
+    if (fgm->state.count > 0) {
         if (yaku->fgm_handles[index] == -1) {
             Vec pos;
             s32 handle = kar_graudio_alloc_map_fgm_track_group(1);
@@ -218,10 +234,8 @@ void kar_gryakubreakcoll_break_target_by_index(HSD_GObj* gobj, s32 index,
         }
 
         kar_graudio_start_fgm_slot_core(
-            YAKU_FGM_ENTRY_DATA(yaku), YAKU_FGM_SLOT_ARG(yaku),
-            yaku->fgm_handles[index],
-            (YAKU_FGM_ENTRY_FLAGS(yaku) & 0x80) ? -1 : 0,
-            YAKU_FGM_SLOT_POS(yaku));
+            fgm->entry_data, fgm->slot_arg, yaku->fgm_handles[index],
+            (fgm->state.bytes.flags & 0x80) ? -1 : 0, &fgm->slot_pos);
     }
 
     if (player != 5) {
@@ -237,6 +251,7 @@ void kar_gryakubreakcoll_update_effects_audio_then_destroy(HSD_GObj* gobj)
 {
     Yaku* yaku = gobj->user_data;
     BreakCollParam* param = yaku->param_link->param;
+    BreakCollFgmState* fgm = (BreakCollFgmState*) yaku->fgm_entry;
     s32 i;
 
     if (yaku->active_target_count <= 0) {
@@ -254,8 +269,8 @@ void kar_gryakubreakcoll_update_effects_audio_then_destroy(HSD_GObj* gobj)
         }
 
         if (i == param->remove_effect_count) {
-            if (YAKU_FGM_ENTRY_DATA(yaku) != NULL &&
-                (YAKU_FGM_ENTRY_FLAGS(yaku) & 0x80) != 0) {
+            if (fgm->entry_data != NULL &&
+                (fgm->state.bytes.flags & 0x80) != 0) {
                 kar_graudio_stop_active_fgm_slot(yaku->fgm_entry);
             }
 
@@ -372,15 +387,17 @@ void kar_gryakubreakcoll_cleanup_multi_target_allocs_and_fgm_handles(
 {
     Yaku* yaku = gobj->user_data;
     BreakCollParam* param = yaku->param_link->param;
+    BreakCollCleanupAllocations* cleanup =
+        (BreakCollCleanupAllocations*) &yaku->collisions;
     s32* handles;
     s32 i;
 
-    HSD_Free(YAKU_RAW_PTR(yaku, 0x130));
-    HSD_Free(YAKU_RAW_PTR(yaku, 0x134));
-    HSD_Free(YAKU_RAW_PTR(yaku, 0x138));
-    HSD_Free(YAKU_RAW_PTR(yaku, 0x13C));
+    HSD_Free(cleanup->buffers[0]);
+    HSD_Free(cleanup->buffers[1]);
+    HSD_Free(cleanup->buffers[2]);
+    HSD_Free(cleanup->buffers[3]);
 
-    handles = YAKU_RAW_PTR(yaku, 0x160);
+    handles = cleanup->fgm_handles;
     if (handles != NULL) {
         for (i = 0; i < param->target_count; i++) {
             s32 handle = handles[i];

@@ -63,7 +63,6 @@ void kar_efdata__near_8023641c(void* effect);
 void kar_efdata__near_80236778(void* effect);
 void kar_efdata__near_80236358(void* effect);
 
-#define LOAD_F32(sym) (*(const f32*) &(sym))
 
 void kar_wnparts__80221914(WnParts* parts)
 {
@@ -172,7 +171,7 @@ void kar_wnparts__near_80221ae0(WnParts* parts, f32 amount)
     f32 result;
 
     timer = parts->timer;
-    max = LOAD_F32(lbl_805E2858[0]);
+    max = lbl_805E2858[0];
     result = timer + amount;
     parts->timer = result;
     result = parts->timer;

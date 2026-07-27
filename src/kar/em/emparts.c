@@ -205,7 +205,6 @@ char lbl_805D7120[] = "0";
 const f32 lbl_805E22C0 = 0.0f;
 const f32 lbl_805E22C4 = 0.05f;
 
-#define LOAD_F32(sym) (*(const f32*) &(sym))
 
 #define EMPARTS_APPLY_TABLE(anim, table, outer_count, action)                 \
     do {                                                                      \
@@ -528,15 +527,15 @@ void kar_emparts__near_8020335c(EmAnim* anim)
     mtx[0][0] = axis.x;
     mtx[0][1] = anim->scale.x;
     mtx[0][2] = anim->dir.x;
-    mtx[0][3] = LOAD_F32(lbl_805E22C0);
+    mtx[0][3] = lbl_805E22C0;
     mtx[1][0] = axis.y;
     mtx[1][1] = anim->scale.y;
     mtx[1][2] = anim->dir.y;
-    mtx[1][3] = LOAD_F32(lbl_805E22C0);
+    mtx[1][3] = lbl_805E22C0;
     mtx[2][0] = axis.z;
     mtx[2][1] = anim->scale.z;
     mtx[2][2] = anim->dir.z;
-    mtx[2][3] = LOAD_F32(lbl_805E22C0);
+    mtx[2][3] = lbl_805E22C0;
 
     PSMTXMultVec(mtx, &anim->field_550, &out);
     anim->pos.x += out.x;
@@ -550,9 +549,9 @@ void kar_emparts__near_80203458(EmAnim* anim)
     f32 speed;
 
     if (fn_801FD0E0(&anim->velocity) == FALSE) {
-        if (LOAD_F32(lbl_805E22C0) != anim->field_B28) {
-            anim->field_B28 -= LOAD_F32(lbl_805E22C4);
-            if (anim->field_B28 > LOAD_F32(lbl_805E22C0)) {
+        if (lbl_805E22C0 != anim->field_B28) {
+            anim->field_B28 -= lbl_805E22C4;
+            if (anim->field_B28 > lbl_805E22C0) {
                 kar_lbvector_lerp(&anim->field_B38, &anim->field_B2C, &dir,
                                   anim->field_B28);
                 if (fn_801FD0E0(&dir) != FALSE) {
@@ -561,7 +560,7 @@ void kar_emparts__near_80203458(EmAnim* anim)
                 kar_lbvector_normalize_with_axis_fallback(&dir, &dir);
                 fn_801FD714(anim, &dir, &anim->scale);
             } else {
-                anim->field_B28 = LOAD_F32(lbl_805E22C0);
+                anim->field_B28 = lbl_805E22C0;
                 fn_801FD714(anim, &anim->field_B38, &anim->scale);
             }
         }

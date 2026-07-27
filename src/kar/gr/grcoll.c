@@ -3,31 +3,32 @@
 #include <dolphin/mtx/vec.h>
 #include <dolphin/types.h>
 #include <kar/gr/grcoll.h>
+#include <sysdolphin/dobj.h>
 #include <sysdolphin/jobj.h>
 #include <sysdolphin/memory.h>
 #include <sysdolphin/mtx.h>
-
-#define GRCOLL_FACE_STRIDE 0x40
-#define GRCOLL_JOINT_STRIDE 0x98
-#define GRCOLL_ZONE_STRIDE 0x140
-#define GRCOLL_ROUGH_STRIDE 0x1C
-#define GRCOLL_SRC_FACE_STRIDE 0x14
-#define GRCOLL_SRC_ZONE_FACE_STRIDE 0x18
-#define GRCOLL_SRC_JOINT_STRIDE 0x1C
-#define GRCOLL_SRC_ZONE_STRIDE 0x4C
-
-#define GET_PTR(base, offset) (*(void**) ((u8*) (base) + (offset)))
-#define GET_U32(base, offset) (*(u32*) ((u8*) (base) + (offset)))
-#define GET_S32(base, offset) (*(s32*) ((u8*) (base) + (offset)))
-#define GET_U8(base, offset) (*(u8*) ((u8*) (base) + (offset)))
-#define SET_PTR(base, offset, value) (*(void**) ((u8*) (base) + (offset)) = (value))
-#define SET_S32(base, offset, value) (*(s32*) ((u8*) (base) + (offset)) = (value))
+#include <sysdolphin/pobj.h>
 
 typedef struct GrCollFace GrCollFace;
 typedef struct GrCollFaceFlagBits GrCollFaceFlagBits;
+typedef struct GrCollDisplayData GrCollDisplayData;
+typedef struct GrCollDisplayRecords GrCollDisplayRecords;
+typedef struct GrCollDisplayRoot GrCollDisplayRoot;
 typedef struct GrCollJoint GrCollJoint;
+typedef struct GrCollJointTable GrCollJointTable;
+typedef struct GrCollJointTableEntry GrCollJointTableEntry;
+typedef struct GrCollPartEntry GrCollPartEntry;
 typedef struct GrCollRoot GrCollRoot;
+typedef struct GrCollRough GrCollRough;
+typedef struct GrCollSourceDescription GrCollSourceDescription;
+typedef struct GrCollSourceFace GrCollSourceFace;
+typedef struct GrCollSourceJoint GrCollSourceJoint;
+typedef struct GrCollSourceZoneFace GrCollSourceZoneFace;
+typedef struct GrCollSourceZoneJoint GrCollSourceZoneJoint;
+typedef struct GrCollZone GrCollZone;
 typedef struct GrCollWalkParts GrCollWalkParts;
+typedef struct Ground Ground;
+typedef struct GroundData GroundData;
 
 struct GrCollFaceFlagBits {
     u8 bit7 : 1;
@@ -68,6 +69,19 @@ struct GrCollJoint {
     u8 pad_95[3];
 };
 
+struct GrCollZone {
+    HSD_JObj* jobj;
+    u8 pad_004[0x20];
+    u32 kind;
+    u8 pad_028[0xB8];
+    Mtx transform;
+    u8 pad_110[0x30];
+};
+
+struct GrCollRough {
+    u8 data[0x1C];
+};
+
 struct GrCollRoot {
     Vec* verts;
     s32 vert_count;
@@ -75,24 +89,115 @@ struct GrCollRoot {
     s32 face_count;
     GrCollJoint* joints;
     s32 joint_count;
-    void* zvtx;
+    Vec* zvtx;
     s32 zvtx_count;
-    void* zones;
+    GrCollZone* zones;
     s32 zone_count;
-    void* rough;
+    GrCollRough* rough;
     s32 rough_count;
     GrCollJoint** move_joints;
     s32 move_joint_count;
-    void** move_zones;
+    GrCollZone** move_zones;
     s32 move_zone_count;
-    void** move_rough;
+    GrCollRough** move_rough;
     s32 move_rough_count;
 };
 
+struct GrCollPartEntry {
+    HSD_JObj* jobj;
+    HSD_Joint* collision_joint;
+};
+
 struct GrCollWalkParts {
-    void* parts;
-    void* links;
-    void* extra;
+    GrCollPartEntry* parts;
+    HSD_DObj** links;
+    HSD_PObj** extra;
+};
+
+struct GrCollSourceFace {
+    s32 vertex_indices[3];
+    u32 info0;
+    u32 info1;
+};
+
+struct GrCollSourceJoint {
+    s32 jobj_index;
+    s32 vertex_start;
+    s32 vertex_count;
+    s32 face_start;
+    s32 face_count;
+    u32 unk_14;
+    u32 unk_18;
+};
+
+struct GrCollSourceZoneFace {
+    u8 pad_00[0x14];
+    u32 info1;
+};
+
+struct GrCollSourceZoneJoint {
+    u8 pad_00[0x0C];
+    s32 face_start;
+    u8 pad_10[0x3C];
+};
+
+struct GrCollSourceDescription {
+    Vec* verts;
+    s32 vert_count;
+    GrCollSourceFace* faces;
+    s32 face_count;
+    GrCollSourceJoint* joints;
+    s32 joint_count;
+    Vec* zone_verts;
+    s32 zone_vert_count;
+    GrCollSourceZoneFace* zone_faces;
+    s32 zone_face_count;
+    GrCollSourceZoneJoint* zone_joints;
+    s32 zone_count;
+};
+
+struct GrCollJointTableEntry {
+    HSD_JObj* jobj;
+    void* unk_04;
+};
+
+struct GrCollJointTable {
+    GrCollJointTableEntry* entries;
+};
+
+struct GroundData {
+    u8 pad_00[0x18];
+    GrCollSourceDescription* collision;
+};
+
+struct Ground {
+    u8 pad_000[0x08];
+    GroundData* data;
+    GrCollRoot totals;
+    GrCollRoot allocations;
+    GrCollRoot collision;
+    u8 pad_0E4[0x20];
+    GrCollJointTable joint_table;
+};
+
+struct GrCollDisplayRecords {
+    u8 pad_00[0x0C];
+    void* entries;
+};
+
+struct GrCollDisplayData {
+    u8 pad_000[0x08];
+    GrCollDisplayRecords* bounds;
+    u8 pad_00C[0xE8];
+    HSD_JObj* overlay_jobj;
+    u8 pad_0F8[0x624];
+    u8 flags;
+};
+
+struct GrCollDisplayRoot {
+    u8 pad_00[0x28];
+    HSD_JObj* jobj;
+    GrCollDisplayData* data;
 };
 
 char lbl_804A3B98[] = "seg move flag!! joint %d face %d\n";
@@ -167,117 +272,112 @@ static void grcoll_assert_jobj(HSD_JObj* jobj)
     }
 }
 
-void kar_grcoll__800d6290(void* total, void* coll_desc)
+void kar_grcoll__800d6290(void* total_arg, void* coll_desc_arg)
 {
     s32 i;
     s32 j;
-    s32 offset;
     u32 move_flag;
-    void* joint;
-    void* face;
-    void* zone;
+    GrCollSourceFace* face;
+    GrCollSourceJoint* joint;
+    GrCollSourceZoneFace* zone;
+    GrCollRoot* total = total_arg;
+    GrCollSourceDescription* coll_desc = coll_desc_arg;
 
-    GET_S32(total, 0x04) += GET_S32(coll_desc, 0x04);
-    GET_S32(total, 0x0C) += GET_S32(coll_desc, 0x0C);
-    GET_S32(total, 0x14) += GET_S32(coll_desc, 0x14);
-    GET_S32(total, 0x1C) += GET_S32(coll_desc, 0x1C);
-    GET_S32(total, 0x24) += GET_S32(coll_desc, 0x2C);
+    total->vert_count += coll_desc->vert_count;
+    total->face_count += coll_desc->face_count;
+    total->joint_count += coll_desc->joint_count;
+    total->zvtx_count += coll_desc->zone_vert_count;
+    total->zone_count += coll_desc->zone_count;
 
-    offset = 0;
-    for (i = 0; i < GET_S32(coll_desc, 0x14); i++) {
-        joint = (u8*) GET_PTR(coll_desc, 0x10) + offset;
-        face = (u8*) GET_PTR(coll_desc, 0x08) +
-               GET_S32(joint, 0x0C) * GRCOLL_SRC_FACE_STRIDE;
-        move_flag = (GET_U32(face, 0x10) >> 5) & 1;
-        for (j = 0; j < GET_S32(joint, 0x10); j++) {
-            if (move_flag != ((GET_U32(face, 0x10) >> 5) & 1)) {
+    for (i = 0; i < coll_desc->joint_count; i++) {
+        joint = &coll_desc->joints[i];
+        face = &coll_desc->faces[joint->face_start];
+        move_flag = (face->info1 >> 5) & 1;
+        for (j = 0; j < joint->face_count; j++) {
+            if (move_flag != ((face->info1 >> 5) & 1)) {
                 OSReport(lbl_804A3B98, i, j);
                 __assert(kar_src_grcoll_804a3bbc, 0x50, lbl_805D60B0);
             }
-            face = (u8*) face + GRCOLL_SRC_FACE_STRIDE;
+            face++;
         }
         if (move_flag != 0) {
-            GET_S32(total, 0x34)++;
+            total->move_joint_count++;
         }
-        offset += GRCOLL_SRC_JOINT_STRIDE;
     }
 
-    offset = 0;
-    for (i = 0; i < GET_S32(coll_desc, 0x2C); i++) {
-        zone = (u8*) GET_PTR(coll_desc, 0x20) +
-               GET_S32((u8*) GET_PTR(coll_desc, 0x28) + offset, 0x0C) *
-                   GRCOLL_SRC_ZONE_FACE_STRIDE;
-        move_flag = (GET_U32(zone, 0x14) >> 5) & 1;
+    for (i = 0; i < coll_desc->zone_count; i++) {
+        zone = &coll_desc
+                    ->zone_faces[coll_desc->zone_joints[i].face_start];
+        move_flag = (zone->info1 >> 5) & 1;
         for (j = 0; j < 12; j++) {
-            if (move_flag != ((GET_U32(zone, 0x14) >> 5) & 1)) {
+            if (move_flag != ((zone->info1 >> 5) & 1)) {
                 OSReport(kar_src_grcoll_804a3bbc + 0x0C, i, j);
                 __assert(kar_src_grcoll_804a3bbc, 0x68, lbl_805D60B0);
             }
-            zone = (u8*) zone + GRCOLL_SRC_ZONE_FACE_STRIDE;
+            zone++;
         }
         if (move_flag != 0) {
-            GET_S32(total, 0x3C)++;
+            total->move_zone_count++;
         }
-        offset += GRCOLL_SRC_ZONE_STRIDE;
     }
 
-    face = GET_PTR(coll_desc, 0x08);
-    for (i = 0; i < GET_S32(coll_desc, 0x0C); i++) {
-        if ((GET_U32(face, 0x10) & 3) != 0) {
-            GET_S32(total, 0x2C)++;
-            if ((GET_U32(face, 0x10) & 0x20) == 0x20) {
-                GET_S32(total, 0x44)++;
+    face = coll_desc->faces;
+    for (i = 0; i < coll_desc->face_count; i++) {
+        if ((face->info1 & 3) != 0) {
+            total->rough_count++;
+            if ((face->info1 & 0x20) == 0x20) {
+                total->move_rough_count++;
             }
         }
-        face = (u8*) face + GRCOLL_SRC_FACE_STRIDE;
+        face++;
     }
 }
 
 void kar_grcoll__800d64b8(GrCollRoot* alloc, GrCollRoot* total,
-                          GrCollRoot* root, void* coll_desc,
-                          void* joint_table, s32 index)
+                          GrCollRoot* root,
+                          GrCollSourceDescription* coll_desc,
+                          GrCollJointTable* joint_table, s32 index)
 {
     s32 i;
     s32 src_vertex;
     s32 src_face;
-    void* src_joint;
-    void* src_vtx;
-    void* src_tri;
+    GrCollSourceJoint* src_joint;
+    Vec* src_vtx;
+    GrCollSourceFace* src_tri;
     GrCollJoint* joint;
     GrCollFace* face;
 
-    src_joint = (u8*) GET_PTR(coll_desc, 0x10) + index * GRCOLL_SRC_JOINT_STRIDE;
-    src_vertex = GET_S32(src_joint, 0x04);
-    src_face = GET_S32(src_joint, 0x0C);
-    joint = (GrCollJoint*) ((u8*) root->joints + index * GRCOLL_JOINT_STRIDE);
+    src_joint = &coll_desc->joints[index];
+    src_vertex = src_joint->vertex_start;
+    src_face = src_joint->face_start;
+    joint = &root->joints[index];
 
-    joint->jobj = *(HSD_JObj**) ((u8*) GET_PTR(joint_table, 0x00) +
-                                 GET_S32(src_joint, 0x00) * 8);
+    joint->jobj = joint_table->entries[src_joint->jobj_index].jobj;
     joint->verts = root->verts + src_vertex;
-    joint->vert_count = GET_S32(src_joint, 0x08);
+    joint->vert_count = src_joint->vertex_count;
     joint->faces = root->faces + src_face;
-    joint->face_count = GET_S32(src_joint, 0x10);
-    SET_S32(joint, 0x8C, GET_S32(src_joint, 0x14));
-    SET_S32(joint, 0x90, GET_S32(src_joint, 0x18));
+    joint->face_count = src_joint->face_count;
+    joint->unk_8C = src_joint->unk_14;
+    joint->unk_90 = src_joint->unk_18;
 
-    src_vtx = (u8*) GET_PTR(coll_desc, 0x00) + src_vertex * sizeof(Vec);
+    src_vtx = &coll_desc->verts[src_vertex];
     for (i = 0; i < joint->vert_count; i++) {
-        joint->verts[i * 2].x = ((Vec*) src_vtx)[i].x;
-        joint->verts[i * 2].y = ((Vec*) src_vtx)[i].y;
-        joint->verts[i * 2].z = ((Vec*) src_vtx)[i].z;
+        joint->verts[i * 2].x = src_vtx[i].x;
+        joint->verts[i * 2].y = src_vtx[i].y;
+        joint->verts[i * 2].z = src_vtx[i].z;
     }
 
-    src_tri = (u8*) GET_PTR(coll_desc, 0x08) + src_face * GRCOLL_SRC_FACE_STRIDE;
+    src_tri = &coll_desc->faces[src_face];
     for (i = 0; i < joint->face_count; i++) {
         face = &joint->faces[i];
-        face->pos[0] = root->verts + GET_S32(src_tri, 0x00) * 2;
-        face->pos[1] = root->verts + GET_S32(src_tri, 0x04) * 2;
-        face->pos[2] = root->verts + GET_S32(src_tri, 0x08) * 2;
-        face->info0 = GET_U32(src_tri, 0x0C);
-        face->info1 = GET_U32(src_tri, 0x10);
+        face->pos[0] = root->verts + src_tri->vertex_indices[0] * 2;
+        face->pos[1] = root->verts + src_tri->vertex_indices[1] * 2;
+        face->pos[2] = root->verts + src_tri->vertex_indices[2] * 2;
+        face->info0 = src_tri->info0;
+        face->info1 = src_tri->info1;
         face->flags |= 0x60;
         face->joint = joint;
-        src_tri = (u8*) src_tri + GRCOLL_SRC_FACE_STRIDE;
+        src_tri++;
     }
 
     if ((joint->faces[0].info1 & 0x20) == 0x20) {
@@ -292,37 +392,38 @@ void kar_grcoll__800d64b8(GrCollRoot* alloc, GrCollRoot* total,
     }
 }
 
-void kar_grcoll__near_800d6724(void* root)
+void kar_grcoll__near_800d6724(GrCollRoot* root)
 {
-    SET_S32(root, 0x00, 0);
-    SET_S32(root, 0x08, 0);
-    SET_S32(root, 0x10, 0);
-    SET_S32(root, 0x18, 0);
-    SET_S32(root, 0x20, 0);
-    SET_S32(root, 0x28, 0);
-    SET_S32(root, 0x30, 0);
-    SET_S32(root, 0x38, 0);
-    SET_S32(root, 0x40, 0);
-    SET_S32(root, 0x04, 0);
-    SET_S32(root, 0x0C, 0);
-    SET_S32(root, 0x14, 0);
-    SET_S32(root, 0x1C, 0);
-    SET_S32(root, 0x24, 0);
-    SET_S32(root, 0x2C, 0);
-    SET_S32(root, 0x34, 0);
-    SET_S32(root, 0x3C, 0);
-    SET_S32(root, 0x44, 0);
+    root->verts = NULL;
+    root->faces = NULL;
+    root->joints = NULL;
+    root->zvtx = NULL;
+    root->zones = NULL;
+    root->rough = NULL;
+    root->move_joints = NULL;
+    root->move_zones = NULL;
+    root->move_rough = NULL;
+    root->vert_count = 0;
+    root->face_count = 0;
+    root->joint_count = 0;
+    root->zvtx_count = 0;
+    root->zone_count = 0;
+    root->rough_count = 0;
+    root->move_joint_count = 0;
+    root->move_zone_count = 0;
+    root->move_rough_count = 0;
 }
 
 void kar_grcoll__800d6774(GrCollRoot* alloc, GrCollRoot* total,
-                          GrCollRoot* root, void* coll_desc,
-                          void* joint_table)
+                          GrCollRoot* root,
+                          GrCollSourceDescription* coll_desc,
+                          GrCollJointTable* joint_table)
 {
     s32 i;
 
     root->verts = alloc->verts + alloc->vert_count * 2;
-    root->vert_count = GET_S32(coll_desc, 0x04);
-    alloc->vert_count += GET_S32(coll_desc, 0x04);
+    root->vert_count = coll_desc->vert_count;
+    alloc->vert_count += coll_desc->vert_count;
     if (total->vert_count < alloc->vert_count) {
         OSReport(kar_src_grcoll_804a3bbc + 0x28, alloc->vert_count);
         __assert(kar_src_grcoll_804a3bbc, 0x181,
@@ -330,8 +431,8 @@ void kar_grcoll__800d6774(GrCollRoot* alloc, GrCollRoot* total,
     }
 
     root->faces = alloc->faces + alloc->face_count;
-    root->face_count = GET_S32(coll_desc, 0x0C);
-    alloc->face_count += GET_S32(coll_desc, 0x0C);
+    root->face_count = coll_desc->face_count;
+    alloc->face_count += coll_desc->face_count;
     if (total->face_count < alloc->face_count) {
         OSReport(kar_src_grcoll_804a3bbc + 0x28, alloc->face_count);
         __assert(kar_src_grcoll_804a3bbc, 0x186,
@@ -339,33 +440,33 @@ void kar_grcoll__800d6774(GrCollRoot* alloc, GrCollRoot* total,
     }
 
     root->joints = alloc->joints + alloc->joint_count;
-    root->joint_count = GET_S32(coll_desc, 0x14);
-    alloc->joint_count += GET_S32(coll_desc, 0x14);
+    root->joint_count = coll_desc->joint_count;
+    alloc->joint_count += coll_desc->joint_count;
     if (total->joint_count < alloc->joint_count) {
         OSReport(kar_src_grcoll_804a3bbc + 0x28, alloc->joint_count);
         __assert(kar_src_grcoll_804a3bbc, 0x18B,
                  kar_src_grcoll_804a3bbc + 0xB0);
     }
 
-    root->zvtx = (u8*) alloc->zvtx + alloc->zvtx_count * sizeof(Vec);
-    root->zvtx_count = GET_S32(coll_desc, 0x1C);
-    alloc->zvtx_count += GET_S32(coll_desc, 0x1C);
+    root->zvtx = alloc->zvtx + alloc->zvtx_count;
+    root->zvtx_count = coll_desc->zone_vert_count;
+    alloc->zvtx_count += coll_desc->zone_vert_count;
     if (total->zvtx_count < alloc->zvtx_count) {
         OSReport(kar_src_grcoll_804a3bbc + 0x28, alloc->zvtx_count);
         __assert(kar_src_grcoll_804a3bbc, 0x190,
                  kar_src_grcoll_804a3bbc + 0xD4);
     }
 
-    root->zones = (u8*) alloc->zones + alloc->zone_count * GRCOLL_ZONE_STRIDE;
-    root->zone_count = GET_S32(coll_desc, 0x2C);
-    alloc->zone_count += GET_S32(coll_desc, 0x2C);
+    root->zones = alloc->zones + alloc->zone_count;
+    root->zone_count = coll_desc->zone_count;
+    alloc->zone_count += coll_desc->zone_count;
     if (total->zone_count < alloc->zone_count) {
         OSReport(kar_src_grcoll_804a3bbc + 0x28, alloc->zone_count);
         __assert(kar_src_grcoll_804a3bbc, 0x195,
                  kar_src_grcoll_804a3bbc + 0xF8);
     }
 
-    root->rough = (u8*) alloc->rough + alloc->rough_count * GRCOLL_ROUGH_STRIDE;
+    root->rough = alloc->rough + alloc->rough_count;
     root->rough_count = 0;
     root->move_joints = alloc->move_joints + alloc->move_joint_count;
     root->move_joint_count = 0;
@@ -374,10 +475,10 @@ void kar_grcoll__800d6774(GrCollRoot* alloc, GrCollRoot* total,
     root->move_rough = alloc->move_rough + alloc->move_rough_count;
     root->move_rough_count = 0;
 
-    for (i = 0; i < GET_S32(coll_desc, 0x14); i++) {
+    for (i = 0; i < coll_desc->joint_count; i++) {
         kar_grcoll__800d64b8(alloc, total, root, coll_desc, joint_table, i);
     }
-    for (i = 0; i < GET_S32(coll_desc, 0x2C); i++) {
+    for (i = 0; i < coll_desc->zone_count; i++) {
         kar_grzone_build_zone_from_zjoint(alloc, total, root, coll_desc,
                                           joint_table, i);
     }
@@ -388,11 +489,11 @@ void kar_grcoll__800d6774(GrCollRoot* alloc, GrCollRoot* total,
 
 // NONMATCHING: transform update flow is recovered, but the exact register and
 // AABB scheduling still needs a focused pass against the asm.
-void kar_grcoll__near_800d6a70(GrCollRoot* root, void* coll_desc)
+void kar_grcoll__near_800d6a70(GrCollRoot* root,
+                               GrCollSourceDescription* coll_desc)
 {
     s32 i;
     s32 j;
-    s32 offset;
     HSD_JObj* jobj;
     GrCollJoint* joint;
     GrCollFace* face;
@@ -403,15 +504,12 @@ void kar_grcoll__near_800d6a70(GrCollRoot* root, void* coll_desc)
     s32 normal_ok;
     Vec* src;
 
-    offset = 0;
     for (i = 0; i < root->joint_count; i++) {
         joint = &root->joints[i];
         jobj = joint->jobj;
         grcoll_assert_jobj(jobj);
         PSMTXCopy(jobj->mtx, joint->mtx);
-        src = (Vec*) ((u8*) GET_PTR(coll_desc, 0x00) +
-                      GET_S32((u8*) GET_PTR(coll_desc, 0x10) + offset, 0x04) *
-                          sizeof(Vec));
+        src = &coll_desc->verts[coll_desc->joints[i].vertex_start];
         for (j = 0; j < joint->vert_count; j++) {
             PSMTXMultVec(jobj->mtx, &src[j], &joint->verts[j * 2]);
         }
@@ -445,7 +543,6 @@ void kar_grcoll__near_800d6a70(GrCollRoot* root, void* coll_desc)
         }
         kar_mpresponse_build_aabb_center_extents(&joint->center, &root_min,
                                                  &root_max);
-        offset += GRCOLL_SRC_JOINT_STRIDE;
     }
 
     for (i = 0; i < root->zone_count; i++) {
@@ -457,8 +554,9 @@ void kar_grcoll__near_800d6a70(GrCollRoot* root, void* coll_desc)
 }
 
 void kar_grcoll__near_800d6d88(GrCollRoot* alloc, GrCollRoot* total,
-                               GrCollRoot* root, void* coll_desc,
-                               void* joint_table)
+                               GrCollRoot* root,
+                               GrCollSourceDescription* coll_desc,
+                               GrCollJointTable* joint_table)
 {
     kar_grcoll__800d6774(alloc, total, root, coll_desc, joint_table);
     kar_grcoll__near_800d6a70(root, coll_desc);
@@ -466,30 +564,32 @@ void kar_grcoll__near_800d6d88(GrCollRoot* alloc, GrCollRoot* total,
 
 // NONMATCHING: this is the allocator/setup skeleton. The yaku-data loops are
 // still raw-offset based until the surrounding ground data structs are named.
-void kar_grcoll__800d6dcc(void* ground)
+void kar_grcoll__800d6dcc(Ground* ground)
 {
-    void* total;
     GrCollRoot* alloc;
     GrCollRoot* root;
-    void* coll_desc;
-    void* joint_table;
+    GrCollRoot* total;
+    GrCollSourceDescription* coll_desc;
 
-    total = (u8*) ground + 0x0C;
-    alloc = (GrCollRoot*) ((u8*) ground + 0x54);
-    root = (GrCollRoot*) ((u8*) ground + 0x9C);
+    total = &ground->totals;
+    alloc = &ground->allocations;
+    root = &ground->collision;
     kar_grcoll__near_800d6724(total);
-    coll_desc = GET_PTR(GET_PTR(ground, 0x08), 0x18);
+    coll_desc = ground->data->collision;
     kar_grcoll__800d6290(total, coll_desc);
 
-    alloc->verts = HSD_Alloc(GET_S32(total, 0x04) * 0x18);
-    alloc->faces = HSD_Alloc(GET_S32(total, 0x0C) * GRCOLL_FACE_STRIDE);
-    alloc->joints = HSD_Alloc(GET_S32(total, 0x14) * GRCOLL_JOINT_STRIDE);
-    alloc->zvtx = HSD_Alloc(GET_S32(total, 0x1C) * sizeof(Vec));
-    alloc->zones = HSD_Alloc(GET_S32(total, 0x24) * GRCOLL_ZONE_STRIDE);
-    alloc->rough = HSD_Alloc(GET_S32(total, 0x2C) * GRCOLL_ROUGH_STRIDE);
-    alloc->move_joints = HSD_Alloc(GET_S32(total, 0x34) * sizeof(void*));
-    alloc->move_zones = HSD_Alloc(GET_S32(total, 0x3C) * sizeof(void*));
-    alloc->move_rough = HSD_Alloc(GET_S32(total, 0x44) * sizeof(void*));
+    alloc->verts = HSD_Alloc(total->vert_count * sizeof(Vec) * 2);
+    alloc->faces = HSD_Alloc(total->face_count * sizeof(GrCollFace));
+    alloc->joints = HSD_Alloc(total->joint_count * sizeof(GrCollJoint));
+    alloc->zvtx = HSD_Alloc(total->zvtx_count * sizeof(Vec));
+    alloc->zones = HSD_Alloc(total->zone_count * sizeof(GrCollZone));
+    alloc->rough = HSD_Alloc(total->rough_count * sizeof(GrCollRough));
+    alloc->move_joints =
+        HSD_Alloc(total->move_joint_count * sizeof(GrCollJoint*));
+    alloc->move_zones =
+        HSD_Alloc(total->move_zone_count * sizeof(GrCollZone*));
+    alloc->move_rough =
+        HSD_Alloc(total->move_rough_count * sizeof(GrCollRough*));
     alloc->vert_count = 0;
     alloc->face_count = 0;
     alloc->joint_count = 0;
@@ -500,50 +600,40 @@ void kar_grcoll__800d6dcc(void* ground)
     alloc->move_zone_count = 0;
     alloc->move_rough_count = 0;
 
-    joint_table = (u8*) ground + 0x104;
-    kar_grcoll__near_800d6d88(alloc, (GrCollRoot*) total, root, coll_desc,
-                              joint_table);
+    kar_grcoll__near_800d6d88(alloc, total, root, coll_desc,
+                              &ground->joint_table);
 }
 
-void kar_grcoll__near_800d7060(void* ground)
+void kar_grcoll__near_800d7060(Ground* ground)
 {
-    void* ptr;
+    GrCollRoot* alloc = &ground->allocations;
 
-    ptr = GET_PTR(ground, 0x54);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->verts != NULL) {
+        HSD_Free(alloc->verts);
     }
-    ptr = GET_PTR(ground, 0x5C);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->faces != NULL) {
+        HSD_Free(alloc->faces);
     }
-    ptr = GET_PTR(ground, 0x64);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->joints != NULL) {
+        HSD_Free(alloc->joints);
     }
-    ptr = GET_PTR(ground, 0x74);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->zvtx != NULL) {
+        HSD_Free(alloc->zvtx);
     }
-    ptr = GET_PTR(ground, 0x74);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->zones != NULL) {
+        HSD_Free(alloc->zones);
     }
-    ptr = GET_PTR(ground, 0x7C);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->rough != NULL) {
+        HSD_Free(alloc->rough);
     }
-    ptr = GET_PTR(ground, 0x84);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->move_joints != NULL) {
+        HSD_Free(alloc->move_joints);
     }
-    ptr = GET_PTR(ground, 0x94);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->move_zones != NULL) {
+        HSD_Free(alloc->move_zones);
     }
-    ptr = GET_PTR(ground, 0x94);
-    if (ptr != NULL) {
-        HSD_Free(ptr);
+    if (alloc->move_rough != NULL) {
+        HSD_Free(alloc->move_rough);
     }
 }
 
@@ -589,7 +679,8 @@ void kar_grcoll__near_800d7b8c(void* root, s32 pass)
 
 // NONMATCHING: moving-joint update is structurally correct, but division and
 // call scheduling do not yet match.
-void kar_grcoll__near_800d7268(GrCollRoot* root, void* coll_desc, s32 index)
+void kar_grcoll__near_800d7268(GrCollRoot* root,
+                               GrCollSourceDescription* coll_desc, s32 index)
 {
     HSD_JObj* jobj;
     GrCollJoint* joint;
@@ -604,40 +695,36 @@ void kar_grcoll__near_800d7268(GrCollRoot* root, void* coll_desc, s32 index)
     }
 }
 
-void kar_grcoll__near_800d7648(GrCollRoot* root, void* coll_desc)
+void kar_grcoll__near_800d7648(GrCollRoot* root,
+                               GrCollSourceDescription* coll_desc)
 {
     s32 i;
     s32 index;
 
     for (i = 0; i < root->move_joint_count; i++) {
-        index = (s32) ((u8*) root->move_joints[i] - (u8*) root->joints);
-        index = index / GRCOLL_JOINT_STRIDE;
+        index = root->move_joints[i] - root->joints;
         kar_grcoll__near_800d7268(root, coll_desc, index);
     }
     for (i = 0; i < root->move_zone_count; i++) {
-        index = (s32) ((u8*) root->move_zones[i] - (u8*) root->zones);
-        index = index / GRCOLL_ZONE_STRIDE;
+        index = root->move_zones[i] - root->zones;
         kar_grzone_update_zone_world_transform(root, coll_desc, index);
     }
     for (i = 0; i < root->move_rough_count; i++) {
-        index = (s32) ((u8*) root->move_rough[i] - (u8*) root->rough);
-        index = index / GRCOLL_ROUGH_STRIDE;
+        index = root->move_rough[i] - root->rough;
         kar_grrough__near_800dc8e0(root, coll_desc, index);
     }
 }
 
-void kar_grcoll__near_800d777c(void* ground)
+void kar_grcoll__near_800d777c(Ground* ground)
 {
-    kar_grcoll__near_800d7648((GrCollRoot*) ((u8*) ground + 0x9C),
-                              GET_PTR(GET_PTR(ground, 0x08), 0x18));
+    kar_grcoll__near_800d7648(&ground->collision, ground->data->collision);
 }
 
 void kar_grcoll__near_800d78b4(void* collision_root, s32 index, Vec* out)
 {
     Mtx* mtx;
 
-    mtx = (Mtx*) ((u8*) ((GrCollRoot*) collision_root)->zones +
-                  index * GRCOLL_ZONE_STRIDE + 0xE0);
+    mtx = &((GrCollRoot*) collision_root)->zones[index].transform;
     out->x = (*mtx)[0][2];
     out->y = (*mtx)[1][2];
     out->z = (*mtx)[2][2];
@@ -647,8 +734,7 @@ void kar_grcoll__near_800d78e0(void* collision_root, s32 index, Vec* out)
 {
     Mtx* mtx;
 
-    mtx = (Mtx*) ((u8*) ((GrCollRoot*) collision_root)->zones +
-                  index * GRCOLL_ZONE_STRIDE + 0xE0);
+    mtx = &((GrCollRoot*) collision_root)->zones[index].transform;
     out->x = (*mtx)[0][1];
     out->y = (*mtx)[1][1];
     out->z = (*mtx)[2][1];
@@ -656,33 +742,27 @@ void kar_grcoll__near_800d78e0(void* collision_root, s32 index, Vec* out)
 
 void kar_grcoll__near_800d790c(void* collision_root, s32 index, Vec* out)
 {
-    HSD_MtxGetTranslate((MtxPtr) ((u8*) ((GrCollRoot*) collision_root)->zones +
-                                  index * GRCOLL_ZONE_STRIDE + 0xE0),
-                        out);
+    HSD_MtxGetTranslate(
+        ((GrCollRoot*) collision_root)->zones[index].transform, out);
 }
 
 void* kar_grcoll__near_800d7940(void* collision_root, s32 index)
 {
-    return (u8*) ((GrCollRoot*) collision_root)->zones +
-           index * GRCOLL_ZONE_STRIDE + 0x110;
+    return ((GrCollRoot*) collision_root)->zones[index].pad_110;
 }
 
 void* kar_grcoll__800d7954(void* collision_root, void* jobj)
 {
     s32 i;
-    s32 offset;
-    s32 count;
-    void* joint;
+    GrCollJoint* joint;
+    GrCollRoot* root = collision_root;
 
-    offset = 0;
-    count = GET_S32(collision_root, 0x14);
-    if (0 < count) {
-        for (i = 0; i < count; i++) {
-            joint = (u8*) GET_PTR(collision_root, 0x10) + offset;
-            if (GET_PTR(joint, 0x00) == jobj) {
+    if (0 < root->joint_count) {
+        for (i = 0; i < root->joint_count; i++) {
+            joint = &root->joints[i];
+            if (joint->jobj == jobj) {
                 return joint;
             }
-            offset += GRCOLL_JOINT_STRIDE;
         }
     }
     __assert(kar_src_grcoll_804a3bbc, 0x332, lbl_805D60B0);
@@ -692,12 +772,12 @@ void* kar_grcoll__800d7954(void* collision_root, void* jobj)
 void* kar_grcoll__800d79c0(void* collision_root, void* jobj, s32* index_out)
 {
     s32 i;
-    void* zone;
+    GrCollZone* zone;
     GrCollRoot* root = collision_root;
 
     for (i = 0; i < root->zone_count; i++) {
-        zone = (u8*) root->zones + i * GRCOLL_ZONE_STRIDE;
-        if (GET_PTR(zone, 0x00) == jobj) {
+        zone = &root->zones[i];
+        if (zone->jobj == jobj) {
             if (index_out != NULL) {
                 *index_out = i;
             }
@@ -712,13 +792,13 @@ void* kar_grcoll__800d7a40(void* collision_root, void* jobj, s32 kind,
                            s32* index_out)
 {
     s32 i;
-    void* zone;
+    GrCollZone* zone;
     GrCollRoot* root = collision_root;
 
     for (i = 0; i < root->zone_count; i++) {
-        zone = (u8*) root->zones + i * GRCOLL_ZONE_STRIDE;
-        if ((GET_PTR(zone, 0x00) == jobj) &&
-            (kind == (s32) (GET_U32(zone, 0x24) & 0x1FFFFFF))) {
+        zone = &root->zones[i];
+        if ((zone->jobj == jobj) &&
+            (kind == (s32) (zone->kind & 0x1FFFFFF))) {
             if (index_out != NULL) {
                 *index_out = i;
             }
@@ -729,97 +809,70 @@ void* kar_grcoll__800d7a40(void* collision_root, void* jobj, s32 kind,
     return NULL;
 }
 
-void kar_grcoll__near_800d7ad0(void* collision, s32 enabled)
+void kar_grcoll__near_800d7ad0(void* collision_arg, s32 enabled)
 {
     s32 i;
-    s32 offset;
-    s32 flag_offset;
-    u8* faces;
+    GrCollJoint* collision = collision_arg;
 
-    offset = 0;
-    for (i = 0; i < GET_S32(collision, 0x10); i++) {
-        flag_offset = offset + 0x3C;
-        offset += GRCOLL_FACE_STRIDE;
-        faces = GET_PTR(collision, 0x0C);
-        ((GrCollFaceFlagBits*) &faces[flag_offset])->bit6 = enabled;
+    for (i = 0; i < collision->face_count; i++) {
+        ((GrCollFaceFlagBits*) &collision->faces[i].flags)->bit6 = enabled;
     }
 }
 
-BOOL kar_grcoll__near_800d7b0c(void* collision, s32 enabled)
+BOOL kar_grcoll__near_800d7b0c(void* collision_arg, s32 enabled)
 {
     s32 i;
-    s32 offset;
-    u8* faces;
+    GrCollJoint* collision = collision_arg;
 
-    offset = 0;
-    for (i = 0; i < GET_S32(collision, 0x10); i++) {
-        faces = GET_PTR(collision, 0x0C);
-        if (((faces[offset + 0x3C] >> 6) & 1) != enabled) {
+    for (i = 0; i < collision->face_count; i++) {
+        if (((collision->faces[i].flags >> 6) & 1) != enabled) {
             return FALSE;
         }
-        offset += GRCOLL_FACE_STRIDE;
     }
     return TRUE;
 }
 
-void kar_grcoll__near_800d7b50(void* collision, s32 enabled)
+void kar_grcoll__near_800d7b50(void* collision_arg, s32 enabled)
 {
     s32 i;
-    s32 offset;
-    s32 flag_offset;
-    u8* faces;
+    GrCollJoint* collision = collision_arg;
 
-    offset = 0;
-    for (i = 0; i < GET_S32(collision, 0x10); i++) {
-        flag_offset = offset + 0x3C;
-        offset += GRCOLL_FACE_STRIDE;
-        faces = GET_PTR(collision, 0x0C);
-        ((GrCollFaceFlagBits*) &faces[flag_offset])->bit5 = enabled;
+    for (i = 0; i < collision->face_count; i++) {
+        ((GrCollFaceFlagBits*) &collision->faces[i].flags)->bit5 = enabled;
     }
 }
 
-void kar_grcoll__near_800d7d70(void* collision_root, s32 enabled)
+void kar_grcoll__near_800d7d70(GrCollRoot* collision_root, s32 enabled)
 {
     s32 i;
     s32 j;
-    s32 joint_offset;
-    s32 face_offset;
-    s32 flag_offset;
-    void* joint;
-    u8* faces;
+    GrCollJoint* joint;
 
-    joint_offset = 0;
-    for (i = 0; i < GET_S32(collision_root, 0x14); i++) {
-        face_offset = 0;
-        joint = (u8*) GET_PTR(collision_root, 0x10) + joint_offset;
-        for (j = 0; j < GET_S32(joint, 0x10); j++) {
-            faces = GET_PTR(joint, 0x0C);
-            flag_offset = face_offset + 0x3C;
-            face_offset += GRCOLL_FACE_STRIDE;
-            ((GrCollFaceFlagBits*) &faces[flag_offset])->bit6 = enabled;
+    for (i = 0; i < collision_root->joint_count; i++) {
+        joint = &collision_root->joints[i];
+        for (j = 0; j < joint->face_count; j++) {
+            ((GrCollFaceFlagBits*) &joint->faces[j].flags)->bit6 = enabled;
         }
-        joint_offset += GRCOLL_JOINT_STRIDE;
     }
 }
 
 void kar_grcoll__near_800d7dd4(void* root, void* a, void* b, void* c,
                                u32 pass)
 {
-    void* data;
-    void* jobj;
+    GrCollDisplayRoot* display_root = root;
+    GrCollDisplayData* data;
     u32 flags;
 
-    data = GET_PTR(root, 0x2C);
-    if (GET_PTR(GET_PTR(data, 0x08), 0x0C) != NULL) {
+    data = display_root->data;
+    if (data->bounds->entries != NULL) {
         if (pass == 0) {
-            if (((u32) GET_U8(data, 0x71C) >> 7) != 0) {
+            if (((u32) data->flags >> 7) != 0) {
                 kar_grdispbbox_update_jobj_bounds_records(data);
             }
             kar_grdispbbox_update_visible_parts_for_camera(data, a, b, c);
         }
-        jobj = GET_PTR(root, 0x28);
         flags = GObj_GetFlagFromArray(pass);
-        HSD_JObjDispAll(jobj, NULL, flags, 0);
+        HSD_JObjDispAll(display_root->jobj, NULL, flags, 0);
     }
 }
 
@@ -832,18 +885,19 @@ void kar_grcoll__near_800d7e78(void* cobj, void* params)
 
 void kar_grcoll__near_800d8148(void* ground, u32 pass)
 {
-    void* data;
+    GrCollDisplayRoot* display_root = ground;
+    GrCollDisplayData* data;
     void* cobj;
     u8 params[16];
     u32 flags;
 
-    data = GET_PTR(ground, 0x2C);
-    if (GET_PTR(data, 0xF4) != NULL) {
+    data = display_root->data;
+    if (data->overlay_jobj != NULL) {
         if (kar_grcoll__near_800d1d48() == 0) {
             kar_grcoll__near_800d1dcc();
         }
         flags = GObj_GetFlagFromArray(pass);
-        HSD_JObjDispAll(GET_PTR(data, 0xF4), NULL, flags, 0);
+        HSD_JObjDispAll(data->overlay_jobj, NULL, flags, 0);
         if (pass == 0) {
             kar_granim__near_800dc7a4(data, params);
             cobj = HSD_CObjGetCurrent();
@@ -869,8 +923,8 @@ void kar_grcoll__near_800d86fc(HSD_JObj* jobj, void* cb_args, s32 type)
     s32* dobj_count;
     s32* mobj_count;
     void** args;
-    void* dobj;
-    void* mobj;
+    HSD_DObj* dobj;
+    HSD_PObj* pobj;
 
     (void) type;
     args = cb_args;
@@ -881,17 +935,17 @@ void kar_grcoll__near_800d86fc(HSD_JObj* jobj, void* cb_args, s32 type)
 
     if (jobj != NULL) {
         dobj = HSD_JObjGetDObj(jobj);
-        SET_PTR((u8*) parts->parts + *jobj_count * 8, 0x00, jobj);
+        parts->parts[*jobj_count].jobj = jobj;
         *jobj_count = *jobj_count + 1;
         while (dobj != NULL) {
-            SET_PTR((u8*) parts->links + *dobj_count * 4, 0x00, dobj);
-            mobj = GET_PTR(dobj, 0x0C);
-            while (mobj != NULL) {
-                SET_PTR((u8*) parts->extra + *mobj_count * 4, 0x00, mobj);
-                mobj = GET_PTR(mobj, 0x04);
+            parts->links[*dobj_count] = dobj;
+            pobj = dobj->pobj;
+            while (pobj != NULL) {
+                parts->extra[*mobj_count] = pobj;
+                pobj = pobj->next;
                 *mobj_count = *mobj_count + 1;
             }
-            dobj = GET_PTR(dobj, 0x04);
+            dobj = dobj->next;
             *dobj_count = *dobj_count + 1;
         }
     }
@@ -899,14 +953,14 @@ void kar_grcoll__near_800d86fc(HSD_JObj* jobj, void* cb_args, s32 type)
 
 void kar_grcoll__near_800d87ec(void* parts_arg, void* jobj, s32* out_index)
 {
-    void* child;
+    HSD_Joint* child;
+    HSD_Joint* joint = jobj;
     GrCollWalkParts* parts = parts_arg;
 
-    if (jobj != NULL) {
-        SET_PTR((u8*) parts->parts + *out_index * 8, 0x04, jobj);
+    if (joint != NULL) {
+        parts->parts[*out_index].collision_joint = joint;
         *out_index = *out_index + 1;
-        for (child = GET_PTR(jobj, 0x08); child != NULL;
-             child = GET_PTR(child, 0x0C)) {
+        for (child = joint->child; child != NULL; child = child->next) {
             kar_grcoll__near_800d87ec(parts, child, out_index);
         }
     }

@@ -3,9 +3,6 @@
 #include <dolphin/types.h>
 #include <sysdolphin/lobj.h>
 
-#define LOBJ_NEXT(lobj) ((lobj) == NULL ? NULL : (lobj)->next)
-#define LOBJ_FLOAT_2C(lobj) (*(f32*) ((u8*) (lobj) + 0x2C))
-
 char kar_src_lblight_80497e00[] = "lblight.c";
 
 HSD_LObj* kar_lblight__80057514(HSD_LObj* lobj)
@@ -16,7 +13,7 @@ HSD_LObj* kar_lblight__80057514(HSD_LObj* lobj)
             return lobj;
         }
 
-        lobj = LOBJ_NEXT(lobj);
+        lobj = lobj->next;
     }
 
     __assert(kar_src_lblight_80497e00, 0x2E, "0");
@@ -31,7 +28,7 @@ HSD_LObj* kar_lblight__80057598(HSD_LObj* lobj)
             return lobj;
         }
 
-        lobj = LOBJ_NEXT(lobj);
+        lobj = lobj->next;
     }
 
     __assert(kar_src_lblight_80497e00, 0x3C, "0");
@@ -53,7 +50,7 @@ void kar_lblight__80057620(HSD_LObj* lobj, f32 scale)
         if ((HSD_LObjGetFlags(lobj) & 0x40) != 0) {
             __assert(kar_src_lblight_80497e00, 0x59, "0");
         } else {
-            LOBJ_FLOAT_2C(lobj) *= scale;
+            lobj->u.point.ref_dist *= scale;
         }
         break;
     case LOBJ_SPOT:
@@ -72,7 +69,7 @@ void kar_lblight__80057620(HSD_LObj* lobj, f32 scale)
         if ((HSD_LObjGetFlags(lobj) & 0x40) != 0) {
             __assert(kar_src_lblight_80497e00, 0x6D, "0");
         } else {
-            LOBJ_FLOAT_2C(lobj) *= scale;
+            lobj->u.spot.ref_dist *= scale;
         }
         break;
     case LOBJ_AMBIENT:

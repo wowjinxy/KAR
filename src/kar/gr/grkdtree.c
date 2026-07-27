@@ -6,6 +6,11 @@
 typedef struct Ground Ground;
 typedef struct GroundData GroundData;
 typedef struct GroundStaticCollisionTree GroundStaticCollisionTree;
+typedef struct KdQuery KdQuery;
+typedef struct KdTree KdTree;
+typedef struct KdTreeDynamicKind KdTreeDynamicKind;
+typedef struct KdTreeKindView KdTreeKindView;
+typedef struct KdTreeStaticKind KdTreeStaticKind;
 typedef struct KdListNode KdListNode;
 
 struct GroundStaticCollisionTree {
@@ -30,20 +35,37 @@ struct KdListNode {
     u16 object_id;
 };
 
-#define QUERY_KIND_COUNT(query) (*(u16*) ((u8*) (query) + 0x194))
-#define QUERY_KIND_INDEX(query) (*(u16*) ((u8*) (query) + 0x196))
-#define QUERY_OBJECT_INDEX(query) (*(u16*) ((u8*) (query) + 0x198))
-#define QUERY_KIND_AT(query, index) \
-    (*(u16*) ((u8*) (query) + 0x04 + ((index) * sizeof(u16))))
+struct KdQuery {
+    u8 pad_000[0x04];
+    u16 kinds[200];
+    u16 kind_count;
+    u16 kind_index;
+    u16 object_index;
+};
 
-#define TREE_OBJECTS(tree) (*(void***) ((u8*) (tree) + 0x00))
-#define TREE_KIND_FLAGS(tree, kind) (*(u8*) ((u8*) (tree) + ((kind) * 0x0C) + 0x08))
-#define TREE_KIND_LIST(tree, kind) (*(u16**) ((u8*) (tree) + ((kind) * 0x0C) + 0x0C))
-#define TREE_VISITED_BITS(tree) (*(u8**) ((u8*) (tree) + 0x54))
-#define TREE_OBJECT_KIND_FIELD(obj, kind, offset) \
-    (*(u16*) ((u8*) (obj) + ((kind) * 0x08) + (offset)))
-#define TREE_OBJECT_KIND_PTR(obj, kind, offset) \
-    (*(void**) ((u8*) (obj) + ((kind) * 0x08) + (offset)))
+struct KdTree {
+    void** objects;
+    u8 pad_004[0x4C];
+    s32 kind_count;
+    u8* visited_bits;
+};
+
+struct KdTreeKindView {
+    u8 pad_00[0x08];
+    u8 flags;
+    u8 pad_09[0x03];
+    u16* object_ids;
+};
+
+struct KdTreeStaticKind {
+    u16 object_id_start;
+    u16 object_count;
+};
+
+struct KdTreeDynamicKind {
+    KdListNode* objects;
+    u16 object_count;
+};
 
 void kar_lbkdtree_add_obj_kind(void* kdtree, s32 obj_kind);
 void* kar_lbkdtree__near_8007125c(void);
@@ -78,7 +100,7 @@ static BOOL kar_grkdtree_has_static_collision_tree(Ground* ground)
 
 void kar_grkdtree_init_static_collision_tree(Ground* ground)
 {
-    void* kdtree;
+    KdTree* kdtree;
 
     if (!kar_grkdtree_has_static_collision_tree(ground)) {
         __assert(kar_src_grkdtree_804a4180, 0xC4, lbl_804A418C);
@@ -87,7 +109,7 @@ void kar_grkdtree_init_static_collision_tree(Ground* ground)
     ground->static_collision_tree =
         ground->data->static_collision_tree->kdtree;
     kdtree = ground->static_collision_tree;
-    *(s32*) ((u8*) kdtree + 0x50) = 3;
+    kdtree->kind_count = 3;
 
     kar_lbkdtree_add_obj_kind(kdtree, 3);
     kar_lbkdtree_add_obj_kind(kdtree, 4);
@@ -136,8 +158,12 @@ void kar_grkdtree_reset_query_iterator(void* query)
 // NONMATCHING: control flow is recovered, remaining risk is KDTree type shape.
 s32 kar_grkdtree_next_query_object_id_for_kind(void* query, s32 obj_kind)
 {
-    void* kdtree = kar_gryaku_current_ground->static_collision_tree;
-    u8* kind_record;
+    KdQuery* kd_query = query;
+    KdTree* kdtree = kar_gryaku_current_ground->static_collision_tree;
+    KdTreeKindView* kind_record;
+    KdTreeDynamicKind* dynamic_kind;
+    KdTreeStaticKind* static_kind;
+    u8* object_kind_data;
     s32 kind_offset;
     void* obj;
     s32 count;
@@ -151,57 +177,63 @@ s32 kar_grkdtree_next_query_object_id_for_kind(void* query, s32 obj_kind)
     KdListNode* node;
     s32 i;
 
-    if (QUERY_KIND_COUNT(query) == 0) {
+    if (kd_query->kind_count == 0) {
         return -1;
     }
 
     goto init_kind;
 
 next_kind:
-    query_index = QUERY_KIND_INDEX(query);
-    obj = TREE_OBJECTS(kdtree)[QUERY_KIND_AT(query, query_index)];
+    query_index = kd_query->kind_index;
+    obj = kdtree->objects[kd_query->kinds[query_index]];
+    object_kind_data = (u8*) obj + kind_offset + 0x1C;
+    static_kind = (KdTreeStaticKind*) object_kind_data;
+    dynamic_kind = (KdTreeDynamicKind*) object_kind_data;
 
-    if (*(u8*) (kind_record + 0x08) & 1) {
-        count = *(u16*) ((u8*) obj + kind_offset + 0x1E);
+    if (kind_record->flags & 1) {
+        count = static_kind->object_count;
     } else {
-        count = *(u16*) ((u8*) obj + kind_offset + 0x20);
+        count = dynamic_kind->object_count;
     }
 
     if (count == 0) {
-        QUERY_KIND_INDEX(query)++;
+        kd_query->kind_index++;
         goto check_query_index;
     }
 
-    object_index = QUERY_OBJECT_INDEX(query);
+    object_index = kd_query->object_index;
     if (object_index < count) {
         goto read_object_id;
     }
 
-    QUERY_KIND_INDEX(query)++;
-    QUERY_OBJECT_INDEX(query) = 0;
+    kd_query->kind_index++;
+    kd_query->object_index = 0;
 
 check_query_index:
-    if (QUERY_KIND_INDEX(query) < QUERY_KIND_COUNT(query)) {
+    if (kd_query->kind_index < kd_query->kind_count) {
         goto next_kind;
     }
 
     return -1;
 
 read_object_id:
-    QUERY_OBJECT_INDEX(query) = object_index + 1;
+    kd_query->object_index = object_index + 1;
 
-    query_kind = QUERY_KIND_AT(query, QUERY_KIND_INDEX(query));
-    obj = TREE_OBJECTS(kdtree)[query_kind];
-    if (*(u8*) (kind_record + 0x08) & 1) {
-        if (*(u8*) (kind_record + 0x08) & 1) {
+    query_kind = kd_query->kinds[kd_query->kind_index];
+    obj = kdtree->objects[query_kind];
+    object_kind_data = (u8*) obj + kind_offset + 0x1C;
+    static_kind = (KdTreeStaticKind*) object_kind_data;
+    dynamic_kind = (KdTreeDynamicKind*) object_kind_data;
+    if (kind_record->flags & 1) {
+        if (kind_record->flags & 1) {
         } else {
             __assert(kar_src_lbkdtree_804a41a8, 0xF9, lbl_804A41B4);
         }
-        obj = TREE_OBJECTS(kdtree)[query_kind];
-        id = (*(u16**) (kind_record + 0x0C))
-            [*(u16*) ((u8*) obj + kind_offset + 0x1C) + object_index];
+        obj = kdtree->objects[query_kind];
+        id = kind_record
+                 ->object_ids[static_kind->object_id_start + object_index];
     } else {
-        node = *(KdListNode**) ((u8*) obj + kind_offset + 0x1C);
+        node = dynamic_kind->objects;
         for (i = 0; i < object_index; i++) {
             node = node->next;
         }
@@ -210,7 +242,7 @@ read_object_id:
 
     byte_index = id / 8;
     bit_index = id % 8;
-    visited_bits = TREE_VISITED_BITS(kdtree);
+    visited_bits = kdtree->visited_bits;
     if ((visited_bits[byte_index] >> bit_index) & 1) {
         goto next_kind;
     }
@@ -219,7 +251,8 @@ read_object_id:
     return id;
 
 init_kind:
-    kind_record = (u8*) kdtree + (obj_kind * 0x0C);
+    kind_record =
+        (KdTreeKindView*) ((u8*) kdtree + (obj_kind * 0x0C));
     kind_offset = obj_kind * 0x08;
     goto next_kind;
 }
