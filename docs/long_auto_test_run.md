@@ -48,3 +48,91 @@ Branch: `long-auto-test`
 - GKYP01 source compile: passing (manual compile because this region has no
   `grkdtree` split yet)
 - Commit: `07193af`
+
+### main/gryakuwhispywoods
+
+- Source: `src/kar/gr/gryakuwhispywoods.c`
+- Unit score: unchanged at 99.30% fuzzy, 7 / 8 exact functions
+- Inspected:
+  - `kar_gryakuwhispywoods_handle_kind69_grcoll_hit_damage`: 97.03%
+- Deferred: target and current code differ only in the allocation of `pass`
+  and the initial Yaku pointer to `r31` and `r30`. Four experiments covering
+  an explicit pass local, declaration order, delayed Yaku assignment, and a
+  `register` hint did not improve the score. All experiments were removed.
+- No source commit
+
+### main/grdata
+
+- Source: `src/kar/gr/grdata.c`
+- Unit score: unchanged at 96.24% fuzzy, 8 / 10 exact functions
+- Inspected:
+  - `kar_grdata__800ce7a0`: 92.54%
+  - `kar_grdata__near_800ceb18`: 94.63%
+- Discovery: the course resource table contains five interleaved pointers per
+  stage kind. The loader's two archive calls and all field offsets agree with
+  the binary. The gravity selector first tries null-position gravity, then
+  spline gravity, and falls back to the model/default vector only when each
+  preceding result is near zero.
+- Deferred: bounded experiments for explicit resource-pointer copies, raw
+  five-pointer indexing, direct model-motion pointer arithmetic, declaration
+  order, nested gravity conditionals, explicit switch cases, and direct
+  constant stores either compiled identically or regressed. All experiments
+  were removed.
+- No source commit
+
+### main/wnparts
+
+- Source: `src/kar/wn/wnparts.c`
+- Unit score: unchanged at 99.74% fuzzy, 5 / 6 exact functions
+- Inspected:
+  - `kar_wnparts__near_80221ae0`: 95.00%
+- Deferred: target and current instructions differ only in floating-point
+  register allocation for timer, amount, and the clamp maximum. Declaration
+  order, assignment order, field compound assignment, direct constant access,
+  and explicit amount accumulation did not improve the score. All experiments
+  were removed.
+- No source commit
+
+### main/grice1
+
+- Source: `src/kar/gr/grice1.c`
+- Unit score: unchanged at 99.88% fuzzy, 3 / 6 exact functions
+- Inspected:
+  - `kar_grice1_switch_trigger_pushoutwall_targets_by_stage_index`: 99.29%
+  - `kar_grice1_switch_trigger_lighttunnel_pillar_entry_by_stage_index`:
+    99.29%
+  - `kar_grice1_switch_trigger_lasergate_ctrl_open_by_stage_index`: 99.29%
+- Deferred: each wrapper differs only in the operand order of the commutative
+  add that combines the ground pointer with `stage_index * 0x48`. Explicit
+  entry pointers, a named offset, and integer-address arithmetic either
+  compiled identically or regressed to an indexed load. All experiments were
+  removed.
+- No source commit
+
+### main/gryakudownforcezone
+
+- Source: `src/kar/gr/gryakudownforcezone.c`
+- Starting unit score: 90.90% fuzzy, 3 / 6 exact functions
+- Ending unit score: 96.84% fuzzy, 3 / 6 exact functions
+- Improved:
+  - `kar_gryakudownforcezone_query_force_vector`: 89.61% -> 96.08%
+  - `kar_gryakudownforcezone_handle_collision_report_audio`: 81.78% -> 92.66%
+  - `kar_gryakudownforcezone_play_contact_fgm_at_report`: 94.29% -> 99.68%
+- Discoveries:
+  - The zero constant at `0x805DF8A8` belongs to this translation unit; the
+    prior literal emitted an anonymous duplicate relocation.
+  - Ground map-object lookup is a typed array pointer followed by `+= index`.
+    Keeping those as separate source operations recovers the target multiply,
+    pointer add, and `yaku_gobj` field load.
+  - The collision event pointer is loaded before zeroing the contact vector.
+  - The FGM slot index is a function local, and the success path computes an
+    explicit `slot * 0x14` byte offset.
+- Deferred:
+  - Force query: collision-root pointer scheduling only.
+  - Collision audio: deadzone FPR allocation.
+  - Contact FGM: one dead-register coalescing choice at 99.68%.
+- GKYE01 object and report: passing; all three existing exact functions remain
+  exact and data remains 100%
+- GKYJ01 object: passing
+- GKYP01 object: passing
+- Commit: `7774205`
