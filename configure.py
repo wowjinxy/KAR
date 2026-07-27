@@ -530,7 +530,7 @@ kar_objects = [
     Object(Matching, "gmviconfigure.c"),
     Object(NonMatching, "gmlanmenu.c"),
     Object(NonMatching, "lbairride.c"),
-    Object(Matching, "lblight.c"),
+    Object(NonMatching, "lblight.c"),
     Object(NonMatching, "lbmemory.c"),
     Object(NonMatching, "lbheap.c"),
     Object(NonMatching, "lbfile.c"),
