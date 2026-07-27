@@ -180,3 +180,37 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing; both exact functions confirmed
 - GKYJ01 object: passing
 - GKYP01 object: passing
+
+### main/grconveyer
+
+- Source: `src/kar/gr/grconveyer.c`
+- Starting unit score: 70.79% fuzzy, 1 / 3 exact functions
+- Ending unit score: 84.20% fuzzy, 1 / 3 exact functions
+- Improved:
+  - `kar_grconveyer__800e8000`: 78.53% -> 92.78%
+  - `kar_grconveyer__800e8338`: 52.32% -> 67.19%
+- Discoveries:
+  - The conveyor cross-product helper is alias-safe: it calculates into a
+    temporary `Vec` and copies that result to the requested output. Direct
+    stores allowed MWCC to fuse and reorder the vector math in both functions.
+  - The spline conveyor sends a null spline-data case to a zero-return block at
+    the end of the function rather than returning inline at the first check.
+  - The spline path retains the face-array base, scaled face offset, and face
+    normal as distinct locals before reloading the direction flags.
+  - The radial conveyor measures the magnitude of `pos - origin`. The previous
+    implementation incorrectly measured the untouched second vector returned
+    by `kar_grcommon_get_conveyerpos_vectors_by_index`.
+- Deferred:
+  - Spline path: remaining differences include GPR/FPR allocation, assertion
+    base materialization, face-bit extraction, and direction-vector stack-slot
+    order. A direct repeated face-base expression regressed to 78.61% and was
+    removed.
+  - Radial path: control-block placement and local vector ordering remain
+    different. Reusing the helper's second output directly regressed to 49.95%
+    and was removed.
+- GKYE01 object and report: passing; the existing exact function remains exact
+  and data remains 100%
+- GKYJ01 source compile: passing (manual compile because this region has no
+  `grconveyer` split yet)
+- GKYP01 source compile: passing (manual compile because this region has no
+  `grconveyer` split yet)

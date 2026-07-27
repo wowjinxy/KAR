@@ -59,11 +59,13 @@ extern void kar_lbcolanim__near_8006b048(Vec* out, HSD_Spline* spline);
         (out)->y = (lhs)->y - (rhs)->y; \
         (out)->z = (lhs)->z - (rhs)->z; \
     } while (0)
-#define VEC_CROSS(out, lhs, rhs)                                      \
-    do {                                                              \
-        (out)->x = ((lhs)->y * (rhs)->z) - ((lhs)->z * (rhs)->y);      \
-        (out)->y = ((lhs)->z * (rhs)->x) - ((lhs)->x * (rhs)->z);      \
-        (out)->z = ((lhs)->x * (rhs)->y) - ((lhs)->y * (rhs)->x);      \
+#define VEC_CROSS(out, lhs, rhs)                                    \
+    do {                                                            \
+        Vec result;                                                 \
+        result.x = ((lhs)->y * (rhs)->z) - ((lhs)->z * (rhs)->y);   \
+        result.y = ((lhs)->z * (rhs)->x) - ((lhs)->x * (rhs)->z);   \
+        result.z = ((lhs)->x * (rhs)->y) - ((lhs)->y * (rhs)->x);   \
+        *(out) = result;                                            \
     } while (0)
 
 GrConveyerDataStrings kar_src_grconveyer_804a4bc0 = {
@@ -101,11 +103,14 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
     void* ground = kar_gryaku_current_ground;
     void* data = LOAD_PTR(ground, 0x8);
     void* spline_data = LOAD_PTR(LOAD_PTR(data, 0x1C), 0x10);
-    u8* face = FACE_AT(LOAD_PTR(gcp, 0x8), face_id);
+    u8* faces = LOAD_PTR(gcp, 0x8);
+    s32 face_offset = face_id * 0x40;
+    u8* face = faces + face_offset;
     void* face_data = LOAD_PTR(face, 0x38);
     GrConveyerParam* param = LOAD_PTR(face_data, 0x90);
     GrConveyerDataStrings* assert_data = &kar_src_grconveyer_804a4bc0;
     HSD_Spline* spline;
+    Vec* face_normal;
     Vec tangent;
     Vec side;
     s32 dir_index;
@@ -114,13 +119,14 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
     f32 mag;
 
     if (spline_data == NULL) {
-        return 0.0f;
+        goto no_spline;
     }
 
-    if (LOAD_U8(face, 0x3C) & 0x80) {
+    if (LOAD_U8(faces + face_offset, 0x3C) & 0x80) {
         __assert(assert_data->grcoll_src, 0xDD, assert_data->face_assert);
     }
 
+    face_normal = (Vec*) (faces + face_offset + 0xC);
     spline = ((HSD_Spline**) LOAD_PTR(LOAD_PTR(spline_data, 0x0), 0x0))[param->index];
     if (spline == NULL) {
         __assert(assert_data->src, 0x7E, assert_data->spline_assert);
@@ -129,12 +135,13 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
     kar_lbcolanim__near_8006bac8(spline, pos, LOAD_U8(spline_data, 0x4) >> 7);
     kar_lbcolanim__near_8006b048(&tangent, spline);
 
-    VEC_CROSS(&side, (Vec*) (face + 0xC), &tangent);
+    VEC_CROSS(&side, face_normal, &tangent);
     kar_lbvector_normalize_with_axis_fallback(&side, &side);
-    VEC_CROSS(&tangent, &side, (Vec*) (face + 0xC));
+    VEC_CROSS(&tangent, &side, face_normal);
     kar_lbvector_normalize_with_axis_fallback(&tangent, &tangent);
 
-    dir_index = (LOAD_U32(face, 0x34) >> 6) & 0xF;
+    dir_index =
+        (LOAD_U32(FACE_AT(LOAD_PTR(gcp, 0x8), face_id), 0x34) >> 6) & 0xF;
     side_bits = dir_index & 0xC;
     if (side_bits == 0xC) {
         __assert(assert_data->src, 0x95, assert_data->left_right_assert_spaced);
@@ -167,6 +174,9 @@ f32 kar_grconveyer__800e8000(void* gcp, Vec* pos, s32 face_id, Vec* out)
     mag = PSVECMag(out);
     kar_lbvector_normalize_with_axis_fallback(out, out);
     return mag;
+
+no_spline:
+    return 0.0f;
 }
 
 f32 kar_grconveyer__800e8338(Vec* pos, s32 face_id, Vec* out)
@@ -219,7 +229,7 @@ f32 kar_grconveyer__800e8338(Vec* pos, s32 face_id, Vec* out)
             VEC_SCALE(out, -1.0f);
         }
 
-        return PSVECMag(&axis_a) * (param->unk0 / param->unk4);
+        return PSVECMag(&delta) * (param->unk0 / param->unk4);
     }
 
     return 0.0f;
