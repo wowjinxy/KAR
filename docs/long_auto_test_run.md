@@ -347,3 +347,53 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing; both newly exact functions confirmed
 - GKYJ01 source compile: passing
 - GKYP01 source compile: passing
+
+### main/grpointstrike
+
+- Source: `src/kar/gr/grpointstrike.c`
+- Unit restored unchanged at 97.49% after a bounded data-layout pass
+- Discovery: the target assertion pool order is filename, panel-limit
+  expression, joint-count expression, then stadium-kind expression. Natural
+  first-use pooling places the stadium-kind expression first.
+- Rejected:
+  - A source-owned `const char` blob moved the strings to `.rodata` and grew
+    the function.
+  - A writable blob reproduced `.data` at 100%, but retaining its explicit
+    pointer added a move and regressed text from 97.49% to 95.25%.
+  - The `register` hint compiled identically to the regressed pointer form.
+- Deferred: retain natural string pooling until a source form can reproduce
+  the target pool without disturbing the function's register allocation.
+- GKYE01 baseline object and report restored and passing
+
+### main/grgravity
+
+- Source: `src/kar/gr/grgravity.c`
+- Unit restored unchanged at 95.99% after a bounded regional-constant pass
+- Discovery: the target shared constants are:
+  - GKYE01: `lbl_805DC8BC`, `lbl_805DF728`, `lbl_805DF72C`
+  - GKYJ01: `lbl_805D7304`, `lbl_805DA150`, `lbl_805DA154`
+  - GKYP01: `lbl_805CF26C`, `lbl_805D2190`, `lbl_805D2194`
+- Rejected:
+  - Volatile shared-constant loads regressed text to 91.73%.
+  - Plain scalar externs regressed text to 94.24%.
+  - Declaring the `FLT_MAX` symbol as the proven array type fixed its full
+    address load but still changed later scheduling; the isolated version
+    scored 95.25%.
+- Deferred: the current literals preserve better instruction scheduling even
+  though objdiff identifies their anonymous relocations.
+- GKYE01 baseline object and report restored and passing
+
+### main/grspline
+
+- Source: `src/kar/gr/grspline.c`
+- Unit fuzzy score: 94.42% -> 95.13%
+- `kar_grspline_scale_all_spline_sets`: 93.28% -> 94.14%
+- Discovery: loading the first course list before initializing its index and
+  offset realigns the register allocation for all four middle spline-set loops.
+- Rejected: initializing `offset` before `i` regressed the function to 92.85%
+  and was removed.
+- Deferred: the first course loop, spline-pair loop, and final vehicle loop
+  still use different index/list register permutations.
+- GKYE01 object and report: passing; both wrapper functions remain exact
+- GKYJ01 object and objdiff: passing at the same 94.14%
+- GKYP01 object and objdiff: passing at the same 94.14%

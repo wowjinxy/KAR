@@ -52,9 +52,9 @@ void kar_grspline_scale_all_spline_sets(GroundSplineSets* spline_sets, f32 scale
 
     set = spline_sets->course;
     if (set != NULL) {
-        i = 0;
         list = set->list;
-        offset = i;
+        i = 0;
+        offset = 0;
         while (i < list->count) {
             kar_lbspline__near_8006c66c(*(HSD_Spline**) ((u8*) list->splines + offset), scale);
             offset += sizeof(HSD_Spline*);
