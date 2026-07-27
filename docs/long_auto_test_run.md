@@ -496,3 +496,80 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing
 - GKYJ01 object: passing; affected raw-object scores 33.54% and 96.05%
 - GKYP01 object: passing; affected raw-object scores 33.54% and 96.05%
+
+## Final Audit
+
+- GKYE01:
+  - Overall: 19.61% fuzzy, 9.07% matched, 1.52% linked
+  - Game Code: 7.52% fuzzy, 4.01% matched, 1.15% linked
+  - Code: 429436 / 4735272 bytes and 3922 / 20003 functions
+  - Game code: 117888 / 2938216 bytes and 1295 / 14684 functions
+  - Data: 92284 / 1429675 bytes; game data: 30404 / 576507 bytes
+  - Checklist: 192 / 360
+- GKYJ01:
+  - Overall: 9.60% fuzzy, 3.96% matched, 1.01% linked
+  - Game Code: 3.04% fuzzy, 1.37% matched, 0.54% linked
+  - Checklist: 85 / 360
+- GKYP01:
+  - Overall: 9.33% fuzzy, 3.88% matched, 1.01% linked
+  - Game Code: 3.02% fuzzy, 1.37% matched, 0.54% linked
+  - Checklist: 85 / 360
+- Full configure, build, link, checksum, report, and progress targets pass for
+  GKYE01, GKYJ01, and GKYP01. The working configuration was restored to GKYE01.
+- No checksum expectation files were changed.
+
+### Newly Exact Functions
+
+- `kar_mpcoll_check_special_face_kind3_enabled`
+- `kar_grswitch__near_800e8888`
+- `kar_efcallback__80234e4c`
+- `kar_efcallback__near_802350a0`
+- `kar_efcallback__near_8023515c`
+- `kar_efcallback__near_80235190`
+- `kar_emparts__near_8020335c`
+- `kar_gmracecommon__near_80013314`
+- `kar_gmracecommon__near_800134d4`
+- `kar_gryakurecoveryzone_update_kind41_wait_then_extend`
+
+The complete `efcallback` translation unit is exact and linked.
+
+### Checkpoints
+
+- `a71eea3` Match mpcoll face kind check
+- `7842195` Add long auto test run notes
+- `07193af` Improve grkdtree query iterator match
+- `fbc98bb` Log grkdtree matching pass
+- `7774205` Improve downforce zone matching
+- `b5f5e97` Log additional gameplay matching passes
+- `c2d2a36` Improve City Trial switch matching
+- `64498cb` Improve conveyor movement matching
+- `2ad94e6` Log efanime matching pass
+- `95adf14` Match effect callback unit
+- `e01da10` Improve enemy parts matching
+- `08c6613` Correct break fan path constants
+- `0a73dc2` Improve race common matching
+- `24d8c3f` Improve ground spline matching
+- `9b15672` Match recovery zone transition
+- `c67c5ca` Improve Air Glider slot handling
+- `d3c6fc8` Correct break collision FGM data
+
+### Best Next Targets
+
+- `kar_gryakubreakcoll_update_effects_audio_then_destroy` (96.21%): determine
+  the source shape that materializes the target `handle != -1` boolean.
+- `kar_gryakurecoveryzone_enter_enabled_state_sequence` (98.71%): resolve the
+  `r30/r31` allocation and reconstruct the preceding translation unit's
+  regional constant block.
+- `kar_gryakurecoveryzone_init_stage_linked_kind42_ground_group_yaku`
+  (98.04%): recover the target search branch shape.
+- `kar_grairglider_mark_spawn_handle_inactive` (98.27%): resolve the remaining
+  runtime/index/slot-base register permutation.
+- `kar_grspline_scale_all_spline_sets` (94.14%): continue the first, paired,
+  and final loop source-shape permutations.
+- `kar_gmracecommon__near_800135ec` (86.69%): refine structure-copy and pointer
+  lifetime behavior; `kar_gmracecommon__near_800130a8` needs a separate,
+  larger reconstruction.
+
+The remaining sampled close candidates are dominated by register allocation,
+constant-pool ownership, or unresolved data layout. Further blind source
+permutations were stopped after non-regressive experiments were exhausted.
