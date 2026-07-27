@@ -214,3 +214,21 @@ Branch: `long-auto-test`
   `grconveyer` split yet)
 - GKYP01 source compile: passing (manual compile because this region has no
   `grconveyer` split yet)
+
+### main/efanime
+
+- Source: `src/kar/ef/efanime.c`
+- Unit score: unchanged at 98.29% fuzzy, 8 / 10 exact functions
+- Inspected:
+  - `kar_efanime__near_80240084`: 94.31%
+  - `kar_efanime__near_802401e8`: 92.18%
+- Discovery: both functions have the same target instructions except for
+  scheduling the high half of the `lbl_8055DA08` address before the JObj load.
+  The end-frame query also has one redundant target compare consistent with an
+  inlined `HSD_AObjGetEndFrame` assertion.
+- Deferred: an explicit unwind pointer compiled identically; initializing the
+  AObj output in its declaration regressed the first function to 86.11%; and a
+  local inline end-frame accessor compiled identically. All experiments were
+  removed. Recovering the remainder likely requires the original shared
+  `aobj.h` inline/macro context rather than more local source shuffling.
+- No source commit
