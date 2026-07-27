@@ -133,16 +133,17 @@ void kar_grkdtree_reset_query_iterator(void* query)
         query, kar_gryaku_current_ground->static_collision_tree);
 }
 
-// NONMATCHING: control flow is recovered, remaining risk is KDTree type shape.
+// NONMATCHING: remaining differences are local register allocation and
+// scheduling.
 s32 kar_grkdtree_next_query_object_id_for_kind(void* query, s32 obj_kind)
 {
+    s32 object_index;
     void* kdtree = kar_gryaku_current_ground->static_collision_tree;
-    u8* kind_record;
     s32 kind_offset;
+    u8* kind_record;
     void* obj;
     s32 count;
     u16 query_index;
-    s32 object_index;
     u16 query_kind;
     s32 id;
     s32 byte_index;
