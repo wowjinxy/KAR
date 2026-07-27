@@ -471,3 +471,28 @@ Branch: `long-auto-test`
 - GKYE01 object and report: passing
 - GKYJ01 source compile: passing; no regional target-object split is available
 - GKYP01 source compile: passing; no regional target-object split is available
+
+### main/gryakubreakcoll
+
+- Source: `src/kar/gr/gryakubreakcoll.c`
+- Unit fuzzy score: 73.33% -> 76.04%
+- Improved:
+  - `kar_gryakubreakcoll_break_target_by_index`: 28.70% -> 34.06%
+  - `kar_gryakubreakcoll_update_effects_audio_then_destroy`: 90.52% ->
+    96.21%
+- Structural correction:
+  - `yaku+0x118` points to an FGM ID-data record. Word 0 is the entry-data
+    pointer passed to `kar_graudio_start_fgm_slot_core`; byte 4 begins a signed
+    one-bit mode field used as the `-1/0` mode argument and as the active-slot
+    cleanup condition.
+  - The previous source passed the wrapper pointer itself and read bit 7 from
+    the unrelated yaku byte at `0x11C`.
+- Discovery: the cleanup loop reloads each FGM handle for the availability
+  check, audio query, and release call. Removing the retained handle local
+  reproduces the target alias-aware loads.
+- Deferred: the cleanup function's only remaining text difference is the
+  target's materialized `handle != -1` boolean sequence. An explicit `BOOL`
+  local compiled identically to the direct compare and was removed.
+- GKYE01 object and report: passing
+- GKYJ01 object: passing; affected raw-object scores 33.54% and 96.05%
+- GKYP01 object: passing; affected raw-object scores 33.54% and 96.05%

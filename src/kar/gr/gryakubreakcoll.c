@@ -15,6 +15,7 @@ typedef struct YakuParamLink YakuParamLink;
 typedef struct BreakCollParam BreakCollParam;
 typedef struct BreakCollTarget BreakCollTarget;
 typedef struct BreakCollFgmParam BreakCollFgmParam;
+typedef struct BreakCollFgmIdData BreakCollFgmIdData;
 typedef struct BreakCollSharedData BreakCollSharedData;
 typedef void (*GroundCallback)(void);
 
@@ -80,6 +81,12 @@ struct BreakCollFgmParam {
     f32 scale;
 };
 
+struct BreakCollFgmIdData {
+    void* entry_data;
+    s8 mode : 1;
+    u8 pad_04 : 7;
+};
+
 struct BreakCollSharedData {
     GroundCallback callbacks[8];
     char src[0x14];
@@ -96,8 +103,8 @@ struct BreakCollSharedData {
 #define BREAKCOLL_TARGET_HIT_COLLISION_OFFSET 0x38
 
 #define YAKU_FGM_ENTRY_COUNT(yaku) (*(s32*) ((u8*) (yaku) + 0x11C))
-#define YAKU_FGM_ENTRY_DATA(yaku) (*(void**) ((u8*) (yaku) + 0x118))
-#define YAKU_FGM_ENTRY_FLAGS(yaku) (*(u8*) ((u8*) (yaku) + 0x11C))
+#define YAKU_FGM_ID_DATA(yaku)                                             \
+    (*(BreakCollFgmIdData**) ((u8*) (yaku) + 0x118))
 #define YAKU_FGM_SLOT_ARG(yaku) (*(void**) ((u8*) (yaku) + 0x120))
 #define YAKU_FGM_SLOT_POS(yaku) ((Vec*) ((u8*) (yaku) + 0x128))
 #define YAKU_RAW_PTR(yaku, offset) (*(void**) ((u8*) (yaku) + (offset)))
@@ -218,9 +225,8 @@ void kar_gryakubreakcoll_break_target_by_index(HSD_GObj* gobj, s32 index,
         }
 
         kar_graudio_start_fgm_slot_core(
-            YAKU_FGM_ENTRY_DATA(yaku), YAKU_FGM_SLOT_ARG(yaku),
-            yaku->fgm_handles[index],
-            (YAKU_FGM_ENTRY_FLAGS(yaku) & 0x80) ? -1 : 0,
+            YAKU_FGM_ID_DATA(yaku)->entry_data, YAKU_FGM_SLOT_ARG(yaku),
+            yaku->fgm_handles[index], YAKU_FGM_ID_DATA(yaku)->mode,
             YAKU_FGM_SLOT_POS(yaku));
     }
 
@@ -254,8 +260,8 @@ void kar_gryakubreakcoll_update_effects_audio_then_destroy(HSD_GObj* gobj)
         }
 
         if (i == param->remove_effect_count) {
-            if (YAKU_FGM_ENTRY_DATA(yaku) != NULL &&
-                (YAKU_FGM_ENTRY_FLAGS(yaku) & 0x80) != 0) {
+            if (YAKU_FGM_ID_DATA(yaku) != NULL &&
+                YAKU_FGM_ID_DATA(yaku)->mode != 0) {
                 kar_graudio_stop_active_fgm_slot(yaku->fgm_entry);
             }
 
@@ -265,10 +271,10 @@ void kar_gryakubreakcoll_update_effects_audio_then_destroy(HSD_GObj* gobj)
 
     if (yaku->fgm_handles != NULL) {
         for (i = 0; i < param->target_count; i++) {
-            s32 handle = yaku->fgm_handles[i];
-
-            if (handle != -1 && kar_lbaudio__near_800623ec(handle) == 0) {
-                kar_graudio_release_fgm_track_group_handle(handle);
+            if (yaku->fgm_handles[i] != -1 &&
+                kar_lbaudio__near_800623ec(yaku->fgm_handles[i]) == 0) {
+                kar_graudio_release_fgm_track_group_handle(
+                    yaku->fgm_handles[i]);
                 yaku->fgm_handles[i] = -1;
             }
         }
