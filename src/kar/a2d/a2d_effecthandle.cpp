@@ -681,10 +681,21 @@ extern "C" s32 kar_a2d_effecthandle__near_8037b61c(GameEffectItem *arg0) {
     return 0;
 }
 
+/* Viewed at outer+4 for fade math (floats at +8/+0xC of this view). */
 struct SoundFadeVol {
     char pad0[8];
     f32 unk8;
     f32 unkC;
+};
+
+/* Full header used by init helpers (kind/id/flag + three floats). */
+struct SoundFadeInit {
+    s32 kind;
+    s32 id;
+    s32 flag;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
 };
 
 #pragma push
@@ -1189,14 +1200,13 @@ extern "C" void kar_a2d_effecthandle__near_8037c660(GameEffectItem *item) {
     }
 }
 
-extern "C" void kar_a2d_effecthandle__near_8037c7dc(SoundFadeVol *arg0) {
-    s32 *raw = (s32 *) arg0;
-    raw[0] = 0x7531;
-    raw[1] = -1;
-    raw[2] = 0;
-    arg0->unk8 = 1.0f;
-    arg0->unkC = 1.0f;
-    ((f32 *) arg0)[1] = 0.0f;
+extern "C" void kar_a2d_effecthandle__near_8037c7dc(SoundFadeInit *arg0) {
+    arg0->kind = 0x7531;
+    arg0->id = -1;
+    arg0->flag = 0;
+    arg0->unk10 = 1.0f;
+    arg0->unk14 = 1.0f;
+    arg0->unkC = 0.0f;
 }
 
 extern "C" void kar_a2d_effecthandle__near_8037c80c(TireMgrOuter *arg0) {

@@ -1784,8 +1784,8 @@ static u32 lbl_805DE0D8;
 static u32 lbl_805DE0DC;
 static OSTime lbl_805DE0E0;
 static void (*lbl_805DE0E8)(void);
-static u32 lbl_805DE0EC;
-static u32 lbl_805DE0F0;
+static s32 lbl_805DE0EC;
+static s32 lbl_805DE0F0;
 static OSThreadQueue lbl_805DE0F8;
 
 void SortVoices(u32 lessDspCycles);
@@ -2514,26 +2514,28 @@ void salInitDspCtrl(void)
 void fn_803EE7F4(AXVPB* p, u32 type)
 {
     BOOL old;
+    AXPB* pb;
 
     old = OSDisableInterrupts();
+    pb = &p->pb;
     switch (type) {
     case 0:
-        p->pb.srcSelect = 2;
+        pb->srcSelect = 2;
         break;
     case 1:
-        p->pb.srcSelect = 1;
+        pb->srcSelect = 1;
         break;
     case 2:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 0;
+        pb->srcSelect = 0;
+        pb->coefSelect = 0;
         break;
     case 3:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 1;
+        pb->srcSelect = 0;
+        pb->coefSelect = 1;
         break;
     case 4:
-        p->pb.srcSelect = 0;
-        p->pb.coefSelect = 2;
+        pb->srcSelect = 0;
+        pb->coefSelect = 2;
         break;
     }
 

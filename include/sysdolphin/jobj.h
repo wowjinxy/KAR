@@ -188,9 +188,10 @@ inline BOOL HSD_JObjMtxIsDirty(HSD_JObj* jobj)
 
 inline void HSD_JObjSetupMatrix(HSD_JObj* jobj)
 {
-    if (jobj != NULL && HSD_JObjMtxIsDirty(jobj)) {
-        HSD_JObjSetupMatrixSub(jobj);
+    if (jobj == NULL || !HSD_JObjMtxIsDirty(jobj)) {
+        return;
     }
+    HSD_JObjSetupMatrixSub(jobj);
 }
 
 inline void HSD_JObjSetMtxDirty(HSD_JObj* jobj)

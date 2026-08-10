@@ -269,7 +269,7 @@ BOOL kar_emcamera__80206d90(HSD_GObj* gobj, Vec* pos)
     }
 
     source = anim->field_014;
-    value = kar_grlib2__near_800bad8c(pos, &anim->pos,
+    value = kar_grlib2__near_800bad8c(pos, &anim->camera_pos,
                                       source->state->value);
     return value >= 1.0f;
 }
@@ -281,12 +281,12 @@ void kar_emcamera__near_80206e1c(EmAnim* anim, BOOL value)
 
 void kar_emcamera__near_80206e2c(EmAnim* anim)
 {
-    Vec old_pos = anim->pos;
+    Vec old_pos = anim->camera_pos;
     s32 face_id;
     f32 t;
 
-    if (kar_grcommon__near_800cf07c(&anim->pos, &face_id, &t) == FALSE) {
-        anim->pos = old_pos;
+    if (kar_grcommon__near_800cf07c(&anim->camera_pos, &face_id, &t) == FALSE) {
+        anim->camera_pos = old_pos;
         anim->flags_B0A.flag_04 = TRUE;
     } else {
         anim->spline_face_id = face_id;

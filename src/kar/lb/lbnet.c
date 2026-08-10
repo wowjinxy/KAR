@@ -558,7 +558,8 @@ void NetFree(void *unused, s32 arg1, s32 arg2) {
     if ((arg1 != 0) && (arg2 > 0)) {
         kar_diagnostic__803d7e58(lbl_80552A30);
         kar_lbheap__80058920(5, (void *) arg1);
-        TotalMemorySize -= (arg2 + 0x1F) & 0xFFFFFFE0;
+        arg2 = (arg2 + 0x1F) & 0xFFFFFFE0;
+        TotalMemorySize -= arg2;
         kar_diagnostic__803d7f34(lbl_80552A30);
     }
 }

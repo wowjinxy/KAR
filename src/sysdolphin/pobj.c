@@ -1159,17 +1159,22 @@ void PObjRelease(HSD_Class* o)
         break;
     }
     case POBJ_ENVELOPE: {
+        HSD_Envelope* next;
+        HSD_Envelope* env;
         HSD_SList* list;
-        for (list = pobj->u.envelope_list; list != NULL; list = HSD_SListRemove(list)) {
-            HSD_Envelope* env = list->data;
+
+        list = pobj->u.envelope_list;
+        while (list != NULL) {
+            env = list->data;
             while (env != NULL) {
-                HSD_Envelope* next = env->next;
+                next = env->next;
                 HSD_JObjUnrefThis(env->jobj);
                 if (env != NULL) {
                     hsdFreeMemPiece(env, sizeof(HSD_Envelope));
                 }
                 env = next;
             }
+            list = HSD_SListRemove(list);
         }
         break;
     }
