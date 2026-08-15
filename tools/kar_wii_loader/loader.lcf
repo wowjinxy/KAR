@@ -1,0 +1,22 @@
+MEMORY
+{
+    loader : origin = 0x93000000
+}
+
+SECTIONS
+{
+    GROUP:
+    {
+        .init ALIGN(0x20): {}
+        .text ALIGN(0x20): {}
+        .ctors ALIGN(0x20): { *(.ctors) }
+        .dtors ALIGN(0x20): { *(.dtors) }
+        .rodata ALIGN(0x20): {}
+        .data ALIGN(0x20): {}
+        .bss ALIGN(0x20): {}
+        .sdata ALIGN(0x20): {}
+        .sbss ALIGN(0x20): {}
+        .sdata2 ALIGN(0x20): {}
+        .sbss2 ALIGN(0x20): {}
+    } > loader
+}

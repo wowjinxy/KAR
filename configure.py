@@ -13,6 +13,8 @@
 ###
 
 import argparse
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -122,6 +124,12 @@ parser.add_argument(
     help="builds equivalent (but non-matching) or modded objects",
 )
 parser.add_argument(
+    "--wii-mode",
+    dest="wii_mode",
+    action="store_true",
+    help="build the standalone Wii-mode loader and enable its MEM2 API",
+)
+parser.add_argument(
     "--warn",
     dest="warn",
     type=str,
@@ -177,11 +185,12 @@ config.wibo_tag = "1.0.3"
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
 config.check_sha_path = Path("config") / config.version / "build.sha1"
+generated_include_dir = (config.out_path() / "include").as_posix()
 config.asflags = [
     "-mgekko",
     "--strip-local-absolute",
     "-I include",
-    f"-I build/{config.version}/include",
+    f"-I {generated_include_dir}",
     f"--defsym BUILD_VERSION={version_num}",
 ]
 config.ldflags = [
@@ -222,10 +231,14 @@ cflags_base = [
     "-nosyspath",
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-i include",
-    f"-i build/{config.version}/include",
+    f"-i {generated_include_dir}",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
 ]
+
+if args.wii_mode:
+    cflags_base.append("-DKAR_WII_MEM2_TARGET=1")
+    config.context_defines.append("KAR_WII_MEM2_TARGET=1")
 
 # Debug flags
 if args.debug:
@@ -257,13 +270,16 @@ cflags_doldecomp_src = [
     "-fp_contract on",
     "-I-",
     "-i include",
-    f"-i build/{config.version}/include",
+    f"-i {generated_include_dir}",
     "-inline all",
     "-nosyspath",
     "-multibyte",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
 ]
+
+if args.wii_mode:
+    cflags_doldecomp_src.append("-DKAR_WII_MEM2_TARGET=1")
 
 if args.debug:
     cflags_doldecomp_src.extend(["-sym on", "-DDEBUG=1"])
@@ -868,6 +884,87 @@ config.progress_report_args = [
     # Default is "functionRelocDiffs=none", which is most lenient
     # "--config functionRelocDiffs=data_value",
 ]
+
+
+def command_line(args: List[str]) -> str:
+    if is_windows():
+        return subprocess.list2cmdline(args)
+    return shlex.join(args)
+
+
+if args.wii_mode:
+    executable_suffix = ".exe" if is_windows() else ""
+    loader_script = Path("tools/build_kar_wii_loader.py")
+    loader_source = Path("tools/kar_wii_loader/loader.c")
+    loader_lcf = Path("tools/kar_wii_loader/loader.lcf")
+    loader_header = Path("include/kar/wii_mem2.h")
+    loader_types_header = Path("include/dolphin/types.h")
+    loader_output_dir = config.out_path() / "wii-loader"
+    loader_dol = loader_output_dir / "boot.dol"
+    loader_elf = loader_output_dir / "kar-wii-loader.elf"
+    loader_manifest = loader_output_dir / "manifest.json"
+
+    compilers = config.compilers()
+    wii_compiler = compilers / "Wii" / "1.0" / "mwcceppc.exe"
+    compiler_dependency = compilers if config.compilers_path is None else wii_compiler
+
+    if config.dtk_path is not None and config.dtk_path.is_file():
+        dtk = config.dtk_path
+    elif config.dtk_path is not None:
+        dtk = config.build_dir / "tools" / "release" / f"dtk{executable_suffix}"
+    else:
+        dtk = config.build_dir / "tools" / f"dtk{executable_suffix}"
+
+    wrapper = config.compiler_wrapper()
+    loader_args = [
+        str(loader_script),
+        "--version",
+        config.version,
+        "--compiler",
+        str(wii_compiler),
+        "--dtk",
+        str(dtk),
+        "--output-dir",
+        str(loader_output_dir),
+    ]
+    if wrapper is not None:
+        loader_args.extend(["--wrapper", str(wrapper)])
+
+    loader_implicit = [
+        loader_source,
+        loader_lcf,
+        loader_header,
+        loader_types_header,
+        Path("config") / config.version / "symbols.txt",
+        compiler_dependency,
+        dtk,
+    ]
+    if wrapper is not None and (wrapper.exists() or config.use_wibo()):
+        loader_implicit.append(wrapper)
+
+    config.custom_build_rules = [
+        {
+            "name": "kar_wii_loader",
+            "command": f"$python {command_line(loader_args)}",
+            "description": "WII-MODE $out",
+        }
+    ]
+    config.custom_build_steps = {
+        "post-compile": [
+            {
+                "outputs": [loader_dol],
+                "implicit_outputs": [loader_elf, loader_manifest],
+                "rule": "kar_wii_loader",
+                "inputs": [loader_script],
+                "implicit": loader_implicit,
+            },
+            {
+                "outputs": "wii-loader",
+                "rule": "phony",
+                "inputs": [loader_dol],
+            },
+        ]
+    }
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json
