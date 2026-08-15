@@ -59,6 +59,24 @@ Build or run initial analysis:
 ninja
 ```
 
+Experimental Wii-mode Loader
+============================
+
+An opt-in KAR-specific Wii-mode compatibility build is available for testing
+MEM2-backed ARAM and a separate mod heap. It leaves the normal matching
+GameCube configuration unchanged:
+
+```sh
+python configure.py --version GKYE01 --non-matching --wii-mode
+ninja
+```
+
+This produces the normal `main.dol` plus a standalone Wii-mode loader. Use
+`ninja wii-loader` to build only the loader after configuring with the flag.
+
+See [docs/wii_mode_loader.md](docs/wii_mode_loader.md) for its current status,
+memory layout, Dolphin launch instructions, and the mod allocation API.
+
 Project Layout
 ==============
 
