@@ -11,8 +11,9 @@ import shutil
 import struct
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Sequence
+from typing import Dict, List, Optional, Sequence, Tuple
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -21,6 +22,8 @@ LOADER_SOURCE = LOADER_DIR / "loader.c"
 LOADER_LCF = LOADER_DIR / "loader.lcf"
 LOADER_MIN = 0x93000000
 LOADER_MAX = 0x933D0000
+TARGET_MIN = 0x80003100
+TARGET_MAX = 0x81200000
 EXECUTABLE_SUFFIX = ".exe" if sys.platform == "win32" else ""
 
 SYMBOL_MACROS = {
@@ -38,6 +41,9 @@ SYMBOL_MACROS = {
     "OSSetAlarm": "KAR_ADDR_OS_SET_ALARM",
     "OSDisableInterrupts": "KAR_ADDR_OS_DISABLE_INTERRUPTS",
     "OSRestoreInterrupts": "KAR_ADDR_OS_RESTORE_INTERRUPTS",
+    "__OSMaskInterrupts": "KAR_ADDR_OS_MASK_INTERRUPTS",
+    "fn_803C4470": "KAR_ADDR_DVD_READ_ISSUE",
+    "Callback": "KAR_ADDR_DVD_CALLBACK",
 }
 
 VERSIONS = {
@@ -61,6 +67,43 @@ VERSIONS = {
 SYMBOL_RE = re.compile(
     r"^(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*[^:;]+:" r"(?P<address>0x[0-9A-Fa-f]+);"
 )
+
+
+@dataclass(frozen=True)
+class DolSection:
+    kind: str
+    index: int
+    offset: int
+    address: int
+    data: bytes
+    source: str
+
+    @property
+    def size(self) -> int:
+        return len(self.data)
+
+    @property
+    def end(self) -> int:
+        return self.address + self.size
+
+    @property
+    def name(self) -> str:
+        return f"{self.source}.{self.kind}[{self.index}]"
+
+
+@dataclass(frozen=True)
+class DolImage:
+    path: Path
+    data: bytes
+    text: Tuple[DolSection, ...]
+    data_sections: Tuple[DolSection, ...]
+    bss_address: int
+    bss_size: int
+    entry: int
+
+    @property
+    def sections(self) -> Tuple[DolSection, ...]:
+        return self.text + self.data_sections
 
 
 def parse_args() -> argparse.Namespace:
@@ -92,14 +135,25 @@ def parse_args() -> argparse.Namespace:
         "--output-dir",
         type=Path,
         help=(
-            "output directory (default: build/<version>/wii-loader, or "
-            "wii-loader-debug with --dolphin-osreport)"
+            "output directory (default: build/<version>/wii-loader for "
+            "standalone mode, wii-loader-merged with --target-dol; append "
+            "-debug when --dolphin-osreport is used)"
         ),
     )
     parser.add_argument(
         "--dolphin-osreport",
         action="store_true",
         help="set the development console type so KAR OSReport reaches Dolphin",
+    )
+    parser.add_argument(
+        "--target-dol",
+        type=Path,
+        help=(
+            "preserved exact retail DOL for this region (conventionally "
+            "files/orig.dol); merge its sections into boot.dol so the Wii "
+            "apploader preloads KAR before entering the compatibility loader; "
+            "this is a build input, not a runtime file"
+        ),
     )
     return parser.parse_args()
 
@@ -118,6 +172,14 @@ def require_executable(path: Path, description: str) -> str:
     if resolved is None:
         raise SystemExit(f"{description} not found: {path}")
     return resolved
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while chunk := stream.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def read_symbols(version: str) -> Dict[str, int]:
@@ -144,7 +206,44 @@ def read_u32(data: bytes, offset: int) -> int:
     return struct.unpack_from(">I", data, offset)[0]
 
 
-def validate_dol(path: Path) -> Dict[str, object]:
+def write_u32(data: bytearray, offset: int, value: int) -> None:
+    struct.pack_into(">I", data, offset, value)
+
+
+def align_up(value: int, alignment: int) -> int:
+    return (value + alignment - 1) // alignment * alignment
+
+
+def ranges_overlap(
+    first_start: int, first_size: int, second_start: int, second_size: int
+) -> bool:
+    return (
+        first_start < second_start + second_size
+        and second_start < first_start + first_size
+    )
+
+
+def validate_section_overlaps(
+    sections: Sequence[DolSection], description: str, check_file: bool = True
+) -> None:
+    for index, first in enumerate(sections):
+        for second in sections[index + 1 :]:
+            if ranges_overlap(first.address, first.size, second.address, second.size):
+                raise SystemExit(
+                    f"{description} sections overlap in memory: {first.name} "
+                    f"0x{first.address:08X}-0x{first.end:08X} and {second.name} "
+                    f"0x{second.address:08X}-0x{second.end:08X}"
+                )
+            if check_file and ranges_overlap(
+                first.offset, first.size, second.offset, second.size
+            ):
+                raise SystemExit(
+                    f"{description} sections overlap in the file: {first.name} and "
+                    f"{second.name}"
+                )
+
+
+def parse_dol(path: Path, source: str) -> DolImage:
     data = path.read_bytes()
     if len(data) < 0x100:
         raise SystemExit(f"DOL is too small to contain a header: {path}")
@@ -159,8 +258,8 @@ def validate_dol(path: Path) -> Dict[str, object]:
     bss_size = read_u32(data, 0xDC)
     entry = read_u32(data, 0xE0)
 
-    sections: List[Dict[str, object]] = []
-    hid4_sentinel_found = False
+    text: List[DolSection] = []
+    data_sections: List[DolSection] = []
     for kind, offsets, addresses, sizes in (
         ("text", text_offsets, text_addresses, text_sizes),
         ("data", data_offsets, data_addresses, data_sizes),
@@ -169,50 +268,260 @@ def validate_dol(path: Path) -> Dict[str, object]:
             if size == 0:
                 continue
             if offset < 0x100 or offset + size > len(data):
-                raise SystemExit(f"{kind}[{index}] lies outside the DOL file")
-            if address < LOADER_MIN or address + size > LOADER_MAX:
+                raise SystemExit(f"{path}: {kind}[{index}] lies outside the DOL file")
+            if address + size > 0x100000000:
                 raise SystemExit(
-                    f"{kind}[{index}] lies outside the loader reservation: "
-                    f"0x{address:08X}-0x{address + size:08X}"
+                    f"{path}: {kind}[{index}] wraps the 32-bit address space"
                 )
-            sections.append(
-                {
-                    "name": f"{kind}[{index}]",
-                    "address": f"0x{address:08X}",
-                    "size": size,
-                }
+            section = DolSection(
+                kind=kind,
+                index=index,
+                offset=offset,
+                address=address,
+                data=data[offset : offset + size],
+                source=source,
             )
-            if kind == "text" and b"\x7C\x73\xFB\xA6" in data[offset : offset + size]:
-                hid4_sentinel_found = True
+            (text if kind == "text" else data_sections).append(section)
 
-    if bss_size:
-        if bss_address < LOADER_MIN or bss_address + bss_size > LOADER_MAX:
+    if bss_address + bss_size > 0x100000000:
+        raise SystemExit(f"{path}: BSS wraps the 32-bit address space")
+
+    sections = text + data_sections
+    validate_section_overlaps(sections, str(path))
+    if not any(section.address <= entry < section.end for section in text):
+        raise SystemExit(f"{path}: entry point 0x{entry:08X} is not in a text section")
+
+    return DolImage(
+        path=path,
+        data=data,
+        text=tuple(text),
+        data_sections=tuple(data_sections),
+        bss_address=bss_address,
+        bss_size=bss_size,
+        entry=entry,
+    )
+
+
+def validate_image_range(
+    image: DolImage, minimum: int, maximum: int, description: str
+) -> None:
+    for section in image.sections:
+        if section.address < minimum or section.end > maximum:
             raise SystemExit(
-                "BSS lies outside the loader reservation: "
-                f"0x{bss_address:08X}-0x{bss_address + bss_size:08X}"
+                f"{section.name} lies outside the {description} range: "
+                f"0x{section.address:08X}-0x{section.end:08X}"
             )
-        sections.append(
-            {"name": "bss", "address": f"0x{bss_address:08X}", "size": bss_size}
+    if image.bss_size and (
+        image.bss_address < minimum or image.bss_address + image.bss_size > maximum
+    ):
+        raise SystemExit(
+            f"{image.path}: BSS lies outside the {description} range: "
+            f"0x{image.bss_address:08X}-0x{image.bss_address + image.bss_size:08X}"
         )
 
-    text_ranges = [
-        (address, address + size)
-        for address, size in zip(text_addresses, text_sizes)
-        if size
-    ]
-    if not any(start <= entry < end for start, end in text_ranges):
-        raise SystemExit(f"entry point 0x{entry:08X} is not in a text section")
 
-    if not hid4_sentinel_found:
+def describe_dol(image: DolImage, require_hid4: bool = False) -> Dict[str, object]:
+    sections: List[Dict[str, object]] = [
+        {
+            "name": f"{section.kind}[{section.index}]",
+            "address": f"0x{section.address:08X}",
+            "size": section.size,
+        }
+        for section in image.sections
+    ]
+    if image.bss_size:
+        sections.append(
+            {
+                "name": "bss",
+                "address": f"0x{image.bss_address:08X}",
+                "size": image.bss_size,
+            }
+        )
+
+    if require_hid4 and not any(
+        b"\x7C\x73\xFB\xA6" in section.data for section in image.text
+    ):
         raise SystemExit("Dolphin Wii-mode HID4 sentinel is missing from the DOL")
 
-    return {"entry": f"0x{entry:08X}", "sections": sections}
+    return {"entry": f"0x{image.entry:08X}", "sections": sections}
+
+
+def validate_loader_dol(image: DolImage) -> Dict[str, object]:
+    validate_image_range(image, LOADER_MIN, LOADER_MAX, "loader reservation")
+    return describe_dol(image, require_hid4=True)
+
+
+def validate_target_dol(image: DolImage) -> Dict[str, object]:
+    validate_image_range(image, TARGET_MIN, TARGET_MAX, "KAR MEM1")
+    return describe_dol(image)
+
+
+def materialize_loader_bss(loader: DolImage) -> List[DolSection]:
+    sections = list(loader.data_sections)
+    if loader.bss_size == 0:
+        return sections
+
+    for section in loader.sections:
+        if ranges_overlap(
+            section.address, section.size, loader.bss_address, loader.bss_size
+        ):
+            raise SystemExit(
+                f"loader BSS overlaps {section.name}; it cannot be safely materialized"
+            )
+
+    for index, section in enumerate(sections):
+        if section.end == loader.bss_address:
+            sections[index] = DolSection(
+                kind="data",
+                index=section.index,
+                offset=section.offset,
+                address=section.address,
+                data=section.data + bytes(loader.bss_size),
+                source=section.source,
+            )
+            validate_section_overlaps(
+                list(loader.text) + sections,
+                "materialized loader",
+                check_file=False,
+            )
+            return sections
+
+    next_index = max((section.index for section in sections), default=-1) + 1
+    sections.append(
+        DolSection(
+            kind="data",
+            index=next_index,
+            offset=0,
+            address=loader.bss_address,
+            data=bytes(loader.bss_size),
+            source="loader-bss",
+        )
+    )
+    validate_section_overlaps(
+        list(loader.text) + sections, "materialized loader", check_file=False
+    )
+    return sections
+
+
+def validate_cross_image_ranges(
+    target: DolImage, loader_sections: Sequence[DolSection]
+) -> None:
+    for target_section in target.sections:
+        for loader_section in loader_sections:
+            if ranges_overlap(
+                target_section.address,
+                target_section.size,
+                loader_section.address,
+                loader_section.size,
+            ):
+                raise SystemExit(
+                    f"target and loader sections overlap: {target_section.name} and "
+                    f"{loader_section.name}"
+                )
+
+    # DOL BSS may overlap that same DOL's initialized data; retail KAR does.
+    # Preserve that layout and reject only overlaps with the resident loader.
+    if target.bss_size:
+        for loader_section in loader_sections:
+            if ranges_overlap(
+                target.bss_address,
+                target.bss_size,
+                loader_section.address,
+                loader_section.size,
+            ):
+                raise SystemExit(
+                    f"target BSS overlaps {loader_section.name}: "
+                    f"0x{loader_section.address:08X}-0x{loader_section.end:08X}"
+                )
+
+
+def append_dol_section(
+    output: bytearray,
+    header_offset_base: int,
+    header_address_base: int,
+    header_size_base: int,
+    index: int,
+    section: DolSection,
+) -> None:
+    section_offset = align_up(len(output), 0x20)
+    output.extend(bytes(section_offset - len(output)))
+    write_u32(output, header_offset_base + index * 4, section_offset)
+    write_u32(output, header_address_base + index * 4, section.address)
+    write_u32(output, header_size_base + index * 4, section.size)
+    output.extend(section.data)
+
+
+def merge_dols(target: DolImage, loader: DolImage, output_path: Path) -> DolImage:
+    loader_data = materialize_loader_bss(loader)
+    text = list(target.text) + list(loader.text)
+    data_sections = list(target.data_sections) + loader_data
+
+    if len(text) > 7:
+        raise SystemExit(f"merged DOL needs {len(text)} text slots; only 7 exist")
+    if len(data_sections) > 11:
+        raise SystemExit(
+            f"merged DOL needs {len(data_sections)} data slots; only 11 exist"
+        )
+
+    all_sections = text + data_sections
+    validate_section_overlaps(all_sections, "merged DOL", check_file=False)
+    validate_cross_image_ranges(target, list(loader.text) + loader_data)
+
+    output = bytearray(0x100)
+    for index, section in enumerate(text):
+        append_dol_section(output, 0x00, 0x48, 0x90, index, section)
+    for index, section in enumerate(data_sections):
+        append_dol_section(output, 0x1C, 0x64, 0xAC, index, section)
+    write_u32(output, 0xD8, target.bss_address)
+    write_u32(output, 0xDC, target.bss_size)
+    write_u32(output, 0xE0, loader.entry)
+    # The Wii apploader rounds every section read to a cache line. Keep the
+    # FST from starting inside that final rounded read when the last section
+    # itself ends only four-byte aligned.
+    output.extend(bytes(align_up(len(output), 0x20) - len(output)))
+    output_path.write_bytes(output)
+
+    merged = parse_dol(output_path, "merged")
+    if merged.entry != loader.entry:
+        raise SystemExit("merged DOL entry does not match the loader entry")
+    if (merged.bss_address, merged.bss_size) != (
+        target.bss_address,
+        target.bss_size,
+    ):
+        raise SystemExit("merged DOL did not preserve the target BSS")
+    if len(merged.sections) != len(all_sections):
+        raise SystemExit("merged DOL section count changed during serialization")
+    for expected, actual in zip(all_sections, merged.sections):
+        if (
+            actual.address != expected.address
+            or actual.size != expected.size
+            or actual.data != expected.data
+        ):
+            raise SystemExit(f"merged DOL changed {expected.name}")
+    describe_dol(merged, require_hid4=True)
+    return merged
 
 
 def main() -> None:
     args = parse_args()
     version = args.version
     region = VERSIONS[version]
+    target_path: Optional[Path] = None
+    target: Optional[DolImage] = None
+    target_info: Optional[Dict[str, object]] = None
+    target_sha1: Optional[str] = None
+    if args.target_dol:
+        target_path = require_file(args.target_dol, "target DOL")
+        target = parse_dol(target_path, "target")
+        target_sha1 = hashlib.sha1(target.data).hexdigest()
+        expected_sha1 = str(region["original_dol_sha1"])
+        if target_sha1 != expected_sha1:
+            raise SystemExit(
+                f"target DOL does not match {version}: expected SHA-1 "
+                f"{expected_sha1}, got {target_sha1}"
+            )
+        target_info = validate_target_dol(target)
+
     symbols = read_symbols(version)
     compiler = require_file(args.compiler, "Wii CodeWarrior compiler")
     dtk = require_file(args.dtk, "decomp-toolkit")
@@ -224,13 +533,13 @@ def main() -> None:
         require_executable(wrapper_arg, "CodeWarrior wrapper") if wrapper_arg else None
     )
 
+    default_output_name = "wii-loader-merged" if target else "wii-loader"
+    if args.dolphin_osreport:
+        default_output_name += "-debug"
     output_dir = (
         args.output_dir.resolve()
         if args.output_dir
-        else ROOT
-        / "build"
-        / version
-        / ("wii-loader-debug" if args.dolphin_osreport else "wii-loader")
+        else ROOT / "build" / version / default_output_name
     )
     output_dir.mkdir(parents=True, exist_ok=True)
     elf_path = output_dir / "kar-wii-loader.elf"
@@ -249,6 +558,8 @@ def main() -> None:
     macros["KAR_DISC_NUMBER"] = 0
     macros["KAR_DISC_REVISION"] = 0
     macros["KAR_ENABLE_DOLPHIN_OSREPORT"] = int(args.dolphin_osreport)
+    if target:
+        macros["KAR_TARGET_DOL_ENTRY"] = target.entry
 
     command = []
     if wrapper:
@@ -284,14 +595,50 @@ def main() -> None:
 
     run(command)
     run([str(dtk), "elf2dol", str(elf_path), str(dol_path)])
-    dol_info = validate_dol(dol_path)
+    loader = parse_dol(dol_path, "loader")
+    validate_loader_dol(loader)
+    if target:
+        final_dol = merge_dols(target, loader, dol_path)
+        dol_info = describe_dol(final_dol, require_hid4=True)
+    else:
+        final_dol = loader
+        dol_info = validate_loader_dol(final_dol)
 
+    manifest_inputs = (
+        Path(__file__).resolve(),
+        LOADER_SOURCE,
+        LOADER_LCF,
+        ROOT / "include" / "kar" / "wii_mem2.h",
+        ROOT / "include" / "dolphin" / "types.h",
+        ROOT / "config" / version / "symbols.txt",
+    )
     manifest = {
-        "format_version": 1,
+        "format_version": 2,
+        "build_mode": "merged" if target else "standalone",
         "game_version": version,
         "reference_original_dol_sha1": region["original_dol_sha1"],
-        "compiler": str(compiler),
-        "compiler_sha256": hashlib.sha256(compiler.read_bytes()).hexdigest(),
+        "toolchain": {
+            "compiler": {
+                "name": compiler.name,
+                "sha256": sha256_file(compiler),
+            },
+            "dtk": {
+                "name": dtk.name,
+                "sha256": sha256_file(dtk),
+            },
+            "wrapper": (
+                {
+                    "name": Path(wrapper).name,
+                    "sha256": sha256_file(Path(wrapper)),
+                }
+                if wrapper
+                else None
+            ),
+        },
+        "inputs": {
+            path.relative_to(ROOT).as_posix(): sha256_file(path)
+            for path in manifest_inputs
+        },
         "dolphin_osreport": args.dolphin_osreport,
         "addresses": {name: f"0x{value:08X}" for name, value in sorted(macros.items())},
         "memory": {
@@ -304,12 +651,27 @@ def main() -> None:
         "dol": {
             **dol_info,
             "size": dol_path.stat().st_size,
-            "sha256": hashlib.sha256(dol_path.read_bytes()).hexdigest(),
+            "sha256": sha256_file(dol_path),
         },
     }
+    if target and target_path and target_info and target_sha1:
+        manifest["target_dol"] = {
+            **target_info,
+            "input_filename": target_path.name,
+            "documented_layout_path": "files/orig.dol",
+            "size": len(target.data),
+            "sha1": target_sha1,
+            "sha256": hashlib.sha256(target.data).hexdigest(),
+            "bss": {
+                "address": f"0x{target.bss_address:08X}",
+                "size": target.bss_size,
+            },
+        }
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     print(f"Built {dol_path}")
+    if target_path:
+        print(f"Merged target {target_path}")
     print(f"Manifest {manifest_path}")
 
 
