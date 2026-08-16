@@ -74,6 +74,18 @@
 #error KAR_ADDR_GX_TLUT_CLEAR_BITS must be supplied by the build script
 #endif
 
+#ifdef KAR_TARGET_DOL_ENTRY
+#ifndef KAR_ADDR_OS_MASK_INTERRUPTS
+#error KAR_ADDR_OS_MASK_INTERRUPTS must be supplied by the build script
+#endif
+#ifndef KAR_ADDR_DVD_READ_ISSUE
+#error KAR_ADDR_DVD_READ_ISSUE must be supplied by the build script
+#endif
+#ifndef KAR_ADDR_DVD_CALLBACK
+#error KAR_ADDR_DVD_CALLBACK must be supplied by the build script
+#endif
+#endif
+
 #ifndef KAR_DISC_ID_0
 #error KAR_DISC_ID_0 through KAR_DISC_ID_5 must be supplied by the build script
 #endif
@@ -537,6 +549,391 @@ static void SetLoaderStatus(KARWiiLoaderStatus status)
                 sizeof(KAR_WII_MEM2_API->loader_status));
 }
 
+#ifdef KAR_TARGET_DOL_ENTRY
+/*
+ * Minimal IPC client for IOS /dev/di. KAR's GameCube OS has no Wii IPC
+ * interrupt handler, so this deliberately polls with the PPC IPC interrupt
+ * enable bits clear. Initialization is synchronous before KAR starts; runtime
+ * reads use short OSAlarm polls so optical-disc latency never blocks an alarm
+ * callback with the game scheduler disabled.
+ */
+#define IOS_OPEN             1u
+#define IOS_IOCTL            6u
+#define IOS_OPEN_READ_WRITE  2u
+#define IOS_DI_LOW_READ      0x71u
+#define IOS_DI_SUCCESS       1
+#define IOS_IPC_TIMEOUT_TICKS 607500000u
+#define IOS_IPC_POLL_TICKS   60750u
+#define IOS_IPC_LATE_POLL_TICKS 607500u
+#define KAR_DVD_INTERRUPT_MASK 0x00000400u
+
+typedef void (*DVDLowCallback)(u32 reason);
+typedef void (*OSMaskInterruptsFunc)(u32 mask);
+
+typedef struct IOSRequest {
+    u32 command;
+    s32 result;
+    s32 fd;
+    u32 args[5];
+    u8 padding[0x20];
+} IOSRequest;
+
+STATIC_ASSERT(sizeof(IOSRequest) == 0x40);
+
+static volatile u32* const ipc_ppc_message = (u32*)0xCD000000;
+static volatile u32* const ipc_ppc_control = (u32*)0xCD000004;
+static volatile u32* const ipc_arm_message = (u32*)0xCD000008;
+static volatile u32* const ipc_ppc_irq_flag = (u32*)0xCD000030;
+
+typedef enum IOSIPCState {
+    IOS_IPC_IDLE = 0,
+    IOS_IPC_WAIT_ACK,
+    IOS_IPC_WAIT_REPLY,
+    IOS_IPC_POISONED,
+} IOSIPCState;
+
+static volatile IOSRequest ios_request __attribute__((aligned(32)));
+static u32 ios_di_command[8] __attribute__((aligned(32)));
+static char ios_di_path[0x20] __attribute__((aligned(32))) = "/dev/di";
+static s32 ios_di_fd = -1;
+static BOOL ios_ipc_failed;
+static IOSIPCState ios_ipc_state;
+static u32 ios_ipc_start_ticks;
+static BOOL ios_ipc_timed_out;
+static void* ios_read_dst;
+static u32 ios_read_length;
+
+static OSAlarm dvd_completion_alarm;
+static BOOL dvd_completion_alarm_initialized;
+static u32 dvd_completion_reason;
+
+static u32 PhysicalAddress(const void* address)
+{
+    return (u32)address & 0x3FFFFFFFu;
+}
+
+static void ZeroMemory(void* address, u32 size)
+{
+    u8* bytes = address;
+
+    while (size-- > 0) {
+        *bytes++ = 0;
+    }
+}
+
+static void SyncMMIO(void)
+{
+    asm("eieio; sync");
+}
+
+static u32 ReadTimeBase(void)
+{
+    u32 ticks;
+
+    asm volatile("mfspr %0, 268" : "=r"(ticks));
+    return ticks;
+}
+
+static BOOL WaitForIPCControl(u32 bit)
+{
+    u32 start;
+    u32 current;
+
+    start = ReadTimeBase();
+    current = start;
+    while ((*ipc_ppc_control & bit) == 0) {
+        current = ReadTimeBase();
+        if (current - start >= IOS_IPC_TIMEOUT_TICKS) {
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+static void PrepareIPC(void)
+{
+    u32 control;
+
+    /* Disable PPC IPC interrupts; KAR has no handler for them. */
+    *ipc_ppc_control = 0;
+    SyncMMIO();
+
+    control = *ipc_ppc_control;
+    if (control & 2) {
+        *ipc_ppc_control = 2;
+        SyncMMIO();
+    }
+    if (control & 4) {
+        *ipc_ppc_control = 4;
+        SyncMMIO();
+        *ipc_ppc_control = 8;
+        SyncMMIO();
+    }
+    *ipc_ppc_irq_flag = 0x40000000u;
+    SyncMMIO();
+}
+
+static BOOL ExecuteIOSRequest(s32* result)
+{
+    u32 reply;
+
+    if (ios_ipc_failed) {
+        return FALSE;
+    }
+
+    FlushDCache((const void*)&ios_request, sizeof(ios_request));
+    *ipc_ppc_message = PhysicalAddress((const void*)&ios_request);
+    SyncMMIO();
+    *ipc_ppc_control = 1;
+    SyncMMIO();
+
+    if (!WaitForIPCControl(2)) {
+        ios_ipc_failed = TRUE;
+        return FALSE;
+    }
+    *ipc_ppc_control = 2;
+    SyncMMIO();
+    *ipc_ppc_irq_flag = 0x40000000u;
+    SyncMMIO();
+
+    if (!WaitForIPCControl(4)) {
+        ios_ipc_failed = TRUE;
+        return FALSE;
+    }
+    reply = *ipc_arm_message;
+    *ipc_ppc_control = 4;
+    SyncMMIO();
+    *ipc_ppc_irq_flag = 0x40000000u;
+    SyncMMIO();
+
+    InvalidateDCache((void*)&ios_request, sizeof(ios_request));
+    asm("sync");
+    *result = ios_request.result;
+
+    *ipc_ppc_control = 8;
+    SyncMMIO();
+    *ipc_ppc_irq_flag = 0x40000000u;
+    SyncMMIO();
+
+    if (PhysicalAddress((const void*)reply) !=
+        PhysicalAddress((const void*)&ios_request)) {
+        ios_ipc_failed = TRUE;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static BOOL WiiDIInit(void)
+{
+    s32 result;
+
+    PrepareIPC();
+    FlushDCache(ios_di_path, sizeof(ios_di_path));
+    ZeroMemory((void*)&ios_request, sizeof(ios_request));
+    ios_request.command = IOS_OPEN;
+    ios_request.args[0] = PhysicalAddress(ios_di_path);
+    ios_request.args[1] = IOS_OPEN_READ_WRITE;
+    if (!ExecuteIOSRequest(&result) || result < 0) {
+        return FALSE;
+    }
+    ios_di_fd = result;
+    return TRUE;
+}
+
+static BOOL BeginWiiDIRead(void* dst, u32 length, u32 byte_offset)
+{
+    u32 start = (u32)dst;
+    u32 end = start + length;
+
+    if (ios_ipc_failed || ios_ipc_state != IOS_IPC_IDLE || ios_di_fd < 0 ||
+        length == 0 || (start & 0x1F) != 0 ||
+        (length & 0x1F) != 0 || (byte_offset & 3) != 0 || end < start ||
+        !((start >= 0x80000000u && end <= 0x81800000u) ||
+          (start >= KAR_WII_ARAM_CACHED_START &&
+           end <= KAR_WII_MEM2_API_ADDRESS))) {
+        return FALSE;
+    }
+
+    ZeroMemory(ios_di_command, sizeof(ios_di_command));
+    ios_di_command[0] = IOS_DI_LOW_READ << 24;
+    ios_di_command[1] = length;
+    ios_di_command[2] = byte_offset >> 2;
+    FlushDCache(ios_di_command, sizeof(ios_di_command));
+    FlushDCache(dst, length);
+
+    ZeroMemory((void*)&ios_request, sizeof(ios_request));
+    ios_request.command = IOS_IOCTL;
+    ios_request.fd = ios_di_fd;
+    ios_request.args[0] = IOS_DI_LOW_READ;
+    ios_request.args[1] = PhysicalAddress(ios_di_command);
+    ios_request.args[2] = sizeof(ios_di_command);
+    ios_request.args[3] = PhysicalAddress(dst);
+    ios_request.args[4] = length;
+
+    ios_read_dst = dst;
+    ios_read_length = length;
+    ios_ipc_start_ticks = ReadTimeBase();
+    ios_ipc_timed_out = FALSE;
+    ios_ipc_state = IOS_IPC_WAIT_ACK;
+    FlushDCache((const void*)&ios_request, sizeof(ios_request));
+    *ipc_ppc_message = PhysicalAddress((const void*)&ios_request);
+    SyncMMIO();
+    *ipc_ppc_control = 1;
+    SyncMMIO();
+    return TRUE;
+}
+
+static void DVDReadCompletionAlarmHandler(OSAlarm* alarm, void* context)
+{
+    DVDLowCallback callback =
+        *(DVDLowCallback*)KAR_ADDR_DVD_CALLBACK;
+    volatile BOOL* stop_at_next_interrupt =
+        (BOOL*)(KAR_ADDR_DVD_CALLBACK - 8);
+    volatile BOOL* breaking =
+        (BOOL*)(KAR_ADDR_DVD_CALLBACK + 0x18);
+    u32 reason = dvd_completion_reason;
+    BOOL was_stopped = *stop_at_next_interrupt;
+    BOOL was_breaking = *breaking;
+
+    (void)alarm;
+    (void)context;
+    *(DVDLowCallback*)KAR_ADDR_DVD_CALLBACK = NULL;
+    *stop_at_next_interrupt = FALSE;
+
+    if (was_stopped && was_breaking) {
+        reason = 8;
+    } else if (reason == 1) {
+        *dilength = 0;
+    }
+
+    if (callback != NULL) {
+        callback(reason);
+    }
+    *breaking = FALSE;
+}
+
+static void MarkRuntimeDIReadFailed(void)
+{
+    ios_ipc_failed = TRUE;
+    dvd_completion_reason = 0x10;
+    SetLoaderStatus(KAR_WII_LOADER_IOS_DI_READ_FAILED);
+}
+
+static void DVDReadIPCAlarmHandler(OSAlarm* alarm, void* context)
+{
+    OSSetAlarmFunc set_alarm = (OSSetAlarmFunc)KAR_ADDR_OS_SET_ALARM;
+    s32 result;
+    u32 reply;
+    BOOL reply_matches;
+
+    if (ios_ipc_state == IOS_IPC_WAIT_ACK &&
+        (*ipc_ppc_control & 2) != 0) {
+        *ipc_ppc_control = 2;
+        SyncMMIO();
+        *ipc_ppc_irq_flag = 0x40000000u;
+        SyncMMIO();
+        ios_ipc_state = IOS_IPC_WAIT_REPLY;
+    }
+
+    if (ios_ipc_state == IOS_IPC_WAIT_REPLY &&
+        (*ipc_ppc_control & 4) != 0) {
+        reply = *ipc_arm_message;
+        *ipc_ppc_control = 4;
+        SyncMMIO();
+        *ipc_ppc_irq_flag = 0x40000000u;
+        SyncMMIO();
+
+        reply_matches =
+            PhysicalAddress((const void*)reply) ==
+            PhysicalAddress((const void*)&ios_request);
+        if (reply_matches) {
+            InvalidateDCache((void*)&ios_request, sizeof(ios_request));
+            asm("sync");
+            result = ios_request.result;
+        } else {
+            result = -1;
+        }
+
+        *ipc_ppc_control = 8;
+        SyncMMIO();
+        *ipc_ppc_irq_flag = 0x40000000u;
+        SyncMMIO();
+
+        if (!reply_matches) {
+            ios_ipc_state = IOS_IPC_POISONED;
+            MarkRuntimeDIReadFailed();
+            return;
+        }
+
+        InvalidateDCache(ios_read_dst, ios_read_length);
+        asm("sync");
+        ios_ipc_state = IOS_IPC_IDLE;
+        ios_read_dst = NULL;
+        ios_read_length = 0;
+        if (ios_ipc_timed_out || result != IOS_DI_SUCCESS) {
+            MarkRuntimeDIReadFailed();
+        } else {
+            dvd_completion_reason = 1;
+        }
+        DVDReadCompletionAlarmHandler(alarm, context);
+        return;
+    }
+
+    if (ios_ipc_state == IOS_IPC_IDLE ||
+        ios_ipc_state == IOS_IPC_POISONED) {
+        MarkRuntimeDIReadFailed();
+        return;
+    }
+
+    if (!ios_ipc_timed_out &&
+        ReadTimeBase() - ios_ipc_start_ticks >= IOS_IPC_TIMEOUT_TICKS) {
+        /*
+         * IOS may still DMA into the caller's buffer after a timeout. Keep the
+         * callback and buffer owned until the late reply has been reaped.
+         */
+        ios_ipc_timed_out = TRUE;
+        MarkRuntimeDIReadFailed();
+    }
+
+    set_alarm(alarm,
+              ios_ipc_timed_out ? IOS_IPC_LATE_POLL_TICKS
+                                : IOS_IPC_POLL_TICKS,
+              DVDReadIPCAlarmHandler);
+}
+
+static void MyDVDLowReadIssue(void* dst, u32 length, u32 byte_offset,
+                              DVDLowCallback callback)
+{
+    OSMaskInterruptsFunc mask_interrupts =
+        (OSMaskInterruptsFunc)KAR_ADDR_OS_MASK_INTERRUPTS;
+    OSCreateAlarmFunc create_alarm =
+        (OSCreateAlarmFunc)KAR_ADDR_OS_CREATE_ALARM;
+    OSSetAlarmFunc set_alarm = (OSSetAlarmFunc)KAR_ADDR_OS_SET_ALARM;
+
+    mask_interrupts(KAR_DVD_INTERRUPT_MASK);
+    *(volatile BOOL*)(KAR_ADDR_DVD_CALLBACK - 8) = FALSE;
+
+    if (ios_ipc_state != IOS_IPC_IDLE) {
+        ios_ipc_state = IOS_IPC_POISONED;
+        MarkRuntimeDIReadFailed();
+        return;
+    }
+
+    *(DVDLowCallback*)KAR_ADDR_DVD_CALLBACK = callback;
+    if (!dvd_completion_alarm_initialized) {
+        create_alarm(&dvd_completion_alarm);
+        dvd_completion_alarm_initialized = TRUE;
+    }
+    if (!BeginWiiDIRead(dst, length, byte_offset)) {
+        MarkRuntimeDIReadFailed();
+        set_alarm(&dvd_completion_alarm, 1, DVDReadCompletionAlarmHandler);
+        return;
+    }
+    set_alarm(&dvd_completion_alarm, IOS_IPC_POLL_TICKS,
+              DVDReadIPCAlarmHandler);
+}
+#endif
+
 static BOOL PatchGame(void)
 {
     static const u32 ar_start_dma_signature[] = {
@@ -557,6 +954,16 @@ static BOOL PatchGame(void)
     static const u32 os_restore_interrupts_signature[] = {
         0x2C030000, 0x7C8000A6, 0x4182000C, 0x60858000,
     };
+#ifdef KAR_TARGET_DOL_ENTRY
+    static const u32 dvd_read_issue_signature[] = {
+        0x7C0802A6, 0x90010004, 0x38000000, 0x9421FFD8,
+    };
+
+    if (!InstructionsMatch((const void*)KAR_ADDR_DVD_READ_ISSUE,
+                           dvd_read_issue_signature, 4)) {
+        return FALSE;
+    }
+#endif
 
     if (!InstructionsMatch((const void*)KAR_ADDR_AR_START_DMA,
                            ar_start_dma_signature, 4) ||
@@ -577,6 +984,9 @@ static BOOL PatchGame(void)
 
     PatchBranch((void*)KAR_ADDR_AR_START_DMA, MyARStartDMA);
     PatchBranch((void*)KAR_ADDR_AR_INIT, MyARInit);
+#ifdef KAR_TARGET_DOL_ENTRY
+    PatchBranch((void*)KAR_ADDR_DVD_READ_ISSUE, MyDVDLowReadIssue);
+#endif
     return PatchInstruction((void*)KAR_ADDR_LBMEMORY_ARAM_LIMIT,
                             0x7C661B78, /* mr r6, r3 */
                             0x3CC31000  /* addis r6, r3, 0x1000 */) &&
@@ -590,16 +1000,106 @@ static volatile u32* const arm_irq_mask = (u32*)0xCD80003C;
 static volatile u32* const access_protection = (u32*)0xCD800070;
 static u32* const console_type = (u32*)0x8000002C;
 
+#ifdef KAR_TARGET_DOL_ENTRY
+typedef struct FstEntry {
+    u32 type_and_name_offset;
+    u32 offset_or_parent;
+    u32 size_or_next;
+} FstEntry;
+
+STATIC_ASSERT(sizeof(FstEntry) == 0xC);
+
+static BOOL NormalizeWiiFstFileOffsets(void)
+{
+    FstEntry* fst = *(FstEntry**)0x80000038;
+    u32 fst_size = *(u32*)0x8000003C;
+    u32 fst_address = (u32)fst;
+    u32 entry_count;
+    u32 string_table_offset;
+    u32 index;
+
+    if (fst_address < 0x80000000 || fst_address >= 0x81800000 ||
+        fst_size < sizeof(FstEntry) || fst_size > 0x81800000 - fst_address) {
+        return FALSE;
+    }
+
+    entry_count = fst[0].size_or_next;
+    if ((fst[0].type_and_name_offset >> 24) != 1 ||
+        fst[0].offset_or_parent != 0 || entry_count == 0 ||
+        entry_count > fst_size / sizeof(FstEntry)) {
+        return FALSE;
+    }
+
+    string_table_offset = entry_count * sizeof(FstEntry);
+    for (index = 1; index < entry_count; index++) {
+        u32 type = fst[index].type_and_name_offset >> 24;
+        u32 name_offset = fst[index].type_and_name_offset & 0x00FFFFFF;
+
+        if (name_offset >= fst_size - string_table_offset) {
+            return FALSE;
+        }
+        if (type == 0) {
+            if (fst[index].offset_or_parent > 0x3FFFFFFF) {
+                return FALSE;
+            }
+            fst[index].offset_or_parent <<= 2;
+        } else if (type == 1) {
+            if (fst[index].offset_or_parent >= index ||
+                fst[index].size_or_next <= index ||
+                fst[index].size_or_next > entry_count) {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    FlushDCache(fst, fst_size);
+    KAR_WII_MEM2_API->flags |= KAR_WII_MEM2_FLAG_FST_BYTE_OFFSETS;
+    FlushDCache((const void*)&KAR_WII_MEM2_API->flags,
+                sizeof(KAR_WII_MEM2_API->flags));
+    return TRUE;
+}
+#endif
+
 static void Run(void)
 {
     GameEntryFunc game_entry;
 
     /* Enable the GameCube-compatible MMIO aliases while remaining in Wii mode. */
     *access_protection &= ~1;
+#ifdef KAR_TARGET_DOL_ENTRY
+    /* IOS owns DI for decrypting partition reads in the merged-disc path. */
+    *arm_irq_mask |= 1 << 18;
+#else
+    /* The standalone path owns DI directly and keeps Starlet away from it. */
     *arm_irq_mask &= ~(1 << 18);
+#endif
     *audio_control = 0;
 
     InstallMem2API();
+#ifdef KAR_TARGET_DOL_ENTRY
+    if (!WiiDIInit()) {
+        SetLoaderStatus(KAR_WII_LOADER_IOS_DI_INIT_FAILED);
+        for (;;) {
+        }
+    }
+    KAR_WII_MEM2_API->flags |= KAR_WII_MEM2_FLAG_IOS_DI_READS;
+    FlushDCache((const void*)&KAR_WII_MEM2_API->flags,
+                sizeof(KAR_WII_MEM2_API->flags));
+    SetLoaderStatus(KAR_WII_LOADER_LOADING_GAME);
+    if (!DiscIDMatches()) {
+        SetLoaderStatus(KAR_WII_LOADER_WRONG_DISC);
+        for (;;) {
+        }
+    }
+    game_entry = (GameEntryFunc)KAR_TARGET_DOL_ENTRY;
+    if (!NormalizeWiiFstFileOffsets()) {
+        SetLoaderStatus(KAR_WII_LOADER_FST_FAILED);
+        for (;;) {
+        }
+    }
+#else
     for (;;) {
         SetLoaderStatus(KAR_WII_LOADER_LOADING_GAME);
         game_entry = LoadAndRunApploader();
@@ -620,6 +1120,7 @@ static void Run(void)
             DIReset();
         }
     }
+#endif
 
     SetLoaderStatus(KAR_WII_LOADER_PATCHING_GAME);
     if (!PatchGame()) {
