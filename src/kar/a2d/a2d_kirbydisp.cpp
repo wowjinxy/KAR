@@ -12,12 +12,17 @@ public:
 
 class DiagObj {
 public:
+    /*
+     * MW C++ inserts two dtor slots; 7 user virtuals + GetNext puts GetNext at
+     * vtable +0x24 (retail).
+     */
     virtual void v00();
     virtual void v04();
     virtual void v08();
     virtual void v0c();
     virtual void v10();
     virtual void v14();
+    virtual void v18();
     virtual DiagObj *GetNext();
     s32 unk4;
     s32 unk8;
@@ -66,12 +71,14 @@ struct HSD_VtxDescList {
 
 class KirbyEffectListItem {
 public:
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5();
-    virtual void v6();
+    /* Same vtable shape as DiagObj so GetNext is at 0x24. */
+    virtual void v00();
+    virtual void v04();
+    virtual void v08();
+    virtual void v0c();
+    virtual void v10();
+    virtual void v14();
+    virtual void v18();
     virtual KirbyEffectListItem *GetNext();
     s32 unk4;
     s32 unk8;
@@ -556,9 +563,11 @@ extern "C" void **kar_a2d_kirbydisp__near_8038383c(void **arg0) {
     return arg0;
 }
 
-extern "C" void kar_a2d_kirbydisp__near_803838a8(void *arg0) {
+extern "C" void kar_a2d_kirbydisp__near_803838a8(void *arg0)
+{
     u8 var_r31 = 0;
-    KirbyEffectListItem *var_r3 = (KirbyEffectListItem *) kar_diag__803ad760(lbl_805DDAC4, 0, &lbl_805DBF9C, &lbl_805DBF94, 0);
+    KirbyEffectListItem *var_r3 =
+        (KirbyEffectListItem *)kar_diag__803ad760(lbl_805DDAC4, 0, &lbl_805DBF9C, &lbl_805DBF94, 0);
     while (var_r3 != NULL) {
         if (var_r3->unkC == 2 || var_r3->unkC == 3) {
             var_r31 = 1;
@@ -567,8 +576,9 @@ extern "C" void kar_a2d_kirbydisp__near_803838a8(void *arg0) {
         var_r3 = var_r3->GetNext();
     }
     if (var_r31 != 0) {
-        KirbyEffectListItem *ctx = (KirbyEffectListItem *) kar_diag__803ad760(lbl_805DDB7C, 0, &lbl_805DBFAC, &lbl_805DBFA4, 0);
-        kar_a2d_refract__near_803842e8((char *) arg0 + 4, (void *) ctx->unk8);
+        KirbyEffectListItem *ctx = (KirbyEffectListItem *)kar_diag__803ad760(
+            lbl_805DDB7C, 0, &lbl_805DBFAC, &lbl_805DBFA4, 0);
+        kar_a2d_refract__near_803842e8((char *)arg0 + 4, (void *)ctx->unk8);
     }
 }
 

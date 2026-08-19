@@ -904,21 +904,24 @@ void HSD_RvalueResolveRefsAll(HSD_Rvalue* rvalue, HSD_RvalueList* list)
 
 void HSD_RObjSetConstraintObj(HSD_RObj* robj, void* o)
 {
+    char* strs = RObjAssertRPJObj;
+
     if (robj != NULL) {
         if (robj->u.jobj != NULL) {
             HSD_JObjUnrefThis(robj->u.jobj);
             robj->u.jobj = NULL;
         }
 
-        if (hsdObjIsDescendantOf((HSD_Class*) &((HSD_JObj*) o)->object,
-                                (HSD_ClassInfo*) &hsdJObj))
-        {
+        if (hsdObjIsDescendantOf((HSD_Class*) o, (HSD_ClassInfo*) &hsdJObj)) {
             robj->u.jobj = o;
             if (o != NULL) {
-                iref_INC(o);
+                HSD_OBJ(o)->ref_count_individual++;
+                if (HSD_OBJ(o)->ref_count_individual == 0) {
+                    __assert(strs + 0x5C, 0x9E, strs + 0x68);
+                }
             }
         } else {
-            OSReport("constraint only support jobj target.\n");
+            OSReport(strs + 0x140);
             assert_line_named(0x51D, 0, RObjAssertZero);
         }
     }

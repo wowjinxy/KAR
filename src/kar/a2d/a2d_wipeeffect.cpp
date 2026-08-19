@@ -87,7 +87,7 @@ struct HSD_JObj {
 
 extern "C" {
 
-void HSD_JObjRemoveAnimAll(void);
+void HSD_JObjRemoveAnimAll(void *jobj);
 void HSD_JObjReqAnimAll(void *jobj, f32 frame);
 void HSD_JObjAnimAll(void *jobj);
 void HSD_JObjDispAll(void *jobj, void *pmtx, s32 which, u32 rendermode);
@@ -297,7 +297,7 @@ extern "C" void kar_a2d_wipeeffect__8037e3cc(WipeCameraHolder *arg0, void *joint
 
 extern "C" void kar_a2d_wipeeffect__near_8037e42c(WipeCameraHolder *arg0, void *arg1, s32 arg2) {
     if (arg0->unk10 != NULL) {
-        HSD_JObjRemoveAnimAll();
+        HSD_JObjRemoveAnimAll(arg0->unk10);
         kar_a2d_game_lib__802894bc(arg0->unk10, arg1, arg2);
     }
 }
@@ -548,7 +548,7 @@ extern "C" WipeJointAnim *kar_a2d_wipeeffect__near_8037eefc(WipeJointAnim *arg0,
     ((DiagObj *) arg0)->Init();
     *(void **) arg0 = lbl_804BD6FC;
     arg0->unkC = 0;
-    kar_a2d_wipeeffect__near_8037efb0(arg0, (s32 *) ((WipeJointAnim *) kar_diag__803ad760(lbl_805DDBE0, 0, &lbl_805DBD88, &lbl_805DBD80, 0))->unk10);
+    kar_a2d_wipeeffect__near_8037efb0(arg0, (s32 *) ((WipeJointAnim *) kar_diag__803ad760(lbl_805DDBE0, 0, &lbl_805DBD88, &lbl_805DBD80, 0))->unk1C);
     arg0->unk14 = arg1;
     arg0->unk24 = 0;
     arg0->unk20 = 0;

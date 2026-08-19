@@ -617,8 +617,8 @@ void kar_grcoll__near_800d7060(Ground* ground)
     if (alloc->joints != NULL) {
         HSD_Free(alloc->joints);
     }
-    if (alloc->zvtx != NULL) {
-        HSD_Free(alloc->zvtx);
+    if (alloc->zones != NULL) {
+        HSD_Free(alloc->zones);
     }
     if (alloc->zones != NULL) {
         HSD_Free(alloc->zones);
@@ -629,8 +629,8 @@ void kar_grcoll__near_800d7060(Ground* ground)
     if (alloc->move_joints != NULL) {
         HSD_Free(alloc->move_joints);
     }
-    if (alloc->move_zones != NULL) {
-        HSD_Free(alloc->move_zones);
+    if (alloc->move_rough != NULL) {
+        HSD_Free(alloc->move_rough);
     }
     if (alloc->move_rough != NULL) {
         HSD_Free(alloc->move_rough);
@@ -797,8 +797,7 @@ void* kar_grcoll__800d7a40(void* collision_root, void* jobj, s32 kind,
 
     for (i = 0; i < root->zone_count; i++) {
         zone = &root->zones[i];
-        if ((zone->jobj == jobj) &&
-            (kind == (s32) (zone->kind & 0x1FFFFFF))) {
+        if (zone->jobj == jobj && (s32) (zone->kind & 0x01FFFFFF) == kind) {
             if (index_out != NULL) {
                 *index_out = i;
             }

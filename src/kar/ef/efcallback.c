@@ -101,19 +101,19 @@ s32 kar_efcallback__80234e4c(void* gobj)
         effect_gobj->particle_kind = entry->particle_kind;
     }
 
-    if (entry->flags & 0x80) {
+    if ((entry->flags >> 7) & 1) {
         effect_gobj->position[0] = entry->position[0];
         effect_gobj->position[1] = entry->position[1];
         effect_gobj->position[2] = entry->position[2];
         effect_gobj->transform_flags |= 1;
     }
 
-    if (entry->flags & 0x40) {
+    if ((entry->flags >> 6) & 1) {
         effect_gobj->flags |= 2;
         effect_gobj->field_3C = entry->field_48;
     }
 
-    if (entry->flags & 0x20) {
+    if ((entry->flags >> 5) & 1) {
         effect_gobj->scale[0] = entry->scale[0];
         effect_gobj->scale[1] = entry->scale[1];
         effect_gobj->scale[2] = entry->scale[2];
@@ -189,7 +189,7 @@ s32 kar_efcallback__near_802350a0(s32 bank, void* particle, void* arg2,
     }
 
     version = data->version;
-    if (version < 0x43) {
+    if ((s32) version < 0x43) {
         OSReport(lbl_804B510C, version, 0x43);
         valid = 0;
     } else {

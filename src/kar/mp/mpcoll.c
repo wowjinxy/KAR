@@ -170,16 +170,10 @@ s32 kar_mpcoll_check_special_face_kind3_enabled(MpCollHandle* handle,
                                                 MpCollFaceArray* face_array,
                                                 s32 index)
 {
-    MpCollFaceEntry* entry;
-    u8* entries;
-    s32 offset;
     s32 result = FALSE;
 
     if (((handle->flags_34c >> 2) & 1) != 0) {
-        entries = (u8*) face_array->entries;
-        offset = index << 6;
-        entry = (MpCollFaceEntry*) (entries + offset);
-        if (*(s32*) ((u8*) entry->data + 0x8C) == 3) {
+        if (*(s32*) ((u8*) face_array->entries[index].data + 0x8C) == 3) {
             result = TRUE;
         }
     }

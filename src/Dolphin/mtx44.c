@@ -6,14 +6,14 @@ void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
     f32 tmp;
 
     tmp = 1.0F / (r - l);
-    m[0][0] = tmp * (2.0F * n);
+    m[0][0] = (n * 2.0F) * tmp;
     m[0][1] = 0.0F;
     m[0][2] = (r + l) * tmp;
     m[0][3] = 0.0F;
 
     tmp = 1.0F / (t - b);
     m[1][0] = 0.0F;
-    m[1][1] = tmp * (2.0F * n);
+    m[1][1] = (n * 2.0F) * tmp;
     m[1][2] = (t + b) * tmp;
     m[1][3] = 0.0F;
 

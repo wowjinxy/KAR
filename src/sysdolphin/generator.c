@@ -807,9 +807,9 @@ HSD_Generator* kar_generator__near_80433098(int linkNo, int bank, int kind,
 
 void kar_generator__near_80433154(HSD_CObj* cobj)
 {
-    HSD_CObj* old = lbl_805DE380;
+    if (lbl_805DE380 != NULL) {
+        HSD_CObj* old = lbl_805DE380;
 
-    if (old != NULL) {
         if (old != NULL && generator_ref_DEC(old)) {
             generator_hsdDelete(old);
         }
@@ -824,9 +824,9 @@ void kar_generator__near_80433154(HSD_CObj* cobj)
 
 void kar_generator__near_80433240(void* obj)
 {
-    void* old = lbl_805DE390;
+    if (lbl_805DE390 != NULL) {
+        void* old = lbl_805DE390;
 
-    if (old != NULL) {
         if (old != NULL && generator_ref_DEC(old)) {
             generator_hsdDelete(old);
         }

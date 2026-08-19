@@ -25,7 +25,6 @@ typedef struct _HSD_Rvalue {
 typedef struct _HSD_RvalueList {
     u32 flags;
     struct _HSD_JObjDesc* joint;
-    struct _HSD_RvalueList* next;
 } HSD_RvalueList;
 
 typedef struct _HSD_IKHint {
