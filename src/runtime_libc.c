@@ -1,10 +1,10 @@
 #include "dolphin/types.h"
 #include "stdarg.h"
 
-typedef struct ThrowContext ThrowContext;
+typedef struct jmp_buf jmp_buf;
 typedef struct MWExceptionInfo MWExceptionInfo;
 
-asm void ExPPC_UnwindStack(register ThrowContext* context)
+asm int __setjmp(register jmp_buf* env)
 {
     nofralloc
     mflr r5
@@ -74,7 +74,7 @@ asm void ExPPC_UnwindStack(register ThrowContext* context)
     blr
 }
 
-asm void ExPPC_IsInSpecification(register ThrowContext* context, register int rc)
+asm void __longjmp(register jmp_buf* env, register int val)
 {
     nofralloc
     lwz r5, 0x0(r3)
