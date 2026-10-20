@@ -21,7 +21,7 @@
 #define kar_efcontrol__near_8023f4e4 fn_8023B470
 #define kar_efcontrol__near_8023f514 fn_8023B4A0
 #define kar_efcontrol__near_8023f8f8 fn_8023B884
-#define ExPPC_UnwindStack fn_803A915C
+#define __setjmp fn_803A915C
 #elif defined(VERSION_GKYP01)
 #define kar_src_efanime_804b5628 lbl_804BAE18
 #define lbl_804B5638 lbl_804BAE28
@@ -38,7 +38,7 @@
 #define kar_efcontrol__near_8023f4e4 fn_802401A8
 #define kar_efcontrol__near_8023f514 fn_802401D8
 #define kar_efcontrol__near_8023f8f8 fn_802405BC
-#define ExPPC_UnwindStack fn_803B06F8
+#define __setjmp fn_803B06F8
 #endif
 
 #include <kar/ef/efanime.h>
@@ -61,7 +61,7 @@ char lbl_805D7318[8] = "aobj";
 const f32 lbl_805E2B20[2] = { 0.0f, 0.0f };
 
 void kar_lbairride__near_800550f4(HSD_JObj* jobj, u32 flags);
-s32 ExPPC_UnwindStack(void* unwind);
+s32 __setjmp(void* env);
 
 s32 kar_efanime__8023fddc(HSD_GObj* gobj, s32 index, f32 frame, s32 flags)
 {
@@ -168,8 +168,6 @@ void kar_efanime__near_80240040(EffectObject* effect)
     }
 }
 
-// NONMATCHING: behavior matches; remaining diff is address-register scheduling
-// around ExPPC_UnwindStack.
 s32 kar_efanime__near_80240084(HSD_GObj* gobj)
 {
     register HSD_JObj* jobj = gobj->hsd_obj;
@@ -177,7 +175,7 @@ s32 kar_efanime__near_80240084(HSD_GObj* gobj)
 
     aobj = NULL;
 
-    if (ExPPC_UnwindStack(lbl_8055DA08) == 0) {
+    if (__setjmp(lbl_8055DA08) == 0) {
         HSD_ForeachAnim(jobj, 6, 0xFFFF, kar_efcontrol__near_8023f4e4,
                         2, &aobj);
     }
@@ -221,7 +219,7 @@ f32 kar_efanime__near_802401e8(HSD_GObj* gobj)
 
     aobj = NULL;
 
-    if (ExPPC_UnwindStack(lbl_8055DA08) == 0) {
+    if (__setjmp(lbl_8055DA08) == 0) {
         HSD_ForeachAnim(jobj, 6, 0xFFFF, kar_efcontrol__near_8023f4e4,
                         2, &aobj);
     }
